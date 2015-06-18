@@ -16,6 +16,8 @@
 #include <utility>
 #include <memory>
 
+class identifier_profile_t;
+
 class profile_t {
 
     private:
@@ -91,8 +93,8 @@ class profile_t {
         void add_child(const std::shared_ptr<profile_t> & profile);
         void add_declaration_identifier(const std::shared_ptr<profile_t> & profile);
 
-        virtual void set_name(versioned_string name);
-        virtual void set_name(versioned_string name UNUSED, const boost::optional<versioned_string> & parent UNUSED);
+        virtual void set_name(const std::shared_ptr<identifier_profile_t> & name);
+        virtual void set_name(const std::shared_ptr<identifier_profile_t> & name UNUSED, const boost::optional<versioned_string> & parent UNUSED);
         virtual void add_identifier(const versioned_string & identifier, const versioned_string & parent);        
         virtual void add_child_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED);
         virtual void add_descendant_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED);

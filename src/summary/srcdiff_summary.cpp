@@ -431,8 +431,19 @@ void srcdiff_summary::startUnit(const char * localname, const char * prefix, con
 
             std::string::size_type pos = file_name.find('|');
 
-            if(pos == std::string::npos) profile_stack.back()->set_name(versioned_string(file_name));
-            else profile_stack.back()->set_name(versioned_string(file_name.substr(0, pos), file_name.substr(pos + 1)));
+            std::shared_ptr<unit_profile_t> & unit_profile = reinterpret_cast<std::shared_ptr<unit_profile_t> &>(profile_t::unit_profile);
+            if(pos == std::string::npos) {
+
+                unit_profile->file_name = versioned_string(file_name);
+                unit_profile->operation = SRCDIFF_COMMON;
+            
+            } else { 
+
+                unit_profile->file_name = versioned_string(file_name.substr(0, pos), file_name.substr(pos + 1));
+                unit_profile->operation = !unit_profile->file_name.has_original() ? SRCDIFF_INSERT 
+                                            : (!unit_profile->file_name.has_modified() ? SRCDIFF_DELETE : SRCDIFF_COMMON);
+
+            }
 
             break;
 
@@ -787,7 +798,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                 identifier_profile->simple_names = simple_names;
 
                 // set name of identifiers parent profile
-                profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2))->set_name(collected_full_name, profile_stack.at(parent_pos)->type_name);
+                profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2))->set_name(identifier_profile, profile_stack.at(parent_pos)->type_name);
 
                 // add declaration to body
                 profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2))->body->add_declaration_identifier(profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2)));

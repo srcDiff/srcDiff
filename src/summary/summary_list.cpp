@@ -716,11 +716,11 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
             } else if(child_change_profile->operation == SRCDIFF_COMMON) {
 
-                bool report_name = !call_profile->name.is_common();
+                bool report_name = !call_profile->name->name.is_common();
                 if(report_name) {
 
                     /** @todo set contains single names these are full */
-                    identifier_utilities ident_diff(call_profile->name);
+                    identifier_utilities ident_diff(call_profile->name->name);
                     ident_diff.trim(true);
 
                     if(!identifier_set.count(ident_diff.trim(true))) {
