@@ -23,9 +23,9 @@ class call_profile_t : public profile_t {
         call_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent)
         	: profile_t(type_name, uri, operation, parent), argument_list_modified(false) {}
 
-        virtual void set_name(const std::shared_ptr<profile_t> & name, const boost::optional<versioned_string> & parent) {
+        virtual void set_name(const std::shared_ptr<identifier_profile_t> & name, const boost::optional<versioned_string> & parent) {
 
-            if(is_call(*parent)) this->name = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(name);
+            if(is_call(*parent)) this->name = name;
 
         }
 
