@@ -56,11 +56,16 @@
     && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0 \
     && identifier_renames.size() == 0)
 
-/** May need to build of set (only changed and has original and modified) of all versioned_string in identifiers */
-#define identifier_set_difference(PROFILE)                                                              \
-    std::set<versioned_string> identifier_set;                                                          \
-    std::set_difference(PROFILE->all_identifiers.begin(), PROFILE->all_identifiers.end(),               \
-                        output_identifiers.begin(), output_identifiers.end(),                           \
+#define identifier_set_difference(PROFILE)                                                                            \
+    std::set<versioned_string> identifier_set;                                                                        \
+    std::set<versioned_string> identifier_list;                                                                       \
+    for(const std::pair<std::string, std::map<versioned_string, size_t>> & identifier_map : PROFILE->identifiers)     \
+        for(const std::pair<versioned_string, size_t> & identifier : identifier_map.second)                           \
+            if(!identifier.first.is_common() && identifier.first.has_original() && identifier.first.has_modified() \
+                && identifier.second > 1)                                                                             \
+                    identifier_list.insert(identifier.first);                                                         \
+    std::set_difference(identifier_list.begin(), identifier_list.end(),                                               \
+                        output_identifiers.begin(), output_identifiers.end(),                                         \
                         std::inserter(identifier_set, identifier_set.begin()));
 
 std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & profile) const {
@@ -212,7 +217,7 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
 
         identifier_utilities ident(*itr, true);
 
-        ++output_identifiers[*itr];
+        output_identifiers.insert(*itr);
 
     }
 
@@ -241,13 +246,11 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
     /** @todo if a single rename probably need to not report as name change but entity modified.  Exceptions for some call name change etc. */
     for(std::vector<versioned_string>::const_iterator itr = name_change_identifiers.begin(); itr != name_change_identifiers.end(); ++itr) {
 
-        identifier_utilities ident(*itr, true);
-
-        if(output_identifiers.find(ident) != output_identifiers.end()) continue;
+        if(output_identifiers.find(*itr) != output_identifiers.end()) continue;
 
         summaries_.emplace_back(new identifier_summary_t(*itr, false));
 
-        ++output_identifiers[*itr];
+        output_identifiers.insert(*itr);
 
     }
 
@@ -576,7 +579,7 @@ static bool operator<(const std::__1::reference_wrapper<const versioned_string> 
 
 }
 
-bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_utilities, size_t> & identifier_set,
+bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, const std::set<versioned_string> & identifier_set,
                                     std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
     bool is_identifier_only = profile->child_change_profiles.size() != 0;
@@ -587,10 +590,11 @@ bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, 
             const std::shared_ptr<identifier_profile_t> & identifier_profile
                 = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_change_profile);
 
+            /** @todo set contains single names these are full */
             identifier_utilities ident_diff(identifier_profile->name);
             ident_diff.trim(false);
 
-            if(identifier_set.count(ident_diff))
+            if(identifier_set.count(ident_diff.trim(false)))
                 identifier_renames.insert(identifier_profile->name);
 
 
@@ -610,7 +614,7 @@ bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, 
 
 }
 
-void summary_list::ternary(const std::shared_ptr<profile_t> & profile, const std::map<identifier_utilities, size_t> & identifier_set,
+void summary_list::ternary(const std::shared_ptr<profile_t> & profile, const std::set<versioned_string> & identifier_set,
                            bool & condition_modified, bool & then_clause_modified, bool & else_clause_modified,
                            std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
@@ -669,7 +673,7 @@ void summary_list::ternary(const std::shared_ptr<profile_t> & profile, const std
 
 }
 
-void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, const std::map<identifier_utilities, size_t> & identifier_set,
+void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, const std::set<versioned_string> & identifier_set,
                               std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
@@ -711,10 +715,11 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                 bool report_name = !call_profile->name.is_common();
                 if(report_name) {
 
+                    /** @todo set contains single names these are full */
                     identifier_utilities ident_diff(call_profile->name);
                     ident_diff.trim(true);
 
-                    if(!identifier_set.count(ident_diff)) {
+                    if(!identifier_set.count(ident_diff.trim(true))) {
                         report_name = false;
                     }
 
@@ -784,10 +789,11 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                                     const std::shared_ptr<identifier_profile_t> & identifier_profile
                                         = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(argument_child_change_profile);
 
+                                    /** @todo set contains single names these are full */
                                     identifier_utilities ident_diff(identifier_profile->name);
                                     ident_diff.trim(false);
 
-                                    if(identifier_set.count(ident_diff)) {
+                                    if(identifier_set.count(ident_diff.trim(false))) {
 
                                         identifier_renames.insert(identifier_profile->name);
                                         report_change = true;
@@ -859,10 +865,11 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                     const std::shared_ptr<identifier_profile_t> & identifier_profile
                         = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_change_profile);
 
+                    /** @todo set contains single names these are full */
                     identifier_utilities ident_diff(identifier_profile->name);
                     ident_diff.trim(false);
 
-                    if(identifier_set.count(ident_diff))
+                    if(identifier_set.count(ident_diff.trim(false)))
                         identifier_renames.insert(identifier_profile->name);
 
 
@@ -1037,10 +1044,11 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
 
         if(!decl_stmt_profile->name.is_common()) {
 
+            /** @todo set contains single names these are full */
             identifier_utilities ident_diff(decl_stmt_profile->name);
             ident_diff.trim(true);
 
-            if(identifier_set.count(ident_diff))
+            if(identifier_set.count(ident_diff.trim(true)))
                 ++number_parts_report;
 
         }
