@@ -10,6 +10,7 @@ FILE_WIDTH = 24
 test_number = 1
 test_count = 0
 errors = []
+python_errors = []
 
 file_pattern = None
 test_number_filter = 0
@@ -74,7 +75,7 @@ def run_test(original, modified, summary) :
 		try :
 			output = subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0]
 		except OSError, (errornum, strerror) :
-			sperrorlist.append((command, inp, errornum, strerror))
+			globals()['python_errors'].append((command, errornum, strerror))
 			raise
 
 	os.remove("original.cpp")
