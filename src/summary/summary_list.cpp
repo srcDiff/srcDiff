@@ -56,11 +56,11 @@
     && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0 \
     && identifier_renames.size() == 0)
 
-static bool is_candidate_name_change(const versioned_string & identifier, const std::multiset<versioned_string> & uses) {
+static bool is_candidate_name_change(const versioned_string & identifier, const std::multiset<versioned_string> & uses, size_t number_threshold) {
 
     if(identifier.is_common()) return false;
 
-     if(identifier.has_original() && identifier.has_modified() && uses.size() > 0) return true;
+     if(identifier.has_original() && identifier.has_modified() && uses.size() > number_threshold) return true;
 
      // should always have an original or modified so no need to check as well
      if(!identifier.has_original() || !identifier.has_modified()) {
@@ -76,7 +76,7 @@ static bool is_candidate_name_change(const versioned_string & identifier, const 
 
         }
 
-        if(number_changed > 0) return true;
+        if(number_changed > number_threshold) return true;
 
      }
 
@@ -97,7 +97,7 @@ bool compare_identifier_map(const std::pair<versioned_string, std::multiset<vers
     for(const std::pair<std::string, std::map<versioned_string,                                                          \
         std::multiset<versioned_string>>> & identifier_map : PROFILE->identifiers)                                       \
             for(const std::pair<versioned_string, std::multiset<versioned_string>> & identifier : identifier_map.second) \
-                if(is_candidate_name_change(identifier.first, identifier.second))                                        \
+                if(is_candidate_name_change(identifier.first, identifier.second, 0))                                     \
                     identifier_list[identifier.first] = identifier.second;                                               \
     std::set_difference(identifier_list.begin(), identifier_list.end(),                                                  \
                         output_identifiers.begin(), output_identifiers.end(),                                            \
@@ -276,30 +276,45 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
 
     }
 
-    std::vector<versioned_string> name_change_identifiers;
+    std::vector<std::pair<versioned_string, versioned_string>> name_change_identifiers;
     for(std::map<std::string, std::map<versioned_string, std::multiset<versioned_string>>>::iterator
         itr = profile_identifiers.begin(); itr != profile_identifiers.end(); ++itr) {
 
         for(std::map<versioned_string, std::multiset<versioned_string>>::iterator 
             use_itr = itr->second.begin(); use_itr != itr->second.end();) {
 
-            if(is_candidate_name_change(use_itr->first, use_itr->second) && use_itr->second.size() > 2) {
+            if(is_candidate_name_change(use_itr->first, use_itr->second, 1)) {
 
-                name_change_identifiers.push_back(use_itr->first);
-                ++use_itr;
+                if(use_itr->first.has_original() && use_itr->first.has_modified()) {
 
-                if(name_change_identifiers.back().has_original() && name_change_identifiers.back().has_modified()) {
-
-                    profile_identifiers[name_change_identifiers.back().original()].erase(name_change_identifiers.back());
-                    profile_identifiers[name_change_identifiers.back().modified()].erase(name_change_identifiers.back());
+                    name_change_identifiers.emplace_back(use_itr->first, use_itr->first);
+                    ++use_itr;
+                    profile_identifiers[name_change_identifiers.back().first.original()].erase(name_change_identifiers.back().first);
+                    profile_identifiers[name_change_identifiers.back().first.modified()].erase(name_change_identifiers.back().first);
 
                 } else {
 
-                    if(name_change_identifiers.back().has_original())
-                        profile_identifiers[name_change_identifiers.back().original()].erase(name_change_identifiers.back());
-   
-                    if(name_change_identifiers.back().has_modified())
-                        profile_identifiers[name_change_identifiers.back().modified()].erase(name_change_identifiers.back());                    
+                    std::multiset<versioned_string>::const_iterator citr = use_itr->second.begin();
+                    for(; citr != use_itr->second.end(); ++citr)
+                        if(!citr->is_common() && citr->has_original() && citr->has_modified())
+                            break;
+
+                    versioned_string extended_name_change = use_itr->first;
+                    if(citr != use_itr->second.end()) {
+
+                       identifier_utilities ident(*citr, false);
+                       extended_name_change = ident.trim(true);
+
+                    }
+
+                    name_change_identifiers.emplace_back(use_itr->first, extended_name_change);
+                    ++use_itr;
+
+                    if(name_change_identifiers.back().first.has_original())
+                        profile_identifiers[name_change_identifiers.back().first.original()].erase(name_change_identifiers.back().first);
+
+                    if(name_change_identifiers.back().first.has_modified())
+                        profile_identifiers[name_change_identifiers.back().first.modified()].erase(name_change_identifiers.back().first);
 
                 }
 
@@ -314,13 +329,13 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
     }
 
     /** @todo if a single rename probably need to not report as name change but entity modified.  Exceptions for some call name change etc. */
-    for(std::vector<versioned_string>::const_iterator itr = name_change_identifiers.begin(); itr != name_change_identifiers.end(); ++itr) {
+    for(std::vector<std::pair<versioned_string, versioned_string>>::const_iterator itr = name_change_identifiers.begin(); itr != name_change_identifiers.end(); ++itr) {
 
-        if(output_identifiers.find(*itr) != output_identifiers.end()) continue;
+        if(output_identifiers.find(itr->first) != output_identifiers.end()) continue;
 
-        summaries_.emplace_back(new identifier_summary_t(*itr, false));
+        summaries_.emplace_back(new identifier_summary_t(itr->second, false));
 
-        output_identifiers[*itr] = std::multiset<versioned_string>();
+        output_identifiers[itr->first] = std::multiset<versioned_string>();
 
     }
 
