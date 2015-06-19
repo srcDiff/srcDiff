@@ -16,6 +16,8 @@
 #include <utility>
 #include <memory>
 
+class identifier_profile_t;
+
 class profile_t {
 
     private:
@@ -41,7 +43,6 @@ class profile_t {
         srcdiff_type operation;
         bool is_replacement;
         size_t move_id;
-
 
         std::shared_ptr<profile_t> parent;
         std::shared_ptr<profile_t> summary_parent;
@@ -76,8 +77,7 @@ class profile_t {
         profile_list_t child_change_profiles;
         profile_list_t descendant_change_profiles;      
 
-        std::map<identifier_utilities, size_t> all_identifiers;
-        std::map<identifier_utilities, size_t> summary_identifiers;
+        std::map<std::string, std::map<versioned_string, std::multiset<versioned_string>>> identifiers;
 
     public:
 
@@ -90,9 +90,8 @@ class profile_t {
         void add_child(const std::shared_ptr<profile_t> & profile);
         void add_declaration_identifier(const std::shared_ptr<profile_t> & profile);
 
-        virtual void set_name(versioned_string name);
-        virtual void set_name(versioned_string name UNUSED, const boost::optional<versioned_string> & parent UNUSED);
-        virtual void add_identifier(const versioned_string & identifier, const versioned_string & parent);        
+        virtual void set_name(const std::shared_ptr<identifier_profile_t> & name);
+        virtual void set_name(const std::shared_ptr<identifier_profile_t> & name UNUSED, const boost::optional<versioned_string> & parent UNUSED);
         virtual void add_child_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED);
         virtual void add_descendant_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED);
 

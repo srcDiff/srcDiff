@@ -431,8 +431,19 @@ void srcdiff_summary::startUnit(const char * localname, const char * prefix, con
 
             std::string::size_type pos = file_name.find('|');
 
-            if(pos == std::string::npos) profile_stack.back()->set_name(versioned_string(file_name));
-            else profile_stack.back()->set_name(versioned_string(file_name.substr(0, pos), file_name.substr(pos + 1)));
+            std::shared_ptr<unit_profile_t> & unit_profile = reinterpret_cast<std::shared_ptr<unit_profile_t> &>(profile_t::unit_profile);
+            if(pos == std::string::npos) {
+
+                unit_profile->file_name = versioned_string(file_name);
+                unit_profile->operation = SRCDIFF_COMMON;
+            
+            } else { 
+
+                unit_profile->file_name = versioned_string(file_name.substr(0, pos), file_name.substr(pos + 1));
+                unit_profile->operation = !unit_profile->file_name.has_original() ? SRCDIFF_INSERT 
+                                            : (!unit_profile->file_name.has_modified() ? SRCDIFF_DELETE : SRCDIFF_COMMON);
+
+            }
 
             break;
 
@@ -782,27 +793,27 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                     --parent_pos;
 
                 // set identifier_profile_t name
-                profile_stack.at(counting_profile_pos.back())->set_name(collected_full_name, profile_stack.at(parent_pos)->type_name);
+                std::shared_ptr<identifier_profile_t> & identifier_profile = reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.at(counting_profile_pos.back()));
+                identifier_profile->name.swap(collected_full_name);
+                identifier_profile->simple_names.swap(simple_names);
 
                 // set name of identifiers parent profile
-                profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2))->set_name(collected_full_name, profile_stack.at(parent_pos)->type_name);
+                profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2))->set_name(identifier_profile, profile_stack.at(parent_pos)->type_name);
 
                 // add declaration to body
                 profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2))->body->add_declaration_identifier(profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2)));
 
-                if(srcdiff_stack.back().operation != SRCDIFF_COMMON || !collected_full_name.is_common())
-                    profile_stack.back()->body->add_identifier(collected_full_name, profile_stack.at(parent_pos)->type_name);
-
-                collected_full_name.clear();
-
                 std::shared_ptr<unit_profile_t> & unit_profile = reinterpret_cast<std::shared_ptr<unit_profile_t> &>(profile_t::unit_profile);
-                for(const versioned_string & name : simple_names) {
+
+                for(const versioned_string & name : identifier_profile->simple_names) {
 
                     if(name.is_common()) {
     
                         std::map<std::string, std::vector<std::shared_ptr<profile_t>>>::iterator itr = unit_profile->identifier_to_declaration_profile.find(name);
                         if(itr != unit_profile->identifier_to_declaration_profile.end())
                             unit_profile->identifier_to_declaration_profile[name].back()->declarations[name].insert(name);
+
+                        profile_stack.back()->body->identifiers[name][name].insert(identifier_profile->name);
 
                         continue;
 
@@ -814,6 +825,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                         if(itr != unit_profile->identifier_to_declaration_profile.end())
                             unit_profile->identifier_to_declaration_profile[name.original()].back()->declarations[name.original()].insert(name);
 
+                        profile_stack.back()->body->identifiers[name.original()][name].insert(identifier_profile->name);
+
                     }
 
                     if(name.has_modified()) {
@@ -822,10 +835,13 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                         if(itr != unit_profile->identifier_to_declaration_profile.end())
                             unit_profile->identifier_to_declaration_profile[name.modified()].back()->declarations[name.modified()].insert(name);
 
+                        profile_stack.back()->body->identifiers[name.modified()][name].insert(identifier_profile->name);
+
                     }
 
                 }
 
+                collected_full_name.clear();
                 simple_names.clear();
 
             }
@@ -878,6 +894,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             left_hand_side.pop_back();
             collect_lhs.pop_back();
             collect_rhs.pop_back();
+
 
         } else if(full_name == "argument_list" && is_call(profile_stack.at(profile_stack.size() - 2)->type_name.first_active_string())
                   && profile_stack.back()->syntax_count > 0) {
@@ -1030,39 +1047,42 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         if(has_body(full_name)) {
 
-            std::shared_ptr<profile_t> & parent_body_profile = profile_stack.back()->parent->body;
+            // sub body identifiers also part of parent.  Merge.
+            std::shared_ptr<profile_t> & body_profile = profile_stack.back()->parent->body;
 
-            // add to identifier list looking for intersections and adding
-            for(std::pair<identifier_utilities, size_t> identifier : profile_stack.back()->all_identifiers) {
+            for(std::map<std::string, std::map<versioned_string, std::multiset<versioned_string>>>::const_iterator top_citr = profile_stack.back()->identifiers.begin();
+                top_citr != profile_stack.back()->identifiers.end(); ++top_citr) {
 
-                std::map<identifier_utilities, size_t>::iterator itr = parent_body_profile->all_identifiers.find(identifier.first);
-                if(itr == parent_body_profile->all_identifiers.end()) {
+                std::map<std::string, std::map<versioned_string, std::multiset<versioned_string>>>::const_iterator pos_itr = body_profile->identifiers.find(top_citr->first);
+                if(pos_itr == body_profile->identifiers.end()) {
 
-                    parent_body_profile->all_identifiers.insert(itr, identifier);
+                    body_profile->identifiers.insert(pos_itr, *top_citr);
 
                 } else {
 
-                    itr->second += identifier.second;
+                    for(std::map<versioned_string, std::multiset<versioned_string>>::const_iterator middle_citr = top_citr->second.begin();
+                        middle_citr != top_citr->second.end(); ++middle_citr) {
 
-                    std::map<identifier_utilities, size_t>::iterator itersect_itr = parent_body_profile->summary_identifiers.find(itr->first);
-                    if(itersect_itr == parent_body_profile->summary_identifiers.end())
-                        parent_body_profile->summary_identifiers.insert(itersect_itr, *itr);
-                    else
-                        itersect_itr->second += itr->second;
+                        std::map<versioned_string, std::multiset<versioned_string>>::const_iterator middle_pos_citr = body_profile->identifiers[top_citr->first].find(middle_citr->first);
+                        if(middle_pos_citr == body_profile->identifiers[top_citr->first].end()) {
+
+                            body_profile->identifiers[top_citr->first].insert(middle_pos_citr, *middle_citr);
+
+                        } else {
+
+                            for(const versioned_string & use : middle_citr->second) {
+
+                                body_profile->identifiers[top_citr->first][middle_citr->first].insert(use);
+
+                            }
+
+                        }
+
+                    }
 
                 }
 
             }
-
-            for(std::map<identifier_utilities, size_t>::iterator itr = profile_stack.back()->summary_identifiers.begin();
-                itr != profile_stack.back()->summary_identifiers.end();) {
-    
-                if(itr->second <= 1) 
-                   profile_stack.back()->summary_identifiers.erase(itr++);
-               else
-                ++itr;
-
-           }
 
         }
 

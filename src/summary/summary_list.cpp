@@ -56,17 +56,72 @@
     && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0 \
     && identifier_renames.size() == 0)
 
-bool compare_identifier_map(const std::pair<identifier_utilities, size_t> & first, const std::pair<identifier_utilities, size_t> & second) {
+static bool is_candidate_name_change(const versioned_string & identifier, const std::multiset<versioned_string> & uses, size_t number_threshold) {
+
+    if(identifier.is_common()) return false;
+
+     if(identifier.has_original() && identifier.has_modified() && uses.size() > number_threshold) return true;
+
+     // should always have an original or modified so no need to check as well
+     if(!identifier.has_original() || !identifier.has_modified()) {
+
+        size_t number_changed = 0;
+        for(const versioned_string & v_string : uses) {
+
+            if(v_string.is_common()) continue;
+
+            if(!v_string.has_original() || !v_string.has_modified()) continue;
+
+            ++number_changed;
+
+        }
+
+        if(number_changed > number_threshold) return true;
+
+     }
+
+     return false;
+
+}
+
+bool compare_identifier_map(const std::pair<versioned_string, std::multiset<versioned_string>> & first,
+                            const std::pair<versioned_string, std::multiset<versioned_string>> & second) {
 
     return first.first < second.first;
 
 }
 
-#define identifier_set_difference(PROFILE)                                                              \
-    std::map<identifier_utilities, size_t> identifier_set;                                              \
-    std::set_difference(PROFILE->all_identifiers.begin(), PROFILE->all_identifiers.end(),               \
-                        output_identifiers.begin(), output_identifiers.end(),                           \
+#define identifier_set_difference(PROFILE)                                                                               \
+    std::map<versioned_string, std::multiset<versioned_string>> identifier_set;                                          \
+    std::map<versioned_string, std::multiset<versioned_string>> identifier_list;                                         \
+    for(const std::pair<std::string, std::map<versioned_string,                                                          \
+        std::multiset<versioned_string>>> & identifier_map : PROFILE->identifiers)                                       \
+            for(const std::pair<versioned_string, std::multiset<versioned_string>> & identifier : identifier_map.second) \
+                if(is_candidate_name_change(identifier.first, identifier.second, 0))                                     \
+                    identifier_list[identifier.first] = identifier.second;                                               \
+    std::set_difference(identifier_list.begin(), identifier_list.end(),                                                  \
+                        output_identifiers.begin(), output_identifiers.end(),                                            \
                         std::inserter(identifier_set, identifier_set.begin()), compare_identifier_map);
+
+static inline bool is_name_change(const std::shared_ptr<identifier_profile_t> & identifier_profile,
+                                        const std::map<versioned_string, std::multiset<versioned_string>> & identifier_set) {
+
+    bool is_found = true;
+    for(const versioned_string & v_string : identifier_profile->simple_names) {
+
+        if(v_string.is_common()) continue;
+
+        std::map<versioned_string, std::multiset<versioned_string>>::const_iterator citr = identifier_set.find(v_string);
+        if(citr != identifier_set.end() && citr->second.find(identifier_profile->name) != citr->second.end()) continue;
+
+        is_found = false;
+        break;
+
+    }
+
+    return is_found;
+
+}
 
 std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & profile) const {
 
@@ -177,29 +232,29 @@ void summary_list::block(const std::shared_ptr<profile_t> & profile) {
 
 }
 
-void summary_list::identifiers(std::map<std::string, std::set<versioned_string>> profile_identifiers,
-                               const std::map<identifier_utilities, size_t> & name_change_identifiers) {
+void summary_list::identifiers(std::map<std::string, std::set<versioned_string>> profile_declarations,
+                               std::map<std::string, std::map<versioned_string, std::multiset<versioned_string>>> profile_identifiers) {
 
     std::vector<versioned_string> rename_identifiers;
-    for(std::map<std::string, std::set<versioned_string>>::iterator itr = profile_identifiers.begin(); itr != profile_identifiers.end();) {
+    for(std::map<std::string, std::set<versioned_string>>::iterator itr = profile_declarations.begin(); itr != profile_declarations.end();) {
 
         if(itr->second.size() == 1 && !itr->second.begin()->is_common()
             && itr->second.begin()->has_original() && itr->second.begin()->has_modified()
-            && profile_identifiers[itr->second.begin()->original()].size() == 1
-            && profile_identifiers[itr->second.begin()->modified()].size() == 1) {
+            && profile_declarations[itr->second.begin()->original()].size() == 1
+            && profile_declarations[itr->second.begin()->modified()].size() == 1) {
 
             versioned_string save_identifier = *itr->second.begin();
     
-            while(itr != profile_identifiers.end()
+            while(itr != profile_declarations.end()
                 &&    ((save_identifier.has_original() && save_identifier.original() == itr->first)
                     || (save_identifier.has_modified() && save_identifier.modified() == itr->first)))
                 ++itr;
     
             if(save_identifier.has_original())
-                profile_identifiers.erase(save_identifier.original());
+                profile_declarations.erase(save_identifier.original());
 
             if(save_identifier.has_modified())
-                profile_identifiers.erase(save_identifier.modified());
+                profile_declarations.erase(save_identifier.modified());
 
             rename_identifiers.push_back(save_identifier);
 
@@ -217,24 +272,70 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
 
         identifier_utilities ident(*itr, true);
 
-        ++output_identifiers[*itr];
+        output_identifiers[*itr] = std::multiset<versioned_string>();
 
     }
 
+    std::vector<std::pair<versioned_string, versioned_string>> name_change_identifiers;
+    for(std::map<std::string, std::map<versioned_string, std::multiset<versioned_string>>>::iterator
+        itr = profile_identifiers.begin(); itr != profile_identifiers.end(); ++itr) {
 
-    for(std::map<identifier_utilities, size_t>::const_iterator itr = name_change_identifiers.begin(); itr != name_change_identifiers.end(); ++itr) {
+        for(std::map<versioned_string, std::multiset<versioned_string>>::iterator 
+            use_itr = itr->second.begin(); use_itr != itr->second.end();) {
 
-        std::map<identifier_utilities, size_t>::iterator itersect_itr = output_identifiers.find(itr->first);
-        if(itersect_itr == output_identifiers.end()) {
+            if(is_candidate_name_change(use_itr->first, use_itr->second, 1)) {
 
-            summaries_.emplace_back(new identifier_summary_t(itr->first.trim(), false));
-            output_identifiers.insert(itersect_itr, *itr);
+                if(use_itr->first.has_original() && use_itr->first.has_modified()) {
 
-        } else {
+                    name_change_identifiers.emplace_back(use_itr->first, use_itr->first);
+                    ++use_itr;
+                    profile_identifiers[name_change_identifiers.back().first.original()].erase(name_change_identifiers.back().first);
+                    profile_identifiers[name_change_identifiers.back().first.modified()].erase(name_change_identifiers.back().first);
 
-            itersect_itr->second += itr->second;
+                } else {
+
+                    std::multiset<versioned_string>::const_iterator citr = use_itr->second.begin();
+                    for(; citr != use_itr->second.end(); ++citr)
+                        if(!citr->is_common() && citr->has_original() && citr->has_modified())
+                            break;
+
+                    versioned_string extended_name_change = use_itr->first;
+                    if(citr != use_itr->second.end()) {
+
+                       identifier_utilities ident(*citr, false);
+                       extended_name_change = ident.trim(true);
+
+                    }
+
+                    name_change_identifiers.emplace_back(use_itr->first, extended_name_change);
+                    ++use_itr;
+
+                    if(name_change_identifiers.back().first.has_original())
+                        profile_identifiers[name_change_identifiers.back().first.original()].erase(name_change_identifiers.back().first);
+
+                    if(name_change_identifiers.back().first.has_modified())
+                        profile_identifiers[name_change_identifiers.back().first.modified()].erase(name_change_identifiers.back().first);
+
+                }
+
+            } else {
+
+                ++use_itr;
+
+            }
 
         }
+
+    }
+
+    /** @todo if a single rename probably need to not report as name change but entity modified.  Exceptions for some call name change etc. */
+    for(std::vector<std::pair<versioned_string, versioned_string>>::const_iterator itr = name_change_identifiers.begin(); itr != name_change_identifiers.end(); ++itr) {
+
+        if(output_identifiers.find(itr->first) != output_identifiers.end()) continue;
+
+        summaries_.emplace_back(new identifier_summary_t(itr->second, false));
+
+        output_identifiers[itr->first] = std::multiset<versioned_string>();
 
     }
 
@@ -502,8 +603,8 @@ void summary_list::jump(const std::shared_ptr<profile_t> & profile) {
 
     assert(is_jump(profile->type_name));
 
-    const std::shared_ptr<profile_t> & parent_profile = profile->summary_parent;
-    identifier_set_difference(parent_profile);
+    const std::shared_ptr<profile_t> & body_profile = profile->body;
+    identifier_set_difference(body_profile);
 
     if(profile->operation == SRCDIFF_COMMON) {
 
@@ -526,8 +627,7 @@ void summary_list::else_clause(const std::shared_ptr<profile_t> & profile) {
     if(profile->operation != SRCDIFF_COMMON)
         summaries_.emplace_back(new conditional_summary_t(profile->operation, get_type_string(profile), false));
 
-    if(profile->summary_identifiers.size() > 0)
-        identifiers(profile->declarations, profile->summary_identifiers);
+    identifiers(profile->declarations, profile->identifiers);
 
     block(profile);
 
@@ -551,8 +651,8 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
     if(condition_modified || (summary_profile->operation != SRCDIFF_COMMON && !is_internal))
         summaries_.emplace_back(new conditional_summary_t(summary_profile->operation, get_type_string(summary_profile), condition_modified));
 
-    if(summary_profile->summary_identifiers.size() > 0)
-        identifiers(summary_profile->declarations, summary_profile->summary_identifiers);
+    if(summary_profile->identifiers.size() > 0)
+        identifiers(summary_profile->declarations, summary_profile->identifiers);
 
     block(summary_profile);
 
@@ -564,7 +664,7 @@ static bool operator<(const std::__1::reference_wrapper<const versioned_string> 
 
 }
 
-bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<identifier_utilities, size_t> & identifier_set,
+bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, std::multiset<versioned_string>> & identifier_set,
                                     std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
     bool is_identifier_only = profile->child_change_profiles.size() != 0;
@@ -575,10 +675,9 @@ bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, 
             const std::shared_ptr<identifier_profile_t> & identifier_profile
                 = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_change_profile);
 
-            identifier_utilities ident_diff(identifier_profile->name);
-            ident_diff.trim(false);
+            bool is_found = is_name_change(identifier_profile, identifier_set);
 
-            if(identifier_set.count(ident_diff))
+            if(is_found)
                 identifier_renames.insert(identifier_profile->name);
 
 
@@ -598,7 +697,7 @@ bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, 
 
 }
 
-void summary_list::ternary(const std::shared_ptr<profile_t> & profile, const std::map<identifier_utilities, size_t> & identifier_set,
+void summary_list::ternary(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, std::multiset<versioned_string>> & identifier_set,
                            bool & condition_modified, bool & then_clause_modified, bool & else_clause_modified,
                            std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
 
@@ -657,7 +756,7 @@ void summary_list::ternary(const std::shared_ptr<profile_t> & profile, const std
 
 }
 
-void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, const std::map<identifier_utilities, size_t> & identifier_set,
+void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, std::multiset<versioned_string>> & identifier_set,
                               std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
                               std::vector<std::shared_ptr<call_profile_t>> & modified_calls,
@@ -696,15 +795,13 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
             } else if(child_change_profile->operation == SRCDIFF_COMMON) {
 
-                bool report_name = !call_profile->name.is_common();
+                bool report_name = !call_profile->name->name.is_common();
                 if(report_name) {
 
-                    identifier_utilities ident_diff(call_profile->name);
-                    ident_diff.trim(true);
+                    bool is_found = is_name_change(call_profile->name, identifier_set);
 
-                    if(!identifier_set.count(ident_diff)) {
+                    if(!is_found)
                         report_name = false;
-                    }
 
                     identifier_rename_only = false;
 
@@ -772,10 +869,9 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                                     const std::shared_ptr<identifier_profile_t> & identifier_profile
                                         = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(argument_child_change_profile);
 
-                                    identifier_utilities ident_diff(identifier_profile->name);
-                                    ident_diff.trim(false);
+                                    bool is_found = is_name_change(identifier_profile, identifier_set);
 
-                                    if(identifier_set.count(ident_diff)) {
+                                    if(is_found) {
 
                                         identifier_renames.insert(identifier_profile->name);
                                         report_change = true;
@@ -847,10 +943,9 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                     const std::shared_ptr<identifier_profile_t> & identifier_profile
                         = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_change_profile);
 
-                    identifier_utilities ident_diff(identifier_profile->name);
-                    ident_diff.trim(false);
+                    bool is_found = is_name_change(identifier_profile, identifier_set);
 
-                    if(identifier_set.count(ident_diff))
+                    if(is_found)
                         identifier_renames.insert(identifier_profile->name);
 
 
@@ -870,8 +965,9 @@ void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) 
 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
-    const std::shared_ptr<profile_t> & parent_profile = profile->summary_parent;
-    identifier_set_difference(parent_profile);
+    const std::shared_ptr<profile_t> & body_profile = profile->body;
+
+    identifier_set_difference(body_profile);
 
     run_expr_statistics(profile->child_change_profiles[0]);
 
@@ -996,9 +1092,9 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
 
     const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
 
-    const std::shared_ptr<profile_t> & parent_profile = profile->summary_parent;
+    const std::shared_ptr<profile_t> & body_profile = profile->body;
 
-    identifier_set_difference(parent_profile);
+    identifier_set_difference(body_profile);
 
     size_t number_parts_report = 0;
     boost::optional<versioned_string> identifier_rename;
@@ -1025,10 +1121,7 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
 
         if(!decl_stmt_profile->name.is_common()) {
 
-            identifier_utilities ident_diff(decl_stmt_profile->name);
-            ident_diff.trim(true);
-
-            if(identifier_set.count(ident_diff))
+            if(identifier_set.find(decl_stmt_profile->name) != identifier_set.end())
                 ++number_parts_report;
 
         }
@@ -1075,8 +1168,7 @@ void summary_list::exception(const std::shared_ptr<profile_t> & profile) {
     if(profile->operation != SRCDIFF_COMMON)
         summaries_.emplace_back(new exception_summary_t(profile->operation, get_type_string(profile)));
 
-    if(profile->summary_identifiers.size() > 0)
-        identifiers(profile->declarations, profile->summary_identifiers);
+    identifiers(profile->declarations, profile->identifiers);
 
     block(profile);
 
@@ -1101,7 +1193,7 @@ summary_list::~summary_list() {
 
 void summary_list::function_body(const profile_t & profile) {
 
-    identifiers(profile.declarations, profile.summary_identifiers);
+    identifiers(profile.declarations, profile.identifiers);
 
     block(std::make_shared<profile_t>(profile));
 

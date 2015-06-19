@@ -33,15 +33,6 @@ class unit_profile_t : public profile_t {
 
         unit_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) : profile_t(type_name, uri, operation) {}
 
-        virtual void set_name(versioned_string name, const boost::optional<versioned_string> & parent) {
-
-            file_name = name;
-            
-            if(!file_name.has_modified())      operation = SRCDIFF_DELETE;
-            else if(!file_name.has_original()) operation = SRCDIFF_INSERT;
-
-        }
-
         virtual void add_descendant_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
 
             const std::string type_name = profile->type_name.is_common() ? std::string(profile->type_name) : profile->type_name.original();
