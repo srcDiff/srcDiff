@@ -807,10 +807,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                     profile_stack.back()->body->add_identifier(identifier_profile->name, profile_stack.at(parent_pos)->type_name);
 
                 std::shared_ptr<unit_profile_t> & unit_profile = reinterpret_cast<std::shared_ptr<unit_profile_t> &>(profile_t::unit_profile);
-                std::cerr << identifier_profile->name << " = { ";
-                for(auto & foo : identifier_profile->simple_names)
-                    std::cerr << foo << ", ";
-                std::cerr << "}\n";
+
                 for(const versioned_string & name : identifier_profile->simple_names) {
 
                     if(name.is_common()) {
@@ -830,7 +827,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                         std::map<std::string, std::vector<std::shared_ptr<profile_t>>>::iterator itr = unit_profile->identifier_to_declaration_profile.find(name.original());
                         if(itr != unit_profile->identifier_to_declaration_profile.end())
                             unit_profile->identifier_to_declaration_profile[name.original()].back()->declarations[name.original()].insert(name);
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
                         profile_stack.back()->body->identifiers[name.original()][name].insert(identifier_profile->name);
 
                     }
@@ -840,7 +837,7 @@ fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
                         std::map<std::string, std::vector<std::shared_ptr<profile_t>>>::iterator itr = unit_profile->identifier_to_declaration_profile.find(name.modified());
                         if(itr != unit_profile->identifier_to_declaration_profile.end())
                             unit_profile->identifier_to_declaration_profile[name.modified()].back()->declarations[name.modified()].insert(name);
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
                         profile_stack.back()->body->identifiers[name.modified()][name].insert(identifier_profile->name);
 
                     }
@@ -900,6 +897,7 @@ fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
             left_hand_side.pop_back();
             collect_lhs.pop_back();
             collect_rhs.pop_back();
+
 
         } else if(full_name == "argument_list" && is_call(profile_stack.at(profile_stack.size() - 2)->type_name.first_active_string())
                   && profile_stack.back()->syntax_count > 0) {
