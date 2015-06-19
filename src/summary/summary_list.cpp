@@ -603,8 +603,8 @@ void summary_list::jump(const std::shared_ptr<profile_t> & profile) {
 
     assert(is_jump(profile->type_name));
 
-    const std::shared_ptr<profile_t> & parent_profile = profile->summary_parent;
-    identifier_set_difference(parent_profile);
+    const std::shared_ptr<profile_t> & body_profile = profile->body;
+    identifier_set_difference(body_profile);
 
     if(profile->operation == SRCDIFF_COMMON) {
 
@@ -965,9 +965,9 @@ void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) 
 
     const std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(profile);
 
-    const std::shared_ptr<profile_t> & parent_profile = profile->summary_parent;
+    const std::shared_ptr<profile_t> & body_profile = profile->body;
 
-    identifier_set_difference(parent_profile);
+    identifier_set_difference(body_profile);
 
     run_expr_statistics(profile->child_change_profiles[0]);
 
@@ -1092,9 +1092,9 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
 
     const std::shared_ptr<decl_stmt_profile_t> & decl_stmt_profile = reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(profile);
 
-    const std::shared_ptr<profile_t> & parent_profile = profile->summary_parent;
+    const std::shared_ptr<profile_t> & body_profile = profile->body;
 
-    identifier_set_difference(parent_profile);
+    identifier_set_difference(body_profile);
 
     size_t number_parts_report = 0;
     boost::optional<versioned_string> identifier_rename;

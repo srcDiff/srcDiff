@@ -1047,7 +1047,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         if(has_body(full_name)) {
 
-            std::shared_ptr<profile_t> & parent_body_profile = profile_stack.back()->parent->body;
+            std::shared_ptr<profile_t> & body_profile = profile_stack.back()->parent->body;
+
 
         }
 
