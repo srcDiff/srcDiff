@@ -76,6 +76,26 @@ bool compare_identifier_map(const std::pair<versioned_string, std::multiset<vers
                         output_identifiers.begin(), output_identifiers.end(),                                            \
                         std::inserter(identifier_set, identifier_set.begin()), compare_identifier_map);
 
+static inline bool is_name_change(const std::shared_ptr<identifier_profile_t> & identifier_profile,
+                                        const std::map<versioned_string, std::multiset<versioned_string>> & identifier_set) {
+
+    bool is_found = true;
+    for(const versioned_string & v_string : identifier_profile->simple_names) {
+
+        if(v_string.is_common()) continue;
+
+        std::map<versioned_string, std::multiset<versioned_string>>::const_iterator citr = identifier_set.find(v_string);
+        if(citr != identifier_set.end() && citr->second.find(identifier_profile->name) != citr->second.end()) continue;
+
+        is_found = false;
+        break;
+
+    }
+
+    return is_found;
+
+}
+
 std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & profile) const {
 
     if(is_if(profile->type_name)) {
@@ -601,16 +621,7 @@ bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, 
             const std::shared_ptr<identifier_profile_t> & identifier_profile
                 = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_change_profile);
 
-            bool is_found = true;
-            for(const versioned_string & v_string : identifier_profile->simple_names) {
-
-                std::map<versioned_string, std::multiset<versioned_string>>::const_iterator citr = identifier_set.find(v_string);
-                if(citr != identifier_set.end() && citr->second.find(identifier_profile->name) != citr->second.end()) continue;
-
-                is_found = false;
-                break;
-
-            }
+            bool is_found = is_name_change(identifier_profile, identifier_set);
 
             if(is_found)
                 identifier_renames.insert(identifier_profile->name);
@@ -733,18 +744,7 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                 bool report_name = !call_profile->name->name.is_common();
                 if(report_name) {
 
-                    bool is_found = true;
-                    for(const versioned_string & v_string : call_profile->name->simple_names) {
-
-                        if(v_string.is_common()) continue;
-
-                        std::map<versioned_string, std::multiset<versioned_string>>::const_iterator citr = identifier_set.find(v_string);
-                        if(citr != identifier_set.end() && citr->second.find(call_profile->name->name) != citr->second.end()) continue;
-
-                        is_found = false;
-                        break;
-
-                    }
+                    bool is_found = is_name_change(call_profile->name, identifier_set);
 
                     if(!is_found)
                         report_name = false;
@@ -815,16 +815,7 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                                     const std::shared_ptr<identifier_profile_t> & identifier_profile
                                         = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(argument_child_change_profile);
 
-                                    bool is_found = true;
-                                    for(const versioned_string & v_string : identifier_profile->simple_names) {
-
-                                        std::map<versioned_string, std::multiset<versioned_string>>::const_iterator citr = identifier_set.find(v_string);
-                                        if(citr != identifier_set.end() && citr->second.find(identifier_profile->name) != citr->second.end()) continue;
-
-                                        is_found = false;
-                                        break;
-
-                                    }
+                                    bool is_found = is_name_change(identifier_profile, identifier_set);
 
                                     if(is_found) {
 
@@ -898,16 +889,7 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                     const std::shared_ptr<identifier_profile_t> & identifier_profile
                         = reinterpret_cast<const std::shared_ptr<identifier_profile_t> &>(child_change_profile);
 
-                    bool is_found = true;
-                    for(const versioned_string & v_string : identifier_profile->simple_names) {
-
-                        std::map<versioned_string, std::multiset<versioned_string>>::const_iterator citr = identifier_set.find(v_string);
-                        if(citr != identifier_set.end() && citr->second.find(identifier_profile->name) != citr->second.end()) continue;
-
-                        is_found = false;
-                        break;
-
-                    }
+                    bool is_found = is_name_change(identifier_profile, identifier_set);
 
                     if(is_found)
                         identifier_renames.insert(identifier_profile->name);
