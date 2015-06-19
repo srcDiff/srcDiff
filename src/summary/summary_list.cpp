@@ -70,7 +70,7 @@ static bool is_candidate_name_change(const versioned_string & identifier, const 
 
             if(v_string.is_common()) continue;
 
-            if(!identifier.has_original() || !identifier.has_modified()) continue;
+            if(!v_string.has_original() || !v_string.has_modified()) continue;
 
             ++number_changed;
 
@@ -287,8 +287,21 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
 
                 name_change_identifiers.push_back(use_itr->first);
                 ++use_itr;
-                profile_identifiers[name_change_identifiers.back().original()].erase(name_change_identifiers.back());
-                profile_identifiers[name_change_identifiers.back().modified()].erase(name_change_identifiers.back());
+
+                if(name_change_identifiers.back().has_original() && name_change_identifiers.back().has_modified()) {
+
+                    profile_identifiers[name_change_identifiers.back().original()].erase(name_change_identifiers.back());
+                    profile_identifiers[name_change_identifiers.back().modified()].erase(name_change_identifiers.back());
+
+                } else {
+
+                    if(name_change_identifiers.back().has_original())
+                        profile_identifiers[name_change_identifiers.back().original()].erase(name_change_identifiers.back());
+   
+                    if(name_change_identifiers.back().has_modified())
+                        profile_identifiers[name_change_identifiers.back().modified()].erase(name_change_identifiers.back());                    
+
+                }
 
             } else {
 
