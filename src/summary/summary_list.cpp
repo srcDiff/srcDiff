@@ -56,6 +56,14 @@
     && deleted_other.size() == 0 && inserted_other.size() == 0 && modified_other.size() == 0 \
     && identifier_renames.size() == 0)
 
+static bool is_identifier_list_item(const versioned_string & identifier, const std::multiset<versioned_string> & uses) {
+
+     if(!identifier.is_common() && identifier.has_original() && identifier.has_modified() && uses.size() > 0) return true;
+
+     return false;
+
+}
+
 bool compare_identifier_map(const std::pair<versioned_string, std::multiset<versioned_string>> & first,
                             const std::pair<versioned_string, std::multiset<versioned_string>> & second) {
 
@@ -69,9 +77,8 @@ bool compare_identifier_map(const std::pair<versioned_string, std::multiset<vers
     for(const std::pair<std::string, std::map<versioned_string,                                                          \
         std::multiset<versioned_string>>> & identifier_map : PROFILE->identifiers)                                       \
             for(const std::pair<versioned_string, std::multiset<versioned_string>> & identifier : identifier_map.second) \
-                if(!identifier.first.is_common() && identifier.first.has_original() && identifier.first.has_modified()   \
-                    && identifier.second.size() > 0)                                                                     \
-                        identifier_list[identifier.first] = identifier.second;                                           \
+                if(is_identifier_list_item(identifier.first, identifier.second))                                         \
+                    identifier_list[identifier.first] = identifier.second;                                               \
     std::set_difference(identifier_list.begin(), identifier_list.end(),                                                  \
                         output_identifiers.begin(), output_identifiers.end(),                                            \
                         std::inserter(identifier_set, identifier_set.begin()), compare_identifier_map);
