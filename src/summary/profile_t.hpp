@@ -79,9 +79,6 @@ class profile_t {
 
         std::map<std::string, std::map<versioned_string, std::multiset<versioned_string>>> identifiers;
 
-        std::map<identifier_utilities, size_t> all_identifiers;
-        std::map<identifier_utilities, size_t> summary_identifiers;
-
     public:
 
         profile_t(std::string type_name = "", namespace_uri uri = SRC, srcdiff_type operation = SRCDIFF_COMMON);
@@ -95,7 +92,6 @@ class profile_t {
 
         virtual void set_name(const std::shared_ptr<identifier_profile_t> & name);
         virtual void set_name(const std::shared_ptr<identifier_profile_t> & name UNUSED, const boost::optional<versioned_string> & parent UNUSED);
-        virtual void add_identifier(const versioned_string & identifier, const versioned_string & parent);        
         virtual void add_child_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED);
         virtual void add_descendant_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED);
 

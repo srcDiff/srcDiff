@@ -103,33 +103,6 @@ void profile_t::set_name(const std::shared_ptr<identifier_profile_t> & name) {
 
 void profile_t::set_name(const std::shared_ptr<identifier_profile_t> & name UNUSED, const boost::optional<versioned_string> & parent UNUSED) {}
 
-void profile_t::add_identifier(const versioned_string & identifier, const versioned_string & parent) {
-
-    if(identifier.has_original() && identifier.has_modified() && !identifier.is_common()) {
-
-        identifier_utilities ident_diff(identifier);
-
-        ident_diff.trim(is_call(parent));
-
-        std::map<identifier_utilities, size_t>::iterator itr = all_identifiers.find(ident_diff);
-        if(itr == all_identifiers.end()) {
-
-            all_identifiers.insert(itr, std::make_pair(ident_diff, 1));
-
-        } else {
-
-            ++itr->second;
-
-            std::map<identifier_utilities, size_t>::iterator itersect_itr = summary_identifiers.find(ident_diff);
-            if(itersect_itr == summary_identifiers.end()) summary_identifiers.insert(itersect_itr, *itr);                     
-            else                                               ++itersect_itr->second;
-
-        }
-
-    }
-
-}
-
 void profile_t::add_child_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
 
     child_change_profiles.insert(std::lower_bound(child_change_profiles.begin(), child_change_profiles.end(), profile), profile);

@@ -803,9 +803,6 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                 // add declaration to body
                 profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2))->body->add_declaration_identifier(profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2)));
 
-                if(srcdiff_stack.back().operation != SRCDIFF_COMMON || !identifier_profile->name.is_common())
-                    profile_stack.back()->body->add_identifier(identifier_profile->name, profile_stack.at(parent_pos)->type_name);
-
                 std::shared_ptr<unit_profile_t> & unit_profile = reinterpret_cast<std::shared_ptr<unit_profile_t> &>(profile_t::unit_profile);
 
                 for(const versioned_string & name : identifier_profile->simple_names) {
@@ -1051,38 +1048,6 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         if(has_body(full_name)) {
 
             std::shared_ptr<profile_t> & parent_body_profile = profile_stack.back()->parent->body;
-
-            // add to identifier list looking for intersections and adding
-            for(std::pair<identifier_utilities, size_t> identifier : profile_stack.back()->all_identifiers) {
-
-                std::map<identifier_utilities, size_t>::iterator itr = parent_body_profile->all_identifiers.find(identifier.first);
-                if(itr == parent_body_profile->all_identifiers.end()) {
-
-                    parent_body_profile->all_identifiers.insert(itr, identifier);
-
-                } else {
-
-                    itr->second += identifier.second;
-
-                    std::map<identifier_utilities, size_t>::iterator itersect_itr = parent_body_profile->summary_identifiers.find(itr->first);
-                    if(itersect_itr == parent_body_profile->summary_identifiers.end())
-                        parent_body_profile->summary_identifiers.insert(itersect_itr, *itr);
-                    else
-                        itersect_itr->second += itr->second;
-
-                }
-
-            }
-
-            for(std::map<identifier_utilities, size_t>::iterator itr = profile_stack.back()->summary_identifiers.begin();
-                itr != profile_stack.back()->summary_identifiers.end();) {
-    
-                if(itr->second <= 1) 
-                   profile_stack.back()->summary_identifiers.erase(itr++);
-               else
-                ++itr;
-
-           }
 
         }
 
