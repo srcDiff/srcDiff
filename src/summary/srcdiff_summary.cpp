@@ -1047,8 +1047,42 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         if(has_body(full_name)) {
 
+            // sub body identifiers also part of parent.  Merge.
             std::shared_ptr<profile_t> & body_profile = profile_stack.back()->parent->body;
 
+            for(std::map<std::string, std::map<versioned_string, std::multiset<versioned_string>>>::const_iterator top_citr = profile_stack.back()->identifiers.begin();
+                top_citr != profile_stack.back()->identifiers.end(); ++top_citr) {
+
+                std::map<std::string, std::map<versioned_string, std::multiset<versioned_string>>>::const_iterator pos_itr = body_profile->identifiers.find(top_citr->first);
+                if(pos_itr == body_profile->identifiers.end()) {
+
+                    body_profile->identifiers.insert(pos_itr, *top_citr);
+
+                } else {
+
+                    for(std::map<versioned_string, std::multiset<versioned_string>>::const_iterator middle_citr = top_citr->second.begin();
+                        middle_citr != top_citr->second.end(); ++middle_citr) {
+
+                        std::map<versioned_string, std::multiset<versioned_string>>::const_iterator middle_pos_citr = body_profile->identifiers[top_citr->first].find(middle_citr->first);
+                        if(middle_pos_citr == body_profile->identifiers[top_citr->first].end()) {
+
+                            body_profile->identifiers[top_citr->first].insert(middle_pos_citr, *middle_citr);
+
+                        } else {
+
+                            for(const versioned_string & use : middle_citr->second) {
+
+                                body_profile->identifiers[top_citr->first][middle_citr->first].insert(use);
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
 
         }
 
