@@ -320,7 +320,7 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
                         for(; pos < list.size(); ++pos) {
 
                             if(list[pos].second != operation) continue;
-                            if(list[pos].first != token) continue;
+                            if(list[pos].first != token)      continue;
 
                             break;
 

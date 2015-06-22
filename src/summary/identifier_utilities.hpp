@@ -149,7 +149,8 @@ public:
 
         }
 
-
+        while(original_pos < original_identifiers.size())
+            list_->emplace_back(original_identifiers[original_pos++], SRCDIFF_COMMON);
 
 
         return *list_;
