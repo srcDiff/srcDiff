@@ -24,6 +24,7 @@ protected:
 
     std::list<summary_t *> summaries_;
     std::map<versioned_string, std::multiset<versioned_string>> output_identifiers;
+    std::set<versioned_string> output_identifiers_full;
 
 private:
 

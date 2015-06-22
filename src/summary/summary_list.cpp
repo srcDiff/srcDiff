@@ -331,9 +331,13 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
 
         if(output_identifiers.find(itr->first) != output_identifiers.end()) continue;
 
-        summaries_.emplace_back(new identifier_summary_t(itr->second, false));
-
         output_identifiers[itr->first] = std::multiset<versioned_string>();
+
+        if(output_identifiers_full.find(itr->second) != output_identifiers_full.end()) continue;
+
+        output_identifiers_full.insert(itr->second);
+
+        summaries_.emplace_back(new identifier_summary_t(itr->second, false));
 
     }
 
