@@ -301,7 +301,46 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
                     if(citr != use_itr->second.end()) {
 
                        identifier_utilities ident(*citr, false);
-                       extended_name_change = ident.diff_with_context();
+
+                        const std::vector<std::pair<std::string, srcdiff_type>> list = ident.list();
+
+                        std::string token;
+                        srcdiff_type operation;
+                        if(use_itr->first.has_original()) {
+
+
+                        } else {
+
+                            token = use_itr->first.modified();
+                            operation = SRCDIFF_INSERT;
+
+                        }
+
+                        std::vector<std::pair<std::string, srcdiff_type>>::size_type pos = 0;
+                        for(; pos < list.size(); ++pos) {
+
+                            if(list[pos].second != operation) continue;
+                            if(list[pos].first != token) continue;
+
+                            break;
+
+                        }
+
+                        std::vector<std::pair<std::string, srcdiff_type>>::size_type start_pos = pos;
+                        if(start_pos > 0 && list[start_pos - 1].second == operation && !identifier_utilities::is_identifier_char(list[start_pos - 1].first[0]))
+                            --start_pos;
+                        if(start_pos > 0 && list[start_pos - 1].second == SRCDIFF_COMMON)
+                            --start_pos;
+
+                        std::vector<std::pair<std::string, srcdiff_type>>::size_type end_pos = pos;
+                        if((end_pos + 1) < list.size() && list[end_pos + 1].second == operation && !identifier_utilities::is_identifier_char(list[end_pos + 1].first[0]))
+                            ++end_pos;
+                        if((end_pos + 1) < list.size() && list[end_pos + 1].second == SRCDIFF_COMMON)
+                            ++end_pos;
+
+                        extended_name_change = versioned_string();
+                        for(std::vector<std::pair<std::string, srcdiff_type>>::size_type i = start_pos; i <= end_pos; ++i)
+                            extended_name_change.append(list[i].first.c_str(), list[i].first.size(), list[i].second);
 
                     }
 

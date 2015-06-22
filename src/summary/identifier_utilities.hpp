@@ -27,11 +27,7 @@ private:
 
 private:
 
-    bool is_identifier_char(char character) const {
 
-        return character == '_' || isalnum(character);
-
-    }
 
     std::vector<std::string> split_complex_identifier(const std::string & identifier_) const {
 
@@ -61,11 +57,17 @@ private:
 
     static int str_compare(const void * item_one, const void * item_two, const void * context) {
 
-        return (*(const std::string *)item_one) == (*(const std::string *)item_two);
+        return !((*(const std::string *)item_one) == (*(const std::string *)item_two));
 
     }
 
 public:
+
+    static bool is_identifier_char(char character) {
+
+        return character == '_' || isalnum(character);
+
+    }
 
 	identifier_utilities(const versioned_string & identifier_, bool is_single = false) : identifier_(identifier_), is_split(false), is_complex(!is_single) {
 
@@ -113,9 +115,8 @@ public:
         ses.compute(&original_identifiers, original_identifiers.size(), &modified_identifiers, modified_identifiers.size());
 
         list_ = std::vector<std::pair<std::string, srcdiff_type>>();
-        edit * edit_script = ses.get_script();
         int original_pos = 0, modified_pos = 0;
-        for(edit * edits = edit_script; edits != nullptr; edits = edits->next) {
+        for(edit * edits = ses.get_script(); edits != nullptr; edits = edits->next) {
 
             if(edits->operation == SESDELETE) {
 
@@ -147,6 +148,9 @@ public:
             }
 
         }
+
+
+
 
         return *list_;
 
