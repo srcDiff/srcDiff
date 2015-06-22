@@ -244,6 +244,61 @@ public:
 
     }
 
+    const versioned_string & diff_with_context() {
+
+        if(diffed_) return *diffed_;
+
+        split_identifier();
+
+        size_t pos = 0;
+        std::string::size_type start_pos = 0;
+        while(pos < original_identifiers.size() && pos < modified_identifiers.size() && original_identifiers[pos] == modified_identifiers[pos]) {
+
+            start_pos += original_identifiers[pos].size();
+            ++pos;
+
+        }
+
+        if(pos > 0 && original_identifiers[pos - 1] == modified_identifiers[pos - 1])
+             start_pos -= original_identifiers[pos - 1].size();
+
+        size_t end_offset = 1;
+        std::string::size_type end_original = identifier_.original().size(), end_modified = identifier_.modified().size();
+        while(end_offset <= original_identifiers.size() && end_offset <= modified_identifiers.size()
+              && original_identifiers[original_identifiers.size() - end_offset] == modified_identifiers[modified_identifiers.size() - end_offset]) {
+
+            end_original -= original_identifiers[original_identifiers.size() - end_offset].size();
+            end_modified -= modified_identifiers[modified_identifiers.size() - end_offset].size();
+            ++end_offset;
+
+        }
+
+        if(end_offset > 1
+            && original_identifiers[original_identifiers.size() - (end_offset - 1)] == modified_identifiers[modified_identifiers.size() - (end_offset - 1)]) {
+
+            end_original += original_identifiers[original_identifiers.size() - (end_offset - 1)].size();
+            end_modified += modified_identifiers[modified_identifiers.size() - (end_offset - 1)].size();
+
+        }
+
+        versioned_string ident;
+
+        if(start_pos >= end_original && start_pos >= end_modified) {
+
+            diffed_ = ident;
+            return *diffed_;
+
+        }
+
+        if(start_pos < end_original) ident.set_original(identifier_.original().substr(start_pos, end_original - start_pos));
+        if(start_pos < end_modified) ident.set_modified(identifier_.modified().substr(start_pos, end_modified - start_pos));
+
+        diffed_ = ident;
+
+        return *diffed_;
+
+    }
+
     bool operator==(const identifier_utilities & other) const {
 
         return trimmed_ == other.trimmed_ && diffed_ == other.diffed_;

@@ -270,8 +270,6 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
 
         summaries_.emplace_back(new identifier_summary_t(*itr, true));
 
-        identifier_utilities ident(*itr, true);
-
         output_identifiers[*itr] = std::multiset<versioned_string>();
 
     }
@@ -303,7 +301,7 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
                     if(citr != use_itr->second.end()) {
 
                        identifier_utilities ident(*citr, false);
-                       extended_name_change = ident.trim(true);
+                       extended_name_change = ident.diff_with_context();
 
                     }
 
