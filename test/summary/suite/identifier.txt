@@ -238,7 +238,7 @@ SUMMARY
 
 END_SUMMARY
 
-### Test 3 ###
+### Test 4 ###
 ORIGINAL
 void f() {
 
@@ -275,7 +275,7 @@ SUMMARY
 
 END_SUMMARY
 
-### Test 4 ###
+### Test 5 ###
 ORIGINAL
 KisFilterOption::KisFilterOption()
         : KisPaintOpOption(i18n("Filter"))
@@ -352,7 +352,7 @@ SUMMARY
 
 END_SUMMARY
 
-### Test 5 ###
+### Test 6 ###
 ORIGINAL
 void f() { 
 
