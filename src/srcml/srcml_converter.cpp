@@ -251,8 +251,8 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         nodes.push_back(text);
 
       }
-    }
-    else {
+
+    } else {
 
       // text node does not need to be copied.
       mutex.lock();
@@ -269,6 +269,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
       if(node->name == "unit") return nodes;
 
+      if(!nodes.empty()) nodes.back()->is_simple = false;
       nodes.push_back(node);
 
     }

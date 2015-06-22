@@ -135,13 +135,13 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type),
 
 srcml_node::srcml_node(xmlElementType type, const std::string & name, const boost::optional<srcml_ns> & ns, const boost::optional<std::string> & content,
 const std::list<srcml_attr> & properties, unsigned short extra, const boost::optional<std::shared_ptr<srcml_node>> & parent, bool is_empty)
-  : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(false), move(0) {}
+  : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(false), move(0), is_simple(true) {}
 
 srcml_node::srcml_node(xmlElementType type, const std::string & name, const srcml_ns & ns) : type(type), name(name), ns(ns),
  properties(0), extra(0), is_empty(false), free(false), move(0) {}
 
 srcml_node::srcml_node(const srcml_node & node) : type(node.type), name(node.name), content(node.content), extra(node.extra),
-  parent(node.parent), is_empty(node.is_empty), free(true), move(0) {
+  parent(node.parent), is_empty(node.is_empty), free(true), move(0), is_simple(true) {
 
   if(node.ns)
     ns = srcml_ns(node.ns->href, node.ns->prefix);

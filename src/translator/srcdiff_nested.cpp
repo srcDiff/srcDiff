@@ -125,7 +125,9 @@ bool is_match(size_t node_pos, const srcml_nodes & nodes, const void * context) 
 
   const std::shared_ptr<srcml_node> & node = nodes[node_pos];
 
-  return (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && srcdiff_compare::node_compare(node, *(const std::shared_ptr<srcml_node> *)context) == 0;
+  const std::shared_ptr<srcml_node> & context_node = *(const std::shared_ptr<srcml_node> *)context;
+
+  return (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && srcdiff_compare::node_compare(node, context_node) == 0;
 
 }
 

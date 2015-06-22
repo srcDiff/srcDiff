@@ -83,6 +83,8 @@ public:
 
   int move;
 
+  bool is_simple;
+
 public:
 
   srcml_node(const xmlNode & node, bool is_archive);
