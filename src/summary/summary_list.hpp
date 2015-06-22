@@ -70,6 +70,7 @@ private:
     void decl_stmt(const std::shared_ptr<profile_t> & profile);
     void exception(const std::shared_ptr<profile_t> & profile);
     void label(const std::shared_ptr<profile_t> & profile);
+    void macro(const std::shared_ptr<profile_t> & profile);
 
 public:
 

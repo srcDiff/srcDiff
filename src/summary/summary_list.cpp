@@ -25,6 +25,7 @@
 #include <decl_stmt_summary_t.hpp>
 #include <exception_summary_t.hpp>
 #include <label_summary_t.hpp>
+#include <macro_summary_t.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -171,7 +172,8 @@ std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & pro
 bool summary_list::is_block_summary(const std::string & type, bool is_replacement) const {
 
     return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type) || (is_comment(type) && is_replacement)
-        || is_jump(type) || type == "else" || is_exception_handling(type) || is_label(type) || is_expr_block(type);
+        || is_jump(type) || type == "else" || is_exception_handling(type) || is_label(type) || is_expr_block(type)
+        || type == "macro";
 
 }
 
@@ -209,6 +211,9 @@ void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile
             label(child_change_profile);
         else if(is_expr_block(child_change_profile->type_name))
             block(child_change_profile);
+        else if(child_change_profile->type_name == "macro")
+            macro(child_change_profile);
+
 
     }
 
@@ -1220,6 +1225,16 @@ void summary_list::label(const std::shared_ptr<profile_t> & profile) {
     assert(is_label(profile->type_name));
 
     summaries_.emplace_back(new label_summary_t(profile->operation, get_type_string(profile)));
+
+}
+
+void summary_list::macro(const std::shared_ptr<profile_t> & profile) {
+
+    assert(typeid(*profile.get()) == typeid(call_profile_t));
+
+    const std::shared_ptr<call_profile_t> & call_profile = reinterpret_cast<const std::shared_ptr<call_profile_t> &>(profile);
+
+    summaries_.emplace_back(new macro_summary_t(profile->operation));
 
 }
 
