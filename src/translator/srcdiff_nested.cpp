@@ -272,9 +272,27 @@ bool is_better_nest_no_recursion(const srcml_nodes & nodes_outer, const node_set
 
 }
 
+bool has_compound_inner(const srcml_nodes & nodes_outer, const node_set & node_set_outer) {
+
+  if(nodes_outer.at(node_set_outer.at(0))->is_simple) return false;
+
+  for(unsigned int i = 1; i < node_set_outer.size(); ++i)
+    if((xmlReaderTypes)nodes_outer.at(node_set_outer.at(i))->type == XML_READER_TYPE_ELEMENT
+      && nodes_outer.at(node_set_outer.at(i))->name == "name" && !nodes_outer.at(node_set_outer.at(i))->is_simple)
+      return true;
+
+  return false;
+
+}
+
 bool is_better_nest(const srcml_nodes & nodes_outer, const node_set & node_set_outer,
                     const srcml_nodes & nodes_inner, const node_set & node_set_inner,
                     int similarity, int difference, int text_outer_length, int text_inner_length) {
+
+    if(nodes_outer.at(node_set_outer.at(0))->name == "name" && nodes_inner.at(node_set_inner.at(0))->name == "name"
+      &&    (nodes_outer.at(node_set_outer.at(0))->is_simple
+        || (!nodes_inner.at(node_set_inner.at(0))->is_simple && !has_compound_inner(nodes_outer, node_set_outer)))) return false;
+
 // parents and children same do not nest.
     if(srcdiff_nested::is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
 

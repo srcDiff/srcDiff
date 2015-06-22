@@ -4,6 +4,7 @@
 #include <cctype>
 
 #include <libxml/xmlreader.h>
+#include <iostream>
 
 std::mutex srcml_converter::mutex;
 
@@ -269,7 +270,9 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
       if(node->name == "unit") return nodes;
 
-      if(!nodes.empty()) nodes.back()->is_simple = false;
+      if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (*node->parent)->is_simple)
+        (*node->parent)->is_simple = false;
+      
       nodes.push_back(node);
 
     }
