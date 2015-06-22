@@ -472,6 +472,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'f':
   #Impact#: #Statement# = #3#	#Non-Statement# = #0#	#Cyclomatic# = #0#
-	• ???
+	• name change from 'bar' to 'b->bar'
+	• name change from 'f' to 'g'
 
 END_SUMMARY
