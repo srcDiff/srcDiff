@@ -948,6 +948,24 @@ bool is_single_name_expr(const srcml_nodes & nodes, int start_pos) {
 
 }
 
+
+node_set get_first_expr_child(const srcml_nodes & nodes, int start_pos) {
+
+  if(nodes.at(start_pos)->extra & 0x1) return node_set(nodes);
+
+  int expr_pos = start_pos;
+
+  while((nodes.at(expr_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || nodes.at(expr_pos)->name != "expr")
+    && !(nodes.at(expr_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(expr_pos)->name == nodes.at(start_pos)->name))
+    ++expr_pos;
+
+  if(nodes.at(expr_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(expr_pos)->name == nodes.at(start_pos)->name)
+    return node_set(nodes);
+
+  return node_set(nodes, expr_pos);
+
+}
+
 /*
   End internal heuristic functions for reject_match
 */
@@ -1009,7 +1027,6 @@ bool srcdiff_match::is_interchangeable_match(const std::string & original_tag, c
           return true;
 
       }
-
 
     }
 
@@ -1224,6 +1241,22 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
   }
 
   if(original_condition != "" && original_condition == modified_condition) return false;
+
+
+  if(  (original_tag == "expr_stmt" || original_tag == "decl_stmt" || original_tag == "return")
+    && (modified_tag == "expr_stmt" || modified_tag == "decl_stmt" || modified_tag == "return")) {
+
+      node_set expr_original = get_first_expr_child(nodes_original, original_pos);
+      node_set expr_modified = get_first_expr_child(nodes_modified, modified_pos);
+
+      srcdiff_measure expr_measure(nodes_original, nodes_modified, expr_original, expr_modified);
+      int expr_similarity, expr_difference, expr_text_original_length, expr_text_modified_length;
+      expr_measure.compute_measures(expr_similarity, expr_difference, expr_text_original_length, expr_text_modified_length);
+
+      bool is_expr_reject = srcdiff_match::reject_similarity(expr_similarity, expr_difference, expr_text_original_length, expr_text_modified_length, nodes_original, expr_original, nodes_modified, expr_modified);
+      if(!is_expr_reject) return false;
+
+  }
 
   bool is_reject = srcdiff_match::reject_similarity(similarity, difference, text_original_length, text_modified_length, nodes_original, set_original, nodes_modified, set_modified);
   return is_reject;
