@@ -45,8 +45,10 @@ const char * const ternary_nest_types[]     = { "ternary", "call", "operator", "
 const char * const condition_nest_types[]   = { "expr", "call", "operator", "literal",                                                                                                            0 };
 const char * const name_nest_types[]        = { "name",                                                                                                                                           0 };
 const char * const try_nest_types[]         = { "expr_stmt", "decl_stmt", "return", "comment", "block", "if", "while", "for", "foreach", "else", "elseif", "try", "catch",                        0 };
-const char * const extern_nest_types[]      = { "decl_stmt", "function_decl", "function", "struct", "struct_decl", "union", "union_decl",                                                                      0 };
-  
+const char * const extern_nest_types[]      = { "decl_stmt", "function_decl", "function", "struct", "struct_decl", "union", "union_decl",                                                         0 };
+const char * const decl_nest_types[]        = { "expr",                                                                                                                                           0 };
+const char * const init_nest_types[]        = { "expr",                                                                                                                                           0 };
+
 // tags that can have something nested in them (incomplete)    
 const nest_info nesting[] = {   
 
@@ -73,6 +75,8 @@ const nest_info nesting[] = {
   { "try",           try_nest_types         },
   { "catch",         try_nest_types         },
   { "extern",        extern_nest_types      },
+  { "decl",          decl_nest_types        },
+  { "init",          init_nest_types        },
   { 0, 0 }
 
 };

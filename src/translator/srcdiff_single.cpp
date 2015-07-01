@@ -158,12 +158,13 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   const std::shared_ptr<srcml_node> & keyword_node_original = out.get_nodes_original().at(node_sets_original.at(start_original).at(1));
   const std::shared_ptr<srcml_node> & keyword_node_modified = out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(1));
-  bool is_keywords = keyword_node_original->is_text() && !keyword_node_original->is_white_space()
-                  && keyword_node_modified->is_text() && !keyword_node_modified->is_white_space();
+  bool is_keyword = keyword_node_original->is_text() && !keyword_node_original->is_white_space();
+  bool is_keywords = is_keyword
+                     && keyword_node_modified->is_text() && !keyword_node_modified->is_white_space();
   bool is_same_keyword = is_keywords && srcdiff_compare::node_compare(keyword_node_original, keyword_node_modified) == 0;
 
   int original_collect_start_pos = 1;
-  if(is_keywords && !is_same_keyword) {
+  if((is_keyword && !is_keywords) || (is_keywords && !is_same_keyword)) {
 
     out.output_node(out.get_nodes_original().at(node_sets_original.at(start_original).at(1)), SESDELETE);
     ++out.last_output_original();
