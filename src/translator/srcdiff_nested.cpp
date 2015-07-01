@@ -351,6 +351,27 @@ bool srcdiff_nested::is_better_nested(const srcml_nodes & nodes_original, const 
 
 }
 
+static bool is_decl_stmt_from_expr(const srcml_nodes & nodes, int pos) {
+
+  if((*nodes.at(pos)->parent)->name == "init") {
+
+    return bool((*nodes.at(pos)->parent)->parent) && bool((*(*nodes.at(pos)->parent)->parent)->parent)
+            && (*(*(*nodes.at(pos)->parent)->parent)->parent)->name == "decl_stmt";
+
+  }
+
+  if((*nodes.at(pos)->parent)->name == "argument") {
+
+    return bool((*nodes.at(pos)->parent)->parent) && bool((*(*nodes.at(pos)->parent)->parent)->parent)
+            && bool((*(*(*nodes.at(pos)->parent)->parent)->parent)->parent)
+            && (*(*(*(*nodes.at(pos)->parent)->parent)->parent)->parent)->name == "decl_stmt";
+
+  }
+
+  return false;
+
+}
+
 bool srcdiff_nested::reject_match_nested(int similarity, int difference, int text_original_length, int text_modified_length,
   const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
 
@@ -365,7 +386,8 @@ bool srcdiff_nested::reject_match_nested(int similarity, int difference, int tex
 
   if(original_tag != modified_tag && !srcdiff_match::is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri)) return true;
 
-  if(original_tag == "expr" && ((*nodes_original.at(original_pos)->parent)->name == "init" || (*nodes_modified.at(modified_pos)->parent)->name == "init")) return false;
+  // if interchanging decl_stmt always nest expr into init or argument
+  if(original_tag == "expr" && (is_decl_stmt_from_expr(nodes_original, original_pos) || is_decl_stmt_from_expr(nodes_modified, modified_pos))) return false;
 
   if(original_tag == "then" || original_tag == "block" || original_tag == "comment"
     || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier"

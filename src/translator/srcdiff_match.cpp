@@ -1254,6 +1254,7 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
       expr_measure.compute_measures(expr_similarity, expr_difference, expr_text_original_length, expr_text_modified_length);
 
       bool is_expr_reject = srcdiff_match::reject_similarity(expr_similarity, expr_difference, expr_text_original_length, expr_text_modified_length, nodes_original, expr_original, nodes_modified, expr_modified);
+
       if(!is_expr_reject) return false;
 
   }
