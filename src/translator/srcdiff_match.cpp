@@ -1246,8 +1246,40 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
   if(  (original_tag == "expr_stmt" || original_tag == "decl_stmt" || original_tag == "return")
     && (modified_tag == "expr_stmt" || modified_tag == "decl_stmt" || modified_tag == "return")) {
 
-      node_set expr_original = get_first_expr_child(nodes_original, original_pos);
-      node_set expr_modified = get_first_expr_child(nodes_modified, modified_pos);
+    node_set expr_original(nodes_original);
+    node_set expr_modified(nodes_modified);
+    if(original_tag == "decl_stmt" || modified_tag == "decl_stmt") {
+
+      if(original_tag == "decl_stmt") {
+
+        expr_modified = get_first_expr_child(nodes_modified, modified_pos);
+        node_sets sets = node_sets(nodes_original, set_original.at(1), set_original.back(), srcdiff_nested::is_match,
+                                  &nodes_modified.at(expr_modified.at(0)));
+        int match = srcdiff_nested::best_match(nodes_original, sets, nodes_modified, expr_modified, SESDELETE);
+
+        if(match < sets.size())
+          expr_original = sets.at(match);
+
+      } else {
+
+        expr_original = get_first_expr_child(nodes_original, original_pos);
+        node_sets sets = node_sets(nodes_modified, set_modified.at(1), set_modified.back(), srcdiff_nested::is_match,
+                                  &nodes_original.at(expr_original.at(0)));
+        int match = srcdiff_nested::best_match(nodes_modified, sets, nodes_original, expr_original, SESINSERT);
+
+        if(match < sets.size())
+          expr_modified = sets.at(match);
+
+      }
+
+    } else {
+
+      expr_original = get_first_expr_child(nodes_original, original_pos);
+      expr_modified = get_first_expr_child(nodes_modified, modified_pos);
+
+    }
+
+    if(expr_original.size() && expr_modified.size()) {
 
       srcdiff_measure expr_measure(nodes_original, nodes_modified, expr_original, expr_modified);
       int expr_similarity, expr_difference, expr_text_original_length, expr_text_modified_length;
@@ -1256,6 +1288,8 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
       bool is_expr_reject = srcdiff_match::reject_similarity(expr_similarity, expr_difference, expr_text_original_length, expr_text_modified_length, nodes_original, expr_original, nodes_modified, expr_modified);
 
       if(!is_expr_reject) return false;
+
+    }
 
   }
 

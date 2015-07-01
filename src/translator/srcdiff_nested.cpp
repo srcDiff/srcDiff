@@ -125,7 +125,7 @@ bool is_nest_type(const node_set & structure, const srcml_nodes & nodes
   return false;
 }
 
-bool is_match(size_t node_pos, const srcml_nodes & nodes, const void * context) {
+bool srcdiff_nested::is_match(size_t node_pos, const srcml_nodes & nodes, const void * context) {
 
   const std::shared_ptr<srcml_node> & node = nodes[node_pos];
 
@@ -135,7 +135,7 @@ bool is_match(size_t node_pos, const srcml_nodes & nodes, const void * context) 
 
 }
 
-int best_match(const srcml_nodes & nodes, const node_sets & set, const srcml_nodes & nodes_match, const node_set & match, int operation) {
+int srcdiff_nested::best_match(const srcml_nodes & nodes, const node_sets & set, const srcml_nodes & nodes_match, const node_set & match, int operation) {
 
   int match_pos = set.size();
   int match_similarity = 0;
@@ -207,7 +207,7 @@ bool srcdiff_nested::is_same_nestable(const node_set & structure_one, const srcm
 
   //unsigned int similarity = compute_similarity(nodes_one, structure_one, nodes_two, structure_two);
 
-  node_sets set = node_sets(nodes_two, structure_two.at(1), structure_two.back(), is_match
+  node_sets set = node_sets(nodes_two, structure_two.at(1), structure_two.back(), srcdiff_nested::is_match
                                                              , &nodes_one.at(structure_one.at(0)));
 
   unsigned int match = best_match(nodes_two, set, nodes_one, structure_one, SESDELETE);
@@ -249,10 +249,10 @@ bool is_better_nest_no_recursion(const srcml_nodes & nodes_outer, const node_set
 
     if(srcdiff_nested::is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
 
-      node_sets set = node_sets(nodes_outer, node_set_outer.at(1), node_set_outer.back(), is_match
+      node_sets set = node_sets(nodes_outer, node_set_outer.at(1), node_set_outer.back(), srcdiff_nested::is_match
                                                              , &nodes_inner.at(node_set_inner.at(0)));
 
-      int match = best_match(nodes_outer, set, nodes_inner, node_set_inner, SESDELETE);
+      int match = srcdiff_nested::best_match(nodes_outer, set, nodes_inner, node_set_inner, SESDELETE);
 
       if(match < set.size()) {
 
@@ -300,10 +300,10 @@ bool is_better_nest(const srcml_nodes & nodes_outer, const node_set & node_set_o
 // parents and children same do not nest.
     if(srcdiff_nested::is_nestable(node_set_inner, nodes_inner, node_set_outer, nodes_outer)) {
 
-      node_sets set = node_sets(nodes_outer, node_set_outer.at(1), node_set_outer.back(), is_match
+      node_sets set = node_sets(nodes_outer, node_set_outer.at(1), node_set_outer.back(), srcdiff_nested::is_match
                                                              , &nodes_inner.at(node_set_inner.at(0)));
 
-      int match = best_match(nodes_outer, set, nodes_inner, node_set_inner, SESDELETE);
+      int match = srcdiff_nested::best_match(nodes_outer, set, nodes_inner, node_set_inner, SESDELETE);
 
       if(match < set.size()) {
 
