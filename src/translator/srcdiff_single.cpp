@@ -217,8 +217,8 @@ void srcdiff_single::output_recursive_interchangeable() {
 
 void srcdiff_single::output() {
 
-    const std::shared_ptr<srcml_node> & start_node_original = out.get_nodes_original().at(node_sets_original.at(start_original).front());
-    const std::shared_ptr<srcml_node> & start_node_modified = out.get_nodes_modified().at(node_sets_modified.at(start_modified).front());
+  const std::shared_ptr<srcml_node> & start_node_original = out.get_nodes_original().at(node_sets_original.at(start_original).front());
+  const std::shared_ptr<srcml_node> & start_node_modified = out.get_nodes_modified().at(node_sets_modified.at(start_modified).front());
 
   if(start_node_original->name == start_node_modified->name
     && (bool(start_node_original->ns) == bool(start_node_modified->ns) && (!start_node_original->ns
