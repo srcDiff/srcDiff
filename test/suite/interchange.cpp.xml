@@ -274,4 +274,12 @@
 <diff:delete><return>return<diff:insert><expr_stmt><diff:delete type="whitespace"> </diff:delete><diff:common><expr><diff:delete><name>a</name> <operator>=</operator> </diff:delete><name>b</name> <operator>+</operator> <name>c</name></expr>;</diff:common></expr_stmt></diff:insert></return></diff:delete>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
+<diff:delete><expr_stmt><diff:insert><decl_stmt><decl><type><name>int</name></type> <name>a</name> <init>= <diff:common><expr><diff:delete><name>a</name> <operator>=</operator> </diff:delete><name>b</name></expr></diff:common></init></decl><diff:common>;</diff:common></decl_stmt></diff:insert></expr_stmt></diff:delete>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
+<diff:delete><decl_stmt><diff:insert><expr_stmt><diff:delete><decl><type><name>int</name></type> <name>a</name> <init>= <diff:common><expr><diff:insert><name>a</name> <operator>=</operator> </diff:insert><name>b</name></expr></diff:common></init></decl></diff:delete><diff:common>;</diff:common></expr_stmt></diff:insert></decl_stmt></diff:delete>
+</unit>
+
 </unit>
