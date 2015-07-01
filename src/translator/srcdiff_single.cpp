@@ -199,7 +199,7 @@ void srcdiff_single::output_recursive_interchangeable() {
 
     out.output_node(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(1)), SESINSERT);
     ++out.last_output_modified();
-    modified_collect_start_pos = 2;
+    ++modified_collect_start_pos;
 
   }
 
