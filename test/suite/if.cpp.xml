@@ -157,13 +157,4 @@
     <block type="pseudo"><empty_stmt>;</empty_stmt></block></diff:insert></then></if>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="if|if">
-<if>if<condition>(<expr><operator>!</operator><call><name><name>paraStyles</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><call><name><name>root</name><operator>.</operator><name>ID</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then><diff:delete type="whitespace">
-   </diff:delete> <block type="pseudo|"><diff:insert>{
-    <decl_stmt><decl><type><name>int</name></type> <name>id</name> <init>= <expr><call><name><name>root</name><operator>.</operator><name>ID</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
-    <if>if<condition>(<expr><name>id</name> <operator>!=</operator> <name>tree_rootID</name></expr>)</condition><then>
-        <block type="pseudo"><diff:common><expr_stmt><expr><diff:delete type="change"><name>tree_root</name> <operator>&lt;&lt;</operator> <call><name><name>root</name><operator>.</operator><name>ID</name></name><argument_list>()</argument_list></call></diff:delete><diff:insert type="change"><call><name><name>tree_root</name><operator>.</operator><name>insert</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></diff:insert></expr>;</expr_stmt></diff:common></block></then></if>
-}</diff:insert></block></then></if>
-</unit>
-
 </unit>
