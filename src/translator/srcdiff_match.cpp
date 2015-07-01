@@ -1323,6 +1323,12 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
   int min_size = text_original_length < text_modified_length ? text_original_length : text_modified_length;
   int max_size = text_original_length < text_modified_length ? text_modified_length : text_original_length;
 
+#if DEBUG
+  std::cerr << "Similarity: " << similarity << '\n';
+  std::cerr << "Difference: " << difference << '\n';
+  std::cerr << "Min Size: "   << min_size   << '\n';
+#endif
+
   if(difference > 1.25 * min_size) return true;
   if(difference > max_size)        return true;
 
