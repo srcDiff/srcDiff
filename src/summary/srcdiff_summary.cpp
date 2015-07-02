@@ -491,7 +491,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     // detect if interchange
     size_t srcml_depth = uri_stack.size();
-    bool is_interchange = srcml_depth > 4 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
+    bool is_interchange = srcml_depth > 3 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
                             && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert";
 
     bool then_clause_child = profile_stack.size() > 1
@@ -755,7 +755,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     // detect if interchange
     size_t srcml_depth = uri_stack.size();
-    bool is_interchange = srcml_depth > 4 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
+    bool is_interchange = srcml_depth > 3 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
                             && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert";
 
     if(uri_stack.back() == SRCDIFF) srcdiff_stack.pop_back();
