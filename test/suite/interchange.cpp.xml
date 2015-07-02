@@ -320,4 +320,20 @@
 }</diff:delete></block></then></if>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
+<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list><block>{
+
+	<diff:delete><expr_stmt><diff:insert><decl_stmt><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr><name>c</name></expr></argument>, <argument><diff:common><expr><name>b</name></expr></diff:common></argument>)</argument_list></decl><diff:common>;</diff:common></decl_stmt></diff:insert></expr_stmt></diff:delete>
+
+}</block></function>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
+<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list><block>{
+
+	<diff:delete><decl_stmt><diff:insert><expr_stmt><diff:delete><decl><type><name>int</name></type> <name>a</name><argument_list>(<argument><expr><name>c</name></expr></argument>, <argument><diff:common><expr><name>b</name></expr></diff:common></argument>)</argument_list></decl></diff:delete><diff:common>;</diff:common></expr_stmt></diff:insert></decl_stmt></diff:delete>
+
+}</block></function>
+</unit>
+
 </unit>

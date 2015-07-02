@@ -552,7 +552,8 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, co
       || ((end_modified - start_modified) == 1 && nest_count_modified != 0)))
     return false;
 
-  if(bool(pos_original) && (!bool(pos_modified) || *similarity_original >= *similarity_modified)) {
+  if(bool(pos_original) && (!bool(pos_modified) || *similarity_original > *similarity_modified
+    || (*similarity_original == *similarity_modified && *difference_original <= *difference_modified))) {
 
       start_nest_original = *pos_original;
       end_nest_original   = *pos_original + 1;
