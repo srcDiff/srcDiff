@@ -637,6 +637,8 @@ void summary_list::interchange(const std::shared_ptr<profile_t> & profile) {
     summaries_.emplace_back(new interchange_summary_t(versioned_string(profile->type_name.original() == "elseif" ? "else-if" : profile->type_name.original(),
                                                                   profile->type_name.modified() == "elseif" ? "else-if" : profile->type_name.modified())));
 
+    if(!has_body(profile->type_name.original())) return;
+
     std::shared_ptr<profile_t> summary_profile = profile;
     if(profile->type_name.original() == "elseif" || profile->type_name.modified() == "elseif")
         summary_profile = profile->child_change_profiles[0];
