@@ -30,7 +30,7 @@ return is_function_type(type_name)  || is_class_type(type_name)           || is_
     || is_specifier(type_name)      || is_expr_stmt(type_name)            || is_argument(type_name)
     || is_comment(type_name)        || is_emit(type_name)                 || is_jump(type_name)
     || is_ternary(type_name)        || is_label(type_name)                || is_init(type_name)
-    || is_type(type_name)           || is_expr_block(type_name);
+    || is_type(type_name)           || is_expr_block(type_name)           || is_interchange(type_name);
 
 }
 

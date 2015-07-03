@@ -174,7 +174,7 @@ bool summary_list::is_block_summary(const std::string & type, bool is_replacemen
 
     return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type) || (is_comment(type) && is_replacement)
         || is_jump(type) || type == "else" || is_exception_handling(type) || is_label(type) || is_expr_block(type)
-        || type == "macro";
+        || is_interchange(type) || type == "macro";
 
 }
 
@@ -190,7 +190,7 @@ void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile
 
         summaries_.emplace_back(new move_summary_t(get_type_string(child_change_profile)));
 
-    } else if(!child_change_profile->type_name.is_common()) {
+    } else if(child_change_profile->type_name == "interchange") {
 
         interchange(child_change_profile);
 
