@@ -962,7 +962,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             specifier_raw.clear();
 
         } else if(profile_stack.size() > 2 && profile_stack.at(profile_stack.size() - 2)->type_name == "decl"
-            && is_decl_stmt(profile_stack.at(profile_stack.size() - 3)->type_name)) {
+            && is_decl_stmt(profile_stack.at(profile_stack.size() - 3)->type_name) && !is_interchange_profile(profile_stack.at(profile_stack.size() - 3))) {
 
             if(profile_stack.back()->type_name == "type")
                 reinterpret_cast<std::shared_ptr<decl_stmt_profile_t> &>(profile_stack.at(profile_stack.size() - 3))->type = profile_stack.back();
