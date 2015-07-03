@@ -136,7 +136,7 @@ SUMMARY
 • function 'KoZoomAction::createWidget':
   #Impact#: #Statement# = #9#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• name change from 'aspectButton' to 'd->aspectButton'
-	• a #declaration# was converted to an #expression#
+	• a #declaration# was converted to an #assignment#
 
 END_SUMMARY
 

@@ -10,6 +10,7 @@
 #include <ternary_profile_t.hpp>
 #include <identifier_profile_t.hpp>
 #include <exception_profile_t.hpp>
+#include <interchange_profile_t.hpp>
 
 #include <identifier_utilities.hpp>
 
@@ -173,7 +174,7 @@ bool summary_list::is_block_summary(const std::string & type, bool is_replacemen
 
     return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type) || (is_comment(type) && is_replacement)
         || is_jump(type) || type == "else" || is_exception_handling(type) || is_label(type) || is_expr_block(type)
-        || type == "macro";
+        || is_interchange(type) || type == "macro";
 
 }
 
@@ -189,7 +190,7 @@ void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile
 
         summaries_.emplace_back(new move_summary_t(get_type_string(child_change_profile)));
 
-    } else if(!child_change_profile->type_name.is_common()) {
+    } else if(child_change_profile->type_name == "interchange") {
 
         interchange(child_change_profile);
 
@@ -630,29 +631,14 @@ void summary_list::replacement(const std::shared_ptr<profile_t> & profile, size_
 
 }
 
-static versioned_string get_interchange_type_string(const std::shared_ptr<profile_t> & profile) {
-
-    versioned_string type_string("", "");
-
-    if(profile->type_name.original() == "elseif")        type_string.original() = "else-if";
-    else if(is_decl_stmt(profile->type_name.original())) type_string.original() = "declaration";
-    else if(is_expr_stmt(profile->type_name.original())) type_string.original() = "expression";
-    else                                                 type_string.original() = profile->type_name.original();
-
-    if(profile->type_name.modified() == "elseif")        type_string.modified() = "else-if";
-    else if(is_decl_stmt(profile->type_name.modified())) type_string.modified() = "declaration";
-    else if(is_expr_stmt(profile->type_name.modified())) type_string.modified() = "expression";
-    else                                                 type_string.modified() = profile->type_name.modified();
-
-    return type_string;
-
-}
-
 void summary_list::interchange(const std::shared_ptr<profile_t> & profile) {
 
-    assert(!profile->type_name.is_common());
+    assert(profile->type_name == "interchange");
 
-    summaries_.emplace_back(new interchange_summary_t(get_interchange_type_string(profile)));
+    const std::shared_ptr<interchange_profile_t> & interchange_profile = reinterpret_cast<const std::shared_ptr<interchange_profile_t> &>(profile);
+
+    summaries_.emplace_back(new interchange_summary_t(versioned_string(get_type_string(interchange_profile->original()),
+                                                                       get_type_string(interchange_profile->modified()))));
 
     if(!has_body(profile->type_name.original())) return;
 

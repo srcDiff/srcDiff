@@ -222,7 +222,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'KisView2::createGUI':
   #Impact#: #Statement# = #5#	#Non-Statement# = #0#	#Cyclomatic# = #0#
-	• an #expression# was modified
+	• an #assignment# was modified
 	• 4 #calls# were deleted
 
 END_SUMMARY
