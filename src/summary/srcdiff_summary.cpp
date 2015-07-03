@@ -83,11 +83,14 @@ void srcdiff_summary::process_characters() {
         if(expr_pos == 0) goto no_expr;
 
         size_t expr_pos_forward = expr_stmt_pos.size() > 0 ? expr_stmt_pos.back() : profile_stack.size();
-        while(expr_pos_forward < profile_stack.size() && !is_expr(profile_stack.at(expr_pos)->type_name))
+        while(expr_pos_forward < profile_stack.size() && !is_expr(profile_stack.at(expr_pos_forward)->type_name))
             ++expr_pos_forward;
 
         /** @todo need to make sure this actually works with complex deletes of different portions. */
-        if(text[0] == '=' && (text.size() == 1 || text.back() != '=') && (srcdiff_stack.back().operation == SRCDIFF_COMMON || profile_stack.at(expr_pos)->operation != SRCDIFF_COMMON)) {
+        if(text[0] == '=' && (text.size() == 1 || text.back() != '=')
+            && (srcdiff_stack.back().operation == SRCDIFF_COMMON || profile_stack.at(expr_pos)->operation != SRCDIFF_COMMON
+                || (expr_stmt_pos.size() > 0 && is_interchange(profile_stack.at(expr_stmt_pos.back())->type_name)
+                    && get_stmt_from_interchange(profile_stack.at(expr_stmt_pos.back()), "expr_stmt")->operation == srcdiff_stack.back().operation))) {
 
             reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->assignment(true);
 
@@ -1008,7 +1011,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             --expr_pos;
 
         size_t expr_pos_forward = expr_stmt_pos.back();
-        while(expr_pos_forward < profile_stack.size() && !is_expr(profile_stack.at(expr_pos)->type_name))
+        while(expr_pos_forward < profile_stack.size() && !is_expr(profile_stack.at(expr_pos_forward)->type_name))
             ++expr_pos_forward;
 
         if(expr_pos == expr_pos_forward && (expr_pos + 1) == profile_stack.size() - 1) {
