@@ -134,9 +134,9 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KoZoomAction::createWidget':
-  #Impact#: #Statement# = #10#	#Non-Statement# = #0#	#Cyclomatic# = #0#
+  #Impact#: #Statement# = #9#	#Non-Statement# = #0#	#Cyclomatic# = #0#
 	• name change from 'aspectButton' to 'd->aspectButton'
-	• a #declaration# was replaced with an #assignment#
+	• a #declaration# was converted to an #expression#
 
 END_SUMMARY
 
