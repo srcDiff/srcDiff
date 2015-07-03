@@ -15,6 +15,7 @@
 #include <expr_profile_t.hpp>
 #include <ternary_profile_t.hpp>
 #include <exception_profile_t.hpp>
+#include <interchange_profile_t.hpp>
 
 #include <cstring>
 #include <algorithm>
@@ -60,8 +61,7 @@ static std::shared_ptr<profile_t> make_profile(const std::string & type_name, na
 
 static bool is_interchange_profile(const std::shared_ptr<profile_t> & profile) {
 
-    return profile->type_name.has_original() && profile->type_name.has_modified() && !profile->type_name.is_common();
-
+    return profile->type_name == "interchange" || (profile->type_name.has_original() && profile->type_name.has_modified() && !profile->type_name.is_common());
 
 }
 
@@ -543,9 +543,12 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     if(is_interchange) {
 
+        std::shared_ptr<profile_t> interchange_profile = std::make_shared<interchange_profile_t>("interchange", SRC, SRCDIFF_COMMON, profile_stack.at(profile_stack.size() - 2)->parent);
+        reinterpret_cast<std::shared_ptr<interchange_profile_t> &>(interchange_profile)->original() = profile_stack.at(profile_stack.size() - 2);
+        reinterpret_cast<std::shared_ptr<interchange_profile_t> &>(interchange_profile)->modified() = make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, interchange_profile->parent);
+
         // update element name/operation
-        profile_stack.at(profile_stack.size() - 2)->set_operation(SRCDIFF_COMMON);
-        profile_stack.at(profile_stack.size() - 2)->type_name.set_modified(full_name);
+        profile_stack.at(profile_stack.size() - 2) = interchange_profile;
 
         // correct element counts
         std::shared_ptr<profile_t> & parent = profile_stack.at(profile_stack.size() - 3);
