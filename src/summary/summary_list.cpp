@@ -314,6 +314,8 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
                         srcdiff_type operation;
                         if(use_itr->first.has_original()) {
 
+                            token = use_itr->first.original();
+                            operation = SRCDIFF_DELETE;
 
                         } else {
 
