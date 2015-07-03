@@ -23,8 +23,8 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KoDocument::openExistingFile':
-  #Impact#: #Statement# = #4#	#Non-Statement# = #0#	#Cyclomatic# = #-1#
-	• a #declaration# was replaced with a #call#
+  #Impact#: #Statement# = #3#	#Non-Statement# = #0#	#Cyclomatic# = #-1#
+	• a #declaration# was converted to an #expression#
 	• an #if# was deleted
 
 END_SUMMARY
