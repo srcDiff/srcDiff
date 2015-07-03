@@ -543,11 +543,13 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     if(is_interchange) {
 
-        std::shared_ptr<profile_t> interchange_profile = std::make_shared<interchange_profile_t>("interchange", SRC, SRCDIFF_COMMON, profile_stack.at(profile_stack.size() - 2)->parent);
+        std::shared_ptr<profile_t> interchange_profile = std::make_shared<interchange_profile_t>("interchange", SRC, SRCDIFF_COMMON, profile_stack.at(profile_stack.size() - 2)->summary_parent);
+        interchange_profile->parent = profile_stack.at(profile_stack.size() - 2)->parent;
         interchange_profile->body = profile_stack.at(profile_stack.size() - 2)->body;
         interchange_profile->summary_profile = profile_stack.at(profile_stack.size() - 2)->summary_profile;
         reinterpret_cast<std::shared_ptr<interchange_profile_t> &>(interchange_profile)->original() = profile_stack.at(profile_stack.size() - 2);
-        reinterpret_cast<std::shared_ptr<interchange_profile_t> &>(interchange_profile)->modified() = make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, interchange_profile->parent);
+        reinterpret_cast<std::shared_ptr<interchange_profile_t> &>(interchange_profile)->modified() = make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, interchange_profile->summary_parent);
+        reinterpret_cast<std::shared_ptr<interchange_profile_t> &>(interchange_profile)->modified()->parent = interchange_profile->parent;
         reinterpret_cast<std::shared_ptr<interchange_profile_t> &>(interchange_profile)->modified()->body = interchange_profile->body;
         reinterpret_cast<std::shared_ptr<interchange_profile_t> &>(interchange_profile)->modified()->summary_profile = interchange_profile->summary_profile;
 
@@ -702,7 +704,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         }
 
     }
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 }
 
 /**
