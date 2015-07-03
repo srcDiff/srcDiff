@@ -59,9 +59,14 @@ static std::shared_ptr<profile_t> make_profile(const std::string & type_name, na
 
 }
 
-static bool is_interchange_profile(const std::shared_ptr<profile_t> & profile) {
+static std::shared_ptr<profile_t> & get_stmt_from_interchange(std::shared_ptr<profile_t> & profile, std::string statement) {
 
-    return profile->type_name == "interchange" || (profile->type_name.has_original() && profile->type_name.has_modified() && !profile->type_name.is_common());
+    if(!is_interchange(profile->type_name)) return profile;
+
+    std::shared_ptr<interchange_profile_t> & interchange_profile = reinterpret_cast<std::shared_ptr<interchange_profile_t> &>(profile);
+
+    if(interchange_profile->original()->type_name == statement) return interchange_profile->original();
+    return interchange_profile->modified();
 
 }
 
@@ -82,9 +87,9 @@ void srcdiff_summary::process_characters() {
 
             reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->assignment(true);
 
-            if(expr_stmt_pos.size() > 0 && !is_interchange_profile(profile_stack.at(expr_stmt_pos.back())) && (expr_pos - 1) == expr_stmt_pos.back()) {
+            if(expr_stmt_pos.size() > 0 && (expr_pos - 1) == expr_stmt_pos.back()) {
 
-                std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()));
+                std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(get_stmt_from_interchange(profile_stack.at(expr_stmt_pos.back()), "expr_stmt"));
 
                 expr_stmt_profile->assignment(true);
 
@@ -113,18 +118,18 @@ void srcdiff_summary::process_characters() {
 
             reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->is_delete(true);
 
-            if(expr_stmt_pos.size() > 0 && !is_interchange_profile(profile_stack.at(expr_stmt_pos.back())) && (expr_pos - 1) == expr_stmt_pos.back()) {
+            if(expr_stmt_pos.size() > 0 && (expr_pos - 1) == expr_stmt_pos.back()) {
 
-                std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()));
+                std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(get_stmt_from_interchange(profile_stack.at(expr_stmt_pos.back()), "expr_stmt"));
                 expr_stmt_profile->is_delete(true);
 
             }
 
         }
 
-        if(expr_stmt_pos.size() > 0 && !is_interchange_profile(profile_stack.at(expr_stmt_pos.back())) && (expr_pos - 1) == expr_stmt_pos.back()) {
+        if(expr_stmt_pos.size() > 0 && (expr_pos - 1) == expr_stmt_pos.back()) {
 
-            std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()));
+            std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(get_stmt_from_interchange(profile_stack.at(expr_stmt_pos.back()), "expr_stmt"));
 
             if(text == "<<" && !expr_stmt_profile->assignment())
                 expr_stmt_profile->print(true);
@@ -902,12 +907,8 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         } else if(full_name == "expr_stmt") {
 
-            if(!is_interchange_profile(profile_stack.at(expr_stmt_pos.back()))) {
-
-                if(left_hand_side.back()) reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()))->lhs(collect_lhs.back());
-                else                      reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()))->rhs(collect_rhs.back());
-
-            }
+            if(left_hand_side.back()) reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(get_stmt_from_interchange(profile_stack.at(expr_stmt_pos.back()), "expr_stmt"))->lhs(collect_lhs.back());
+            else                      reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(get_stmt_from_interchange(profile_stack.at(expr_stmt_pos.back()), "expr_stmt"))->rhs(collect_rhs.back());
 
             expr_stmt_pos.pop_back();
             left_hand_side.pop_back();
@@ -971,12 +972,12 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             specifier_raw.clear();
 
         } else if(profile_stack.size() > 2 && profile_stack.at(profile_stack.size() - 2)->type_name == "decl"
-            && is_decl_stmt(profile_stack.at(profile_stack.size() - 3)->type_name) && !is_interchange_profile(profile_stack.at(profile_stack.size() - 3))) {
+            && is_decl_stmt(profile_stack.at(profile_stack.size() - 3)->type_name)) {
 
             if(profile_stack.back()->type_name == "type")
-                reinterpret_cast<std::shared_ptr<decl_stmt_profile_t> &>(profile_stack.at(profile_stack.size() - 3))->type = profile_stack.back();
+                reinterpret_cast<std::shared_ptr<decl_stmt_profile_t> &>(get_stmt_from_interchange(profile_stack.at(profile_stack.size() - 3), "decl_stmt"))->type = profile_stack.back();
             else if(profile_stack.back()->type_name == "init")
-                reinterpret_cast<std::shared_ptr<decl_stmt_profile_t> &>(profile_stack.at(profile_stack.size() - 3))->init = profile_stack.back();
+                reinterpret_cast<std::shared_ptr<decl_stmt_profile_t> &>(get_stmt_from_interchange(profile_stack.at(profile_stack.size() - 3), "decl_stmt"))->init = profile_stack.back();
 
         } else if(profile_stack.size() > 2 && profile_stack.at(profile_stack.size() - 2)->type_name == "decl"
             && is_parameter(profile_stack.at(profile_stack.size() - 3)->type_name)) {
@@ -996,9 +997,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
     }
 
     // inner expr_stmt handling
-    if(expr_stmt_pos.size() > 0 && !is_interchange_profile(profile_stack.at(expr_stmt_pos.back())) && ((profile_stack.size() - 1) - expr_stmt_pos.back()) == 2) {
+    if(expr_stmt_pos.size() > 0 && ((profile_stack.size() - 1) - expr_stmt_pos.back()) == 2) {
 
-        std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(profile_stack.at(expr_stmt_pos.back()));
+        std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(get_stmt_from_interchange(profile_stack.at(expr_stmt_pos.back()), "expr_stmt"));
 
         if(!is_call(full_name) && uri_stack.back() != SRCDIFF && full_name != "operator")
             expr_stmt_profile->call(false);
