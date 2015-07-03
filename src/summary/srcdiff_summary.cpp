@@ -702,7 +702,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         }
 
     }
-
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 }
 
 /**

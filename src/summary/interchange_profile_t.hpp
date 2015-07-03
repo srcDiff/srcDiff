@@ -17,25 +17,25 @@ class interchange_profile_t : public profile_t {
             : profile_t(type_name, uri, operation, parent), original_(), modified_() {}
 
 
-        const std::shared_ptr<profile_t> original() const {
+        const std::shared_ptr<profile_t> & original() const {
 
             return original_;
 
         }
 
-        const std::shared_ptr<profile_t> modified() const {
+        const std::shared_ptr<profile_t> & modified() const {
 
             return modified_;
 
         }
 
-        std::shared_ptr<profile_t> original() {
+        std::shared_ptr<profile_t> & original() {
 
             return original_;
 
         }
 
-        std::shared_ptr<profile_t> modified() {
+        std::shared_ptr<profile_t> & modified() {
 
             return modified_;
 
