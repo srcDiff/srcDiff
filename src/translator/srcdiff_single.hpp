@@ -11,6 +11,8 @@ protected:
 	unsigned int start_modified;
 
 private:
+
+	static const std::string convert;
 	
 	void output_recursive_same();
 	void output_recursive_interchangeable();

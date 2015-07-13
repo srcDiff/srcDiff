@@ -10,6 +10,8 @@
 #include <map>
 #include <list>
 
+const std::string srcdiff_single::convert("convert");
+
 srcdiff_single::srcdiff_single(const srcdiff_many & diff, unsigned int start_original, unsigned int start_modified) : srcdiff_many(diff), start_original(start_original), start_modified(start_modified) {}
 
 static std::list<srcml_node::srcml_attr> merge_properties(const std::list<srcml_node::srcml_attr> & properties_original, const std::list<srcml_node::srcml_attr> & properties_modified) {
@@ -152,7 +154,12 @@ void srcdiff_single::output_recursive_interchangeable() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_all();
 
+  out.diff_type->value = convert;
+  out.diff_original_start->properties.push_back(*out.diff_type.get());
+  out.diff_modified_start->properties.push_back(*out.diff_type.get());
+
   out.output_node(out.diff_original_start, SESDELETE);
+  out.diff_original_start->properties.clear();
 
   out.output_node(out.get_nodes_original().at(node_sets_original.at(start_original).at(0)), SESDELETE);
 
@@ -191,6 +198,7 @@ void srcdiff_single::output_recursive_interchangeable() {
   ++out.last_output_original();
 
   out.output_node(out.diff_modified_start, SESINSERT);
+  out.diff_modified_start->properties.clear();
 
   out.output_node(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0)), SESINSERT);
 
