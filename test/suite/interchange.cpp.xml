@@ -171,9 +171,6 @@
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete type="convert"><elseif><diff:insert type="convert"><else><diff:common>else </diff:common><diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <diff:common><block type="pseudo"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></block></diff:common></then></if></diff:delete></else></diff:insert></elseif></diff:delete></unit>
 
-
-<!-- Specific examples -->
-
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete type="convert"><foreach>foreach<diff:insert type="convert"><for>for<diff:common><control>(<init><diff:delete type="change"><decl><type><name><name>KoViewPrivate</name><operator>::</operator><name>StatusBarItem</name></name></type> <name>sbItem</name>,<range> <expr><name><name>d</name><operator>-&gt;</operator><name>statusBarItems</name></name></expr></range></decl></diff:delete><diff:insert type="change"><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">0</literal></expr></init></decl>;</diff:insert></init><diff:insert type="whitespace"> <condition><expr><name>i</name> <operator>&lt;</operator> <name>itemCount</name></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr></diff:insert>)</control> <block>{
 <diff:insert>    <decl_stmt><decl><type><name><name>KoViewPrivate</name><operator>::</operator><name>StatusBarItem</name></name> <modifier>&amp;</modifier></type><name>sbItem</name> <init>= <expr><name><name>d</name><operator>-&gt;</operator><name>statusBarItems</name><index>[<expr><name>i</name></expr>]</index></name></expr></init></decl>;</decl_stmt>
