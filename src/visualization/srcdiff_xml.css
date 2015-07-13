@@ -1,28 +1,83 @@
-@namespace cpp url(http://www.sdml.info/srcML/cpp);
-@namespace diff url(http://www.sdml.info/srcDiff);
+@namespace cpp url(http://www.srcML.org/srcML/cpp);
+@namespace diff url(http://www.srcML.org/srcDiff);
 
 * {
 
 	font-weight: bold;
 	font-family: menlo, courier;
+	word-wrap: break-word;
 
 }
 
 diff|insert {
 
-	color: blue;
+	background-color: #21FF59;
 
 }
 
 diff|delete {
 
-	color: red;
+	background-color: #FEAAAD;
 
 }
 
 diff|common {
 
-	color: black;
+	background-color: white;
+
+}
+
+diff|insert::before {
+
+	font-weight: normal;
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
+	content: "<diff:insert>";
+
+}
+
+diff|delete::before {
+
+	font-weight: normal;
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
+	content: "<diff:delete>";
+
+}
+
+diff|common::before {
+
+	font-weight: normal;
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
+	content: "<diff:common>";
+
+}
+
+diff|insert::after {
+
+	font-weight: normal;
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
+	content: "</diff:insert>";
+
+}
+
+diff|delete::after {
+
+	font-weight: normal;
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
+	content: "</diff:delete>";
+
+}
+
+diff|common::after {
+
+	font-weight: normal;
+	font-size: 90%;opacity: 0.6;
+    filter: alpha(opacity=60);
+	content: "</diff:common>";
 
 }
 
