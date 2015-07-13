@@ -158,7 +158,7 @@ void srcdiff_single::output_recursive_interchangeable() {
   out.diff_original_start->properties.push_back(*out.diff_type.get());
   out.diff_modified_start->properties.push_back(*out.diff_type.get());
 
-  out.output_node(out.diff_original_start, SESDELETE);
+  out.output_node(out.diff_original_start, SESDELETE, true);
   out.diff_original_start->properties.clear();
 
   out.output_node(out.get_nodes_original().at(node_sets_original.at(start_original).at(0)), SESDELETE);
@@ -197,7 +197,7 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   ++out.last_output_original();
 
-  out.output_node(out.diff_modified_start, SESINSERT);
+  out.output_node(out.diff_modified_start, SESINSERT, true);
   out.diff_modified_start->properties.clear();
 
   out.output_node(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0)), SESINSERT);
@@ -229,11 +229,11 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   output_change(out.last_output_original(), node_sets_modified.at(start_modified).back() + 1);
 
-  out.output_node(out.diff_modified_end, SESINSERT);
+  out.output_node(out.diff_modified_end, SESINSERT, true);
 
   output_change(node_sets_original.at(start_original).back() + 1, out.last_output_modified());
 
-  out.output_node(out.diff_original_end, SESDELETE);
+  out.output_node(out.diff_original_end, SESDELETE, true);
 
   whitespace.output_statement();
 

@@ -146,7 +146,7 @@ public:
   virtual unsigned int & last_output_modified();
   METHOD_TYPE method() const;
 
-  virtual void output_node(const std::shared_ptr<srcml_node> & node, int operation);
+  virtual void output_node(const std::shared_ptr<srcml_node> & node, int operation, bool force_output = false);
   virtual void output_text_as_node(const std::string & text, int operation);
   virtual void output_char(char character, int operation);
 

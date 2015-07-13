@@ -208,7 +208,7 @@ METHOD_TYPE srcdiff_output::method() const {
 
 }
 
-void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int operation) {
+void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int operation, bool force_output) {
 
   /*
     fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
@@ -275,7 +275,7 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
       return;
 
     // check if ending a SESDELETE/SESINSERT/SESCOMMON tag. if so delay.
-    if(ismethod(wstate->method, METHOD_GROUP) && operation != SESMOVE && (*node == *diff_original_end || *node == *diff_modified_end || *node == *diff_common_end)) {
+    if(ismethod(wstate->method, METHOD_GROUP) && !force_output && operation != SESMOVE && (*node == *diff_original_end || *node == *diff_modified_end || *node == *diff_common_end)) {
 
 
       delay = true;
@@ -334,7 +334,7 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
     int current_operation = wstate->output_diff.back()->operation;
     int size = wstate->output_diff.back()->open_tags.size();
 
-    if(size > 0 && operation != SESMOVE &&
+    if(!force_output && size > 0 && operation != SESMOVE &&
        ((*node == *diff_original_start && current_operation == SESDELETE)
                     || (*node == *diff_modified_start && current_operation == SESINSERT)
                     || (*node == *diff_common_start && current_operation == SESCOMMON))) {
