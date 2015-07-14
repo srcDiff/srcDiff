@@ -109,7 +109,7 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
     } else {
 
-      original_moved.push_back(IntPair(SESDELETE, 0));
+      original_moved.push_back(IntPair(SES_DELETE, 0));
       pos_original.push_back(i);
       original_sets.push_back(node_sets_original.at(index));
 
@@ -131,7 +131,7 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
     } else {
 
-      modified_moved.push_back(IntPair(SESINSERT, 0));
+      modified_moved.push_back(IntPair(SES_INSERT, 0));
       pos_modified.push_back(i);
       modified_sets.push_back(node_sets_modified.at(index));
 
@@ -150,10 +150,10 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
   for(; matches; matches = matches->next) {
 
-    original_moved.at(pos_original.at(matches->original_offset)).first = SESCOMMON;
+    original_moved.at(pos_original.at(matches->original_offset)).first = SES_COMMON;
     original_moved.at(pos_original.at(matches->original_offset)).second = pos_modified.at(matches->modified_offset);
 
-    modified_moved.at(pos_modified.at(matches->modified_offset)).first = SESCOMMON;
+    modified_moved.at(pos_modified.at(matches->modified_offset)).first = SES_COMMON;
     modified_moved.at(pos_modified.at(matches->modified_offset)).second = pos_original.at(matches->original_offset);
 
   }
@@ -196,10 +196,10 @@ void srcdiff_many::output() {
 
     unsigned int end_modified = start_modified;
 
-    for(; end_original < original_moved.size() && (original_moved.at(end_original).first == SESDELETE || original_moved.at(end_original).first == MOVE); ++end_original)
+    for(; end_original < original_moved.size() && (original_moved.at(end_original).first == SES_DELETE || original_moved.at(end_original).first == MOVE); ++end_original)
       ;
 
-    for(; end_modified < modified_moved.size() && (modified_moved.at(end_modified).first == SESINSERT || modified_moved.at(end_modified).first == MOVE); ++end_modified)
+    for(; end_modified < modified_moved.size() && (modified_moved.at(end_modified).first == SES_INSERT || modified_moved.at(end_modified).first == MOVE); ++end_modified)
       ;
 
     // output diffs until match
@@ -212,7 +212,7 @@ void srcdiff_many::output() {
     if(i >= original_moved.size() || j >= modified_moved.size())
       break;
 
-    if(original_moved.at(i).first == SESCOMMON && modified_moved.at(j).first == SESCOMMON) {
+    if(original_moved.at(i).first == SES_COMMON && modified_moved.at(j).first == SES_COMMON) {
  
       if((xmlReaderTypes)out.get_nodes_original().at(node_sets_original.at(edits->offset_sequence_one + i).at(0))->type != XML_READER_TYPE_TEXT) {
 

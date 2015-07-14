@@ -86,13 +86,13 @@ void srcdiff_single::output_recursive_same() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_all();
 
-  out.output_node(out.diff_common_start, SESCOMMON);
+  out.output_node(out.diff_common_start, SES_COMMON);
 
   std::shared_ptr<srcml_node> merged_node;
 
   if(srcdiff_compare::node_compare(out.get_nodes_original().at(node_sets_original.at(start_original).at(0)), out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))) == 0) {
 
-    out.output_node(out.get_nodes_original().at(node_sets_original.at(start_original).at(0)), SESCOMMON);
+    out.output_node(out.get_nodes_original().at(node_sets_original.at(start_original).at(0)), SES_COMMON);
 
   } else {
 
@@ -102,7 +102,7 @@ void srcdiff_single::output_recursive_same() {
                                               out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->properties);
 
 
-    out.output_node(merged_node, SESCOMMON);
+    out.output_node(merged_node, SES_COMMON);
 
 
   }
@@ -143,7 +143,7 @@ void srcdiff_single::output_recursive_same() {
 
   output_common(node_sets_original.at(start_original).back() + 1, node_sets_modified.at(start_modified).back() + 1);
 
-  out.output_node(out.diff_common_end, SESCOMMON);
+  out.output_node(out.diff_common_end, SES_COMMON);
 
   whitespace.output_statement();
 
@@ -158,10 +158,10 @@ void srcdiff_single::output_recursive_interchangeable() {
   out.diff_original_start->properties.push_back(*out.diff_type.get());
   out.diff_modified_start->properties.push_back(*out.diff_type.get());
 
-  out.output_node(out.diff_original_start, SESDELETE, true);
+  out.output_node(out.diff_original_start, SES_DELETE, true);
   out.diff_original_start->properties.clear();
 
-  out.output_node(out.get_nodes_original().at(node_sets_original.at(start_original).at(0)), SESDELETE);
+  out.output_node(out.get_nodes_original().at(node_sets_original.at(start_original).at(0)), SES_DELETE);
 
   int original_collect_start_pos = 1;
 
@@ -189,7 +189,7 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   if((is_keyword && !is_keywords) || (is_keywords && !is_same_keyword)) {
 
-    out.output_node(out.get_nodes_original().at(node_sets_original.at(start_original).at(1)), SESDELETE);
+    out.output_node(out.get_nodes_original().at(node_sets_original.at(start_original).at(1)), SES_DELETE);
     ++out.last_output_original();
     ++original_collect_start_pos;
 
@@ -197,15 +197,15 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   ++out.last_output_original();
 
-  out.output_node(out.diff_modified_start, SESINSERT, true);
+  out.output_node(out.diff_modified_start, SES_INSERT, true);
   out.diff_modified_start->properties.clear();
 
-  out.output_node(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0)), SESINSERT);
+  out.output_node(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0)), SES_INSERT);
 
   int modified_collect_start_pos = 1;
   if(is_keywords && !is_same_keyword){
 
-    out.output_node(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(1)), SESINSERT);
+    out.output_node(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(1)), SES_INSERT);
     ++out.last_output_modified();
     ++modified_collect_start_pos;
 
@@ -229,11 +229,11 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   output_change(out.last_output_original(), node_sets_modified.at(start_modified).back() + 1);
 
-  out.output_node(out.diff_modified_end, SESINSERT, true);
+  out.output_node(out.diff_modified_end, SES_INSERT, true);
 
   output_change(node_sets_original.at(start_original).back() + 1, out.last_output_modified());
 
-  out.output_node(out.diff_original_end, SESDELETE, true);
+  out.output_node(out.diff_original_end, SES_DELETE, true);
 
   whitespace.output_statement();
 

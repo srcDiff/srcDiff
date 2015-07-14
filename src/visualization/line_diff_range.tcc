@@ -87,14 +87,14 @@ std::string line_diff_range<T>::get_line_diff_range() {
 
     std::stringstream stream;
     
-    if(edits->operation == SESDELETE) {
+    if(edits->operation == SES_DELETE) {
 
       stream <<  "d";
       stream << (edits->offset_sequence_one + 1);
       stream << "-";
       stream << (edits->offset_sequence_one + edits->length);
 
-    } else if(edits->operation == SESINSERT) {
+    } else if(edits->operation == SES_INSERT) {
 
       stream << "i";
       stream << (edits->offset_sequence_two + 1);
@@ -190,7 +190,7 @@ bool line_diff_range<T>::is_no_white_space_diff() {
 
     switch(edits->operation) {
 
-    case SESINSERT:
+    case SES_INSERT:
 
       for(int i = 0; i < edits->length; ++i)
         if(remove_white_space(lines_two.at(edits->offset_sequence_two + i)) != "")
@@ -198,7 +198,7 @@ bool line_diff_range<T>::is_no_white_space_diff() {
 
       break;
 
-    case SESDELETE:
+    case SES_DELETE:
 
       for(int i = 0; i < edits->length; ++i)
         if(remove_white_space(lines_one.at(edits->offset_sequence_one + i)) != "")

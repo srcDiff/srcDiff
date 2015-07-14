@@ -91,12 +91,12 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original, cons
   //   return;
 
   int is_original = 0;
-  std::thread thread_original(std::ref(input_original), SESDELETE, std::ref(output.get_nodes_original()), std::ref(is_original));
+  std::thread thread_original(std::ref(input_original), SES_DELETE, std::ref(output.get_nodes_original()), std::ref(is_original));
 
   thread_original.join();
 
   int is_modified = 0;
-  std::thread thread_modified(std::ref(input_modified), SESINSERT, std::ref(output.get_nodes_modified()), std::ref(is_modified));
+  std::thread thread_modified(std::ref(input_modified), SES_INSERT, std::ref(output.get_nodes_modified()), std::ref(is_modified));
 
   thread_modified.join();
 

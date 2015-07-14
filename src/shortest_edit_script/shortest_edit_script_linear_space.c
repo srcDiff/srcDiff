@@ -309,7 +309,7 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
       // fprintf(stderr, "Range New: %d->%d\n", sequence_two_start, sequence_two_end);
       // fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1].x, points[1].y);
       struct edit * new_edit = (struct edit *)malloc(sizeof(struct edit));
-      new_edit->operation = SESDELETE;
+      new_edit->operation = SES_DELETE;
       new_edit->previous = 0;
       new_edit->next = 0;
 
@@ -344,7 +344,7 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
       // fprintf(stderr, "Range New: %d->%d\n", sequence_two_start, sequence_two_end);
       // fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1].x, points[1].y);
       struct edit * new_edit = (struct edit *)malloc(sizeof(struct edit));
-      new_edit->operation = SESINSERT;
+      new_edit->operation = SES_INSERT;
       new_edit->previous = 0;
       new_edit->next = 0;
 
@@ -383,7 +383,7 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
 
     if((sequence_one_end - sequence_one_start) > 0) {
 
-      new_edit->operation = SESDELETE;
+      new_edit->operation = SES_DELETE;
       new_edit->offset_sequence_one = sequence_one_start;
       new_edit->offset_sequence_two = sequence_two_start;
       new_edit->length = sequence_one_end - sequence_one_start;
@@ -391,7 +391,7 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
 
     } else if((sequence_two_end - sequence_two_start) > 0) {
 
-      new_edit->operation = SESINSERT;
+      new_edit->operation = SES_INSERT;
       new_edit->offset_sequence_one = sequence_one_start;
       new_edit->offset_sequence_two = sequence_two_start;
       new_edit->length = sequence_two_end - sequence_two_start;
@@ -440,7 +440,7 @@ int merge_sequential_edits(struct edit ** edit_script) {
     ++edit_distance;
 
     // condense insert edit
-    if(current_edit->operation == SESINSERT) {
+    if(current_edit->operation == SES_INSERT) {
 
       while(current_edit->next != NULL
             && (current_edit->operation == current_edit->next->operation)
@@ -531,11 +531,11 @@ int main(int argc, char * argv[]) {
 
 fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current_edit->offset_sequence_one);
 fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current_edit->offset_sequence_two);
-    const char ** sequence = current_edit->operation == SESDELETE ? sequence_one : sequence_two;
+    const char ** sequence = current_edit->operation == SES_DELETE ? sequence_one : sequence_two;
     for(int i = 0; i < current_edit->length; ++i) {
 
-      fprintf(stderr, "%s: ",current_edit->operation == SESDELETE ? "DELETE" : "INSERT");
-      fprintf(stderr, "%s\n", sequence[current_edit->operation == SESDELETE ? current_edit->offset_sequence_one + i : current_edit->offset_sequence_two + i]);
+      fprintf(stderr, "%s: ",current_edit->operation == SES_DELETE ? "DELETE" : "INSERT");
+      fprintf(stderr, "%s\n", sequence[current_edit->operation == SES_DELETE ? current_edit->offset_sequence_one + i : current_edit->offset_sequence_two + i]);
 
     }
 

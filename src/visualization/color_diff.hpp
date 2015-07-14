@@ -106,7 +106,7 @@ int color_diff::colorize(const char * srcdiff, line_diff_range<T> & line_diff_ra
   ctxt->sax = &sax;
 
   std::vector<int> stack = std::vector<int>();
-  stack.push_back(SESCOMMON);
+  stack.push_back(SES_COMMON);
 
   struct sax2_color_diff::source_diff data = { 1, 1, &stack, lines_original, lines_modified, line_diff_range.get_file_one(), line_diff_range.get_file_two()
                               , *outfile, options, "", false, false, false };

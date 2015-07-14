@@ -43,12 +43,12 @@ void srcdiff_comment::output() {
     // determine ending position to output
     diff_end_original = out.last_output_original();
     diff_end_modified = out.last_output_modified();
-    if(edits->operation == SESDELETE && last_diff_original < edits->offset_sequence_one) {
+    if(edits->operation == SES_DELETE && last_diff_original < edits->offset_sequence_one) {
 
       diff_end_original = node_sets_original.at(edits->offset_sequence_one - 1).back() + 1;
       diff_end_modified = node_sets_modified.at(edits->offset_sequence_two - 1).back() + 1;
 
-    } else if(edits->operation == SESINSERT && edits->offset_sequence_one != 0 && last_diff_original <= edits->offset_sequence_one)  {
+    } else if(edits->operation == SES_INSERT && edits->offset_sequence_one != 0 && last_diff_original <= edits->offset_sequence_one)  {
 
       diff_end_original = node_sets_original.at(edits->offset_sequence_one - 1).back() + 1;
       diff_end_modified = node_sets_modified.at(edits->offset_sequence_two - 1).back() + 1;
@@ -89,7 +89,7 @@ void srcdiff_comment::output() {
       // handle pure delete or insert
       switch (edits->operation) {
 
-      case SESINSERT:
+      case SES_INSERT:
 
         //fprintf(stderr, "HERE\n");
         output_pure(0, node_sets_modified.at(edits->offset_sequence_two + edits->length - 1).back() + 1);
@@ -100,7 +100,7 @@ void srcdiff_comment::output() {
 
         break;
 
-      case SESDELETE:
+      case SES_DELETE:
 
         //fprintf(stderr, "HERE\n");
         output_pure(node_sets_original.at(edits->offset_sequence_one + edits->length - 1).back() + 1, 0);

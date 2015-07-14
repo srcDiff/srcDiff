@@ -50,21 +50,21 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original, const node_sets & no
 
     switch(edits->operation) {
 
-    case SESINSERT :
+    case SES_INSERT :
 
       for(int i = 0; i < edits->length; ++i) {
 
-        add_construct(constructs, node_sets_modified, nodes_modified, edits->offset_sequence_two + i, SESINSERT);
+        add_construct(constructs, node_sets_modified, nodes_modified, edits->offset_sequence_two + i, SES_INSERT);
 
       }
 
       break;
 
-    case SESDELETE :
+    case SES_DELETE :
 
       for(int i = 0; i < edits->length; ++i) {
 
-        add_construct(constructs, node_sets_original, nodes_original, edits->offset_sequence_one + i, SESDELETE);
+        add_construct(constructs, node_sets_original, nodes_original, edits->offset_sequence_one + i, SES_DELETE);
 
       }
 
@@ -89,7 +89,7 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original, const node_sets & no
       const node_sets * node_sets_one = &node_sets_original;
       const node_sets * node_sets_two = &node_sets_modified;
 
-      if(elements.at(i).second == SESINSERT) {
+      if(elements.at(i).second == SES_INSERT) {
 
        nodes_one = &nodes_modified;
        nodes_two = &nodes_original;
@@ -161,7 +161,7 @@ void srcdiff_move::output() {
   std::shared_ptr<srcml_node> start_node = diff_original_start;
   std::shared_ptr<srcml_node> end_node = diff_original_end;
 
-  if(operation == SESINSERT) {
+  if(operation == SES_INSERT) {
 
     rbuf = rbuf_modified;
     start_node = diff_modified_start;

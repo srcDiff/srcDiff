@@ -226,10 +226,10 @@ void sax2_color_diff::startDocument(void* ctx) {
 
     for(; edits; edits = edits->next) {
 
-      if(edits->operation == SESDELETE)
+      if(edits->operation == SES_DELETE)
         for(int i = last_line; i < edits->offset_sequence_one; ++i)
           file_name += path_one.at(i) + "/";
-      else if(edits->operation == SESINSERT)
+      else if(edits->operation == SES_INSERT)
         for(int i = last_line; i < edits->offset_sequence_one + 1; ++i)
           file_name += path_one.at(i) + "/";
 
@@ -279,7 +279,7 @@ void sax2_color_diff::startDocument(void* ctx) {
 
       switch(edits->operation) {
 
-      case SESINSERT :
+      case SES_INSERT :
 
         {
 
@@ -314,7 +314,7 @@ void sax2_color_diff::startDocument(void* ctx) {
 
         break;
 
-      case SESDELETE :
+      case SES_DELETE :
 
         {
 
@@ -443,11 +443,11 @@ void sax2_color_diff::startDocument(void* ctx) {
 
   std::string span_class = "class=\"";
   bool is_srcdiff = false;
-  if(data->in_diff->back() == SESCOMMON)
+  if(data->in_diff->back() == SES_COMMON)
     span_class += common_color;
   else {
 
-    if(data->in_diff->back() == SESDELETE)
+    if(data->in_diff->back() == SES_DELETE)
       span_class += delete_color;
     else
       span_class += insert_color;
@@ -539,11 +539,11 @@ void sax2_color_diff::startElementNs(void* ctx, const xmlChar* localname, const 
   if((const char *)URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
     if(strcmp((const char *)localname, "common") == 0)
-      data->in_diff->push_back(SESCOMMON);
+      data->in_diff->push_back(SES_COMMON);
     else if(strcmp((const char *)localname, "delete") == 0)
-      data->in_diff->push_back(SESDELETE);
+      data->in_diff->push_back(SES_DELETE);
     else if(strcmp((const char *)localname, "insert") == 0)
-      data->in_diff->push_back(SESINSERT);
+      data->in_diff->push_back(SES_INSERT);
 
     if(nb_attributes && strcmp((const char *)attributes[0], "move") == 0) {
 
@@ -585,11 +585,11 @@ void sax2_color_diff::characters(void* ctx, const xmlChar* ch, int len) {
   std::string span_class = "class=\"";
 
   bool is_srcdiff = false;
-  if(data->in_diff->back() == SESCOMMON)
+  if(data->in_diff->back() == SES_COMMON)
     span_class += common_color;
   else {
 
-    if(data->in_diff->back() == SESDELETE)
+    if(data->in_diff->back() == SES_DELETE)
       span_class += delete_color;
     else
       span_class += insert_color;
@@ -680,12 +680,12 @@ void sax2_color_diff::characters(void* ctx, const xmlChar* ch, int len) {
 
     if((char)ch[i] == '\n') {
 
-      if(data->in_diff->back() == SESCOMMON) {
+      if(data->in_diff->back() == SES_COMMON) {
 
         ++data->line_original;
         ++data->line_modified;
 
-      } else if(data->in_diff->back() == SESDELETE) {
+      } else if(data->in_diff->back() == SES_DELETE) {
 
         ++data->line_original;
 
@@ -793,11 +793,11 @@ void sax2_color_diff::characters(void* ctx, const xmlChar* ch, int len) {
 
     span_class = "class=\"";
 
-    if(data->in_diff->back() == SESCOMMON)
+    if(data->in_diff->back() == SES_COMMON)
       span_class += common_color;
     else {
 
-      if(data->in_diff->back() == SESDELETE)
+      if(data->in_diff->back() == SES_DELETE)
         span_class += delete_color;
       else
         span_class += insert_color;

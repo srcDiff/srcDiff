@@ -116,7 +116,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
         // move down (set delete operation) and append edit
         column = last_distance[diagonal_pos + 1].x;
         row= last_distance[diagonal_pos + 1].y + 1;
-        edit_pointers[edit_array][edit].operation = SESINSERT;
+        edit_pointers[edit_array][edit].operation = SES_INSERT;
         edit_pointers[edit_array][edit].previous = script[diagonal_pos + 1];
 
       } else {
@@ -124,7 +124,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
         // move right (set insert operation) and append edit
         column = last_distance[diagonal_pos - 1].x + 1;
         row = last_distance[diagonal_pos - 1].y;
-        edit_pointers[edit_array][edit].operation = SESDELETE;
+        edit_pointers[edit_array][edit].operation = SES_DELETE;
         edit_pointers[edit_array][edit].previous = script[diagonal_pos - 1];
 
       }
@@ -272,7 +272,7 @@ int make_edit_script(struct edit * start_edit, struct edit ** edit_script, struc
     current_edit->length = 1;
 
     // condense insert edit
-    if(current_edit->operation == SESINSERT)
+    if(current_edit->operation == SES_INSERT)
       while(current_edit->next != NULL
             && (current_edit->operation == current_edit->next->operation)
             && (current_edit->offset_sequence_one == current_edit->next->offset_sequence_one)) {
@@ -329,7 +329,7 @@ int make_edit_script(struct edit * start_edit, struct edit ** edit_script, struc
     }
 
     // correct offset
-    if(current_edit->operation == SESDELETE)
+    if(current_edit->operation == SES_DELETE)
       --current_edit->offset_sequence_one;
     else
       --current_edit->offset_sequence_two;
@@ -368,7 +368,7 @@ struct edit * copy_edit(struct edit * edit) {
 
 int is_change(struct edit * edit_script) {
 
-  return edit_script->operation == SESDELETE && edit_script->next != NULL && edit_script->next->operation == SESINSERT
+  return edit_script->operation == SES_DELETE && edit_script->next != NULL && edit_script->next->operation == SES_INSERT
     && (edit_script->offset_sequence_one + edit_script->length) == edit_script->next->offset_sequence_one;
 
 }
@@ -411,11 +411,11 @@ int main(int argc, char * argv[]) {
 
 fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current_edit->offset_sequence_one);
 fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current_edit->offset_sequence_two);
-    const char ** sequence = current_edit->operation == SESDELETE ? sequence_one : sequence_two;
+    const char ** sequence = current_edit->operation == SES_DELETE ? sequence_one : sequence_two;
     for(int i = 0; i < current_edit->length; ++i) {
 
-      fprintf(stderr, "%s: ",current_edit->operation == SESDELETE ? "DELETE" : "INSERT");
-      fprintf(stderr, "%s\n", sequence[current_edit->operation == SESDELETE ? current_edit->offset_sequence_one + i : current_edit->offset_sequence_two + i]);
+      fprintf(stderr, "%s: ",current_edit->operation == SES_DELETE ? "DELETE" : "INSERT");
+      fprintf(stderr, "%s\n", sequence[current_edit->operation == SES_DELETE ? current_edit->offset_sequence_one + i : current_edit->offset_sequence_two + i]);
 
     }
 

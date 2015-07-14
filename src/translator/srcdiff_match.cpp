@@ -565,12 +565,12 @@ int name_list_similarity(std::vector<std::string> name_list_original, std::vecto
 
     switch(edits->operation) {
 
-      case SESDELETE :
+      case SES_DELETE :
 
         delete_similarity += edits->length;
         break;
 
-      case SESINSERT :
+      case SES_INSERT :
 
         insert_similarity += edits->length;
         break;
@@ -1088,7 +1088,7 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
                       start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
 
 
-        is_reject = !(operation == SESINSERT);
+        is_reject = !(operation == SES_INSERT);
 
       } else {
 
@@ -1100,7 +1100,7 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
                       start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
 
 
-        is_reject = !(operation == SESDELETE);
+        is_reject = !(operation == SES_DELETE);
 
       }
 
@@ -1255,7 +1255,7 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
         expr_modified = get_first_expr_child(nodes_modified, modified_pos);
         node_sets sets = node_sets(nodes_original, set_original.at(1), set_original.back(), srcdiff_nested::is_match,
                                   &nodes_modified.at(expr_modified.at(0)));
-        int match = srcdiff_nested::best_match(nodes_original, sets, nodes_modified, expr_modified, SESDELETE);
+        int match = srcdiff_nested::best_match(nodes_original, sets, nodes_modified, expr_modified, SES_DELETE);
 
         if(match < sets.size())
           expr_original = sets.at(match);
@@ -1265,7 +1265,7 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
         expr_original = get_first_expr_child(nodes_original, original_pos);
         node_sets sets = node_sets(nodes_modified, set_modified.at(1), set_modified.back(), srcdiff_nested::is_match,
                                   &nodes_original.at(expr_original.at(0)));
-        int match = srcdiff_nested::best_match(nodes_modified, sets, nodes_original, expr_original, SESINSERT);
+        int match = srcdiff_nested::best_match(nodes_modified, sets, nodes_original, expr_original, SES_INSERT);
 
         if(match < sets.size())
           expr_modified = sets.at(match);

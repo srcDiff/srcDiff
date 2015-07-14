@@ -156,7 +156,7 @@ template<class T>
 void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
   static const std::shared_ptr<srcml_node> flush = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"));
-  output_node(flush, SESCOMMON);
+  output_node(flush, SES_COMMON);
 
   srcml_write_end_unit(wstate->unit);
 

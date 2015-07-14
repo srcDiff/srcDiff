@@ -6,7 +6,7 @@
 const std::string DIFF_PREFIX = "diff:";
 const std::string DIFF_OLD = "delete";
 const std::string DIFF_NEW = "insert";
-const std::string DIFF_SESCOMMON = "common";
+const std::string DIFF_SES_COMMON = "common";
 const std::string DIFF_TYPE = "type";
 
 const std::string SRCDIFF_DEFAULT_NAMESPACE_HREF = "http://www.srcML.org/srcDiff";

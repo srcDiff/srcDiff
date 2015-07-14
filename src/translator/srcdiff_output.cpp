@@ -11,7 +11,7 @@
 srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method,
   const boost::any & bash_view_context, const boost::optional<std::string> & summary_type_str)
  : archive(archive), flags(flags),
-   rbuf_original(std::make_shared<reader_state>(SESDELETE)), rbuf_modified(std::make_shared<reader_state>(SESINSERT)), wstate(std::make_shared<writer_state>(method)),
+   rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcml_node::srcml_ns>()), diff_type(std::make_shared<srcml_node::srcml_attr>(DIFF_TYPE)) {
 
   if(!is_option(flags, OPTION_VISUALIZE | OPTION_BASH_VIEW | OPTION_SUMMARY)) {
@@ -44,8 +44,8 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
   unit_tag            = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, std::string("unit"), srcml_node::srcml_ns());
 
-  diff_common_start   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_SESCOMMON, *diff.get());
-  diff_common_end     = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_SESCOMMON, *diff.get());
+  diff_common_start   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_SES_COMMON, *diff.get());
+  diff_common_end     = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_SES_COMMON, *diff.get());
   diff_original_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_OLD, *diff.get());
   diff_original_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_OLD, *diff.get());
   diff_modified_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_NEW, *diff.get());
@@ -58,28 +58,28 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
  void srcdiff_output::initialize(int is_original, int is_modified) {
 
   diff_set * original_diff = new diff_set();
-  original_diff->operation = SESCOMMON;
+  original_diff->operation = SES_COMMON;
   rbuf_original->open_diff.push_back(original_diff);
 
   diff_set * modified_diff = new diff_set();
-  modified_diff->operation = SESCOMMON;
+  modified_diff->operation = SES_COMMON;
   rbuf_modified->open_diff.push_back(modified_diff);
 
   diff_set * output_diff = new diff_set();
-  output_diff->operation = SESCOMMON;
+  output_diff->operation = SES_COMMON;
   wstate->output_diff.push_back(output_diff);
 
   if(!rbuf_original->nodes.empty() && !rbuf_modified->nodes.empty()) {
 
-    update_diff_stack(rbuf_original->open_diff, unit_tag, SESCOMMON);
-    update_diff_stack(rbuf_modified->open_diff, unit_tag, SESCOMMON);
-    update_diff_stack(wstate->output_diff, unit_tag, SESCOMMON);
+    update_diff_stack(rbuf_original->open_diff, unit_tag, SES_COMMON);
+    update_diff_stack(rbuf_modified->open_diff, unit_tag, SES_COMMON);
+    update_diff_stack(wstate->output_diff, unit_tag, SES_COMMON);
 
   } else if(rbuf_original->nodes.empty() && rbuf_modified->nodes.empty()) {
 
-    update_diff_stack(rbuf_original->open_diff, diff_common_start, SESCOMMON);
-    update_diff_stack(rbuf_modified->open_diff, diff_common_start, SESCOMMON);
-    update_diff_stack(wstate->output_diff, diff_common_start, SESCOMMON);
+    update_diff_stack(rbuf_original->open_diff, diff_common_start, SES_COMMON);
+    update_diff_stack(rbuf_modified->open_diff, diff_common_start, SES_COMMON);
+    update_diff_stack(wstate->output_diff, diff_common_start, SES_COMMON);
 
     if(is_original <= -1 && is_modified <= -1) {
 
@@ -98,9 +98,9 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
     }
 
-    update_diff_stack(rbuf_original->open_diff, diff_common_start, SESCOMMON);
-    update_diff_stack(rbuf_modified->open_diff, unit_tag, SESCOMMON);
-    update_diff_stack(wstate->output_diff, unit_tag, SESCOMMON);
+    update_diff_stack(rbuf_original->open_diff, diff_common_start, SES_COMMON);
+    update_diff_stack(rbuf_modified->open_diff, unit_tag, SES_COMMON);
+    update_diff_stack(wstate->output_diff, unit_tag, SES_COMMON);
 
   } else {
 
@@ -111,9 +111,9 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
     }
 
-    update_diff_stack(rbuf_original->open_diff, unit_tag, SESCOMMON);
-    update_diff_stack(rbuf_modified->open_diff, diff_common_start, SESCOMMON);
-    update_diff_stack(wstate->output_diff, unit_tag, SESCOMMON);
+    update_diff_stack(rbuf_original->open_diff, unit_tag, SES_COMMON);
+    update_diff_stack(rbuf_modified->open_diff, diff_common_start, SES_COMMON);
+    update_diff_stack(wstate->output_diff, unit_tag, SES_COMMON);
 
   }
 
@@ -221,39 +221,39 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
   static bool delay = false;
   static int delay_operation = -2;
 
-  // check if delaying SESDELETE/SESINSERT/SESCOMMON tag. should only stop if operation is different or not whitespace
+  // check if delaying SES_DELETE/SES_INSERT/SES_COMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)
-     && ((delay_operation == SESDELETE 
+     && ((delay_operation == SES_DELETE 
           && wstate->output_diff.back()->open_tags.back()->name == diff_original_end->name)
-         || (delay_operation == SESINSERT 
+         || (delay_operation == SES_INSERT 
              && wstate->output_diff.back()->open_tags.back()->name == diff_modified_end->name)
-         || (delay_operation == SESCOMMON 
+         || (delay_operation == SES_COMMON 
              && wstate->output_diff.back()->open_tags.back()->name == diff_common_end->name))) {
 
-    if(delay_operation == SESDELETE) {
+    if(delay_operation == SES_DELETE) {
 
       output_node(*diff_original_end);
 
-      update_diff_stack(rbuf_original->open_diff, diff_original_end, SESDELETE);
+      update_diff_stack(rbuf_original->open_diff, diff_original_end, SES_DELETE);
 
-      update_diff_stack(wstate->output_diff, diff_original_end, SESDELETE);
+      update_diff_stack(wstate->output_diff, diff_original_end, SES_DELETE);
 
-    } else if(delay_operation == SESINSERT) {
+    } else if(delay_operation == SES_INSERT) {
 
       output_node(*diff_modified_end);
 
-      update_diff_stack(rbuf_modified->open_diff, diff_modified_end, SESINSERT);
+      update_diff_stack(rbuf_modified->open_diff, diff_modified_end, SES_INSERT);
 
-      update_diff_stack(wstate->output_diff, diff_modified_end, SESINSERT);
+      update_diff_stack(wstate->output_diff, diff_modified_end, SES_INSERT);
 
-    } else if(delay_operation == SESCOMMON)  {
+    } else if(delay_operation == SES_COMMON)  {
 
       output_node(*diff_common_end);
 
-      update_diff_stack(rbuf_original->open_diff, diff_common_end, SESCOMMON);
-      update_diff_stack(rbuf_modified->open_diff, diff_common_end, SESCOMMON);
+      update_diff_stack(rbuf_original->open_diff, diff_common_end, SES_COMMON);
+      update_diff_stack(rbuf_modified->open_diff, diff_common_end, SES_COMMON);
 
-      update_diff_stack(wstate->output_diff, diff_common_end, SESCOMMON);
+      update_diff_stack(wstate->output_diff, diff_common_end, SES_COMMON);
 
     }
 
@@ -272,7 +272,7 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
     if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT && wstate->output_diff.back()->open_tags.back()->name != node->name)
       return;
 
-    // check if ending a SESDELETE/SESINSERT/SESCOMMON tag. if so delay.
+    // check if ending a SES_DELETE/SES_INSERT/SES_COMMON tag. if so delay.
     if(ismethod(wstate->method, METHOD_GROUP) && !force_output && (*node == *diff_original_end || *node == *diff_modified_end || *node == *diff_common_end)) {
 
 
@@ -286,32 +286,32 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
 
     }
 
-    if(wstate->output_diff.back()->operation == SESCOMMON) {
+    if(wstate->output_diff.back()->operation == SES_COMMON) {
 
-      //fprintf(stderr, "HERE OUTPUT SESCOMMON\n");
+      //fprintf(stderr, "HERE OUTPUT SES_COMMON\n");
 
-      update_diff_stack(rbuf_original->open_diff, node, SESCOMMON);
-      update_diff_stack(rbuf_modified->open_diff, node, SESCOMMON);
+      update_diff_stack(rbuf_original->open_diff, node, SES_COMMON);
+      update_diff_stack(rbuf_modified->open_diff, node, SES_COMMON);
 
-      update_diff_stack(wstate->output_diff, node, SESCOMMON);
+      update_diff_stack(wstate->output_diff, node, SES_COMMON);
 
-    } else if(wstate->output_diff.back()->operation == SESDELETE) {
+    } else if(wstate->output_diff.back()->operation == SES_DELETE) {
 
-      //fprintf(stderr, "HERE OUTPUT SESDELETE\n");
+      //fprintf(stderr, "HERE OUTPUT SES_DELETE\n");
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-      update_diff_stack(rbuf_original->open_diff, node, SESDELETE);
+      update_diff_stack(rbuf_original->open_diff, node, SES_DELETE);
 
-      update_diff_stack(wstate->output_diff, node, SESDELETE);
+      update_diff_stack(wstate->output_diff, node, SES_DELETE);
 
-    } else if(wstate->output_diff.back()->operation == SESINSERT) {
+    } else if(wstate->output_diff.back()->operation == SES_INSERT) {
 
-      //fprintf(stderr, "HERE OUTPUT SESINSERT\n");
+      //fprintf(stderr, "HERE OUTPUT SES_INSERT\n");
       //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
-      update_diff_stack(rbuf_modified->open_diff, node, SESINSERT);
+      update_diff_stack(rbuf_modified->open_diff, node, SES_INSERT);
 
-      update_diff_stack(wstate->output_diff, node, SESINSERT);
+      update_diff_stack(wstate->output_diff, node, SES_INSERT);
 
     }
 
@@ -324,9 +324,9 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
     int size = wstate->output_diff.back()->open_tags.size();
 
     if(!force_output && size > 0 &&
-       ((*node == *diff_original_start && current_operation == SESDELETE)
-                    || (*node == *diff_modified_start && current_operation == SESINSERT)
-                    || (*node == *diff_common_start && current_operation == SESCOMMON))) {
+       ((*node == *diff_original_start && current_operation == SES_DELETE)
+                    || (*node == *diff_modified_start && current_operation == SES_INSERT)
+                    || (*node == *diff_common_start && current_operation == SES_COMMON))) {
 
       return;
     }
@@ -336,9 +336,9 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
   // output non-text node and get next node
   output_node(*node);
 
-  if(operation == SESCOMMON) {
+  if(operation == SES_COMMON) {
 
-    //fprintf(stderr, "HERE OUTPUT SESCOMMON\n");
+    //fprintf(stderr, "HERE OUTPUT SES_COMMON\n");
     //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     update_diff_stack(rbuf_original->open_diff, node, operation);
@@ -347,18 +347,18 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
     update_diff_stack(wstate->output_diff, node, operation);
 
   }
-  else if(operation == SESDELETE) {
+  else if(operation == SES_DELETE) {
 
-    //fprintf(stderr, "HERE OUTPUT SESDELETE\n");
+    //fprintf(stderr, "HERE OUTPUT SES_DELETE\n");
     //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     update_diff_stack(rbuf_original->open_diff, node, operation);
 
     update_diff_stack(wstate->output_diff, node, operation);
 
-  } else if(operation == SESINSERT) {
+  } else if(operation == SES_INSERT) {
 
-    //fprintf(stderr, "HERE OUTPUT SESINSERT\n");
+    //fprintf(stderr, "HERE OUTPUT SES_INSERT\n");
     //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     update_diff_stack(rbuf_modified->open_diff, node, operation);

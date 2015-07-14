@@ -149,12 +149,12 @@ int srcdiff_measure::compute_similarity(int & text_original_length, int & text_m
 
     switch(edits->operation) {
 
-      case SESDELETE :
+      case SES_DELETE :
 
         delete_similarity += edits->length;
         break;
 
-      case SESINSERT :
+      case SES_INSERT :
 
         insert_similarity += edits->length;
         break;
@@ -212,12 +212,12 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
 
     switch(edits->operation) {
 
-      case SESDELETE :
+      case SES_DELETE :
 
         delete_similarity += edits->length;
         break;
 
-      case SESINSERT :
+      case SES_INSERT :
 
         insert_similarity += edits->length;
         break;
@@ -299,12 +299,12 @@ void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference
 
     switch(edits->operation) {
 
-      case SESDELETE :
+      case SES_DELETE :
 
         delete_similarity += edits->length;
         break;
 
-      case SESINSERT :
+      case SES_INSERT :
 
         insert_similarity += edits->length;
         break;

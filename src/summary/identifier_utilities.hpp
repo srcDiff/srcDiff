@@ -118,7 +118,7 @@ public:
         int original_pos = 0, modified_pos = 0;
         for(edit * edits = ses.get_script(); edits != nullptr; edits = edits->next) {
 
-            if(edits->operation == SESDELETE) {
+            if(edits->operation == SES_DELETE) {
 
                 while(original_pos < edits->offset_sequence_one) {
 

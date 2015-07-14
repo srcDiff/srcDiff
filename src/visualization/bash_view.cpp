@@ -147,7 +147,7 @@ void bash_view::startUnit(const char * localname, const char * prefix, const cha
                        int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                        const struct srcsax_attribute * attributes) {
 
-    diff_stack.push_back(SESCOMMON);
+    diff_stack.push_back(SES_COMMON);
 
 }
 
@@ -173,11 +173,11 @@ void bash_view::startElement(const char * localname, const char * prefix, const 
   if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
     if(local_name == "common")
-     diff_stack.push_back(SESCOMMON);
+     diff_stack.push_back(SES_COMMON);
     else if(local_name == "delete")
-     diff_stack.push_back(SESDELETE);
+     diff_stack.push_back(SES_DELETE);
     else if(local_name == "insert")
-     diff_stack.push_back(SESINSERT);
+     diff_stack.push_back(SES_INSERT);
     
   } else {
 
@@ -292,8 +292,8 @@ void bash_view::output_additional_context() {
 void bash_view::characters(const char * ch, int len) {
 
   const char * code = COMMON_CODE;
-  if(diff_stack.back() == SESDELETE) code = DELETE_CODE;
-  else if(diff_stack.back() == SESINSERT) code = INSERT_CODE;
+  if(diff_stack.back() == SES_DELETE) code = DELETE_CODE;
+  else if(diff_stack.back() == SES_INSERT) code = INSERT_CODE;
 
   if(code != COMMON_CODE) (*output) << code;
 
@@ -365,7 +365,7 @@ void bash_view::characters(const char * ch, int len) {
  */
 void bash_view::charactersUnit(const char * ch, int len) {
 
-  if(diff_stack.back() != SESCOMMON) {
+  if(diff_stack.back() != SES_COMMON) {
 
    output_additional_context();
 
@@ -380,7 +380,7 @@ void bash_view::charactersUnit(const char * ch, int len) {
 
   characters(ch, len);
 
-  if(diff_stack.back() != SESCOMMON) is_after_change  = true;
+  if(diff_stack.back() != SES_COMMON) is_after_change  = true;
 
 }
 
