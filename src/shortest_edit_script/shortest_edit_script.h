@@ -15,10 +15,7 @@ extern "C" {
 #endif
 
 // edit constants
-#define SESCOMMON 0
-#define SESDELETE -1
-#define SESINSERT 1
-#define SESCHANGE 2
+enum edit_operations { SESCOMMON, SESDELETE, SESINSERT };
 
 // single edit script
 struct edit {
