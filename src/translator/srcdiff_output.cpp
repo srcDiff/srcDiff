@@ -8,8 +8,6 @@
 
 #include <cstring>
 
-int move_operation = SESCOMMON;
-
 srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method,
   const boost::any & bash_view_context, const boost::optional<std::string> & summary_type_str)
  : archive(archive), flags(flags),
@@ -275,7 +273,7 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
       return;
 
     // check if ending a SESDELETE/SESINSERT/SESCOMMON tag. if so delay.
-    if(ismethod(wstate->method, METHOD_GROUP) && !force_output && operation != SESMOVE && (*node == *diff_original_end || *node == *diff_modified_end || *node == *diff_common_end)) {
+    if(ismethod(wstate->method, METHOD_GROUP) && !force_output && (*node == *diff_original_end || *node == *diff_modified_end || *node == *diff_common_end)) {
 
 
       delay = true;
@@ -315,15 +313,6 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
 
       update_diff_stack(wstate->output_diff, node, SESINSERT);
 
-    } else if(wstate->output_diff.back()->operation == SESMOVE) {
-
-      if(move_operation == SESDELETE)
-        update_diff_stack(rbuf_original->open_diff, node, SESMOVE);
-      else if(move_operation == SESINSERT)
-        update_diff_stack(rbuf_modified->open_diff, node, SESMOVE);
-
-      update_diff_stack(wstate->output_diff, node, SESMOVE);
-
     }
 
     return;
@@ -334,7 +323,7 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
     int current_operation = wstate->output_diff.back()->operation;
     int size = wstate->output_diff.back()->open_tags.size();
 
-    if(!force_output && size > 0 && operation != SESMOVE &&
+    if(!force_output && size > 0 &&
        ((*node == *diff_original_start && current_operation == SESDELETE)
                     || (*node == *diff_modified_start && current_operation == SESINSERT)
                     || (*node == *diff_common_start && current_operation == SESCOMMON))) {
@@ -373,20 +362,6 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
     //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     update_diff_stack(rbuf_modified->open_diff, node, operation);
-
-    update_diff_stack(wstate->output_diff, node, operation);
-
-  } else if(operation == SESMOVE) {
-
-    if(*node == *diff_original_start)
-      move_operation = SESDELETE;
-    else if(*node == *diff_modified_start)
-      move_operation = SESINSERT;
-
-    if(move_operation == SESDELETE)
-      update_diff_stack(rbuf_original->open_diff, node, operation);
-    else
-      update_diff_stack(rbuf_modified->open_diff, node, operation);
 
     update_diff_stack(wstate->output_diff, node, operation);
 

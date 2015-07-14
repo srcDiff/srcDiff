@@ -6,6 +6,8 @@
 #include <srcdiff_measure.hpp>
 #include <srcdiff_match.hpp>
 
+#define MOVE 3
+
 srcdiff_many::srcdiff_many(const srcdiff_diff & diff, edit * edit_script) : srcdiff_diff(diff), edit_script(edit_script) {}
 
 void srcdiff_many::output_unmatched(int start_original, int end_original, int start_modified, int end_modified) {
@@ -103,7 +105,7 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
     if(out.get_nodes_original().at(node_sets_original.at(index).at(0))->move) {
 
-      original_moved.push_back(IntPair(SESMOVE, 0));
+      original_moved.push_back(IntPair(MOVE, 0));
 
     } else {
 
@@ -125,7 +127,7 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
     if(out.get_nodes_modified().at(node_sets_modified.at(index).at(0))->move) {
 
-      modified_moved.push_back(IntPair(SESMOVE, 0));
+      modified_moved.push_back(IntPair(MOVE, 0));
 
     } else {
 
@@ -194,10 +196,10 @@ void srcdiff_many::output() {
 
     unsigned int end_modified = start_modified;
 
-    for(; end_original < original_moved.size() && (original_moved.at(end_original).first == SESDELETE || original_moved.at(end_original).first == SESMOVE); ++end_original)
+    for(; end_original < original_moved.size() && (original_moved.at(end_original).first == SESDELETE || original_moved.at(end_original).first == MOVE); ++end_original)
       ;
 
-    for(; end_modified < modified_moved.size() && (modified_moved.at(end_modified).first == SESINSERT || modified_moved.at(end_modified).first == SESMOVE); ++end_modified)
+    for(; end_modified < modified_moved.size() && (modified_moved.at(end_modified).first == SESINSERT || modified_moved.at(end_modified).first == MOVE); ++end_modified)
       ;
 
     // output diffs until match

@@ -173,9 +173,9 @@ void srcdiff_move::output() {
 
   start_node->properties.emplace_back(move, std::to_string(id));
 
-  output_node(start_node, SESMOVE);
+  output_node(start_node, operation, true);
 
-  output_node(rbuf->nodes.at(position), SESMOVE);
+  output_node(rbuf->nodes.at(position), operation);
 
   if(!rbuf->nodes.at(position)->is_empty) {
 
@@ -183,15 +183,15 @@ void srcdiff_move::output() {
 
     for(; rbuf->nodes.at(position)->move != id; ++position) {
 
-      output_node(rbuf->nodes.at(position), SESMOVE);
+      output_node(rbuf->nodes.at(position), operation);
 
     }
 
-    output_node(rbuf->nodes.at(position), SESMOVE);
+    output_node(rbuf->nodes.at(position), operation);
 
   }
 
-  output_node(end_node, SESMOVE);
+  output_node(end_node, operation, true);
 
   start_node->properties.clear();
 
