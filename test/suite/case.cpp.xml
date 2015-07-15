@@ -17,12 +17,12 @@
 <diff:delete type="change"><case>case:</case></diff:delete><diff:insert type="change"><case>case <expr><name>bar</name></expr>:</case> <break>break;</break></diff:insert></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
-<case>case <expr><name><diff:delete type="change">foo</diff:delete><diff:insert type="change">bar</diff:insert></name></expr>:</case> <diff:insert type="whitespace">
+<case>case <expr><name><diff:delete type="change">foo</diff:delete><diff:insert type="change">bar</diff:insert></name></expr>:</case> <diff:insert><diff:ws>
 
-        <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
-        <break>break;</break></diff:insert></unit>
+        </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>c</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><break>break;</break></diff:insert></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{

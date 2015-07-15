@@ -76,6 +76,16 @@ void srcdiff_change::output() {
 
       }
 
+      if(rbuf_original->nodes.at(i)->is_white_space()) {
+
+        rbuf_original->last_output = i;
+        srcdiff_whitespace whitespace(*this);
+        whitespace.output_all();
+        i = rbuf_original->last_output - 1;
+        continue;
+
+      }
+
       output_node(rbuf_original->nodes.at(i), SES_DELETE);
 
     }
@@ -107,6 +117,16 @@ void srcdiff_change::output() {
 
         output_node(diff_modified_start, SES_INSERT, is_change);
         first = false;
+
+      }
+
+      if(rbuf_modified->nodes.at(i)->is_white_space()) {
+
+        rbuf_modified->last_output = i;
+        srcdiff_whitespace whitespace(*this);
+        whitespace.output_all();
+        i = rbuf_modified->last_output - 1;
+        continue;
 
       }
 
