@@ -43,18 +43,20 @@ void srcdiff_change::output() {
   unsigned int begin_original = rbuf_original->last_output;
   unsigned int begin_modified = rbuf_modified->last_output;
 
+  bool is_change = false;
   if(end_original > begin_original && end_modified > begin_modified) {
 
     // set attribute to change
     diff_type->value = change;
     diff_original_start->properties.push_back(*diff_type.get());
     diff_modified_start->properties.push_back(*diff_type.get());
+    is_change = true;
 
   }
 
   if(end_original > begin_original) {
 
-
+    bool first = true;
     for(unsigned int i = begin_original; i < end_original; ++i) {
 
       if(rbuf_original->nodes.at(i)->move) {
@@ -67,17 +69,20 @@ void srcdiff_change::output() {
       }
 
       // output diff tag begin
-      output_node(diff_original_start, SES_DELETE);
+      if(first) {
+
+        output_node(diff_original_start, SES_DELETE, is_change);
+        first = false;
+
+      }
 
       output_node(rbuf_original->nodes.at(i), SES_DELETE);
 
-      // output diff tag begin
-      output_node(diff_original_end, SES_DELETE);
-
     }
 
-    // output diff tag begin
-    output_node(diff_original_end, SES_DELETE);
+    // output diff tag end
+    if(!first)
+      output_node(diff_original_end, SES_DELETE, is_change);
 
     rbuf_original->last_output = end_original;
 
@@ -85,6 +90,7 @@ void srcdiff_change::output() {
 
   if(end_modified > begin_modified) {
 
+    bool first = true;
     for(unsigned int i = begin_modified; i < end_modified; ++i) {
 
       if(rbuf_modified->nodes.at(i)->move) {
@@ -97,18 +103,20 @@ void srcdiff_change::output() {
       }
 
       // output diff tag
-      output_node(diff_modified_start, SES_INSERT);
+      if(first) {
+
+        output_node(diff_modified_start, SES_INSERT, is_change);
+        first = false;
+
+      }
 
       output_node(rbuf_modified->nodes.at(i), SES_INSERT);
 
-    // output diff tag begin
-    output_node(diff_modified_end, SES_INSERT);
-
-
     }
 
-    // output diff tag begin
-    output_node(diff_modified_end, SES_INSERT);
+    // output diff tag end
+    if(!first)
+      output_node(diff_modified_end, SES_INSERT, is_change);
 
     rbuf_modified->last_output = end_modified;
 
