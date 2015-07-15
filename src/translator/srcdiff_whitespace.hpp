@@ -9,8 +9,6 @@ protected:
 
 private:
 
-  static std::shared_ptr<srcml_node> diff_ws_start;
-  static std::shared_ptr<srcml_node> diff_ws_end;
   void markup_whitespace(unsigned int end_original, unsigned int end_modified);
 
 public:

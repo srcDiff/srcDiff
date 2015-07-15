@@ -110,6 +110,9 @@ public:
   std::shared_ptr<srcml_node> diff_modified_start;
   std::shared_ptr<srcml_node> diff_modified_end;
 
+  std::shared_ptr<srcml_node> diff_ws_start;
+  std::shared_ptr<srcml_node> diff_ws_end;
+
   std::shared_ptr<srcml_node::srcml_ns> diff;
 
   // diff attribute

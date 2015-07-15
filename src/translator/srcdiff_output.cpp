@@ -51,6 +51,9 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
   diff_modified_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_NEW, *diff.get());
   diff_modified_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_NEW, *diff.get());
 
+  diff_ws_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_WHITESPACE, *diff.get());
+  diff_ws_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_WHITESPACE, *diff.get());
+
  }
 
  srcdiff_output::~srcdiff_output() {}
@@ -220,6 +223,8 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
 
   static bool delay = false;
   static int delay_operation = -2;
+
+  static bool delay_ws_end = false;
 
   // check if delaying SES_DELETE/SES_INSERT/SES_COMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)

@@ -2,19 +2,9 @@
 
 #include <srcdiff_common.hpp>
 #include <srcdiff_compare.hpp>
-#include <srcdiff_constants.hpp>
 #include <shortest_edit_script.h>
 
-static const std::string DIFF_WHITESPACE("ws");
-std::shared_ptr<srcml_node> srcdiff_whitespace::diff_ws_start;
-std::shared_ptr<srcml_node> srcdiff_whitespace::diff_ws_end;
-
-srcdiff_whitespace::srcdiff_whitespace(const srcdiff_output & out) : srcdiff_output(out) {
-
-  diff_ws_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_WHITESPACE, *diff.get());
-  diff_ws_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_WHITESPACE, *diff.get());
-
-}
+srcdiff_whitespace::srcdiff_whitespace(const srcdiff_output & out) : srcdiff_output(out) {}
 
 void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned int end_modified) {
 
