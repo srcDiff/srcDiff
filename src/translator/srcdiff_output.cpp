@@ -46,10 +46,10 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
   diff_common_start   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_SES_COMMON, *diff.get());
   diff_common_end     = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_SES_COMMON, *diff.get());
-  diff_original_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_OLD, *diff.get());
-  diff_original_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_OLD, *diff.get());
-  diff_modified_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_NEW, *diff.get());
-  diff_modified_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_NEW, *diff.get());
+  diff_original_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_ORIGINAL, *diff.get());
+  diff_original_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_ORIGINAL, *diff.get());
+  diff_modified_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_MODIFIED, *diff.get());
+  diff_modified_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_MODIFIED, *diff.get());
 
   diff_ws_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_WHITESPACE, *diff.get());
   diff_ws_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_WHITESPACE, *diff.get());
