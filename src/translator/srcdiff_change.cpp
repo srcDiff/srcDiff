@@ -80,7 +80,7 @@ void srcdiff_change::output() {
 
         rbuf_original->last_output = i;
         srcdiff_whitespace whitespace(*this);
-        whitespace.output_all();
+        whitespace.output_all(SES_DELETE);
         i = rbuf_original->last_output - 1;
         continue;
 
@@ -124,7 +124,7 @@ void srcdiff_change::output() {
 
         rbuf_modified->last_output = i;
         srcdiff_whitespace whitespace(*this);
-        whitespace.output_all();
+        whitespace.output_all(SES_INSERT);
         i = rbuf_modified->last_output - 1;
         continue;
 

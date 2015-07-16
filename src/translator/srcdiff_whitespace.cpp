@@ -171,15 +171,17 @@ void srcdiff_whitespace::output_statement() {
 
 }
 
-void srcdiff_whitespace::output_all() {
+void srcdiff_whitespace::output_all(int operation) {
 
   unsigned int oend = rbuf_original->last_output;
   unsigned int nend = rbuf_modified->last_output;
 
   // advance whitespace after targeted end
-  for(; oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_white_space(); ++oend)
-    ;
+  if(operation == SES_COMMON || operation == SES_DELETE)
+    for(; oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_white_space(); ++oend)
+      ;
 
+  if(operation == SES_COMMON || operation == SES_INSERT)
   for(; nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_white_space(); ++nend)
     ;
 

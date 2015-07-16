@@ -31,7 +31,7 @@
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
         <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-<diff:delete>        <expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:delete>
+<diff:delete><diff:ws>        </diff:ws><expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:delete>
 
     <break>break;</break>
 

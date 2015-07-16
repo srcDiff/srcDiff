@@ -15,7 +15,7 @@ public:
 
   srcdiff_whitespace(const srcdiff_output & out);
 
-  virtual void output_all();
+  virtual void output_all(int operation = SES_COMMON);
   virtual void output_prefix();
   virtual void output_nested(int operation);
   virtual void output_statement();
