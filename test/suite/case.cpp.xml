@@ -41,35 +41,35 @@
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
-<diff:delete>    <case>case <expr><name>bar</name></expr>:</case>
+<diff:delete><diff:ws>    </diff:ws><case>case<diff:ws> </diff:ws><expr><name>bar</name></expr>:</case><diff:ws>
 
-        <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+        </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>c</name></expr>;</expr_stmt><diff:ws>
 
-    <break>break;</break>
+    </diff:ws><break>break;</break><diff:ws>
 
 
-</diff:delete>}</block></switch></unit>
+</diff:ws></diff:delete>}</block></switch></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
-<diff:delete>    <case>case <expr><name>bar</name></expr>:</case>
+<diff:delete><diff:ws>    </diff:ws><case>case<diff:ws> </diff:ws><expr><name>bar</name></expr>:</case><diff:ws>
 
-        <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+        </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
 
-    <break>break;</break>
+    </diff:ws><break>break;</break><diff:ws>
 
-    <case>case <expr><name>foobar</name></expr>:</case>
+    </diff:ws><case>case<diff:ws> </diff:ws><expr><name>foobar</name></expr>:</case><diff:ws>
 
-        <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+        </diff:ws><expr_stmt><expr><name>c</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>d</name></expr>;</expr_stmt><diff:ws>
 
-    <break>break;</break>
+    </diff:ws><break>break;</break><diff:ws>
 
-</diff:delete>}</block></switch></unit>
+</diff:ws></diff:delete>}</block></switch></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
@@ -77,14 +77,14 @@
     <case>case <expr><name>bar</name></expr>:</case>
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete type="change">        <expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:delete><diff:insert type="change">        <expr_stmt><expr><name>e</name></expr>;</expr_stmt></diff:insert>
+<diff:delete type="change"><diff:ws>        </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"><diff:ws>        </diff:ws><expr_stmt><expr><name>e</name></expr>;</expr_stmt></diff:insert>
 
     <break>break;</break>
 
     <case>case <expr><name>foobar</name></expr>:</case>
 
         <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
-<diff:delete type="change">        <expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:delete><diff:insert type="change">        <expr_stmt><expr><name>f</name></expr>;</expr_stmt></diff:insert>
+<diff:delete type="change"><diff:ws>        </diff:ws><expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"><diff:ws>        </diff:ws><expr_stmt><expr><name>f</name></expr>;</expr_stmt></diff:insert>
 
     <break>break;</break>
 
@@ -96,26 +96,26 @@
     <case>case <expr><name>bar</name></expr>:</case>
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete>        <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>g</name></expr>;</expr_stmt></diff:delete>
-<diff:delete type="whitespace">
-</diff:delete>    <break>break;</break>
+<diff:delete><diff:ws>        </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>c</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>d</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>e</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>f</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>g</name></expr>;</expr_stmt></diff:delete>
+<diff:delete><diff:ws>
+</diff:ws></diff:delete>    <break>break;</break>
 
     <case>case <expr><name>foobar</name></expr>:</case>
 
         <expr_stmt><expr><name>h</name></expr>;</expr_stmt>
-<diff:delete>        <expr_stmt><expr><name>i</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>j</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>k</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>l</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>m</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>n</name></expr>;</expr_stmt></diff:delete>
-<diff:delete type="whitespace">
-</diff:delete>    <break>break;</break>
+<diff:delete><diff:ws>        </diff:ws><expr_stmt><expr><name>i</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>j</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>k</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>l</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>m</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>n</name></expr>;</expr_stmt></diff:delete>
+<diff:delete><diff:ws>
+</diff:ws></diff:delete>    <break>break;</break>
 
 }</block></switch></unit>
 
