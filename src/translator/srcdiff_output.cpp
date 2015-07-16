@@ -209,22 +209,48 @@ METHOD_TYPE srcdiff_output::method() const {
 
 }
 
+void srcdiff_output::update_diff_stacks(const std::shared_ptr<srcml_node> & node, int operation) {
+
+  if(operation == SES_COMMON) {
+
+    //fprintf(stderr, "HERE OUTPUT SES_COMMON\n");
+    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+
+    update_diff_stack(rbuf_original->open_diff, node, operation);
+    update_diff_stack(rbuf_modified->open_diff, node, operation);
+
+    update_diff_stack(wstate->output_diff, node, operation);
+
+  }
+  else if(operation == SES_DELETE) {
+
+    //fprintf(stderr, "HERE OUTPUT SES_DELETE\n");
+    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+
+    update_diff_stack(rbuf_original->open_diff, node, operation);
+
+    update_diff_stack(wstate->output_diff, node, operation);
+
+  } else if(operation == SES_INSERT) {
+
+    //fprintf(stderr, "HERE OUTPUT SES_INSERT\n");
+    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+
+    update_diff_stack(rbuf_modified->open_diff, node, operation);
+
+    update_diff_stack(wstate->output_diff, node, operation);
+
+  }
+
+}
+
 void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int operation, bool force_output) {
-
-  /*
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff.back()->operation);
-
-    if((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT)
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
-    else
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-  */
 
   static bool delay = false;
   static int delay_operation = -2;
 
   static bool delay_ws_end = false;
+  static int delay_ws_operation = -2;
 
   // check if delaying SES_DELETE/SES_INSERT/SES_COMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)
@@ -239,26 +265,19 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
 
       output_node(*diff_original_end);
 
-      update_diff_stack(rbuf_original->open_diff, diff_original_end, SES_DELETE);
-
-      update_diff_stack(wstate->output_diff, diff_original_end, SES_DELETE);
+      update_diff_stacks(diff_original_end, delay_operation);
 
     } else if(delay_operation == SES_INSERT) {
 
       output_node(*diff_modified_end);
 
-      update_diff_stack(rbuf_modified->open_diff, diff_modified_end, SES_INSERT);
-
-      update_diff_stack(wstate->output_diff, diff_modified_end, SES_INSERT);
+      update_diff_stacks(diff_modified_end, delay_operation);
 
     } else if(delay_operation == SES_COMMON)  {
 
       output_node(*diff_common_end);
 
-      update_diff_stack(rbuf_original->open_diff, diff_common_end, SES_COMMON);
-      update_diff_stack(rbuf_modified->open_diff, diff_common_end, SES_COMMON);
-
-      update_diff_stack(wstate->output_diff, diff_common_end, SES_COMMON);
+      update_diff_stacks(diff_common_end, delay_operation);
 
     }
 
@@ -291,36 +310,9 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
 
     }
 
-    if(wstate->output_diff.back()->operation == SES_COMMON) {
-
-      //fprintf(stderr, "HERE OUTPUT SES_COMMON\n");
-
-      update_diff_stack(rbuf_original->open_diff, node, SES_COMMON);
-      update_diff_stack(rbuf_modified->open_diff, node, SES_COMMON);
-
-      update_diff_stack(wstate->output_diff, node, SES_COMMON);
-
-    } else if(wstate->output_diff.back()->operation == SES_DELETE) {
-
-      //fprintf(stderr, "HERE OUTPUT SES_DELETE\n");
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-
-      update_diff_stack(rbuf_original->open_diff, node, SES_DELETE);
-
-      update_diff_stack(wstate->output_diff, node, SES_DELETE);
-
-    } else if(wstate->output_diff.back()->operation == SES_INSERT) {
-
-      //fprintf(stderr, "HERE OUTPUT SES_INSERT\n");
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-
-      update_diff_stack(rbuf_modified->open_diff, node, SES_INSERT);
-
-      update_diff_stack(wstate->output_diff, node, SES_INSERT);
-
-    }
-
+    update_diff_stacks(node, wstate->output_diff.back()->operation);
     return;
+
   }
 
   if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
@@ -341,36 +333,7 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
   // output non-text node and get next node
   output_node(*node);
 
-  if(operation == SES_COMMON) {
-
-    //fprintf(stderr, "HERE OUTPUT SES_COMMON\n");
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-
-    update_diff_stack(rbuf_original->open_diff, node, operation);
-    update_diff_stack(rbuf_modified->open_diff, node, operation);
-
-    update_diff_stack(wstate->output_diff, node, operation);
-
-  }
-  else if(operation == SES_DELETE) {
-
-    //fprintf(stderr, "HERE OUTPUT SES_DELETE\n");
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-
-    update_diff_stack(rbuf_original->open_diff, node, operation);
-
-    update_diff_stack(wstate->output_diff, node, operation);
-
-  } else if(operation == SES_INSERT) {
-
-    //fprintf(stderr, "HERE OUTPUT SES_INSERT\n");
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-
-    update_diff_stack(rbuf_modified->open_diff, node, operation);
-
-    update_diff_stack(wstate->output_diff, node, operation);
-
-  }
+  update_diff_stacks(node, operation);
 
 }
 
