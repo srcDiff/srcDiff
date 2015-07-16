@@ -3,6 +3,7 @@
 #include <srcdiff_diff.hpp>
 #include <srcdiff_measure.hpp>
 #include <srcdiff_compare.hpp>
+#include <srcdiff_whitespace.hpp>
 
 #include <vector>
 #include <map>
@@ -182,6 +183,16 @@ void srcdiff_move::output() {
     ++position;
 
     for(; rbuf->nodes.at(position)->move != id; ++position) {
+
+      if(rbuf->nodes.at(position)->is_white_space()) {
+
+        rbuf->last_output = position;
+        srcdiff_whitespace whitespace(*this);
+        whitespace.output_all(operation);
+        position = rbuf->last_output - 1;
+        continue;
+
+      }
 
       output_node(rbuf->nodes.at(position), operation);
 
