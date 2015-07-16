@@ -760,7 +760,7 @@ bool conditional_has_block(const srcml_nodes & nodes, const node_set & set) {
 
   for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
-    if(nodes.at(itr->at(0))->name == "block" && find_attribute(nodes.at(itr->at(0)), "type") == 0) {
+    if(nodes.at(itr->at(0))->name == "block" && !bool(find_attribute(nodes.at(itr->at(0)), "type"))) {
 
       return true;
 
@@ -772,7 +772,7 @@ bool conditional_has_block(const srcml_nodes & nodes, const node_set & set) {
 
       if(nodes.at(next_element_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
         && nodes.at(next_element_pos)->name == "block"
-        && find_attribute(nodes.at((next_element_pos)), "type") == 0)
+        && !bool(find_attribute(nodes.at((next_element_pos)), "type")))
         return true;
       else
         return false;
@@ -1067,8 +1067,8 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
 
   if(original_tag == "block") {
 
-    bool is_pseudo_original = find_attribute(nodes_original.at(original_pos), "type") != 0;
-    bool is_pseudo_modified = find_attribute(nodes_modified.at(modified_pos), "type") != 0;
+    bool is_pseudo_original = bool(find_attribute(nodes_original.at(original_pos), "type"));
+    bool is_pseudo_modified = bool(find_attribute(nodes_modified.at(modified_pos), "type"));
 
     if(is_pseudo_original == is_pseudo_modified) {
 
