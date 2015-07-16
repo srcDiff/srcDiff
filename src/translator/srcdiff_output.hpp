@@ -122,9 +122,9 @@ public:
 
 private:
 
-  void output_node(const srcml_node & node);
-  void update_diff_stacks(const std::shared_ptr<srcml_node> & node, int operation);
   static void update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcml_node> & node, int operation);
+  void update_diff_stacks(const std::shared_ptr<srcml_node> & node, int operation);
+  void output_node(const srcml_node & node);
 
 public:
 

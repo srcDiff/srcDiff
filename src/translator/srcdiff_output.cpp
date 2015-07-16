@@ -209,6 +209,47 @@ METHOD_TYPE srcdiff_output::method() const {
 
 }
 
+void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcml_node> & node, int operation) {
+
+  // Skip empty node
+  if(node->is_empty || node->is_text())
+    return;
+
+  if(open_diffs.back()->operation != operation) {
+
+    diff_set * modified_diff = new diff_set;
+    modified_diff->operation = operation;
+
+    open_diffs.push_back(modified_diff);
+  }
+
+  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
+
+    open_diffs.back()->open_tags.push_back(node);
+  } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
+
+    if(open_diffs.size() == 1 && open_diffs.back()->open_tags.size() == 1)
+      return;
+
+    open_diffs.back()->open_tags.pop_back();
+
+  }
+
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
+  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.back()->open_tags.size());
+  if(open_diffs.back()->open_tags.size() == 0) {
+
+    delete open_diffs.back();
+    open_diffs.pop_back();
+
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
+    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.back()->open_tags.size());
+  }
+
+  //fprintf(stderr, "HERE\n");
+
+}
+
 void srcdiff_output::update_diff_stacks(const std::shared_ptr<srcml_node> & node, int operation) {
 
   if(operation == SES_COMMON) {
@@ -334,47 +375,6 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
   output_node(*node);
 
   update_diff_stacks(node, operation);
-
-}
-
-void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcml_node> & node, int operation) {
-
-  // Skip empty node
-  if(node->is_empty || node->is_text())
-    return;
-
-  if(open_diffs.back()->operation != operation) {
-
-    diff_set * modified_diff = new diff_set;
-    modified_diff->operation = operation;
-
-    open_diffs.push_back(modified_diff);
-  }
-
-  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
-
-    open_diffs.back()->open_tags.push_back(node);
-  } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
-
-    if(open_diffs.size() == 1 && open_diffs.back()->open_tags.size() == 1)
-      return;
-
-    open_diffs.back()->open_tags.pop_back();
-
-  }
-
-  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
-  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.back()->open_tags.size());
-  if(open_diffs.back()->open_tags.size() == 0) {
-
-    delete open_diffs.back();
-    open_diffs.pop_back();
-
-    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
-    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.back()->open_tags.size());
-  }
-
-  //fprintf(stderr, "HERE\n");
 
 }
 
