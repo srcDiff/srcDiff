@@ -112,7 +112,9 @@ void srcdiff_input_source_local::process_file(const boost::optional<std::string>
 
   const char * dir = srcml_archive_get_url(options.archive);
 
-  translator->translate(input_original, input_modified, line_diff_range, language_string, dir ? boost::optional<std::string>(dir) : boost::optional<std::string>(), unit_filename, 0);
+  translator->translate(input_original, input_modified, line_diff_range, language_string,
+                        dir ? boost::optional<std::string>(dir) : boost::optional<std::string>(),
+                        unit_filename, boost::optional<std::string>());
 
 }
 
