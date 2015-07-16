@@ -290,23 +290,6 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
   static bool delay = false;
   static int delay_operation = -2;
 
-  static bool delay_ws_end = false;
-  static int delay_ws_operation = -2;
-
-  if(delay_ws_end) {
-
-    if(!(*node == *diff_ws_end)) {
-
-      output_node(*diff_ws_end);
-      update_diff_stacks(diff_ws_end, delay_ws_operation);
-
-    }
-
-    delay_ws_end = false;
-    delay_ws_operation = -2;
-
-  }
-
   // check if delaying SES_DELETE/SES_INSERT/SES_COMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)
      && ((delay_operation == SES_DELETE 
@@ -351,14 +334,6 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
     if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT && wstate->output_diff.back()->open_tags.back()->name != node->name)
       return;
 
-    if(*node == *diff_ws_end) {
-
-      delay_ws_end = true;
-      delay_ws_operation = operation;
-      return;
-
-    }
-
     // check if ending a SES_DELETE/SES_INSERT/SES_COMMON tag. if so delay.
     if(ismethod(wstate->method, METHOD_GROUP) && !force_output && (*node == *diff_original_end || *node == *diff_modified_end || *node == *diff_common_end)) {
 
@@ -384,9 +359,9 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
     int size = wstate->output_diff.back()->open_tags.size();
 
     if(!force_output && size > 0 &&
-       ((*node == *diff_original_start && current_operation == SES_DELETE)
-                    || (*node == *diff_modified_start && current_operation == SES_INSERT)
-                    || (*node == *diff_common_start && current_operation == SES_COMMON))) {
+       (   (*node == *diff_original_start && current_operation == SES_DELETE)
+        || (*node == *diff_modified_start && current_operation == SES_INSERT)
+        || (*node == *diff_common_start && current_operation == SES_COMMON))) {
 
       return;
     }
@@ -417,8 +392,32 @@ void srcdiff_output::output_char(char character, int operation) {
   output_text_as_node(buf, operation);
 }
 
-// output current XML node in reader
 void srcdiff_output::output_node(const srcml_node & node) {
+
+  static bool delay_ws_end = false;
+
+  if(delay_ws_end) {
+
+    delay_ws_end = false;
+
+    if(node == *diff_ws_start) return;
+    else output_node_inner(*diff_ws_end);
+
+  }
+
+  if(node == *diff_ws_end) {
+
+    delay_ws_end = true;
+    return;
+
+  }
+
+  output_node_inner(node);
+
+}
+
+// output current XML node in reader
+void srcdiff_output::output_node_inner(const srcml_node & node) {
 
   bool isemptyelement = false;
 
