@@ -5,8 +5,6 @@
 
 #include <string>
 
-const boost::optional<std::string> srcdiff_common::whitespace("whitespace");
-
 srcdiff_common::srcdiff_common(const srcdiff_output & out, unsigned int end_original, unsigned int end_modified)
 : srcdiff_output(out), end_original(end_original), end_modified(end_modified) {}
 
@@ -24,10 +22,6 @@ void srcdiff_common::markup_common() {
   int nend = end_modified;
 
   // set attribute to change
-  diff_type->value = whitespace;
-  diff_original_start->properties.push_back(*diff_type.get());
-  diff_modified_start->properties.push_back(*diff_type.get());
-
   int i, j;
   for(i = begin_original, j = begin_modified; i < oend && j < nend; ++i, ++j) {
 
@@ -68,11 +62,12 @@ void srcdiff_common::markup_common() {
         if(i < opivot) {
 
         output_node(diff_original_start, SES_DELETE);
+        output_node(diff_ws_start, SES_DELETE);
 
         for(int k = i; k < opivot; ++k)
           output_node(rbuf_original->nodes.at(k), SES_DELETE);
 
-        // output diff tag
+        output_node(diff_ws_end, SES_DELETE);
         output_node(diff_original_end, SES_DELETE);
 
         }
@@ -80,11 +75,12 @@ void srcdiff_common::markup_common() {
         if(j < npivot) {
 
         output_node(diff_modified_start, SES_INSERT);
+        output_node(diff_ws_start, SES_INSERT);
 
         for(int k = j; k < npivot; ++k)
           output_node(rbuf_modified->nodes.at(k), SES_INSERT);
 
-        // output diff tag
+        output_node(diff_ws_end, SES_INSERT);
         output_node(diff_modified_end, SES_INSERT);
 
         }
@@ -108,13 +104,13 @@ void srcdiff_common::markup_common() {
     } else if(rbuf_original->nodes.at(i)->is_white_space()) {
 
       output_node(diff_original_start, SES_DELETE);
-      // whitespace delete
-      // output diff tag
+        output_node(diff_ws_start, SES_DELETE);
 
       for(; i < oend && rbuf_original->nodes.at(i)->is_white_space(); ++i)
         output_node(rbuf_original->nodes.at(i), SES_DELETE);
 
-      // output diff tag
+
+      output_node(diff_ws_end, SES_DELETE);
       output_node(diff_original_end, SES_DELETE);
 
       --i;
@@ -123,13 +119,14 @@ void srcdiff_common::markup_common() {
     } else if(rbuf_modified->nodes.at(j)->is_white_space()) {
 
       output_node(diff_modified_start, SES_INSERT);
-      //whitespace insert
-      // output diff tag
+      output_node(diff_ws_start, SES_INSERT);
+
 
       for(; j < nend && rbuf_modified->nodes.at(j)->is_white_space(); ++j)
         output_node(rbuf_modified->nodes.at(j), SES_INSERT);
 
-      // output diff tag
+
+      output_node(diff_ws_end, SES_INSERT);
       output_node(diff_modified_end, SES_INSERT);
 
       --i;
