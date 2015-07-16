@@ -4,8 +4,6 @@
 #include <srcdiff_compare.hpp>
 #include <shortest_edit_script.h>
 
-const boost::optional<std::string> srcdiff_whitespace::whitespace("whitespace");
-
 srcdiff_whitespace::srcdiff_whitespace(const srcdiff_output & out) : srcdiff_output(out) {}
 
 void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned int end_modified) {
@@ -15,11 +13,6 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned i
 
   int oend = end_original;
   int nend = end_modified;
-
-  // set attribute to change
-  diff_type->value = whitespace;
-  diff_original_start->properties.push_back(*diff_type.get());
-  diff_modified_start->properties.push_back(*diff_type.get());
 
   int ostart = begin_original;
   int nstart = begin_modified;
@@ -63,11 +56,12 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned i
     if(nstart < npivot) {
 
       output_node(diff_modified_start, SES_INSERT);
+      output_node(diff_ws_start, SES_INSERT);
 
       for(int k = nstart; k < npivot; ++k)
         output_node(rbuf_modified->nodes.at(k), SES_INSERT);
 
-      // output diff tag
+      output_node(diff_ws_end, SES_INSERT);
       output_node(diff_modified_end, SES_INSERT);
 
     }
@@ -75,11 +69,12 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned i
     if(ostart < opivot) {
 
       output_node(diff_original_start, SES_DELETE);
+      output_node(diff_ws_start, SES_DELETE);
 
       for(int k = ostart; k < opivot; ++k)
         output_node(rbuf_original->nodes.at(k), SES_DELETE);
 
-      // output diff tag
+      output_node(diff_ws_end, SES_DELETE);
       output_node(diff_original_end, SES_DELETE);
 
     }
@@ -89,11 +84,12 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned i
     if(ostart < opivot) {
 
       output_node(diff_original_start, SES_DELETE);
+      output_node(diff_ws_start, SES_DELETE);
 
       for(int k = ostart; k < opivot; ++k)
         output_node(rbuf_original->nodes.at(k), SES_DELETE);
 
-      // output diff tag
+      output_node(diff_ws_end, SES_DELETE);
       output_node(diff_original_end, SES_DELETE);
 
     }
@@ -101,11 +97,12 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned i
     if(nstart < npivot) {
 
       output_node(diff_modified_start, SES_INSERT);
+      output_node(diff_ws_start, SES_INSERT);
 
       for(int k = nstart; k < npivot; ++k)
         output_node(rbuf_modified->nodes.at(k), SES_INSERT);
 
-      // output diff tag
+      output_node(diff_ws_end, SES_INSERT);
       output_node(diff_modified_end, SES_INSERT);
 
     }
@@ -126,10 +123,6 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned i
 
     rbuf_original->last_output = oend > (signed)rbuf_original->last_output ? oend : rbuf_original->last_output;
     rbuf_modified->last_output = nend > (signed)rbuf_modified->last_output ? nend : rbuf_modified->last_output;
-
-    diff_original_start->properties.clear();
-    diff_modified_start->properties.clear();
-
 
 }
 
@@ -178,15 +171,17 @@ void srcdiff_whitespace::output_statement() {
 
 }
 
-void srcdiff_whitespace::output_all() {
+void srcdiff_whitespace::output_all(int operation) {
 
   unsigned int oend = rbuf_original->last_output;
   unsigned int nend = rbuf_modified->last_output;
 
   // advance whitespace after targeted end
-  for(; oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_white_space(); ++oend)
-    ;
+  if(operation == SES_COMMON || operation == SES_DELETE)
+    for(; oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_white_space(); ++oend)
+      ;
 
+  if(operation == SES_COMMON || operation == SES_INSERT)
   for(; nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_white_space(); ++nend)
     ;
 

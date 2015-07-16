@@ -4,28 +4,28 @@
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
 <enum>enum <name>A</name> <block>{
 
-<diff:delete><decl><name>a</name></decl>,
-<decl><name>b</name></decl>,
-<decl><name>c</name></decl>,
-<decl><name>d</name></decl>,
-<decl><name>e</name></decl></diff:delete>
+<diff:delete><decl><name>a</name></decl>,<diff:ws>
+</diff:ws><decl><name>b</name></decl>,<diff:ws>
+</diff:ws><decl><name>c</name></decl>,<diff:ws>
+</diff:ws><decl><name>d</name></decl>,<diff:ws>
+</diff:ws><decl><name>e</name></decl></diff:delete>
 
 }</block>;</enum></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
-<diff:delete type="change"><enum>enum <name>B</name> <block>{
+<diff:delete type="change"><enum>enum<diff:ws> </diff:ws><name>B</name><diff:ws> </diff:ws><block>{<diff:ws>
 
-<decl><name>a</name></decl>,
-<decl><name>b</name></decl>,
-<decl><name>c</name></decl>,
-<decl><name>d</name></decl>,
-<decl><name>e</name></decl>
+</diff:ws><decl><name>a</name></decl>,<diff:ws>
+</diff:ws><decl><name>b</name></decl>,<diff:ws>
+</diff:ws><decl><name>c</name></decl>,<diff:ws>
+</diff:ws><decl><name>d</name></decl>,<diff:ws>
+</diff:ws><decl><name>e</name></decl><diff:ws>
 
-}</block>;</enum></diff:delete><diff:insert type="change"><enum>enum <name>A</name> <block>{
+</diff:ws>}</block>;</enum></diff:delete><diff:insert type="change"><enum>enum<diff:ws> </diff:ws><name>A</name><diff:ws> </diff:ws><block>{<diff:ws>
 
 
 
-}</block>;</enum></diff:insert></unit>
+</diff:ws>}</block>;</enum></diff:insert></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
 <enum>enum <name><diff:delete type="change">A</diff:delete><diff:insert type="change">B</diff:insert></name> <block>{
@@ -50,25 +50,25 @@
 }</block>;</enum></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
-<diff:delete type="change"><enum>enum <block>{
+<diff:delete type="change"><enum>enum<diff:ws> </diff:ws><block>{<diff:ws>
 
-<decl><name>a</name></decl>,
-<decl><name>b</name></decl>,
-<decl><name>c</name></decl>,
-<decl><name>d</name></decl>,
-<decl><name>e</name></decl>
+</diff:ws><decl><name>a</name></decl>,<diff:ws>
+</diff:ws><decl><name>b</name></decl>,<diff:ws>
+</diff:ws><decl><name>c</name></decl>,<diff:ws>
+</diff:ws><decl><name>d</name></decl>,<diff:ws>
+</diff:ws><decl><name>e</name></decl><diff:ws>
 
-}</block>;</enum></diff:delete><diff:insert type="change"><enum>enum <block>{
+</diff:ws>}</block>;</enum></diff:delete><diff:insert type="change"><enum>enum<diff:ws> </diff:ws><block>{<diff:ws>
 
 
 
-}</block>;</enum></diff:insert>
+</diff:ws>}</block>;</enum></diff:insert>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
 <enum>enum <name>A</name> <block>{
 
-<decl><name>a</name><diff:delete> <init>= <expr><literal type="number">0</literal></expr></init></diff:delete></decl>,
+<decl><name>a</name><diff:delete><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><literal type="number">0</literal></expr></init></diff:delete></decl>,
 <decl><name>b</name></decl>,
 <decl><name>c</name></decl>,
 <decl><name>d</name></decl>,

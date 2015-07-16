@@ -2,18 +2,18 @@
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="ternary">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="ternary|ternary">
-<diff:delete><expr_stmt><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr>;</expr_stmt></diff:delete></unit>
+<diff:delete><expr_stmt><expr><ternary><condition><expr><name>a</name></expr><diff:ws> </diff:ws>?</condition><then><diff:ws> </diff:ws><expr><name>b</name></expr><diff:ws> </diff:ws></then><else>:<diff:ws> </diff:ws><expr><name>c</name></expr></else></ternary></expr>;</expr_stmt></diff:delete></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="ternary|ternary">
-<expr_stmt><diff:delete><expr><ternary><condition><diff:common><expr><name>a</name></expr></diff:common> ?</condition><then> <expr><name>b</name></expr> </then><else>: <expr><name>c</name></expr></else></ternary></expr></diff:delete>;</expr_stmt></unit>
+<expr_stmt><diff:delete><expr><ternary><condition><diff:common><expr><name>a</name></expr></diff:common><diff:ws> </diff:ws>?</condition><then><diff:ws> </diff:ws><expr><name>b</name></expr><diff:ws> </diff:ws></then><else>:<diff:ws> </diff:ws><expr><name>c</name></expr></else></ternary></expr></diff:delete>;</expr_stmt></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="ternary|ternary">
-<expr_stmt><diff:delete><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <diff:common><expr><name>b</name></expr></diff:common> </then><else>: <expr><name>c</name></expr></else></ternary></expr></diff:delete>;</expr_stmt></unit>
+<expr_stmt><diff:delete><expr><ternary><condition><expr><name>a</name></expr><diff:ws> </diff:ws>?</condition><then><diff:ws> </diff:ws><diff:common><expr><name>b</name></expr></diff:common><diff:ws> </diff:ws></then><else>:<diff:ws> </diff:ws><expr><name>c</name></expr></else></ternary></expr></diff:delete>;</expr_stmt></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="ternary|ternary">
-<expr_stmt><diff:delete><expr><ternary><condition><expr><name>a</name></expr> ?</condition><then> <expr><name>b</name></expr> </then><else>: <diff:common><expr><name>c</name></expr></diff:common></else></ternary></expr></diff:delete>;</expr_stmt></unit>
+<expr_stmt><diff:delete><expr><ternary><condition><expr><name>a</name></expr><diff:ws> </diff:ws>?</condition><then><diff:ws> </diff:ws><expr><name>b</name></expr><diff:ws> </diff:ws></then><else>:<diff:ws> </diff:ws><diff:common><expr><name>c</name></expr></diff:common></else></ternary></expr></diff:delete>;</expr_stmt></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="ternary|ternary">
-<return>return <diff:delete><expr><ternary><condition><expr><call><name><name>changedShapes</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr> ?</condition><then> <expr><literal type="number">0</literal></expr></then><else>: <diff:common><expr><operator>new</operator> <call><name>KoShapeReorderCommand</name><argument_list>(<argument><expr><name>changedShapes</name></expr></argument>, <argument><expr><name>newIndexes</name></expr></argument>, <argument><expr><name>parent</name></expr></argument>)</argument_list></call></expr></diff:common></else></ternary></expr></diff:delete>;</return></unit>
+<return>return <diff:delete><expr><ternary><condition><expr><call><name><name>changedShapes</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr><diff:ws> </diff:ws>?</condition><then><diff:ws> </diff:ws><expr><literal type="number">0</literal></expr></then><else>:<diff:ws> </diff:ws><diff:common><expr><operator>new</operator> <call><name>KoShapeReorderCommand</name><argument_list>(<argument><expr><name>changedShapes</name></expr></argument>, <argument><expr><name>newIndexes</name></expr></argument>, <argument><expr><name>parent</name></expr></argument>)</argument_list></call></expr></diff:common></else></ternary></expr></diff:delete>;</return></unit>
 
 </unit>

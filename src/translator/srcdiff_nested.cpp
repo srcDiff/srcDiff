@@ -10,9 +10,6 @@
 
 #include <cstring>
 
-extern const char * change;
-extern const char * whitespace;
-
 srcdiff_nested::srcdiff_nested(const srcdiff_many & diff, int start_original, int end_original, int start_modified, int end_modified, int operation)
   : srcdiff_many(diff), start_original(start_original), end_original(end_original), start_modified(start_modified), end_modified(end_modified), operation(operation) {}
 

@@ -4,196 +4,196 @@
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private type="default">
 
-</private><diff:delete><public>public:
-    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+</private><diff:delete><public>public:<diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
 
-</public></diff:delete>}</block>;</class></unit>
-
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
-<class>class <name>A</name> <block>{<private type="default">
-
-</private><diff:delete><private>private:
-    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
-
-</private></diff:delete>}</block>;</class></unit>
+</diff:ws></public></diff:delete>}</block>;</class></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private type="default">
 
-</private><diff:delete><protected>protected:
-    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+</private><diff:delete><private>private:<diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
 
-</protected></diff:delete>}</block>;</class></unit>
+</diff:ws></private></diff:delete>}</block>;</class></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private type="default">
 
-</private><diff:delete><signals>signals:
-    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+</private><diff:delete><protected>protected:<diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
 
-</signals></diff:delete>}</block>;</class></unit>
+</diff:ws></protected></diff:delete>}</block>;</class></unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
+<class>class <name>A</name> <block>{<private type="default">
+
+</private><diff:delete><signals>signals:<diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+
+</diff:ws></signals></diff:delete>}</block>;</class></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<public>public:
 
-<diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+<diff:delete><diff:ws>    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
 
 </public>}</block>;</class></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private>private:
 
-<diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+<diff:delete><diff:ws>    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
 
 </private>}</block>;</class></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<protected>protected:
 
-<diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+<diff:delete><diff:ws>    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
 
 </protected>}</block>;</class></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<signals>signals:
 
-<diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+<diff:delete><diff:ws>    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
 
 </signals>}</block>;</class></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private type="default">
 
-</private><diff:delete><public>public:
-    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+</private><diff:delete><public>public:<diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
 
-</public><public>public:
-    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+</diff:ws></public><public>public:<diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
 
-</public></diff:delete>}</block>;</class></unit>
-
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
-<class>class <name>A</name> <block>{<private type="default">
-
-</private><diff:delete><private>private:
-    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
-
-</private><private>private:
-    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
-
-</private></diff:delete>}</block>;</class></unit>
+</diff:ws></public></diff:delete>}</block>;</class></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private type="default">
 
-</private><diff:delete><protected>protected:
-    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+</private><diff:delete><private>private:<diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
 
-</protected><protected>protected:
-    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+</diff:ws></private><private>private:<diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
 
-</protected></diff:delete>}</block>;</class></unit>
+</diff:ws></private></diff:delete>}</block>;</class></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private type="default">
 
-</private><diff:delete><signals>signals:
-    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+</private><diff:delete><protected>protected:<diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
 
-</signals><signals>signals:
-    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl>
+</diff:ws></protected><protected>protected:<diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
 
-</signals></diff:delete>}</block>;</class></unit>
+</diff:ws></protected></diff:delete>}</block>;</class></unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
+<class>class <name>A</name> <block>{<private type="default">
+
+</private><diff:delete><signals>signals:<diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+
+</diff:ws></signals><signals>signals:<diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+
+</diff:ws></signals></diff:delete>}</block>;</class></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<public>public:
 
-<diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+<diff:delete><diff:ws>    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
 
 </public><public>public:
 
-<diff:delete>    <function_decl><type><name>void</name></type> <name>i</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>j</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>k</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+<diff:delete><diff:ws>    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>i</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>j</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>k</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
 
 </public>}</block>;</class></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<private>private:
 
-<diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+<diff:delete><diff:ws>    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
 
 </private><private>private:
 
-<diff:delete>    <function_decl><type><name>void</name></type> <name>i</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>j</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>k</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+<diff:delete><diff:ws>    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>i</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>j</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>k</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
 
 </private>}</block>;</class></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<protected>protected:
 
-<diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+<diff:delete><diff:ws>    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
 
 </protected><protected>protected:
 
-<diff:delete>    <function_decl><type><name>void</name></type> <name>i</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>j</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>k</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+<diff:delete><diff:ws>    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>i</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>j</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>k</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
 
 </protected>}</block>;</class></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="access_region|access_region">
 <class>class <name>A</name> <block>{<signals>signals:
 
-<diff:delete>    <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+<diff:delete><diff:ws>    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
 
 </signals><signals>signals:
 
-<diff:delete>    <function_decl><type><name>void</name></type> <name>i</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>j</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name>k</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
+<diff:delete><diff:ws>    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>i</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>j</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
+    </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>k</name><parameter_list>()</parameter_list>;</function_decl></diff:delete>
 
 </signals>}</block>;</class></unit>
 

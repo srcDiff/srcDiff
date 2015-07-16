@@ -46,10 +46,13 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
   diff_common_start   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_SES_COMMON, *diff.get());
   diff_common_end     = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_SES_COMMON, *diff.get());
-  diff_original_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_OLD, *diff.get());
-  diff_original_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_OLD, *diff.get());
-  diff_modified_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_NEW, *diff.get());
-  diff_modified_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_NEW, *diff.get());
+  diff_original_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_ORIGINAL, *diff.get());
+  diff_original_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_ORIGINAL, *diff.get());
+  diff_modified_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_MODIFIED, *diff.get());
+  diff_modified_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_MODIFIED, *diff.get());
+
+  diff_ws_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_WHITESPACE, *diff.get());
+  diff_ws_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_WHITESPACE, *diff.get());
 
  }
 
@@ -206,169 +209,6 @@ METHOD_TYPE srcdiff_output::method() const {
 
 }
 
-void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int operation, bool force_output) {
-
-  /*
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, operation);
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, rbuf->output_diff.back()->operation);
-
-    if((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT)
-    fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->content);
-    else
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-  */
-
-  static bool delay = false;
-  static int delay_operation = -2;
-
-  // check if delaying SES_DELETE/SES_INSERT/SES_COMMON tag. should only stop if operation is different or not whitespace
-  if(delay && (delay_operation != operation)
-     && ((delay_operation == SES_DELETE 
-          && wstate->output_diff.back()->open_tags.back()->name == diff_original_end->name)
-         || (delay_operation == SES_INSERT 
-             && wstate->output_diff.back()->open_tags.back()->name == diff_modified_end->name)
-         || (delay_operation == SES_COMMON 
-             && wstate->output_diff.back()->open_tags.back()->name == diff_common_end->name))) {
-
-    if(delay_operation == SES_DELETE) {
-
-      output_node(*diff_original_end);
-
-      update_diff_stack(rbuf_original->open_diff, diff_original_end, SES_DELETE);
-
-      update_diff_stack(wstate->output_diff, diff_original_end, SES_DELETE);
-
-    } else if(delay_operation == SES_INSERT) {
-
-      output_node(*diff_modified_end);
-
-      update_diff_stack(rbuf_modified->open_diff, diff_modified_end, SES_INSERT);
-
-      update_diff_stack(wstate->output_diff, diff_modified_end, SES_INSERT);
-
-    } else if(delay_operation == SES_COMMON)  {
-
-      output_node(*diff_common_end);
-
-      update_diff_stack(rbuf_original->open_diff, diff_common_end, SES_COMMON);
-      update_diff_stack(rbuf_modified->open_diff, diff_common_end, SES_COMMON);
-
-      update_diff_stack(wstate->output_diff, diff_common_end, SES_COMMON);
-
-    }
-
-    delay = false;
-    delay_operation = -2;
-
-  } else if(delay) {
-
-    delay = false;
-    delay_operation = -2;
-
-  }
-
-  if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
-
-    if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT && wstate->output_diff.back()->open_tags.back()->name != node->name)
-      return;
-
-    // check if ending a SES_DELETE/SES_INSERT/SES_COMMON tag. if so delay.
-    if(ismethod(wstate->method, METHOD_GROUP) && !force_output && (*node == *diff_original_end || *node == *diff_modified_end || *node == *diff_common_end)) {
-
-
-      delay = true;
-      delay_operation = wstate->output_diff.back()->operation;
-      return;
-
-    } else {
-
-      output_node(*node);
-
-    }
-
-    if(wstate->output_diff.back()->operation == SES_COMMON) {
-
-      //fprintf(stderr, "HERE OUTPUT SES_COMMON\n");
-
-      update_diff_stack(rbuf_original->open_diff, node, SES_COMMON);
-      update_diff_stack(rbuf_modified->open_diff, node, SES_COMMON);
-
-      update_diff_stack(wstate->output_diff, node, SES_COMMON);
-
-    } else if(wstate->output_diff.back()->operation == SES_DELETE) {
-
-      //fprintf(stderr, "HERE OUTPUT SES_DELETE\n");
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-
-      update_diff_stack(rbuf_original->open_diff, node, SES_DELETE);
-
-      update_diff_stack(wstate->output_diff, node, SES_DELETE);
-
-    } else if(wstate->output_diff.back()->operation == SES_INSERT) {
-
-      //fprintf(stderr, "HERE OUTPUT SES_INSERT\n");
-      //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-
-      update_diff_stack(rbuf_modified->open_diff, node, SES_INSERT);
-
-      update_diff_stack(wstate->output_diff, node, SES_INSERT);
-
-    }
-
-    return;
-  }
-
-  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
-
-    int current_operation = wstate->output_diff.back()->operation;
-    int size = wstate->output_diff.back()->open_tags.size();
-
-    if(!force_output && size > 0 &&
-       ((*node == *diff_original_start && current_operation == SES_DELETE)
-                    || (*node == *diff_modified_start && current_operation == SES_INSERT)
-                    || (*node == *diff_common_start && current_operation == SES_COMMON))) {
-
-      return;
-    }
-
-  }
-
-  // output non-text node and get next node
-  output_node(*node);
-
-  if(operation == SES_COMMON) {
-
-    //fprintf(stderr, "HERE OUTPUT SES_COMMON\n");
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-
-    update_diff_stack(rbuf_original->open_diff, node, operation);
-    update_diff_stack(rbuf_modified->open_diff, node, operation);
-
-    update_diff_stack(wstate->output_diff, node, operation);
-
-  }
-  else if(operation == SES_DELETE) {
-
-    //fprintf(stderr, "HERE OUTPUT SES_DELETE\n");
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-
-    update_diff_stack(rbuf_original->open_diff, node, operation);
-
-    update_diff_stack(wstate->output_diff, node, operation);
-
-  } else if(operation == SES_INSERT) {
-
-    //fprintf(stderr, "HERE OUTPUT SES_INSERT\n");
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-
-    update_diff_stack(rbuf_modified->open_diff, node, operation);
-
-    update_diff_stack(wstate->output_diff, node, operation);
-
-  }
-
-}
-
 void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcml_node> & node, int operation) {
 
   // Skip empty node
@@ -410,6 +250,131 @@ void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, con
 
 }
 
+void srcdiff_output::update_diff_stacks(const std::shared_ptr<srcml_node> & node, int operation) {
+
+  if(operation == SES_COMMON) {
+
+    //fprintf(stderr, "HERE OUTPUT SES_COMMON\n");
+    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+
+    update_diff_stack(rbuf_original->open_diff, node, operation);
+    update_diff_stack(rbuf_modified->open_diff, node, operation);
+
+    update_diff_stack(wstate->output_diff, node, operation);
+
+  }
+  else if(operation == SES_DELETE) {
+
+    //fprintf(stderr, "HERE OUTPUT SES_DELETE\n");
+    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+
+    update_diff_stack(rbuf_original->open_diff, node, operation);
+
+    update_diff_stack(wstate->output_diff, node, operation);
+
+  } else if(operation == SES_INSERT) {
+
+    //fprintf(stderr, "HERE OUTPUT SES_INSERT\n");
+    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
+
+    update_diff_stack(rbuf_modified->open_diff, node, operation);
+
+    update_diff_stack(wstate->output_diff, node, operation);
+
+  }
+
+}
+
+void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int operation, bool force_output) {
+
+  static bool delay = false;
+  static int delay_operation = -2;
+
+  // check if delaying SES_DELETE/SES_INSERT/SES_COMMON tag. should only stop if operation is different or not whitespace
+  if(delay && (delay_operation != operation)
+     && ((delay_operation == SES_DELETE 
+          && wstate->output_diff.back()->open_tags.back()->name == diff_original_end->name)
+         || (delay_operation == SES_INSERT 
+             && wstate->output_diff.back()->open_tags.back()->name == diff_modified_end->name)
+         || (delay_operation == SES_COMMON 
+             && wstate->output_diff.back()->open_tags.back()->name == diff_common_end->name))) {
+
+    if(delay_operation == SES_DELETE) {
+
+      output_node(*diff_original_end);
+
+      update_diff_stacks(diff_original_end, delay_operation);
+
+    } else if(delay_operation == SES_INSERT) {
+
+      output_node(*diff_modified_end);
+
+      update_diff_stacks(diff_modified_end, delay_operation);
+
+    } else if(delay_operation == SES_COMMON)  {
+
+      output_node(*diff_common_end);
+
+      update_diff_stacks(diff_common_end, delay_operation);
+
+    }
+
+    delay = false;
+    delay_operation = -2;
+
+  } else if(delay) {
+
+    delay = false;
+    delay_operation = -2;
+
+  }
+
+  if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
+
+    if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT && wstate->output_diff.back()->open_tags.back()->name != node->name)
+      return;
+
+    // check if ending a SES_DELETE/SES_INSERT/SES_COMMON tag. if so delay.
+    if(ismethod(wstate->method, METHOD_GROUP) && !force_output && (*node == *diff_original_end || *node == *diff_modified_end || *node == *diff_common_end)) {
+
+
+      delay = true;
+      delay_operation = wstate->output_diff.back()->operation;
+      return;
+
+    } else {
+
+      output_node(*node);
+
+    }
+
+    update_diff_stacks(node, wstate->output_diff.back()->operation);
+    return;
+
+  }
+
+  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
+
+    int current_operation = wstate->output_diff.back()->operation;
+    int size = wstate->output_diff.back()->open_tags.size();
+
+    if(!force_output && size > 0 &&
+       (   (*node == *diff_original_start && current_operation == SES_DELETE)
+        || (*node == *diff_modified_start && current_operation == SES_INSERT)
+        || (*node == *diff_common_start && current_operation == SES_COMMON))) {
+
+      return;
+    }
+
+  }
+
+  // output non-text node and get next node
+  output_node(*node);
+
+  update_diff_stacks(node, operation);
+
+}
+
 void srcdiff_output::output_text_as_node(const std::string & text, int operation) {
 
   if(text.size() == 0) return;
@@ -427,8 +392,32 @@ void srcdiff_output::output_char(char character, int operation) {
   output_text_as_node(buf, operation);
 }
 
-// output current XML node in reader
 void srcdiff_output::output_node(const srcml_node & node) {
+
+  static bool delay_ws_end = false;
+
+  if(delay_ws_end) {
+
+    delay_ws_end = false;
+
+    if(node == *diff_ws_start) return;
+    else output_node_inner(*diff_ws_end);
+
+  }
+
+  if(node == *diff_ws_end) {
+
+    delay_ws_end = true;
+    return;
+
+  }
+
+  output_node_inner(node);
+
+}
+
+// output current XML node in reader
+void srcdiff_output::output_node_inner(const srcml_node & node) {
 
   bool isemptyelement = false;
 

@@ -110,6 +110,9 @@ public:
   std::shared_ptr<srcml_node> diff_modified_start;
   std::shared_ptr<srcml_node> diff_modified_end;
 
+  std::shared_ptr<srcml_node> diff_ws_start;
+  std::shared_ptr<srcml_node> diff_ws_end;
+
   std::shared_ptr<srcml_node::srcml_ns> diff;
 
   // diff attribute
@@ -119,8 +122,10 @@ public:
 
 private:
 
-  void output_node(const srcml_node & node);
   static void update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcml_node> & node, int operation);
+  void update_diff_stacks(const std::shared_ptr<srcml_node> & node, int operation);
+  void output_node(const srcml_node & node);
+  void output_node_inner(const srcml_node & node);
 
 public:
 

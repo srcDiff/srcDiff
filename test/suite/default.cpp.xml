@@ -3,11 +3,11 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="default|default">
 <default>default:</default>
-<diff:delete>  <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-  <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-  <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
-  <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
-</diff:delete>  <break>break;</break>
+<diff:delete><diff:ws>  </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
+  </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
+  </diff:ws><expr_stmt><expr><name>c</name></expr>;</expr_stmt><diff:ws>
+  </diff:ws><expr_stmt><expr><name>d</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:delete>  <break>break;</break>
 </unit>
 
 </unit>

@@ -2,7 +2,7 @@
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="switch">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="switch|switch">
-<diff:delete><switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{}</block></switch></diff:delete></unit>
+<diff:delete><switch>switch<condition>(<expr><name>foo</name></expr>)</condition><diff:ws> </diff:ws><block>{}</block></switch></diff:delete></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="switch|switch">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
@@ -11,7 +11,7 @@
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
         <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-<diff:delete>        <expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:delete>
+<diff:delete><diff:ws>        </diff:ws><expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:delete>
 
     <break>break;</break>
 
@@ -21,15 +21,15 @@
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="switch|switch">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
-<diff:delete>    <case>case <expr><name>bar</name></expr>:</case>
+<diff:delete><diff:ws>    </diff:ws><case>case<diff:ws> </diff:ws><expr><name>bar</name></expr>:</case><diff:ws>
 
-        <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-        <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+        </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>c</name></expr>;</expr_stmt><diff:ws>
 
-    <break>break;</break>
+    </diff:ws><break>break;</break><diff:ws>
 
 
-</diff:delete>}</block></switch></unit>
+</diff:ws></diff:delete>}</block></switch></unit>
 
 </unit>

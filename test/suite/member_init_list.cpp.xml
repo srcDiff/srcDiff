@@ -3,13 +3,13 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="member_init_list|member_init_list">
 <constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list>
-<diff:delete><member_init_list>: <call><name>a</name><argument_list>()</argument_list></call></member_init_list></diff:delete><block>{}</block></constructor>
+<diff:delete><member_init_list>:<diff:ws> </diff:ws><call><name>a</name><argument_list>()</argument_list></call></member_init_list></diff:delete><block>{}</block></constructor>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="member_init_list|member_init_list">
 <constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list>
-<diff:delete><member_init_list>: <call><name>a</name><argument_list>()</argument_list></call>
-</member_init_list></diff:delete><block>{}</block></constructor>
+<diff:delete><member_init_list>:<diff:ws> </diff:ws><call><name>a</name><argument_list>()</argument_list></call><diff:ws>
+</diff:ws></member_init_list></diff:delete><block>{}</block></constructor>
 </unit>
 
 </unit>

@@ -3,11 +3,11 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="expr_stmt|expr_stmt"><diff:delete><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="expr_stmt|expr_stmt"><diff:delete>
-<expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete></unit>
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="expr_stmt|expr_stmt"><diff:delete><diff:ws>
+</diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="expr_stmt|expr_stmt">
-<expr_stmt><expr><call><name>c</name><argument_list>(<diff:insert><argument><expr><name>foo</name></expr></argument>, <argument><expr><name>bar</name></expr></argument></diff:insert>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name>c</name><argument_list>(<diff:insert><argument><expr><name>foo</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>bar</name></expr></argument></diff:insert>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="expr_stmt|expr_stmt">
