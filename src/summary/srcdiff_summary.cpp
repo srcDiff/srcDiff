@@ -490,6 +490,8 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
                             int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                             const struct srcsax_attribute * attributes) {
 
+    if(std::string(localname) == "ws" && std::string(URI) == SRCDIFF_DEFAULT_NAMESPACE_HREF) return;
+
     process_characters();
 
     const std::string local_name(localname);
@@ -776,6 +778,8 @@ void srcdiff_summary::update_anscestor_profile(const std::shared_ptr<profile_t> 
  * Overide for desired behaviour.
  */
 void srcdiff_summary::endElement(const char * localname, const char * prefix, const char * URI) {
+
+    if(std::string(localname) == "ws" && std::string(URI) == SRCDIFF_DEFAULT_NAMESPACE_HREF) return;
 
     process_characters();
 
