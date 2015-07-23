@@ -157,6 +157,7 @@ no_expr:
 
         const char * current_ch = ch;
 
+        /** @todo modify to use diff:ws tag probably should adapt to not ignore diff:ws as well */
         while(current_ch < (ch + len)) {
 
             bool is_whitespace = true;
