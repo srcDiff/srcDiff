@@ -199,6 +199,8 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
     for(std::string::size_type pos = filename.find('/'); pos != std::string::npos; pos = filename.find('/', pos + 1))
       filename.replace(pos, 1, "_");
     filename += ".srcdiff";
+
+    filename = wstate->filename + "/" + filename;
     srcml_archive_write_open_filename(srcdiff_archive, filename.c_str(), 0);
 
     srcml_write_unit(srcdiff_archive, wstate->unit);
