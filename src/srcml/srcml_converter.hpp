@@ -39,7 +39,7 @@ public:
  	srcml_converter(srcml_archive * archive, int stream_source);
  	~srcml_converter();
 
-	void convert(const std::string & language, void * context, const std::function<int(void *, char *, size_t)> & read, const std::function<int(void *)> & close, bool burst_srcml); 
+	void convert(const std::string & language, void * context, const std::function<int(void *, char *, size_t)> & read, const std::function<int(void *)> & close, const boost::optional<std::string> & output_path); 
 	srcml_nodes create_nodes() const;
 
 };

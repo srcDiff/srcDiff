@@ -14,7 +14,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcml_node::srcml_ns>()), diff_type(std::make_shared<srcml_node::srcml_attr>(DIFF_TYPE)) {
 
-  if(!is_option(flags, OPTION_VISUALIZE | OPTION_BASH_VIEW | OPTION_SUMMARY)) {
+  if(!is_option(flags, OPTION_VISUALIZE | OPTION_BASH_VIEW | OPTION_SUMMARY | OPTION_BURST)) {
 
       int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str(), 0);
       if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
@@ -37,7 +37,10 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
   }
 
-  wstate->filename = srcdiff_filename;
+  if(!is_option(flags, OPTION_BURST) || srcdiff_filename != "-")
+    wstate->filename = srcdiff_filename;
+  else
+    wstate->filename = ".";
 
   diff->prefix = srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
   diff->href   = SRCDIFF_DEFAULT_NAMESPACE_HREF;
@@ -152,6 +155,13 @@ void srcdiff_output::close() {
     srcml_archive_close(archive);
 
   }
+
+}
+
+const std::string & srcdiff_output::get_srcdiff_filename() const {
+
+  return wstate->filename;
+
 
 }
 

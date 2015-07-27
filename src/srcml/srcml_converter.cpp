@@ -110,7 +110,7 @@ srcml_converter::~srcml_converter() {
 // converts source code to srcML
 void srcml_converter::convert(const std::string & language, void * context,
                               const std::function<int(void *, char *, size_t)> & read, const std::function<int(void *)> & close,
-                              bool burst_srcml) {
+                              const boost::optional<std::string> & output_path) {
 
   srcml_archive * unit_archive = srcml_archive_clone(archive);
   srcml_archive_disable_option(unit_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH);
@@ -125,10 +125,11 @@ void srcml_converter::convert(const std::string & language, void * context,
 
   srcml_write_unit(unit_archive, unit);
 
-  if(burst_srcml) {
+  if(bool(output_path)) {
 
     srcml_archive * srcml_archive = srcml_archive_create();
     srcml_archive_set_options(srcml_archive, srcml_archive_get_options(unit_archive));
+    srcml_archive_disable_option(srcml_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH);
     srcml_archive_set_tabstop(srcml_archive, srcml_archive_get_tabstop(unit_archive));
     srcml_archive_set_src_encoding(srcml_archive, srcml_archive_get_src_encoding(unit_archive));
     srcml_archive_set_xml_encoding(srcml_archive, srcml_archive_get_xml_encoding(unit_archive));

@@ -89,14 +89,15 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original, cons
 
   // if(!is_option(flags, OPTION_SAME) && line_diff_range.get_line_diff() == NULL)
   //   return;
+  const boost::optional<std::string> output_path = is_option(flags, OPTION_BURST) && is_option(flags, OPTION_SRCML) ? output.get_srcdiff_filename() : boost::optional<std::string>();
 
   int is_original = 0;
-  std::thread thread_original(std::ref(input_original), SES_DELETE, std::ref(output.get_nodes_original()), std::ref(is_original));
+  std::thread thread_original(std::ref(input_original), SES_DELETE, std::ref(output.get_nodes_original()), std::ref(is_original), output_path);
 
   thread_original.join();
 
   int is_modified = 0;
-  std::thread thread_modified(std::ref(input_modified), SES_INSERT, std::ref(output.get_nodes_modified()), std::ref(is_modified));
+  std::thread thread_modified(std::ref(input_modified), SES_INSERT, std::ref(output.get_nodes_modified()), std::ref(is_modified), output_path);
 
   thread_modified.join();
 

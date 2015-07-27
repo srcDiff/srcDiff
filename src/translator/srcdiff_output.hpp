@@ -141,6 +141,7 @@ public:
   virtual void reset();
   virtual void close();
 
+  virtual const std::string & get_srcdiff_filename() const;
   virtual const srcml_nodes & get_nodes_original() const;
   virtual const srcml_nodes & get_nodes_modified() const;
   virtual srcml_nodes & get_nodes_original();
@@ -188,6 +189,21 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
     srcml_unit_get_xml_standalone(wstate->unit, "UTF-8", &xml, &size);
     summary->summarize(xml, "UTF-8");
     srcml_memory_free((char *)xml);
+
+  } else if(is_option(flags, OPTION_BURST)) {
+
+    srcml_archive * srcdiff_archive = srcml_archive_clone(archive);
+    srcml_archive_disable_option(srcdiff_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH);
+
+    std::string filename = srcml_unit_get_filename(wstate->unit);
+    for(std::string::size_type pos = filename.find('/'); pos != std::string::npos; pos = filename.find('/', pos + 1))
+      filename.replace(pos, 1, "_");
+    filename += ".srcdiff";
+    srcml_archive_write_open_filename(srcdiff_archive, filename.c_str(), 0);
+
+    srcml_write_unit(srcdiff_archive, wstate->unit);
+    srcml_archive_close(srcdiff_archive);
+    srcml_archive_free(srcdiff_archive);
 
   } else {
 
