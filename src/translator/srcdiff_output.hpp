@@ -200,7 +200,7 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
     if((pos = filename.find('|')) != std::string::npos) {
 
       if(pos == 0)
-        filename = filename.substr(11, std::string::npos);
+        filename = filename.substr(1, std::string::npos);
       else
         filename = filename.substr(0, pos);
 
