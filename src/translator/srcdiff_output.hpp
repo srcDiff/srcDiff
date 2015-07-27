@@ -196,6 +196,15 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
     srcml_archive_disable_option(srcdiff_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH);
 
     std::string filename = srcml_unit_get_filename(wstate->unit);
+    if(std::string::size_type pos = filename.find('|') != std::string::npos) {
+
+      if(pos == 0)
+        filename = filename.substr(1, std::string::npos);
+      else
+        filename = filename.substr(0, pos);
+
+    }
+
     for(std::string::size_type pos = filename.find('/'); pos != std::string::npos; pos = filename.find('/', pos + 1))
       filename.replace(pos, 1, "_");
     filename += ".srcdiff";
