@@ -107,7 +107,8 @@ srcml_converter::~srcml_converter() {
 
 // converts source code to srcML
 void srcml_converter::convert(const std::string & language, void * context,
-                              const std::function<int(void *, char *, size_t)> & read, const std::function<int(void *)> & close) {
+                              const std::function<int(void *, char *, size_t)> & read, const std::function<int(void *)> & close,
+                              bool burst_srcml) {
 
   srcml_archive * unit_archive = srcml_archive_clone(archive);
   srcml_archive_disable_option(unit_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH);
@@ -121,6 +122,16 @@ void srcml_converter::convert(const std::string & language, void * context,
   srcml_unit_parse_io(unit, context, *read.target<int (*) (void *, char *, size_t)>(), *close.target<int (*) (void *)>());
 
   srcml_write_unit(unit_archive, unit);
+
+  if(burst_srcml) {
+
+    srcml_archive * srcml_archive = srcml_archive_clone(unit_archive);
+    srcml_archive_write_open_filename(srcml_archive, "foo.xml", 0);
+    srcml_write_unit(srcml_archive, unit);
+    srcml_archive_close(srcml_archive);
+    srcml_archive_free(srcml_archive);
+
+  }
 
   srcml_unit_free(unit);
 

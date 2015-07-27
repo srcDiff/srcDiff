@@ -381,6 +381,9 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("srcdiff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCDIFFONLY>), "Output files that only srcdiff, but not diff says are changed")
     ("diff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_DIFFONLY>), "Output files that only diff, but not srcdiff says are changed")
 
+    ("burst", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_BURST>), "Output each input file to a single srcDiff document.")
+    ("srcml", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCML>), "Also, output the original and modified srcML of each file when burst enabled")
+
     ("bash", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::bash_view_context>),
         "Output as colorized bash text with provided context. Number is lines of context, 'all' or -1 for entire file, 'function' for encompasing function (default = 3)")
     ("summary", boost::program_options::value<std::string>()->implicit_value("text")->notifier(option_field<&srcdiff_options::summary_type_str>),
