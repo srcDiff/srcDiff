@@ -1,5 +1,7 @@
 #include <srcml_converter.hpp>
 
+#include <srcdiff_constants.hpp>
+
 #include <string>
 #include <cctype>
 
@@ -125,7 +127,20 @@ void srcml_converter::convert(const std::string & language, void * context,
 
   if(burst_srcml) {
 
-    srcml_archive * srcml_archive = srcml_archive_clone(unit_archive);
+    srcml_archive * srcml_archive = srcml_archive_create();
+    srcml_archive_set_options(srcml_archive, srcml_archive_get_options(unit_archive));
+    srcml_archive_set_tabstop(srcml_archive, srcml_archive_get_tabstop(unit_archive));
+    srcml_archive_set_src_encoding(srcml_archive, srcml_archive_get_src_encoding(unit_archive));
+    srcml_archive_set_xml_encoding(srcml_archive, srcml_archive_get_xml_encoding(unit_archive));
+    srcml_archive_set_language(srcml_archive, srcml_archive_get_language(unit_archive));
+    srcml_archive_set_url(srcml_archive, srcml_archive_get_url(unit_archive));
+    srcml_archive_set_version(srcml_archive, srcml_archive_get_version(unit_archive));
+    srcml_archive_set_url(srcml_archive, srcml_archive_get_url(unit_archive));
+    // skipping register extension as probably does not need done.  Some of the above may not need to be done as well.
+    for(size_t pos = 0; pos < srcml_archive_get_namespace_size(unit_archive); ++pos)
+      if(srcml_archive_get_namespace_uri(unit_archive, pos) != SRCDIFF_DEFAULT_NAMESPACE_HREF)
+        srcml_archive_register_namespace(srcml_archive, srcml_archive_get_namespace_prefix(unit_archive, pos), srcml_archive_get_namespace_uri(unit_archive, pos));
+ 
     srcml_archive_write_open_filename(srcml_archive, "foo.xml", 0);
     srcml_write_unit(srcml_archive, unit);
     srcml_archive_close(srcml_archive);
