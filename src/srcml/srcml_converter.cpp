@@ -136,8 +136,9 @@ void srcml_converter::convert(const std::string & language, void * context,
     srcml_archive_set_xml_encoding(srcml_archive, srcml_archive_get_xml_encoding(unit_archive));
 
     std::string filename = !bool(burst_config.unit_filename) ? "" : burst_config.unit_filename->find("|") == std::string::npos ? *burst_config.unit_filename
-                          : stream_source == SES_DELETE ? burst_config.unit_filename->substr(0, burst_config.unit_filename->find("|"))
-                            : burst_config.unit_filename->substr(burst_config.unit_filename->find("|") + 1, std::string::npos);
+                          : stream_source == SES_DELETE && burst_config.unit_filename->front() != '|' ? burst_config.unit_filename->substr(0, burst_config.unit_filename->find("|"))
+                            : burst_config.unit_filename->back() != '|' ? burst_config.unit_filename->substr(burst_config.unit_filename->find("|") + 1, std::string::npos)
+                              : burst_config.unit_filename->substr(0, burst_config.unit_filename->find("|"));
 
     srcml_unit_set_language(unit, burst_config.language.c_str());
     srcml_unit_set_filename(unit, filename.c_str());
@@ -159,7 +160,7 @@ void srcml_converter::convert(const std::string & language, void * context,
 
     if(burst_config.output_path)
       filename = *burst_config.output_path + "/" + filename;
-
+std::cout << filename << '\n';
     srcml_archive_write_open_filename(srcml_archive, filename.c_str(), 0);
     srcml_write_unit(srcml_archive, unit);
     srcml_archive_close(srcml_archive);
