@@ -1,4 +1,3 @@
-#include <srcml_converter.hpp>
 
 class no_file_exception {};
 
@@ -10,12 +9,12 @@ template<class T>
 srcdiff_input<T>::~srcdiff_input() {}
 
 template<class T>
-void srcdiff_input<T>::operator()(int stream_source, srcml_nodes & nodes, int & is_input, const boost::optional<std::string> & output_path) const {
+void srcdiff_input<T>::operator()(int stream_source, srcml_nodes & nodes, int & is_input, const srcml_converter::srcml_burst_config & burst_config) const {
 
   is_input = 0;
   try {
 
-    nodes = input_nodes(stream_source, output_path);
+    nodes = input_nodes(stream_source, burst_config);
     is_input = 1;
 
   } catch(no_file_exception) {}
@@ -28,7 +27,7 @@ void srcdiff_input<T>::operator()(int stream_source, srcml_nodes & nodes, int & 
 }
 
 template<class T>
-srcml_nodes srcdiff_input<T>::input_nodes(int stream_source, const boost::optional<std::string> & output_path) const {
+srcml_nodes srcdiff_input<T>::input_nodes(int stream_source, const srcml_converter::srcml_burst_config & burst_config) const {
 
   if(!input_path || input_path->empty()) throw no_file_exception();
 
@@ -36,7 +35,7 @@ srcml_nodes srcdiff_input<T>::input_nodes(int stream_source, const boost::option
 
   typename T::input_context * context = input.open(input_path->c_str());
 
-  converter.convert(language_string, (void *)context, T::read, T::close, output_path);
+  converter.convert(language_string, (void *)context, T::read, T::close, burst_config);
 
   return converter.create_nodes();
 

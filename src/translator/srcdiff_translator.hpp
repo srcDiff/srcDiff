@@ -91,13 +91,14 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original, cons
   //   return;
   const boost::optional<std::string> output_path = is_option(flags, OPTION_BURST) && is_option(flags, OPTION_SRCML) ? output.get_srcdiff_filename() : boost::optional<std::string>();
 
+  const srcml_converter::srcml_burst_config burst_config = { output_path, language, unit_directory, (this->unit_filename ? this->unit_filename : unit_filename), unit_version };
   int is_original = 0;
-  std::thread thread_original(std::ref(input_original), SES_DELETE, std::ref(output.get_nodes_original()), std::ref(is_original), output_path);
+  std::thread thread_original(std::ref(input_original), SES_DELETE, std::ref(output.get_nodes_original()), std::ref(is_original), burst_config);
 
   thread_original.join();
 
   int is_modified = 0;
-  std::thread thread_modified(std::ref(input_modified), SES_INSERT, std::ref(output.get_nodes_modified()), std::ref(is_modified), output_path);
+  std::thread thread_modified(std::ref(input_modified), SES_INSERT, std::ref(output.get_nodes_modified()), std::ref(is_modified), burst_config);
 
   thread_modified.join();
 
