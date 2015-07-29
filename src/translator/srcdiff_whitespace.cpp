@@ -218,17 +218,17 @@ void srcdiff_whitespace::output_prefix() {
 
   if(ostart < oend) {
 
-  output_node(diff_common_start, SES_COMMON);
+    output_node(diff_common_start, SES_COMMON);
 
-  for(unsigned int i = ostart; i < oend; ++i)
-    output_node(rbuf_original->nodes.at(i), SES_COMMON);
+    for(unsigned int i = ostart; i < oend; ++i)
+      output_node(rbuf_original->nodes.at(i), SES_COMMON);
 
-  output_node(diff_common_end, SES_COMMON);
+    output_node(diff_common_end, SES_COMMON);
+
+    rbuf_original->last_output = oend > rbuf_original->last_output ? oend : rbuf_original->last_output;
+    rbuf_modified->last_output = nend > rbuf_modified->last_output ? nend : rbuf_modified->last_output;
 
   }
-
-  rbuf_original->last_output = oend > rbuf_original->last_output ? oend : rbuf_original->last_output;
-  rbuf_modified->last_output = nend > rbuf_modified->last_output ? nend : rbuf_modified->last_output;
 
 }
 
