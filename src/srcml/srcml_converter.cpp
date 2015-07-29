@@ -160,7 +160,7 @@ void srcml_converter::convert(const std::string & language, void * context,
 
     if(burst_config.output_path)
       filename = *burst_config.output_path + "/" + filename;
-std::cout << filename << '\n';
+
     srcml_archive_write_open_filename(srcml_archive, filename.c_str(), 0);
     srcml_write_unit(srcml_archive, unit);
     srcml_archive_close(srcml_archive);
