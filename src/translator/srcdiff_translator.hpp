@@ -67,7 +67,6 @@ public:
   template<class T>
   void translate(const srcdiff_input<T> & input_original, const srcdiff_input<T> & input_modified,
                  line_diff_range<T> & line_diff_range, const std::string & language,
-                 const boost::optional<std::string> & unit_directory = boost::optional<std::string>(),
                  const boost::optional<std::string> & unit_filename  = boost::optional<std::string>(),
                  const boost::optional<std::string> & unit_version   = boost::optional<std::string>());
 
@@ -81,7 +80,6 @@ public:
 template<class T>
 void srcdiff_translator::translate(const srcdiff_input<T> & input_original, const srcdiff_input<T> & input_modified,
                                   line_diff_range<T> & line_diff_range, const std::string & language,
-                                  const boost::optional<std::string> & unit_directory,
                                   const boost::optional<std::string> & unit_filename,
                                   const boost::optional<std::string> & unit_version) {
 
@@ -91,7 +89,7 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original, cons
   //   return;
   const boost::optional<std::string> output_path = is_option(flags, OPTION_BURST) && is_option(flags, OPTION_SRCML) ? output.get_srcdiff_filename() : boost::optional<std::string>();
 
-  const srcml_converter::srcml_burst_config burst_config = { output_path, language, unit_directory, (this->unit_filename ? this->unit_filename : unit_filename), unit_version };
+  const srcml_converter::srcml_burst_config burst_config = { output_path, language, (this->unit_filename ? this->unit_filename : unit_filename), unit_version };
   int is_original = 0;
   std::thread thread_original(std::ref(input_original), SES_DELETE, std::ref(output.get_nodes_original()), std::ref(is_original), burst_config);
 
@@ -110,7 +108,7 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original, cons
   // run on file level
   if(is_original || is_modified) {
 
-    output.start_unit(language, unit_directory, this->unit_filename ? this->unit_filename : unit_filename, unit_version);
+    output.start_unit(language, this->unit_filename ? this->unit_filename : unit_filename, unit_version);
 
     srcdiff_diff diff(output, set_original, set_modified);
     diff.output();

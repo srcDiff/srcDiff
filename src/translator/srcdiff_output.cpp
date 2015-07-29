@@ -125,14 +125,13 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
  }
 
- void srcdiff_output::start_unit(const std::string & language_string, const boost::optional<std::string> & unit_url, const boost::optional<std::string> & unit_filename, const boost::optional<std::string> & unit_version) {
+ void srcdiff_output::start_unit(const std::string & language_string, const boost::optional<std::string> & unit_filename, const boost::optional<std::string> & unit_version) {
 
   wstate->unit = srcml_unit_create(archive);
 
   srcml_unit_set_language(wstate->unit, language_string.c_str());
 
   srcml_unit_set_filename(wstate->unit, unit_filename ? unit_filename->c_str() : 0);
-  srcml_unit_set_url(wstate->unit, unit_url ? unit_url->c_str() : 0);
   srcml_unit_set_version(wstate->unit, unit_version ? unit_version->c_str() : 0);
   /** @todo when output non-archive additional namespaces not appended, because not collected 
     However this is correct when output is to archive */

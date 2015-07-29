@@ -134,7 +134,7 @@ public:
   virtual ~srcdiff_output();
 
   virtual void initialize(int is_original, int is_modified);
-  virtual void start_unit(const std::string & language_string, const boost::optional<std::string> & unit_url, const boost::optional<std::string> & unit_filename, const boost::optional<std::string> & unit_version);
+  virtual void start_unit(const std::string & language_string, const boost::optional<std::string> & unit_filename, const boost::optional<std::string> & unit_version);
 
   template<class T>
   void finish(line_diff_range<T> & line_diff_range);

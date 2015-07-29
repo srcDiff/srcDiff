@@ -142,7 +142,6 @@ void srcml_converter::convert(const std::string & language, void * context,
 
     srcml_unit_set_language(unit, burst_config.language.c_str());
     srcml_unit_set_filename(unit, filename.c_str());
-    srcml_unit_set_url(unit, burst_config.unit_url ? burst_config.unit_url->c_str() : 0);
     srcml_unit_set_version(unit, burst_config.unit_version ? burst_config.unit_version->c_str() : 0);
 
     // skipping register extension as probably does not need done.  Some of the above may not need to be done as well.

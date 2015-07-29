@@ -40,7 +40,6 @@ public:
 
     const boost::optional<std::string> & output_path;
     const std::string & language;
-    const boost::optional<std::string> & unit_url;
     const boost::optional<std::string> & unit_filename;
     const boost::optional<std::string> & unit_version;
 
