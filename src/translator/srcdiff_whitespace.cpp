@@ -131,18 +131,12 @@ void srcdiff_whitespace::output_nested(int operation) {
   unsigned int oend = rbuf_original->last_output;
   unsigned int nend = rbuf_modified->last_output;
 
-  // advance whitespace after targeted end
-  for(; oend < rbuf_original->nodes.size() && nend < rbuf_modified->nodes.size()
-        && rbuf_original->nodes.at(oend)->is_white_space() && rbuf_modified->nodes.at(nend)->is_white_space()
-        ; ++oend)
-    ;
-
   if(operation == SES_DELETE)
-    for(; oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_white_space(); ++oend) {
-    }
+    for(; oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_white_space(); ++oend) 
+      ;
   else
-    for(; nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_white_space(); ++nend) {
-    }
+    for(; nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_white_space(); ++nend)
+      ;
 
   markup_whitespace(oend, nend);
 
