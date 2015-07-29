@@ -94,6 +94,9 @@ void srcdiff_change::output() {
     if(!first)
       output_node(diff_original_end, SES_DELETE, is_change);
 
+    if(wstate->output_diff.back()->operation)
+      output_node(diff_original_end, SES_DELETE);
+
     rbuf_original->last_output = end_original;
 
   }
@@ -137,6 +140,9 @@ void srcdiff_change::output() {
     // output diff tag end
     if(!first)
       output_node(diff_modified_end, SES_INSERT, is_change);
+    
+    if(wstate->output_diff.back()->operation == SES_INSERT)
+      output_node(diff_modified_end, SES_INSERT);
 
     rbuf_modified->last_output = end_modified;
 
