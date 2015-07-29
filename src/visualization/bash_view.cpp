@@ -237,6 +237,7 @@ void bash_view::endElement(const char * localname, const char * prefix, const ch
 
       if(local_name == "common" || local_name == "delete" || local_name == "insert")
         diff_stack.pop_back();
+
   } else {
 
     if(in_mode(FUNCTION) && is_function_type(local_name)) {
