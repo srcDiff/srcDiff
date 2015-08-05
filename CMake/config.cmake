@@ -37,10 +37,8 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/dep)
     include_directories(${WINDOWS_DEP_PATH}/include)
     link_directories(${WINDOWS_DEP_PATH}/lib)
-    if(ENABLE_SVN_INTEGRATION)
-        message(FATAL_ERROR "SVN integration not tested on windows.")
-    endif()
-    # FIXME
+ 
+     # FIXME
     set(LIBXML2_LIBRARIES libxml2.lib iconv.lib)
     include_directories(C:/antlr/277/include)
     set(BOOST_DIR $ENV{BOOST_ROOT})
@@ -80,7 +78,7 @@ include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLU
 endif()
 
 # find needed libraries
-find_library(LIBSRCML_LIBRARY NAMES libsrcml.dll libsrcml.a PATHS /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
+find_library(LIBSRCML_LIBRARY NAMES libsrcml.a libsrcml.lib PATHS /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
 
 # Locating the antlr library.
 find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
@@ -105,8 +103,6 @@ set(CMAKE_MACOSX_RPATH OFF)
 if(NOT WIN32 AND NOT APPLE)
 list(APPEND SRCDIFF_LIBRARIES rt)
 endif()
-
-
 
 # The default configuration is to compile in DEBUG mode. These flags can be directly
 # overridden by setting the property of a target you wish to change them for.
