@@ -89,6 +89,7 @@ void option_field(const std::string & arg) { options.*field = arg; }
 template<boost::optional<std::string> srcdiff_options::*field>
 void option_field(const std::string & arg) { options.*field = arg; }
 
+#ifndef _MSC_BUILD
 template<>
 void option_field<&srcdiff_options::files_from_name>(const std::string & arg) {
 
@@ -105,6 +106,8 @@ void option_field<&srcdiff_options::summary_type_str>(const std::string & arg) {
   options.flags |= OPTION_SUMMARY;
 
 }
+
+#endif
 
 #if SVN
 template<>
@@ -146,6 +149,7 @@ void option_field<&srcdiff_options::git_url>(const std::string & arg) {
 template<boost::any srcdiff_options::*field>
 void option_field(const std::string & arg) { options.*field = arg; }
 
+#ifndef _MSC_BUILD
 template<>
 void option_field<&srcdiff_options::bash_view_context>(const std::string & arg) {
 
@@ -162,6 +166,8 @@ void option_field<&srcdiff_options::bash_view_context>(const std::string & arg) 
   options.flags |= OPTION_BASH_VIEW;
 
 }
+
+#endif
 
 enum srcml_int_field { TABSTOP };
 
@@ -336,8 +342,10 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("input", boost::program_options::value<std::vector<std::string>>()->notifier(option_input_file), "Set the input to be a list of file pairs from the provided file")
   ;
 
+#ifndef _MSC_BUILD
   input_ops.add_options()
     ("files-from", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::files_from_name>), "Set the input to be a list of file pairs from the provided file.  Pairs are of the format: original|modified")
+    #endif
 
 #if SVN
     ("svn", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::svn_url>), "Input from a Subversion repository. Example: --svn http://example.org@1-2")
@@ -352,7 +360,11 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
   srcml_ops.add_options()
     ("archive,n", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_ARCHIVE>), "Output srcDiff as an archive")
+
+#ifndef _MSC_BUILD
     ("src-encoding,t", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_ENCODING>)->default_value("ISO-8859-1"), "Set the input source encoding")
+#endif
+
     ("xml-encoding,x", boost::program_options::value<std::string>()->notifier(option_srcml_field<XML_ENCODING>)->default_value("UTF-8"), "Set the output XML encoding") // may want this to be encoding instead of xml-encoding
     ("language,l", boost::program_options::value<std::string>()->notifier(option_srcml_field<LANGUAGE>)->default_value("C++"), "Set the input source programming language")
     ("filename,f", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::unit_filename>), "Override unit filename")
@@ -361,7 +373,11 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("src-version,s", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_VERSION>), "Set the root version attribute")
     ("xmlns", boost::program_options::value<std::string>()->notifier(option_srcml_field<XMLNS>), "Set the prefix associationed with a namespace or register a new one. of the form --xmlns:prefix=url or --xmlns=url for default prefix.")
     ("position", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_POSITION>), "Output additional position information on the srcML elements")
+
+#ifndef _MSC_BUILD
     ("tabs", boost::program_options::value<int>()->notifier(option_srcml_field<TABSTOP>)->default_value(8), "Set the tabstop size")
+#endif
+
     ("no-xml-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_NAMESPACE_DECL>), "Do not output the xml declaration")
     ("no-namespace-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_XML_DECL>), "Do not output any namespace declarations")
     ("cpp-markup-else", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_CPP_TEXT_ELSE>), "Markup up #else contents (default)")
@@ -384,9 +400,9 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("burst", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_BURST>), "Output each input file to a single srcDiff document.  -o gives output directory")
     ("srcml", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCML>), "Also, output the original and modified srcML of each file when burst enabled")
 
+#ifndef _MSC_BUILD
     ("bash", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::bash_view_context>),
         "Output as colorized bash text with provided context. Number is lines of context, 'all' or -1 for entire file, 'function' for encompasing function (default = 3)")
-#ifndef _MSC_BUILD
     ("summary", boost::program_options::value<std::string>()->implicit_value("text")->notifier(option_field<&srcdiff_options::summary_type_str>),
         "Output a summary of the differences.  Options 'text' and/or 'table' summary.   Default 'text'  ")
 #endif
