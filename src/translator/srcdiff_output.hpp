@@ -5,7 +5,11 @@
 #include <line_diff_range.hpp>
 #include <color_diff.hpp>
 #include <bash_view.hpp>
+
+#ifndef _MSC_BUILD
 #include <srcdiff_summary.hpp>
+#endif
+
 #include <methods.hpp>
 
 #include <boost/any.hpp>
@@ -98,7 +102,10 @@ protected:
 
   std::shared_ptr<color_diff> colordiff;
   std::shared_ptr<bash_view> bashview;
+
+#ifndef _MSC_BUILD
   std::shared_ptr<srcdiff_summary> summary;
+#endif
 
 public:
 

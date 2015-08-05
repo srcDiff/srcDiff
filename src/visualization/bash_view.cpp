@@ -183,7 +183,7 @@ void bash_view::startElement(const char * localname, const char * prefix, const 
 
     if(in_mode(FUNCTION) && is_function_type(local_name)) {
 
-      in_function.emplace_back(true);
+      in_function.push_back(true);
 
       if(in_function.size() == 1) {
 
