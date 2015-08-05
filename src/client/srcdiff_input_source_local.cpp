@@ -7,7 +7,10 @@
 #include <uri_stream.hpp>
 
 #include <cstring>
+
+#ifndef _MSC_BUILD
 #include <dirent.h>
+#endif
 
 srcdiff_input_source_local::srcdiff_input_source_local(const srcdiff_options & options) : srcdiff_input_source(options) {
 
@@ -49,6 +52,7 @@ void srcdiff_input_source_local::consume() {
       else if(stat_status_modified == -1)
         throw std::string("Input source '" + input_pair.second + "' could not be opened");
 
+#ifndef _MSC_BUILD
       if (!stat_status_original && S_ISDIR(in_stat_original.st_mode)) {
 
         srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
@@ -66,10 +70,12 @@ void srcdiff_input_source_local::consume() {
         directory(input_pair.first, nullptr, input_pair.second, nullptr);
 
       } else {
-
+#endif
         file(input_pair.first, nullptr, input_pair.second, nullptr);
 
+#ifndef _MSC_BUILD
       }
+#endif
 
    }
 
@@ -115,6 +121,8 @@ void srcdiff_input_source_local::process_file(const boost::optional<std::string>
 
 }
 
+#ifndef _MSC_BUILD
+
 // file/directory names to ignore when processing a directory
 // const/non-const versions for linux/bsd different declarations
 int dir_filter(const struct dirent* d) {
@@ -152,6 +160,8 @@ int is_dir(struct dirent * file, const char * filename) {
 
 }
 
+#endif
+
 int is_output_file(const char * filename, const struct stat & outstat) {
 
   struct stat instat = { 0 };
@@ -170,6 +180,8 @@ int is_output_file(const char * filename, const struct stat & outstat) {
 
 void srcdiff_input_source_local::process_directory(const boost::optional<std::string> & directory_original, const void * context_original,
                                                    const boost::optional<std::string> & directory_modified, const void * context_modified) {
+
+#ifndef _MSC_BUILD
 
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'
@@ -396,6 +408,8 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
 
 #undef PATH_SEPARATOR
 
+#endif
+  
 }
 
 
