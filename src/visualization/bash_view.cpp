@@ -16,7 +16,7 @@ const char * const LINE_CODE = "\x1b[36m";
 
 const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
-#ifndef _MSC_BUILD
+#ifdef _MSC_BUILD
 bool is_function_type(const std::string & type_name) {
 
     return type_name == "function" || type_name == "function_decl" || type_name == "constructor" || type_name == "constructor_decl"
