@@ -18,6 +18,21 @@ const char * XML_VERSION = "1.0";
 const char * output_encoding = "UTF-8";
 const char * XML_DECLARATION_STANDALONE = "yes";
 
+#ifdef _MSC_BUILD
+
+char * strndup(const char * source, size_t n) {
+
+  if(source == 0) return 0;
+
+  char * dup = (char *)malloc((n + 1) * sizeof(char));
+  strncpy(dup, source, n);
+  dup[n] = 0;
+
+  return dup;
+
+}
+
+#endif
 
 inline bool iselement(const xmlTextReaderPtr& reader, const xmlChar* element_name) {
 
