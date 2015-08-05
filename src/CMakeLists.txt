@@ -24,7 +24,9 @@ add_subdirectory(shortest_edit_script)
 add_subdirectory(srcml)
 add_subdirectory(translator)
 add_subdirectory(visualization)
+if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 add_subdirectory(summary)
+endif()
 add_subdirectory(srcSAX/src)
 
 if(WIN32)
@@ -42,8 +44,13 @@ set(SRCDIFF_LIBRARY_SOURCE_EXTRA CACHE INTERNAL "libsrcdiff Extra Source")
 # 
 macro(build_library LIBRARY_NAME LIBRARY_TYPE)
 
+if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator>
     $<TARGET_OBJECTS:visualization> $<TARGET_OBJECTS:summary>)
+else()
+    add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator>
+    $<TARGET_OBJECTS:visualization>)
+endif()
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME libsrcdiff LINK_FLAGS_DEBUG "/SAFESEH:NO")
