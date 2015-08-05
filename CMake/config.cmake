@@ -30,6 +30,25 @@ option(SVN_ENABLED            "Build in svn source input support"         OFF)
 
 option(GIT_ENABLED            "Build in git source input support"         OFF)
 
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+
+    # Adding suspected windows include directory for ANTRL
+    include_directories("C:/antlr/277/include/antlr")
+    set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/dep)
+    include_directories(${WINDOWS_DEP_PATH}/include)
+    link_directories(${WINDOWS_DEP_PATH}/lib)
+    if(ENABLE_SVN_INTEGRATION)
+        message(FATAL_ERROR "SVN integration not tested on windows.")
+    endif()
+    # FIXME
+    set(LIBXML2_LIBRARIES libxml2.lib iconv.lib)
+    include_directories(C:/antlr/277/include)
+    set(BOOST_DIR $ENV{BOOST_ROOT})
+    include_directories(${BOOST_DIR})
+    link_directories(${BOOST_DIR}/stage/lib)
+
+else()
+
 if(SVN_ENABLED)
 
 find_package(LibApr REQUIRED)
@@ -47,8 +66,6 @@ add_definitions("-DGIT")
 
 endif()
 
-# find needed libraries
-find_library(LIBSRCML_LIBRARY NAMES libsrcml.dll libsrcml.a PATHS /usr/local/lib)
 set(LIBSRCML_INCLUDE_DIR /usr/local/include)
 
 set(Boost_NO_BOOST_CMAKE ON)
@@ -57,13 +74,27 @@ find_package(Boost COMPONENTS program_options filesystem system thread regex dat
 
 find_package(LibXml2 REQUIRED)
 
-find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib)
+endif()
+
+# find needed libraries
+find_library(LIBSRCML_LIBRARY NAMES libsrcml.dll libsrcml.a PATHS /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
+
+# Locating the antlr library.
+find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
 
 # Set libsrcdiff libraries
-set(LIBSRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} pthread ${LIBAPR_LIBRARIES} ${LIBSVN_LIBRARIES} ${LIBGIT2_LIBRARIES} crypto dl CACHE INTERNAL "libsrcdiff Link Libraries")
+if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+set(LIBSRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} ${LIBAPR_LIBRARIES} ${LIBSVN_LIBRARIES} ${LIBGIT2_LIBRARIES} crypto dl CACHE INTERNAL "libsrcdiff Link Libraries")
+else()
+set(LIBSRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} ${LIBAPR_LIBRARIES} ${LIBSVN_LIBRARIES} ${LIBGIT2_LIBRARIES} CACHE INTERNAL "libsrcdiff Link Libraries")
+endif()
 
-# Set libsrcdiff libraries
+# Set srcdiff libraries
+if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 set(SRCDIFF_LIBRARIES crypto CACHE INTERNAL "srcdiff Link Libraries")
+else()
+set(SRCDIFF_LIBRARIES CACHE INTERNAL "srcdiff Link Libraries")
+endif()
 
 # Do not use rpath on OSX
 set(CMAKE_MACOSX_RPATH OFF)
@@ -116,7 +147,10 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
     
 elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC") 
 
-    message(FATAL_ERROR "Configuration Not Implemented: ${CMAKE_CXX_COMPILER_ID}. Build not configured for selected compiler.")
+    # message(STATUS "MSVC Compiler not completely configured yet")
+    set(MSVC_WARNINGS "/W3 /wd4068 /wd4101 /D_CRT_SECURE_NO_WARNINGS")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} ${MSVC_WARNINGS} /DSTATIC_GLOBALS  /Od /ZI /MDd")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} ${MSVC_WARNINGS} /Ox")
 
 else()
 
