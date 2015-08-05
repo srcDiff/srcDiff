@@ -33,8 +33,10 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
 
+#ifndef _MSC_BUILD
     summary = std::make_shared<srcdiff_summary>(srcdiff_filename, summary_type_str);
-
+#endif
+    
   }
 
   if(!is_option(flags, OPTION_BURST) || srcdiff_filename != "-")

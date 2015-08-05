@@ -386,8 +386,11 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
     ("bash", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::bash_view_context>),
         "Output as colorized bash text with provided context. Number is lines of context, 'all' or -1 for entire file, 'function' for encompasing function (default = 3)")
+#ifndef _MSC_BUILD
     ("summary", boost::program_options::value<std::string>()->implicit_value("text")->notifier(option_field<&srcdiff_options::summary_type_str>),
         "Output a summary of the differences.  Options 'text' and/or 'table' summary.   Default 'text'  ")
+#endif
+
   ;
 
   input_file.add("input", -1);

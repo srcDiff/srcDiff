@@ -184,11 +184,13 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
 
+#ifndef _MSC_BUILD
     char * xml = 0;
     size_t size = 0;
     srcml_unit_get_xml_standalone(wstate->unit, "UTF-8", &xml, &size);
     summary->summarize(xml, "UTF-8");
     srcml_memory_free((char *)xml);
+#endif
 
   } else if(is_option(flags, OPTION_BURST)) {
 
