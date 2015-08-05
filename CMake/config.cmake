@@ -74,6 +74,9 @@ find_package(Boost COMPONENTS program_options filesystem system thread regex dat
 
 find_package(LibXml2 REQUIRED)
 
+# include needed includes
+include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR} ${LIBSVN_INCLUDE_DIR} ${LIBGIT2_INCLUDE_DIR})
+
 endif()
 
 # find needed libraries
@@ -103,8 +106,7 @@ if(NOT WIN32 AND NOT APPLE)
 list(APPEND SRCDIFF_LIBRARIES rt)
 endif()
 
-# include needed includes
-include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR} ${LIBSVN_INCLUDE_DIR} ${LIBGIT2_INCLUDE_DIR})
+
 
 # The default configuration is to compile in DEBUG mode. These flags can be directly
 # overridden by setting the property of a target you wish to change them for.
