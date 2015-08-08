@@ -16,15 +16,6 @@ const char * const LINE_CODE = "\x1b[36m";
 
 const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
-#ifdef _MSC_BUILD
-bool is_function_type(const std::string & type_name) {
-
-    return type_name == "function" || type_name == "function_decl" || type_name == "constructor" || type_name == "constructor_decl"
-        || type_name == "destructor" || type_name == "destructor_decl";
-
-}
-#endif
-
 bash_view::bash_view(const std::string & output_filename, boost::any context_type) : modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
           is_after_change(false), wait_change(true), in_function(), context_type(context_type), length(0),
           is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
