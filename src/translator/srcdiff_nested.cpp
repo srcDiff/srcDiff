@@ -886,7 +886,6 @@ void srcdiff_nested::output() {
           ++end_pos;
 
         ++end_pos;
-        ++end_pos;
 
     }
 
@@ -935,7 +934,6 @@ void srcdiff_nested::output() {
           && out.get_nodes_modified().at(end_pos)->name == "control"))
           ++end_pos;
 
-        ++end_pos;
         ++end_pos;
 
     }
