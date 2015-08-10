@@ -204,7 +204,7 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
     srcml_archive * srcdiff_archive = srcml_archive_clone(archive);
     srcml_archive_disable_full_archive(srcdiff_archive);
-    srcml_archive_disable_option(srcdiff_archive, SRCML_OPTION_HASH);
+    srcml_archive_disable_hash(srcdiff_archive);
 
     std::string filename = srcml_unit_get_filename(wstate->unit);
     std::string::size_type pos;

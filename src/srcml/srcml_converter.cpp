@@ -115,7 +115,7 @@ void srcml_converter::convert(const std::string & language, void * context,
 
   srcml_archive * unit_archive = srcml_archive_clone(archive);
   srcml_archive_disable_full_archive(unit_archive);
-  srcml_archive_disable_option(unit_archive, SRCML_OPTION_HASH);
+  srcml_archive_disable_hash(unit_archive);
 
   srcml_archive_write_open_memory(unit_archive, &output_buffer, &output_size);
 
@@ -132,7 +132,7 @@ void srcml_converter::convert(const std::string & language, void * context,
     srcml_archive * srcml_archive = srcml_archive_create();
     srcml_archive_set_options(srcml_archive, srcml_archive_get_options(unit_archive));
     srcml_archive_disable_full_archive(srcml_archive);
-    srcml_archive_disable_option(srcml_archive, SRCML_OPTION_HASH);
+    srcml_archive_disable_hash(srcml_archive);
     srcml_archive_set_tabstop(srcml_archive, srcml_archive_get_tabstop(unit_archive));
     srcml_archive_set_src_encoding(srcml_archive, srcml_archive_get_src_encoding(unit_archive));
     srcml_archive_set_xml_encoding(srcml_archive, srcml_archive_get_xml_encoding(unit_archive));

@@ -341,7 +341,8 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
   options.archive = srcml_archive_create();
   srcml_archive_disable_full_archive(options.archive);
-  srcml_archive_enable_option(options.archive, SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH);
+  srcml_archive_disable_hash(options.archive);
+  srcml_archive_enable_option(options.archive, SRCML_OPTION_XML_DECL);
   srcml_archive_register_namespace(options.archive, "diff", SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
 
   general.add_options()
