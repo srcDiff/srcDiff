@@ -216,7 +216,7 @@ void srcdiff_whitespace::output_prefix() {
   if(nend > 0 && !rbuf_modified->nodes.at(nend - 1)->is_new_line())
     nend = save_nend;
 
-  if(ostart < oend) {
+  if(ostart < oend && nstart < nend) {
 
     output_node(diff_common_start, SES_COMMON);
 
