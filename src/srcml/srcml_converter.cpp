@@ -14,7 +14,7 @@ std::mutex srcml_converter::mutex;
 std::map<std::string, std::shared_ptr<srcml_node>> srcml_converter::start_tags;
 std::map<std::string, std::shared_ptr<srcml_node>> srcml_converter::end_tags;
 
-std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr reader, const OPTION_TYPE & options) {
+std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr reader, bool is_archive) {
 
   xmlNode * curnode = xmlTextReaderCurrentNode(reader);
 
@@ -37,7 +37,7 @@ std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr r
       node = lb->second;
     } else {
 
-      node = std::make_shared<srcml_node>(*curnode, options & SRCML_OPTION_ARCHIVE);
+      node = std::make_shared<srcml_node>(*curnode, is_archive);
       node->extra = 0;
       start_tags.insert(lb, std::map<std::string, std::shared_ptr<srcml_node>>::value_type(full_name, node));
     }
@@ -50,17 +50,17 @@ std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr r
       node = lb->second;
     } else {
 
-      node = std::make_shared<srcml_node>(*curnode, options & SRCML_OPTION_ARCHIVE);
+      node = std::make_shared<srcml_node>(*curnode, is_archive);
       node->extra = 0;
       end_tags.insert(lb, std::map<std::string, std::shared_ptr<srcml_node>>::value_type(full_name, node));
     }
 
   } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) {
-    node = std::make_shared<srcml_node>(*curnode, options & SRCML_OPTION_ARCHIVE);
+    node = std::make_shared<srcml_node>(*curnode, is_archive);
     node->free = true;
     node->extra = xmlTextReaderIsEmptyElement(reader);
   } else {
-    node = std::make_shared<srcml_node>(*curnode, options & SRCML_OPTION_ARCHIVE);
+    node = std::make_shared<srcml_node>(*curnode, is_archive);
     node->free = true;
   }
 
@@ -114,7 +114,8 @@ void srcml_converter::convert(const std::string & language, void * context,
                               const srcml_burst_config & burst_config) {
 
   srcml_archive * unit_archive = srcml_archive_clone(archive);
-  srcml_archive_disable_option(unit_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH);
+  srcml_archive_disable_full_archive(unit_archive);
+  srcml_archive_disable_option(unit_archive, SRCML_OPTION_HASH);
 
   srcml_archive_write_open_memory(unit_archive, &output_buffer, &output_size);
 
@@ -130,7 +131,8 @@ void srcml_converter::convert(const std::string & language, void * context,
 
     srcml_archive * srcml_archive = srcml_archive_create();
     srcml_archive_set_options(srcml_archive, srcml_archive_get_options(unit_archive));
-    srcml_archive_disable_option(srcml_archive, SRCML_OPTION_ARCHIVE | SRCML_OPTION_HASH);
+    srcml_archive_disable_full_archive(srcml_archive);
+    srcml_archive_disable_option(srcml_archive, SRCML_OPTION_HASH);
     srcml_archive_set_tabstop(srcml_archive, srcml_archive_get_tabstop(unit_archive));
     srcml_archive_set_src_encoding(srcml_archive, srcml_archive_get_src_encoding(unit_archive));
     srcml_archive_set_xml_encoding(srcml_archive, srcml_archive_get_xml_encoding(unit_archive));

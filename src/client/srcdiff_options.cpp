@@ -79,7 +79,7 @@ void option_input_file(const std::vector<std::string> & arg) {
   for(std::vector<std::string>::size_type pos = 0; pos + 1 < arg.size(); pos += 2)
     options.input_pairs.push_back(std::make_pair(arg[pos], arg[pos + 1]));
 
-  if(options.input_pairs.size() > 1) srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
+  if(options.input_pairs.size() > 1) srcml_archive_enable_full_archive(options.archive);
 
 }
 
@@ -94,7 +94,7 @@ template<>
 void option_field<&srcdiff_options::files_from_name>(const std::string & arg) {
 
     options.files_from_name = arg;
-    srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
+    srcml_archive_enable_full_archive(options.archive);
 
 }
 
@@ -141,7 +141,7 @@ void option_field<&srcdiff_options::git_url>(const std::string & arg) {
   std::string::size_type dash = arg.find('-', atsign + 1);
   options.git_revision_one = arg.substr(atsign + 1, dash - (atsign + 1));
   options.git_revision_two = arg.substr(dash + 1);
-  srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
+  srcml_archive_enable_full_archive(options.archive);
 
 }
 #endif
@@ -168,6 +168,21 @@ void option_field<&srcdiff_options::bash_view_context>(const std::string & arg) 
 }
 
 #endif
+
+enum srcml_bool_field { ARCHIVE };
+
+template<srcml_bool_field field>
+void option_srcml_field(bool on) {}
+
+template<>
+void option_srcml_field<ARCHIVE>(bool on) {
+
+  if(on)
+    srcml_archive_enable_full_archive(options.archive);
+  else
+    srcml_archive_disable_full_archive(options.archive);
+
+}
 
 enum srcml_int_field { TABSTOP };
 
@@ -325,8 +340,8 @@ std::pair<std::string, std::string> parse_xmlns(const std::string & arg) {
 const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
   options.archive = srcml_archive_create();
-  srcml_archive_disable_option(options.archive, SRCML_OPTION_ARCHIVE);
-  srcml_archive_enable_option(options.archive, SRCML_OPTION_NAMESPACE_DECL | SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH | SRCML_OPTION_TERNARY);
+  srcml_archive_disable_full_archive(options.archive);
+  srcml_archive_enable_option(options.archive, SRCML_OPTION_XML_DECL | SRCML_OPTION_HASH);
   srcml_archive_register_namespace(options.archive, "diff", SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
 
   general.add_options()
@@ -359,7 +374,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   ;
 
   srcml_ops.add_options()
-    ("archive,n", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_ARCHIVE>), "Output srcDiff as an archive")
+    ("archive,n", boost::program_options::bool_switch()->notifier(option_srcml_field<ARCHIVE>), "Output srcDiff as an archive")
 
 #ifndef _MSC_BUILD
     ("src-encoding,t", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_ENCODING>)->default_value("ISO-8859-1"), "Set the input source encoding")
@@ -378,8 +393,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("tabs", boost::program_options::value<int>()->notifier(option_srcml_field<TABSTOP>)->default_value(8), "Set the tabstop size")
 #endif
 
-    ("no-xml-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_NAMESPACE_DECL>), "Do not output the xml declaration")
-    ("no-namespace-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_XML_DECL>), "Do not output any namespace declarations")
+    ("no-xml-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_XML_DECL>), "Do not output the xml declaration")
     ("cpp-markup-else", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_CPP_TEXT_ELSE>), "Markup up #else contents (default)")
     ("cpp-text-else", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_CPP_TEXT_ELSE>), "Do not markup #else contents")
     ("cpp-markup-if0", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_CPP_MARKUP_IF0>), "Markup up #if 0 contents")

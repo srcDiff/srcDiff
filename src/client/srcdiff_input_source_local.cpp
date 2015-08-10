@@ -55,7 +55,7 @@ void srcdiff_input_source_local::consume() {
 #ifndef _MSC_BUILD
       if (!stat_status_original && S_ISDIR(in_stat_original.st_mode)) {
 
-        srcml_archive_enable_option(options.archive, SRCML_OPTION_ARCHIVE);
+        srcml_archive_enable_full_archive(options.archive);
 
         if(!srcml_archive_get_url(options.archive)) {
 
