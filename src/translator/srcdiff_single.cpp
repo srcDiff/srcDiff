@@ -230,10 +230,14 @@ void srcdiff_single::output_recursive_interchangeable() {
   output_change(out.last_output_original(), node_sets_modified.at(start_modified).back() + 1);
 
   out.output_node(out.diff_modified_end, SES_INSERT, true);
+  if(out.get_output_state() == SES_INSERT)
+    out.output_node(out.diff_modified_end, SES_INSERT);
 
   output_change(node_sets_original.at(start_original).back() + 1, out.last_output_modified());
 
   out.output_node(out.diff_original_end, SES_DELETE, true);
+  if(out.get_output_state() == SES_DELETE)
+      out.output_node(out.diff_original_end, SES_DELETE);
 
   whitespace.output_statement();
 

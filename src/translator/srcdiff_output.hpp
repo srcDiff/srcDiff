@@ -157,6 +157,7 @@ public:
   unsigned int last_output_modified() const;
   virtual unsigned int & last_output_original();
   virtual unsigned int & last_output_modified();
+  virtual int get_output_state() const;
   METHOD_TYPE method() const;
 
   virtual void output_node(const std::shared_ptr<srcml_node> & node, int operation, bool force_output = false);

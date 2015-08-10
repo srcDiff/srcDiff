@@ -333,4 +333,14 @@
 }</block></function>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange"><function><type><name>QRectF</name></type> <name><name>ParagraphEditor</name><operator>::</operator><name>dirtyRectangle</name></name><parameter_list>(<diff:insert><parameter><decl><type><name>bool</name></type><diff:ws> </diff:ws><name>updateWholeRegion</name></decl></parameter></diff:insert>)</parameter_list>
+<block>{
+    <if>if <condition>(<diff:insert><diff:ws> </diff:ws></diff:insert><expr><operator>!</operator><diff:insert><name>updateWholeRegion</name><diff:ws> </diff:ws><operator>&amp;&amp;</operator><diff:ws> </diff:ws><operator>!</operator></diff:insert><call><name>needsRepaint</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+       <diff:delete><diff:ws> </diff:ws><diff:delete type="convert"><expr_stmt><diff:insert type="convert"><return>return<diff:ws> </diff:ws><diff:common><expr><call><name>QRectF</name><argument_list>()</argument_list></call></expr>;</diff:common></return></diff:insert></expr_stmt></diff:delete></diff:delete>
+    }</block></then></if>
+
+    <return>return <expr><name>repaintRectangle</name></expr>;</return>
+}</block></function>
+</unit>
+
 </unit>
