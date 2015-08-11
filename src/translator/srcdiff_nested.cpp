@@ -388,11 +388,11 @@ bool srcdiff_nested::reject_match_nested(int similarity, int difference, int tex
 
   if(original_tag == "then" || original_tag == "block" || original_tag == "comment"
     || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier"
-    || original_tag == "expr" || original_tag == "name") {
+    || original_tag == "expr" || original_tag == "expr_stmt" || original_tag == "name") {
 
-
-    return srcdiff_match::reject_similarity(similarity, difference, text_original_length, text_modified_length,
+    bool is_reject = srcdiff_match::reject_similarity(similarity, difference, text_original_length, text_modified_length,
       nodes_original, set_original, nodes_modified, set_modified);
+    return is_reject;
 
   } else {
 
