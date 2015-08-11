@@ -1289,7 +1289,10 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
 
       bool is_expr_reject = srcdiff_match::reject_similarity(expr_similarity, expr_difference, expr_text_original_length, expr_text_modified_length, nodes_original, expr_original, nodes_modified, expr_modified);
 
-      if(!is_expr_reject) return false;
+      int min_size = expr_text_original_length < expr_text_modified_length ? expr_text_original_length : expr_text_modified_length;
+      int max_size = expr_text_original_length < expr_text_modified_length ? expr_text_modified_length : expr_text_original_length;
+
+      if(!is_expr_reject && 2 * expr_similarity > max_size && 2 * expr_difference < max_size) return false;
 
     }
 
@@ -1397,6 +1400,7 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
   std::cerr << "Similarity: " << similarity << '\n';
   std::cerr << "Difference: " << difference << '\n';
   std::cerr << "Min Size: "   << min_size   << '\n';
+  std::cerr << "Max Size: "   << max_size   << '\n';
 #endif
 
   /** @todo consider making this configurable.  That is, allow user to specify file or have default file to read from */

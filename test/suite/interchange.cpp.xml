@@ -300,24 +300,6 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
-<if>if<condition>(<expr><operator>!</operator><call><name><name>paraStyles</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><call><name><name>root</name><operator>.</operator><name>ID</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then><diff:delete><diff:ws>
-   </diff:ws></diff:delete> <block type="pseudo|"><diff:insert>{<diff:ws>
-    </diff:ws></diff:insert><diff:delete type="convert"><expr_stmt><diff:insert type="convert"><decl_stmt><decl><type><name>int</name></type><diff:ws> </diff:ws><name>id</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><diff:common><expr><diff:delete><name>tree_root</name><diff:ws> </diff:ws><operator>&lt;&lt;</operator><diff:ws> </diff:ws></diff:delete><call><name><name>root</name><operator>.</operator><name>ID</name></name><argument_list>()</argument_list></call></expr></diff:common></init></decl><diff:common>;</diff:common></decl_stmt></diff:insert></expr_stmt></diff:delete><diff:insert><diff:ws>
-    </diff:ws><if>if<condition>(<expr><name>id</name><diff:ws> </diff:ws><operator>!=</operator><diff:ws> </diff:ws><name>tree_rootID</name></expr>)</condition><then><diff:ws>
-        </diff:ws><block type="pseudo"><expr_stmt><expr><call><name><name>tree_root</name><operator>.</operator><name>insert</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if><diff:ws>
-</diff:ws>}</diff:insert></block></then></if>
-</unit>
-
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
-<if>if<condition>(<expr><operator>!</operator><call><name><name>paraStyles</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><call><name><name>root</name><operator>.</operator><name>ID</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then><diff:insert><diff:ws>
-   </diff:ws></diff:insert> <block type="|pseudo"><diff:delete>{<diff:ws>
-    </diff:ws><diff:delete type="convert"><decl_stmt><diff:insert type="convert"><expr_stmt><diff:delete><decl><type><name>int</name></type><diff:ws> </diff:ws><name>id</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><diff:common><expr><diff:insert><name>tree_root</name><diff:ws> </diff:ws><operator>&lt;&lt;</operator><diff:ws> </diff:ws></diff:insert><call><name><name>root</name><operator>.</operator><name>ID</name></name><argument_list>()</argument_list></call></expr></diff:common></init></decl></diff:delete><diff:common>;</diff:common></expr_stmt></diff:insert></decl_stmt></diff:delete><diff:ws>
-    </diff:ws><if>if<condition>(<expr><name>id</name><diff:ws> </diff:ws><operator>!=</operator><diff:ws> </diff:ws><name>tree_rootID</name></expr>)</condition><then><diff:ws>
-        </diff:ws><block type="pseudo"><expr_stmt><expr><call><name><name>tree_root</name><operator>.</operator><name>insert</name></name><argument_list>(<argument><expr><name>id</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if><diff:ws>
-</diff:ws>}</diff:delete></block></then></if>
-</unit>
-
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list><block>{
 
 	<diff:delete type="convert"><expr_stmt><diff:insert type="convert"><decl_stmt><decl><type><name>int</name></type><diff:ws> </diff:ws><name>a</name><argument_list>(<argument><expr><name>c</name></expr></argument>,<diff:ws> </diff:ws><argument><diff:common><expr><name>b</name></expr></diff:common></argument>)</argument_list></decl><diff:common>;</diff:common></decl_stmt></diff:insert></expr_stmt></diff:delete>
