@@ -982,6 +982,7 @@ static const char * const access_interchange[]    = { "public", "protected", "pr
 static const char * const if_interchange[]        = { "if", "while", "for", "foreach",    0 };
 static const char * const else_interchange[]      = { "else", "elseif",                   0 };
 static const char * const expr_stmt_interchange[] = { "expr_stmt", "decl_stmt", "return", 0 };
+static const char * const cast_interchange[] = { "cast", 0 };
 static const interchange_list interchange_lists[] = {
 
   { "class",     class_interchange },
@@ -1004,6 +1005,8 @@ static const interchange_list interchange_lists[] = {
   {"expr_stmt", expr_stmt_interchange },
   {"decl_stmt", expr_stmt_interchange },
   {"return"   , expr_stmt_interchange },
+
+  {"cast", cast_interchange },
 
   { 0, 0 }
 

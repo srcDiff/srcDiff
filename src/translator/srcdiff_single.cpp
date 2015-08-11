@@ -101,9 +101,7 @@ void srcdiff_single::output_recursive_same() {
     merged_node->properties = merge_properties(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->properties,
                                               out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->properties);
 
-
     out.output_node(merged_node, SES_COMMON);
-
 
   }
 
