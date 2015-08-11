@@ -584,8 +584,7 @@ int name_list_similarity(std::vector<std::string> name_list_original, std::vecto
 
   similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
 
-  if(similarity < 0)
-    similarity = 0;
+  if(similarity < 0) similarity = 0;
 
   return similarity;
 
