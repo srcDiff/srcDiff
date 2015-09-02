@@ -81,10 +81,12 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type),
   }
 
   xmlNsPtr node_ns = node.nsDef;
-  if(name == "unit" && ns) {
+  if(name == "unit" && node_ns) {
 
-    while(is_archive && node_ns && (const char *)node_ns->href !=SRCML_CPP_NAMESPACE_HREF)
+    while(is_archive && node_ns && (const char *)node_ns->href != SRCML_CPP_NAMESPACE_HREF)
         node_ns = node_ns->next;
+
+    if(!node_ns) goto end_ns_def;
 
     std::string ns_name = "xmlns";
     if(node_ns->prefix) {
@@ -114,6 +116,8 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type),
     }
 
   }
+
+end_ns_def:
 
   xmlAttrPtr attribute = node.properties;
   if(attribute) {
