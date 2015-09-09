@@ -1,4 +1,21 @@
 #!/bin/sh
 echo "---" $1
 echo "+++" $1
-[ $# -eq 7 ] && srcdiff --bash=3 "$2" "$5"
+
+if [[ $2 = "/dev/null" ]]; then
+
+	touch srcdiff_temp$(bash -c "echo $5 | grep -o '\.[^.]*$'")
+	[ $# -eq 7 ] && srcdiff --bash=3 srcdiff_temp$(bash -c "echo $5 | grep -o '\.[^.]*$'") "$5"
+	rm -f srcdiff_temp$(bash -c "echo $5 | grep -o '\.[^.]*$'")
+
+elif [[ $5 = "/dev/null" ]]; then
+
+	touch srcdiff_temp$(bash -c "echo $2 | grep -o '\.[^.]*$'")
+	[ $# -eq 7 ] && srcdiff --bash=3 "$2" srcdiff_temp$(bash -c "echo $2 | grep -o '\.[^.]*$'")
+	rm -f srcdiff_temp$(bash -c "echo $2 | grep -o '\.[^.]*$'")
+
+else
+
+	[ $# -eq 7 ] && srcdiff --bash=3 "$2" "$5"
+
+fi
