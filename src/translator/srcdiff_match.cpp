@@ -1061,7 +1061,8 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
     || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier" || original_tag == "member_list")
     return false;
 
-  if((original_tag == "expr" || original_tag == "expr_stmt") && similarity > 0) return false;
+  int max_size = text_original_length > text_modified_length ? text_original_length : text_modified_length;
+  if((original_tag == "expr" || original_tag == "expr_stmt") && similarity > 0 && difference <= max_size) return false;
 
   // may need to refine to if child only single name
   if(original_tag == "expr" && nodes_original.at(original_pos)->parent && (*nodes_original.at(original_pos)->parent)->name == "argument") return false;
