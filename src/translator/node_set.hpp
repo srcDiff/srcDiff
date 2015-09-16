@@ -44,7 +44,7 @@ public:
 
 	node_set(const srcml_nodes & nodes, int & start) : nodes(nodes) {
 
-	if((xmlReaderTypes)nodes.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)nodes.at(start)->type != XML_READER_TYPE_ELEMENT) return;
+	  if((xmlReaderTypes)nodes.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)nodes.at(start)->type != XML_READER_TYPE_ELEMENT) return;
 
 	  push_back(start);
 
