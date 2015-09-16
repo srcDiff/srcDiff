@@ -394,6 +394,53 @@ bool is_single_call_expr(const srcml_nodes & nodes, int start_pos) {
  
 }
 
+void skip_tag(const srcml_nodes & nodes, int & start_pos) {
+
+  std::string & start_tag = nodes.at(start_pos)->name;
+  int open_type_count = nodes.at(start_pos)->extra & 0x1 ? 0 : 1;
+  ++start_pos;
+
+  while(open_type_count) {
+
+    if(nodes.at(start_pos)->name == start_tag) {
+
+      if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(start_pos)->extra & 0x1) == 0)
+        ++open_type_count;
+      else if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
+        --open_type_count;
+
+    }
+
+    ++start_pos;
+
+  }
+
+}
+
+void top_level_name_seek(const srcml_nodes & nodes, int & start_pos) {
+
+    if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name == "name")
+      return;
+
+    std::string & start_tag = nodes.at(start_pos)->name;
+    int name_start_pos = start_pos + 1;
+
+    while(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || nodes.at(name_start_pos)->name != "name") {
+
+      if(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(name_start_pos)->name == start_tag)
+        return;
+
+      if(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT)
+        skip_tag(nodes, name_start_pos);
+      else
+        ++name_start_pos;
+
+    }
+
+    start_pos = name_start_pos;
+
+}
+
 std::string get_name(const srcml_nodes & nodes, int name_start_pos) {
 
   int open_name_count = nodes.at(name_start_pos)->extra & 0x1 ? 0 : 1;
@@ -422,67 +469,6 @@ std::string get_name(const srcml_nodes & nodes, int name_start_pos) {
   }
 
   return name;
-
-}
-
-void skip_type(const srcml_nodes & nodes, const std::string & tag_name, int & start_pos) {
-
-  int type_start_pos = start_pos;
-
-  while((nodes.at(type_start_pos)->type != (xmlElementType)XML_READER_TYPE_END_ELEMENT || nodes.at(type_start_pos)->name != tag_name)
-     && (nodes.at(type_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || nodes.at(type_start_pos)->name != "type"))
-    ++type_start_pos;
-
-  if(nodes.at(type_start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT || nodes.at(type_start_pos)->name == tag_name)
-    return;
-
-  start_pos = type_start_pos;
-  int open_type_count = nodes.at(start_pos)->extra & 0x1 ? 0 : 1;
-  ++start_pos;
-
-  while(open_type_count) {
-
-    if(nodes.at(start_pos)->name == "type") {
-
-      if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(start_pos)->extra & 0x1) == 0)
-        ++open_type_count;
-      else if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
-        --open_type_count;
-
-    }
-
-    ++start_pos;
-
-  }
-
-}
-
-void skip_specifiers(const srcml_nodes & nodes, int & start_pos) {
-
-  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || nodes.at(start_pos)->name != "specifier")
-      return;
-
-  while(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(start_pos)->name == "specifier") {
-
-    int open_specifier_count = nodes.at(start_pos)->extra & 0x1 ? 0 : 1;
-    ++start_pos;
-
-    while(open_specifier_count) {
-
-      if(nodes.at(start_pos)->name == "specifier") {
-
-        if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (nodes.at(start_pos)->extra & 0x1) == 0)
-          ++open_specifier_count;
-        else if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
-          --open_specifier_count;
-
-      }
-
-      ++start_pos;
-
-    }
-
-  }
 
 }
 
@@ -589,19 +575,12 @@ std::string get_decl_name(const srcml_nodes & nodes, int start_pos) {
       && nodes.at(start_pos)->name != "decl")) return "";
   if(nodes.at(start_pos)->extra & 0x1) return "";
 
-  int name_start_pos = start_pos + 1;
+  int name_start_pos = start_pos;
 
-  skip_type(nodes, nodes.at(start_pos)->name, name_start_pos);
-
-  while(!(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-      && nodes.at(name_start_pos)->name == "name")
-    && !(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-      && nodes.at(name_start_pos)->name == "decl"))
+  if(nodes.at(name_start_pos)->name != "decl")
     ++name_start_pos;
 
-  if(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-      && nodes.at(name_start_pos)->name == "decl")
-    return "";
+  top_level_name_seek(nodes, name_start_pos);
 
   return get_name(nodes, name_start_pos);
 
@@ -708,16 +687,9 @@ std::string get_function_type_name(const srcml_nodes & nodes, int start_pos) {
       && nodes.at(start_pos)->name != "destructor" && nodes.at(start_pos)->name != "destructor_decl")) return "";
   if(nodes.at(start_pos)->extra & 0x1) return "";
 
-  int name_start_pos = start_pos + 1;
+  int name_start_pos = start_pos;
 
-  if(nodes.at(name_start_pos)->name == "function" || nodes.at(name_start_pos)->name == "function_decl")
-    skip_type(nodes, nodes.at(start_pos)->name, name_start_pos);
-  else
-    skip_specifiers(nodes, ++name_start_pos);
-
-  while(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || nodes.at(name_start_pos)->name != "name")
-    ++name_start_pos;
+  top_level_name_seek(nodes, name_start_pos);
 
   return get_name(nodes, name_start_pos);
 
