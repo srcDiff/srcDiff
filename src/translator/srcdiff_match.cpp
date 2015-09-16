@@ -425,28 +425,18 @@ std::string get_name(const srcml_nodes & nodes, int name_start_pos) {
 
 }
 
-void skip_type(const srcml_nodes & nodes, int & start_pos) {
+void skip_type(const srcml_nodes & nodes, const std::string & tag_name, int & start_pos) {
 
-  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-   && nodes.at(start_pos)->name == "decl_stmt")
-    ++start_pos;
+  int type_start_pos = start_pos;
 
-  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-   && nodes.at(start_pos)->name == "parameter")
-    ++start_pos;
+  while((nodes.at(type_start_pos)->type != (xmlElementType)XML_READER_TYPE_END_ELEMENT || nodes.at(type_start_pos)->name != tag_name)
+     && (nodes.at(type_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || nodes.at(type_start_pos)->name != "type"))
+    ++type_start_pos;
 
-  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-   && nodes.at(start_pos)->name == "param")
-    ++start_pos;
-
-  if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-   && nodes.at(start_pos)->name == "decl")
-    ++start_pos;
-
-  if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || nodes.at(start_pos)->name != "type")
+  if(nodes.at(type_start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT || nodes.at(type_start_pos)->name == tag_name)
     return;
 
+  start_pos = type_start_pos;
   int open_type_count = nodes.at(start_pos)->extra & 0x1 ? 0 : 1;
   ++start_pos;
 
@@ -601,7 +591,7 @@ std::string get_decl_name(const srcml_nodes & nodes, int start_pos) {
 
   int name_start_pos = start_pos + 1;
 
-  skip_type(nodes, name_start_pos);
+  skip_type(nodes, nodes.at(start_pos)->name, name_start_pos);
 
   while(!(nodes.at(name_start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
       && nodes.at(name_start_pos)->name == "name")
@@ -720,8 +710,8 @@ std::string get_function_type_name(const srcml_nodes & nodes, int start_pos) {
 
   int name_start_pos = start_pos + 1;
 
-  if(nodes.at(name_start_pos)->name != "function" && nodes.at(name_start_pos)->name != "function_decl")
-    skip_type(nodes, name_start_pos);
+  if(nodes.at(name_start_pos)->name == "function" || nodes.at(name_start_pos)->name == "function_decl")
+    skip_type(nodes, nodes.at(start_pos)->name, name_start_pos);
   else
     skip_specifiers(nodes, ++name_start_pos);
 
