@@ -62,8 +62,14 @@ void srcdiff_change::output() {
 
       if(rbuf_original->nodes.at(i)->move) {
 
+        if(is_change)
+          diff_original_start->properties.clear();
+
         srcdiff_move move(*this, i, SES_DELETE);
         move.output();
+
+        if(is_change)
+          diff_original_start->properties.push_back(diff_type);
 
         continue;
 
@@ -109,8 +115,14 @@ void srcdiff_change::output() {
 
       if(rbuf_modified->nodes.at(i)->move) {
 
+        if(is_change)
+          diff_modified_start->properties.clear();
+
         srcdiff_move move(*this, i, SES_INSERT);
         move.output();
+
+        if(is_change)
+          diff_modified_start->properties.push_back(diff_type);
 
         continue;
 
