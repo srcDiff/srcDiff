@@ -1,5 +1,6 @@
 #include <srcdiff_change.hpp>
 
+#include <srcdiff_constants.hpp>
 #include <srcdiff_whitespace.hpp>
 #include <srcdiff_move.hpp>
 #include <shortest_edit_script.h>
@@ -11,7 +12,8 @@
 #include <cstring>
 #include <string>
 
-const boost::optional<std::string> srcdiff_change::change("change");
+const std::string change("change");
+const srcml_node::srcml_attr diff_type(DIFF_TYPE, change);
 
 srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_original, unsigned int end_modified)
 : srcdiff_output(out), end_original(end_original), end_modified(end_modified) {}
@@ -47,9 +49,8 @@ void srcdiff_change::output() {
   if(end_original > begin_original && end_modified > begin_modified) {
 
     // set attribute to change
-    diff_type->value = change;
-    diff_original_start->properties.push_back(*diff_type.get());
-    diff_modified_start->properties.push_back(*diff_type.get());
+    diff_original_start->properties.push_back(diff_type);
+    diff_modified_start->properties.push_back(diff_type);
     is_change = true;
 
   }

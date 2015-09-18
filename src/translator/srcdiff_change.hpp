@@ -12,8 +12,6 @@ protected:
 
 private:
 
-	static const boost::optional<std::string> change;
-
 public:
 
 	srcdiff_change(const srcdiff_output & out, unsigned int end_original, unsigned int end_modified);

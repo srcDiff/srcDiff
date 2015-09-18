@@ -122,9 +122,6 @@ public:
 
   std::shared_ptr<srcml_node::srcml_ns> diff;
 
-  // diff attribute
-  std::shared_ptr<srcml_node::srcml_attr> diff_type;
-
   std::shared_ptr<srcml_node> unit_tag;
 
 private:

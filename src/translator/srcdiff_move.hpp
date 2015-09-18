@@ -15,8 +15,6 @@ protected:
 
 private:
 
-	static const std::string move;
-
 public:
 
 	srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation);

@@ -1,4 +1,6 @@
 #include <srcdiff_single.hpp>
+
+#include <srcdiff_constants.hpp>
 #include <srcdiff_change.hpp>
 #include <srcdiff_comment.hpp>
 #include <srcdiff_common.hpp>
@@ -10,7 +12,8 @@
 #include <map>
 #include <list>
 
-const std::string srcdiff_single::convert("convert");
+const std::string convert("convert");
+const srcml_node::srcml_attr diff_type(DIFF_TYPE, convert);
 
 srcdiff_single::srcdiff_single(const srcdiff_many & diff, unsigned int start_original, unsigned int start_modified) : srcdiff_many(diff), start_original(start_original), start_modified(start_modified) {}
 
@@ -152,9 +155,8 @@ void srcdiff_single::output_recursive_interchangeable() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_all();
 
-  out.diff_type->value = convert;
-  out.diff_original_start->properties.push_back(*out.diff_type.get());
-  out.diff_modified_start->properties.push_back(*out.diff_type.get());
+  out.diff_original_start->properties.push_back(diff_type);
+  out.diff_modified_start->properties.push_back(diff_type);
 
   out.output_node(out.diff_original_start, SES_DELETE, true);
   out.diff_original_start->properties.clear();

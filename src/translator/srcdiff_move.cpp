@@ -10,7 +10,7 @@
 #include <list>
 
 int move_id = 0;
-const std::string srcdiff_move::move("move");
+const std::string move("move");
 
 typedef std::pair<int, int> IntPair;
 typedef std::vector<IntPair> IntPairs;
