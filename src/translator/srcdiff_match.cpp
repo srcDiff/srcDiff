@@ -472,6 +472,17 @@ std::string get_name(const srcml_nodes & nodes, int name_start_pos) {
 
 }
 
+std::string extract_name(const srcml_nodes & nodes, int start_pos) {
+
+  int name_start_pos = start_pos;
+  top_level_name_seek(nodes, name_start_pos);
+
+  if(name_start_pos == start_pos) return "";
+
+  return get_name(nodes, name_start_pos);  
+
+}
+
 std::vector<std::string> get_call_name(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || nodes.at(start_pos)->name != "call")
@@ -575,14 +586,11 @@ std::string get_decl_name(const srcml_nodes & nodes, int start_pos) {
       && nodes.at(start_pos)->name != "decl")) return "";
   if(nodes.at(start_pos)->extra & 0x1) return "";
 
-  int name_start_pos = start_pos;
+  if(nodes.at(start_pos)->name != "decl")
+    ++start_pos;
+  if(nodes.at(start_pos)->extra & 0x1) return "";
 
-  if(nodes.at(name_start_pos)->name != "decl")
-    ++name_start_pos;
-
-  top_level_name_seek(nodes, name_start_pos);
-
-  return get_name(nodes, name_start_pos);
+  return extract_name(nodes, start_pos);
 
 }
 
@@ -687,11 +695,8 @@ std::string get_function_type_name(const srcml_nodes & nodes, int start_pos) {
       && nodes.at(start_pos)->name != "destructor" && nodes.at(start_pos)->name != "destructor_decl")) return "";
   if(nodes.at(start_pos)->extra & 0x1) return "";
 
-  int name_start_pos = start_pos;
 
-  top_level_name_seek(nodes, name_start_pos);
-
-  return get_name(nodes, name_start_pos);
+  return extract_name(nodes, start_pos);
 
 }
 
@@ -702,16 +707,7 @@ std::string get_class_type_name(const srcml_nodes & nodes, int start_pos) {
       && nodes.at(start_pos)->name != "union" && nodes.at(start_pos)->name == "enum")) return "";
   if(nodes.at(start_pos)->extra & 0x1) return "";
 
-  int name_start_pos = start_pos + 1;
-
-  while(nodes.at(name_start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-   || (nodes.at(name_start_pos)->name != "name" && nodes.at(name_start_pos)->name != "block"))
-    ++name_start_pos;
-
-  if(nodes.at(name_start_pos)->name == "name")
-    return get_name(nodes, name_start_pos);
-  else
-    return "";
+  return extract_name(nodes, start_pos);
 
 }
 
