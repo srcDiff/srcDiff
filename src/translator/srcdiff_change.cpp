@@ -60,6 +60,14 @@ void srcdiff_change::output() {
     bool first = true;
     for(unsigned int i = begin_original; i < end_original; ++i) {
 
+      // output diff tag begin
+      if(first && is_change) {
+
+        output_node(diff_original_start, SES_DELETE, is_change);
+        first = false;
+
+      }
+
       if(rbuf_original->nodes.at(i)->move) {
 
         if(is_change)
@@ -112,6 +120,14 @@ void srcdiff_change::output() {
 
     bool first = true;
     for(unsigned int i = begin_modified; i < end_modified; ++i) {
+
+      // output diff tag
+      if(first && is_change) {
+
+        output_node(diff_modified_start, SES_INSERT, is_change);
+        first = false;
+
+      }
 
       if(rbuf_modified->nodes.at(i)->move) {
 
