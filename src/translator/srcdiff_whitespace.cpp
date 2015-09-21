@@ -2,6 +2,7 @@
 
 #include <srcdiff_common.hpp>
 #include <srcdiff_compare.hpp>
+#include <type_query.hpp>
 #include <shortest_edit_script.h>
 
 srcdiff_whitespace::srcdiff_whitespace(const srcdiff_output & out) : srcdiff_output(out) {}
@@ -147,6 +148,9 @@ void srcdiff_whitespace::output_statement() {
 
   unsigned int oend = rbuf_original->last_output;
   unsigned int nend = rbuf_modified->last_output;
+
+  if((oend - 1) >= 0 && !is_statement(rbuf_original->nodes.at(oend - 1)->name)
+    && (nend - 1) >= 0 && !is_statement(rbuf_modified->nodes.at(nend - 1)->name)) return;
 
   // advance whitespace after targeted end
   for(; oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_white_space() && !rbuf_original->nodes.at(oend)->is_new_line(); ++oend)
