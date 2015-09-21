@@ -115,15 +115,19 @@ def srcdiff(source_file_version_one, source_file_version_two, encoding, language
 
 	command = [globals()["srcdiff_utility"], "-f", filename]
 
-	temp_file = open("temp_file_one.cpp", "w")
+	extension = "cpp"
+	if language == "Java" :
+		extension = "java"
+
+	temp_file = open("temp_file_one." + extension, "w")
 	temp_file.write(source_file_version_one)
 	temp_file.close()
 
-	temp_file = open("temp_file_two.cpp", "w")
+	temp_file = open("temp_file_two." + extension, "w")
 	temp_file.write(source_file_version_two)
 	temp_file.close()
 
-	return safe_communicate_two_files(command, "temp_file_one.cpp", "temp_file_two.cpp", url).replace(" options=\"CPPIF_CHECK,TERNARY\"", "").replace(" options=\"TERNARY\"", "").replace(" revision=\"0.8.0\"", "")
+	return safe_communicate_two_files(command, "temp_file_one." + extension, "temp_file_two." + extension, url).replace(" revision=\"0.8.0\"", "")
 
 def get_srcml_attribute(xml_file, command) :
 
@@ -296,19 +300,6 @@ try :
 				# only process if url name matches or is not given
 				if specname != "" and m.match(url) == None :
 					continue
-			
-				# language of the entire document with a default of C++
-				#language = lre.search(info).group(1)
-				#if len(language) == 0 :
-				language = "C++"
-
-				# only process if language matches or is not given
-				if speclang != "" and language != speclang :
-					continue
-			
-				# output language and url
-				print
-				print language.ljust(FIELD_WIDTH_LANGUAGE), " ", url.ljust(FIELD_WIDTH_URL), " ",
 
 				# encoding of the outer unit
 				encoding = ere.search(info).group(1)
@@ -330,6 +321,8 @@ try :
 				# read entire file into a string
 				filexml = name2filestr(xml_filename)
 
+				get_language = True				
+
 				while count == 0 or count < number :
 
 					try : 
@@ -344,6 +337,23 @@ try :
 							unitxml = filexml
 						else :
 							unitxml = extract_unit(filexml, count)
+
+						if get_language :
+
+							get_language = False
+
+							# language of the entire document with a default of C++
+							language = lre.search(unitxml).group(1)
+							if len(language) == 0 :
+								language = "C++"
+
+							# only process if language matches or is not given
+							if speclang != "" and language != speclang :
+								continue
+						
+							# output language and url
+							print
+							print language.ljust(FIELD_WIDTH_LANGUAGE), " ", url.ljust(FIELD_WIDTH_URL), " ",
 
 						# total count of test cases
 						total_count = total_count + 1

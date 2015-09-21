@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Java" url="expr_stmt">
+
+<unit language="Java" filename="expr_stmt|expr_stmt">
+<expr_stmt><expr><diff:insert><operator>!</operator></diff:insert><name><name>blocks</name><index>[<expr><name><name>blocks</name><operator>.</operator><name>length</name></name> <operator>-</operator> <literal type="number">1</literal></expr>]</index></name><diff:delete><diff:ws> </diff:ws></diff:delete><operator><diff:delete type="change">instanceof</diff:delete><diff:insert type="change">.</diff:insert></operator><diff:delete type="change"><diff:ws> </diff:ws><name>BlockInfo</name></diff:delete><diff:insert type="change"><call><name>isComplete</name><argument_list>()</argument_list></call></diff:insert></expr>;</expr_stmt>
+</unit>
+
+</unit>
