@@ -583,6 +583,8 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
   start_nest_modified = start_modified;  
   end_nest_modified = start_modified;
 
+  operation = SES_COMMON;
+
   if((end_original - start_original) == 1 || (end_modified - start_modified) == 1) {
 
     if(check_nested_single_to_many(node_sets_original, nodes_original, start_original, end_original,
