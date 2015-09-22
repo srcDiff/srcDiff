@@ -508,8 +508,13 @@ f.close()
 
 if os.path.exists("temp_file_one.cpp") :
 		os.remove("temp_file_one.cpp")
+if os.path.exists("temp_file_one.java") :
+		os.remove("temp_file_one.java")
 if os.path.exists("temp_file_two.cpp") :
 		os.remove("temp_file_two.cpp")
+if os.path.exists("temp_file_two.java") :
+		os.remove("temp_file_two.java")
+
 
 # output tool version
 print
