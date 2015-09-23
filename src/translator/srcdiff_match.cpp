@@ -1214,22 +1214,32 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
       if(original_tag == "decl_stmt") {
 
         expr_modified = get_first_expr_child(nodes_modified, modified_pos);
-        node_sets sets = node_sets(nodes_original, set_original.at(1), set_original.back(), srcdiff_nested::is_match,
-                                  &nodes_modified.at(expr_modified.at(0)));
-        int match = srcdiff_nested::best_match(nodes_original, sets, nodes_modified, expr_modified, SES_DELETE);
 
-        if(match < sets.size())
-          expr_original = sets.at(match);
+        if(!expr_modified.empty()) {
+
+          node_sets sets = node_sets(nodes_original, set_original.at(1), set_original.back(), srcdiff_nested::is_match,
+                                    &nodes_modified.at(expr_modified.at(0)));
+          int match = srcdiff_nested::best_match(nodes_original, sets, nodes_modified, expr_modified, SES_DELETE);
+
+          if(match < sets.size())
+            expr_original = sets.at(match);
+
+        }
 
       } else {
 
         expr_original = get_first_expr_child(nodes_original, original_pos);
-        node_sets sets = node_sets(nodes_modified, set_modified.at(1), set_modified.back(), srcdiff_nested::is_match,
-                                  &nodes_original.at(expr_original.at(0)));
-        int match = srcdiff_nested::best_match(nodes_modified, sets, nodes_original, expr_original, SES_INSERT);
 
-        if(match < sets.size())
-          expr_modified = sets.at(match);
+        if(!expr_original.empty()) {
+
+          node_sets sets = node_sets(nodes_modified, set_modified.at(1), set_modified.back(), srcdiff_nested::is_match,
+                                    &nodes_original.at(expr_original.at(0)));
+          int match = srcdiff_nested::best_match(nodes_modified, sets, nodes_original, expr_original, SES_INSERT);
+
+          if(match < sets.size())
+            expr_modified = sets.at(match);
+
+        }
 
       }
 

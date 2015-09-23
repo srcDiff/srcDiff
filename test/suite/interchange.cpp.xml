@@ -333,4 +333,8 @@
 <expr_stmt><expr><cast type="reinterpret|dynamic"><diff:delete type="change">reinterpret_cast</diff:delete><diff:insert type="change">dynamic_cast</diff:insert><argument_list type="generic">&lt;<argument><expr><name>foo</name></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>bar</name></expr></argument>)</argument_list></cast></expr>;</expr_stmt>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
+<diff:delete type="change"><decl_stmt><decl><type><name>String</name></type><diff:ws> </diff:ws><name>redirectPath</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><call><name><name>rmWebApp</name><operator>.</operator><name>getRedirectPath</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>uri</name></expr></init></decl>;</decl_stmt></diff:delete><diff:insert type="change"><return>return;</return></diff:insert>
+</unit>
+
 </unit>
