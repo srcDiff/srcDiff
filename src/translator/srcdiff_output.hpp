@@ -124,6 +124,9 @@ public:
 
   std::shared_ptr<srcml_node> unit_tag;
 
+  static bool delay;
+  static int delay_operation;
+
 private:
 
   static void update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcml_node> & node, int operation);
@@ -156,6 +159,8 @@ public:
   virtual unsigned int & last_output_modified();
   virtual int get_output_state() const;
   METHOD_TYPE method() const;
+
+  virtual bool is_delay_type(int operation);
 
   virtual void output_node(const std::shared_ptr<srcml_node> & node, int operation, bool force_output = false);
   virtual void output_text_as_node(const std::string & text, int operation);

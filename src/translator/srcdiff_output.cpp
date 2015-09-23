@@ -8,6 +8,9 @@
 
 #include <cstring>
 
+bool srcdiff_output::delay = false;
+int srcdiff_output::delay_operation = -2;
+
 srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method,
   const boost::any & bash_view_context, const boost::optional<std::string> & summary_type_str)
  : archive(archive), flags(flags),
@@ -227,6 +230,15 @@ METHOD_TYPE srcdiff_output::method() const {
 
 }
 
+bool srcdiff_output::is_delay_type(int operation) {
+
+  if(!delay) return false;
+
+  return operation == delay_operation;
+
+
+}
+
 void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcml_node> & node, int operation) {
 
   // Skip empty node
@@ -304,9 +316,6 @@ void srcdiff_output::update_diff_stacks(const std::shared_ptr<srcml_node> & node
 }
 
 void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int operation, bool force_output) {
-
-  static bool delay = false;
-  static int delay_operation = -2;
 
   // check if delaying SES_DELETE/SES_INSERT/SES_COMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)

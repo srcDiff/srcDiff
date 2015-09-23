@@ -53,6 +53,9 @@ void srcdiff_change::output() {
     diff_modified_start->properties.push_back(diff_type);
     is_change = true;
 
+    if(is_delay_type(SES_DELETE))
+      output_node(diff_original_end, SES_DELETE, true);
+
   }
 
   if(end_original > begin_original) {
