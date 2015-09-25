@@ -27,7 +27,7 @@
 
 find_path(LIBGIT2_INCLUDE_DIR NAMES git2.h HINTS /usr/local/include /usr/include)
 
-find_library(LIBGIT2_GIT2     NAMES git2     HINTS /usr/local/lib /usr/lib /usr/lib64)
+find_library(LIBGIT2_GIT2     NAMES git2   HINTS /usr/local/lib /usr/lib /usr/lib64)
 
 set(LIBGIT2_LIBRARIES "")
 
