@@ -1013,10 +1013,11 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
   if(original_tag == "name" || original_tag == "type" || original_tag == "then" || original_tag == "condition" || original_tag == "control" || original_tag == "init"
     || original_tag == "default" || original_tag == "comment"
     || original_tag == "private" || original_tag == "protected" || original_tag == "public" || original_tag == "signals"
-    || original_tag == "parameter_list" || original_tag == "krparameter_list" || original_tag == "argument_list" || original_tag == "member_init_list"
+    || original_tag == "parameter_list" || original_tag == "krparameter_list" || original_tag == "argument_list"
     || original_tag == "attribute_list" || original_tag == "association_list" || original_tag == "protocol_list"
+    || original_tag == "member_init_list" || original_tag == "member_list"
     || original_tag == "argument"
-    || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier" || original_tag == "member_list")
+    || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier")
     return false;
 
   int max_size = text_original_length > text_modified_length ? text_original_length : text_modified_length;
