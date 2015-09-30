@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Java" url="return">
+
+<unit language="Java" filename="return|return">
+<return>return <expr><call><name><name>sb</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call><diff:delete><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><call><name><name>ToStringUtils</name><operator>.</operator><name>boost</name></name><argument_list>(<argument><expr><call><name>getBoost</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></diff:delete></expr>;</return>
+</unit>
+
+</unit>

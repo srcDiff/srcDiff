@@ -217,10 +217,11 @@
 <function><type><name>bool</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{
 <diff:delete><diff:ws>  </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><literal type="number">1</literal></expr>)</condition><then><diff:ws> </diff:ws><block>{<diff:ws>
   </diff:ws><diff:common>  <decl_stmt><decl><type><diff:delete><specifier>const</specifier><diff:ws> </diff:ws></diff:delete><name>MultiTermQueryDocValuesWrapper</name></type> <name>that</name> <init>= <expr><operator>(</operator><name>MultiTermQueryDocValuesWrapper</name><operator>)</operator> <name>o</name></expr></init></decl>;</decl_stmt>
-</diff:common><diff:ws>    </diff:ws><return>return<diff:ws> </diff:ws><expr><call><name><name>this</name><operator>.</operator><name>query</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name><name>that</name><operator>.</operator><name>query</name></name></expr></argument>)</argument_list></call><diff:ws> </diff:ws><operator>&amp;&amp;</operator><diff:ws> </diff:ws><call><name><name>this</name><operator>.</operator><name>getBoost</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>==</operator><diff:ws> </diff:ws><call><name><name>that</name><operator>.</operator><name>getBoost</name></name><argument_list>()</argument_list></call></expr>;</return><diff:ws>
-  </diff:ws>}</block></then></if></diff:delete><diff:delete type="change"><diff:ws>
-  </diff:ws><return>return<diff:ws> </diff:ws><expr><literal type="boolean">false</literal></expr>;</return></diff:delete><diff:insert type="change"><diff:ws>  </diff:ws><return>return<diff:ws> </diff:ws><expr><call><name><name>query</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name><name>that</name><operator>.</operator><name>query</name></name></expr></argument>)</argument_list></call></expr>;</return></diff:insert>
-}</block></function>
+  </diff:common><diff:ws>  </diff:ws><diff:common><return>return <expr><call><name><diff:delete><name>this</name><operator>.</operator></diff:delete><name>query</name><operator>.</operator><name>equals</name></name><argument_list>(<argument><expr><name><name>that</name><operator>.</operator><name>query</name></name></expr></argument>)</argument_list></call><diff:delete><diff:ws> </diff:ws><operator>&amp;&amp;</operator><diff:ws> </diff:ws><call><name><name>this</name><operator>.</operator><name>getBoost</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>==</operator><diff:ws> </diff:ws><call><name><name>that</name><operator>.</operator><name>getBoost</name></name><argument_list>()</argument_list></call></diff:delete></expr>;</return>
+</diff:common><diff:ws>  </diff:ws>}</block></then></if><diff:ws>
+  </diff:ws><return>return<diff:ws> </diff:ws><expr><literal type="boolean">false</literal></expr>;</return><diff:ws>
+</diff:ws></diff:delete>}</block></function>
 </unit>
+
 
 </unit>
