@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Java" url="complex">
+
+<unit language="Java" filename="complex|complex">
+<function><annotation>@<name>Override</name></annotation>
+<specifier>public</specifier> <type><name>LeafCollector</name></type> <name>getLeafCollector</name><parameter_list>(<parameter><decl><type><name>LeafReaderContext</name></type> <name>context</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+  <decl_stmt><decl><type><specifier>final</specifier> <diff:delete type="change"><name><name>LeafCollector</name><index>[]</index></name></diff:delete><diff:insert type="change"><name><name>List</name><argument_list type="generic">&lt;<argument><name>LeafCollector</name></argument>&gt;</argument_list></name></diff:insert></type> <name>leafCollectors</name> <init>= <diff:delete type="change"><expr><operator>new</operator><diff:ws> </diff:ws><name><name>LeafCollector</name><index>[<expr><name><name>collectors</name><operator>.</operator><name>length</name></name></expr>]</index></name></expr></diff:delete><diff:insert type="change"><expr><operator>new</operator><diff:ws> </diff:ws><call><name><name>ArrayList</name><argument_list type="generic">&lt;&gt;</argument_list></name><argument_list>()</argument_list></call></expr></diff:insert></init></decl>;</decl_stmt>
+<diff:delete type="change"><diff:ws>  </diff:ws><for>for<diff:ws> </diff:ws><control>(<init><decl><type><name>int</name></type><diff:ws> </diff:ws><name>i</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><literal type="number">0</literal></expr></init></decl>;</init><diff:ws> </diff:ws><condition><expr><name>i</name><diff:ws> </diff:ws><operator>&lt;</operator><diff:ws> </diff:ws><name><name>collectors</name><operator>.</operator><name>length</name></name></expr>;</condition><diff:ws> </diff:ws><incr><expr><operator>++</operator><name>i</name></expr></incr>)</control><diff:ws> </diff:ws><block>{<diff:ws>
+    </diff:ws><expr_stmt><expr><name><name>leafCollectors</name><index>[<expr><name>i</name></expr>]</index></name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><name><name>collectors</name><index>[<expr><name>i</name></expr>]</index></name><operator>.</operator><call><name>getLeafCollector</name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
+  </diff:ws>}</block></for><diff:ws>
+  </diff:ws><return>return<diff:ws> </diff:ws><expr><operator>new</operator><diff:ws> </diff:ws><call><name>MultiLeafCollector</name><argument_list>(<argument><expr><name>leafCollectors</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>cacheScores</name></expr></argument>)</argument_list></call></expr>;</return></diff:delete><diff:insert type="change"><diff:ws>  </diff:ws><for>for<diff:ws> </diff:ws><control>(<init><decl><type><name>Collector</name></type><diff:ws> </diff:ws><name>collector</name><diff:ws> </diff:ws><range>:<diff:ws> </diff:ws><expr><name>collectors</name></expr></range></decl></init>)</control><diff:ws> </diff:ws><block>{<diff:ws>
+    </diff:ws><decl_stmt><decl><type><specifier>final</specifier><diff:ws> </diff:ws><name>LeafCollector</name></type><diff:ws> </diff:ws><name>leafCollector</name></decl>;</decl_stmt><diff:ws>
+    </diff:ws><try>try<diff:ws> </diff:ws><block>{<diff:ws>
+      </diff:ws><expr_stmt><expr><name>leafCollector</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><call><name><name>collector</name><operator>.</operator><name>getLeafCollector</name></name><argument_list>(<argument><expr><name>context</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
+    </diff:ws>}</block><diff:ws> </diff:ws><catch>catch<diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><name>CollectionTerminatedException</name></type><diff:ws> </diff:ws><name>e</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><block>{<diff:ws>
+      </diff:ws><comment type="line">//<diff:ws> </diff:ws>this<diff:ws> </diff:ws>leaf<diff:ws> </diff:ws>collector<diff:ws> </diff:ws>does<diff:ws> </diff:ws>not<diff:ws> </diff:ws>need<diff:ws> </diff:ws>this<diff:ws> </diff:ws>segment</comment><diff:ws>
+      </diff:ws><continue>continue;</continue><diff:ws>
+    </diff:ws>}</block></catch></try><diff:ws>
+    </diff:ws><expr_stmt><expr><call><name><name>leafCollectors</name><operator>.</operator><name>add</name></name><argument_list>(<argument><expr><name>leafCollector</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
+  </diff:ws>}</block></for><diff:ws>
+  </diff:ws><switch>switch<diff:ws> </diff:ws><condition>(<expr><call><name><name>leafCollectors</name><operator>.</operator><name>size</name></name><argument_list>()</argument_list></call></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+    </diff:ws><case>case<diff:ws> </diff:ws><expr><literal type="number">0</literal></expr>:</case><diff:ws>
+      </diff:ws><throw>throw<diff:ws> </diff:ws><expr><operator>new</operator><diff:ws> </diff:ws><call><name>CollectionTerminatedException</name><argument_list>()</argument_list></call></expr>;</throw><diff:ws>
+    </diff:ws><case>case<diff:ws> </diff:ws><expr><literal type="number">1</literal></expr>:</case><diff:ws>
+      </diff:ws><return>return<diff:ws> </diff:ws><expr><call><name><name>leafCollectors</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr>;</return><diff:ws>
+    </diff:ws><default>default:</default><diff:ws>
+      </diff:ws><return>return<diff:ws> </diff:ws><expr><operator>new</operator><diff:ws> </diff:ws><call><name>MultiLeafCollector</name><argument_list>(<argument><expr><name>leafCollectors</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>cacheScores</name></expr></argument>)</argument_list></call></expr>;</return><diff:ws>
+  </diff:ws>}</block></switch></diff:insert>
+}</block></function>
+
+<class><specifier>private</specifier> <specifier>static</specifier> class <name>MultiLeafCollector</name> <super><implements>implements <name>LeafCollector</name></implements></super> <block>{
+
+  <function><annotation>@<name>Override</name></annotation>
+  <specifier>public</specifier> <type><name>void</name></type> <name>collect</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>doc</name></decl></parameter>)</parameter_list> <throws>throws <argument><expr><name>IOException</name></expr></argument></throws> <block>{
+<diff:delete type="change"><diff:ws>    </diff:ws><for>for<diff:ws> </diff:ws><control>(<init><decl><type><name>LeafCollector</name></type><diff:ws> </diff:ws><name>c</name><diff:ws> </diff:ws><range>:<diff:ws> </diff:ws><expr><name>collectors</name></expr></range></decl></init>)</control><diff:ws> </diff:ws><block>{<diff:ws>
+      </diff:ws><expr_stmt><expr><call><name><name>c</name><operator>.</operator><name>collect</name></name><argument_list>(<argument><expr><name>doc</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
+    </diff:ws>}</block></for></diff:delete><diff:insert type="change"><diff:ws>    </diff:ws><decl_stmt><decl><type><specifier>final</specifier><diff:ws> </diff:ws><name><name>LeafCollector</name><index>[]</index></name></type><diff:ws> </diff:ws><name>collectors</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><name><name>this</name><operator>.</operator><name>collectors</name></name></expr></init></decl>;</decl_stmt><diff:ws>
+    </diff:ws><decl_stmt><decl><type><name>int</name></type><diff:ws> </diff:ws><name>numCollectors</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><name><name>this</name><operator>.</operator><name>numCollectors</name></name></expr></init></decl>;</decl_stmt><diff:ws>
+    </diff:ws><for>for<diff:ws> </diff:ws><control>(<init><decl><type><name>int</name></type><diff:ws> </diff:ws><name>i</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><literal type="number">0</literal></expr></init></decl>;</init><diff:ws> </diff:ws><condition><expr><name>i</name><diff:ws> </diff:ws><operator>&lt;</operator><diff:ws> </diff:ws><name>numCollectors</name></expr>;</condition><diff:ws> </diff:ws><incr/>)</control><diff:ws> </diff:ws><block>{<diff:ws>
+      </diff:ws><decl_stmt><decl><type><specifier>final</specifier><diff:ws> </diff:ws><name>LeafCollector</name></type><diff:ws> </diff:ws><name>collector</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><name><name>collectors</name><index>[<expr><name>i</name></expr>]</index></name></expr></init></decl>;</decl_stmt><diff:ws>
+      </diff:ws><try>try<diff:ws> </diff:ws><block>{<diff:ws>
+        </diff:ws><expr_stmt><expr><call><name><name>collector</name><operator>.</operator><name>collect</name></name><argument_list>(<argument><expr><name>doc</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><operator>++</operator><name>i</name></expr>;</expr_stmt><diff:ws>
+      </diff:ws>}</block><diff:ws> </diff:ws><catch>catch<diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><name>CollectionTerminatedException</name></type><diff:ws> </diff:ws><name>e</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><block>{<diff:ws>
+        </diff:ws><expr_stmt><expr><call><name>removeCollector</name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
+        </diff:ws><expr_stmt><expr><name>numCollectors</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><name><name>this</name><operator>.</operator><name>numCollectors</name></name></expr>;</expr_stmt><diff:ws>
+        </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><name>numCollectors</name><diff:ws> </diff:ws><operator>==</operator><diff:ws> </diff:ws><literal type="number">0</literal></expr>)</condition><then><diff:ws> </diff:ws><block>{<diff:ws>
+          </diff:ws><throw>throw<diff:ws> </diff:ws><expr><operator>new</operator><diff:ws> </diff:ws><call><name>CollectionTerminatedException</name><argument_list>()</argument_list></call></expr>;</throw><diff:ws>
+        </diff:ws>}</block></then></if><diff:ws>
+      </diff:ws>}</block></catch></try><diff:ws>
+    </diff:ws>}</block></for></diff:insert>
+  }</block></function>
+
+}</block></class>
+</unit>
+
+</unit>
