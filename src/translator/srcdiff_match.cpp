@@ -1010,7 +1010,7 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
 
   if(original_tag != modified_tag) return true;
 
-  if(original_tag == "name" || original_tag == "type" || original_tag == "then" || original_tag == "condition" || original_tag == "control" || original_tag == "init"
+  if(original_tag == "type" || original_tag == "then" || original_tag == "condition" || original_tag == "control" || original_tag == "init"
     || original_tag == "default" || original_tag == "comment"
     || original_tag == "private" || original_tag == "protected" || original_tag == "public" || original_tag == "signals"
     || original_tag == "parameter_list" || original_tag == "krparameter_list" || original_tag == "argument_list"
@@ -1019,6 +1019,8 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
     || original_tag == "argument"
     || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier")
     return false;
+
+  if(original_tag == "name" && nodes_original.at(original_pos)->is_simple && nodes_original.at(original_pos)->is_simple == nodes_modified.at(modified_pos)->is_simple) return false;
 
   int max_size = text_original_length > text_modified_length ? text_original_length : text_modified_length;
   if((original_tag == "expr" || original_tag == "expr_stmt") && similarity > 0 && difference <= max_size) return false;

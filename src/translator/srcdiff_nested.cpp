@@ -332,6 +332,12 @@ bool srcdiff_nested::is_better_nested(const srcml_nodes & nodes_original, const 
 
   for(int pos = start_pos_original; pos < node_sets_original.size(); ++pos) {
 
+    int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
+    check_nestable(node_sets_original, nodes_original, pos, pos + 1
+                 , node_sets_modified, nodes_modified, start_pos_modified, start_pos_modified + 1
+                 , start_nest_original, end_nest_original, start_nest_modified, end_nest_modified
+                 , operation);
+    if(operation == SES_COMMON) continue;
     if(is_better_nest(nodes_original, node_sets_original.at(pos), nodes_modified, node_sets_modified.at(start_pos_modified), similarity, difference, text_original_length, text_modified_length))
       return true;
 
@@ -339,6 +345,12 @@ bool srcdiff_nested::is_better_nested(const srcml_nodes & nodes_original, const 
 
   for(int pos = start_pos_modified; pos < node_sets_modified.size(); ++pos) {
 
+    int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
+    check_nestable(node_sets_original, nodes_original, start_pos_original, start_pos_original + 1
+                 , node_sets_modified, nodes_modified, pos, pos + 1
+                 , start_nest_original, end_nest_original, start_nest_modified, end_nest_modified
+                 , operation);
+    if(operation == SES_COMMON) continue;
     if(is_better_nest(nodes_modified, node_sets_modified.at(pos), nodes_original, node_sets_original.at(start_pos_original), similarity, difference, text_original_length, text_modified_length))
       return true;
 
