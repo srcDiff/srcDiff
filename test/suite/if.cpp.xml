@@ -48,11 +48,11 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="if|if">
 <if>if<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><then>
-    <block type="pseudo"><diff:delete type="change"><expr_stmt><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>c</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>d</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>e</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>f</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"><empty_stmt>;</empty_stmt></diff:insert></block></then></if>
+    <block type="pseudo"><diff:delete type="replace"><expr_stmt><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>c</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>d</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>e</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>f</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><empty_stmt>;</empty_stmt></diff:insert></block></then></if>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="if|if">
-<if>if <condition>(<diff:delete type="change"><expr><name>p</name><diff:ws> </diff:ws><operator>&gt;=</operator><diff:ws> </diff:ws><call><name>count</name><argument_list>()</argument_list></call></expr></diff:delete><diff:insert type="change"><expr><call><name>already_exist</name><argument_list>(<argument><expr><name>chain</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>p</name></expr></argument>)</argument_list></call></expr></diff:insert>)</condition><then> <block type="pseudo"><break>break;</break></block></then></if></unit>
+<if>if <condition>(<diff:delete type="replace"><expr><name>p</name><diff:ws> </diff:ws><operator>&gt;=</operator><diff:ws> </diff:ws><call><name>count</name><argument_list>()</argument_list></call></expr></diff:delete><diff:insert type="replace"><expr><call><name>already_exist</name><argument_list>(<argument><expr><name>chain</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>p</name></expr></argument>)</argument_list></call></expr></diff:insert>)</condition><then> <block type="pseudo"><break>break;</break></block></then></if></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="if|if">
 <diff:insert><if>if<condition>(<diff:ws> </diff:ws><expr><operator>*</operator><call><name><name>m_d</name><operator>-&gt;</operator><name>cachedPaintDevice</name><operator>-&gt;</operator><name>colorSpace</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>==</operator><diff:ws> </diff:ws><operator>*</operator><call><name>image</name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name>colorSpace</name><argument_list>()</argument_list></call></expr>)</condition><then><diff:ws>
@@ -138,7 +138,7 @@
 </diff:ws></diff:delete></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="if|if">
-<if>if<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><then><diff:delete type="change"><diff:ws> </diff:ws><block>{<diff:ws>
+<if>if<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><then><diff:delete type="replace"><diff:ws> </diff:ws><block>{<diff:ws>
 
     </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
     </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
@@ -153,7 +153,7 @@
     </diff:ws><expr_stmt><expr><name>k</name></expr>;</expr_stmt><diff:ws>
 
 
-</diff:ws>}</block></diff:delete><diff:insert type="change"><diff:ws>
+</diff:ws>}</block></diff:delete><diff:insert type="replace"><diff:ws>
     </diff:ws><block type="pseudo"><empty_stmt>;</empty_stmt></block></diff:insert></then></if>
 </unit>
 
