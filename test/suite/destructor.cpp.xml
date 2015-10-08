@@ -2,7 +2,7 @@
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="destructor">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="destructor|destructor">
-<destructor><name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>()</parameter_list> <block><diff:delete type="change">{}</diff:delete><diff:insert type="change">{<diff:ws>
+<destructor><name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>()</parameter_list> <block><diff:delete type="replace">{}</diff:delete><diff:insert type="replace">{<diff:ws>
 
     </diff:ws><decl_stmt><decl><type><name>int</name></type><diff:ws> </diff:ws><name>a</name></decl>;</decl_stmt><diff:ws>
     </diff:ws><decl_stmt><decl><type><name>int</name></type><diff:ws> </diff:ws><name>b</name></decl>;</decl_stmt><diff:ws>

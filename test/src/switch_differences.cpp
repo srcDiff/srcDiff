@@ -165,7 +165,7 @@ const char * const DIFF_PREFIX = "diff";
 const char * const DELETE_TAG = "delete";
 const char * const INSERT_TAG = "insert";
 const char * const TYPE_ATTR = "type";
-const char * const CHANGE_ATTR_VALUE = "change";
+const char * const REPLACE_ATTR_VALUE = "replace";
 
 const char * get_attr(xmlNodePtr node, const char * attribute) {
 
@@ -223,14 +223,14 @@ int main(int argc, char * argv[]) {
 
         node->name = (const xmlChar *)strdup(INSERT_TAG);
 
-        if(!isendelement(reader) && get_attr(node, TYPE_ATTR) && strcmp(get_attr(node, TYPE_ATTR), CHANGE_ATTR_VALUE) == 0)
+        if(!isendelement(reader) && get_attr(node, TYPE_ATTR) && strcmp(get_attr(node, TYPE_ATTR), REPLACE_ATTR_VALUE) == 0)
           is_change = true;
 
       } else if(strcmp((const char *)node->name, INSERT_TAG) == 0) {
 
         node->name = (const xmlChar *)strdup(DELETE_TAG);
 
-        if(is_change && !isendelement(reader) && get_attr(node, TYPE_ATTR) && strcmp(get_attr(node, TYPE_ATTR), CHANGE_ATTR_VALUE) == 0) {
+        if(is_change && !isendelement(reader) && get_attr(node, TYPE_ATTR) && strcmp(get_attr(node, TYPE_ATTR), REPLACE_ATTR_VALUE) == 0) {
 
           is_change = false;
           wait_end = true;

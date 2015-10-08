@@ -2,7 +2,7 @@
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Java" url="class">
 
 <unit language="Java" filename="class|class">
-<decl_stmt><decl><type><name>Object</name></type> <name>o</name> <init>= <expr><operator>new</operator> <class><diff:delete type="change"><super><name>bar</name></super></diff:delete><diff:insert type="change"><super><name>bar2</name></super></diff:insert><argument_list>()</argument_list> <block>{}</block></class></expr></init></decl>;</decl_stmt>
+<decl_stmt><decl><type><name>Object</name></type> <name>o</name> <init>= <expr><operator>new</operator> <class><diff:delete type="replace"><super><name>bar</name></super></diff:delete><diff:insert type="replace"><super><name>bar2</name></super></diff:insert><argument_list>()</argument_list> <block>{}</block></class></expr></init></decl>;</decl_stmt>
 </unit>
 
 

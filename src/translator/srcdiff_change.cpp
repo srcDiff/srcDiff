@@ -12,8 +12,8 @@
 #include <cstring>
 #include <string>
 
-const std::string change("change");
-const srcml_node::srcml_attr diff_type(DIFF_TYPE, change);
+const std::string replace("replace");
+const srcml_node::srcml_attr diff_type(DIFF_TYPE, replace);
 
 srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_original, unsigned int end_modified)
 : srcdiff_output(out), end_original(end_original), end_modified(end_modified) {}
@@ -45,13 +45,13 @@ void srcdiff_change::output() {
   unsigned int begin_original = rbuf_original->last_output;
   unsigned int begin_modified = rbuf_modified->last_output;
 
-  bool is_change = false;
+  bool is_replace = false;
   if(end_original > begin_original && end_modified > begin_modified) {
 
     // set attribute to change
     diff_original_start->properties.push_back(diff_type);
     diff_modified_start->properties.push_back(diff_type);
-    is_change = true;
+    is_replace = true;
 
     if(is_delay_type(SES_DELETE))
       output_node(diff_original_end, SES_DELETE, true);
@@ -64,22 +64,22 @@ void srcdiff_change::output() {
     for(unsigned int i = begin_original; i < end_original; ++i) {
 
       // output diff tag begin
-      if(first && is_change) {
+      if(first && is_replace) {
 
-        output_node(diff_original_start, SES_DELETE, is_change);
+        output_node(diff_original_start, SES_DELETE, is_replace);
         first = false;
 
       }
 
       if(rbuf_original->nodes.at(i)->move) {
 
-        if(is_change)
+        if(is_replace)
           diff_original_start->properties.clear();
 
         srcdiff_move move(*this, i, SES_DELETE);
         move.output();
 
-        if(is_change)
+        if(is_replace)
           diff_original_start->properties.push_back(diff_type);
 
         continue;
@@ -89,7 +89,7 @@ void srcdiff_change::output() {
       // output diff tag begin
       if(first) {
 
-        output_node(diff_original_start, SES_DELETE, is_change);
+        output_node(diff_original_start, SES_DELETE, is_replace);
         first = false;
 
       }
@@ -110,7 +110,7 @@ void srcdiff_change::output() {
 
     // output diff tag end
     if(!first)
-      output_node(diff_original_end, SES_DELETE, is_change);
+      output_node(diff_original_end, SES_DELETE, is_replace);
 
     if(wstate->output_diff.back()->operation)
       output_node(diff_original_end, SES_DELETE);
@@ -125,22 +125,22 @@ void srcdiff_change::output() {
     for(unsigned int i = begin_modified; i < end_modified; ++i) {
 
       // output diff tag
-      if(first && is_change) {
+      if(first && is_replace) {
 
-        output_node(diff_modified_start, SES_INSERT, is_change);
+        output_node(diff_modified_start, SES_INSERT, is_replace);
         first = false;
 
       }
 
       if(rbuf_modified->nodes.at(i)->move) {
 
-        if(is_change)
+        if(is_replace)
           diff_modified_start->properties.clear();
 
         srcdiff_move move(*this, i, SES_INSERT);
         move.output();
 
-        if(is_change)
+        if(is_replace)
           diff_modified_start->properties.push_back(diff_type);
 
         continue;
@@ -150,7 +150,7 @@ void srcdiff_change::output() {
       // output diff tag
       if(first) {
 
-        output_node(diff_modified_start, SES_INSERT, is_change);
+        output_node(diff_modified_start, SES_INSERT, is_replace);
         first = false;
 
       }
@@ -171,7 +171,7 @@ void srcdiff_change::output() {
 
     // output diff tag end
     if(!first)
-      output_node(diff_modified_end, SES_INSERT, is_change);
+      output_node(diff_modified_end, SES_INSERT, is_replace);
     
     if(wstate->output_diff.back()->operation == SES_INSERT)
       output_node(diff_modified_end, SES_INSERT);
