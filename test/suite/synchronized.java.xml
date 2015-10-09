@@ -3,6 +3,10 @@
 
 <unit language="Java" filename="synchronized|synchronized"><diff:delete><synchronized>synchronized<diff:ws> </diff:ws><init>(<expr><name>this</name></expr>)</init><diff:ws> </diff:ws><block>{}</block></synchronized></diff:delete></unit>
 
+<unit language="Java" filename="synchronized|synchronized"><synchronized>synchronized <init>(<expr><name><diff:delete type="change">this</diff:delete><diff:insert type="change">foo</diff:insert></name></expr>)</init> <block>{ <expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt> }</block></synchronized></unit>
+
+<unit language="Java" filename="synchronized|synchronized"><synchronized>synchronized <init>(<expr><name>this</name></expr>)</init> <block>{ <diff:delete type="change"><expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:delete><diff:insert type="change"><expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:insert> }</block></synchronized></unit>
+
 <unit language="Java" filename="synchronized|synchronized"><diff:delete><synchronized>synchronized<diff:ws> </diff:ws><init>(<expr><name>this</name></expr>)</init><diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:common><diff:ws> </diff:ws>}</block></synchronized></diff:delete></unit>
 
 <unit language="Java" filename="synchronized|synchronized"><diff:delete><synchronized>synchronized<diff:ws> </diff:ws><init>(<expr><name>this</name></expr>)</init><diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if></diff:common><diff:ws> </diff:ws>}</block></synchronized></diff:delete></unit>
