@@ -3,4 +3,6 @@
 
 <unit language="Java" filename="try|try"><diff:delete><try>try<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><synchronized>synchronized <init>(<expr><name>this</name></expr>)</init> <block>{  <expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt> }</block></synchronized></diff:common><diff:ws> </diff:ws>}</block></try></diff:delete></unit>
 
+<unit language="Java" filename="try|try"><diff:delete><try>try<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws> </diff:ws>}</block><diff:ws> </diff:ws><diff:common><finally>finally <block>{ <expr_stmt><expr><name>e</name></expr>;</expr_stmt> }</block></finally></diff:common></try></diff:delete></unit>
+
 </unit>
