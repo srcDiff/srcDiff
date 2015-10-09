@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Java" url="synchronized">
+
+<unit language="Java" filename="synchronized|synchronized"><diff:delete><synchronized>synchronized<diff:ws> </diff:ws><init>(<expr><name>this</name></expr>)</init><diff:ws> </diff:ws><block>{}</block></synchronized></diff:delete></unit>
+
+<unit language="Java" filename="synchronized|synchronized"><diff:delete><synchronized>synchronized<diff:ws> </diff:ws><init>(<expr><name>this</name></expr>)</init><diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:common><diff:ws> </diff:ws>}</block></synchronized></diff:delete></unit>
+
+<unit language="Java" filename="synchronized|synchronized"><diff:delete><synchronized>synchronized<diff:ws> </diff:ws><init>(<expr><name>this</name></expr>)</init><diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block type="pseudo"><expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></then></if></diff:common><diff:ws> </diff:ws>}</block></synchronized></diff:delete></unit>
+
+<unit language="Java" filename="synchronized|synchronized"><diff:delete><synchronized>synchronized<diff:ws> </diff:ws><init>(<expr><name>this</name></expr>)</init><diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><try>try <block>{ <expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt> }</block></try></diff:common><diff:ws> </diff:ws>}</block></synchronized></diff:delete></unit>
+
+</unit>
