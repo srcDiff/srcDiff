@@ -885,14 +885,6 @@ void srcdiff_nested::output() {
 
         ++end_pos;
 
-    } else if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "try") {
-
-        while(!(out.get_nodes_original().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-          && out.get_nodes_original().at(end_pos)->name == "block"))
-          ++end_pos;
-
-        ++end_pos;
-
     }
 
     node_sets set = node_sets(out.get_nodes_original(),
@@ -938,14 +930,6 @@ void srcdiff_nested::output() {
 
         while(!(out.get_nodes_modified().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
           && out.get_nodes_modified().at(end_pos)->name == "control"))
-          ++end_pos;
-
-        ++end_pos;
-
-    } else if(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "try") {
-
-        while(!(out.get_nodes_modified().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-          && out.get_nodes_modified().at(end_pos)->name == "block"))
           ++end_pos;
 
         ++end_pos;
