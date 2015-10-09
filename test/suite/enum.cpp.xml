@@ -13,7 +13,7 @@
 }</block>;</enum></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
-<diff:delete type="change"><enum>enum<diff:ws> </diff:ws><name>B</name><diff:ws> </diff:ws><block>{<diff:ws>
+<diff:delete type="replace"><enum>enum<diff:ws> </diff:ws><name>B</name><diff:ws> </diff:ws><block>{<diff:ws>
 
 </diff:ws><decl><name>a</name></decl>,<diff:ws>
 </diff:ws><decl><name>b</name></decl>,<diff:ws>
@@ -21,14 +21,14 @@
 </diff:ws><decl><name>d</name></decl>,<diff:ws>
 </diff:ws><decl><name>e</name></decl><diff:ws>
 
-</diff:ws>}</block>;</enum></diff:delete><diff:insert type="change"><enum>enum<diff:ws> </diff:ws><name>A</name><diff:ws> </diff:ws><block>{<diff:ws>
+</diff:ws>}</block>;</enum></diff:delete><diff:insert type="replace"><enum>enum<diff:ws> </diff:ws><name>A</name><diff:ws> </diff:ws><block>{<diff:ws>
 
 
 
 </diff:ws>}</block>;</enum></diff:insert></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
-<enum>enum <name><diff:delete type="change">A</diff:delete><diff:insert type="change">B</diff:insert></name> <block>{
+<enum>enum <name><diff:delete type="replace">A</diff:delete><diff:insert type="replace">B</diff:insert></name> <block>{
 
 <decl><name>a</name></decl>,
 <decl><name>b</name></decl>,
@@ -45,12 +45,12 @@
 <decl><name>b</name></decl>,
 <decl><name>c</name></decl>,
 <decl><name>d</name></decl>,
-<diff:delete type="change"><decl><name>e</name></decl></diff:delete><diff:insert type="change"><decl><name>f</name></decl></diff:insert>
+<diff:delete type="replace"><decl><name>e</name></decl></diff:delete><diff:insert type="replace"><decl><name>f</name></decl></diff:insert>
 
 }</block>;</enum></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
-<diff:delete type="change"><enum>enum<diff:ws> </diff:ws><block>{<diff:ws>
+<diff:delete type="replace"><enum>enum<diff:ws> </diff:ws><block>{<diff:ws>
 
 </diff:ws><decl><name>a</name></decl>,<diff:ws>
 </diff:ws><decl><name>b</name></decl>,<diff:ws>
@@ -58,7 +58,7 @@
 </diff:ws><decl><name>d</name></decl>,<diff:ws>
 </diff:ws><decl><name>e</name></decl><diff:ws>
 
-</diff:ws>}</block>;</enum></diff:delete><diff:insert type="change"><enum>enum<diff:ws> </diff:ws><block>{<diff:ws>
+</diff:ws>}</block>;</enum></diff:delete><diff:insert type="replace"><enum>enum<diff:ws> </diff:ws><block>{<diff:ws>
 
 
 

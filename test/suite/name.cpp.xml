@@ -6,15 +6,15 @@
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="name|name">
-<diff:delete type="change"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:insert>
+<diff:delete type="replace"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:insert>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="name|name">
-<expr_stmt><expr><name><diff:delete type="change">a</diff:delete><diff:insert type="change">b</diff:insert></name> <operator>+</operator> <name>c</name></expr>;</expr_stmt>
+<expr_stmt><expr><name><diff:delete type="replace">a</diff:delete><diff:insert type="replace">b</diff:insert></name> <operator>+</operator> <name>c</name></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="name|name">
-<expr_stmt><expr><name><diff:delete type="change">a</diff:delete><diff:insert type="change">b</diff:insert></name> <operator>+</operator> <name>c</name> <operator>+</operator> <name>d</name></expr>;</expr_stmt>
+<expr_stmt><expr><name><diff:delete type="replace">a</diff:delete><diff:insert type="replace">b</diff:insert></name> <operator>+</operator> <name>c</name> <operator>+</operator> <name>d</name></expr>;</expr_stmt>
 </unit>
 
 </unit>

@@ -41,12 +41,12 @@
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="for|for">
 <for>for<control>(<init><decl><type><name>int</name></type> <name>i</name></decl>;</init> <condition><expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control>
-    <block type="pseudo"><diff:delete type="change"><expr_stmt><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>c</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>d</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>e</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>f</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"><empty_stmt>;</empty_stmt></diff:insert></block></for>
+    <block type="pseudo"><diff:delete type="replace"><expr_stmt><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>c</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>d</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>e</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>f</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><empty_stmt>;</empty_stmt></diff:insert></block></for>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="for|for">
 <for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>)</control>
-    <block type="pseudo"><diff:delete type="change"><expr_stmt><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>c</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>d</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>e</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>f</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"><empty_stmt>;</empty_stmt></diff:insert></block></for>
+    <block type="pseudo"><diff:delete type="replace"><expr_stmt><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>c</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>d</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>e</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>f</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><empty_stmt>;</empty_stmt></diff:insert></block></for>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="for|for"><diff:delete><for>for<control>(<init>;</init><condition><expr><literal type="number">1</literal></expr>;</condition><incr/>)</control><diff:ws>
@@ -80,7 +80,7 @@
 </diff:ws></diff:delete></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="for|for">
-<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name></decl>;</init> <condition><expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control><diff:delete type="change"><diff:ws> </diff:ws><block>{<diff:ws>
+<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name></decl>;</init> <condition><expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control><diff:delete type="replace"><diff:ws> </diff:ws><block>{<diff:ws>
 
     </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
     </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
@@ -95,7 +95,7 @@
     </diff:ws><expr_stmt><expr><name>k</name></expr>;</expr_stmt><diff:ws>
 
 
-</diff:ws>}</block></diff:delete><diff:insert type="change"><diff:ws>
+</diff:ws>}</block></diff:delete><diff:insert type="replace"><diff:ws>
     </diff:ws><block type="pseudo"><empty_stmt>;</empty_stmt></block></diff:insert></for></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="for|for">
@@ -117,7 +117,7 @@
 </diff:ws></diff:delete></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="for|for">
-<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>)</control><diff:delete type="change"><diff:ws> </diff:ws><block>{<diff:ws>
+<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <range>: <expr><name>j</name></expr></range></decl></init>)</control><diff:delete type="replace"><diff:ws> </diff:ws><block>{<diff:ws>
 
     </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
     </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
@@ -131,11 +131,11 @@
     </diff:ws><expr_stmt><expr><name>j</name></expr>;</expr_stmt><diff:ws>
     </diff:ws><expr_stmt><expr><name>k</name></expr>;</expr_stmt><diff:ws>
 
-</diff:ws>}</block></diff:delete><diff:insert type="change"><diff:ws>
+</diff:ws>}</block></diff:delete><diff:insert type="replace"><diff:ws>
     </diff:ws><block type="pseudo"><empty_stmt>;</empty_stmt></block></diff:insert></for></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="for|for">
-<for>for<control>(<init><decl><type><diff:delete type="change"><name>auto</name></diff:delete><diff:insert type="change"><name><name>std</name><operator>::</operator><name><name>pair</name><argument_list type="generic">&lt;<argument><expr><name><name>std</name><operator>::</operator><name>string</name></name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>counts</name></expr></argument>&gt;</argument_list></name></name></diff:insert></type> <name>entry</name> <range>: <expr><name>modified</name></expr></range></decl></init>)</control>
+<for>for<control>(<init><decl><type><diff:delete type="replace"><name>auto</name></diff:delete><diff:insert type="replace"><name><name>std</name><operator>::</operator><name><name>pair</name><argument_list type="generic">&lt;<argument><expr><name><name>std</name><operator>::</operator><name>string</name></name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>counts</name></expr></argument>&gt;</argument_list></name></name></diff:insert></type> <name>entry</name> <range>: <expr><name>modified</name></expr></range></decl></init>)</control>
     <block type="pseudo"><expr_stmt><expr><call><name>pad</name><argument_list>(<argument><expr><name>out</name></expr></argument>, <argument><expr><name>depth</name> <operator>+</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call> <operator>&lt;&lt;</operator> <name><name>entry</name><operator>.</operator><name>first</name></name> <operator>&lt;&lt;</operator> <literal type="string">":\t"</literal> <operator>&lt;&lt;</operator> <name><name>entry</name><operator>.</operator><name>second</name></name> <operator>&lt;&lt;</operator> <literal type="char">'\n'</literal></expr>;</expr_stmt></block></for></unit>
 
 </unit>

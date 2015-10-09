@@ -14,10 +14,10 @@
 <diff:delete><case>case<diff:ws> </diff:ws><expr><name>bar</name></expr>:</case></diff:delete></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
-<diff:delete type="change"><case>case:</case></diff:delete><diff:insert type="change"><case>case<diff:ws> </diff:ws><expr><name>bar</name></expr>:</case><diff:ws> </diff:ws><break>break;</break></diff:insert></unit>
+<diff:delete type="replace"><case>case:</case></diff:delete><diff:insert type="replace"><case>case<diff:ws> </diff:ws><expr><name>bar</name></expr>:</case><diff:ws> </diff:ws><break>break;</break></diff:insert></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
-<case>case <expr><name><diff:delete type="change">foo</diff:delete><diff:insert type="change">bar</diff:insert></name></expr>:</case> <diff:insert><diff:ws>
+<case>case <expr><name><diff:delete type="replace">foo</diff:delete><diff:insert type="replace">bar</diff:insert></name></expr>:</case> <diff:insert><diff:ws>
 
         </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
         </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
@@ -77,14 +77,14 @@
     <case>case <expr><name>bar</name></expr>:</case>
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete type="change"><diff:ws>        </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"><diff:ws>        </diff:ws><expr_stmt><expr><name>e</name></expr>;</expr_stmt></diff:insert>
+<diff:delete type="replace"><diff:ws>        </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:ws>        </diff:ws><expr_stmt><expr><name>e</name></expr>;</expr_stmt></diff:insert>
 
     <break>break;</break>
 
     <case>case <expr><name>foobar</name></expr>:</case>
 
         <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
-<diff:delete type="change"><diff:ws>        </diff:ws><expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:delete><diff:insert type="change"><diff:ws>        </diff:ws><expr_stmt><expr><name>f</name></expr>;</expr_stmt></diff:insert>
+<diff:delete type="replace"><diff:ws>        </diff:ws><expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:ws>        </diff:ws><expr_stmt><expr><name>f</name></expr>;</expr_stmt></diff:insert>
 
     <break>break;</break>
 

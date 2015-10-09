@@ -12,19 +12,19 @@
 </diff:ws></public></diff:delete>}</block>;</class></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="class|class">
-<diff:delete type="change"><class>class<diff:ws> </diff:ws><name>A</name><diff:ws> </diff:ws><block>{<private type="default"><diff:ws>
+<diff:delete type="replace"><class>class<diff:ws> </diff:ws><name>A</name><diff:ws> </diff:ws><block>{<private type="default"><diff:ws>
 
 </diff:ws></private><public>public:<diff:ws>
     </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
     </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
     </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
 
-</diff:ws></public>}</block>;</class></diff:delete><diff:insert type="change"><class>class<diff:ws> </diff:ws><name>B</name><diff:ws> </diff:ws><block>{<private type="default"><diff:ws>
+</diff:ws></public>}</block>;</class></diff:delete><diff:insert type="replace"><class>class<diff:ws> </diff:ws><name>B</name><diff:ws> </diff:ws><block>{<private type="default"><diff:ws>
 
 </diff:ws></private>}</block>;</class></diff:insert></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="class|class">
-<class>class <name><diff:delete type="change">A</diff:delete><diff:insert type="change">B</diff:insert></name> <block>{<private type="default">
+<class>class <name><diff:delete type="replace">A</diff:delete><diff:insert type="replace">B</diff:insert></name> <block>{<private type="default">
 
 </private><public>public:
     <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
@@ -39,19 +39,19 @@
 </private><public>public:
     <function_decl><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list>;</function_decl>
     <function_decl><type><name>void</name></type> <name>g</name><parameter_list>()</parameter_list>;</function_decl>
-    <function_decl><type><name>void</name></type> <name><diff:delete type="change">h</diff:delete><diff:insert type="change">i</diff:insert></name><parameter_list>()</parameter_list>;</function_decl>
+    <function_decl><type><name>void</name></type> <name><diff:delete type="replace">h</diff:delete><diff:insert type="replace">i</diff:insert></name><parameter_list>()</parameter_list>;</function_decl>
 
 </public>}</block>;</class></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="class|class">
-<diff:delete type="change"><class>class<diff:ws> </diff:ws><block>{<private type="default"><diff:ws>
+<diff:delete type="replace"><class>class<diff:ws> </diff:ws><block>{<private type="default"><diff:ws>
 
 </diff:ws></private><public>public:<diff:ws>
     </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
     </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
     </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>h</name><parameter_list>()</parameter_list>;</function_decl><diff:ws>
 
-</diff:ws></public>}</block>;</class></diff:delete><diff:insert type="change"><class>class<diff:ws> </diff:ws><block>{<private type="default"><diff:ws>
+</diff:ws></public>}</block>;</class></diff:delete><diff:insert type="replace"><class>class<diff:ws> </diff:ws><block>{<private type="default"><diff:ws>
     
 </diff:ws></private>}</block>;</class></diff:insert></unit>
 

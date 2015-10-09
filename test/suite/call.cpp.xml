@@ -5,13 +5,13 @@
 <diff:delete><expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:delete></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="call|call">
-<diff:delete type="change"><expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:delete><diff:insert type="change"><expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:insert></unit>
+<diff:delete type="replace"><expr_stmt><expr><call><name>a</name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt><expr><call><name>b</name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:insert></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="call|call">
 <expr_stmt><expr><call><name>a</name><argument_list>(<diff:insert><argument><expr><name>foo</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>bar</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>foobar</name></expr></argument></diff:insert>)</argument_list></call></expr>;</expr_stmt></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="call|call">
-<expr_stmt><expr><call><name><diff:delete type="change">a</diff:delete><diff:insert type="change">b</diff:insert></name><argument_list>(<argument><expr><name>foo</name></expr></argument>, <argument><expr><name>bar</name></expr></argument>, <argument><expr><name>foobar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+<expr_stmt><expr><call><name><diff:delete type="replace">a</diff:delete><diff:insert type="replace">b</diff:insert></name><argument_list>(<argument><expr><name>foo</name></expr></argument>, <argument><expr><name>bar</name></expr></argument>, <argument><expr><name>foobar</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="call|call">
