@@ -27,8 +27,8 @@
 
         </diff:ws><comment type="line">//<diff:ws> </diff:ws>XXX:<diff:ws> </diff:ws>What<diff:ws> </diff:ws>happens<diff:ws> </diff:ws>if<diff:ws> </diff:ws>the<diff:ws> </diff:ws>shape<diff:ws> </diff:ws>is<diff:ws> </diff:ws>added<diff:ws> </diff:ws>embedded<diff:ws> </diff:ws>in<diff:ws> </diff:ws>another</comment><diff:ws>
         </diff:ws><comment type="line">//<diff:ws> </diff:ws>shape?</comment><diff:ws>
-        </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><name>shapeLayer</name></expr>)</condition><then><diff:ws>
-            </diff:ws><block type="pseudo"><expr_stmt><expr><call><name><name>shapeLayer</name><operator>-&gt;</operator><name>removeChild</name></name><argument_list>(<argument><expr><name>shape</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if><diff:ws>
+        </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><name>shapeLayer</name></expr>)</condition><then><block type="pseudo"><diff:ws>
+            </diff:ws><expr_stmt><expr><call><name><name>shapeLayer</name><operator>-&gt;</operator><name>removeChild</name></name><argument_list>(<argument><expr><name>shape</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if><diff:ws>
     </diff:ws>}</block></else></if></diff:delete><diff:insert><diff:ws>    </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><name>shapeSelection</name></expr>)</condition><then><diff:ws> </diff:ws><block>{<diff:ws>
         </diff:ws><expr_stmt><expr><call><name><name>shapeSelection</name><operator>-&gt;</operator><name>removeChild</name></name><argument_list>(<argument><expr><name>shape</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
     </diff:ws>}</block></then><diff:ws> </diff:ws><else>else<diff:ws> </diff:ws><block>{<diff:ws>
@@ -36,8 +36,8 @@
 
         </diff:ws><comment type="line">//<diff:ws> </diff:ws>XXX:<diff:ws> </diff:ws>What<diff:ws> </diff:ws>happens<diff:ws> </diff:ws>if<diff:ws> </diff:ws>the<diff:ws> </diff:ws>shape<diff:ws> </diff:ws>is<diff:ws> </diff:ws>added<diff:ws> </diff:ws>embedded<diff:ws> </diff:ws>in<diff:ws> </diff:ws>another</comment><diff:ws>
         </diff:ws><comment type="line">//<diff:ws> </diff:ws>shape?</comment><diff:ws>
-        </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><name>shapeLayer</name></expr>)</condition><then><diff:ws>
-            </diff:ws><block type="pseudo"><expr_stmt><expr><call><name><name>shapeLayer</name><operator>-&gt;</operator><name>removeChild</name></name><argument_list>(<argument><expr><name>shape</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if><diff:ws>
+        </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><name>shapeLayer</name></expr>)</condition><then><block type="pseudo"><diff:ws>
+            </diff:ws><expr_stmt><expr><call><name><name>shapeLayer</name><operator>-&gt;</operator><name>removeChild</name></name><argument_list>(<argument><expr><name>shape</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></then></if><diff:ws>
     </diff:ws>}</block></else></if></diff:insert>
 </unit>
 
