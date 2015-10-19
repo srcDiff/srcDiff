@@ -17,7 +17,6 @@ error_filename_extension = ".txt"
 FIELD_WIDTH_LANGUAGE = 11
 
 FIELD_WIDTH_URL = 27
-MAX_COUNT = 29
 sperrorlist = []
 
 srcml_client = "srcml"
