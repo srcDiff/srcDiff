@@ -192,6 +192,21 @@ def get_nested(xml_file) :
 	else :
 		return 0
 
+def get_updated_line_count(count, line_count) :
+
+	# adjust for count width
+	if count > 99 :
+		line_count += 3
+	elif count > 9 :
+		line_count += 2
+	else :
+		line_count += 1
+
+	# space after count
+	line_count += 1
+
+	return line_count
+
 class Tee(object) :
 	def __init__(self, name) :
 		self.file = open(name, "w")
@@ -323,6 +338,7 @@ try :
 
 				get_language = True				
 
+				line_count = 0
 				while count == 0 or count < number :
 
 					try : 
@@ -378,16 +394,23 @@ try :
 						
 						# find the difference
 						result = linediff(unitxml, unitsrcml)
-						if count == MAX_COUNT :
-							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_URL), " ",
-						if result != "" :
-							error_count += 1
+						if line_count > 75 :
 
+							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_URL), " ",
+							line_count = 0
+
+						line_count = get_updated_line_count(count, line_count)
+
+						if result != "" :
+
+							error_count += 1			
 							errorlist.append((url + " " + language, test_number, result))
 
 							# part of list of nested unit number in output
 							print "\033[0;31m" + str(test_number) + "\033[0m",
+
 						elif number != 0 :
+
 							# part of list of nested unit number in output
 							print "\033[0;33m" + str(test_number) + "\033[0m",
 
@@ -415,16 +438,22 @@ try :
 						
 						# find the difference
 						result = linediff(unitxml, unitsrcml)
-						if count == MAX_COUNT :
+						if line_count > 75 :
 							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_URL), " ",
+							line_count = 0
+
+						line_count = get_updated_line_count(count, line_count)
+
 						if result != "" :
-							error_count += 1
-							
+
+							error_count += 1						
 							errorlist.append((url + " " + language, count * 2, result))
 
 							# part of list of nested unit number in output
 							print "\033[0;31m" + str(count * 2) + "\033[0m",
+
 						elif number != 0 :
+
 							# part of list of nested unit number in output
 							print "\033[0;33m" + str(count * 2) + "\033[0m",
 	
