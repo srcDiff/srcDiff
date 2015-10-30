@@ -319,9 +319,8 @@ SUMMARY
 
 • Modified function(s): 1
 • function 'KWView::formatPage':
-  #Impact#: #Statement# = #5#	#Non-Statement# = #0#	#Cyclomatic# = #+2#
-	• an #if# was inserted
-	• an #argument# was modified
+  #Impact#: #Statement# = #6#	#Non-Statement# = #0#	#Cyclomatic# = #+2#
+	• a #call# was replaced with an #if#
 
 END_SUMMARY
 
