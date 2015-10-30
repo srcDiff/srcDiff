@@ -30,13 +30,13 @@ private:
 
     std::string get_type_string(const std::shared_ptr<profile_t> & profile) const;
 
-    bool is_block_summary(const std::string & type, bool is_replacement) const;
+    bool is_block_summary(const std::string & type, bool is_replace) const;
     void statement_dispatch(const std::shared_ptr<profile_t> & profile, size_t & child_pos);
     void block(const std::shared_ptr<profile_t> & profile);
 
     void identifiers(std::map<std::string, std::set<versioned_string>> profile_declarations,
                      std::map<std::string, std::map<versioned_string, std::multiset<versioned_string>>> profile_identifiers);
-    void replacement(const std::shared_ptr<profile_t> & profile, size_t & pos);
+    void replace(const std::shared_ptr<profile_t> & profile, size_t & pos);
     void interchange(const std::shared_ptr<profile_t> & profile);
 
     void jump(const std::shared_ptr<profile_t> & profile);

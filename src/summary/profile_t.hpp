@@ -41,7 +41,7 @@ class profile_t {
         versioned_string type_name;
         namespace_uri uri;
         srcdiff_type operation;
-        bool is_replacement;
+        bool is_replace;
         size_t move_id;
 
         std::shared_ptr<profile_t> parent;

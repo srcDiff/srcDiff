@@ -189,7 +189,7 @@ no_expr:
                 ++profile_stack.at(profile_stack.size() - 2)->total_count;
                 total.inc_comment();
 
-                if(srcdiff_stack.back().is_change) {
+                if(srcdiff_stack.back().is_replace) {
 
                     change_count.inc_comment();
                     change_count.inc_total();
@@ -213,7 +213,7 @@ no_expr:
                 ++profile_stack.at(profile_stack.size() - 2)->total_count;
                 total.inc_whitespace();
 
-                if(srcdiff_stack.back().is_change) {
+                if(srcdiff_stack.back().is_replace) {
 
                     change_count.inc_whitespace();
                     change_count.inc_total();
@@ -237,7 +237,7 @@ no_expr:
                 ++profile_stack.at(profile_stack.size() - 2)->total_count;
                 total.inc_syntax();
 
-                if(srcdiff_stack.back().is_change) {
+                if(srcdiff_stack.back().is_replace) {
 
                     change_count.inc_syntax();
                     change_count.inc_total();
@@ -524,14 +524,14 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     if(uri_stack.back() == SRCDIFF) {
 
-        bool is_change = false;
+        bool is_replace = false;
         size_t move_id = 0;
         for(int i = 0; i < num_attributes; ++i) {
 
             if(attributes[i].localname == std::string("type")) {
 
                 std::string value = attributes[i].value;
-                if(value == "change") is_change = true;
+                if(value == "replace") is_replace = true;
 
             } else if(attributes[i].localname == std::string("move")) {
 
@@ -542,11 +542,11 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         }
 
         if(local_name == "common")
-            srcdiff_stack.push_back(srcdiff(SRCDIFF_COMMON, is_change, move_id));
+            srcdiff_stack.push_back(srcdiff(SRCDIFF_COMMON, is_replace, move_id));
         else if(local_name == "delete")
-            srcdiff_stack.push_back(srcdiff(SRCDIFF_DELETE, is_change, move_id));
+            srcdiff_stack.push_back(srcdiff(SRCDIFF_DELETE, is_replace, move_id));
         else if(local_name == "insert")
-            srcdiff_stack.push_back(srcdiff(SRCDIFF_INSERT, is_change, move_id));
+            srcdiff_stack.push_back(srcdiff(SRCDIFF_INSERT, is_replace, move_id));
 
         bool is_interchange_diff = (srcml_depth > 3 && uri_stack.at(srcml_depth - 3) == SRCDIFF && srcml_element_stack.at(srcml_depth - 3) == "diff:delete"
                             && uri_stack.at(srcml_depth - 2) == SRC && uri_stack.back() == SRCDIFF && local_name == "insert");
@@ -603,7 +603,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         else
             profile_stack.back()->summary_profile = profile_stack.back()->parent->summary_profile;
 
-        if(srcdiff_stack.back().is_change) profile_stack.back()->is_replacement = true;
+        if(srcdiff_stack.back().is_replace) profile_stack.back()->is_replace = true;
         if(srcdiff_stack.back().move_id && srcdiff_stack.back().level == 0 && uri_stack.back() != SRCDIFF && current_move_id < srcdiff_stack.back().move_id) {
 
             profile_stack.back()->move_id = srcdiff_stack.back().move_id;
@@ -669,7 +669,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
                     ++profile_stack.at(profile_stack.size() - 3)->total_count;
 
                     /** @todo refactor into method or something for counting global insert/delete/change */
-                    if(srcdiff_stack.back().is_change) {
+                    if(srcdiff_stack.back().is_replace) {
 
                         change_count.inc_comment();
                         change_count.inc_total();
@@ -693,7 +693,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
                     ++profile_stack.at(profile_stack.size() - 3)->syntax_count;
                     ++profile_stack.at(profile_stack.size() - 3)->total_count;
 
-                    if(srcdiff_stack.back().is_change) {
+                    if(srcdiff_stack.back().is_replace) {
 
                         change_count.inc_syntax();
                         change_count.inc_total();

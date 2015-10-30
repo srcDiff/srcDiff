@@ -9,11 +9,11 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, con
     size_t number_parameters_deleted = 0, number_parameters_inserted = 0, number_parameters_modified = 0, number_parameters_replaced = 0;
     for(std::vector<std::shared_ptr<parameter_profile_t>>::size_type pos = 0; pos < parameters.size(); ++pos) {
 
-        if(parameters[pos]->is_replacement && parameters[pos]->operation == SRCDIFF_DELETE
-            && (pos == 0 || !parameters[pos - 1]->is_replacement || parameters[pos - 1]->operation != SRCDIFF_DELETE)) {
+        if(parameters[pos]->is_replace && parameters[pos]->operation == SRCDIFF_DELETE
+            && (pos == 0 || !parameters[pos - 1]->is_replace || parameters[pos - 1]->operation != SRCDIFF_DELETE)) {
 
             if((pos + 1) < parameters.size() && parameters[pos + 1]->operation == SRCDIFF_INSERT
-                && ((pos + 2) == parameters.size() || !parameters[pos + 2]->is_replacement || parameters[pos + 2]->operation != SRCDIFF_INSERT)) {
+                && ((pos + 2) == parameters.size() || !parameters[pos + 2]->is_replace || parameters[pos + 2]->operation != SRCDIFF_INSERT)) {
 
                 ++number_parameters_replaced;
                 ++pos;

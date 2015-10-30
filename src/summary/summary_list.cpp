@@ -15,7 +15,7 @@
 #include <identifier_utilities.hpp>
 
 #include <identifier_summary_t.hpp>
-#include <replacement_summary_t.hpp>
+#include <replace_summary_t.hpp>
 #include <move_summary_t.hpp>
 #include <interchange_summary_t.hpp>
 #include <jump_summary_t.hpp>
@@ -170,9 +170,9 @@ std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & pro
 
 }
 
-bool summary_list::is_block_summary(const std::string & type, bool is_replacement) const {
+bool summary_list::is_block_summary(const std::string & type, bool is_replace) const {
 
-    return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type) || (is_comment(type) && is_replacement)
+    return is_condition_type(type) || is_expr_stmt(type) || is_decl_stmt(type) || (is_comment(type) && is_replace)
         || is_jump(type) || type == "else" || is_exception_handling(type) || is_label(type) || is_expr_block(type)
         || is_interchange(type) || type == "macro";
 
@@ -182,9 +182,9 @@ void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile
 
     const std::shared_ptr<profile_t> & child_change_profile = profile->child_change_profiles[child_pos];
 
-    if(child_change_profile->is_replacement && ((child_pos + 1) < profile->child_change_profiles.size())) {
+    if(child_change_profile->is_replace && ((child_pos + 1) < profile->child_change_profiles.size())) {
 
-        replacement(profile, child_pos);
+        replace(profile, child_pos);
 
     } else if(child_change_profile->move_id) {
 
@@ -228,7 +228,7 @@ void summary_list::block(const std::shared_ptr<profile_t> & profile) {
 
         if((child_change_profile->syntax_count > 0 || child_change_profile->move_id
             || (child_change_profile->operation != SRCDIFF_COMMON && (profile->operation != child_change_profile->operation || is_expr_block(profile->type_name))))
-            && is_block_summary(child_change_profile->type_name.first_active_string(), child_change_profile->is_replacement)) {
+            && is_block_summary(child_change_profile->type_name.first_active_string(), child_change_profile->is_replace)) {
 
             statement_dispatch(profile, pos);
 
@@ -390,7 +390,7 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
 
 }
 
-void summary_list::replacement(const std::shared_ptr<profile_t> & profile, size_t & pos) {
+void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & pos) {
 
     const std::shared_ptr<profile_t> & start_profile = profile->child_change_profiles[pos];
 
@@ -399,42 +399,42 @@ void summary_list::replacement(const std::shared_ptr<profile_t> & profile, size_
     std::vector<const std::shared_ptr<conditional_profile_t>> conditionals_deleted, conditionals_inserted;
     std::vector<const std::shared_ptr<profile_t>>             jump_deleted,         jump_inserted;
     std::vector<const std::shared_ptr<profile_t>>             comment_deleted,      comment_inserted;
-    for(; pos < profile->child_change_profiles.size() && profile->child_change_profiles[pos]->is_replacement; ++pos) {
+    for(; pos < profile->child_change_profiles.size() && profile->child_change_profiles[pos]->is_replace; ++pos) {
 
-        const std::shared_ptr<profile_t> & replacement_profile = profile->child_change_profiles[pos];                    
+        const std::shared_ptr<profile_t> & replace_profile = profile->child_change_profiles[pos];                    
 
-        if(is_condition_type(replacement_profile->type_name)) {
+        if(is_condition_type(replace_profile->type_name)) {
 
-            if(replacement_profile->operation == SRCDIFF_DELETE)
-                conditionals_deleted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(replacement_profile));
+            if(replace_profile->operation == SRCDIFF_DELETE)
+                conditionals_deleted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(replace_profile));
             else
-                conditionals_inserted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(replacement_profile));
+                conditionals_inserted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(replace_profile));
 
-        } else if(is_jump(replacement_profile->type_name)) {
+        } else if(is_jump(replace_profile->type_name)) {
 
-            if(replacement_profile->operation == SRCDIFF_DELETE)
-                jump_deleted.push_back(replacement_profile);
+            if(replace_profile->operation == SRCDIFF_DELETE)
+                jump_deleted.push_back(replace_profile);
             else
-                jump_inserted.push_back(replacement_profile);
+                jump_inserted.push_back(replace_profile);
 
-        } else if(is_expr_stmt(replacement_profile->type_name)) {
+        } else if(is_expr_stmt(replace_profile->type_name)) {
 
-            if(replacement_profile->operation == SRCDIFF_DELETE)
-                expr_stmt_deleted.push_back(reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(replacement_profile));
+            if(replace_profile->operation == SRCDIFF_DELETE)
+                expr_stmt_deleted.push_back(reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(replace_profile));
             else
-                expr_stmt_inserted.push_back(reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(replacement_profile));
+                expr_stmt_inserted.push_back(reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(replace_profile));
 
-        } else if(is_decl_stmt(replacement_profile->type_name)){
+        } else if(is_decl_stmt(replace_profile->type_name)){
 
-            if(replacement_profile->operation == SRCDIFF_DELETE)
-                decl_stmt_deleted.push_back(reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(replacement_profile));
+            if(replace_profile->operation == SRCDIFF_DELETE)
+                decl_stmt_deleted.push_back(reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(replace_profile));
             else
-                decl_stmt_inserted.push_back(reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(replacement_profile));
+                decl_stmt_inserted.push_back(reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(replace_profile));
 
-        } else if(is_comment(replacement_profile->type_name)) {
+        } else if(is_comment(replace_profile->type_name)) {
 
-            if(replacement_profile->operation == SRCDIFF_DELETE) comment_deleted.push_back(replacement_profile);
-            else                                                 comment_inserted.push_back(replacement_profile);
+            if(replace_profile->operation == SRCDIFF_DELETE) comment_deleted.push_back(replace_profile);
+            else                                                 comment_inserted.push_back(replace_profile);
 
         }
 
@@ -483,9 +483,9 @@ void summary_list::replacement(const std::shared_ptr<profile_t> & profile, size_
             single_profile = jump_inserted.back();
 
         if(number_syntax_deletions == 1)
-            summaries_.emplace_back(new replacement_summary_t(1, get_type_string(single_profile), comment_deleted.size(), 0, std::string(), comment_inserted.size()));
+            summaries_.emplace_back(new replace_summary_t(1, get_type_string(single_profile), comment_deleted.size(), 0, std::string(), comment_inserted.size()));
         else
-            summaries_.emplace_back(new replacement_summary_t(0, std::string(), comment_deleted.size(), 1, get_type_string(single_profile), comment_inserted.size()));
+            summaries_.emplace_back(new replace_summary_t(0, std::string(), comment_deleted.size(), 1, get_type_string(single_profile), comment_inserted.size()));
 
         return;
 
@@ -629,7 +629,7 @@ void summary_list::replacement(const std::shared_ptr<profile_t> & profile, size_
 
     }
 
-    summaries_.emplace_back(new replacement_summary_t(number_original, original_type, comment_deleted.size(), number_modified, modified_type, comment_inserted.size()));
+    summaries_.emplace_back(new replace_summary_t(number_original, original_type, comment_deleted.size(), number_modified, modified_type, comment_inserted.size()));
 
 }
 

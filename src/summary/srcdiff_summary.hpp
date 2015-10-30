@@ -33,11 +33,11 @@ public:
     struct srcdiff {
 
         srcdiff_type operation;
-        bool is_change;
+        bool is_replace;
         size_t move_id;
         int level;
 
-        srcdiff(srcdiff_type operation, bool is_change, size_t move_id) : operation(operation), is_change(is_change), move_id(move_id), level(0) {}
+        srcdiff(srcdiff_type operation, bool is_replace, size_t move_id) : operation(operation), is_replace(is_replace), move_id(move_id), level(0) {}
 
     };
 
