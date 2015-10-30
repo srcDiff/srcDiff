@@ -1020,7 +1020,8 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
     || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier")
     return false;
 
-  if(original_tag == "name" && nodes_original.at(original_pos)->is_simple && nodes_original.at(original_pos)->is_simple == nodes_modified.at(modified_pos)->is_simple) return false;
+  if(original_tag == "name" && nodes_original.at(original_pos)->is_simple && nodes_modified.at(modified_pos)->is_simple) return false;
+  if(original_tag == "name" && nodes_original.at(original_pos)->is_simple != nodes_modified.at(modified_pos)->is_simple) return true;
 
   int max_size = text_original_length > text_modified_length ? text_original_length : text_modified_length;
   if((original_tag == "expr" || original_tag == "expr_stmt") && similarity > 0 && difference <= max_size) return false;

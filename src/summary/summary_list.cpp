@@ -390,6 +390,8 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
 
 }
 
+/** @todo this needs to be more generic so stuff like identifier can be replaced or anyother
+    arbitrary item */
 void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & pos) {
 
     const std::shared_ptr<profile_t> & start_profile = profile->child_change_profiles[pos];

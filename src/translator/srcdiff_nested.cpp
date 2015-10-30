@@ -395,6 +395,8 @@ bool srcdiff_nested::reject_match_nested(int similarity, int difference, int tex
   // if interchanging decl_stmt always nest expr into init or argument
   if(original_tag == "expr" && (is_decl_stmt_from_expr(nodes_original, original_pos) || is_decl_stmt_from_expr(nodes_modified, modified_pos))) return false;
 
+  if(original_tag == "name" && nodes_original.at(original_pos)->is_simple != nodes_modified.at(modified_pos)->is_simple) return true;
+
   if(original_tag == "then" || original_tag == "block" || original_tag == "comment"
     || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier"
     || original_tag == "expr" || original_tag == "expr_stmt" || original_tag == "name") {
