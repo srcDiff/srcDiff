@@ -401,37 +401,72 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
     std::vector<const std::shared_ptr<conditional_profile_t>> conditionals_deleted, conditionals_inserted;
     std::vector<const std::shared_ptr<profile_t>>             jump_deleted,         jump_inserted;
     std::vector<const std::shared_ptr<profile_t>>             comment_deleted,      comment_inserted;
+
+    /** @todo may want to optimze to enum */
+    std::map<std::string, std::vector<const std::shared_ptr<profile_t>>> entity_deleted, entity_inserted;
     for(; pos < profile->child_change_profiles.size() && profile->child_change_profiles[pos]->is_replace; ++pos) {
 
         const std::shared_ptr<profile_t> & replace_profile = profile->child_change_profiles[pos];                    
 
         if(is_condition_type(replace_profile->type_name)) {
 
-            if(replace_profile->operation == SRCDIFF_DELETE)
+            if(replace_profile->operation == SRCDIFF_DELETE) {
+
                 conditionals_deleted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(replace_profile));
-            else
+                entity_deleted["conditional"].push_back(replace_profile);
+
+            } else {
+
                 conditionals_inserted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(replace_profile));
+                entity_inserted["conditional"].push_back(replace_profile);
+            }
 
         } else if(is_jump(replace_profile->type_name)) {
 
-            if(replace_profile->operation == SRCDIFF_DELETE)
+            if(replace_profile->operation == SRCDIFF_DELETE) {
+
                 jump_deleted.push_back(replace_profile);
-            else
-                jump_inserted.push_back(replace_profile);
+                entity_deleted["jump"].push_back(replace_profile);
 
-        } else if(is_expr_stmt(replace_profile->type_name)) {
+            } else {
+
+                jump_inserted.push_back(replace_profile);
+                entity_inserted["jump"].push_back(replace_profile);
+
+            }
+
+        } else {
 
             if(replace_profile->operation == SRCDIFF_DELETE)
+                entity_deleted[replace_profile->type_name].push_back(replace_profile);
+
+        }
+
+
+/*
+         if(is_expr_stmt(replace_profile->type_name)) {
+
+            if(replace_profile->operation == SRCDIFF_DELETE) {
+
                 expr_stmt_deleted.push_back(reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(replace_profile));
-            else
+
+            } else {
+
                 expr_stmt_inserted.push_back(reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(replace_profile));
+
+            }
 
         } else if(is_decl_stmt(replace_profile->type_name)){
 
-            if(replace_profile->operation == SRCDIFF_DELETE)
+            if(replace_profile->operation == SRCDIFF_DELETE) {
+
                 decl_stmt_deleted.push_back(reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(replace_profile));
-            else
+
+            } else {
+
                 decl_stmt_inserted.push_back(reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(replace_profile));
+
+            }
 
         } else if(is_comment(replace_profile->type_name)) {
 
@@ -439,26 +474,18 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
             else                                                 comment_inserted.push_back(replace_profile);
 
         }
+        */
 
     }
 
     --pos;
 
-    size_t number_deleted_types  = 0;
-    if(expr_stmt_deleted.size() != 0)    ++number_deleted_types;
-    if(decl_stmt_deleted.size() != 0)    ++number_deleted_types;
-    if(conditionals_deleted.size() != 0) ++number_deleted_types;
-    if(jump_deleted.size() != 0)         ++number_deleted_types;
-    if(comment_deleted.size() != 0)      ++number_deleted_types;
-
+    size_t number_deleted_types  = entity_deleted.size();
+    bool is_comment_deleted = entity_deleted.count("comment");
     size_t number_syntax_deletions = expr_stmt_deleted.size() + decl_stmt_deleted.size() + conditionals_deleted.size() + jump_deleted.size();
 
-    size_t number_inserted_types = 0;
-    if(expr_stmt_inserted.size() != 0)    ++number_inserted_types;
-    if(decl_stmt_inserted.size() != 0)    ++number_inserted_types;
-    if(conditionals_inserted.size() != 0) ++number_inserted_types;
-    if(jump_inserted.size() != 0)         ++number_inserted_types;
-    if(comment_inserted.size() != 0)      ++number_inserted_types;
+    size_t number_inserted_types = entity_inserted.size();
+    bool is_comment_inserted = entity_inserted.count("comment");
 
     size_t number_syntax_insertions = expr_stmt_inserted.size() + decl_stmt_inserted.size() + conditionals_inserted.size() + jump_inserted.size();
 
