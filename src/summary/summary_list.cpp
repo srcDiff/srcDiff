@@ -484,7 +484,7 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
     size_t number_deleted_types  = entity_deleted.size();
     bool is_comment_deleted = entity_deleted.count("comment");
     size_t number_syntax_deletions = 0;
-    std::for_each(entity_deleted.begin(), entity_deleted.end(), [&number_syntax_deletions] (std::pair<std::string, std::vector<const std::shared_ptr<profile_t>>> entity) {
+    std::for_each(entity_deleted.begin(), entity_deleted.end(), [&number_syntax_deletions] (const std::pair<std::string, std::vector<const std::shared_ptr<profile_t>>> & entity) {
 
         number_syntax_deletions += entity.second.size();
 
@@ -493,7 +493,7 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
     size_t number_inserted_types = entity_inserted.size();
     bool is_comment_inserted = entity_inserted.count("comment");
     size_t number_syntax_insertions = 0;
-    std::for_each(entity_inserted.begin(), entity_inserted.end(), [&number_syntax_insertions] (std::pair<std::string, std::vector<const std::shared_ptr<profile_t>>> entity) {
+    std::for_each(entity_inserted.begin(), entity_inserted.end(), [&number_syntax_insertions] (const std::pair<std::string, std::vector<const std::shared_ptr<profile_t>>> & entity) {
 
         number_syntax_insertions += entity.second.size();
 
