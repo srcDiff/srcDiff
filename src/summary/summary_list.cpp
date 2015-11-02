@@ -396,12 +396,6 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
 
     const std::shared_ptr<profile_t> & start_profile = profile->child_change_profiles[pos];
 
-    std::vector<const std::shared_ptr<expr_stmt_profile_t>>   expr_stmt_deleted,    expr_stmt_inserted;
-    std::vector<const std::shared_ptr<decl_stmt_profile_t>>   decl_stmt_deleted,    decl_stmt_inserted;
-    std::vector<const std::shared_ptr<conditional_profile_t>> conditionals_deleted, conditionals_inserted;
-    std::vector<const std::shared_ptr<profile_t>>             jump_deleted,         jump_inserted;
-    std::vector<const std::shared_ptr<profile_t>>             comment_deleted,      comment_inserted;
-
     /** @todo may want to optimze to enum */
     std::map<std::string, std::vector<const std::shared_ptr<profile_t>>> entity_deleted, entity_inserted;
     for(; pos < profile->child_change_profiles.size() && profile->child_change_profiles[pos]->is_replace; ++pos) {
@@ -410,121 +404,77 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
 
         if(is_condition_type(replace_profile->type_name)) {
 
-            if(replace_profile->operation == SRCDIFF_DELETE) {
-
-                conditionals_deleted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(replace_profile));
+            if(replace_profile->operation == SRCDIFF_DELETE)
                 entity_deleted["conditional"].push_back(replace_profile);
-
-            } else {
-
-                conditionals_inserted.push_back(reinterpret_cast<const std::shared_ptr<conditional_profile_t> &>(replace_profile));
+            else
                 entity_inserted["conditional"].push_back(replace_profile);
-            }
 
         } else if(is_jump(replace_profile->type_name)) {
 
-            if(replace_profile->operation == SRCDIFF_DELETE) {
-
-                jump_deleted.push_back(replace_profile);
+            if(replace_profile->operation == SRCDIFF_DELETE)
                 entity_deleted["jump"].push_back(replace_profile);
-
-            } else {
-
-                jump_inserted.push_back(replace_profile);
+            else
                 entity_inserted["jump"].push_back(replace_profile);
-
-            }
 
         } else {
 
             if(replace_profile->operation == SRCDIFF_DELETE)
                 entity_deleted[replace_profile->type_name].push_back(replace_profile);
+            else
+                entity_inserted[replace_profile->type_name].push_back(replace_profile);
 
         }
-
-
-/*
-         if(is_expr_stmt(replace_profile->type_name)) {
-
-            if(replace_profile->operation == SRCDIFF_DELETE) {
-
-                expr_stmt_deleted.push_back(reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(replace_profile));
-
-            } else {
-
-                expr_stmt_inserted.push_back(reinterpret_cast<const std::shared_ptr<expr_stmt_profile_t> &>(replace_profile));
-
-            }
-
-        } else if(is_decl_stmt(replace_profile->type_name)){
-
-            if(replace_profile->operation == SRCDIFF_DELETE) {
-
-                decl_stmt_deleted.push_back(reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(replace_profile));
-
-            } else {
-
-                decl_stmt_inserted.push_back(reinterpret_cast<const std::shared_ptr<decl_stmt_profile_t> &>(replace_profile));
-
-            }
-
-        } else if(is_comment(replace_profile->type_name)) {
-
-            if(replace_profile->operation == SRCDIFF_DELETE) comment_deleted.push_back(replace_profile);
-            else                                                 comment_inserted.push_back(replace_profile);
-
-        }
-        */
 
     }
 
     --pos;
-
 
     size_t number_deleted_types  = entity_deleted.size();
     bool is_comment_deleted = entity_deleted.count("comment");
     size_t number_syntax_deletions = 0;
     std::for_each(entity_deleted.begin(), entity_deleted.end(), [&number_syntax_deletions] (const std::pair<std::string, std::vector<const std::shared_ptr<profile_t>>> & entity) {
 
-        number_syntax_deletions += entity.second.size();
+        if(entity.first != "comment")
+            number_syntax_deletions += entity.second.size();
 
     });
 
     size_t number_inserted_types = entity_inserted.size();
-    bool is_comment_inserted = entity_inserted.count("comment");
+    bool num_comment_inserted = entity_inserted.count("comment");
     size_t number_syntax_insertions = 0;
     std::for_each(entity_inserted.begin(), entity_inserted.end(), [&number_syntax_insertions] (const std::pair<std::string, std::vector<const std::shared_ptr<profile_t>>> & entity) {
 
-        number_syntax_insertions += entity.second.size();
+        if(entity.first != "comment")
+            number_syntax_insertions += entity.second.size();
 
     });
 
     if(((number_syntax_deletions == 1 && number_syntax_insertions == 0) || (number_syntax_insertions == 1 && number_syntax_deletions == 0))
-        && (comment_deleted.size() >= 1 || comment_inserted.size() >= 1)) {
+        && (entity_deleted["comment"].size() >= 1 || entity_inserted["comment"].size() >= 1)) {
 
         std::shared_ptr<profile_t> single_profile;
 
-        if(expr_stmt_deleted.size())
-            single_profile = expr_stmt_deleted.back();
-        else if(expr_stmt_inserted.size())
-            single_profile = expr_stmt_inserted.back();
-        else if(decl_stmt_deleted.size())
-            single_profile = decl_stmt_deleted.back();
-        else if(decl_stmt_inserted.size())
-            single_profile = decl_stmt_inserted.back();
-        else if(conditionals_deleted.size())
-            single_profile = conditionals_deleted.back();
-        else if(conditionals_inserted.size())
-            single_profile = conditionals_inserted.back();
-        else if(jump_deleted.size())
-            single_profile = jump_deleted.back();
-        else if(jump_inserted.size())
-            single_profile = jump_inserted.back();
+        if(entity_deleted["expr_stmt"].size())
+            single_profile = entity_deleted["expr_stmt"].back();
+        else if(entity_inserted["expr_stmt"].size())
+            single_profile = entity_inserted["expr_stmt"].back();
+        else if(entity_deleted["decl_stmt"].size())
+            single_profile = entity_deleted["decl_stmt"].back();
+        else if(entity_inserted["decl_stmt"].size())
+            single_profile = entity_inserted["decl_stmt"].back();
+        else if(entity_deleted["conditional"].size())
+            single_profile = entity_deleted["conditional"].back();
+        else if(entity_inserted["conditional"].size())
+            single_profile = entity_inserted["conditional"].back();
+        else if(entity_deleted["jump"].size())
+            single_profile = entity_deleted["jump"].back();
+        else if(entity_inserted["jump"].size())
+            single_profile = entity_inserted["jump"].back();
 
         if(number_syntax_deletions == 1)
-            summaries_.emplace_back(new replace_summary_t(1, get_type_string(single_profile), comment_deleted.size(), 0, std::string(), comment_inserted.size()));
+            summaries_.emplace_back(new replace_summary_t(1, get_type_string(single_profile), entity_deleted["comment"].size(), 0, std::string(), entity_inserted["comment"].size()));
         else
-            summaries_.emplace_back(new replace_summary_t(0, std::string(), comment_deleted.size(), 1, get_type_string(single_profile), comment_inserted.size()));
+            summaries_.emplace_back(new replace_summary_t(0, std::string(), entity_deleted["comment"].size(), 1, get_type_string(single_profile), entity_inserted["comment"].size()));
 
         return;
 
@@ -536,52 +486,52 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
     if(number_syntax_deletions == 1) {
 
         number_original = 1;
-        if(expr_stmt_deleted.size())
-            original_type = get_type_string(expr_stmt_deleted.back());
-        else if(decl_stmt_deleted.size())
-            original_type = get_type_string(decl_stmt_deleted.back());
-        else if(conditionals_deleted.size())
-            original_type = get_type_string(conditionals_deleted.back());
-        else if(jump_deleted.size())
-            original_type = get_type_string(jump_deleted.back());
+        if(entity_deleted["expr_stmt"].size())
+            original_type = get_type_string(entity_deleted["expr_stmt"].back());
+        else if(entity_deleted["decl_stmt"].size())
+            original_type = get_type_string(entity_deleted["decl_stmt"].back());
+        else if(entity_deleted["conditional"].size())
+            original_type = get_type_string(entity_deleted["conditional"].back());
+        else if(entity_deleted["jump"].size())
+            original_type = get_type_string(entity_deleted["jump"].back());
         else
-            original_type = get_type_string(comment_deleted.back());
+            original_type = get_type_string(entity_deleted["comment"].back());
 
     } else {
 
-        if(number_deleted_types == 1 || (comment_deleted.size() != 0 && number_deleted_types == 2)) {
+        if(number_deleted_types == 1 || (entity_deleted["comment"].size() != 0 && number_deleted_types == 2)) {
 
-            if(expr_stmt_deleted.size()) {
+            if(entity_deleted["expr_stmt"].size()) {
 
-                number_original = expr_stmt_deleted.size();
-                original_type = get_type_string(expr_stmt_deleted.back());
+                number_original = entity_deleted["expr_stmt"].size();
+                original_type = get_type_string(entity_deleted["expr_stmt"].back());
 
-            } else if(decl_stmt_deleted.size()) {
+            } else if(entity_deleted["decl_stmt"].size()) {
 
-                number_original = decl_stmt_deleted.size();
-                original_type = get_type_string(decl_stmt_deleted.back());
+                number_original = entity_deleted["decl_stmt"].size();
+                original_type = get_type_string(entity_deleted["decl_stmt"].back());
 
-            } else if(conditionals_deleted.size()) {
+            } else if(entity_deleted["conditional"].size()) {
 
-                number_original = conditionals_deleted.size();
+                number_original = entity_deleted["conditional"].size();
                 original_type = "conditional";
 
-            } else if(jump_deleted.size()) {
+            } else if(entity_deleted["jump"].size()) {
 
-                if(jump_deleted.size() == 1) {
+                if(entity_deleted["jump"].size() == 1) {
 
                     number_original = 1;
-                    original_type = get_type_string(jump_deleted.back());
+                    original_type = get_type_string(entity_deleted["jump"].back());
 
                 } else {
 
-                    number_original = jump_deleted.size();
+                    number_original = entity_deleted["jump"].size();
                     std::set<std::string> jump_types;
-                    for(const std::shared_ptr<profile_t> & profile_ptr : jump_deleted)
+                    for(const std::shared_ptr<profile_t> & profile_ptr : entity_deleted["jump"])
                         jump_types.insert(profile_ptr->type_name.original());
 
                     if(jump_types.size() == 1)
-                        original_type = get_type_string(jump_deleted.back());
+                        original_type = get_type_string(entity_deleted["jump"].back());
                     else
                         original_type = "statement";
 
@@ -605,52 +555,52 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
     if(number_syntax_insertions == 1) {
 
         number_modified = 1;
-        if(expr_stmt_inserted.size())
-            modified_type = get_type_string(expr_stmt_inserted.back());
-        else if(decl_stmt_inserted.size())
-            modified_type = get_type_string(decl_stmt_inserted.back());
-        else if(conditionals_inserted.size())
-            modified_type = get_type_string(conditionals_inserted.back());
-        else if(jump_inserted.size())
-            modified_type = get_type_string(jump_inserted.back());
+        if(entity_inserted["expr_stmt"].size())
+            modified_type = get_type_string(entity_inserted["expr_stmt"].back());
+        else if(entity_inserted["decl_stmt"].size())
+            modified_type = get_type_string(entity_inserted["decl_stmt"].back());
+        else if(entity_inserted["conditional"].size())
+            modified_type = get_type_string(entity_inserted["conditional"].back());
+        else if(entity_inserted["jump"].size())
+            modified_type = get_type_string(entity_inserted["jump"].back());
         else
-            modified_type = get_type_string(comment_inserted.back());
+            modified_type = get_type_string(entity_inserted["comment"].back());
 
     } else {
 
-        if(number_inserted_types == 1 || (comment_inserted.size() != 0 && number_inserted_types == 2)) {
+        if(number_inserted_types == 1 || (entity_inserted["comment"].size() != 0 && number_inserted_types == 2)) {
 
-            if(expr_stmt_inserted.size()) {
+            if(entity_inserted["expr_stmt"].size()) {
 
-                number_modified = expr_stmt_inserted.size();
-                modified_type = get_type_string(expr_stmt_inserted.back());
+                number_modified = entity_inserted["expr_stmt"].size();
+                modified_type = get_type_string(entity_inserted["expr_stmt"].back());
 
-            } else if(decl_stmt_inserted.size()) {
+            } else if(entity_inserted["decl_stmt"].size()) {
 
-                number_modified = decl_stmt_inserted.size();
-                modified_type = get_type_string(decl_stmt_inserted.back());
+                number_modified = entity_inserted["decl_stmt"].size();
+                modified_type = get_type_string(entity_inserted["decl_stmt"].back());
 
-            } else if(conditionals_inserted.size()) {
+            } else if(entity_inserted["conditional"].size()) {
 
-                number_modified = conditionals_inserted.size();
+                number_modified = entity_inserted["conditional"].size();
                 modified_type = "conditional";
 
-            } else if(jump_inserted.size()) {
+            } else if(entity_inserted["jump"].size()) {
 
-                if(jump_inserted.size() == 1) {
+                if(entity_inserted["jump"].size() == 1) {
 
                     number_modified = 1;
-                    modified_type = get_type_string(jump_inserted.back());
+                    modified_type = get_type_string(entity_inserted["jump"].back());
 
                 } else {
 
-                    number_modified = jump_inserted.size();
+                    number_modified = entity_inserted["jump"].size();
                     std::set<std::string> jump_types;
-                    for(const std::shared_ptr<profile_t> & profile_ptr : jump_inserted)
+                    for(const std::shared_ptr<profile_t> & profile_ptr : entity_inserted["jump"])
                         jump_types.insert(profile_ptr->type_name.modified());
 
                     if(jump_types.size() == 1)
-                        modified_type = get_type_string(jump_inserted.back());
+                        modified_type = get_type_string(entity_inserted["jump"].back());
                     else
                         modified_type = "statement";
 
@@ -668,7 +618,7 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
 
     }
 
-    summaries_.emplace_back(new replace_summary_t(number_original, original_type, comment_deleted.size(), number_modified, modified_type, comment_inserted.size()));
+    summaries_.emplace_back(new replace_summary_t(number_original, original_type, entity_deleted["comment"].size(), number_modified, modified_type, entity_inserted["comment"].size()));
 
 }
 
