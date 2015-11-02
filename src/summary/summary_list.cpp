@@ -480,14 +480,24 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
 
     --pos;
 
+
     size_t number_deleted_types  = entity_deleted.size();
     bool is_comment_deleted = entity_deleted.count("comment");
-    size_t number_syntax_deletions = expr_stmt_deleted.size() + decl_stmt_deleted.size() + conditionals_deleted.size() + jump_deleted.size();
+    size_t number_syntax_deletions = 0;
+    std::for_each(entity_deleted.begin(), entity_deleted.end(), [&number_syntax_deletions] (std::pair<std::string, std::vector<const std::shared_ptr<profile_t>>> entity) {
+
+        number_syntax_deletions += entity.second.size();
+
+    });
 
     size_t number_inserted_types = entity_inserted.size();
     bool is_comment_inserted = entity_inserted.count("comment");
+    size_t number_syntax_insertions = 0;
+    std::for_each(entity_inserted.begin(), entity_inserted.end(), [&number_syntax_insertions] (std::pair<std::string, std::vector<const std::shared_ptr<profile_t>>> entity) {
 
-    size_t number_syntax_insertions = expr_stmt_inserted.size() + decl_stmt_inserted.size() + conditionals_inserted.size() + jump_inserted.size();
+        number_syntax_insertions += entity.second.size();
+
+    });
 
     if(((number_syntax_deletions == 1 && number_syntax_insertions == 0) || (number_syntax_insertions == 1 && number_syntax_deletions == 0))
         && (comment_deleted.size() >= 1 || comment_inserted.size() >= 1)) {
