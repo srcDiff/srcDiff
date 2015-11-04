@@ -173,3 +173,21 @@ void srcdiff_diff::output_change_whitespace(int end_original, int end_modified) 
   change.output();
 
 }
+
+void srcdiff_diff::output_replace_inner_whitespace(int start_original, int end_original,
+                                                   int start_modified, int end_modified) {
+
+  srcdiff_change change(out, end_original - 1, end_modified - 1);
+  change.output_whitespace();
+
+  out.output_node(out.diff_common_start, SES_COMMON);
+  out.output_node(out.get_nodes_original().at(start_original), SES_COMMON);
+  ++out.last_output_original();
+  ++out.last_output_modified();
+
+  change.output();
+
+  output_common(end_original, end_modified);
+  out.output_node(out.diff_common_end, SES_COMMON);
+
+}
