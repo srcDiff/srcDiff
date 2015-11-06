@@ -12,6 +12,20 @@ struct offset_pair {
   int similarity;
   offset_pair * next;
 
+  std::pair<int, int> totals() {
+
+    std::pair<int, int> sub_totals = std::make_pair(0, 0);
+    for(offset_pair * current = this; current; current = current->next) {
+
+      sub_totals.first += 1;
+      sub_totals.second += current->similarity;
+
+    }
+
+    return sub_totals;
+
+  }
+
 };
 
 class srcdiff_match {
