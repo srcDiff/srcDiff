@@ -21,8 +21,25 @@ struct difference {
 
 };
 
-srcdiff_match::srcdiff_match(const srcml_nodes & nodes_original, const srcml_nodes & nodes_modified, const node_sets & node_sets_original, const node_sets & node_sets_modified)
-  : nodes_original(nodes_original), nodes_modified(nodes_modified), node_sets_original(node_sets_original), node_sets_modified(node_sets_modified) {}
+bool srcdiff_match::is_match_default(const srcml_nodes & nodes_original, const node_sets & node_sets_original, int start_pos_original,
+              const srcml_nodes & nodes_modified, const node_sets & node_sets_modified, int start_pos_modified,
+              int similarity, int difference, int text_original_length, int text_modified_length) {
+
+  return !(similarity == MAX_INT 
+          || reject_match(similarity, difference, text_original_length, text_modified_length,
+                          nodes_original, node_sets_original.at(start_pos_original), nodes_modified, node_sets_modified.at(start_pos_modified))
+          || srcdiff_nested::is_better_nested(nodes_original, node_sets_original, start_pos_original, nodes_modified, node_sets_modified, start_pos_modified,
+                                              similarity, difference, text_original_length, text_modified_length));
+
+}
+
+
+srcdiff_match::srcdiff_match(const srcml_nodes & nodes_original, const srcml_nodes & nodes_modified,
+                             const node_sets & node_sets_original, const node_sets & node_sets_modified,
+                             is_match_func is_match)
+  : nodes_original(nodes_original), nodes_modified(nodes_modified),
+    node_sets_original(node_sets_original), node_sets_modified(node_sets_modified),
+    is_match(is_match) {}
 
 static offset_pair * create_linked_list(int olength, int nlength, difference * differences) {
 
@@ -97,6 +114,7 @@ static offset_pair * create_linked_list(int olength, int nlength, difference * d
 
 }
 
+
 offset_pair * srcdiff_match::match_differences() {
 
   /*
@@ -155,11 +173,8 @@ offset_pair * srcdiff_match::match_differences() {
       int unmatched = 0;
 
       // check if unmatched
-      if(similarity == MAX_INT 
-        || reject_match(similarity, difference, text_original_length, text_modified_length,
-          nodes_original, node_sets_original.at(j), nodes_modified, node_sets_modified.at(i))
-        || srcdiff_nested::is_better_nested(nodes_original, node_sets_original, j, nodes_modified, node_sets_modified, i,
-            similarity, difference, text_original_length, text_modified_length)) {
+      if(!is_match(nodes_original, node_sets_original, j, nodes_modified, node_sets_modified, i,
+                  similarity, difference, text_original_length, text_modified_length)) {
 
         similarity = 0;
         unmatched = 1;
