@@ -583,6 +583,14 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, co
 
 }
 
+/**
+ *
+ * @todo need to make a dynamic programming table or use the one already have.
+ * Probably need one for both ways. Collect all statements of type one one, and all the possible matches
+ * and run dynamic programming algorithm.  Run both ways and use number matched and similarity to choose best.
+ *
+ */
+
 void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const srcml_nodes & nodes_original, int start_original, int end_original
                  , const node_sets & node_sets_modified, const srcml_nodes & nodes_modified, int start_modified, int end_modified
                  , int & start_nest_original, int & end_nest_original, int & start_nest_modified, int & end_nest_modified
