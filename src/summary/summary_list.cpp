@@ -250,7 +250,7 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
             && profile_declarations[itr->second.begin()->modified()].size() == 1) {
 
             versioned_string save_identifier = *itr->second.begin();
-    
+
             while(itr != profile_declarations.end()
                 &&    ((save_identifier.has_original() && save_identifier.original() == itr->first)
                     || (save_identifier.has_modified() && save_identifier.modified() == itr->first)))
@@ -289,7 +289,18 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
 
             if(is_candidate_name_change(use_itr->first, use_itr->second, 1)) {
 
-                if(use_itr->first.has_original() && use_itr->first.has_modified()) {
+                if(use_itr->second.size() == use_itr->second.count(*use_itr->second.begin())) {
+
+                    name_change_identifiers.emplace_back(use_itr->first, *use_itr->second.begin());
+                    ++use_itr;
+
+                    if(name_change_identifiers.back().first.has_original())
+                        profile_identifiers[name_change_identifiers.back().first.original()].erase(name_change_identifiers.back().first);
+
+                    if(name_change_identifiers.back().first.has_modified())
+                        profile_identifiers[name_change_identifiers.back().first.modified()].erase(name_change_identifiers.back().first);
+
+                } else if(use_itr->first.has_original() && use_itr->first.has_modified()) {
 
                     name_change_identifiers.emplace_back(use_itr->first, use_itr->first);
                     ++use_itr;
@@ -302,7 +313,7 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
                     for(; citr != use_itr->second.end(); ++citr)
                         if(!citr->is_common() && citr->has_original() && citr->has_modified())
                             break;
-
+                    std::cerr << *use_itr->second.begin() << '\n';
                     versioned_string extended_name_change = use_itr->first;
                     if(citr != use_itr->second.end()) {
 

@@ -430,8 +430,7 @@ SUMMARY
 • Modified function(s): 1
 • function 'f':
   #Impact#: #Statement# = #3#	#Non-Statement# = #0#	#Cyclomatic# = #0#
-	• name change from 'a' to 'b->a'
-	• name change from 'f' to 'g'
+	• name change from 'a->bar->f' to 'b->a->bar->g'
 
 END_SUMMARY
 
@@ -472,7 +471,6 @@ SUMMARY
 • Modified function(s): 1
 • function 'f':
   #Impact#: #Statement# = #3#	#Non-Statement# = #0#	#Cyclomatic# = #0#
-	• name change from 'bar' to 'b->bar'
-	• name change from 'f' to 'g'
+	• name change from 'bar->f' to 'b->bar->g'
 
 END_SUMMARY
