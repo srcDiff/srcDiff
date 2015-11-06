@@ -585,8 +585,8 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, co
 
 /**
  *
- * @todo need to make a dynamic programming table or use the one already have.
- * Probably need one for both ways. Collect all statements of type one one, and all the possible matches
+ * @todo need to make this more robust using dynamic programming.
+ * Probably need one for both ways. Collect all statements of type one, and all the possible matches (statements of those types in order)
  * and run dynamic programming algorithm.  Run both ways and use number matched and similarity to choose best.
  *
  */
