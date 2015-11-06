@@ -36,7 +36,7 @@ bool srcdiff_match::is_match_default(const srcml_nodes & nodes_original, const n
 
 srcdiff_match::srcdiff_match(const srcml_nodes & nodes_original, const srcml_nodes & nodes_modified,
                              const node_sets & node_sets_original, const node_sets & node_sets_modified,
-                             is_match_func is_match)
+                             const is_match_func & is_match)
   : nodes_original(nodes_original), nodes_modified(nodes_modified),
     node_sets_original(node_sets_original), node_sets_modified(node_sets_modified),
     is_match(is_match) {}

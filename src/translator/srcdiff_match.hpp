@@ -39,7 +39,7 @@ public:
 
   srcdiff_match(const srcml_nodes & nodes_original, const srcml_nodes & nodes_modified,
                 const node_sets & node_sets_original, const node_sets & node_sets_modified,
-                is_match_func is_match = is_match_default);
+                const is_match_func & is_match = is_match_default);
   offset_pair * match_differences();
 
   static bool reject_match(int similarity, int difference, int text_original_length, int text_modified_length,
