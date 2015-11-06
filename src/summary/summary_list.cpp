@@ -291,7 +291,28 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
 
                 if(use_itr->second.size() == use_itr->second.count(*use_itr->second.begin())) {
 
-                    name_change_identifiers.emplace_back(use_itr->first, *use_itr->second.begin());
+                    identifier_utilities ident(*use_itr->second.begin(), false);
+                    const std::vector<std::pair<std::string, srcdiff_type>> list = ident.list();
+
+                    std::vector<std::pair<std::string, srcdiff_type>>::size_type start_pos = 0;
+                    for(; start_pos < list.size() && list[start_pos].second == SRCDIFF_COMMON; ++start_pos)
+                        ;
+
+                    std::vector<std::pair<std::string, srcdiff_type>>::size_type end_pos = list.size() - 1;
+                    for(; start_pos > 0 && list[end_pos].second == SRCDIFF_COMMON; --end_pos)
+                        ;
+
+                    if(start_pos > 0 && list[start_pos - 1].second == SRCDIFF_COMMON && identifier_utilities::is_identifier_char(list[start_pos - 1].first[0]))
+                        --start_pos;
+
+                    if((end_pos + 1) < list.size() && list[end_pos + 1].second == SRCDIFF_COMMON && identifier_utilities::is_identifier_char(list[end_pos + 1].first[0]))
+                        ++end_pos;
+
+                    versioned_string extended_name_change;
+                    for(std::vector<std::pair<std::string, srcdiff_type>>::size_type i = start_pos; i <= end_pos; ++i)
+                        extended_name_change.append(list[i].first.c_str(), list[i].first.size(), list[i].second);
+
+                    name_change_identifiers.emplace_back(use_itr->first, extended_name_change);
                     ++use_itr;
 
                     if(name_change_identifiers.back().first.has_original())
@@ -313,11 +334,11 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
                     for(; citr != use_itr->second.end(); ++citr)
                         if(!citr->is_common() && citr->has_original() && citr->has_modified())
                             break;
-                    std::cerr << *use_itr->second.begin() << '\n';
+
                     versioned_string extended_name_change = use_itr->first;
                     if(citr != use_itr->second.end()) {
 
-                       identifier_utilities ident(*citr, false);
+                        identifier_utilities ident(*citr, false);
 
                         const std::vector<std::pair<std::string, srcdiff_type>> list = ident.list();
 
