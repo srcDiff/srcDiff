@@ -42,7 +42,7 @@
     std::vector<std::shared_ptr<profile_t>> deleted_other, inserted_other, modified_other;                                              \
     size_t number_arguments_deleted = 0, number_arguments_inserted = 0, number_arguments_modified = 0;                                  \
     bool identifier_rename_only = true;                                                                                                 \
-    std::set<std::reference_wrapper<const versioned_string>> identifier_renames;                                                        \
+    std::set<std::reference_wrapper<const versioned_string>, ref_version_string_compare> identifier_renames;                                                        \
     expr_statistics(PROFILE, identifier_set, deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists,     \
                     deleted_other, inserted_other, modified_other,                                                                      \
                     number_arguments_deleted, number_arguments_inserted, number_arguments_modified,                                     \
@@ -632,14 +632,8 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
 
 }
 
-static bool operator<(const std::__1::reference_wrapper<const versioned_string> & ref_one, const std::__1::reference_wrapper<const versioned_string> & ref_two) {
-
-    return ref_one.get() < ref_two.get();
-
-}
-
 bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, std::multiset<versioned_string>> & identifier_set,
-                                    std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
+                                    std::set<std::reference_wrapper<const versioned_string>, ref_version_string_compare> & identifier_renames) const {
 
     bool is_identifier_only = profile->child_change_profiles.size() != 0;
     for(const std::shared_ptr<profile_t> & child_change_profile : profile->child_change_profiles) {
@@ -673,7 +667,7 @@ bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, 
 
 void summary_list::ternary(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, std::multiset<versioned_string>> & identifier_set,
                            bool & condition_modified, bool & then_clause_modified, bool & else_clause_modified,
-                           std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
+                           std::set<std::reference_wrapper<const versioned_string>, ref_version_string_compare> & identifier_renames) const {
 
     assert(typeid(*profile.get()) == typeid(ternary_profile_t));
 
@@ -743,7 +737,7 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                               size_t & number_arguments_inserted,
                               size_t & number_arguments_modified,
                               bool & identifier_rename_only,
-                              std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const {
+                              std::set<std::reference_wrapper<const versioned_string>, ref_version_string_compare> & identifier_renames) const {
 
     assert(typeid(*profile.get()) == typeid(expr_profile_t));
 
@@ -984,7 +978,7 @@ void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) 
 void summary_list::call_sequence(const std::shared_ptr<profile_t> & profile, size_t number_rename,
                                                     size_t number_arguments_deleted, size_t number_arguments_inserted, size_t number_arguments_modified,
                                                     size_t number_argument_lists_modified,
-                                                    bool identifier_rename_only, const std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) {
+                                                    bool identifier_rename_only, const std::set<std::reference_wrapper<const versioned_string>, ref_version_string_compare> & identifier_renames) {
 
     assert(typeid(*profile.get()) == typeid(expr_stmt_profile_t));
 
@@ -1082,7 +1076,7 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
 
         if(decl_stmt_profile->type->syntax_count > 0) {
 
-            std::set<std::reference_wrapper<const versioned_string>> identifier_renames;
+            std::set<std::reference_wrapper<const versioned_string>, ref_version_string_compare> identifier_renames;
             bool is_identifier_only = identifier_check(decl_stmt_profile->type, identifier_set, identifier_renames);
 
             if(!is_identifier_only || identifier_renames.size() != 0)

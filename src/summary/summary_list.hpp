@@ -18,6 +18,16 @@ class summary_list {
 
 public:
 
+struct ref_version_string_compare {
+
+    bool operator()(const std::reference_wrapper<const versioned_string> & ref_one, const std::reference_wrapper<const versioned_string> & ref_two) {
+
+        return ref_one.get() < ref_two.get();
+
+    }
+
+};
+
 private:
 
 protected:
@@ -43,10 +53,10 @@ private:
     void else_clause(const std::shared_ptr<profile_t> & profile);
     void conditional(const std::shared_ptr<profile_t> & profile);
     bool identifier_check(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, std::multiset<versioned_string>> & identifier_set,
-                          std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
+                          std::set<std::reference_wrapper<const versioned_string>, ref_version_string_compare> & identifier_renames) const;
     void ternary(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, std::multiset<versioned_string>> & identifier_set,
                  bool & condition_modified, bool & then_clause_modified, bool & else_clause_modified,
-                 std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
+                 std::set<std::reference_wrapper<const versioned_string>, ref_version_string_compare> & identifier_renames) const;
     void expr_statistics(const std::shared_ptr<profile_t> & profile, const std::map<versioned_string, std::multiset<versioned_string>> & identifier_set,
                          std::vector<std::shared_ptr<call_profile_t>> & deleted_calls,
                          std::vector<std::shared_ptr<call_profile_t>> & inserted_calls,
@@ -60,12 +70,12 @@ private:
                          size_t & number_arguments_inserted,
                          size_t & number_arguments_modified,
                          bool & identifier_rename_only,
-                         std::set<std::reference_wrapper<const versioned_string>> & identifier_renames) const;
+                         std::set<std::reference_wrapper<const versioned_string>, ref_version_string_compare> & identifier_renames) const;
     void common_expr_stmt(const std::shared_ptr<profile_t> & expr_stmt_profile);
     void call_sequence(const std::shared_ptr<profile_t> & profile, size_t number_rename,
                                           size_t number_arguments_deleted, size_t number_arguments_inserted, size_t numbe_arguments_modified,
                                           size_t number_argument_lists_modified,
-                                          bool identifier_rename_only, const std::set<std::reference_wrapper<const versioned_string>> & identifier_renames);
+                                          bool identifier_rename_only, const std::set<std::reference_wrapper<const versioned_string>, ref_version_string_compare> & identifier_renames);
     void expr_stmt(const std::shared_ptr<profile_t> & profile);
     void decl_stmt(const std::shared_ptr<profile_t> & profile);
     void exception(const std::shared_ptr<profile_t> & profile);
