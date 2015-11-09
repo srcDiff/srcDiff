@@ -20,7 +20,7 @@ public:
 
 struct ref_version_string_compare {
 
-    bool operator()(const std::reference_wrapper<const versioned_string> & ref_one, const std::reference_wrapper<const versioned_string> & ref_two) {
+    bool operator()(const std::reference_wrapper<const versioned_string> & ref_one, const std::reference_wrapper<const versioned_string> & ref_two) const {
 
         return ref_one.get() < ref_two.get();
 
