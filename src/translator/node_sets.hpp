@@ -13,7 +13,7 @@ private:
 
 	const srcml_nodes & nodes;
 
-	static bool is_non_white_space(size_t node_pos, const srcml_nodes & nodes, const void * context UNUSED) {
+	static bool is_non_white_space(int & node_pos, const srcml_nodes & nodes, const void * context UNUSED) {
 
 		const std::shared_ptr<srcml_node> & node = nodes[node_pos];
 
@@ -22,7 +22,7 @@ private:
 
 	}
 
-	typedef bool (*node_set_filter)(size_t node_pos, const srcml_nodes & nodes, const void * context);
+	typedef std::function<bool (int & node_pos, const srcml_nodes & nodes, const void * context)> node_set_filter;
 
 public:
 
@@ -49,7 +49,7 @@ public:
 	~node_sets() {}
 		
 	// create the node sets for shortest edit script
-	node_sets(const srcml_nodes & nodes, int start, int end, node_set_filter filter = is_non_white_space, const void * context = 0) : nodes(nodes) {
+	node_sets(const srcml_nodes & nodes, int start, int end, const node_set_filter & filter = is_non_white_space, const void * context = 0) : nodes(nodes) {
 
 	  // runs on a subset of base array
 	  for(int i = start; i < end; ++i) {

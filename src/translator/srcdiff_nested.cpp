@@ -119,7 +119,7 @@ bool is_nest_type(const node_set & structure, const srcml_nodes & nodes
   return false;
 }
 
-bool srcdiff_nested::is_match(size_t node_pos, const srcml_nodes & nodes, const void * context) {
+bool srcdiff_nested::is_match(int & node_pos, const srcml_nodes & nodes, const void * context) {
 
   const std::shared_ptr<srcml_node> & node = nodes[node_pos];
 
