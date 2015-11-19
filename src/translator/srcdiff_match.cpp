@@ -637,6 +637,8 @@ std::string get_for_condition(const srcml_nodes & nodes, int start_pos) {
 
   }
 
+  --control_end_pos;
+
   node_sets control_sets = node_sets(nodes, control_start_pos + 1, control_end_pos);
 
   node_sets::const_iterator citr;
