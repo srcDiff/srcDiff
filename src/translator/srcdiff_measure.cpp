@@ -246,7 +246,7 @@ static bool is_significant(int & node_pos, const srcml_nodes & nodes, const void
 
   if(node->name == "argument_list") {
 
-    size_t pos = node_pos + 1;
+    int pos = node_pos + 1;
     while(pos < nodes.size() && (nodes[pos]->type == XML_READER_TYPE_ELEMENT || nodes[pos]->name != "argument_list")) {
 
       if(!nodes[pos]->is_text()) return true;
@@ -254,6 +254,8 @@ static bool is_significant(int & node_pos, const srcml_nodes & nodes, const void
       ++pos;
 
     }
+
+    node_pos = pos;
 
     return false;
 
