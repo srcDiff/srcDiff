@@ -915,7 +915,6 @@ void srcdiff_nested::output() {
     }
 
     node_sets set = node_sets(out.get_nodes_original(),
-      //node_sets_original.at(start_original).at(1),
       end_pos,
       node_sets_original.at(end_original - 1).back());
 
@@ -964,7 +963,6 @@ void srcdiff_nested::output() {
     }
 
     node_sets set = node_sets(out.get_nodes_modified(),
-      //node_sets_original.at(start_original).at(1),
       end_pos,
       node_sets_modified.at(end_modified - 1).back());
 
