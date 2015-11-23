@@ -637,6 +637,8 @@ std::string get_for_condition(const srcml_nodes & nodes, int start_pos) {
 
   }
 
+  --control_end_pos;
+
   node_sets control_sets = node_sets(nodes, control_start_pos + 1, control_end_pos);
 
   node_sets::const_iterator citr;
@@ -1067,7 +1069,6 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
         srcdiff_nested::check_nestable(node_sets_original, nodes_original, 0, node_sets_original.size(), node_sets_modified, nodes_modified, 0, 1,
                       start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
 
-
         is_reject = !(operation == SES_INSERT);
 
       } else {
@@ -1078,7 +1079,6 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
         int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
         srcdiff_nested::check_nestable(node_sets_original, nodes_original, 0, 1, node_sets_modified, nodes_modified, 0, node_sets_modified.size(),
                       start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
-
 
         is_reject = !(operation == SES_DELETE);
 
