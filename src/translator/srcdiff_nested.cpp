@@ -888,42 +888,43 @@ void srcdiff_nested::output() {
 
   if(operation == SES_DELETE) {
 
-    unsigned int end_pos = node_sets_original.at(start_original).at(1);
+    unsigned int start_pos = node_sets_original.at(start_original).at(1);
 
-    if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "if"|| out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "elseif") {
+    if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "if" || out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "elseif") {
 
-        while(!(out.get_nodes_original().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-          && out.get_nodes_original().at(end_pos)->name == "then"))
-          ++end_pos;
+        while(!(out.get_nodes_original().at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+          && out.get_nodes_original().at(start_pos)->name == "then"))
+          ++start_pos;
 
     } else if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "while") {
 
-        while(!(out.get_nodes_original().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && out.get_nodes_original().at(end_pos)->name == "condition"))
-          ++end_pos;
+        while(!(out.get_nodes_original().at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+          && out.get_nodes_original().at(start_pos)->name == "condition"))
+          ++start_pos;
 
-        ++end_pos;
+        ++start_pos;
 
     } else if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "for") {
 
-        while(!(out.get_nodes_original().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && out.get_nodes_original().at(end_pos)->name == "control"))
-          ++end_pos;
+        while(!(out.get_nodes_original().at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+          && out.get_nodes_original().at(start_pos)->name == "control"))
+          ++start_pos;
 
-        ++end_pos;
+        ++start_pos;
 
     }
 
+    size_t end_pos = node_sets_original.at(end_original - 1).back();
+
     node_sets set = node_sets(out.get_nodes_original(),
-      end_pos,
-      node_sets_original.at(end_original - 1).back());
+                              start_pos, end_pos);
 
     node_sets nest_set(out.get_nodes_modified());
 
     for(int i = start_modified; i < end_modified; ++i)
         nest_set.push_back(node_sets_modified.at(i));
 
-      output_change(end_pos, out.last_output_modified());
+      output_change(start_pos, out.last_output_modified());
 
       whitespace.output_nested(SES_DELETE);
 
@@ -936,42 +937,43 @@ void srcdiff_nested::output() {
 
   } else {
 
-    unsigned int end_pos = node_sets_modified.at(start_modified).at(1);
+    unsigned int start_pos = node_sets_modified.at(start_modified).at(1);
 
-    if(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "if"|| out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "elseif") {
+    if(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "if" || out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "elseif") {
 
-        while(!(out.get_nodes_modified().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-          && out.get_nodes_modified().at(end_pos)->name == "then"))
-          ++end_pos;
+        while(!(out.get_nodes_modified().at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+          && out.get_nodes_modified().at(start_pos)->name == "then"))
+          ++start_pos;
 
     } else if(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "while") {
 
-        while(!(out.get_nodes_modified().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && out.get_nodes_modified().at(end_pos)->name == "condition"))
-          ++end_pos;
+        while(!(out.get_nodes_modified().at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+          && out.get_nodes_modified().at(start_pos)->name == "condition"))
+          ++start_pos;
 
-        ++end_pos;
+        ++start_pos;
 
     } else if(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "for") {
 
-        while(!(out.get_nodes_modified().at(end_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && out.get_nodes_modified().at(end_pos)->name == "control"))
-          ++end_pos;
+        while(!(out.get_nodes_modified().at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+          && out.get_nodes_modified().at(start_pos)->name == "control"))
+          ++start_pos;
 
-        ++end_pos;
+        ++start_pos;
 
     }
 
+    size_t end_pos = node_sets_modified.at(end_modified - 1).back();
+
     node_sets set = node_sets(out.get_nodes_modified(),
-      end_pos,
-      node_sets_modified.at(end_modified - 1).back());
+                              start_pos, end_pos);
 
     node_sets nest_set(out.get_nodes_original());
 
     for(int i = start_original; i < end_original; ++i)
         nest_set.push_back(node_sets_original.at(i));
 
-      output_change(out.last_output_original(), end_pos);
+      output_change(out.last_output_original(), start_pos);
 
       whitespace.output_nested(SES_INSERT);
 
