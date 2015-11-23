@@ -915,6 +915,12 @@ void srcdiff_nested::output() {
     }
 
     size_t end_pos = node_sets_original.at(end_original - 1).back();
+    if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "elseif") {
+
+      while(end_pos > start_pos && out.get_nodes_original().at(end_pos)->name != "if")
+        --end_pos;
+
+    }
 
     node_sets set = node_sets(out.get_nodes_original(),
                               start_pos, end_pos);
@@ -964,6 +970,12 @@ void srcdiff_nested::output() {
     }
 
     size_t end_pos = node_sets_modified.at(end_modified - 1).back();
+    if(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "elseif") {
+
+      while(end_pos > start_pos && out.get_nodes_modified().at(end_pos)->name != "if")
+        --end_pos;
+
+    }
 
     node_sets set = node_sets(out.get_nodes_modified(),
                               start_pos, end_pos);
