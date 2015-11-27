@@ -17,7 +17,7 @@ error_filename_extension = ".txt"
 
 FIELD_WIDTH_LANGUAGE   = 11
 FIELD_WIDTH_URL        = 20
-FIELD_WIDTH_TEST_CASES = 52
+FIELD_WIDTH_TEST_CASES = 60
 
 sperrorlist = []
 
@@ -400,7 +400,7 @@ try :
 							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_URL), " ",
 							line_count = 0
 
-						line_count = get_updated_line_count(count, line_count)
+						line_count = get_updated_line_count(test_number, line_count)
 
 						if result != "" :
 
@@ -419,7 +419,7 @@ try :
 							continue
 
 						# total count of test cases
-						total_count = total_count + 1
+						total_count += 1
 
 						# convert the unit in xml to text
 						unitxml = switch_differences(unitxml)
@@ -437,13 +437,15 @@ try :
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefault_xmlns(get_full_xmlns(unitxml)))
 						
+						test_number += 1
+
 						# find the difference
 						result = linediff(unitxml, unitsrcml)
 						if line_count > FIELD_WIDTH_TEST_CASES :
 							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_URL), " ",
 							line_count = 0
 
-						line_count = get_updated_line_count(count, line_count)
+						line_count = get_updated_line_count(test_number, line_count)
 
 						if result != "" :
 
