@@ -5,4 +5,8 @@
 <return>return <expr><call><name><name>sb</name><operator>.</operator><name>toString</name></name><argument_list>()</argument_list></call><diff:delete><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><call><name><name>ToStringUtils</name><operator>.</operator><name>boost</name></name><argument_list>(<argument><expr><call><name>getBoost</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></diff:delete></expr>;</return>
 </unit>
 
+<unit language="Java" filename="return|return">
+<return>return <diff:delete type="replace"><expr><call><name><name>Objects</name><operator>.</operator><name>hash</name></name><argument_list>(<argument><expr><call><name>getClass</name><argument_list>()</argument_list></call></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>query</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><call><name>getBoost</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</diff:delete><diff:insert type="replace"><expr><literal type="number">31</literal><diff:ws> </diff:ws><operator>*</operator><diff:ws> </diff:ws><call><name><name>super</name><operator>.</operator><name>hashCode</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><call><name><name>query</name><operator>.</operator><name>hashCode</name></name><argument_list>()</argument_list></call></expr>;</diff:insert></return>
+</unit>
+
 </unit>
