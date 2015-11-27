@@ -84,13 +84,23 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
     }
 
     if(start_original == end_original && start_original >= 0 && end_original < (signed)node_sets_original.size()
-      && start_modified == end_modified && start_modified >= 0 && end_modified < (signed)node_sets_modified.size()
-      && is_identifier(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name)
-      && !out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->is_simple
-      && is_identifier(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name)
-      && !out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->is_simple)
-      output_replace_inner_whitespace(node_sets_original.at(start_original).at(0), finish_original,
-                                      node_sets_modified.at(start_modified).at(0), finish_modified);
+      && start_modified == end_modified && start_modified >= 0 && end_modified < (signed)node_sets_modified.size()) {
+
+      if(is_identifier(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name)
+         && !out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->is_simple
+         && is_identifier(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name)
+         && !out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->is_simple)
+         output_replace_inner_whitespace(node_sets_original.at(start_original).at(0), finish_original,
+                                         node_sets_modified.at(start_modified).at(0), finish_modified,
+                                         1);
+
+       if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "return"
+          && out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "return")
+          output_replace_inner_whitespace(node_sets_original.at(start_original).at(0), finish_original,
+                                          node_sets_modified.at(start_modified).at(0), finish_modified,
+                                          2);
+
+    }
 
     output_change_whitespace(finish_original, finish_modified);
               

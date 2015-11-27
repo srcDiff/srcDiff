@@ -147,7 +147,7 @@ void srcdiff_diff::output_common(int end_original, int end_modified) {
 void srcdiff_diff::output_pure(int end_original, int end_modified) {
 
   srcdiff_change pure(out, end_original, end_modified);
-  pure.output_whitespace();
+  pure.output_whitespace_prefix();
   pure.output();
 
 }
@@ -169,22 +169,29 @@ void srcdiff_diff::output_whitespace() {
 void srcdiff_diff::output_change_whitespace(int end_original, int end_modified) {
 
   srcdiff_change change(out, end_original, end_modified);
-  change.output_whitespace();
+  change.output_whitespace_prefix();
   change.output();
 
 }
 
 void srcdiff_diff::output_replace_inner_whitespace(int start_original, int end_original,
-                                                   int start_modified, int end_modified) {
+                                                   int start_modified, int end_modified,
+                                                   int common_offset) {
+
 
   srcdiff_change change(out, end_original - 1, end_modified - 1);
-  change.output_whitespace();
+  change.output_whitespace_all();
 
   out.output_node(out.diff_common_start, SES_COMMON);
-  out.output_node(out.get_nodes_original().at(start_original), SES_COMMON);
-  ++out.last_output_original();
-  ++out.last_output_modified();
+  for(int i = 0; i < common_offset; ++i) {
 
+    out.output_node(out.get_nodes_original().at(start_original + i), SES_COMMON);
+    ++out.last_output_original();
+    ++out.last_output_modified();
+
+  }
+
+  change.output_whitespace_prefix();
   change.output();
 
   output_common(end_original, end_modified);

@@ -20,6 +20,18 @@ srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_orig
 
 /*
 
+  Output all prepending whitespace as part of a change.
+
+*/
+void srcdiff_change::output_whitespace_all() {
+
+  srcdiff_whitespace whitespace(*this);
+  whitespace.output_all();
+
+}
+
+/*
+
   Adds whitespace to a change. Then outputs the change.
 
   All preceeding unused whitespace must be included, and all whitespace
@@ -27,7 +39,7 @@ srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_orig
   it is included and the following nodes are included if they have a new line.
 
 */
-void srcdiff_change::output_whitespace() {
+void srcdiff_change::output_whitespace_prefix() {
 
   srcdiff_whitespace whitespace(*this);
   whitespace.output_prefix();
