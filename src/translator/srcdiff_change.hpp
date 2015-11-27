@@ -16,7 +16,8 @@ public:
 
 	srcdiff_change(const srcdiff_output & out, unsigned int end_original, unsigned int end_modified);
 
-	virtual void output_whitespace();
+	virtual void output_whitespace_all();
+	virtual void output_whitespace_prefix();
 	virtual void output();
 
 };
