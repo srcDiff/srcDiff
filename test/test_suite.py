@@ -14,9 +14,11 @@ from datetime import datetime, time
 
 error_filename = "srcDiffTestReport"
 error_filename_extension = ".txt"
-FIELD_WIDTH_LANGUAGE = 11
 
-FIELD_WIDTH_URL = 27
+FIELD_WIDTH_LANGUAGE   = 11
+FIELD_WIDTH_URL        = 20
+FIELD_WIDTH_TEST_CASES = 52
+
 sperrorlist = []
 
 srcml_client = "srcml"
@@ -393,7 +395,7 @@ try :
 						
 						# find the difference
 						result = linediff(unitxml, unitsrcml)
-						if line_count > 75 :
+						if line_count > FIELD_WIDTH_TEST_CASES :
 
 							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_URL), " ",
 							line_count = 0
@@ -437,7 +439,7 @@ try :
 						
 						# find the difference
 						result = linediff(unitxml, unitsrcml)
-						if line_count > 75 :
+						if line_count > FIELD_WIDTH_TEST_CASES :
 							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_URL), " ",
 							line_count = 0
 
