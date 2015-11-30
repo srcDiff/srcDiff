@@ -87,9 +87,7 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
       && start_modified == end_modified && start_modified >= 0 && end_modified < (signed)node_sets_modified.size()) {
 
       if(is_identifier(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name)
-         && !out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->is_simple
-         && is_identifier(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name)
-         && !out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->is_simple)
+         && is_identifier(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name))
          output_replace_inner_whitespace(node_sets_original.at(start_original).at(0), finish_original,
                                          node_sets_modified.at(start_modified).at(0), finish_modified,
                                          1);
