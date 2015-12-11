@@ -11,13 +11,16 @@ import re
 import subprocess
 import difflib
 from datetime import datetime, time
+import commands
 
 error_filename = "srcDiffTestReport"
 error_filename_extension = ".txt"
 
-FIELD_WIDTH_LANGUAGE   = 11
+SHELL_ROWS, SHELL_COLUMNS = commands.getoutput('stty size').split(' ')
+
+FIELD_WIDTH_LANGUAGE   = 12
 FIELD_WIDTH_URL        = 20
-FIELD_WIDTH_TEST_CASES = 60
+FIELD_WIDTH_TEST_CASES = int(SHELL_COLUMNS) - (FIELD_WIDTH_LANGUAGE + 1) - (FIELD_WIDTH_URL + 1)
 
 sperrorlist = []
 
@@ -193,15 +196,15 @@ def get_nested(xml_file) :
 	else :
 		return 0
 
-def get_updated_line_count(count, line_count) :
+def get_line_count(count) :
 
 	# adjust for count width
 	if count > 99 :
-		line_count += 3
+		line_count = 3
 	elif count > 9 :
-		line_count += 2
+		line_count = 2
 	else :
-		line_count += 1
+		line_count = 1
 
 	# space after count
 	line_count += 1
@@ -370,7 +373,7 @@ try :
 						
 							# output language and url
 							print
-							print language.ljust(FIELD_WIDTH_LANGUAGE), " ", url.ljust(FIELD_WIDTH_URL), " ",
+							print language.ljust(FIELD_WIDTH_LANGUAGE), url.ljust(FIELD_WIDTH_URL),
 
 						# total count of test cases
 						total_count = total_count + 1
@@ -395,12 +398,10 @@ try :
 						
 						# find the difference
 						result = linediff(unitxml, unitsrcml)
+						line_count += get_line_count(test_number)
 						if line_count > FIELD_WIDTH_TEST_CASES :
-
-							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_URL), " ",
-							line_count = 0
-
-						line_count = get_updated_line_count(test_number, line_count)
+							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), "...".ljust(FIELD_WIDTH_URL),
+							line_count = get_line_count(test_number)
 
 						if result != "" :
 
@@ -441,11 +442,10 @@ try :
 
 						# find the difference
 						result = linediff(unitxml, unitsrcml)
+						line_count += get_line_count(test_number)
 						if line_count > FIELD_WIDTH_TEST_CASES :
-							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), " ", "...".ljust(FIELD_WIDTH_URL), " ",
-							line_count = 0
-
-						line_count = get_updated_line_count(test_number, line_count)
+							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), "...".ljust(FIELD_WIDTH_URL),
+							line_count = get_line_count(test_number)
 
 						if result != "" :
 
