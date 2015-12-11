@@ -200,7 +200,9 @@ srcml_nodes srcml_converter::create_nodes() const {
 static bool is_separate_token(const char character) {
 
 
-  return character == '(' || character ==')' || character == '[' || character == ']' || character == ',' || character == '"' || character == '\'' || character == '\\';
+  return character == '(' || character ==')'  || character == '['  || character == ']'
+      || character == ',' || character == '"' || character == '\'' || character == '\\'
+      || character == ';';
 
 }
 
