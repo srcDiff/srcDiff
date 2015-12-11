@@ -196,20 +196,20 @@ def get_nested(xml_file) :
 	else :
 		return 0
 
-def get_line_count(count) :
+def get_character_count(count) :
 
 	# adjust for count width
 	if count > 99 :
-		line_count = 3
+		character_count = 3
 	elif count > 9 :
-		line_count = 2
+		character_count = 2
 	else :
-		line_count = 1
+		character_count = 1
 
 	# space after count
-	line_count += 1
+	character_count += 1
 
-	return line_count
+	return character_count
 
 class Tee(object) :
 	def __init__(self, name) :
@@ -342,7 +342,7 @@ try :
 
 				get_language = True				
 
-				line_count = 0
+				character_count = 0
 				while count == 0 or count < number :
 
 					try : 
@@ -398,10 +398,10 @@ try :
 						
 						# find the difference
 						result = linediff(unitxml, unitsrcml)
-						line_count += get_line_count(test_number)
-						if line_count > FIELD_WIDTH_TEST_CASES :
+						character_count += get_character_count(test_number)
+						if character_count > FIELD_WIDTH_TEST_CASES :
 							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), "...".ljust(FIELD_WIDTH_URL),
-							line_count = get_line_count(test_number)
+							character_count = get_character_count(test_number)
 
 						if result != "" :
 
@@ -442,10 +442,10 @@ try :
 
 						# find the difference
 						result = linediff(unitxml, unitsrcml)
-						line_count += get_line_count(test_number)
-						if line_count > FIELD_WIDTH_TEST_CASES :
+						character_count += get_character_count(test_number)
+						if character_count > FIELD_WIDTH_TEST_CASES :
 							print "\n", "".rjust(FIELD_WIDTH_LANGUAGE), "...".ljust(FIELD_WIDTH_URL),
-							line_count = get_line_count(test_number)
+							character_count = get_character_count(test_number)
 
 						if result != "" :
 
