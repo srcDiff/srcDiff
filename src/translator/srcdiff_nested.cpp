@@ -775,9 +775,8 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
         int similarity, difference, text_original_length, text_modified_length;
         measure.compute_measures(similarity, difference, text_original_length, text_modified_length);
 
-        if(reject_match_nested(similarity, difference, text_original_length, text_modified_length,
-          nodes_original, node_sets_original.at(j), nodes_modified, set.at(match))
-          || (i + 1 < end_modified && is_better_nest(nodes_modified, node_sets_modified.at(i + 1), nodes_original, node_sets_original.at(j), similarity, difference, text_modified_length, text_original_length)))
+        if(check_nestable_predicate(similarity, difference, text_modified_length, text_original_length,
+           set.at(match), nodes_modified, node_sets_modified, i, end_modified, nodes_original, node_sets_original, j, end_original))
           continue;
 
         if(nodes_original.at(node_sets_original.at(j).at(0))->name == "name"
@@ -826,9 +825,8 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
             int similarity, difference, text_original_length, text_modified_length;
             measure.compute_measures(similarity, difference, text_original_length, text_modified_length);
 
-            if(reject_match_nested(similarity, difference, text_original_length, text_modified_length,
-              nodes_original, node_sets_original.at(k), nodes_modified, set.at(match))
-              || (i + 1 < end_modified && is_better_nest(nodes_modified, node_sets_modified.at(i + 1), nodes_original, node_sets_original.at(k), similarity, difference, text_modified_length, text_original_length)))
+            if(check_nestable_predicate(similarity, difference, text_modified_length, text_original_length,
+               set.at(match), nodes_modified, node_sets_modified, i, end_modified, nodes_original, node_sets_original, k, end_original))
               continue;
 
             if(nodes_original.at(node_sets_original.at(k).at(0))->name == "name" 
