@@ -15,6 +15,10 @@ protected:
 
 private:
 
+static bool check_nestable_predicate(int similarity, int difference, int text_outer_length, int text_inner_length,
+                                     const node_set & match,
+                                     const srcml_nodes & nodes_outer, const node_sets & node_sets_outer, int pos_outer, int end_outer,
+                                     const srcml_nodes & nodes_inner, const node_sets & node_sets_inner, int pos_inner, int end_inner);
 public:
 
   static bool is_match(int & node_pos, const srcml_nodes & nodes, const void * context);
