@@ -712,12 +712,8 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
           int similarity, difference, text_original_length, text_modified_length;
           measure.compute_measures(similarity, difference, text_original_length, text_modified_length);
 
-          if(reject_match_nested(similarity, difference, text_original_length, text_modified_length,
-            nodes_original, set.at(match), nodes_modified, node_sets_modified.at(k))
-          || is_better_nest(nodes_modified, node_sets_modified.at(k), nodes_original, node_sets_original.at(i), similarity, difference, text_modified_length, text_original_length)
-          || (i + 1 < end_original && is_better_nest(nodes_original, node_sets_original.at(i + 1), nodes_modified, node_sets_modified.at(k), similarity, difference, text_original_length, text_modified_length))
-          || (k + 1 < end_modified && is_better_nest(nodes_modified, node_sets_modified.at(k + 1), nodes_original, node_sets_original.at(i), similarity, difference, text_modified_length, text_original_length))
-          )
+          if(check_nestable_predicate(similarity, difference, text_original_length, text_modified_length,
+             set.at(match), nodes_original, node_sets_original, i, end_original, nodes_modified, node_sets_modified, k, end_modified))
             continue;
 
           if(nodes_modified.at(node_sets_modified.at(k).at(0))->name == "name"
