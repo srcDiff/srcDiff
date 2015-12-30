@@ -151,19 +151,19 @@ void option_field(const std::string & arg) { options.*field = arg; }
 
 #ifndef _MSC_BUILD
 template<>
-void option_field<&srcdiff_options::bash_view_context>(const std::string & arg) {
+void option_field<&srcdiff_options::unified_view_context>(const std::string & arg) {
 
   try {
 
-    options.bash_view_context = (size_t)std::stoll(arg);
+    options.unified_view_context = (size_t)std::stoll(arg);
 
   } catch(std::invalid_argument) {
 
-    options.bash_view_context = arg;
+    options.unified_view_context = arg;
 
   }
 
-  options.flags |= OPTION_BASH_VIEW;
+  options.flags |= OPTION_UNIFIED_VIEW;
 
 }
 
@@ -416,8 +416,8 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("srcml", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCML>), "Also, output the original and modified srcML of each file when burst enabled")
 
 #ifndef _MSC_BUILD
-    ("bash", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::bash_view_context>),
-        "Output as colorized bash text with provided context. Number is lines of context, 'all' or -1 for entire file, 'function' for encompasing function (default = 3)")
+    ("unified", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::unified_view_context>),
+        "Output as colorized unified diff with provided context. Number is lines of context, 'all' or -1 for entire file, 'function' for encompasing function (default = 3)")
     ("summary", boost::program_options::value<std::string>()->implicit_value("text")->notifier(option_field<&srcdiff_options::summary_type_str>),
         "Output a summary of the differences.  Options 'text' and/or 'table' summary.   Default 'text'  ")
 #endif

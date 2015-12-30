@@ -59,7 +59,7 @@ public:
   // constructor
   srcdiff_translator(const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method, srcml_archive * archive,
                      const boost::optional<std::string> & unit_filename,
-                     const boost::any & bash_view_context, const boost::optional<std::string> & summary_type_str);
+                     const boost::any & unified_view_context, const boost::optional<std::string> & summary_type_str);
 
   // destructor
   ~srcdiff_translator();

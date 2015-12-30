@@ -67,7 +67,7 @@ const OPTION_TYPE OPTION_SVN            = ull(1) << __COUNTER__;
 const OPTION_TYPE OPTION_RECURSIVE      = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_BASH_VIEW      = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_UNIFIED_VIEW   = ull(1) << __COUNTER__;
 
 // @srcdiff
 const OPTION_TYPE OPTION_SUMMARY        = ull(1) << __COUNTER__;
@@ -91,7 +91,7 @@ struct srcdiff_options
   OPTION_TYPE flags;
   METHOD_TYPE methods;
 
-  boost::any bash_view_context;
+  boost::any unified_view_context;
   boost::optional<std::string> summary_type_str;
 
 #if SVN

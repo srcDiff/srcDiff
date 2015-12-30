@@ -27,8 +27,8 @@
 // constructor
 srcdiff_translator::srcdiff_translator(const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method, srcml_archive * archive,
                                        const boost::optional<std::string> & unit_filename,
-                                       const boost::any & bash_view_context, const boost::optional<std::string> & summary_type_str)
-  : archive(archive), flags(flags), output(archive, srcdiff_filename, flags, method, bash_view_context, summary_type_str),
+                                       const boost::any & unified_view_context, const boost::optional<std::string> & summary_type_str)
+  : archive(archive), flags(flags), output(archive, srcdiff_filename, flags, method, unified_view_context, summary_type_str),
     unit_filename(unit_filename) {}
 
 
