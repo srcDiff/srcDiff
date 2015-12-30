@@ -1,5 +1,5 @@
-#ifndef INCLUDED_BASH_VIEW_HPP
-#define INCLUDED_BASH_VIEW_HPP
+#ifndef INCLUDED_UNIFIED_VIEW_HPP
+#define INCLUDED_UNIFIED_VIEW_HPP
 
 #include <srcSAXHandler.hpp>
 
@@ -11,7 +11,7 @@
 #include <fstream>
 #include <iostream>
 
-class bash_view : public srcSAXHandler {
+class unified_view : public srcSAXHandler {
 
 private:
 
@@ -48,8 +48,8 @@ private:
 
 public:
 
-  bash_view(const std::string & output_filename, boost::any context_type);
-  ~bash_view();
+  unified_view(const std::string & output_filename, boost::any context_type);
+  ~unified_view();
 
   void transform(const std::string & srcdiff, const std::string & xml_encoding);
   void reset();

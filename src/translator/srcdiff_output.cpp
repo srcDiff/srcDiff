@@ -12,7 +12,7 @@ bool srcdiff_output::delay = false;
 int srcdiff_output::delay_operation = -2;
 
 srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method,
-  const boost::any & bash_view_context, const boost::optional<std::string> & summary_type_str)
+  const boost::any & unified_view_context, const boost::optional<std::string> & summary_type_str)
  : archive(archive), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcml_node::srcml_ns>()) {
@@ -32,7 +32,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
   } else if(is_option(flags, OPTION_BASH_VIEW)) {
 
-     bashview = std::make_shared<bash_view>(srcdiff_filename, bash_view_context);
+     unifiedview = std::make_shared<unified_view>(srcdiff_filename, unified_view_context);
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
 
