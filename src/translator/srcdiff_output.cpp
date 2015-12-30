@@ -12,12 +12,12 @@ bool srcdiff_output::delay = false;
 int srcdiff_output::delay_operation = -2;
 
 srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method,
-  const boost::any & bash_view_context, const boost::optional<std::string> & summary_type_str)
+  const boost::any & unified_view_context, const boost::optional<std::string> & summary_type_str)
  : archive(archive), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcml_node::srcml_ns>()) {
 
-  if(!is_option(flags, OPTION_VISUALIZE | OPTION_BASH_VIEW | OPTION_SUMMARY | OPTION_BURST)) {
+  if(!is_option(flags, OPTION_VISUALIZE | OPTION_UNIFIED_VIEW | OPTION_SUMMARY | OPTION_BURST)) {
 
       int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str(), 0);
       if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
@@ -30,9 +30,9 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
     const std::string version = srcml_archive_get_version(archive) ? srcml_archive_get_version(archive) : "";
     colordiff = std::make_shared<color_diff>(srcdiff_filename, url, version, flags);
 
-  } else if(is_option(flags, OPTION_BASH_VIEW)) {
+  } else if(is_option(flags, OPTION_UNIFIED_VIEW)) {
 
-     bashview = std::make_shared<bash_view>(srcdiff_filename, bash_view_context);
+     unifiedview = std::make_shared<unified_view>(srcdiff_filename, unified_view_context);
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
 
@@ -154,7 +154,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
 void srcdiff_output::close() {
 
-  if(!is_option(flags, OPTION_VISUALIZE | OPTION_BASH_VIEW | OPTION_SUMMARY)) {
+  if(!is_option(flags, OPTION_VISUALIZE | OPTION_UNIFIED_VIEW | OPTION_SUMMARY)) {
 
     srcml_archive_close(archive);
 

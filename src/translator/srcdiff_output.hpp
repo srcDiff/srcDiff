@@ -4,7 +4,7 @@
 #include <srcml_nodes.hpp>
 #include <line_diff_range.hpp>
 #include <color_diff.hpp>
-#include <bash_view.hpp>
+#include <unified_view.hpp>
 
 #ifndef _MSC_BUILD
 #include <srcdiff_summary.hpp>
@@ -101,7 +101,7 @@ protected:
   std::shared_ptr<writer_state> wstate;
 
   std::shared_ptr<color_diff> colordiff;
-  std::shared_ptr<bash_view> bashview;
+  std::shared_ptr<unified_view> unifiedview;
 
 #ifndef _MSC_BUILD
   std::shared_ptr<srcdiff_summary> summary;
@@ -137,7 +137,7 @@ private:
 public:
 
   srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method,
-                 const boost::any & bash_view_context, const boost::optional<std::string> & summary_type_str);
+                 const boost::any & unified_view_context, const boost::optional<std::string> & summary_type_str);
   virtual ~srcdiff_output();
 
   virtual void initialize(int is_original, int is_modified);
@@ -184,12 +184,12 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
     colordiff->colorize(xml, line_diff_range);
     srcml_memory_free((char *)xml);
 
-  } else if(is_option(flags, OPTION_BASH_VIEW)) {
+  } else if(is_option(flags, OPTION_UNIFIED_VIEW)) {
 
     char * xml = 0;
     size_t size = 0;
     srcml_unit_get_xml_standalone(wstate->unit, "UTF-8", &xml, &size);
-    bashview->transform(xml, "UTF-8");
+    unifiedview->transform(xml, "UTF-8");
     srcml_memory_free((char *)xml);
 
   } else if(is_option(flags, OPTION_SUMMARY)) {

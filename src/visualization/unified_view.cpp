@@ -1,4 +1,4 @@
-#include <bash_view.hpp>
+#include <unified_view.hpp>
 
 #include <srcdiff_constants.hpp>
 
@@ -16,7 +16,7 @@ const char * const LINE_CODE = "\x1b[36m";
 
 const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
-bash_view::bash_view(const std::string & output_filename, boost::any context_type) : modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
+unified_view::unified_view(const std::string & output_filename, boost::any context_type) : modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
           is_after_change(false), wait_change(true), in_function(), context_type(context_type), length(0),
           is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
 
@@ -45,7 +45,7 @@ bash_view::bash_view(const std::string & output_filename, boost::any context_typ
 
 }
 
-bash_view::~bash_view() {
+unified_view::~unified_view() {
 
   if(output != &std::cout) {
 
@@ -56,7 +56,7 @@ bash_view::~bash_view() {
   
 }
 
-void bash_view::reset() {
+void unified_view::reset() {
 
   line_number_delete = 0;
   line_number_insert = 0;
@@ -72,7 +72,7 @@ void bash_view::reset() {
 
 }
 
-void bash_view::transform(const std::string & srcdiff, const std::string & xml_encoding) {
+void unified_view::transform(const std::string & srcdiff, const std::string & xml_encoding) {
 
   srcSAXController controller(srcdiff, xml_encoding.c_str());
 
@@ -82,7 +82,7 @@ void bash_view::transform(const std::string & srcdiff, const std::string & xml_e
 
 }
 
-bash_view::context_mode bash_view::context_string_to_id(const std::string & context_type_str) const {
+unified_view::context_mode unified_view::context_string_to_id(const std::string & context_type_str) const {
 
   if(context_type_str == "all")      return ALL;
   if(context_type_str == "function") return FUNCTION;
@@ -91,7 +91,7 @@ bash_view::context_mode bash_view::context_string_to_id(const std::string & cont
 
 }
 
-bool bash_view::in_mode(context_mode mode) {
+bool unified_view::in_mode(context_mode mode) {
 
   return mode & modes;
 
@@ -103,7 +103,7 @@ bool bash_view::in_mode(context_mode mode) {
  * SAX handler function for start of document.
  * Overide for desired behaviour.
  */
-void bash_view::startDocument() {}
+void unified_view::startDocument() {}
 
 /**
  * endDocument
@@ -111,7 +111,7 @@ void bash_view::startDocument() {}
  * SAX handler function for end of document.
  * Overide for desired behaviour.
  */
-void bash_view::endDocument() {}
+void unified_view::endDocument() {}
 
 /**
  * startRoot
@@ -126,7 +126,7 @@ void bash_view::endDocument() {}
  * SAX handler function for start of the root profile.
  * Overide for desired behaviour.
  */
-void bash_view::startRoot(const char * localname, const char * prefix, const char * URI,
+void unified_view::startRoot(const char * localname, const char * prefix, const char * URI,
                        int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                        const struct srcsax_attribute * attributes) {}
 
@@ -143,7 +143,7 @@ void bash_view::startRoot(const char * localname, const char * prefix, const cha
  * SAX handler function for start of an unit.
  * Overide for desired behaviour.
  */
-void bash_view::startUnit(const char * localname, const char * prefix, const char * URI,
+void unified_view::startUnit(const char * localname, const char * prefix, const char * URI,
                        int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                        const struct srcsax_attribute * attributes) {
 
@@ -164,7 +164,7 @@ void bash_view::startUnit(const char * localname, const char * prefix, const cha
  * SAX handler function for start of an profile.
  * Overide for desired behaviour.
  */
-void bash_view::startElement(const char * localname, const char * prefix, const char * URI,
+void unified_view::startElement(const char * localname, const char * prefix, const char * URI,
                             int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                             const struct srcsax_attribute * attributes) {
 
@@ -207,7 +207,7 @@ void bash_view::startElement(const char * localname, const char * prefix, const 
  * SAX handler function for end of the root profile.
  * Overide for desired behaviour.
  */
-void bash_view::endRoot(const char * localname, const char * prefix, const char * URI) {}
+void unified_view::endRoot(const char * localname, const char * prefix, const char * URI) {}
 
 /**
  * endUnit
@@ -218,7 +218,7 @@ void bash_view::endRoot(const char * localname, const char * prefix, const char 
  * SAX handler function for end of an unit.
  * Overide for desired behaviour.
  */
-void bash_view::endUnit(const char * localname, const char * prefix, const char * URI) {}
+void unified_view::endUnit(const char * localname, const char * prefix, const char * URI) {}
 
 /**
  * endElement
@@ -229,7 +229,7 @@ void bash_view::endUnit(const char * localname, const char * prefix, const char 
  * SAX handler function for end of an profile.
  * Overide for desired behaviour.
  */
-void bash_view::endElement(const char * localname, const char * prefix, const char * URI) {
+void unified_view::endElement(const char * localname, const char * prefix, const char * URI) {
 
     const std::string local_name(localname);
 
@@ -264,9 +264,9 @@ void bash_view::endElement(const char * localname, const char * prefix, const ch
  * SAX handler function for character handling at the root level.
  * Overide for desired behaviour.
  */
-void bash_view::charactersRoot(const char * ch, int len) {}
+void unified_view::charactersRoot(const char * ch, int len) {}
 
-void bash_view::output_additional_context() {
+void unified_view::output_additional_context() {
 
 
   size_t line_delete = line_number_delete + 1 - additional_context.size();
@@ -290,7 +290,7 @@ void bash_view::output_additional_context() {
 
 }
 
-void bash_view::characters(const char * ch, int len) {
+void unified_view::characters(const char * ch, int len) {
 
   const char * code = COMMON_CODE;
   if(diff_stack.back() == SES_DELETE) code = DELETE_CODE;
@@ -364,7 +364,7 @@ void bash_view::characters(const char * ch, int len) {
  * SAX handler function for character handling within a unit.
  * Overide for desired behaviour.
  */
-void bash_view::charactersUnit(const char * ch, int len) {
+void unified_view::charactersUnit(const char * ch, int len) {
 
   if(diff_stack.back() != SES_COMMON) {
 
