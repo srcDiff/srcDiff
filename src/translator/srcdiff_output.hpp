@@ -4,7 +4,7 @@
 #include <srcml_nodes.hpp>
 #include <line_diff_range.hpp>
 #include <color_diff.hpp>
-#include <bash_view.hpp>
+#include <unified_view.hpp>
 
 #ifndef _MSC_BUILD
 #include <srcdiff_summary.hpp>

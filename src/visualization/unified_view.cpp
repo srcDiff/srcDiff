@@ -1,4 +1,4 @@
-#include <bash_view.hpp>
+#include <unified_view.hpp>
 
 #include <srcdiff_constants.hpp>
 
