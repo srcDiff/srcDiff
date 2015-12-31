@@ -16,9 +16,14 @@ const char * const LINE_CODE = "\x1b[36m";
 
 const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
-unified_view::unified_view(const std::string & output_filename, boost::any context_type) : modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
-          is_after_change(false), wait_change(true), in_function(), context_type(context_type), length(0),
-          is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
+unified_view::unified_view(const std::string & output_filename, boost::any context_type,
+               bool ignore_whitespace, bool ignore_comments)
+              : ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
+                modes(LINE), line_number_delete(0), line_number_insert(0),
+                number_context_lines(3), is_after_change(false), wait_change(true),
+                in_function(), context_type(context_type), length(0), 
+                is_after_additional(false), after_edit_count(0),
+                last_context_line((unsigned)-1) {
 
   if(context_type.type() == typeid(size_t)) {
 
