@@ -6,6 +6,7 @@
 #include <libxml/parser.h>
 
 #include <iostream>
+#include <stdexcept>
 
 srcdiff_options options;
 
@@ -80,6 +81,41 @@ void option_input_file(const std::vector<std::string> & arg) {
     options.input_pairs.push_back(std::make_pair(arg[pos], arg[pos + 1]));
 
   if(options.input_pairs.size() > 1) srcml_archive_enable_full_archive(options.archive);
+
+}
+
+void option_dependency(const boost::program_options::variables_map & var_map,
+                       const std::string & dependent,
+                       const std::vector<std::string> & independent_list) {
+
+  if(var_map[dependent].defaulted()) return;
+
+  for(const std::string & independent : independent_list)
+    if(!(var_map[independent].empty())) return;
+
+  std::string what = "Option '--" + dependent + "' requires option";
+  if(independent_list.size() == 1) {
+
+    what += " '--" + independent_list[0] + '\'';
+
+  } else if(independent_list.size() == 2) {
+
+    what += " '--" + independent_list[0] + "' or '--" + independent_list[1] + '\'';
+
+  } else {
+
+    for(int pos = 0; pos < independent_list.size(); ++pos) {
+
+      if(pos != (independent_list.size() - 1))
+        what += " '--" + independent_list[pos] + "',";
+      else
+        what += " or '--" + independent_list[pos] + '\'';
+
+    }
+
+  }
+
+  throw std::invalid_argument(what);
 
 }
 
@@ -430,15 +466,27 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   input_file.add("input", -1);
   all.add(general).add(input_file_op).add(input_ops).add(srcml_ops).add(srcdiff_ops);
 
+  boost::program_options::variables_map var_map;
+
   try {
 
-    boost::program_options::variables_map var_map;
     boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(all).positional(input_file).extra_parser(parse_xmlns).run(), var_map);
     boost::program_options::notify(var_map);
 
-  } catch(boost::program_options::error e) {
+  } catch(const boost::program_options::error & e) {
 
     std::cerr << "Exception: " << e.what() << '\n';
+    exit(1);
+
+  }
+
+  try {
+
+    option_dependency(var_map, "ignore-all-space", std::vector<std::string>{"unified"});
+
+  } catch(const std::invalid_argument & e) {
+
+    std::cerr << e.what() << '\n';
     exit(1);
 
   }
