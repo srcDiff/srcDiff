@@ -49,6 +49,8 @@ private:
   size_t after_edit_count;
   size_t last_context_line;
 
+  bool in_comment;
+
 public:
 
   unified_view(const std::string & output_filename, boost::any context_type,

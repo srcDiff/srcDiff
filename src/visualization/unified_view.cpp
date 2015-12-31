@@ -23,7 +23,7 @@ unified_view::unified_view(const std::string & output_filename, boost::any conte
                 number_context_lines(3), is_after_change(false), wait_change(true),
                 in_function(), context_type(context_type), length(0), 
                 is_after_additional(false), after_edit_count(0),
-                last_context_line((unsigned)-1) {
+                last_context_line((unsigned)-1), in_comment(false) {
 
   if(context_type.type() == typeid(size_t)) {
 
@@ -73,6 +73,7 @@ void unified_view::reset() {
   is_after_additional = false;
   after_edit_count = 0;
   last_context_line = -1;
+  in_comment = false;
 
 
 }
@@ -177,14 +178,26 @@ void unified_view::startElement(const char * localname, const char * prefix, con
 
   if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
+    if(ignore_comments && in_comment) return;
+
     if(local_name == "common")
      diff_stack.push_back(SES_COMMON);
     else if(local_name == "delete")
      diff_stack.push_back(SES_DELETE);
     else if(local_name == "insert")
      diff_stack.push_back(SES_INSERT);
+    else if(local_name == "ws" && ignore_whitespace)
+      diff_stack.push_back(SES_COMMON);
     
   } else {
+
+    if(local_name == "comment") {
+
+      in_comment = true;
+      if(ignore_comments)
+        diff_stack.push_back(SES_COMMON);
+
+    }
 
     if(in_mode(FUNCTION) && is_function_type(local_name)) {
 
@@ -240,10 +253,21 @@ void unified_view::endElement(const char * localname, const char * prefix, const
 
     if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
-      if(local_name == "common" || local_name == "delete" || local_name == "insert")
+      if(ignore_comments && in_comment) return;
+
+      if(local_name == "common" || local_name == "delete" || local_name == "insert"
+        || (local_name == "ws" && ignore_whitespace))
         diff_stack.pop_back();
 
   } else {
+
+    if(local_name == "comment") {
+
+      in_comment = false;
+      if(ignore_comments)
+        diff_stack.pop_back();
+      
+    }
 
     if(in_mode(FUNCTION) && is_function_type(local_name)) {
 
