@@ -21,6 +21,9 @@ private:
   static const context_mode FUNCTION = 1 << 1;
   static const context_mode ALL      = 1 << 2;
 
+  bool ignore_whitespace;
+  bool ignore_comments;
+
   std::vector<int> diff_stack;
 
   std::ostream * output;
@@ -46,9 +49,12 @@ private:
   size_t after_edit_count;
   size_t last_context_line;
 
+  bool in_comment;
+
 public:
 
-  unified_view(const std::string & output_filename, boost::any context_type);
+  unified_view(const std::string & output_filename, boost::any context_type,
+               bool ignore_whitespace, bool ignore_comments);
   ~unified_view();
 
   void transform(const std::string & srcdiff, const std::string & xml_encoding);

@@ -16,9 +16,14 @@ const char * const LINE_CODE = "\x1b[36m";
 
 const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
-unified_view::unified_view(const std::string & output_filename, boost::any context_type) : modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
-          is_after_change(false), wait_change(true), in_function(), context_type(context_type), length(0),
-          is_after_additional(false), after_edit_count(0), last_context_line((unsigned)-1) {
+unified_view::unified_view(const std::string & output_filename, boost::any context_type,
+               bool ignore_whitespace, bool ignore_comments)
+              : ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
+                modes(LINE), line_number_delete(0), line_number_insert(0),
+                number_context_lines(3), is_after_change(false), wait_change(true),
+                in_function(), context_type(context_type), length(0), 
+                is_after_additional(false), after_edit_count(0),
+                last_context_line((unsigned)-1), in_comment(false) {
 
   if(context_type.type() == typeid(size_t)) {
 
@@ -68,6 +73,7 @@ void unified_view::reset() {
   is_after_additional = false;
   after_edit_count = 0;
   last_context_line = -1;
+  in_comment = false;
 
 
 }
@@ -172,14 +178,26 @@ void unified_view::startElement(const char * localname, const char * prefix, con
 
   if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
+    if(ignore_comments && in_comment) return;
+
     if(local_name == "common")
      diff_stack.push_back(SES_COMMON);
     else if(local_name == "delete")
      diff_stack.push_back(SES_DELETE);
     else if(local_name == "insert")
      diff_stack.push_back(SES_INSERT);
+    else if(local_name == "ws" && ignore_whitespace)
+      diff_stack.push_back(SES_COMMON);
     
   } else {
+
+    if(local_name == "comment") {
+
+      in_comment = true;
+      if(ignore_comments)
+        diff_stack.push_back(SES_COMMON);
+
+    }
 
     if(in_mode(FUNCTION) && is_function_type(local_name)) {
 
@@ -235,10 +253,21 @@ void unified_view::endElement(const char * localname, const char * prefix, const
 
     if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
-      if(local_name == "common" || local_name == "delete" || local_name == "insert")
+      if(ignore_comments && in_comment) return;
+
+      if(local_name == "common" || local_name == "delete" || local_name == "insert"
+        || (local_name == "ws" && ignore_whitespace))
         diff_stack.pop_back();
 
   } else {
+
+    if(local_name == "comment") {
+
+      in_comment = false;
+      if(ignore_comments)
+        diff_stack.pop_back();
+      
+    }
 
     if(in_mode(FUNCTION) && is_function_type(local_name)) {
 
@@ -267,7 +296,6 @@ void unified_view::endElement(const char * localname, const char * prefix, const
 void unified_view::charactersRoot(const char * ch, int len) {}
 
 void unified_view::output_additional_context() {
-
 
   size_t line_delete = line_number_delete + 1 - additional_context.size();
   size_t line_insert = line_number_insert + 1 - additional_context.size();
