@@ -364,7 +364,9 @@ void unified_view::characters(const char * ch, int len) {
 
   }
 
-  const char * code = change_operation_to_code(diff_stack.back());
+  if(last_character_operation == SES_COMMON &&  diff_stack.back() != SES_COMMON
+     && ignore_whitespace)
+    change_starting_line = true;
 
   for(int i = 0; i < len; ++i) {
 
@@ -463,8 +465,8 @@ void unified_view::characters(const char * ch, int len) {
 
       }
 
-      if(code == COMMON_CODE || code == DELETE_CODE) ++line_number_delete;
-      if(code == COMMON_CODE || code == INSERT_CODE) ++line_number_insert;
+      if(diff_stack.back() != SES_INSERT) ++line_number_delete;
+      if(diff_stack.back() != SES_DELETE) ++line_number_insert;
 
       context = "";
 
