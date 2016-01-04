@@ -21,11 +21,13 @@ private:
   static const context_mode FUNCTION = 1 << 1;
   static const context_mode ALL      = 1 << 2;
 
+  bool ignore_all_whitespace;
   bool ignore_whitespace;
   bool ignore_comments;
 
   std::vector<int> diff_stack;
 
+  int last_character_operation;
   std::ostream * output;
 
   context_mode modes;
@@ -49,12 +51,15 @@ private:
   size_t after_edit_count;
   size_t last_context_line;
 
+  bool change_starting_line;
+  std::string change_ending_space;
+  int change_ending_operation;
   bool in_comment;
 
 public:
 
   unified_view(const std::string & output_filename, boost::any context_type,
-               bool ignore_whitespace, bool ignore_comments);
+               bool ignore_all_whitespace, bool ignore_whitespace, bool ignore_comments);
   ~unified_view();
 
   void transform(const std::string & srcdiff, const std::string & xml_encoding);
@@ -69,6 +74,9 @@ private:
   void characters(const char * ch, int len);
 
   context_mode context_string_to_id(const std::string & context_type_str) const;
+
+  void output_characters(const char c, int operation);
+  void output_characters(const std::string ch, int operation);
 
 public:
 

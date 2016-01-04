@@ -6,6 +6,7 @@
 #include <type_query.hpp>
 
 #include <cstring>
+#include <cassert>
 
 const char * const DELETE_CODE = "\x1b[9;48;5;210;1m";
 const char * const INSERT_CODE = "\x1b[48;5;120;1m";
@@ -17,13 +18,16 @@ const char * const LINE_CODE = "\x1b[36m";
 const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
 unified_view::unified_view(const std::string & output_filename, boost::any context_type,
-               bool ignore_whitespace, bool ignore_comments)
-              : ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
+               bool ignore_all_whitespace, bool ignore_whitespace, bool ignore_comments)
+              : ignore_all_whitespace(ignore_all_whitespace), ignore_whitespace(ignore_whitespace),
+                ignore_comments(ignore_comments), last_character_operation(SES_COMMON),
                 modes(LINE), line_number_delete(0), line_number_insert(0),
                 number_context_lines(3), is_after_change(false), wait_change(true),
                 in_function(), context_type(context_type), length(0), 
                 is_after_additional(false), after_edit_count(0),
-                last_context_line((unsigned)-1), in_comment(false) {
+                last_context_line((unsigned)-1), change_starting_line(false),
+                change_ending_space(), change_ending_operation(SES_COMMON),
+                in_comment(false) {
 
   if(context_type.type() == typeid(size_t)) {
 
@@ -73,6 +77,10 @@ void unified_view::reset() {
   is_after_additional = false;
   after_edit_count = 0;
   last_context_line = -1;
+  last_character_operation = SES_COMMON;
+  change_starting_line = false;
+  change_ending_space = "";
+  change_ending_operation = SES_COMMON;
   in_comment = false;
 
 
@@ -154,6 +162,7 @@ void unified_view::startUnit(const char * localname, const char * prefix, const 
                        const struct srcsax_attribute * attributes) {
 
     diff_stack.push_back(SES_COMMON);
+    output_characters("", SES_COMMON);
 
 }
 
@@ -186,7 +195,7 @@ void unified_view::startElement(const char * localname, const char * prefix, con
      diff_stack.push_back(SES_DELETE);
     else if(local_name == "insert")
      diff_stack.push_back(SES_INSERT);
-    else if(local_name == "ws" && ignore_whitespace)
+    else if(local_name == "ws" && ignore_all_whitespace)
       diff_stack.push_back(SES_COMMON);
     
   } else {
@@ -256,7 +265,7 @@ void unified_view::endElement(const char * localname, const char * prefix, const
       if(ignore_comments && in_comment) return;
 
       if(local_name == "common" || local_name == "delete" || local_name == "insert"
-        || (local_name == "ws" && ignore_whitespace))
+        || (local_name == "ws" && ignore_all_whitespace))
         diff_stack.pop_back();
 
   } else {
@@ -307,7 +316,7 @@ void unified_view::output_additional_context() {
 
   for(std::list<std::string>::const_iterator citr = additional_context.begin(); citr != additional_context.end(); ++citr) {
 
-    (*output) << *citr;
+    output_characters(*citr, SES_COMMON);
 
     ++line_delete, ++line_insert;
 
@@ -318,30 +327,115 @@ void unified_view::output_additional_context() {
 
 }
 
+const char * change_operation_to_code(int operation) {
+
+  if(operation == SES_DELETE) return DELETE_CODE;
+  if(operation == SES_INSERT) return INSERT_CODE;
+
+  return COMMON_CODE;
+
+}
+
+void unified_view::output_characters(const char c, int operation) {
+
+  std::string ch;
+  ch += c;
+  output_characters(ch, operation);
+
+}
+
+void unified_view::output_characters(const std::string ch, int operation) {
+
+  if(operation != last_character_operation)
+    (*output) << change_operation_to_code(operation);
+
+  last_character_operation = operation;
+  (*output) << ch;
+
+}
+
 void unified_view::characters(const char * ch, int len) {
 
-  const char * code = COMMON_CODE;
-  if(diff_stack.back() == SES_DELETE) code = DELETE_CODE;
-  else if(diff_stack.back() == SES_INSERT) code = INSERT_CODE;
+  if(!change_ending_space.empty() && change_ending_operation != diff_stack.back()) {
 
-  if(code != COMMON_CODE) (*output) << code;
+    output_characters(change_ending_space, diff_stack.back());
+    change_ending_space = "";
+    change_ending_operation = SES_COMMON;
+
+  }
+
+  if(last_character_operation == SES_COMMON &&  diff_stack.back() != SES_COMMON
+     && ignore_whitespace)
+    change_starting_line = true;
 
   for(int i = 0; i < len; ++i) {
 
-    if(wait_change) {
+    bool skip = false;
+    if(isspace(ch[i])) {
 
-      context.append(&ch[i], 1);
+      if(ignore_whitespace && diff_stack.back() != SES_COMMON) {
+
+        if(change_starting_line) {
+
+          output_characters(ch[i], SES_COMMON);
+
+        } else {
+
+          change_ending_space += ch[i];
+          change_ending_operation = diff_stack.back();
+
+        }
+
+        skip = true;
+
+      }
 
     } else {
 
-      if(code != COMMON_CODE && ch[i] == '\n') (*output) << CARRIAGE_RETURN_SYMBOL << COMMON_CODE;
-      (*output) << ch[i];
+      if(!change_ending_space.empty()) {
 
-      if(code != COMMON_CODE && ch[i] == '\n') (*output) << code;
+        output_characters(change_ending_space, diff_stack.back());
+        change_ending_space = "";
+        change_ending_operation = SES_COMMON;
+
+      }
+
+      change_starting_line = false;
+
+    }
+
+    if(wait_change) {
+
+      assert(!skip);
+      context.append(&ch[i], 1);
+
+    } else if(!skip) {
+
+      if(diff_stack.back() != SES_COMMON && ch[i] == '\n') {
+
+        output_characters(CARRIAGE_RETURN_SYMBOL, diff_stack.back());
+        output_characters(ch[i], SES_COMMON);
+
+      } else {
+
+        output_characters(ch[i], diff_stack.back());
+
+      }
 
     }
 
     if(ch[i] == '\n') {
+
+      if(!change_ending_space.empty()) {
+
+        output_characters(change_ending_space, SES_COMMON);
+        change_ending_space = "";
+        change_ending_operation = SES_COMMON;
+
+      }
+
+      if(diff_stack.back() != SES_COMMON)
+        change_starting_line = true;
 
       if(is_after_change) {
 
@@ -371,16 +465,14 @@ void unified_view::characters(const char * ch, int len) {
 
       }
 
-      if(code == COMMON_CODE || code == DELETE_CODE) ++line_number_delete;
-      if(code == COMMON_CODE || code == INSERT_CODE) ++line_number_insert;
+      if(diff_stack.back() != SES_INSERT) ++line_number_delete;
+      if(diff_stack.back() != SES_DELETE) ++line_number_insert;
 
       context = "";
 
     }
 
   }
-
-  if(code != COMMON_CODE) (*output) << COMMON_CODE;
 
 }
 

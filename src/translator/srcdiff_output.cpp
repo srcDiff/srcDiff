@@ -33,6 +33,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
   } else if(is_option(flags, OPTION_UNIFIED_VIEW)) {
 
      unifiedview = std::make_shared<unified_view>(srcdiff_filename, unified_view_context,
+                                                  flags & OPTION_IGNORE_ALL_WHITESPACE,
                                                   flags & OPTION_IGNORE_WHITESPACE,
                                                   flags & OPTION_IGNORE_COMMENTS);
 
