@@ -454,8 +454,8 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 #ifndef _MSC_BUILD
     ("unified", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::unified_view_context>),
         "Output as colorized unified diff with provided context. Number is lines of context, 'all' or -1 for entire file, 'function' for encompasing function (default = 3)")
-    ("ignore-all-space,W", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>), "Ignore whitespace when outputting unified view")
-    ("ignore-space,w", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>), "Ignore whitespace when outputting unified view")
+    ("ignore-all-space,W", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>), "Ignore all whitespace when outputting unified view")
+    ("ignore-space,w", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_WHITESPACE>), "Ignore whitespace when outputting unified view")
     ("ignore-comments,c", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_COMMENTS>), "Ignore comments when outputting unified view")
 
     ("summary", boost::program_options::value<std::string>()->implicit_value("text")->notifier(option_field<&srcdiff_options::summary_type_str>),
