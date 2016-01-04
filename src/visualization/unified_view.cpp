@@ -17,11 +17,11 @@ const char * const LINE_CODE = "\x1b[36m";
 const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
 unified_view::unified_view(const std::string & output_filename, boost::any context_type,
-               bool ignore_whitespace, bool ignore_comments)
-              : ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
-                modes(LINE), line_number_delete(0), line_number_insert(0),
-                number_context_lines(3), is_after_change(false), wait_change(true),
-                in_function(), context_type(context_type), length(0), 
+               bool ignore_all_whitespace, bool ignore_whitespace, bool ignore_comments)
+              : ignore_all_whitespace(ignore_all_whitespace), ignore_whitespace(ignore_whitespace),
+                ignore_comments(ignore_comments), modes(LINE), line_number_delete(0),
+                line_number_insert(0), number_context_lines(3), is_after_change(false),
+                wait_change(true), in_function(), context_type(context_type), length(0), 
                 is_after_additional(false), after_edit_count(0),
                 last_context_line((unsigned)-1), in_comment(false) {
 
@@ -186,7 +186,7 @@ void unified_view::startElement(const char * localname, const char * prefix, con
      diff_stack.push_back(SES_DELETE);
     else if(local_name == "insert")
      diff_stack.push_back(SES_INSERT);
-    else if(local_name == "ws" && ignore_whitespace)
+    else if(local_name == "ws" && ignore_all_whitespace)
       diff_stack.push_back(SES_COMMON);
     
   } else {
@@ -256,7 +256,7 @@ void unified_view::endElement(const char * localname, const char * prefix, const
       if(ignore_comments && in_comment) return;
 
       if(local_name == "common" || local_name == "delete" || local_name == "insert"
-        || (local_name == "ws" && ignore_whitespace))
+        || (local_name == "ws" && ignore_all_whitespace))
         diff_stack.pop_back();
 
   } else {

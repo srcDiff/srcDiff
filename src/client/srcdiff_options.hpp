@@ -73,6 +73,9 @@ const OPTION_TYPE OPTION_UNIFIED_VIEW          = ull(1) << __COUNTER__;
 const OPTION_TYPE OPTION_IGNORE_ALL_WHITESPACE = ull(1) << __COUNTER__;
 
 // @srcdiff
+const OPTION_TYPE OPTION_IGNORE_WHITESPACE     = ull(1) << __COUNTER__;
+
+// @srcdiff
 const OPTION_TYPE OPTION_IGNORE_COMMENTS       = ull(1) << __COUNTER__;
 
 // @srcdiff
