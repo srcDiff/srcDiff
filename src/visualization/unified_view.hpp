@@ -50,6 +50,7 @@ private:
   size_t after_edit_count;
   size_t last_context_line;
 
+  bool change_starting_line;
   bool in_comment;
 
 public:

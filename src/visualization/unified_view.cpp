@@ -6,6 +6,7 @@
 #include <type_query.hpp>
 
 #include <cstring>
+#include <cassert>
 
 const char * const DELETE_CODE = "\x1b[9;48;5;210;1m";
 const char * const INSERT_CODE = "\x1b[48;5;120;1m";
@@ -23,7 +24,8 @@ unified_view::unified_view(const std::string & output_filename, boost::any conte
                 line_number_insert(0), number_context_lines(3), is_after_change(false),
                 wait_change(true), in_function(), context_type(context_type), length(0), 
                 is_after_additional(false), after_edit_count(0),
-                last_context_line((unsigned)-1), in_comment(false) {
+                last_context_line((unsigned)-1), change_starting_line(false),
+                in_comment(false) {
 
   if(context_type.type() == typeid(size_t)) {
 
@@ -73,6 +75,7 @@ void unified_view::reset() {
   is_after_additional = false;
   after_edit_count = 0;
   last_context_line = -1;
+  change_starting_line = false;
   in_comment = false;
 
 
@@ -180,6 +183,8 @@ void unified_view::startElement(const char * localname, const char * prefix, con
 
     if(ignore_comments && in_comment) return;
 
+    bool prev_in_common = diff_stack.back() == SES_COMMON;
+
     if(local_name == "common")
      diff_stack.push_back(SES_COMMON);
     else if(local_name == "delete")
@@ -188,6 +193,9 @@ void unified_view::startElement(const char * localname, const char * prefix, con
      diff_stack.push_back(SES_INSERT);
     else if(local_name == "ws" && ignore_all_whitespace)
       diff_stack.push_back(SES_COMMON);
+
+    if(prev_in_common && diff_stack.back() != SES_COMMON)
+      change_starting_line = true;
     
   } else {
 
@@ -255,9 +263,14 @@ void unified_view::endElement(const char * localname, const char * prefix, const
 
       if(ignore_comments && in_comment) return;
 
+      bool prev_in_common = diff_stack.back() == SES_COMMON;
+
       if(local_name == "common" || local_name == "delete" || local_name == "insert"
         || (local_name == "ws" && ignore_all_whitespace))
         diff_stack.pop_back();
+
+      if(prev_in_common && diff_stack.back() != SES_COMMON)
+        change_starting_line = true;
 
   } else {
 
@@ -328,11 +341,29 @@ void unified_view::characters(const char * ch, int len) {
 
   for(int i = 0; i < len; ++i) {
 
+    bool skip = false;
+    if(change_starting_line) {
+
+      bool is_space = isspace(ch[i]);
+      if(!is_space)
+        change_starting_line = false;
+
+      if(ignore_whitespace && is_space) {
+
+        (*output) << COMMON_CODE << ch[i] << code;
+        skip = true;
+
+      }
+
+    }
+
+
     if(wait_change) {
 
+      assert(!skip);
       context.append(&ch[i], 1);
 
-    } else {
+    } else if(!skip) {
 
       if(code != COMMON_CODE && ch[i] == '\n') (*output) << CARRIAGE_RETURN_SYMBOL << COMMON_CODE;
       (*output) << ch[i];
@@ -342,6 +373,9 @@ void unified_view::characters(const char * ch, int len) {
     }
 
     if(ch[i] == '\n') {
+
+      if(diff_stack.back() != SES_COMMON)
+        change_starting_line = true;
 
       if(is_after_change) {
 
