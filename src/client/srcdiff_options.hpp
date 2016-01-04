@@ -31,58 +31,58 @@ inline bool is_option(OPTION_TYPE options, OPTION_TYPE flag) {
 }
 
 // @srcdiff
-const OPTION_TYPE OPTION_VERBOSE           = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_VERBOSE               = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_QUIET             = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_QUIET                 = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_COMPRESS          = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_COMPRESS              = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_VISUALIZE         = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_VISUALIZE             = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_SAME              = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_SAME                  = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_PURE              = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_PURE                  = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_CHANGE            = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_CHANGE                = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_SRCDIFFONLY       = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_SRCDIFFONLY           = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_DIFFONLY          = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_DIFFONLY              = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_SVN_CONTINUOUS    = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_SVN_CONTINUOUS        = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_SVN               = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_SVN                   = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_RECURSIVE         = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_RECURSIVE             = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_UNIFIED_VIEW      = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_UNIFIED_VIEW          = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_IGNORE_WHITESPACE = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_IGNORE_ALL_WHITESPACE = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_IGNORE_COMMENTS   = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_IGNORE_COMMENTS       = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_SUMMARY           = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_SUMMARY               = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_BURST             = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_BURST                 = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_SRCML             = ull(1) << __COUNTER__;
+const OPTION_TYPE OPTION_SRCML                 = ull(1) << __COUNTER__;
 
 struct srcdiff_options
 {
