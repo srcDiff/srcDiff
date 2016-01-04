@@ -69,7 +69,9 @@ std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr r
   return node;
 }
 
-std::shared_ptr<srcml_node> split_text(const char * characters_start, const char * characters_end) {
+std::shared_ptr<srcml_node> split_text(const char * characters_start,
+                                       const char * characters_end,
+                                       const std::shared_ptr<srcml_node> & parent) {
 
   std::shared_ptr<srcml_node> text = std::make_shared<srcml_node>();
   text->type = (xmlElementType)XML_READER_TYPE_TEXT;
@@ -84,7 +86,7 @@ std::shared_ptr<srcml_node> split_text(const char * characters_start, const char
   }
 
   text->is_empty = true;
-  text->parent = boost::optional<std::shared_ptr<srcml_node>>();
+  text->parent = parent;
   text->free = true;
   text->move = 0;
 
@@ -233,7 +235,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         if(*characters == '\n') {
 
           ++characters;
-          text = split_text(characters_start, characters);
+          text = split_text(characters_start, characters, element_stack.back());
         }
 
         // separate non-new line whitespace
@@ -242,7 +244,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
           //while((*characters) != 0 && *characters != '\n' && isspace(*characters))
             ++characters;
 
-            text = split_text(characters_start, characters);
+            text = split_text(characters_start, characters, element_stack.back());
 
         }
 
@@ -286,7 +288,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
           ++characters;
 
           // Copy the remainder after (
-          text = split_text(characters_start, characters);
+          text = split_text(characters_start, characters, element_stack.back());
 
         } else {
 
@@ -294,7 +296,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
             ++characters;
 
           // Copy the remainder after (
-          text = split_text(characters_start, characters);
+          text = split_text(characters_start, characters, element_stack.back());
 
         }
 

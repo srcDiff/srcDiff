@@ -66,12 +66,14 @@ void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & se
 
     if(nodes_original.at(set_original.at(i))->is_text() && !nodes_original.at(set_original.at(i))->is_white_space()
       && nodes_original.at(set_original.at(i))->content
-      && *nodes_original.at(set_original.at(i))->content != "("
-      && *nodes_original.at(set_original.at(i))->content != ")"
-      && *nodes_original.at(set_original.at(i))->content != "{"
-      && *nodes_original.at(set_original.at(i))->content != "}"
-      && *nodes_original.at(set_original.at(i))->content != ";"
-      && *nodes_original.at(set_original.at(i))->content != ",")
+      && ((nodes_original.at(set_original.at(i))->parent &&
+          (*nodes_original.at(set_original.at(i))->parent)->name == "operator")
+      ||   (*nodes_original.at(set_original.at(i))->content != "("
+        && *nodes_original.at(set_original.at(i))->content != ")"
+        && *nodes_original.at(set_original.at(i))->content != "{"
+        && *nodes_original.at(set_original.at(i))->content != "}"
+        && *nodes_original.at(set_original.at(i))->content != ";"
+        && *nodes_original.at(set_original.at(i))->content != ",")))
       set_original_text.push_back(set_original.at(i));
 
   }
@@ -97,12 +99,14 @@ void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & se
 
     if(nodes_modified.at(set_modified.at(i))->is_text() && !nodes_modified.at(set_modified.at(i))->is_white_space()
       && nodes_modified.at(set_modified.at(i))->content
-      && *nodes_modified.at(set_modified.at(i))->content != "("
-      && *nodes_modified.at(set_modified.at(i))->content != ")"
-      && *nodes_modified.at(set_modified.at(i))->content != "{"
-      && *nodes_modified.at(set_modified.at(i))->content != "}"
-      && *nodes_modified.at(set_modified.at(i))->content != ";"
-      && *nodes_modified.at(set_modified.at(i))->content != ",")
+      && ((nodes_modified.at(set_modified.at(i))->parent
+        && (*nodes_modified.at(set_modified.at(i))->parent)->name == "operator")
+      ||  (*nodes_modified.at(set_modified.at(i))->content != "("
+        && *nodes_modified.at(set_modified.at(i))->content != ")"
+        && *nodes_modified.at(set_modified.at(i))->content != "{"
+        && *nodes_modified.at(set_modified.at(i))->content != "}"
+        && *nodes_modified.at(set_modified.at(i))->content != ";"
+        && *nodes_modified.at(set_modified.at(i))->content != ",")))
       set_modified_text.push_back(set_modified.at(i));
 
   }

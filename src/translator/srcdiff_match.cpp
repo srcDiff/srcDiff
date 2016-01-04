@@ -1391,6 +1391,8 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
   std::cerr << "Max Size: "   << max_size   << '\n';
 #endif
 
+  if(difference != 0 && similarity == 0) return true;
+
   /** @todo consider making this configurable.  That is, allow user to specify file or have default file to read from */
   if(min_size == similarity && difference < 2 * min_size) return false;
 
