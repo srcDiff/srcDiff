@@ -245,7 +245,11 @@ void unified_view::endRoot(const char * localname, const char * prefix, const ch
  * SAX handler function for end of an unit.
  * Overide for desired behaviour.
  */
-void unified_view::endUnit(const char * localname, const char * prefix, const char * URI) {}
+void unified_view::endUnit(const char * localname, const char * prefix, const char * URI) {
+
+  output_characters("", SES_COMMON);
+
+}
 
 /**
  * endElement
