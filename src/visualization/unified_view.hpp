@@ -27,6 +27,7 @@ private:
 
   std::vector<int> diff_stack;
 
+  int last_character_operation;
   std::ostream * output;
 
   context_mode modes;
@@ -74,7 +75,8 @@ private:
 
   context_mode context_string_to_id(const std::string & context_type_str) const;
 
-  const char * change_operation_to_code(int operation);
+  void output_characters(const char c, int operation);
+  void output_characters(const std::string ch, int operation);
 
 public:
 

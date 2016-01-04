@@ -20,9 +20,10 @@ const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
 unified_view::unified_view(const std::string & output_filename, boost::any context_type,
                bool ignore_all_whitespace, bool ignore_whitespace, bool ignore_comments)
               : ignore_all_whitespace(ignore_all_whitespace), ignore_whitespace(ignore_whitespace),
-                ignore_comments(ignore_comments), modes(LINE), line_number_delete(0),
-                line_number_insert(0), number_context_lines(3), is_after_change(false),
-                wait_change(true), in_function(), context_type(context_type), length(0), 
+                ignore_comments(ignore_comments), last_character_operation(SES_COMMON),
+                modes(LINE), line_number_delete(0), line_number_insert(0),
+                number_context_lines(3), is_after_change(false), wait_change(true),
+                in_function(), context_type(context_type), length(0), 
                 is_after_additional(false), after_edit_count(0),
                 last_context_line((unsigned)-1), change_starting_line(false),
                 change_ending_space(), change_ending_operation(SES_COMMON),
@@ -76,6 +77,7 @@ void unified_view::reset() {
   is_after_additional = false;
   after_edit_count = 0;
   last_context_line = -1;
+  last_character_operation = SES_COMMON;
   change_starting_line = false;
   change_ending_space = "";
   change_ending_operation = SES_COMMON;
@@ -160,6 +162,7 @@ void unified_view::startUnit(const char * localname, const char * prefix, const 
                        const struct srcsax_attribute * attributes) {
 
     diff_stack.push_back(SES_COMMON);
+    output_characters("", SES_COMMON);
 
 }
 
@@ -186,8 +189,6 @@ void unified_view::startElement(const char * localname, const char * prefix, con
 
     if(ignore_comments && in_comment) return;
 
-    bool prev_in_common = diff_stack.back() == SES_COMMON;
-
     if(local_name == "common")
      diff_stack.push_back(SES_COMMON);
     else if(local_name == "delete")
@@ -196,9 +197,6 @@ void unified_view::startElement(const char * localname, const char * prefix, con
      diff_stack.push_back(SES_INSERT);
     else if(local_name == "ws" && ignore_all_whitespace)
       diff_stack.push_back(SES_COMMON);
-
-    if(prev_in_common && diff_stack.back() != SES_COMMON)
-      change_starting_line = true;
     
   } else {
 
@@ -266,14 +264,9 @@ void unified_view::endElement(const char * localname, const char * prefix, const
 
       if(ignore_comments && in_comment) return;
 
-      bool prev_in_common = diff_stack.back() == SES_COMMON;
-
       if(local_name == "common" || local_name == "delete" || local_name == "insert"
         || (local_name == "ws" && ignore_all_whitespace))
         diff_stack.pop_back();
-
-      if(prev_in_common && diff_stack.back() != SES_COMMON)
-        change_starting_line = true;
 
   } else {
 
@@ -323,7 +316,7 @@ void unified_view::output_additional_context() {
 
   for(std::list<std::string>::const_iterator citr = additional_context.begin(); citr != additional_context.end(); ++citr) {
 
-    (*output) << *citr;
+    output_characters(*citr, SES_COMMON);
 
     ++line_delete, ++line_insert;
 
@@ -334,12 +327,30 @@ void unified_view::output_additional_context() {
 
 }
 
-const char * unified_view::change_operation_to_code(int operation) {
+const char * change_operation_to_code(int operation) {
 
-  if(diff_stack.back() == SES_DELETE) return DELETE_CODE;
-  if(diff_stack.back() == SES_INSERT) return INSERT_CODE;
+  if(operation == SES_DELETE) return DELETE_CODE;
+  if(operation == SES_INSERT) return INSERT_CODE;
 
   return COMMON_CODE;
+
+}
+
+void unified_view::output_characters(const char c, int operation) {
+
+  std::string ch;
+  ch += c;
+  output_characters(ch, operation);
+
+}
+
+void unified_view::output_characters(const std::string ch, int operation) {
+
+  if(operation != last_character_operation)
+    (*output) << change_operation_to_code(operation);
+
+  last_character_operation = operation;
+  (*output) << ch;
 
 }
 
@@ -347,20 +358,13 @@ void unified_view::characters(const char * ch, int len) {
 
   if(!change_ending_space.empty() && change_ending_operation != diff_stack.back()) {
 
-    if(diff_stack.back() == SES_COMMON)
-      (*output) << change_ending_space;
-    else
-      (*output) << change_operation_to_code(change_ending_operation)
-                << change_ending_space << COMMON_CODE;
-
+    output_characters(change_ending_space, diff_stack.back());
     change_ending_space = "";
     change_ending_operation = SES_COMMON;
 
   }
 
   const char * code = change_operation_to_code(diff_stack.back());
-
-  if(code != COMMON_CODE) (*output) << code;
 
   for(int i = 0; i < len; ++i) {
 
@@ -371,7 +375,7 @@ void unified_view::characters(const char * ch, int len) {
 
         if(change_starting_line) {
 
-          (*output) << COMMON_CODE << ch[i] << code;
+          output_characters(ch[i], SES_COMMON);
 
         } else {
 
@@ -388,7 +392,7 @@ void unified_view::characters(const char * ch, int len) {
 
       if(!change_ending_space.empty()) {
 
-        (*output) << change_ending_space << code;
+        output_characters(change_ending_space, diff_stack.back());
         change_ending_space = "";
         change_ending_operation = SES_COMMON;
 
@@ -405,10 +409,16 @@ void unified_view::characters(const char * ch, int len) {
 
     } else if(!skip) {
 
-      if(code != COMMON_CODE && ch[i] == '\n') (*output) << CARRIAGE_RETURN_SYMBOL << COMMON_CODE;
-      (*output) << ch[i];
+      if(diff_stack.back() != SES_COMMON && ch[i] == '\n') {
 
-      if(code != COMMON_CODE && ch[i] == '\n') (*output) << code;
+        output_characters(CARRIAGE_RETURN_SYMBOL, diff_stack.back());
+        output_characters(ch[i], SES_COMMON);
+
+      } else {
+
+        output_characters(ch[i], diff_stack.back());
+
+      }
 
     }
 
@@ -416,7 +426,7 @@ void unified_view::characters(const char * ch, int len) {
 
       if(!change_ending_space.empty()) {
 
-        (*output) << COMMON_CODE << change_ending_space << code;
+        output_characters(change_ending_space, SES_COMMON);
         change_ending_space = "";
         change_ending_operation = SES_COMMON;
 
@@ -461,8 +471,6 @@ void unified_view::characters(const char * ch, int len) {
     }
 
   }
-
-  if(code != COMMON_CODE) (*output) << COMMON_CODE;
 
 }
 
