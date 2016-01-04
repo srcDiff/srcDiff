@@ -25,6 +25,7 @@ unified_view::unified_view(const std::string & output_filename, boost::any conte
                 wait_change(true), in_function(), context_type(context_type), length(0), 
                 is_after_additional(false), after_edit_count(0),
                 last_context_line((unsigned)-1), change_starting_line(false),
+                change_ending_space(), change_ending_operation(SES_COMMON),
                 in_comment(false) {
 
   if(context_type.type() == typeid(size_t)) {
@@ -76,6 +77,8 @@ void unified_view::reset() {
   after_edit_count = 0;
   last_context_line = -1;
   change_starting_line = false;
+  change_ending_space = "";
+  change_ending_operation = SES_COMMON;
   in_comment = false;
 
 
@@ -331,32 +334,69 @@ void unified_view::output_additional_context() {
 
 }
 
+const char * unified_view::change_operation_to_code(int operation) {
+
+  if(diff_stack.back() == SES_DELETE) return DELETE_CODE;
+  if(diff_stack.back() == SES_INSERT) return INSERT_CODE;
+
+  return COMMON_CODE;
+
+}
+
 void unified_view::characters(const char * ch, int len) {
 
-  const char * code = COMMON_CODE;
-  if(diff_stack.back() == SES_DELETE) code = DELETE_CODE;
-  else if(diff_stack.back() == SES_INSERT) code = INSERT_CODE;
+  if(!change_ending_space.empty() && change_ending_operation != diff_stack.back()) {
+
+    if(diff_stack.back() == SES_COMMON)
+      (*output) << change_ending_space;
+    else
+      (*output) << change_operation_to_code(change_ending_operation)
+                << change_ending_space << COMMON_CODE;
+
+    change_ending_space = "";
+    change_ending_operation = SES_COMMON;
+
+  }
+
+  const char * code = change_operation_to_code(diff_stack.back());
 
   if(code != COMMON_CODE) (*output) << code;
 
   for(int i = 0; i < len; ++i) {
 
     bool skip = false;
-    if(change_starting_line) {
+    if(isspace(ch[i])) {
 
-      bool is_space = isspace(ch[i]);
-      if(!is_space)
-        change_starting_line = false;
+      if(ignore_whitespace && diff_stack.back() != SES_COMMON) {
 
-      if(ignore_whitespace && is_space) {
+        if(change_starting_line) {
 
-        (*output) << COMMON_CODE << ch[i] << code;
+          (*output) << COMMON_CODE << ch[i] << code;
+
+        } else {
+
+          change_ending_space += ch[i];
+          change_ending_operation = diff_stack.back();
+
+        }
+
         skip = true;
 
       }
 
-    }
+    } else {
 
+      if(!change_ending_space.empty()) {
+
+        (*output) << change_ending_space << code;
+        change_ending_space = "";
+        change_ending_operation = SES_COMMON;
+
+      }
+
+      change_starting_line = false;
+
+    }
 
     if(wait_change) {
 
@@ -373,6 +413,14 @@ void unified_view::characters(const char * ch, int len) {
     }
 
     if(ch[i] == '\n') {
+
+      if(!change_ending_space.empty()) {
+
+        (*output) << COMMON_CODE << change_ending_space << code;
+        change_ending_space = "";
+        change_ending_operation = SES_COMMON;
+
+      }
 
       if(diff_stack.back() != SES_COMMON)
         change_starting_line = true;

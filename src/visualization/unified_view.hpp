@@ -51,6 +51,8 @@ private:
   size_t last_context_line;
 
   bool change_starting_line;
+  std::string change_ending_space;
+  int change_ending_operation;
   bool in_comment;
 
 public:
@@ -71,6 +73,8 @@ private:
   void characters(const char * ch, int len);
 
   context_mode context_string_to_id(const std::string & context_type_str) const;
+
+  const char * change_operation_to_code(int operation);
 
 public:
 
