@@ -119,6 +119,18 @@ void option_dependency(const boost::program_options::variables_map & var_map,
 
 }
 
+void conflicting_options(const boost::program_options::variables_map & var_map,
+                         const std::string & option_one,
+                         const std::string & option_two) {
+
+  if(var_map[option_one].defaulted()) return;
+  if(var_map[option_two].defaulted()) return;
+
+  throw std::invalid_argument("Conflicting Options: '--" + option_one
+                            + "' and '--" + option_two + "'");
+
+}
+
 template<std::string srcdiff_options::*field>
 void option_field(const std::string & arg) { options.*field = arg; }
 
@@ -486,6 +498,8 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     option_dependency(var_map, "ignore-all-space", std::vector<std::string>{"unified"});
     option_dependency(var_map, "ignore-space", std::vector<std::string>{"unified"});
     option_dependency(var_map, "ignore-comments", std::vector<std::string>{"unified"});
+
+    conflicting_options(var_map, "ignore-all-space", "ignore-space");
 
   } catch(const std::invalid_argument & e) {
 
