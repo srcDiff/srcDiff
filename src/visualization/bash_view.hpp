@@ -24,7 +24,6 @@ protected:
 
   std::vector<int> diff_stack;
 
-  int last_character_operation;
   std::ostream * output;
 
 public:
@@ -38,8 +37,8 @@ public:
 protected:
 
   const char * change_operation_to_code(int operation);
-  void output_characters(const char c, int operation);
-  virtual void output_characters(const std::string ch, int operation);
+  void output_character(const char c, int operation);
+  virtual void output_characters(const std::string ch, int operation) = 0;
 
   virtual void characters(const char * ch, int len) = 0;
 

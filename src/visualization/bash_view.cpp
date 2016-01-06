@@ -57,21 +57,11 @@ const char * bash_view::change_operation_to_code(int operation) {
 
 }
 
-void bash_view::output_characters(const char c, int operation) {
+void bash_view::output_character(const char c, int operation) {
 
   std::string ch;
   ch += c;
   output_characters(ch, operation);
-
-}
-
-void bash_view::output_characters(const std::string ch, int operation) {
-
-  if(operation != last_character_operation)
-    (*output) << change_operation_to_code(operation);
-
-  last_character_operation = operation;
-  (*output) << ch;
 
 }
 
