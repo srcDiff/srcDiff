@@ -28,6 +28,8 @@ void side_by_side_view::reset() {
 
 void side_by_side_view::output_characters(const std::string ch, int operation) {
 
+  if(original_lines.empty()) add_new_line();
+
   if(operation != bash_view::INSERT) {
 
     output_characters_to_buffer(ch, operation, original_lines.back().first,
