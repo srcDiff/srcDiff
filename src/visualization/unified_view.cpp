@@ -8,14 +8,14 @@
 #include <cstring>
 #include <cassert>
 
-const char * const DELETE_CODE = "\x1b[9;48;5;210;1m";
-const char * const INSERT_CODE = "\x1b[48;5;120;1m";
+static const char * const DELETE_CODE = "\x1b[9;48;5;210;1m";
+static const char * const INSERT_CODE = "\x1b[48;5;120;1m";
 
-const char * const COMMON_CODE = "\x1b[0m";
+static const char * const COMMON_CODE = "\x1b[0m";
 
-const char * const LINE_CODE = "\x1b[36m";
+static const char * const LINE_CODE = "\x1b[36m";
 
-const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
+static const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
 unified_view::unified_view(const std::string & output_filename, boost::any context_type,
                bool ignore_all_whitespace, bool ignore_whitespace, bool ignore_comments)
