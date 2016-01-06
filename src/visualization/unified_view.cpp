@@ -83,7 +83,6 @@ void unified_view::reset() {
   change_ending_operation = SES_COMMON;
   in_comment = false;
 
-
 }
 
 void unified_view::transform(const std::string & srcdiff, const std::string & xml_encoding) {
