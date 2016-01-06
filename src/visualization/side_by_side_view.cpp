@@ -2,7 +2,6 @@
 
 #include <srcdiff_constants.hpp>
 
-#include <shortest_edit_script.hpp>
 #include <type_query.hpp>
 
 #include <algorithm>
@@ -12,90 +11,84 @@
 #include <cstring>
 #include <cassert>
 
-static const char * const DELETE_CODE = "\x1b[9;48;5;210;1m";
-static const char * const INSERT_CODE = "\x1b[48;5;120;1m";
-
-static const char * const COMMON_CODE = "\x1b[0m";
-
-static const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
-
 side_by_side_view::side_by_side_view(const std::string & output_filename)
-  : diff_stack(), line_operations(),
-    last_character_operation_original(COMMON), original_lines(),
-    last_character_operation_modified(COMMON), modified_lines() {
+  : bash_view(output_filename), line_operations(),
+    last_character_operation_original(bash_view::COMMON), original_lines(),
+    last_character_operation_modified(bash_view::COMMON), modified_lines() {}
 
-  if(output_filename != "-")
-    output = new std::ofstream(output_filename.c_str());
-  else
-    output = &std::cout;
-
-}
-
-side_by_side_view::~side_by_side_view() {
-
-  if(output != &std::cout) {
-
-    ((std::ofstream *)output)->close();
-    delete output;
-
-  }
-  
-}
+side_by_side_view::~side_by_side_view() {}
 
 void side_by_side_view::reset() {
 
   line_operations.clear();
 
-  last_character_operation_original = COMMON;
+  last_character_operation_original = bash_view::COMMON;
   original_lines.clear();
 
-  last_character_operation_modified = COMMON;
+  last_character_operation_modified = bash_view::COMMON;
   modified_lines.clear();
 
 }
 
-void side_by_side_view::transform(const std::string & srcdiff, const std::string & xml_encoding) {
+void side_by_side_view::output_characters_to_buffer(const std::string ch,
+                                                    int operation,
+                                                    std::string & buffer,
+                                                    int & last_character_operation) {
 
-  srcSAXController controller(srcdiff, xml_encoding.c_str());
+  if(operation != last_character_operation)
+    buffer += change_operation_to_code(operation);
 
-  controller.parse(this);
-
-  reset();
+  last_character_operation = operation;
+  buffer += ch;  
 
 }
 
-/**
- * startDocument
- *
- * SAX handler function for start of document.
- * Overide for desired behavior.
- */
-void side_by_side_view::startDocument() {}
+void side_by_side_view::output_characters(const std::string ch, int operation) {
 
-/**
- * endDocument
- *
- * SAX handler function for end of document.
- * Overide for desired behavior.
- */
-void side_by_side_view::endDocument() {}
+  if(operation != bash_view::INSERT) {
 
-/**
- * startRoot
- * @param localname the name of the profile tag
- * @param prefix the tag prefix
- * @param URI the namespace of tag
- * @param num_namespaces number of namespaces definitions
- * @param namespaces the defined namespaces
- * @param num_attributes the number of attributes on the tag
- * @param attributes list of attributes
- *
- * SAX handler function for start of the root profile.
- * Overide for desired behavior.
- */
-void side_by_side_view::startRoot(const char * localname, const char * prefix, const char * URI,
-                       int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                       const struct srcsax_attribute * attributes) {}
+    output_characters_to_buffer(ch, operation, original_lines.back().first,
+                                last_character_operation_original);
+    original_lines.back().second += ch.size();
+
+  }
+
+  if(operation != bash_view::DELETE) {
+
+    output_characters_to_buffer(ch, operation, modified_lines.back().first,
+                                last_character_operation_modified);
+    modified_lines.back().second += ch.size();
+
+  }
+
+  line_operations.back() |= operation;
+
+}
+
+void side_by_side_view::add_new_line() {
+
+  original_lines.emplace_back("", 0);
+  modified_lines.emplace_back("", 0);
+  line_operations.push_back(bash_view::COMMON);
+
+}
+
+void side_by_side_view::characters(const char * ch, int len) {
+
+  for(int i = 0; i < len; ++i) {
+
+    if(ch[i] == '\n') {
+
+      add_new_line();
+      continue;
+
+    }
+
+    output_character(ch[i], diff_stack.back());
+
+  }
+
+}
 
 /**
  * startUnit
@@ -114,7 +107,7 @@ void side_by_side_view::startUnit(const char * localname, const char * prefix, c
                        int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                        const struct srcsax_attribute * attributes) {
 
-    diff_stack.push_back(COMMON);
+    diff_stack.push_back(bash_view::COMMON);
     add_new_line();
 
 }
@@ -141,26 +134,15 @@ void side_by_side_view::startElement(const char * localname, const char * prefix
   if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
     if(local_name == "common")
-     diff_stack.push_back(COMMON);
+     diff_stack.push_back(bash_view::COMMON);
     else if(local_name == "delete")
-     diff_stack.push_back(DELETE);
+     diff_stack.push_back(bash_view::DELETE);
     else if(local_name == "insert")
-     diff_stack.push_back(INSERT);
+     diff_stack.push_back(bash_view::INSERT);
     
   }
 
 }
-
-/**
- * endRoot
- * @param localname the name of the profile tag
- * @param prefix the tag prefix
- * @param URI the namespace of tag
- *
- * SAX handler function for end of the root profile.
- * Overide for desired behavior.
- */
-void side_by_side_view::endRoot(const char * localname, const char * prefix, const char * URI) {}
 
 /**
  * endUnit
@@ -180,21 +162,21 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix, con
 
   for(int i = 0; i < original_lines.size(); ++i) {
 
-    (*output) << COMMON_CODE << original_lines[i].first;
+    (*output) << bash_view::COMMON_CODE << original_lines[i].first;
 
     std::string fill(max_width - original_lines[i].second, ' ');
-    (*output) << COMMON_CODE << fill;
+    (*output) << bash_view::COMMON_CODE << fill;
 
-    if(line_operations[i] == DELETE)
+    if(line_operations[i] == bash_view::DELETE)
       (*output) << " < ";
-    else if(line_operations[i] == INSERT)
+    else if(line_operations[i] == bash_view::INSERT)
       (*output) << " > ";
     else
       (*output) << " | ";
 
     (*output) << modified_lines[i].first;
 
-    (*output) << COMMON_CODE << '\n';
+    (*output) << bash_view::COMMON_CODE << '\n';
 
   }
 
@@ -221,105 +203,3 @@ void side_by_side_view::endElement(const char * localname, const char * prefix, 
   }
 
 }
-
-/**
- * charactersRoot
- * @param ch the characers
- * @param len number of characters
- *
- * SAX handler function for character handling at the root level.
- * Overide for desired behavior.
- */
-void side_by_side_view::charactersRoot(const char * ch, int len) {}
-
-const char * side_by_side_view::change_operation_to_code(int operation) {
-
-  if(operation == DELETE) return DELETE_CODE;
-  if(operation == INSERT) return INSERT_CODE;
-
-  return COMMON_CODE;
-
-}
-
-void side_by_side_view::output_characters(const char c, int operation) {
-
-  std::string ch;
-  ch += c;
-  output_characters(ch, operation);
-
-}
-
-void side_by_side_view::output_characters_to_buffer(const std::string ch,
-                                                    int operation,
-                                                    std::string & buffer,
-                                                    int & last_character_operation) {
-
-  if(operation != last_character_operation)
-    buffer += change_operation_to_code(operation);
-
-  last_character_operation = operation;
-  buffer += ch;  
-
-}
-
-void side_by_side_view::output_characters(const std::string ch, int operation) {
-
-  if(operation != INSERT) {
-
-    output_characters_to_buffer(ch, operation, original_lines.back().first,
-                                last_character_operation_original);
-    original_lines.back().second += ch.size();
-
-  }
-
-  if(operation != DELETE) {
-
-    output_characters_to_buffer(ch, operation, modified_lines.back().first,
-                                last_character_operation_modified);
-    modified_lines.back().second += ch.size();
-
-  }
-
-  line_operations.back() |= operation;
-
-}
-
-void side_by_side_view::add_new_line() {
-
-  original_lines.emplace_back("", 0);
-  modified_lines.emplace_back("", 0);
-  line_operations.push_back(COMMON);
-
-}
-
-void side_by_side_view::characters(const char * ch, int len) {
-
-  for(int i = 0; i < len; ++i) {
-
-    if(ch[i] == '\n') {
-
-      add_new_line();
-      continue;
-
-    }
-
-    output_characters(ch[i], diff_stack.back());
-
-  }
-
-}
-
-/**
- * charactersUnit
- * @param ch the characers
- * @param len number of characters
- *
- * SAX handler function for character handling within a unit.
- * Overide for desired behavior.
- */
-void side_by_side_view::charactersUnit(const char * ch, int len) {
-
-  characters(ch, len);
-
-}
-

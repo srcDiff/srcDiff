@@ -8,6 +8,11 @@
 #include <cstring>
 #include <cassert>
 
+
+int bash_view::COMMON = 0;
+int bash_view::DELETE = 1 << 0;
+int bash_view::INSERT = 1 << 1;
+
 const char * const bash_view::DELETE_CODE = "\x1b[9;48;5;210;1m";
 const char * const bash_view::INSERT_CODE = "\x1b[48;5;120;1m";
 

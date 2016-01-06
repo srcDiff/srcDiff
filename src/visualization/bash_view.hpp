@@ -2,18 +2,18 @@
 #define INCLUDED_BASH_VIEW_HPP
 
 #include <srcSAXHandler.hpp>
-
-#include <boost/any.hpp>
-
 #include <vector>
 #include <string>
-#include <list>
 #include <fstream>
 #include <iostream>
 
 class bash_view : public srcSAXHandler {
 
 protected:
+
+  static int COMMON;
+  static int DELETE;
+  static int INSERT;
 
   static const char * const DELETE_CODE;
   static const char * const INSERT_CODE;
