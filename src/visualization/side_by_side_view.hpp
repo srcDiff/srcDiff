@@ -1,5 +1,5 @@
-#ifndef INCLUDED_SIDE_BY_SIDE_HPP
-#define INCLUDED_SIDE_BY_SIDE_HPP
+#ifndef INCLUDED_SIDE_BY_SIDE_VIEW_HPP
+#define INCLUDED_SIDE_BY_SIDE_VIEW_HPP
 
 #include <srcSAXHandler.hpp>
 
@@ -11,7 +11,7 @@
 #include <fstream>
 #include <iostream>
 
-class side_by_side : public srcSAXHandler {
+class side_by_side_view : public srcSAXHandler {
 
 private:
 
@@ -26,8 +26,8 @@ private:
 
 public:
 
-  side_by_side(const std::string & output_filename);
-  ~side_by_side();
+  side_by_side_view(const std::string & output_filename);
+  ~side_by_side_view();
 
   void transform(const std::string & srcdiff, const std::string & xml_encoding);
   void reset();

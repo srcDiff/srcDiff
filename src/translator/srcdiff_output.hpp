@@ -5,6 +5,7 @@
 #include <line_diff_range.hpp>
 #include <color_diff.hpp>
 #include <unified_view.hpp>
+#include <side_by_side_view.hpp>
 
 #ifndef _MSC_BUILD
 #include <srcdiff_summary.hpp>
@@ -101,7 +102,9 @@ protected:
   std::shared_ptr<writer_state> wstate;
 
   std::shared_ptr<color_diff> colordiff;
+  /** @tood make this hierarchy */
   std::shared_ptr<unified_view> unifiedview;
+  std::shared_ptr<side_by_side_view> side_by_sideview;
 
 #ifndef _MSC_BUILD
   std::shared_ptr<srcdiff_summary> summary;
@@ -190,6 +193,14 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
     size_t size = 0;
     srcml_unit_get_xml_standalone(wstate->unit, "UTF-8", &xml, &size);
     unifiedview->transform(xml, "UTF-8");
+    srcml_memory_free((char *)xml);
+
+  } else if(is_option(flags, OPTION_SIDE_BY_SIDE_VIEW)) {
+
+    char * xml = 0;
+    size_t size = 0;
+    srcml_unit_get_xml_standalone(wstate->unit, "UTF-8", &xml, &size);
+    side_by_sideview->transform(xml, "UTF-8");
     srcml_memory_free((char *)xml);
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
