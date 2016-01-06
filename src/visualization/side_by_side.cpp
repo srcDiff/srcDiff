@@ -108,6 +108,7 @@ void side_by_side::startUnit(const char * localname, const char * prefix, const 
 
     diff_stack.push_back(SES_COMMON);
     add_new_line();
+    output_characters("", SES_COMMON);
 
 }
 
@@ -163,7 +164,11 @@ void side_by_side::endRoot(const char * localname, const char * prefix, const ch
  * SAX handler function for end of an unit.
  * Overide for desired behaviour.
  */
-void side_by_side::endUnit(const char * localname, const char * prefix, const char * URI) {}
+void side_by_side::endUnit(const char * localname, const char * prefix, const char * URI) {
+
+      output_characters("", SES_COMMON);
+
+}
 
 /**
  * endElement
@@ -258,9 +263,7 @@ void side_by_side::characters(const char * ch, int len) {
 
     }
 
-
-
-
+    output_characters(ch[i], diff_stack.back());
 
   }
 
