@@ -15,9 +15,15 @@ class side_by_side_view : public srcSAXHandler {
 
 private:
 
+  int COMMON = 0;
+  int DELETE = 1 << 0;
+  int INSERT = 1 << 1;
+
   std::vector<int> diff_stack;
 
   std::ostream * output;
+
+  std::vector<int> line_operations;
 
   int last_character_operation_original;
   std::vector<std::pair<std::string, int>> original_lines;
@@ -36,6 +42,10 @@ private:
 
   void characters(const char * ch, int len);
 
+  const char * change_operation_to_code(int operation);
+  void output_characters_to_buffer(const std::string ch, int operation,
+                                   std::string & buffer,
+                                   int & last_character_operation);
   void output_characters(const char c, int operation);
   void output_characters(const std::string ch, int operation);
 

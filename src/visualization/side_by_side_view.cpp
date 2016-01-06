@@ -20,8 +20,9 @@ static const char * const COMMON_CODE = "\x1b[0m";
 static const char * CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
 side_by_side_view::side_by_side_view(const std::string & output_filename)
-  : diff_stack(), last_character_operation_original(SES_COMMON), original_lines(),
-  last_character_operation_modified(SES_COMMON), modified_lines() {
+  : diff_stack(), line_operations(),
+    last_character_operation_original(COMMON), original_lines(),
+    last_character_operation_modified(COMMON), modified_lines() {
 
   if(output_filename != "-")
     output = new std::ofstream(output_filename.c_str());
@@ -43,9 +44,12 @@ side_by_side_view::~side_by_side_view() {
 
 void side_by_side_view::reset() {
 
-  last_character_operation_original = SES_COMMON;
+  line_operations.clear();
+
+  last_character_operation_original = COMMON;
   original_lines.clear();
-  last_character_operation_modified = SES_COMMON;
+
+  last_character_operation_modified = COMMON;
   modified_lines.clear();
 
 }
@@ -110,9 +114,8 @@ void side_by_side_view::startUnit(const char * localname, const char * prefix, c
                        int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                        const struct srcsax_attribute * attributes) {
 
-    diff_stack.push_back(SES_COMMON);
+    diff_stack.push_back(COMMON);
     add_new_line();
-    output_characters("", SES_COMMON);
 
 }
 
@@ -138,11 +141,11 @@ void side_by_side_view::startElement(const char * localname, const char * prefix
   if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
     if(local_name == "common")
-     diff_stack.push_back(SES_COMMON);
+     diff_stack.push_back(COMMON);
     else if(local_name == "delete")
-     diff_stack.push_back(SES_DELETE);
+     diff_stack.push_back(DELETE);
     else if(local_name == "insert")
-     diff_stack.push_back(SES_INSERT);
+     diff_stack.push_back(INSERT);
     
   }
 
@@ -177,9 +180,21 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix, con
 
   for(int i = 0; i < original_lines.size(); ++i) {
 
-    (*output) << original_lines[i].first
-                  .append(max_width - original_lines[i].second, ' ')
-              << " | " << modified_lines[i].first << '\n';
+    (*output) << COMMON_CODE << original_lines[i].first;
+
+    std::string fill(max_width - original_lines[i].second, ' ');
+    (*output) << COMMON_CODE << fill;
+
+    if(line_operations[i] == DELETE)
+      (*output) << " < ";
+    else if(line_operations[i] == INSERT)
+      (*output) << " > ";
+    else
+      (*output) << " | ";
+
+    (*output) << modified_lines[i].first;
+
+    (*output) << COMMON_CODE << '\n';
 
   }
 
@@ -217,10 +232,10 @@ void side_by_side_view::endElement(const char * localname, const char * prefix, 
  */
 void side_by_side_view::charactersRoot(const char * ch, int len) {}
 
-static const char * change_operation_to_code(int operation) {
+const char * side_by_side_view::change_operation_to_code(int operation) {
 
-  if(operation == SES_DELETE) return DELETE_CODE;
-  if(operation == SES_INSERT) return INSERT_CODE;
+  if(operation == DELETE) return DELETE_CODE;
+  if(operation == INSERT) return INSERT_CODE;
 
   return COMMON_CODE;
 
@@ -234,9 +249,10 @@ void side_by_side_view::output_characters(const char c, int operation) {
 
 }
 
-void output_characters_to_buffer(const std::string ch, int operation,
-                                 std::string & buffer,
-                                 int & last_character_operation) {
+void side_by_side_view::output_characters_to_buffer(const std::string ch,
+                                                    int operation,
+                                                    std::string & buffer,
+                                                    int & last_character_operation) {
 
   if(operation != last_character_operation)
     buffer += change_operation_to_code(operation);
@@ -248,7 +264,7 @@ void output_characters_to_buffer(const std::string ch, int operation,
 
 void side_by_side_view::output_characters(const std::string ch, int operation) {
 
-  if(operation != SES_INSERT) {
+  if(operation != INSERT) {
 
     output_characters_to_buffer(ch, operation, original_lines.back().first,
                                 last_character_operation_original);
@@ -256,7 +272,7 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 
   }
 
-  if(operation != SES_DELETE) {
+  if(operation != DELETE) {
 
     output_characters_to_buffer(ch, operation, modified_lines.back().first,
                                 last_character_operation_modified);
@@ -264,16 +280,15 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 
   }
 
-
+  line_operations.back() |= operation;
 
 }
 
 void side_by_side_view::add_new_line() {
 
-  if(original_lines.size() > 0) output_characters("", SES_COMMON);
-
   original_lines.emplace_back("", 0);
   modified_lines.emplace_back("", 0);
+  line_operations.push_back(COMMON);
 
 }
 
