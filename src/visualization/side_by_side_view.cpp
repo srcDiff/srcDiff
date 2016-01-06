@@ -52,9 +52,13 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 
 void side_by_side_view::add_new_line() {
 
+  last_character_operation_original = COMMON;
   original_lines.emplace_back(std::ostringstream(), 0);
+
+  last_character_operation_modified = COMMON;
   modified_lines.emplace_back(std::ostringstream(), 0);
-  line_operations.push_back(bash_view::COMMON);
+
+  line_operations.push_back(0);
 
 }
 
