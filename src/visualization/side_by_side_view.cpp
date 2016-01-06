@@ -2,8 +2,6 @@
 
 #include <srcdiff_constants.hpp>
 
-#include <type_query.hpp>
-
 #include <algorithm>
 
 #include <cstring>

@@ -9,9 +9,9 @@
 #include <cassert>
 
 
-int bash_view::COMMON = 0;
-int bash_view::DELETE = 1 << 0;
-int bash_view::INSERT = 1 << 1;
+int bash_view::COMMON = 1 << 0;
+int bash_view::DELETE = 1 << 1;
+int bash_view::INSERT = 1 << 2;
 
 const char * const bash_view::DELETE_CODE = "\x1b[9;48;5;210;1m";
 const char * const bash_view::INSERT_CODE = "\x1b[48;5;120;1m";
@@ -55,8 +55,8 @@ void bash_view::transform(const std::string & srcdiff, const std::string & xml_e
 
 const char * bash_view::change_operation_to_code(int operation) {
 
-  if(operation == SES_DELETE) return DELETE_CODE;
-  if(operation == SES_INSERT) return INSERT_CODE;
+  if(operation == DELETE) return DELETE_CODE;
+  if(operation == INSERT) return INSERT_CODE;
 
   return COMMON_CODE;
 
