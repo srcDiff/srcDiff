@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <sstream>
 #include <iostream>
 
 class side_by_side_view : public bash_view {
@@ -15,9 +16,9 @@ private:
   std::vector<int> line_operations;
 
   int last_character_operation_original;
-  std::vector<std::pair<std::string, int>> original_lines;
+  std::vector<std::pair<std::ostringstream, int>> original_lines;
   int last_character_operation_modified;
-  std::vector<std::pair<std::string, int>> modified_lines;
+  std::vector<std::pair<std::ostringstream, int>> modified_lines;
 
 public:
 
@@ -30,9 +31,6 @@ private:
 
   void characters(const char * ch, int len);
 
-  void output_characters_to_buffer(const std::string ch, int operation,
-                                   std::string & buffer,
-                                   int & last_character_operation);
   void output_characters(const std::string ch, int operation);
   void add_new_line();
 

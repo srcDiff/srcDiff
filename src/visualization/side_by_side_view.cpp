@@ -5,8 +5,6 @@
 #include <type_query.hpp>
 
 #include <algorithm>
-#include <iomanip>
-#include <sstream>
 
 #include <cstring>
 #include <cassert>
@@ -30,26 +28,13 @@ void side_by_side_view::reset() {
 
 }
 
-void side_by_side_view::output_characters_to_buffer(const std::string ch,
-                                                    int operation,
-                                                    std::string & buffer,
-                                                    int & last_character_operation) {
-
-  if(operation != last_character_operation)
-    buffer += change_operation_to_code(operation);
-
-  last_character_operation = operation;
-  buffer += ch;  
-
-}
-
 void side_by_side_view::output_characters(const std::string ch, int operation) {
 
   if(operation != bash_view::INSERT) {
 
     output_characters_to_buffer(ch, operation, original_lines.back().first,
                                 last_character_operation_original);
-    original_lines.back().second += ch.size();
+    original_lines.back().second += 1;
 
   }
 
@@ -57,7 +42,7 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 
     output_characters_to_buffer(ch, operation, modified_lines.back().first,
                                 last_character_operation_modified);
-    modified_lines.back().second += ch.size();
+    modified_lines.back().second += 1;
 
   }
 
@@ -67,8 +52,8 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 
 void side_by_side_view::add_new_line() {
 
-  original_lines.emplace_back("", 0);
-  modified_lines.emplace_back("", 0);
+  original_lines.emplace_back(std::ostringstream(), 0);
+  modified_lines.emplace_back(std::ostringstream(), 0);
   line_operations.push_back(bash_view::COMMON);
 
 }
@@ -78,6 +63,11 @@ void side_by_side_view::characters(const char * ch, int len) {
   for(int i = 0; i < len; ++i) {
 
     if(ch[i] == '\n') {
+
+      if(diff_stack.back() != COMMON)
+        output_characters(CARRIAGE_RETURN_SYMBOL, diff_stack.back());
+      else
+        line_operations.back() |= COMMON;
 
       add_new_line();
       continue;
@@ -157,12 +147,12 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix, con
 
   /** @todo handle tabs */
   int max_width = 0;
-  for(const std::pair<std::string, int> & line : original_lines)
+  for(const std::pair<std::ostringstream, int> & line : original_lines)
     max_width = std::max(max_width, line.second);
 
   for(int i = 0; i < original_lines.size(); ++i) {
 
-    (*output) << bash_view::COMMON_CODE << original_lines[i].first;
+    (*output) << bash_view::COMMON_CODE << original_lines[i].first.str();
 
     std::string fill(max_width - original_lines[i].second, ' ');
     (*output) << bash_view::COMMON_CODE << fill;
@@ -174,7 +164,7 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix, con
     else
       (*output) << " | ";
 
-    (*output) << modified_lines[i].first;
+    (*output) << modified_lines[i].first.str();
 
     (*output) << bash_view::COMMON_CODE << '\n';
 

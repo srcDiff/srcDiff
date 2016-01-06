@@ -62,6 +62,18 @@ const char * bash_view::change_operation_to_code(int operation) {
 
 }
 
+void bash_view::output_characters_to_buffer(const std::string ch, int operation,
+                                            std::ostream & out,
+                                            int & last_character_operation) {
+
+  if(operation != last_character_operation)
+    out << change_operation_to_code(operation);
+
+  last_character_operation = operation;
+  out << ch;  
+
+}
+
 void bash_view::output_character(const char c, int operation) {
 
   std::string ch;

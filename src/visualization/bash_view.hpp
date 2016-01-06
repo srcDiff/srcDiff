@@ -36,11 +36,16 @@ public:
 
 protected:
 
-  const char * change_operation_to_code(int operation);
-  void output_character(const char c, int operation);
-  virtual void output_characters(const std::string ch, int operation) = 0;
-
   virtual void characters(const char * ch, int len) = 0;
+
+  const char * change_operation_to_code(int operation);
+
+  void output_characters_to_buffer(const std::string ch, int operation,
+                                   std::ostream & out,
+                                   int & last_character_operation);
+  virtual void output_characters(const std::string ch, int operation) = 0;
+  void output_character(const char c, int operation);
+
 
 public:
 
