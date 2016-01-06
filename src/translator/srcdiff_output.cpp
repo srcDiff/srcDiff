@@ -17,13 +17,6 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcml_node::srcml_ns>()) {
 
-  if(!is_option(flags, OPTION_VISUALIZE | OPTION_UNIFIED_VIEW | OPTION_SUMMARY | OPTION_BURST)) {
-
-      int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str(), 0);
-      if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
-
-  }
-
   if(is_option(flags, OPTION_VISUALIZE)) {
 
     const std::string url = srcml_archive_get_url(archive) ? srcml_archive_get_url(archive) : "";
@@ -37,12 +30,21 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
                                                   flags & OPTION_IGNORE_WHITESPACE,
                                                   flags & OPTION_IGNORE_COMMENTS);
 
+  } else if(is_option(flags, OPTION_SIDE_BY_SIDE_VIEW)) {
+
+     side_by_sideview = std::make_shared<side_by_side_view>(srcdiff_filename);
+
   } else if(is_option(flags, OPTION_SUMMARY)) {
 
 #ifndef _MSC_BUILD
     summary = std::make_shared<srcdiff_summary>(srcdiff_filename, summary_type_str);
 #endif
     
+  } else if(!is_option(flags, OPTION_BURST)) {
+
+      int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str(), 0);
+      if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
+
   }
 
   if(!is_option(flags, OPTION_BURST) || srcdiff_filename != "-")
