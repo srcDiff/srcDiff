@@ -25,14 +25,14 @@ srcdiff_output::srcdiff_output(srcml_archive * archive, const std::string & srcd
 
   } else if(is_option(flags, OPTION_UNIFIED_VIEW)) {
 
-     unifiedview = std::make_shared<unified_view>(srcdiff_filename, unified_view_context,
+     bashview = std::make_shared<unified_view>(srcdiff_filename, unified_view_context,
                                                   flags & OPTION_IGNORE_ALL_WHITESPACE,
                                                   flags & OPTION_IGNORE_WHITESPACE,
                                                   flags & OPTION_IGNORE_COMMENTS);
 
   } else if(is_option(flags, OPTION_SIDE_BY_SIDE_VIEW)) {
 
-     side_by_sideview = std::make_shared<side_by_side_view>(srcdiff_filename);
+     bashview = std::make_shared<side_by_side_view>(srcdiff_filename);
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
 
