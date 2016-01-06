@@ -20,9 +20,9 @@ private:
   std::ostream * output;
 
   int last_character_operation_original;
-  std::vector<std::string> original_lines;
+  std::vector<std::pair<std::string, int>> original_lines;
   int last_character_operation_modified;
-  std::vector<std::string> modified_lines;
+  std::vector<std::pair<std::string, int>> modified_lines;
 
 public:
 

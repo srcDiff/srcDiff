@@ -114,7 +114,7 @@ bool unified_view::in_mode(context_mode mode) {
  * startDocument
  *
  * SAX handler function for start of document.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void unified_view::startDocument() {}
 
@@ -122,7 +122,7 @@ void unified_view::startDocument() {}
  * endDocument
  *
  * SAX handler function for end of document.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void unified_view::endDocument() {}
 
@@ -137,7 +137,7 @@ void unified_view::endDocument() {}
  * @param attributes list of attributes
  *
  * SAX handler function for start of the root profile.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void unified_view::startRoot(const char * localname, const char * prefix, const char * URI,
                        int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
@@ -154,7 +154,7 @@ void unified_view::startRoot(const char * localname, const char * prefix, const 
  * @param attributes list of attributes
  *
  * SAX handler function for start of an unit.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void unified_view::startUnit(const char * localname, const char * prefix, const char * URI,
                        int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
@@ -176,7 +176,7 @@ void unified_view::startUnit(const char * localname, const char * prefix, const 
  * @param attributes list of attributes
  *
  * SAX handler function for start of an profile.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void unified_view::startElement(const char * localname, const char * prefix, const char * URI,
                             int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
@@ -231,7 +231,7 @@ void unified_view::startElement(const char * localname, const char * prefix, con
  * @param URI the namespace of tag
  *
  * SAX handler function for end of the root profile.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void unified_view::endRoot(const char * localname, const char * prefix, const char * URI) {}
 
@@ -242,7 +242,7 @@ void unified_view::endRoot(const char * localname, const char * prefix, const ch
  * @param URI the namespace of tag
  *
  * SAX handler function for end of an unit.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void unified_view::endUnit(const char * localname, const char * prefix, const char * URI) {
 
@@ -257,7 +257,7 @@ void unified_view::endUnit(const char * localname, const char * prefix, const ch
  * @param URI the namespace of tag
  *
  * SAX handler function for end of an profile.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void unified_view::endElement(const char * localname, const char * prefix, const char * URI) {
 
@@ -303,7 +303,7 @@ void unified_view::endElement(const char * localname, const char * prefix, const
  * @param len number of characters
  *
  * SAX handler function for character handling at the root level.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void unified_view::charactersRoot(const char * ch, int len) {}
 
@@ -485,7 +485,7 @@ void unified_view::characters(const char * ch, int len) {
  * @param len number of characters
  *
  * SAX handler function for character handling within a unit.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void unified_view::charactersUnit(const char * ch, int len) {
 

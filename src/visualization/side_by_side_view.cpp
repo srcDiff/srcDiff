@@ -5,6 +5,10 @@
 #include <shortest_edit_script.hpp>
 #include <type_query.hpp>
 
+#include <algorithm>
+#include <iomanip>
+#include <sstream>
+
 #include <cstring>
 #include <cassert>
 
@@ -60,7 +64,7 @@ void side_by_side_view::transform(const std::string & srcdiff, const std::string
  * startDocument
  *
  * SAX handler function for start of document.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void side_by_side_view::startDocument() {}
 
@@ -68,7 +72,7 @@ void side_by_side_view::startDocument() {}
  * endDocument
  *
  * SAX handler function for end of document.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void side_by_side_view::endDocument() {}
 
@@ -83,7 +87,7 @@ void side_by_side_view::endDocument() {}
  * @param attributes list of attributes
  *
  * SAX handler function for start of the root profile.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void side_by_side_view::startRoot(const char * localname, const char * prefix, const char * URI,
                        int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
@@ -100,7 +104,7 @@ void side_by_side_view::startRoot(const char * localname, const char * prefix, c
  * @param attributes list of attributes
  *
  * SAX handler function for start of an unit.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void side_by_side_view::startUnit(const char * localname, const char * prefix, const char * URI,
                        int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
@@ -123,7 +127,7 @@ void side_by_side_view::startUnit(const char * localname, const char * prefix, c
  * @param attributes list of attributes
  *
  * SAX handler function for start of an profile.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void side_by_side_view::startElement(const char * localname, const char * prefix, const char * URI,
                             int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
@@ -151,7 +155,7 @@ void side_by_side_view::startElement(const char * localname, const char * prefix
  * @param URI the namespace of tag
  *
  * SAX handler function for end of the root profile.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void side_by_side_view::endRoot(const char * localname, const char * prefix, const char * URI) {}
 
@@ -162,11 +166,22 @@ void side_by_side_view::endRoot(const char * localname, const char * prefix, con
  * @param URI the namespace of tag
  *
  * SAX handler function for end of an unit.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void side_by_side_view::endUnit(const char * localname, const char * prefix, const char * URI) {
 
-      output_characters("", SES_COMMON);
+  /** @todo handle tabs */
+  int max_width = 0;
+  for(const std::pair<std::string, int> & line : original_lines)
+    max_width = std::max(max_width, line.second);
+
+  for(int i = 0; i < original_lines.size(); ++i) {
+
+    (*output) << original_lines[i].first
+                  .append(max_width - original_lines[i].second, ' ')
+              << " | " << modified_lines[i].first << '\n';
+
+  }
 
 }
 
@@ -177,7 +192,7 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix, con
  * @param URI the namespace of tag
  *
  * SAX handler function for end of an profile.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void side_by_side_view::endElement(const char * localname, const char * prefix, const char * URI) {
 
@@ -198,7 +213,7 @@ void side_by_side_view::endElement(const char * localname, const char * prefix, 
  * @param len number of characters
  *
  * SAX handler function for character handling at the root level.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void side_by_side_view::charactersRoot(const char * ch, int len) {}
 
@@ -233,13 +248,21 @@ void output_characters_to_buffer(const std::string ch, int operation,
 
 void side_by_side_view::output_characters(const std::string ch, int operation) {
 
-  if(operation != SES_INSERT)
-    output_characters_to_buffer(ch, operation, original_lines.back(),
-                                last_character_operation_original);
+  if(operation != SES_INSERT) {
 
-  if(operation != SES_DELETE)
-    output_characters_to_buffer(ch, operation, modified_lines.back(),
+    output_characters_to_buffer(ch, operation, original_lines.back().first,
+                                last_character_operation_original);
+    original_lines.back().second += ch.size();
+
+  }
+
+  if(operation != SES_DELETE) {
+
+    output_characters_to_buffer(ch, operation, modified_lines.back().first,
                                 last_character_operation_modified);
+    modified_lines.back().second += ch.size();
+
+  }
 
 
 
@@ -247,8 +270,10 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 
 void side_by_side_view::add_new_line() {
 
-  original_lines.push_back("");
-  modified_lines.push_back("");
+  if(original_lines.size() > 0) output_characters("", SES_COMMON);
+
+  original_lines.emplace_back("", 0);
+  modified_lines.emplace_back("", 0);
 
 }
 
@@ -275,7 +300,7 @@ void side_by_side_view::characters(const char * ch, int len) {
  * @param len number of characters
  *
  * SAX handler function for character handling within a unit.
- * Overide for desired behaviour.
+ * Overide for desired behavior.
  */
 void side_by_side_view::charactersUnit(const char * ch, int len) {
 
