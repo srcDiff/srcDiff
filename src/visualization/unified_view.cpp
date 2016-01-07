@@ -133,7 +133,6 @@ void unified_view::start_element(const std::string & local_name,
 
     if(local_name == "comment") {
 
-      in_comment = true;
       if(ignore_comments)
         diff_stack.push_back(COMMON);
 
@@ -171,7 +170,6 @@ void unified_view::end_element(const std::string & local_name, const char * pref
 
     if(local_name == "comment") {
 
-      in_comment = false;
       if(ignore_comments)
         diff_stack.pop_back();
       

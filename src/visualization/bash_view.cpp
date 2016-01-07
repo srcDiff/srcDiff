@@ -166,6 +166,10 @@ void bash_view::startElement(const char * localname, const char * prefix,
                              const struct srcsax_attribute * attributes) {
 
   const std::string local_name(localname);
+
+  if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF && local_name == "comment")
+    in_comment = true;
+
   start_element(local_name, prefix, URI, num_namespaces, namespaces,
                 num_attributes, attributes);
 
@@ -206,6 +210,9 @@ void bash_view::endElement(const char * localname, const char * prefix,
                            const char * URI) {
 
   const std::string local_name(localname);
+  if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF && local_name == "comment")
+    in_comment = false;
+
   end_element(local_name, prefix, URI);
 
 }

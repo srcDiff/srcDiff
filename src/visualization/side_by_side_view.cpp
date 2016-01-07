@@ -35,9 +35,13 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 
   if(original_lines.empty()) add_new_line();
 
+  int real_operation = operation;
+  if(ignore_comments && in_comment)
+    real_operation = bash_view::COMMON;
+
   if(operation != bash_view::INSERT) {
 
-    output_characters_to_buffer(ch, operation, original_lines.back().first,
+    output_characters_to_buffer(ch, real_operation, original_lines.back().first,
                                 last_character_operation_original);
     original_lines.back().second += 1;
 
@@ -45,13 +49,13 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 
   if(operation != bash_view::DELETE) {
 
-    output_characters_to_buffer(ch, operation, modified_lines.back().first,
+    output_characters_to_buffer(ch, real_operation, modified_lines.back().first,
                                 last_character_operation_modified);
     modified_lines.back().second += 1;
 
   }
 
-  line_operations.back() |= operation;
+  line_operations.back() |= real_operation;
 
 }
 
@@ -96,7 +100,7 @@ void side_by_side_view::end_element(const std::string & local_name, const char *
       diff_stack.pop_back();
 
   }
-  
+
 }
 
 void side_by_side_view::characters(const char * ch, int len) {
