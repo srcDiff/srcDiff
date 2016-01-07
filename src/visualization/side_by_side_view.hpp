@@ -13,6 +13,8 @@ class side_by_side_view : public bash_view {
 
 private:
 
+  int side_by_side_tab_size;
+
   std::vector<int> line_operations;
 
   int last_character_operation_original;
@@ -20,16 +22,29 @@ private:
   int last_character_operation_modified;
   std::vector<std::pair<std::ostringstream, int>> modified_lines;
 
+  bool change_starting_line_original;
+  bool change_starting_line_modified;
+
+  std::string change_ending_space_original;
+  std::string change_ending_space_modified;
+
 public:
 
-  side_by_side_view(const std::string & output_filename);
+  side_by_side_view(const std::string & output_filename, bool ignore_all_whitespace,
+                    bool ignore_whitespace, bool ignore_comments,
+                    int side_by_side_tab_size);
   virtual ~side_by_side_view();
-
-  void reset();
 
 private:
 
-  void characters(const char * ch, int len);
+  void reset_internal();
+
+  virtual void start_element(const std::string & local_name, const char * prefix, const char * URI,
+                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                            const struct srcsax_attribute * attributes);
+  virtual void end_element(const std::string & local_name, const char * prefix,
+                           const char * URI);
+  virtual void characters(const char * ch, int len);
 
   void output_characters(const std::string ch, int operation);
   void add_new_line();
@@ -50,25 +65,9 @@ public:
    * Overide for desired behaviour.
    */
   virtual void startUnit(const char * localname, const char * prefix, const char * URI,
-                         int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                         int num_namespaces, const struct srcsax_namespace * namespaces,
+                         int num_attributes,
                          const struct srcsax_attribute * attributes);
-
-  /**
-   * startElement
-   * @param localname the name of the profile tag
-   * @param prefix the tag prefix
-   * @param URI the namespace of tag
-   * @param num_namespaces number of namespaces definitions
-   * @param namespaces the defined namespaces
-   * @param num_attributes the number of attributes on the tag
-   * @param attributes list of attributes
-   *
-   * SAX handler function for start of an profile.
-   * Overide for desired behaviour.
-   */
-  virtual void startElement(const char * localname, const char * prefix, const char * URI,
-                              int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                              const struct srcsax_attribute * attributes);
 
   /**
    * endUnit
@@ -80,17 +79,6 @@ public:
    * Overide for desired behaviour.
    */
   virtual void endUnit(const char * localname, const char * prefix, const char * URI);
-
-  /**
-   * endElement
-   * @param localname the name of the profile tag
-   * @param prefix the tag prefix
-   * @param URI the namespace of tag
-   *
-   * SAX handler function for end of an profile.
-   * Overide for desired behaviour.
-   */
-  virtual void endElement(const char * localname, const char * prefix, const char * URI);
 
 };
 

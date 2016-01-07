@@ -22,8 +22,11 @@ const char * const bash_view::LINE_CODE = "\x1b[36m";
 
 const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
-bash_view::bash_view(const std::string & output_filename) 
-  : diff_stack() {
+bash_view::bash_view(const std::string & output_filename, bool ignore_all_whitespace,
+                     bool ignore_whitespace, bool ignore_comments) 
+  : diff_stack(), ignore_all_whitespace(ignore_all_whitespace),
+    ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
+    in_comment(false) {
 
   if(output_filename != "-")
     output = new std::ofstream(output_filename.c_str());
@@ -50,6 +53,15 @@ void bash_view::transform(const std::string & srcdiff, const std::string & xml_e
   controller.parse(this);
 
   reset();
+
+}
+
+void bash_view::reset() {
+
+  diff_stack.clear();
+  in_comment = false;
+
+  reset_internal();
 
 }
 
@@ -151,7 +163,17 @@ void bash_view::startElement(const char * localname, const char * prefix,
                              const char * URI, int num_namespaces,
                              const struct srcsax_namespace * namespaces,
                              int num_attributes,
-                             const struct srcsax_attribute * attributes) {}
+                             const struct srcsax_attribute * attributes) {
+
+  const std::string local_name(localname);
+
+  if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF && local_name == "comment")
+    in_comment = true;
+
+  start_element(local_name, prefix, URI, num_namespaces, namespaces,
+                num_attributes, attributes);
+
+}
 
 /**
  * endRoot
@@ -185,7 +207,15 @@ void bash_view::endUnit(const char * localname, const char * prefix, const char 
  * Overide for desired behavior.
  */
 void bash_view::endElement(const char * localname, const char * prefix,
-                           const char * URI) {}
+                           const char * URI) {
+
+  const std::string local_name(localname);
+  if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF && local_name == "comment")
+    in_comment = false;
+
+  end_element(local_name, prefix, URI);
+
+}
 
 /**
  * charactersRoot

@@ -217,6 +217,21 @@ void option_field<&srcdiff_options::unified_view_context>(const std::string & ar
 
 #endif
 
+template<int srcdiff_options::*field>
+void option_field(const int & arg) { options.*field = arg; }
+
+#ifndef _MSC_BUILD
+template<>
+void option_field<&srcdiff_options::side_by_side_tab_size>(const int & arg) {
+
+  options.side_by_side_tab_size = arg;
+
+  options.flags |= OPTION_SIDE_BY_SIDE_VIEW;
+
+}
+
+#endif
+
 enum srcml_bool_field { ARCHIVE };
 
 template<srcml_bool_field field>
@@ -466,7 +481,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 #ifndef _MSC_BUILD
     ("unified", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::unified_view_context>),
         "Output as colorized unified diff with provided context. Number is lines of context, 'all' or -1 for entire file, 'function' for encompasing function (default = 3)")
-    ("side-by-side", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SIDE_BY_SIDE_VIEW>),
+    ("side-by-side", boost::program_options::value<int>()->implicit_value(7)->notifier(option_field<&srcdiff_options::side_by_side_tab_size>),
         "Output as colorized side-by-side diff")
     ("ignore-all-space,W", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>), "Ignore all whitespace when outputting unified view")
     ("ignore-space,w", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_WHITESPACE>), "Ignore whitespace when outputting unified view")

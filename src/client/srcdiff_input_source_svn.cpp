@@ -127,7 +127,8 @@ void srcdiff_input_source_svn::session_single() {
 
   srcdiff_translator translator(options.srcdiff_filename, options.flags, options.methods, options.archive,
                                 options.unit_filename,
-                                options.unified_view_context, options.summary_type_str);
+                                options.unified_view_context, options.side_by_side_tab_size,
+                                options.summary_type_str);
 
   this->translator = &translator;
 
@@ -170,7 +171,8 @@ void srcdiff_input_source_svn::session_range() {
 
     srcdiff_translator translator(full_srcdiff.str(), options.flags, options.methods, options.archive,
                                   options.unit_filename,
-                                  options.unified_view_context, options.summary_type_str);
+                                  options.unified_view_context, options.side_by_side_tab_size,
+                                  options.summary_type_str);
 
     this->translator = &translator;
 
@@ -473,7 +475,8 @@ void srcdiff_input_source_svn::process_files_from() {
 
   srcdiff_translator translator(options.srcdiff_filename, options.flags, options.methods, options.archive,
                                 options.unit_filename,
-                                options.unified_view_context, options.summary_type_str);
+                                options.unified_view_context, options.side_by_side_tab_size,
+                                options.summary_type_str);
 
   this->translator = &translator;
 

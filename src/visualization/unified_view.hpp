@@ -21,13 +21,9 @@ private:
   static const context_mode FUNCTION = 1 << 1;
   static const context_mode ALL      = 1 << 2;
 
-  bool ignore_all_whitespace;
-  bool ignore_whitespace;
-  bool ignore_comments;
+  context_mode modes;
 
   int last_character_operation;
-
-  context_mode modes;
 
   size_t line_number_delete;
   size_t line_number_insert;
@@ -51,22 +47,26 @@ private:
   bool change_starting_line;
   std::string change_ending_space;
   int change_ending_operation;
-  bool in_comment;
 
 public:
 
-  unified_view(const std::string & output_filename, boost::any context_type,
-               bool ignore_all_whitespace, bool ignore_whitespace, bool ignore_comments);
+  unified_view(const std::string & output_filename, bool ignore_all_whitespace,
+               bool ignore_whitespace, bool ignore_comments, boost::any context_type);
   virtual ~unified_view();
 
-  virtual void reset();
-
 private:
+
+  virtual void reset_internal();
 
   bool in_mode(context_mode mode);
 
   void output_additional_context();
 
+  virtual void start_element(const std::string & local_name, const char * prefix, const char * URI,
+                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                            const struct srcsax_attribute * attributes);
+  virtual void end_element(const std::string & local_name, const char * prefix,
+                           const char * URI);
   virtual void characters(const char * ch, int len);
 
   context_mode context_string_to_id(const std::string & context_type_str) const;
@@ -93,23 +93,6 @@ public:
                          const struct srcsax_attribute * attributes);
 
   /**
-   * startElement
-   * @param localname the name of the profile tag
-   * @param prefix the tag prefix
-   * @param URI the namespace of tag
-   * @param num_namespaces number of namespaces definitions
-   * @param namespaces the defined namespaces
-   * @param num_attributes the number of attributes on the tag
-   * @param attributes list of attributes
-   *
-   * SAX handler function for start of an profile.
-   * Overide for desired behaviour.
-   */
-  virtual void startElement(const char * localname, const char * prefix, const char * URI,
-                              int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                              const struct srcsax_attribute * attributes);
-
-  /**
    * endUnit
    * @param localname the name of the profile tag
    * @param prefix the tag prefix
@@ -119,17 +102,6 @@ public:
    * Overide for desired behaviour.
    */
   virtual void endUnit(const char * localname, const char * prefix, const char * URI);
-
-  /**
-   * endElement
-   * @param localname the name of the profile tag
-   * @param prefix the tag prefix
-   * @param URI the namespace of tag
-   *
-   * SAX handler function for end of an profile.
-   * Overide for desired behaviour.
-   */
-  virtual void endElement(const char * localname, const char * prefix, const char * URI);
 
 };
 

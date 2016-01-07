@@ -26,16 +26,32 @@ protected:
 
   std::ostream * output;
 
+  bool ignore_all_whitespace;
+  bool ignore_whitespace;
+  bool ignore_comments;
+
+  bool in_comment;
+
 public:
 
-  bash_view(const std::string & output_filename);
+  bash_view(const std::string & output_filename, bool ignore_all_whitespace,
+            bool ignore_whitespace, bool ignore_comments);
   virtual ~bash_view();
 
   void transform(const std::string & srcdiff, const std::string & xml_encoding);
-  virtual void reset() = 0;
+  void reset();
 
 protected:
 
+  virtual void reset_internal() = 0;
+
+  virtual void start_element(const std::string & local_name, const char * prefix,
+                             const char * URI, int num_namespaces,
+                             const struct srcsax_namespace * namespaces,
+                             int num_attributes,
+                             const struct srcsax_attribute * attributes) = 0;
+  virtual void end_element(const std::string & local_name, const char * prefix,
+                           const char * URI) = 0;
   virtual void characters(const char * ch, int len) = 0;
 
   const char * change_operation_to_code(int operation);
@@ -112,9 +128,11 @@ public:
    * SAX handler function for start of an profile.
    * Overide for desired behaviour.
    */
-  virtual void startElement(const char * localname, const char * prefix, const char * URI,
-                              int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                              const struct srcsax_attribute * attributes);
+  virtual void startElement(const char * localname, const char * prefix,
+                            const char * URI, int num_namespaces,
+                            const struct srcsax_namespace * namespaces,
+                            int num_attributes,
+                            const struct srcsax_attribute * attributes);
 
   /**
    * endRoot

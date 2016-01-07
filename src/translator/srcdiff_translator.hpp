@@ -59,13 +59,15 @@ public:
   // constructor
   srcdiff_translator(const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method, srcml_archive * archive,
                      const boost::optional<std::string> & unit_filename,
-                     const boost::any & unified_view_context, const boost::optional<std::string> & summary_type_str);
+                     const boost::any & unified_view_context, int side_by_side_tab_size,
+                     const boost::optional<std::string> & summary_type_str);
 
   // destructor
   ~srcdiff_translator();
 
   template<class T>
-  void translate(const srcdiff_input<T> & input_original, const srcdiff_input<T> & input_modified,
+  void translate(const srcdiff_input<T> & input_original,
+                 const srcdiff_input<T> & input_modified,
                  line_diff_range<T> & line_diff_range, const std::string & language,
                  const boost::optional<std::string> & unit_filename  = boost::optional<std::string>(),
                  const boost::optional<std::string> & unit_version   = boost::optional<std::string>());
@@ -78,10 +80,12 @@ public:
 
 // Translate from input stream to output stream
 template<class T>
-void srcdiff_translator::translate(const srcdiff_input<T> & input_original, const srcdiff_input<T> & input_modified,
-                                  line_diff_range<T> & line_diff_range, const std::string & language,
-                                  const boost::optional<std::string> & unit_filename,
-                                  const boost::optional<std::string> & unit_version) {
+void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
+                                   const srcdiff_input<T> & input_modified,
+                                   line_diff_range<T> & line_diff_range,
+                                   const std::string & language,
+                                   const boost::optional<std::string> & unit_filename,
+                                   const boost::optional<std::string> & unit_version) {
 
   // line_diff_range.create_line_diff();
 
