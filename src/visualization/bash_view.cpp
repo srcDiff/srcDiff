@@ -56,6 +56,15 @@ void bash_view::transform(const std::string & srcdiff, const std::string & xml_e
 
 }
 
+void bash_view::reset() {
+
+  diff_stack.clear();
+  in_comment = false;
+
+  reset_internal();
+
+}
+
 const char * bash_view::change_operation_to_code(int operation) {
 
   if(operation == DELETE) return DELETE_CODE;

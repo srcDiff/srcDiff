@@ -26,9 +26,10 @@ public:
                     bool ignore_whitespace, bool ignore_comments);
   virtual ~side_by_side_view();
 
-  void reset();
 
 private:
+
+  void reset_internal();
 
   virtual void start_element(const std::string & local_name, const char * prefix, const char * URI,
                             int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,

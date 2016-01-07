@@ -19,7 +19,7 @@ side_by_side_view::side_by_side_view(const std::string & output_filename,
 
 side_by_side_view::~side_by_side_view() {}
 
-void side_by_side_view::reset() {
+void side_by_side_view::reset_internal() {
 
   line_operations.clear();
 

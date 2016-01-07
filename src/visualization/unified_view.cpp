@@ -41,7 +41,7 @@ unified_view::unified_view(const std::string & output_filename,
 
 unified_view::~unified_view() {}
 
-void unified_view::reset() {
+void unified_view::reset_internal() {
 
   line_number_delete = 0;
   line_number_insert = 0;
@@ -57,7 +57,6 @@ void unified_view::reset() {
   change_starting_line = false;
   change_ending_space = "";
   change_ending_operation = COMMON;
-  in_comment = false;
 
 }
 

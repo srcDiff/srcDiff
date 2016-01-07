@@ -54,9 +54,9 @@ public:
                bool ignore_whitespace, bool ignore_comments, boost::any context_type);
   virtual ~unified_view();
 
-  virtual void reset();
-
 private:
+
+  virtual void reset_internal();
 
   bool in_mode(context_mode mode);
 

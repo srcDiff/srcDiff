@@ -39,9 +39,11 @@ public:
   virtual ~bash_view();
 
   void transform(const std::string & srcdiff, const std::string & xml_encoding);
-  virtual void reset() = 0;
+  void reset();
 
 protected:
+
+  virtual void reset_internal() = 0;
 
   virtual void start_element(const std::string & local_name, const char * prefix,
                              const char * URI, int num_namespaces,
