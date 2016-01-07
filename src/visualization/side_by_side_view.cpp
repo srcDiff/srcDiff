@@ -72,10 +72,32 @@ void side_by_side_view::start_element(const std::string & local_name,
                                          int num_namespaces,
                                          const struct srcsax_namespace * namespaces,
                                          int num_attributes,
-                                         const struct srcsax_attribute * attributes) {}
+                                         const struct srcsax_attribute * attributes) {
+
+  if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
+
+    if(local_name == "common")
+     diff_stack.push_back(bash_view::COMMON);
+    else if(local_name == "delete")
+     diff_stack.push_back(bash_view::DELETE);
+    else if(local_name == "insert")
+     diff_stack.push_back(bash_view::INSERT);
+    
+  }
+
+}
 
 void side_by_side_view::end_element(const std::string & local_name, const char * prefix,
-                               const char * URI) {}
+                               const char * URI) {
+
+  if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
+
+    if(local_name == "common" || local_name == "delete" || local_name == "insert")
+      diff_stack.pop_back();
+
+  }
+  
+}
 
 void side_by_side_view::characters(const char * ch, int len) {
 

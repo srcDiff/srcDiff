@@ -115,8 +115,31 @@ void unified_view::start_element(const std::string & local_name,
                                          int num_attributes,
                                          const struct srcsax_attribute * attributes) {
 
-    if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF &&
-       in_mode(FUNCTION) && is_function_type(local_name)) {
+
+  if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
+
+    if(ignore_comments && in_comment) return;
+
+    if(local_name == "common")
+     diff_stack.push_back(COMMON);
+    else if(local_name == "delete")
+     diff_stack.push_back(DELETE);
+    else if(local_name == "insert")
+     diff_stack.push_back(INSERT);
+    else if(local_name == "ws" && ignore_all_whitespace)
+      diff_stack.push_back(COMMON);
+    
+  } else {
+
+    if(local_name == "comment") {
+
+      in_comment = true;
+      if(ignore_comments)
+        diff_stack.push_back(COMMON);
+
+    }
+
+    if(in_mode(FUNCTION) && is_function_type(local_name)) {
 
       in_function.push_back(true);
 
@@ -129,13 +152,32 @@ void unified_view::start_element(const std::string & local_name,
 
     }
 
+  }
+
 }
 
 void unified_view::end_element(const std::string & local_name, const char * prefix,
                                const char * URI) {
 
-    if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF && in_mode(FUNCTION)
-       && is_function_type(local_name)) {
+    if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
+
+      if(ignore_comments && in_comment) return;
+
+      if(local_name == "common" || local_name == "delete" || local_name == "insert"
+        || (local_name == "ws" && ignore_all_whitespace))
+        diff_stack.pop_back();
+
+  } else {
+
+    if(local_name == "comment") {
+
+      in_comment = false;
+      if(ignore_comments)
+        diff_stack.pop_back();
+      
+    }
+
+    if(in_mode(FUNCTION) && is_function_type(local_name)) {
 
       in_function.pop_back();
       if(in_function.size() == 0) {
@@ -146,6 +188,8 @@ void unified_view::end_element(const std::string & local_name, const char * pref
       }
 
     }
+
+  }
 
 }
 

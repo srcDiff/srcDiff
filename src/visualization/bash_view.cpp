@@ -166,32 +166,6 @@ void bash_view::startElement(const char * localname, const char * prefix,
                              const struct srcsax_attribute * attributes) {
 
   const std::string local_name(localname);
-
-  if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
-
-    if(ignore_comments && in_comment) return;
-
-    if(local_name == "common")
-     diff_stack.push_back(COMMON);
-    else if(local_name == "delete")
-     diff_stack.push_back(DELETE);
-    else if(local_name == "insert")
-     diff_stack.push_back(INSERT);
-    else if(local_name == "ws" && ignore_all_whitespace)
-      diff_stack.push_back(COMMON);
-    
-  } else {
-
-    if(local_name == "comment") {
-
-      in_comment = true;
-      if(ignore_comments)
-        diff_stack.push_back(COMMON);
-
-    }
-
-  }
-
   start_element(local_name, prefix, URI, num_namespaces, namespaces,
                 num_attributes, attributes);
 
@@ -231,28 +205,7 @@ void bash_view::endUnit(const char * localname, const char * prefix, const char 
 void bash_view::endElement(const char * localname, const char * prefix,
                            const char * URI) {
 
-    const std::string local_name(localname);
-
-    if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
-
-      if(ignore_comments && in_comment) return;
-
-      if(local_name == "common" || local_name == "delete" || local_name == "insert"
-        || (local_name == "ws" && ignore_all_whitespace))
-        diff_stack.pop_back();
-
-  } else {
-
-    if(local_name == "comment") {
-
-      in_comment = false;
-      if(ignore_comments)
-        diff_stack.pop_back();
-      
-    }
-
-  }
-
+  const std::string local_name(localname);
   end_element(local_name, prefix, URI);
 
 }
