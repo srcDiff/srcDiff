@@ -104,6 +104,7 @@ struct srcdiff_options
   METHOD_TYPE methods;
 
   boost::any unified_view_context;
+  int side_by_side_tab_size;
   boost::optional<std::string> summary_type_str;
 
 #if SVN
