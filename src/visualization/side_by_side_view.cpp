@@ -36,6 +36,10 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
   if(original_lines.empty()) add_new_line();
 
   int real_operation = operation;
+
+  if(ignore_all_whitespace && ch.size() == 1 && isspace(ch[0]))
+    real_operation = bash_view::COMMON;
+
   if(ignore_comments && in_comment)
     real_operation = bash_view::COMMON;
 
@@ -109,7 +113,7 @@ void side_by_side_view::characters(const char * ch, int len) {
 
     if(ch[i] == '\n') {
 
-      if(diff_stack.back() != COMMON)
+      if(diff_stack.back() != COMMON && !ignore_all_whitespace)
         output_characters(CARRIAGE_RETURN_SYMBOL, diff_stack.back());
       else
         line_operations.back() |= COMMON;
