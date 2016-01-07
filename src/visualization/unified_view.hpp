@@ -21,9 +21,9 @@ private:
   static const context_mode FUNCTION = 1 << 1;
   static const context_mode ALL      = 1 << 2;
 
-  int last_character_operation;
-
   context_mode modes;
+
+  int last_character_operation;
 
   size_t line_number_delete;
   size_t line_number_insert;

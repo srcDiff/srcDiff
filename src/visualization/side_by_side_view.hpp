@@ -13,6 +13,8 @@ class side_by_side_view : public bash_view {
 
 private:
 
+  int side_by_side_tab_size;
+
   std::vector<int> line_operations;
 
   int last_character_operation_original;
@@ -29,7 +31,8 @@ private:
 public:
 
   side_by_side_view(const std::string & output_filename, bool ignore_all_whitespace,
-                    bool ignore_whitespace, bool ignore_comments);
+                    bool ignore_whitespace, bool ignore_comments,
+                    int side_by_side_tab_size);
   virtual ~side_by_side_view();
 
 
