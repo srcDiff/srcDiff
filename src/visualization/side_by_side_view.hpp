@@ -22,7 +22,8 @@ private:
 
 public:
 
-  side_by_side_view(const std::string & output_filename);
+  side_by_side_view(const std::string & output_filename, bool ignore_all_whitespace,
+                    bool ignore_whitespace, bool ignore_comments);
   virtual ~side_by_side_view();
 
   void reset();

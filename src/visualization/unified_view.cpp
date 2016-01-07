@@ -7,10 +7,11 @@
 #include <cstring>
 #include <cassert>
 
-unified_view::unified_view(const std::string & output_filename, boost::any context_type,
-               bool ignore_all_whitespace, bool ignore_whitespace, bool ignore_comments)
-              : bash_view(output_filename), ignore_all_whitespace(ignore_all_whitespace),
-                ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
+unified_view::unified_view(const std::string & output_filename,
+                           bool ignore_all_whitespace, bool ignore_whitespace,
+                           bool ignore_comments, boost::any context_type)
+              : bash_view(output_filename, ignore_all_whitespace, ignore_whitespace,
+                          ignore_comments),
                 last_character_operation(COMMON), modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
                 is_after_change(false), wait_change(true), in_function(),
                 context_type(context_type), length(0), is_after_additional(false),

@@ -7,10 +7,15 @@
 #include <cstring>
 #include <cassert>
 
-side_by_side_view::side_by_side_view(const std::string & output_filename)
-  : bash_view(output_filename), line_operations(),
-    last_character_operation_original(bash_view::COMMON), original_lines(),
-    last_character_operation_modified(bash_view::COMMON), modified_lines() {}
+side_by_side_view::side_by_side_view(const std::string & output_filename,
+                                     bool ignore_all_whitespace,
+                                     bool ignore_whitespace,
+                                     bool ignore_comments)
+  : bash_view(output_filename, ignore_all_whitespace, ignore_whitespace,
+              ignore_comments),
+    line_operations(), last_character_operation_original(bash_view::COMMON),
+    original_lines(), last_character_operation_modified(bash_view::COMMON),
+    modified_lines() {}
 
 side_by_side_view::~side_by_side_view() {}
 

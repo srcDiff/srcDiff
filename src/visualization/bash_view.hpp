@@ -26,9 +26,17 @@ protected:
 
   std::ostream * output;
 
+  bool ignore_all_whitespace;
+  bool ignore_whitespace;
+  bool ignore_comments;
+
+  std::vector<bool> in_function;
+  bool in_comment;
+
 public:
 
-  bash_view(const std::string & output_filename);
+  bash_view(const std::string & output_filename, bool ignore_all_whitespace,
+            bool ignore_whitespace, bool ignore_comments);
   virtual ~bash_view();
 
   void transform(const std::string & srcdiff, const std::string & xml_encoding);

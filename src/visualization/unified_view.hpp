@@ -55,8 +55,8 @@ private:
 
 public:
 
-  unified_view(const std::string & output_filename, boost::any context_type,
-               bool ignore_all_whitespace, bool ignore_whitespace, bool ignore_comments);
+  unified_view(const std::string & output_filename, bool ignore_all_whitespace,
+               bool ignore_whitespace, bool ignore_comments, boost::any context_type);
   virtual ~unified_view();
 
   virtual void reset();

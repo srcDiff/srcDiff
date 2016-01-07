@@ -22,8 +22,10 @@ const char * const bash_view::LINE_CODE = "\x1b[36m";
 
 const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
-bash_view::bash_view(const std::string & output_filename) 
-  : diff_stack() {
+bash_view::bash_view(const std::string & output_filename, bool ignore_all_whitespace,
+                     bool ignore_whitespace, bool ignore_comments) 
+  : diff_stack(), ignore_all_whitespace(ignore_all_whitespace),
+    ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments) {
 
   if(output_filename != "-")
     output = new std::ofstream(output_filename.c_str());
