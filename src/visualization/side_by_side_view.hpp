@@ -35,7 +35,6 @@ public:
                     int side_by_side_tab_size);
   virtual ~side_by_side_view();
 
-
 private:
 
   void reset_internal();

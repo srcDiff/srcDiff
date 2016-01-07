@@ -176,7 +176,13 @@ void side_by_side_view::characters(const char * ch, int len) {
 
   for(int i = 0; i < len; ++i) {
 
-    if(ch[i] == '\n') {
+    std::string str;
+    if(ch[i] == '\t')
+      str.append(side_by_side_tab_size, ' ');
+    else
+      str.append(1, ch[i]);
+
+    if(str[0] == '\n') {
 
       if(!ignore_all_whitespace && !ignore_whitespace) {
 
@@ -192,24 +198,24 @@ void side_by_side_view::characters(const char * ch, int len) {
 
     }
 
-    if(isspace(ch[i]) && ignore_whitespace && diff_stack.back() != bash_view::COMMON) {
+    if(isspace(str[0]) && ignore_whitespace && diff_stack.back() != bash_view::COMMON) {
 
       bool output = true;
       if(!change_starting_line_original && diff_stack.back() == bash_view::DELETE) {
 
-        change_ending_space_original += ch[i];
+        change_ending_space_original += str;
         output = false;
 
       }
 
       if(!change_starting_line_modified && diff_stack.back() == bash_view::INSERT) {
 
-        change_ending_space_modified += ch[i];
+        change_ending_space_modified += str;
         output = false;
       }
 
       if(output)
-        output_character(ch[i], diff_stack.back());
+        output_characters(str, diff_stack.back());
 
     } else {
 
@@ -232,7 +238,7 @@ void side_by_side_view::characters(const char * ch, int len) {
   
       }
 
-      output_character(ch[i], diff_stack.back());
+      output_characters(str, diff_stack.back());
 
     }
 
@@ -295,7 +301,6 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
 
   }
 
-  /** @todo handle tabs */
   int max_width = 0;
   for(const std::pair<std::ostringstream, int> & line : original_lines)
     max_width = std::max(max_width, line.second);
