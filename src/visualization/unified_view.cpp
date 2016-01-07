@@ -300,9 +300,11 @@ void unified_view::characters(const char * ch, int len) {
  * SAX handler function for start of an unit.
  * Overide for desired behavior.
  */
-void unified_view::startUnit(const char * localname, const char * prefix, const char * URI,
-                       int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                       const struct srcsax_attribute * attributes) {
+void unified_view::startUnit(const char * localname, const char * prefix,
+                             const char * URI, int num_namespaces,
+                             const struct srcsax_namespace * namespaces,
+                             int num_attributes,
+                             const struct srcsax_attribute * attributes) {
 
     diff_stack.push_back(COMMON);
     output_characters("", COMMON);

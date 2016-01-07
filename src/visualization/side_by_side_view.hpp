@@ -56,7 +56,8 @@ public:
    * Overide for desired behaviour.
    */
   virtual void startUnit(const char * localname, const char * prefix, const char * URI,
-                         int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                         int num_namespaces, const struct srcsax_namespace * namespaces,
+                         int num_attributes,
                          const struct srcsax_attribute * attributes);
 
   /**

@@ -112,9 +112,11 @@ void side_by_side_view::characters(const char * ch, int len) {
  * SAX handler function for start of an unit.
  * Overide for desired behavior.
  */
-void side_by_side_view::startUnit(const char * localname, const char * prefix, const char * URI,
-                       int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                       const struct srcsax_attribute * attributes) {
+void side_by_side_view::startUnit(const char * localname, const char * prefix,
+                                  const char * URI, int num_namespaces,
+                                  const struct srcsax_namespace * namespaces,
+                                  int num_attributes,
+                                  const struct srcsax_attribute * attributes) {
 
     diff_stack.push_back(bash_view::COMMON);
     add_new_line();
@@ -130,7 +132,8 @@ void side_by_side_view::startUnit(const char * localname, const char * prefix, c
  * SAX handler function for end of an unit.
  * Overide for desired behavior.
  */
-void side_by_side_view::endUnit(const char * localname, const char * prefix, const char * URI) {
+void side_by_side_view::endUnit(const char * localname, const char * prefix,
+                                const char * URI) {
 
   /** @todo handle tabs */
   int max_width = 0;

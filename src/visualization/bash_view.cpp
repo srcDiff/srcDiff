@@ -150,9 +150,11 @@ void bash_view::startUnit(const char * localname, const char * prefix, const cha
  * SAX handler function for start of an profile.
  * Overide for desired behavior.
  */
-void bash_view::startElement(const char * localname, const char * prefix, const char * URI,
-                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                            const struct srcsax_attribute * attributes) {
+void bash_view::startElement(const char * localname, const char * prefix,
+                             const char * URI, int num_namespaces,
+                             const struct srcsax_namespace * namespaces,
+                             int num_attributes,
+                             const struct srcsax_attribute * attributes) {
 
   const std::string local_name(localname);
 
