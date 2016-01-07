@@ -67,6 +67,13 @@ void side_by_side_view::add_new_line() {
 
 }
 
+void side_by_side_view::start_element(const std::string & local_name, 
+                                         const char * prefix, const char * URI,
+                                         int num_namespaces,
+                                         const struct srcsax_namespace * namespaces,
+                                         int num_attributes,
+                                         const struct srcsax_attribute * attributes) {}
+
 void side_by_side_view::characters(const char * ch, int len) {
 
   for(int i = 0; i < len; ++i) {
@@ -108,38 +115,6 @@ void side_by_side_view::startUnit(const char * localname, const char * prefix, c
 
     diff_stack.push_back(bash_view::COMMON);
     add_new_line();
-
-}
-
-/**
- * startElement
- * @param localname the name of the profile tag
- * @param prefix the tag prefix
- * @param URI the namespace of tag
- * @param num_namespaces number of namespaces definitions
- * @param namespaces the defined namespaces
- * @param num_attributes the number of attributes on the tag
- * @param attributes list of attributes
- *
- * SAX handler function for start of an profile.
- * Overide for desired behavior.
- */
-void side_by_side_view::startElement(const char * localname, const char * prefix, const char * URI,
-                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                            const struct srcsax_attribute * attributes) {
-
-  const std::string local_name(localname);
-
-  if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
-
-    if(local_name == "common")
-     diff_stack.push_back(bash_view::COMMON);
-    else if(local_name == "delete")
-     diff_stack.push_back(bash_view::DELETE);
-    else if(local_name == "insert")
-     diff_stack.push_back(bash_view::INSERT);
-    
-  }
 
 }
 

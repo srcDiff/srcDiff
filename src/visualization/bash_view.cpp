@@ -25,7 +25,8 @@ const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 bash_view::bash_view(const std::string & output_filename, bool ignore_all_whitespace,
                      bool ignore_whitespace, bool ignore_comments) 
   : diff_stack(), ignore_all_whitespace(ignore_all_whitespace),
-    ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments) {
+    ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
+    in_comment(false) {
 
   if(output_filename != "-")
     output = new std::ofstream(output_filename.c_str());
@@ -149,11 +150,41 @@ void bash_view::startUnit(const char * localname, const char * prefix, const cha
  * SAX handler function for start of an profile.
  * Overide for desired behavior.
  */
-void bash_view::startElement(const char * localname, const char * prefix,
-                             const char * URI, int num_namespaces,
-                             const struct srcsax_namespace * namespaces,
-                             int num_attributes,
-                             const struct srcsax_attribute * attributes) {}
+void bash_view::startElement(const char * localname, const char * prefix, const char * URI,
+                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
+                            const struct srcsax_attribute * attributes) {
+
+  const std::string local_name(localname);
+
+  if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
+
+    if(ignore_comments && in_comment) return;
+
+    if(local_name == "common")
+     diff_stack.push_back(COMMON);
+    else if(local_name == "delete")
+     diff_stack.push_back(DELETE);
+    else if(local_name == "insert")
+     diff_stack.push_back(INSERT);
+    else if(local_name == "ws" && ignore_all_whitespace)
+      diff_stack.push_back(COMMON);
+    
+  } else {
+
+    if(local_name == "comment") {
+
+      in_comment = true;
+      if(ignore_comments)
+        diff_stack.push_back(COMMON);
+
+    }
+
+  }
+
+  start_element(local_name, prefix, URI, num_namespaces, namespaces,
+                num_attributes, attributes);
+
+}
 
 /**
  * endRoot

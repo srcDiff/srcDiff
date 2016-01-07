@@ -17,7 +17,7 @@ unified_view::unified_view(const std::string & output_filename,
                 context_type(context_type), length(0), is_after_additional(false),
                 after_edit_count(0), last_context_line((unsigned)-1),
                 change_starting_line(false), change_ending_space(),
-                change_ending_operation(COMMON), in_comment(false) {
+                change_ending_operation(COMMON) {
 
   if(context_type.type() == typeid(size_t)) {
 
@@ -106,6 +106,29 @@ void unified_view::output_characters(const std::string ch, int operation) {
 
   last_character_operation = operation;
   (*output) << ch;
+
+}
+
+void unified_view::start_element(const std::string & local_name, 
+                                         const char * prefix, const char * URI,
+                                         int num_namespaces,
+                                         const struct srcsax_namespace * namespaces,
+                                         int num_attributes,
+                                         const struct srcsax_attribute * attributes) {
+
+    if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF &&
+       in_mode(FUNCTION) && is_function_type(local_name)) {
+
+      in_function.push_back(true);
+
+      if(in_function.size() == 1) {
+
+        additional_context.clear();
+        length = 0;
+
+      }
+
+    }
 
 }
 
@@ -265,65 +288,6 @@ void unified_view::startUnit(const char * localname, const char * prefix, const 
 
     diff_stack.push_back(COMMON);
     output_characters("", COMMON);
-
-}
-
-/**
- * startElement
- * @param localname the name of the profile tag
- * @param prefix the tag prefix
- * @param URI the namespace of tag
- * @param num_namespaces number of namespaces definitions
- * @param namespaces the defined namespaces
- * @param num_attributes the number of attributes on the tag
- * @param attributes list of attributes
- *
- * SAX handler function for start of an profile.
- * Overide for desired behavior.
- */
-void unified_view::startElement(const char * localname, const char * prefix, const char * URI,
-                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                            const struct srcsax_attribute * attributes) {
-
-  const std::string local_name(localname);
-
-  if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
-
-    if(ignore_comments && in_comment) return;
-
-    if(local_name == "common")
-     diff_stack.push_back(COMMON);
-    else if(local_name == "delete")
-     diff_stack.push_back(DELETE);
-    else if(local_name == "insert")
-     diff_stack.push_back(INSERT);
-    else if(local_name == "ws" && ignore_all_whitespace)
-      diff_stack.push_back(COMMON);
-    
-  } else {
-
-    if(local_name == "comment") {
-
-      in_comment = true;
-      if(ignore_comments)
-        diff_stack.push_back(COMMON);
-
-    }
-
-    if(in_mode(FUNCTION) && is_function_type(local_name)) {
-
-      in_function.push_back(true);
-
-      if(in_function.size() == 1) {
-
-        additional_context.clear();
-        length = 0;
-
-      }
-
-    }
-
-  }
 
 }
 
