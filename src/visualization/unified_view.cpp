@@ -363,6 +363,14 @@ void unified_view::startUnit(const char * localname, const char * prefix,
  */
 void unified_view::endUnit(const char * localname, const char * prefix, const char * URI) {
 
+  if(!change_ending_space.empty()) {
+
+    output_characters(change_ending_space, bash_view::COMMON);
+    change_ending_space = "";
+    change_ending_operation = bash_view::COMMON;
+
+  }
+
   output_characters("", bash_view::COMMON);
 
 }

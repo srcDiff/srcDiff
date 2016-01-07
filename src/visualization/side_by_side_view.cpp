@@ -29,6 +29,12 @@ void side_by_side_view::reset_internal() {
   last_character_operation_modified = bash_view::COMMON;
   modified_lines.clear();
 
+  change_starting_line_original = true;
+  change_starting_line_modified = true;
+
+  change_ending_space_original = "";
+  change_ending_space_modified = "";
+
 }
 
 void side_by_side_view::output_characters(const std::string ch, int operation) {
@@ -37,7 +43,7 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 
   int real_operation = operation;
   bool is_ignore = false;
-  if(ch.size() == 1 && isspace(ch[0])) {
+  if(!ch.empty() && isspace(ch[0])) {
 
     if(ignore_all_whitespace)
       real_operation = bash_view::COMMON;
@@ -54,6 +60,8 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 
   }
 
+  int size = ch == CARRIAGE_RETURN_SYMBOL ? 1 : ch.size();
+
   if(operation != bash_view::INSERT) {
 
     if(change_starting_line_original && !ch.empty() && !isspace(ch[0]))
@@ -68,7 +76,7 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 
     output_characters_to_buffer(ch, real_operation, original_lines.back().first,
                                 last_character_operation_original);
-    original_lines.back().second += 1;
+    original_lines.back().second += size;
 
   }
 
@@ -86,7 +94,7 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 
     output_characters_to_buffer(ch, real_operation, modified_lines.back().first,
                                 last_character_operation_modified);
-    modified_lines.back().second += 1;
+    modified_lines.back().second += size;
 
   }
 
@@ -154,6 +162,25 @@ void side_by_side_view::end_element(const std::string & local_name, const char *
 
 void side_by_side_view::characters(const char * ch, int len) {
 
+  if((!change_ending_space_original.empty() || !change_ending_space_modified.empty())) {
+
+    assert(change_ending_space_original.empty() || change_ending_space_modified.empty());
+    if(!change_ending_space_original.empty() && diff_stack.back() != bash_view::DELETE) {
+
+      output_characters(change_ending_space_original, bash_view::COMMON);
+      change_ending_space_original = "";
+
+    }
+
+    if(!change_ending_space_modified.empty() && diff_stack.back() != bash_view::INSERT) {
+
+      output_characters(change_ending_space_modified, bash_view::COMMON);
+      change_ending_space_modified = "";
+
+    }
+
+  }
+
   for(int i = 0; i < len; ++i) {
 
     if(ch[i] == '\n') {
@@ -172,7 +199,48 @@ void side_by_side_view::characters(const char * ch, int len) {
 
     }
 
-    output_character(ch[i], diff_stack.back());
+    if(isspace(ch[i]) && ignore_whitespace && diff_stack.back() != bash_view::COMMON) {
+
+      bool output = true;
+      if(!change_starting_line_original && diff_stack.back() != bash_view::INSERT) {
+
+        change_ending_space_original += ch[i];
+        output = false;
+
+      }
+
+      if(!change_starting_line_modified && diff_stack.back() != bash_view::DELETE) {
+
+        change_ending_space_modified += ch[i];
+        output = false;
+      }
+
+      if(output)
+        output_character(ch[i], diff_stack.back());
+
+    } else {
+
+      if(!change_ending_space_original.empty()
+         && diff_stack.back() != bash_view::INSERT) {
+
+        output_characters(change_ending_space_original,
+                          last_character_operation_original);
+        change_ending_space_original = "";
+
+      }
+
+      if(!change_ending_space_modified.empty()
+         && diff_stack.back() != bash_view::DELETE) {
+
+        output_characters(change_ending_space_modified,
+                          last_character_operation_modified);
+        change_ending_space_modified = "";
+  
+      }
+
+      output_character(ch[i], diff_stack.back());
+
+    }
 
   }
 
@@ -213,6 +281,25 @@ void side_by_side_view::startUnit(const char * localname, const char * prefix,
  */
 void side_by_side_view::endUnit(const char * localname, const char * prefix,
                                 const char * URI) {
+
+  if((!change_ending_space_original.empty() || !change_ending_space_modified.empty())) {
+
+    assert(change_ending_space_original.empty() || change_ending_space_modified.empty());
+    if(!change_ending_space_original.empty() && diff_stack.back() != bash_view::DELETE) {
+
+      output_characters(change_ending_space_original, bash_view::COMMON);
+      change_ending_space_original = "";
+
+    }
+
+    if(!change_ending_space_modified.empty() && diff_stack.back() != bash_view::INSERT) {
+
+      output_characters(change_ending_space_modified, bash_view::COMMON);
+      change_ending_space_modified = "";
+
+    }
+
+  }
 
   /** @todo handle tabs */
   int max_width = 0;

@@ -23,6 +23,9 @@ private:
   bool change_starting_line_original;
   bool change_starting_line_modified;
 
+  std::string change_ending_space_original;
+  std::string change_ending_space_modified;
+
 public:
 
   side_by_side_view(const std::string & output_filename, bool ignore_all_whitespace,
