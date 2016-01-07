@@ -124,7 +124,7 @@ void conflicting_options(const boost::program_options::variables_map & var_map,
                          const std::string & option_two) {
 
   if(var_map[option_one].defaulted() || var_map[option_one].empty()) return;
-  if(var_map[option_two].defaulted() || var_map[option_one].empty()) return;
+  if(var_map[option_two].defaulted() || var_map[option_two].empty()) return;
 
   throw std::invalid_argument("Conflicting Options: '--" + option_one
                             + "' and '--" + option_two + "'");
