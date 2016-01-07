@@ -218,7 +218,33 @@ void bash_view::endUnit(const char * localname, const char * prefix, const char 
  * Overide for desired behavior.
  */
 void bash_view::endElement(const char * localname, const char * prefix,
-                           const char * URI) {}
+                           const char * URI) {
+
+    const std::string local_name(localname);
+
+    if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
+
+      if(ignore_comments && in_comment) return;
+
+      if(local_name == "common" || local_name == "delete" || local_name == "insert"
+        || (local_name == "ws" && ignore_all_whitespace))
+        diff_stack.pop_back();
+
+  } else {
+
+    if(local_name == "comment") {
+
+      in_comment = false;
+      if(ignore_comments)
+        diff_stack.pop_back();
+      
+    }
+
+  }
+
+  end_element(local_name, prefix, URI);
+
+}
 
 /**
  * charactersRoot

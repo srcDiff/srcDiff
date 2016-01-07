@@ -74,6 +74,9 @@ void side_by_side_view::start_element(const std::string & local_name,
                                          int num_attributes,
                                          const struct srcsax_attribute * attributes) {}
 
+void side_by_side_view::end_element(const std::string & local_name, const char * prefix,
+                               const char * URI) {}
+
 void side_by_side_view::characters(const char * ch, int len) {
 
   for(int i = 0; i < len; ++i) {
@@ -151,28 +154,6 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix, con
     (*output) << modified_lines[i].first.str();
 
     (*output) << bash_view::COMMON_CODE << '\n';
-
-  }
-
-}
-
-/**
- * endElement
- * @param localname the name of the profile tag
- * @param prefix the tag prefix
- * @param URI the namespace of tag
- *
- * SAX handler function for end of an profile.
- * Overide for desired behavior.
- */
-void side_by_side_view::endElement(const char * localname, const char * prefix, const char * URI) {
-
-    const std::string local_name(localname);
-
-    if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
-
-      if(local_name == "common" || local_name == "delete" || local_name == "insert")
-        diff_stack.pop_back();
 
   }
 

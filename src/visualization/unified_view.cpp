@@ -116,12 +116,30 @@ void unified_view::start_element(const std::string & local_name,
                                          int num_attributes,
                                          const struct srcsax_attribute * attributes) {
 
-    if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF &&
+    if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF &&
        in_mode(FUNCTION) && is_function_type(local_name)) {
 
       in_function.push_back(true);
 
       if(in_function.size() == 1) {
+
+        additional_context.clear();
+        length = 0;
+
+      }
+
+    }
+
+}
+
+void unified_view::end_element(const std::string & local_name, const char * prefix,
+                               const char * URI) {
+
+    if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF && in_mode(FUNCTION)
+       && is_function_type(local_name)) {
+
+      in_function.pop_back();
+      if(in_function.size() == 0) {
 
         additional_context.clear();
         length = 0;
@@ -303,52 +321,5 @@ void unified_view::startUnit(const char * localname, const char * prefix, const 
 void unified_view::endUnit(const char * localname, const char * prefix, const char * URI) {
 
   output_characters("", COMMON);
-
-}
-
-/**
- * endElement
- * @param localname the name of the profile tag
- * @param prefix the tag prefix
- * @param URI the namespace of tag
- *
- * SAX handler function for end of an profile.
- * Overide for desired behavior.
- */
-void unified_view::endElement(const char * localname, const char * prefix, const char * URI) {
-
-    const std::string local_name(localname);
-
-    if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
-
-      if(ignore_comments && in_comment) return;
-
-      if(local_name == "common" || local_name == "delete" || local_name == "insert"
-        || (local_name == "ws" && ignore_all_whitespace))
-        diff_stack.pop_back();
-
-  } else {
-
-    if(local_name == "comment") {
-
-      in_comment = false;
-      if(ignore_comments)
-        diff_stack.pop_back();
-      
-    }
-
-    if(in_mode(FUNCTION) && is_function_type(local_name)) {
-
-      in_function.pop_back();
-      if(in_function.size() == 0) {
-
-        additional_context.clear();
-        length = 0;
-
-      }
-
-    }
-
-  }
 
 }

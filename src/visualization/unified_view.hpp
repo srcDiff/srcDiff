@@ -65,6 +65,8 @@ private:
   virtual void start_element(const std::string & local_name, const char * prefix, const char * URI,
                             int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                             const struct srcsax_attribute * attributes);
+  virtual void end_element(const std::string & local_name, const char * prefix,
+                           const char * URI);
   virtual void characters(const char * ch, int len);
 
   context_mode context_string_to_id(const std::string & context_type_str) const;
@@ -100,17 +102,6 @@ public:
    * Overide for desired behaviour.
    */
   virtual void endUnit(const char * localname, const char * prefix, const char * URI);
-
-  /**
-   * endElement
-   * @param localname the name of the profile tag
-   * @param prefix the tag prefix
-   * @param URI the namespace of tag
-   *
-   * SAX handler function for end of an profile.
-   * Overide for desired behaviour.
-   */
-  virtual void endElement(const char * localname, const char * prefix, const char * URI);
 
 };
 
