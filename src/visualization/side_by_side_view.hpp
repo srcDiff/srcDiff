@@ -20,6 +20,9 @@ private:
   int last_character_operation_modified;
   std::vector<std::pair<std::ostringstream, int>> modified_lines;
 
+  bool change_starting_line_original;
+  bool change_starting_line_modified;
+
 public:
 
   side_by_side_view(const std::string & output_filename, bool ignore_all_whitespace,

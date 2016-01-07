@@ -36,14 +36,35 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
   if(original_lines.empty()) add_new_line();
 
   int real_operation = operation;
+  bool is_ignore = false;
+  if(ch.size() == 1 && isspace(ch[0])) {
 
-  if(ignore_all_whitespace && ch.size() == 1 && isspace(ch[0]))
-    real_operation = bash_view::COMMON;
+    if(ignore_all_whitespace)
+      real_operation = bash_view::COMMON;
 
-  if(ignore_comments && in_comment)
+    if(ignore_all_whitespace || ignore_whitespace)
+      is_ignore = true;
+
+  }
+
+  if(ignore_comments && in_comment) {
+
     real_operation = bash_view::COMMON;
+    is_ignore = true;
+
+  }
 
   if(operation != bash_view::INSERT) {
+
+    if(change_starting_line_original && !ch.empty() && !isspace(ch[0]))
+      change_starting_line_original = false;
+
+    if(ignore_whitespace && change_starting_line_original) {
+
+      real_operation = bash_view::COMMON;
+      is_ignore = true;
+
+    }
 
     output_characters_to_buffer(ch, real_operation, original_lines.back().first,
                                 last_character_operation_original);
@@ -53,13 +74,24 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 
   if(operation != bash_view::DELETE) {
 
+    if(change_starting_line_modified && !ch.empty() && !isspace(ch[0]))
+      change_starting_line_modified = false;
+
+    if(ignore_whitespace && change_starting_line_modified) {
+
+      real_operation = bash_view::COMMON;
+      is_ignore = true;
+
+    }
+
     output_characters_to_buffer(ch, real_operation, modified_lines.back().first,
                                 last_character_operation_modified);
     modified_lines.back().second += 1;
 
   }
 
-  line_operations.back() |= real_operation;
+  if(!is_ignore)
+    line_operations.back() |= operation;
 
 }
 
@@ -72,6 +104,9 @@ void side_by_side_view::add_new_line() {
   modified_lines.emplace_back(std::ostringstream(), 0);
 
   line_operations.push_back(0);
+
+  change_starting_line_original = true;
+  change_starting_line_modified = true;
 
 }
 
@@ -90,7 +125,17 @@ void side_by_side_view::start_element(const std::string & local_name,
      diff_stack.push_back(bash_view::DELETE);
     else if(local_name == "insert")
      diff_stack.push_back(bash_view::INSERT);
-    
+
+    if(local_name != "ws") {
+
+      if(diff_stack.back() != bash_view::INSERT)
+        change_starting_line_original = true;
+   
+      if(diff_stack.back() != bash_view::DELETE)
+        change_starting_line_modified = true;
+
+    }
+      
   }
 
 }
@@ -113,10 +158,14 @@ void side_by_side_view::characters(const char * ch, int len) {
 
     if(ch[i] == '\n') {
 
-      if(diff_stack.back() != COMMON && !ignore_all_whitespace)
-        output_characters(CARRIAGE_RETURN_SYMBOL, diff_stack.back());
-      else
-        line_operations.back() |= COMMON;
+      if(!ignore_all_whitespace && !ignore_whitespace) {
+
+        if(diff_stack.back() != bash_view::COMMON)
+          output_characters(CARRIAGE_RETURN_SYMBOL, diff_stack.back());
+        else
+          line_operations.back() |= bash_view::COMMON;
+
+      }
 
       add_new_line();
       continue;
