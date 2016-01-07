@@ -67,12 +67,9 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
     if(change_starting_line_original && !ch.empty() && !isspace(ch[0]))
       change_starting_line_original = false;
 
-    if(ignore_whitespace && change_starting_line_original) {
-
+    if(ignore_whitespace && change_starting_line_original
+       && operation != bash_view::COMMON)
       real_operation = bash_view::COMMON;
-      is_ignore = true;
-
-    }
 
     output_characters_to_buffer(ch, real_operation, original_lines.back().first,
                                 last_character_operation_original);
@@ -85,12 +82,9 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
     if(change_starting_line_modified && !ch.empty() && !isspace(ch[0]))
       change_starting_line_modified = false;
 
-    if(ignore_whitespace && change_starting_line_modified) {
-
+    if(ignore_whitespace && change_starting_line_modified
+       && operation != bash_view::COMMON)
       real_operation = bash_view::COMMON;
-      is_ignore = true;
-
-    }
 
     output_characters_to_buffer(ch, real_operation, modified_lines.back().first,
                                 last_character_operation_modified);
@@ -202,14 +196,14 @@ void side_by_side_view::characters(const char * ch, int len) {
     if(isspace(ch[i]) && ignore_whitespace && diff_stack.back() != bash_view::COMMON) {
 
       bool output = true;
-      if(!change_starting_line_original && diff_stack.back() != bash_view::INSERT) {
+      if(!change_starting_line_original && diff_stack.back() == bash_view::DELETE) {
 
         change_ending_space_original += ch[i];
         output = false;
 
       }
 
-      if(!change_starting_line_modified && diff_stack.back() != bash_view::DELETE) {
+      if(!change_starting_line_modified && diff_stack.back() == bash_view::INSERT) {
 
         change_ending_space_modified += ch[i];
         output = false;
@@ -220,8 +214,10 @@ void side_by_side_view::characters(const char * ch, int len) {
 
     } else {
 
-      if(!change_ending_space_original.empty()
-         && diff_stack.back() != bash_view::INSERT) {
+      assert(change_ending_space_original.empty()
+             || change_ending_space_modified.empty());
+
+      if(!change_ending_space_original.empty()) {
 
         output_characters(change_ending_space_original,
                           last_character_operation_original);
@@ -229,8 +225,7 @@ void side_by_side_view::characters(const char * ch, int len) {
 
       }
 
-      if(!change_ending_space_modified.empty()
-         && diff_stack.back() != bash_view::DELETE) {
+      if(!change_ending_space_modified.empty()) {
 
         output_characters(change_ending_space_modified,
                           last_character_operation_modified);
@@ -285,14 +280,14 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
   if((!change_ending_space_original.empty() || !change_ending_space_modified.empty())) {
 
     assert(change_ending_space_original.empty() || change_ending_space_modified.empty());
-    if(!change_ending_space_original.empty() && diff_stack.back() != bash_view::DELETE) {
+    if(!change_ending_space_original.empty()) {
 
       output_characters(change_ending_space_original, bash_view::COMMON);
       change_ending_space_original = "";
 
     }
 
-    if(!change_ending_space_modified.empty() && diff_stack.back() != bash_view::INSERT) {
+    if(!change_ending_space_modified.empty()) {
 
       output_characters(change_ending_space_modified, bash_view::COMMON);
       change_ending_space_modified = "";
