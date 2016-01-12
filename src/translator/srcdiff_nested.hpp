@@ -21,7 +21,7 @@ static bool check_nestable_predicate(const node_set & match,
 public:
 
   static bool is_match(int & node_pos, const srcml_nodes & nodes, const void * context);
-  static int best_match(const srcml_nodes & nodes, const node_sets & set, const srcml_nodes & nodes_match, const node_set & match, int operation);
+  static int best_match(const srcml_nodes & nodes, const node_sets & set, const srcml_nodes & nodes_match, const node_set & match);
   
   srcdiff_nested(const srcdiff_many & diff, int start_original, int end_original, int start_modified, int end_modified, int operation);
 

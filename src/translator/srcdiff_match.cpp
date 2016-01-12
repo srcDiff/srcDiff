@@ -1238,7 +1238,7 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
 
           node_sets sets = node_sets(nodes_original, set_original.at(1), set_original.back(), srcdiff_nested::is_match,
                                     &nodes_modified.at(expr_modified.at(0)));
-          int match = srcdiff_nested::best_match(nodes_original, sets, nodes_modified, expr_modified, SES_DELETE);
+          int match = srcdiff_nested::best_match(nodes_original, sets, nodes_modified, expr_modified);
 
           if(match < sets.size())
             expr_original = sets.at(match);
@@ -1253,7 +1253,7 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
 
           node_sets sets = node_sets(nodes_modified, set_modified.at(1), set_modified.back(), srcdiff_nested::is_match,
                                     &nodes_original.at(expr_original.at(0)));
-          int match = srcdiff_nested::best_match(nodes_modified, sets, nodes_original, expr_original, SES_INSERT);
+          int match = srcdiff_nested::best_match(nodes_modified, sets, nodes_original, expr_original);
 
           if(match < sets.size())
             expr_modified = sets.at(match);

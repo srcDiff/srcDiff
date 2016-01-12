@@ -129,7 +129,7 @@ bool srcdiff_nested::is_match(int & node_pos, const srcml_nodes & nodes, const v
 
 }
 
-int srcdiff_nested::best_match(const srcml_nodes & nodes, const node_sets & set, const srcml_nodes & nodes_match, const node_set & match, int operation) {
+int srcdiff_nested::best_match(const srcml_nodes & nodes, const node_sets & set, const srcml_nodes & nodes_match, const node_set & match) {
 
   int match_pos = set.size();
   int match_similarity = 0;
@@ -204,7 +204,7 @@ bool srcdiff_nested::is_same_nestable(const node_set & structure_one, const srcm
   node_sets set = node_sets(nodes_two, structure_two.at(1), structure_two.back(), srcdiff_nested::is_match
                                                              , &nodes_one.at(structure_one.at(0)));
 
-  unsigned int match = best_match(nodes_two, set, nodes_one, structure_one, SES_DELETE);
+  unsigned int match = best_match(nodes_two, set, nodes_one, structure_one);
 
   if(match >= set.size())
     return false;
@@ -246,7 +246,7 @@ bool is_better_nest_no_recursion(const srcml_nodes & nodes_outer, const node_set
       node_sets set = node_sets(nodes_outer, node_set_outer.at(1), node_set_outer.back(), srcdiff_nested::is_match
                                                              , &nodes_inner.at(node_set_inner.at(0)));
 
-      int match = srcdiff_nested::best_match(nodes_outer, set, nodes_inner, node_set_inner, SES_DELETE);
+      int match = srcdiff_nested::best_match(nodes_outer, set, nodes_inner, node_set_inner);
 
       if(match < set.size()) {
 
@@ -297,7 +297,7 @@ bool is_better_nest(const srcml_nodes & nodes_outer, const node_set & node_set_o
       node_sets set = node_sets(nodes_outer, node_set_outer.at(1), node_set_outer.back(), srcdiff_nested::is_match
                                                              , &nodes_inner.at(node_set_inner.at(0)));
 
-      int match = srcdiff_nested::best_match(nodes_outer, set, nodes_inner, node_set_inner, SES_DELETE);
+      int match = srcdiff_nested::best_match(nodes_outer, set, nodes_inner, node_set_inner);
 
       if(match < set.size()) {
 
@@ -435,7 +435,7 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, co
         node_sets set = node_sets(nodes_original, node_sets_original.at(i).at(1), node_sets_original.at(i).back(), srcdiff_nested::is_match
                                                              , &nodes_modified.at(node_sets_modified.at(j).at(0)));
 
-        int match = srcdiff_nested::best_match(nodes_original, set, nodes_modified, node_sets_modified.at(j), SES_DELETE);
+        int match = srcdiff_nested::best_match(nodes_original, set, nodes_modified, node_sets_modified.at(j));
 
         if(match >= set.size()) continue;
 
@@ -503,7 +503,7 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, co
         node_sets set = node_sets(nodes_modified, node_sets_modified.at(i).at(1), node_sets_modified.at(i).back(), srcdiff_nested::is_match
                                                              , &nodes_original.at(node_sets_original.at(j).at(0)));
 
-        int match = srcdiff_nested::best_match(nodes_modified, set, nodes_original, node_sets_original.at(j), SES_INSERT);
+        int match = srcdiff_nested::best_match(nodes_modified, set, nodes_original, node_sets_original.at(j));
 
         if(match >= set.size()) continue;
 
@@ -674,7 +674,7 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
         node_sets set = node_sets(nodes_original, node_sets_original.at(i).at(1), node_sets_original.at(i).back(), is_match
                                                              , &nodes_modified.at(node_sets_modified.at(j).at(0)));
 
-        int match = best_match(nodes_original, set, nodes_modified, node_sets_modified.at(j), SES_DELETE);
+        int match = best_match(nodes_original, set, nodes_modified, node_sets_modified.at(j));
 
         if(match >= set.size()) continue;
 
@@ -697,7 +697,7 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
           node_sets set = node_sets(nodes_original, node_sets_original.at(i).at(1), node_sets_original.at(i).back(), is_match
                                                                , &nodes_modified.at(node_sets_modified.at(k).at(0)));
 
-          int match = best_match(nodes_original, set, nodes_modified, node_sets_modified.at(k), SES_DELETE);
+          int match = best_match(nodes_original, set, nodes_modified, node_sets_modified.at(k));
 
           if(match >= set.size()) continue;
 
@@ -733,7 +733,7 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
         node_sets set = node_sets(nodes_modified, node_sets_modified.at(i).at(1), node_sets_modified.at(i).back(), is_match
                                                              , &nodes_original.at(node_sets_original.at(j).at(0)));
 
-        int match = best_match(nodes_modified, set, nodes_original, node_sets_original.at(j), SES_INSERT);
+        int match = best_match(nodes_modified, set, nodes_original, node_sets_original.at(j));
 
         if(match >= set.size()) continue;
 
@@ -756,7 +756,7 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
             node_sets set = node_sets(nodes_modified, node_sets_modified.at(i).at(1), node_sets_modified.at(i).back(), is_match
                                                              , &nodes_original.at(node_sets_original.at(k).at(0)));
 
-            int match = best_match(nodes_modified, set, nodes_original, node_sets_original.at(k), SES_INSERT);
+            int match = best_match(nodes_modified, set, nodes_original, node_sets_original.at(k));
 
             if(match >= set.size()) continue;
 
