@@ -24,19 +24,38 @@ struct nest_info {
 };
 
 // may need to change collection algorithm to gather full and nested of same type           
-const char * const block_nest_types[]       = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block", "if", "while", "for", "foreach", "else", "elseif", "try", "catch", "finally", "synchronized",                                        0 };
-const char * const then_nest_types[]        = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block", "if", "while", "for", "foreach", "else", "elseif", "try", "catch", "finally", "synchronized", "expr", "call", "operator", "literal", 0 };
-const char * const else_nest_types[]        = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block", "if", "while", "for", "foreach", "try", "catch", "finally", "synchronized", "expr", "call", "operator", "literal",                   0 };
-const char * const for_control_nest_types[] = { "condition", "comment",                                                                                                                                                                      0 };
-const char * const class_nest_types[]       = { "decl_stmt", "function_decl", "function", "constructor_decl", "constructor", "destructor_decl", "destructor", "class_decl", "class",
-                                                "struct_decl", "struct", "union_decl", "union", "typedef",                                                                                                                                   0 };
-const char * const call_nest_types[]        = { "expr", "call", "operator", "literal", "name",                                                                                                                                               0 };
-const char * const ternary_nest_types[]     = { "ternary", "call", "operator", "literal", "expr",                                                                                                                                            0 };
-const char * const condition_nest_types[]   = { "expr", "call", "operator", "literal",                                                                                                                                                       0 };
-const char * const name_nest_types[]        = { "name",                                                                                                                                                                                      0 };
-const char * const extern_nest_types[]      = { "decl_stmt", "function_decl", "function", "class", "class_decl", "struct", "struct_decl", "union", "union_decl", "typedef", "using",                                                         0 };
-const char * const decl_nest_types[]        = { "expr",                                                                                                                                                                                      0 };
-const char * const static_nest_types[]      = { "decl_stmt",                                                                                                                                                                                 0 };
+const char * const block_nest_types[]       = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
+                                                "if", "while", "for", "foreach", "else", "elseif",
+                                                "try", "catch", "finally", "synchronized", 0 };
+
+const char * const then_nest_types[]        = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
+                                                "if", "while", "for", "foreach", "else", "elseif",
+                                                "try", "catch", "finally", "synchronized",
+                                                "expr", "call", "operator", "literal", 0 };
+
+const char * const else_nest_types[]        = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
+                                                "if", "while", "for", "foreach",
+                                                "try", "catch", "finally", "synchronized",
+                                                "expr", "call", "operator", "literal", 0 };
+
+const char * const class_nest_types[]       = { "decl_stmt",
+                                                "function_decl", "function",
+                                                "constructor_decl", "constructor", 
+                                                "destructor_decl", "destructor",
+                                                "class_decl", "class", 
+                                                "struct_decl", "struct", 
+                                                "union_decl", "union",
+                                                "typedef", 0 };
+
+const char * const extern_nest_types[]      = { "decl_stmt", "function_decl", "function", "class", "class_decl",
+                                                "struct", "struct_decl", "union", "union_decl", "typedef", "using", 0 };
+const char * const for_control_nest_types[] = { "condition", "comment",                                             0 };
+const char * const call_nest_types[]        = { "expr", "call", "operator", "literal", "name",                      0 };
+const char * const ternary_nest_types[]     = { "ternary", "call", "operator", "literal", "expr",                   0 };
+const char * const condition_nest_types[]   = { "expr", "call", "operator", "literal",                              0 };
+const char * const name_nest_types[]        = { "name",                                                             0 };
+const char * const decl_nest_types[]        = { "expr",                                                             0 };
+const char * const static_nest_types[]      = { "decl_stmt",                                                        0 };
 
 // tags that can have something nested in them (incomplete)    
 const nest_info nesting[] = {   
