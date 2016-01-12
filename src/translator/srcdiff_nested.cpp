@@ -586,6 +586,10 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, co
 bool srcdiff_nested::check_nestable_predicate(const srcml_nodes & nodes_outer, const node_sets & node_sets_outer, int pos_outer, int end_outer,
                                               const srcml_nodes & nodes_inner, const node_sets & node_sets_inner, int pos_inner, int end_inner) {
 
+  if(nodes_inner.at(node_sets_inner.at(pos_inner).at(0))->move) return true;
+
+  if(!is_nestable(node_sets_inner.at(pos_inner), nodes_inner, node_sets_outer.at(pos_outer), nodes_outer))
+    return true;
 
   node_sets set = node_sets(nodes_outer, node_sets_outer.at(pos_outer).at(1),
                             node_sets_outer.at(pos_outer).back(), is_match,
@@ -677,36 +681,26 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
 
     for(int j = start_modified; j < end_modified; ++j) {
 
-      if(nodes_modified.at(node_sets_modified.at(j).at(0))->move) continue;
+      if(check_nestable_predicate(nodes_original, node_sets_original, i, end_original,
+                                  nodes_modified, node_sets_modified, j, end_modified))
+        continue;
 
-      if(is_nestable(node_sets_modified.at(j), nodes_modified, node_sets_original.at(i), nodes_original)) {
+      valid_nests_original.push_back(j);
+
+      start_nest_original = i;
+      end_nest_original = i + 1;
+
+      for(int k = j + 1; k < end_modified; ++k) {
 
         if(check_nestable_predicate(nodes_original, node_sets_original, i, end_original,
-                                    nodes_modified, node_sets_modified, j, end_modified))
+                                    nodes_modified, node_sets_modified, k, end_modified))
           continue;
 
-        valid_nests_original.push_back(j);
-
-        start_nest_original = i;
-        end_nest_original = i + 1;
-
-        for(int k = j + 1; k < end_modified; ++k) {
-
-          if(nodes_modified.at(node_sets_modified.at(k).at(0))->move) continue;
-
-          if(!is_nestable(node_sets_modified.at(k), nodes_modified, node_sets_original.at(i), nodes_original)) continue;
-
-          if(check_nestable_predicate(nodes_original, node_sets_original, i, end_original,
-                                      nodes_modified, node_sets_modified, k, end_modified))
-            continue;
-
-          valid_nests_original.push_back(k);
-
-        }
-
-        goto end_nest_check_original;
+        valid_nests_original.push_back(k);
 
       }
+
+      goto end_nest_check_original;
 
     }
 
@@ -720,39 +714,26 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
 
     for(int j = start_original; j < end_original; ++j) {
 
-      if(nodes_original.at(node_sets_original.at(j).at(0))->move) continue;
+      if(check_nestable_predicate(nodes_modified, node_sets_modified, i, end_modified,
+                                  nodes_original, node_sets_original, j, end_original))
+        continue;
 
-      if(is_nestable(node_sets_original.at(j), nodes_original, node_sets_modified.at(i), nodes_modified)) {
+      valid_nests_modified.push_back(j);
 
+      start_nest_modified = i;
+      end_nest_modified = i + 1;
+
+      for(int k = j + 1; k < end_original; ++k) {
+      
         if(check_nestable_predicate(nodes_modified, node_sets_modified, i, end_modified,
-                                    nodes_original, node_sets_original, j, end_original))
+                                    nodes_original, node_sets_original, k, end_original))
           continue;
 
-        valid_nests_modified.push_back(j);
-
-        start_nest_modified = i;
-        end_nest_modified = i + 1;
-
-        for(int k = j + 1; k < end_original; ++k) {
-
-          if(nodes_original.at(node_sets_original.at(k).at(0))->move) continue;
-        
-          if(!is_nestable(node_sets_original.at(k), nodes_original, node_sets_modified.at(i), nodes_modified)) continue;
-
-            if(check_nestable_predicate(nodes_modified, node_sets_modified, i, end_modified,
-                                        nodes_original, node_sets_original, k, end_original))
-              continue;
-
-            valid_nests_modified.push_back(k);
-
-        }
-
-        //start_nest_original = valid_nests.front();
-        //end_nest_original = valid_nests.back() + 1;
-
-        goto end_nest_check_modified;
+        valid_nests_modified.push_back(k);
 
       }
+
+      goto end_nest_check_modified;
 
     }
 
