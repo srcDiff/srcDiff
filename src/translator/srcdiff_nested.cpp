@@ -583,10 +583,13 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, co
 
 }
 
-bool srcdiff_nested::check_nestable_predicate(int similarity, int difference, int text_outer_length, int text_inner_length,
-                                              const node_set & match,
+bool srcdiff_nested::check_nestable_predicate(const node_set & match,
                                               const srcml_nodes & nodes_outer, const node_sets & node_sets_outer, int pos_outer, int end_outer,
                                               const srcml_nodes & nodes_inner, const node_sets & node_sets_inner, int pos_inner, int end_inner) {
+
+  srcdiff_measure measure(nodes_outer, nodes_inner, match, node_sets_inner.at(pos_inner));
+  int similarity, difference, text_inner_length, text_outer_length;
+  measure.compute_measures(similarity, difference, text_inner_length, text_outer_length);
 
   if(reject_match_nested(similarity, difference, text_outer_length, text_inner_length,
           nodes_outer, match, nodes_inner, node_sets_inner.at(pos_inner)))
@@ -675,12 +678,9 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
 
         if(match >= set.size()) continue;
 
-        srcdiff_measure measure(nodes_original, nodes_modified, set.at(match), node_sets_modified.at(j));
-        int similarity, difference, text_original_length, text_modified_length;
-        measure.compute_measures(similarity, difference, text_original_length, text_modified_length);
-
-        if(check_nestable_predicate(similarity, difference, text_original_length, text_modified_length,
-           set.at(match), nodes_original, node_sets_original, i, end_original, nodes_modified, node_sets_modified, j, end_modified))
+        if(check_nestable_predicate(set.at(match),
+                                    nodes_original, node_sets_original, i, end_original,
+                                    nodes_modified, node_sets_modified, j, end_modified))
           continue;
 
         valid_nests_original.push_back(j);
@@ -701,12 +701,9 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
 
           if(match >= set.size()) continue;
 
-          srcdiff_measure measure(nodes_original, nodes_modified, set.at(match), node_sets_modified.at(k));
-          int similarity, difference, text_original_length, text_modified_length;
-          measure.compute_measures(similarity, difference, text_original_length, text_modified_length);
-
-          if(check_nestable_predicate(similarity, difference, text_original_length, text_modified_length,
-             set.at(match), nodes_original, node_sets_original, i, end_original, nodes_modified, node_sets_modified, k, end_modified))
+          if(check_nestable_predicate(set.at(match),
+                                      nodes_original, node_sets_original, i, end_original,
+                                      nodes_modified, node_sets_modified, k, end_modified))
             continue;
 
           valid_nests_original.push_back(k);
@@ -740,12 +737,9 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
 
         if(match >= set.size()) continue;
 
-        srcdiff_measure measure(nodes_original, nodes_modified, node_sets_original.at(j), set.at(match));
-        int similarity, difference, text_original_length, text_modified_length;
-        measure.compute_measures(similarity, difference, text_original_length, text_modified_length);
-
-        if(check_nestable_predicate(similarity, difference, text_modified_length, text_original_length,
-           set.at(match), nodes_modified, node_sets_modified, i, end_modified, nodes_original, node_sets_original, j, end_original))
+        if(check_nestable_predicate(set.at(match),
+                                    nodes_modified, node_sets_modified, i, end_modified,
+                                    nodes_original, node_sets_original, j, end_original))
           continue;
 
         valid_nests_modified.push_back(j);
@@ -766,12 +760,9 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
 
             if(match >= set.size()) continue;
 
-            srcdiff_measure measure(nodes_original, nodes_modified, node_sets_original.at(k), set.at(match));
-            int similarity, difference, text_original_length, text_modified_length;
-            measure.compute_measures(similarity, difference, text_original_length, text_modified_length);
-
-            if(check_nestable_predicate(similarity, difference, text_modified_length, text_original_length,
-               set.at(match), nodes_modified, node_sets_modified, i, end_modified, nodes_original, node_sets_original, k, end_original))
+            if(check_nestable_predicate(set.at(match),
+                                        nodes_modified, node_sets_modified, i, end_modified,
+                                        nodes_original, node_sets_original, k, end_original))
               continue;
 
             valid_nests_modified.push_back(k);
