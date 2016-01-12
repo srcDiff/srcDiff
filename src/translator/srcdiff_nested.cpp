@@ -666,12 +666,6 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
            set.at(match), nodes_original, node_sets_original, i, end_original, nodes_modified, node_sets_modified, j, end_modified))
           continue;
 
-        if(nodes_modified.at(node_sets_modified.at(j).at(0))->name == "name"
-          && nodes_modified.at(node_sets_modified.at(j).at(0))->parent && (*nodes_modified.at(node_sets_modified.at(j).at(0))->parent)->name == "expr"
-          && nodes_original.at(node_sets_original.at(i).at(0))->parent && (*nodes_original.at(node_sets_original.at(i).at(0))->parent)->name == "expr"
-          && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1))
-          continue;
-
         if(nodes_modified.at(node_sets_modified.at(j).at(0))->name == "name") {
 
             if(!nodes_modified.at(node_sets_modified.at(j).at(0))->parent || !nodes_original.at(set.at(match).at(0))->parent)
@@ -714,12 +708,6 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
 
           if(check_nestable_predicate(similarity, difference, text_original_length, text_modified_length,
              set.at(match), nodes_original, node_sets_original, i, end_original, nodes_modified, node_sets_modified, k, end_modified))
-            continue;
-
-          if(nodes_modified.at(node_sets_modified.at(k).at(0))->name == "name"
-            && nodes_modified.at(node_sets_modified.at(k).at(0))->parent && (*nodes_modified.at(node_sets_modified.at(k).at(0))->parent)->name == "expr"
-            && nodes_original.at(node_sets_original.at(i).at(0))->parent && (*nodes_original.at(node_sets_original.at(i).at(0))->parent)->name == "expr"
-            && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1))
             continue;
 
           if(nodes_modified.at(node_sets_modified.at(k).at(0))->name == "name") {
@@ -779,12 +767,6 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
            set.at(match), nodes_modified, node_sets_modified, i, end_modified, nodes_original, node_sets_original, j, end_original))
           continue;
 
-        if(nodes_original.at(node_sets_original.at(j).at(0))->name == "name"
-          && nodes_original.at(node_sets_original.at(j).at(0))->parent && (*nodes_original.at(node_sets_original.at(j).at(0))->parent)->name == "expr"
-          && nodes_modified.at(node_sets_modified.at(i).at(0))->parent && (*nodes_modified.at(node_sets_modified.at(i).at(0))->parent)->name == "expr"
-          && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1))
-          continue;
-
         if(nodes_original.at(node_sets_original.at(j).at(0))->name == "name") {
 
             if(!nodes_original.at(node_sets_original.at(j).at(0))->parent || !nodes_modified.at(set.at(match).at(0))->parent)
@@ -827,12 +809,6 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
 
             if(check_nestable_predicate(similarity, difference, text_modified_length, text_original_length,
                set.at(match), nodes_modified, node_sets_modified, i, end_modified, nodes_original, node_sets_original, k, end_original))
-              continue;
-
-            if(nodes_original.at(node_sets_original.at(k).at(0))->name == "name" 
-              && nodes_original.at(node_sets_original.at(k).at(0))->parent && (*nodes_original.at(node_sets_original.at(k).at(0))->parent)->name == "expr"
-              && nodes_modified.at(node_sets_modified.at(i).at(0))->parent && (*nodes_modified.at(node_sets_modified.at(i).at(0))->parent)->name == "expr"
-              && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1))
               continue;
 
             if(nodes_original.at(node_sets_original.at(k).at(0))->name == "name") {
