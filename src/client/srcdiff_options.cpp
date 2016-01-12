@@ -448,7 +448,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("language,l", boost::program_options::value<std::string>()->notifier(option_srcml_field<LANGUAGE>)->default_value("C++"), "Set the input source programming language")
     ("filename,f", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::unit_filename>), "Override unit filename")
     ("register-ext", boost::program_options::value<std::string>()->notifier(option_srcml_field<REGISTER_EXT>), "Register an extension to language pair to be used during parsing")
-    ("url,u", boost::program_options::value<std::string>()->notifier(option_srcml_field<URL>), "Set the root url attribute")
+    ("url", boost::program_options::value<std::string>()->notifier(option_srcml_field<URL>), "Set the root url attribute")
     ("src-version,s", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_VERSION>), "Set the root version attribute")
     ("xmlns", boost::program_options::value<std::string>()->notifier(option_srcml_field<XMLNS>), "Set the prefix associationed with a namespace or register a new one. of the form --xmlns:prefix=url or --xmlns=url for default prefix.")
     ("position", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_POSITION>), "Output additional position information on the srcML elements")
@@ -479,9 +479,9 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("srcml", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCML>), "Also, output the original and modified srcML of each file when burst enabled")
 
 #ifndef _MSC_BUILD
-    ("unified", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::unified_view_context>),
+    ("unified,u", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::unified_view_context>),
         "Output as colorized unified diff with provided context. Number is lines of context, 'all' or -1 for entire file, 'function' for encompasing function (default = 3)")
-    ("side-by-side", boost::program_options::value<int>()->implicit_value(7)->notifier(option_field<&srcdiff_options::side_by_side_tab_size>),
+    ("side-by-side,y", boost::program_options::value<int>()->implicit_value(7)->notifier(option_field<&srcdiff_options::side_by_side_tab_size>),
         "Output as colorized side-by-side diff")
     ("ignore-all-space,W", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>), "Ignore all whitespace when outputting unified view")
     ("ignore-space,w", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_WHITESPACE>), "Ignore whitespace when outputting unified view")
