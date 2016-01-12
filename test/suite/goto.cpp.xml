@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="goto">
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="goto|goto">
+<diff:delete><block>{<diff:ws> </diff:ws><diff:common><goto>goto;</goto></diff:common><diff:ws> </diff:ws>}</block></diff:delete>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="goto|goto">
+<diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo"><diff:ws> </diff:ws><diff:common><goto>goto;</goto></diff:common></block></then></if></diff:delete>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="goto|goto">
+<diff:delete><else>else<block type="pseudo"><diff:ws> </diff:ws><diff:common><goto>goto;</goto></diff:common></block></else></diff:delete>
+</unit>
+
+</unit>
