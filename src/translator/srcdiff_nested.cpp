@@ -602,6 +602,24 @@ bool srcdiff_nested::check_nestable_predicate(int similarity, int difference, in
     return true;
 
 
+  if(nodes_inner.at(node_sets_inner.at(pos_inner).at(0))->name == "name") {
+
+      if(!nodes_inner.at(node_sets_inner.at(pos_inner).at(0))->parent || !nodes_outer.at(match.at(0))->parent)
+        return true;
+
+      boost::optional<std::shared_ptr<srcml_node>> parent_outer = nodes_outer.at(match.at(0))->parent;
+      while((*parent_outer)->name == "name")
+        parent_outer = (*parent_outer)->parent;
+
+      boost::optional<std::shared_ptr<srcml_node>> parent_inner = nodes_inner.at(node_sets_inner.at(pos_inner).at(0))->parent;
+      while((*parent_inner)->name == "name")
+        parent_inner = (*parent_inner)->parent;
+
+      if((*parent_outer)->name != (*parent_inner)->name)
+        return true;
+
+  }
+
   return false;
 
 
@@ -661,28 +679,9 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
         int similarity, difference, text_original_length, text_modified_length;
         measure.compute_measures(similarity, difference, text_original_length, text_modified_length);
 
-
         if(check_nestable_predicate(similarity, difference, text_original_length, text_modified_length,
            set.at(match), nodes_original, node_sets_original, i, end_original, nodes_modified, node_sets_modified, j, end_modified))
           continue;
-
-        if(nodes_modified.at(node_sets_modified.at(j).at(0))->name == "name") {
-
-            if(!nodes_modified.at(node_sets_modified.at(j).at(0))->parent || !nodes_original.at(set.at(match).at(0))->parent)
-              continue;
-
-            boost::optional<std::shared_ptr<srcml_node>> parent_original = nodes_original.at(set.at(match).at(0))->parent;
-            while((*parent_original)->name == "name")
-              parent_original = (*parent_original)->parent;
-
-            boost::optional<std::shared_ptr<srcml_node>> parent_modified = nodes_modified.at(node_sets_modified.at(j).at(0))->parent;
-            while((*parent_modified)->name == "name")
-              parent_modified = (*parent_modified)->parent;
-
-            if((*parent_original)->name != (*parent_modified)->name)
-              continue;
-
-        }
 
         valid_nests_original.push_back(j);
 
@@ -709,24 +708,6 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
           if(check_nestable_predicate(similarity, difference, text_original_length, text_modified_length,
              set.at(match), nodes_original, node_sets_original, i, end_original, nodes_modified, node_sets_modified, k, end_modified))
             continue;
-
-          if(nodes_modified.at(node_sets_modified.at(k).at(0))->name == "name") {
-
-              if(!nodes_modified.at(node_sets_modified.at(k).at(0))->parent || !nodes_original.at(set.at(match).at(0))->parent)
-                continue;
-
-              boost::optional<std::shared_ptr<srcml_node>> parent_original = nodes_original.at(set.at(match).at(0))->parent;
-              while(parent_original && (*parent_original)->name == "name")
-                parent_original = (*parent_original)->parent;
-
-              boost::optional<std::shared_ptr<srcml_node>> parent_modified = nodes_modified.at(node_sets_modified.at(k).at(0))->parent;
-              while(parent_modified && (*parent_modified)->name == "name")
-                parent_modified = (*parent_modified)->parent;
-
-              if((*parent_original)->name != (*parent_modified)->name)
-                continue;
-
-          }
 
           valid_nests_original.push_back(k);
 
@@ -767,24 +748,6 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
            set.at(match), nodes_modified, node_sets_modified, i, end_modified, nodes_original, node_sets_original, j, end_original))
           continue;
 
-        if(nodes_original.at(node_sets_original.at(j).at(0))->name == "name") {
-
-            if(!nodes_original.at(node_sets_original.at(j).at(0))->parent || !nodes_modified.at(set.at(match).at(0))->parent)
-              continue;
-
-            boost::optional<std::shared_ptr<srcml_node>> parent_original = nodes_original.at(node_sets_original.at(j).at(0))->parent;
-            while(parent_original && (*parent_original)->name == "name")
-              parent_original = (*parent_original)->parent;
-
-            boost::optional<std::shared_ptr<srcml_node>> parent_modified = nodes_modified.at(set.at(match).at(0))->parent;
-            while(parent_modified && (*parent_modified)->name == "name")
-              parent_modified = (*parent_modified)->parent;
-
-            if((*parent_original)->name != (*parent_modified)->name)
-              continue;
-
-        }
-
         valid_nests_modified.push_back(j);
 
         start_nest_modified = i;
@@ -811,25 +774,7 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
                set.at(match), nodes_modified, node_sets_modified, i, end_modified, nodes_original, node_sets_original, k, end_original))
               continue;
 
-            if(nodes_original.at(node_sets_original.at(k).at(0))->name == "name") {
-
-                if(!nodes_original.at(node_sets_original.at(k).at(0))->parent || !nodes_modified.at(set.at(match).at(0))->parent)
-                  continue;
-
-                boost::optional<std::shared_ptr<srcml_node>> parent_original = nodes_original.at(node_sets_original.at(k).at(0))->parent;
-                while(parent_original && (*parent_original)->name == "name")
-                  parent_original = (*parent_original)->parent;
-
-                boost::optional<std::shared_ptr<srcml_node>> parent_modified = nodes_modified.at(set.at(match).at(0))->parent;
-                while(parent_modified && (*parent_modified)->name == "name")
-                  parent_modified = (*parent_modified)->parent;
-
-                if((*parent_original)->name != (*parent_modified)->name)
-                  continue;
-
-            }
-
-          valid_nests_modified.push_back(k);
+            valid_nests_modified.push_back(k);
 
         }
 
