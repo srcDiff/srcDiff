@@ -129,7 +129,7 @@ bool srcdiff_nested::is_match(int & node_pos, const srcml_nodes & nodes, const v
 
 }
 
-int srcdiff_nested::best_match(const srcml_nodes & nodes, const node_sets & set, const srcml_nodes & nodes_match, const node_set & match, int operation) {
+int srcdiff_nested::best_match(const srcml_nodes & nodes, const node_sets & set, const srcml_nodes & nodes_match, const node_set & match) {
 
   int match_pos = set.size();
   int match_similarity = 0;
@@ -204,7 +204,7 @@ bool srcdiff_nested::is_same_nestable(const node_set & structure_one, const srcm
   node_sets set = node_sets(nodes_two, structure_two.at(1), structure_two.back(), srcdiff_nested::is_match
                                                              , &nodes_one.at(structure_one.at(0)));
 
-  unsigned int match = best_match(nodes_two, set, nodes_one, structure_one, SES_DELETE);
+  unsigned int match = best_match(nodes_two, set, nodes_one, structure_one);
 
   if(match >= set.size())
     return false;
@@ -246,7 +246,7 @@ bool is_better_nest_no_recursion(const srcml_nodes & nodes_outer, const node_set
       node_sets set = node_sets(nodes_outer, node_set_outer.at(1), node_set_outer.back(), srcdiff_nested::is_match
                                                              , &nodes_inner.at(node_set_inner.at(0)));
 
-      int match = srcdiff_nested::best_match(nodes_outer, set, nodes_inner, node_set_inner, SES_DELETE);
+      int match = srcdiff_nested::best_match(nodes_outer, set, nodes_inner, node_set_inner);
 
       if(match < set.size()) {
 
@@ -297,7 +297,7 @@ bool is_better_nest(const srcml_nodes & nodes_outer, const node_set & node_set_o
       node_sets set = node_sets(nodes_outer, node_set_outer.at(1), node_set_outer.back(), srcdiff_nested::is_match
                                                              , &nodes_inner.at(node_set_inner.at(0)));
 
-      int match = srcdiff_nested::best_match(nodes_outer, set, nodes_inner, node_set_inner, SES_DELETE);
+      int match = srcdiff_nested::best_match(nodes_outer, set, nodes_inner, node_set_inner);
 
       if(match < set.size()) {
 
@@ -435,7 +435,7 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, co
         node_sets set = node_sets(nodes_original, node_sets_original.at(i).at(1), node_sets_original.at(i).back(), srcdiff_nested::is_match
                                                              , &nodes_modified.at(node_sets_modified.at(j).at(0)));
 
-        int match = srcdiff_nested::best_match(nodes_original, set, nodes_modified, node_sets_modified.at(j), SES_DELETE);
+        int match = srcdiff_nested::best_match(nodes_original, set, nodes_modified, node_sets_modified.at(j));
 
         if(match >= set.size()) continue;
 
@@ -503,7 +503,7 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, co
         node_sets set = node_sets(nodes_modified, node_sets_modified.at(i).at(1), node_sets_modified.at(i).back(), srcdiff_nested::is_match
                                                              , &nodes_original.at(node_sets_original.at(j).at(0)));
 
-        int match = srcdiff_nested::best_match(nodes_modified, set, nodes_original, node_sets_original.at(j), SES_INSERT);
+        int match = srcdiff_nested::best_match(nodes_modified, set, nodes_original, node_sets_original.at(j));
 
         if(match >= set.size()) continue;
 
@@ -583,10 +583,27 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, co
 
 }
 
-bool srcdiff_nested::check_nestable_predicate(int similarity, int difference, int text_outer_length, int text_inner_length,
-                                              const node_set & match,
-                                              const srcml_nodes & nodes_outer, const node_sets & node_sets_outer, int pos_outer, int end_outer,
+bool srcdiff_nested::check_nestable_predicate(const srcml_nodes & nodes_outer, const node_sets & node_sets_outer, int pos_outer, int end_outer,
                                               const srcml_nodes & nodes_inner, const node_sets & node_sets_inner, int pos_inner, int end_inner) {
+
+  if(nodes_inner.at(node_sets_inner.at(pos_inner).at(0))->move) return true;
+
+  if(!is_nestable(node_sets_inner.at(pos_inner), nodes_inner, node_sets_outer.at(pos_outer), nodes_outer))
+    return true;
+
+  node_sets set = node_sets(nodes_outer, node_sets_outer.at(pos_outer).at(1),
+                            node_sets_outer.at(pos_outer).back(), is_match,
+                            &nodes_inner.at(node_sets_inner.at(pos_inner).at(0)));
+
+  int match_pos = best_match(nodes_outer, set, nodes_inner, node_sets_inner.at(pos_inner));
+
+  if(match_pos >= set.size()) return true;
+
+  const node_set & match = set.at(match_pos);
+
+  srcdiff_measure measure(nodes_outer, nodes_inner, match, node_sets_inner.at(pos_inner));
+  int similarity, difference, text_inner_length, text_outer_length;
+  measure.compute_measures(similarity, difference, text_inner_length, text_outer_length);
 
   if(reject_match_nested(similarity, difference, text_outer_length, text_inner_length,
           nodes_outer, match, nodes_inner, node_sets_inner.at(pos_inner)))
@@ -601,6 +618,24 @@ bool srcdiff_nested::check_nestable_predicate(int similarity, int difference, in
   if(pos_inner + 1 < end_inner && is_better_nest(nodes_inner, node_sets_inner.at(pos_inner + 1), nodes_outer, node_sets_outer.at(pos_outer), similarity, difference, text_inner_length, text_outer_length))
     return true;
 
+
+  if(nodes_inner.at(node_sets_inner.at(pos_inner).at(0))->name == "name") {
+
+      if(!nodes_inner.at(node_sets_inner.at(pos_inner).at(0))->parent || !nodes_outer.at(match.at(0))->parent)
+        return true;
+
+      boost::optional<std::shared_ptr<srcml_node>> parent_outer = nodes_outer.at(match.at(0))->parent;
+      while((*parent_outer)->name == "name")
+        parent_outer = (*parent_outer)->parent;
+
+      boost::optional<std::shared_ptr<srcml_node>> parent_inner = nodes_inner.at(node_sets_inner.at(pos_inner).at(0))->parent;
+      while((*parent_inner)->name == "name")
+        parent_inner = (*parent_inner)->parent;
+
+      if((*parent_outer)->name != (*parent_inner)->name)
+        return true;
+
+  }
 
   return false;
 
@@ -646,107 +681,26 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
 
     for(int j = start_modified; j < end_modified; ++j) {
 
-      if(nodes_modified.at(node_sets_modified.at(j).at(0))->move) continue;
+      if(check_nestable_predicate(nodes_original, node_sets_original, i, end_original,
+                                  nodes_modified, node_sets_modified, j, end_modified))
+        continue;
 
-      if(is_nestable(node_sets_modified.at(j), nodes_modified, node_sets_original.at(i), nodes_original)) {
+      valid_nests_original.push_back(j);
 
-        node_sets set = node_sets(nodes_original, node_sets_original.at(i).at(1), node_sets_original.at(i).back(), is_match
-                                                             , &nodes_modified.at(node_sets_modified.at(j).at(0)));
+      start_nest_original = i;
+      end_nest_original = i + 1;
 
-        int match = best_match(nodes_original, set, nodes_modified, node_sets_modified.at(j), SES_DELETE);
+      for(int k = j + 1; k < end_modified; ++k) {
 
-        if(match >= set.size()) continue;
-
-        srcdiff_measure measure(nodes_original, nodes_modified, set.at(match), node_sets_modified.at(j));
-        int similarity, difference, text_original_length, text_modified_length;
-        measure.compute_measures(similarity, difference, text_original_length, text_modified_length);
-
-
-        if(check_nestable_predicate(similarity, difference, text_original_length, text_modified_length,
-           set.at(match), nodes_original, node_sets_original, i, end_original, nodes_modified, node_sets_modified, j, end_modified))
+        if(check_nestable_predicate(nodes_original, node_sets_original, i, end_original,
+                                    nodes_modified, node_sets_modified, k, end_modified))
           continue;
 
-        if(nodes_modified.at(node_sets_modified.at(j).at(0))->name == "name"
-          && nodes_modified.at(node_sets_modified.at(j).at(0))->parent && (*nodes_modified.at(node_sets_modified.at(j).at(0))->parent)->name == "expr"
-          && nodes_original.at(node_sets_original.at(i).at(0))->parent && (*nodes_original.at(node_sets_original.at(i).at(0))->parent)->name == "expr"
-          && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1))
-          continue;
-
-        if(nodes_modified.at(node_sets_modified.at(j).at(0))->name == "name") {
-
-            if(!nodes_modified.at(node_sets_modified.at(j).at(0))->parent || !nodes_original.at(set.at(match).at(0))->parent)
-              continue;
-
-            boost::optional<std::shared_ptr<srcml_node>> parent_original = nodes_original.at(set.at(match).at(0))->parent;
-            while((*parent_original)->name == "name")
-              parent_original = (*parent_original)->parent;
-
-            boost::optional<std::shared_ptr<srcml_node>> parent_modified = nodes_modified.at(node_sets_modified.at(j).at(0))->parent;
-            while((*parent_modified)->name == "name")
-              parent_modified = (*parent_modified)->parent;
-
-            if((*parent_original)->name != (*parent_modified)->name)
-              continue;
-
-        }
-
-        valid_nests_original.push_back(j);
-
-        start_nest_original = i;
-        end_nest_original = i + 1;
-
-        for(int k = j + 1; k < end_modified; ++k) {
-
-          if(nodes_modified.at(node_sets_modified.at(k).at(0))->move) continue;
-
-          if(!is_nestable(node_sets_modified.at(k), nodes_modified, node_sets_original.at(i), nodes_original)) continue;
-
-          node_sets set = node_sets(nodes_original, node_sets_original.at(i).at(1), node_sets_original.at(i).back(), is_match
-                                                               , &nodes_modified.at(node_sets_modified.at(k).at(0)));
-
-          int match = best_match(nodes_original, set, nodes_modified, node_sets_modified.at(k), SES_DELETE);
-
-          if(match >= set.size()) continue;
-
-          srcdiff_measure measure(nodes_original, nodes_modified, set.at(match), node_sets_modified.at(k));
-          int similarity, difference, text_original_length, text_modified_length;
-          measure.compute_measures(similarity, difference, text_original_length, text_modified_length);
-
-          if(check_nestable_predicate(similarity, difference, text_original_length, text_modified_length,
-             set.at(match), nodes_original, node_sets_original, i, end_original, nodes_modified, node_sets_modified, k, end_modified))
-            continue;
-
-          if(nodes_modified.at(node_sets_modified.at(k).at(0))->name == "name"
-            && nodes_modified.at(node_sets_modified.at(k).at(0))->parent && (*nodes_modified.at(node_sets_modified.at(k).at(0))->parent)->name == "expr"
-            && nodes_original.at(node_sets_original.at(i).at(0))->parent && (*nodes_original.at(node_sets_original.at(i).at(0))->parent)->name == "expr"
-            && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1))
-            continue;
-
-          if(nodes_modified.at(node_sets_modified.at(k).at(0))->name == "name") {
-
-              if(!nodes_modified.at(node_sets_modified.at(k).at(0))->parent || !nodes_original.at(set.at(match).at(0))->parent)
-                continue;
-
-              boost::optional<std::shared_ptr<srcml_node>> parent_original = nodes_original.at(set.at(match).at(0))->parent;
-              while(parent_original && (*parent_original)->name == "name")
-                parent_original = (*parent_original)->parent;
-
-              boost::optional<std::shared_ptr<srcml_node>> parent_modified = nodes_modified.at(node_sets_modified.at(k).at(0))->parent;
-              while(parent_modified && (*parent_modified)->name == "name")
-                parent_modified = (*parent_modified)->parent;
-
-              if((*parent_original)->name != (*parent_modified)->name)
-                continue;
-
-          }
-
-          valid_nests_original.push_back(k);
-
-        }
-
-        goto end_nest_check_original;
+        valid_nests_original.push_back(k);
 
       }
+
+      goto end_nest_check_original;
 
     }
 
@@ -760,109 +714,26 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, const 
 
     for(int j = start_original; j < end_original; ++j) {
 
-      if(nodes_original.at(node_sets_original.at(j).at(0))->move) continue;
+      if(check_nestable_predicate(nodes_modified, node_sets_modified, i, end_modified,
+                                  nodes_original, node_sets_original, j, end_original))
+        continue;
 
-      if(is_nestable(node_sets_original.at(j), nodes_original, node_sets_modified.at(i), nodes_modified)) {
+      valid_nests_modified.push_back(j);
 
-        node_sets set = node_sets(nodes_modified, node_sets_modified.at(i).at(1), node_sets_modified.at(i).back(), is_match
-                                                             , &nodes_original.at(node_sets_original.at(j).at(0)));
+      start_nest_modified = i;
+      end_nest_modified = i + 1;
 
-        int match = best_match(nodes_modified, set, nodes_original, node_sets_original.at(j), SES_INSERT);
-
-        if(match >= set.size()) continue;
-
-        srcdiff_measure measure(nodes_original, nodes_modified, node_sets_original.at(j), set.at(match));
-        int similarity, difference, text_original_length, text_modified_length;
-        measure.compute_measures(similarity, difference, text_original_length, text_modified_length);
-
-        if(check_nestable_predicate(similarity, difference, text_modified_length, text_original_length,
-           set.at(match), nodes_modified, node_sets_modified, i, end_modified, nodes_original, node_sets_original, j, end_original))
+      for(int k = j + 1; k < end_original; ++k) {
+      
+        if(check_nestable_predicate(nodes_modified, node_sets_modified, i, end_modified,
+                                    nodes_original, node_sets_original, k, end_original))
           continue;
 
-        if(nodes_original.at(node_sets_original.at(j).at(0))->name == "name"
-          && nodes_original.at(node_sets_original.at(j).at(0))->parent && (*nodes_original.at(node_sets_original.at(j).at(0))->parent)->name == "expr"
-          && nodes_modified.at(node_sets_modified.at(i).at(0))->parent && (*nodes_modified.at(node_sets_modified.at(i).at(0))->parent)->name == "expr"
-          && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1))
-          continue;
-
-        if(nodes_original.at(node_sets_original.at(j).at(0))->name == "name") {
-
-            if(!nodes_original.at(node_sets_original.at(j).at(0))->parent || !nodes_modified.at(set.at(match).at(0))->parent)
-              continue;
-
-            boost::optional<std::shared_ptr<srcml_node>> parent_original = nodes_original.at(node_sets_original.at(j).at(0))->parent;
-            while(parent_original && (*parent_original)->name == "name")
-              parent_original = (*parent_original)->parent;
-
-            boost::optional<std::shared_ptr<srcml_node>> parent_modified = nodes_modified.at(set.at(match).at(0))->parent;
-            while(parent_modified && (*parent_modified)->name == "name")
-              parent_modified = (*parent_modified)->parent;
-
-            if((*parent_original)->name != (*parent_modified)->name)
-              continue;
-
-        }
-
-        valid_nests_modified.push_back(j);
-
-        start_nest_modified = i;
-        end_nest_modified = i + 1;
-
-        for(int k = j + 1; k < end_original; ++k) {
-
-          if(nodes_original.at(node_sets_original.at(k).at(0))->move) continue;
-        
-          if(!is_nestable(node_sets_original.at(k), nodes_original, node_sets_modified.at(i), nodes_modified)) continue;
-
-            node_sets set = node_sets(nodes_modified, node_sets_modified.at(i).at(1), node_sets_modified.at(i).back(), is_match
-                                                             , &nodes_original.at(node_sets_original.at(k).at(0)));
-
-            int match = best_match(nodes_modified, set, nodes_original, node_sets_original.at(k), SES_INSERT);
-
-            if(match >= set.size()) continue;
-
-            srcdiff_measure measure(nodes_original, nodes_modified, node_sets_original.at(k), set.at(match));
-            int similarity, difference, text_original_length, text_modified_length;
-            measure.compute_measures(similarity, difference, text_original_length, text_modified_length);
-
-            if(check_nestable_predicate(similarity, difference, text_modified_length, text_original_length,
-               set.at(match), nodes_modified, node_sets_modified, i, end_modified, nodes_original, node_sets_original, k, end_original))
-              continue;
-
-            if(nodes_original.at(node_sets_original.at(k).at(0))->name == "name" 
-              && nodes_original.at(node_sets_original.at(k).at(0))->parent && (*nodes_original.at(node_sets_original.at(k).at(0))->parent)->name == "expr"
-              && nodes_modified.at(node_sets_modified.at(i).at(0))->parent && (*nodes_modified.at(node_sets_modified.at(i).at(0))->parent)->name == "expr"
-              && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1))
-              continue;
-
-            if(nodes_original.at(node_sets_original.at(k).at(0))->name == "name") {
-
-                if(!nodes_original.at(node_sets_original.at(k).at(0))->parent || !nodes_modified.at(set.at(match).at(0))->parent)
-                  continue;
-
-                boost::optional<std::shared_ptr<srcml_node>> parent_original = nodes_original.at(node_sets_original.at(k).at(0))->parent;
-                while(parent_original && (*parent_original)->name == "name")
-                  parent_original = (*parent_original)->parent;
-
-                boost::optional<std::shared_ptr<srcml_node>> parent_modified = nodes_modified.at(set.at(match).at(0))->parent;
-                while(parent_modified && (*parent_modified)->name == "name")
-                  parent_modified = (*parent_modified)->parent;
-
-                if((*parent_original)->name != (*parent_modified)->name)
-                  continue;
-
-            }
-
-          valid_nests_modified.push_back(k);
-
-        }
-
-        //start_nest_original = valid_nests.front();
-        //end_nest_original = valid_nests.back() + 1;
-
-        goto end_nest_check_modified;
+        valid_nests_modified.push_back(k);
 
       }
+
+      goto end_nest_check_modified;
 
     }
 

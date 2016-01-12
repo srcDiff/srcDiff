@@ -15,14 +15,12 @@ protected:
 
 private:
 
-static bool check_nestable_predicate(int similarity, int difference, int text_outer_length, int text_inner_length,
-                                     const node_set & match,
-                                     const srcml_nodes & nodes_outer, const node_sets & node_sets_outer, int pos_outer, int end_outer,
+static bool check_nestable_predicate(const srcml_nodes & nodes_outer, const node_sets & node_sets_outer, int pos_outer, int end_outer,
                                      const srcml_nodes & nodes_inner, const node_sets & node_sets_inner, int pos_inner, int end_inner);
 public:
 
   static bool is_match(int & node_pos, const srcml_nodes & nodes, const void * context);
-  static int best_match(const srcml_nodes & nodes, const node_sets & set, const srcml_nodes & nodes_match, const node_set & match, int operation);
+  static int best_match(const srcml_nodes & nodes, const node_sets & set, const srcml_nodes & nodes_match, const node_set & match);
   
   srcdiff_nested(const srcdiff_many & diff, int start_original, int end_original, int start_modified, int end_modified, int operation);
 
