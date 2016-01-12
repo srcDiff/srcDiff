@@ -165,8 +165,8 @@ offset_pair * srcdiff_match::match_differences() {
     for(int j = 0; j < olength; ++j) {
 
       srcdiff_measure measure(nodes_original, nodes_modified, node_sets_original.at(j), node_sets_modified.at(i));
-      int similarity, difference, text_original_length, text_modified_length;
-      measure.compute_measures(similarity, difference, text_original_length, text_modified_length);
+      measure.compute_measures();
+      int similarity = measure.similarity();
 
       //unsigned long long max_similarity = (unsigned long long)-1;
       int max_similarity = -1;
@@ -174,7 +174,7 @@ offset_pair * srcdiff_match::match_differences() {
 
       // check if unmatched
       if(!is_match(nodes_original, node_sets_original, j, nodes_modified, node_sets_modified, i,
-                  similarity, difference, text_original_length, text_modified_length)) {
+                  similarity, measure.difference(), measure.original_length(), measure.modified_length())) {
 
         similarity = 0;
         unmatched = 1;
@@ -1272,15 +1272,14 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
     if(expr_original.size() && expr_modified.size()) {
 
       srcdiff_measure expr_measure(nodes_original, nodes_modified, expr_original, expr_modified);
-      int expr_similarity, expr_difference, expr_text_original_length, expr_text_modified_length;
-      expr_measure.compute_measures(expr_similarity, expr_difference, expr_text_original_length, expr_text_modified_length);
+      expr_measure.compute_measures();
 
-      bool is_expr_reject = srcdiff_match::reject_similarity(expr_similarity, expr_difference, expr_text_original_length, expr_text_modified_length, nodes_original, expr_original, nodes_modified, expr_modified);
+      bool is_expr_reject = srcdiff_match::reject_similarity(expr_measure.similarity(), expr_measure.difference(), expr_measure.original_length(), expr_measure.modified_length(), nodes_original, expr_original, nodes_modified, expr_modified);
 
-      int min_size = expr_text_original_length < expr_text_modified_length ? expr_text_original_length : expr_text_modified_length;
-      int max_size = expr_text_original_length < expr_text_modified_length ? expr_text_modified_length : expr_text_original_length;
+      int min_size = expr_measure.original_length() < expr_measure.modified_length() ? expr_measure.original_length() : expr_measure.modified_length();
+      int max_size = expr_measure.original_length() < expr_measure.modified_length() ? expr_measure.modified_length() : expr_measure.original_length();
 
-      if(!is_expr_reject && 2 * expr_similarity > max_size && 2 * expr_difference < max_size) return false;
+      if(!is_expr_reject && 2 * expr_measure.similarity() > max_size && 2 * expr_measure.difference() < max_size) return false;
 
     }
 
@@ -1333,15 +1332,14 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
   }
 
   srcdiff_measure measure(nodes_original, nodes_modified, set_original, set_modified);
-  int syntax_similarity, syntax_difference, children_length_original, children_length_modified;
-  measure.compute_syntax_measures(syntax_similarity, syntax_difference, children_length_original, children_length_modified);
+  measure.compute_syntax_measures();
 
-  int min_child_length = children_length_original < children_length_modified ? children_length_original : children_length_modified;
-  int max_child_length = children_length_original < children_length_modified ? children_length_modified : children_length_original;
+  int min_child_length = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
+  int max_child_length = measure.original_length() < measure.modified_length() ? measure.modified_length() : measure.original_length();
 
   if(min_child_length > 1) { 
 
-    if(2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
+    if(2 * measure.similarity() >= min_child_length && measure.difference() <= min_child_length)
       return false;
 
   }
@@ -1367,14 +1365,14 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
     && nodes_original.at(child_node_sets_original.back().at(0))->name == "block" && nodes_modified.at(child_node_sets_modified.back().at(0))->name == "block") {
 
     srcdiff_measure measure(nodes_original, nodes_modified, child_node_sets_original.back(), child_node_sets_modified.back());
-    measure.compute_syntax_measures(syntax_similarity, syntax_difference, children_length_original, children_length_modified);
+    measure.compute_syntax_measures();
 
-    min_child_length = children_length_original < children_length_modified ? children_length_original : children_length_modified;
-    max_child_length = children_length_original < children_length_modified ? children_length_modified : children_length_original;      
+    min_child_length = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
+    max_child_length = measure.original_length() < measure.modified_length() ? measure.modified_length() : measure.original_length();      
 
     if(min_child_length > 1) { 
 
-      if(2 * syntax_similarity >= min_child_length && syntax_difference <= min_child_length)
+      if(2 * measure.similarity() >= min_child_length && measure.difference() <= min_child_length)
         return false;
 
     }

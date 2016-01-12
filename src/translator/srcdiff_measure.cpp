@@ -10,13 +10,18 @@
 srcdiff_measure::srcdiff_measure(const srcml_nodes & nodes_original, const srcml_nodes & nodes_modified, const node_set & set_original, const node_set & set_modified) 
   : nodes_original(nodes_original), nodes_modified(nodes_modified), set_original(set_original), set_modified(set_modified) {}
 
-void srcdiff_measure::compute_ses(class shortest_edit_script & ses, int & text_original_length, int & text_modified_length) {
+int srcdiff_measure::similarity() const { return a_similarity; }
+
+int srcdiff_measure::difference() const { return a_difference; }
+
+int srcdiff_measure::original_length() const { return original_len; }
+
+int srcdiff_measure::modified_length() const { return modified_len; }
+
+void srcdiff_measure::compute_ses(class shortest_edit_script & ses) {
 
   unsigned int olength = set_original.size();
   unsigned int nlength = set_modified.size();
-
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_original.nodes.at(set_original.at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_modified.at(set_modified.at(0))->name);
 
   node_set set_original_text(nodes_original);
 
@@ -30,20 +35,17 @@ void srcdiff_measure::compute_ses(class shortest_edit_script & ses, int & text_o
     if(nodes_modified.at(set_modified.at(i))->is_text() && !nodes_modified.at(set_modified.at(i))->is_white_space())
       set_modified_text.push_back(set_modified.at(i));
 
-  text_original_length = set_original_text.size();
-  text_modified_length = set_modified_text.size();
+  original_len = set_original_text.size();
+  modified_len = set_modified_text.size();
 
   ses.compute((const void *)&set_original_text, set_original_text.size(), (const void *)&set_modified_text, set_modified_text.size());
 
 }
 
-void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & ses, int & text_original_length, int & text_modified_length) {
+void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & ses) {
 
   unsigned int olength = set_original.size();
   unsigned int nlength = set_modified.size();
-
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_original.nodes.at(set_original.at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_modified.at(set_modified.at(0))->name);
 
   node_set set_original_text(nodes_original);
 
@@ -111,28 +113,16 @@ void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & se
 
   }
 
-  text_original_length = set_original_text.size();
-  text_modified_length = set_modified_text.size();
+  original_len = set_original_text.size();
+  modified_len = set_modified_text.size();
 
   ses.compute((const void *)&set_original_text, set_original_text.size(), (const void *)&set_modified_text, set_modified_text.size());
 
 }
 
-int srcdiff_measure::compute_similarity() {
-
-  int text_original_length;
-  int text_modified_length;
-
-  return compute_similarity(text_original_length, text_modified_length);
-
-}
-
-int srcdiff_measure::compute_similarity(int & text_original_length, int & text_modified_length) {
+void srcdiff_measure::compute_similarity() {
 
   diff_nodes dnodes = { nodes_original, nodes_modified };
-
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_original.nodes.at(set_original.at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_modified.at(set_modified.at(0))->name);
 
   if((xmlReaderTypes)nodes_original.at(set_original.at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_modified.at(set_modified.at(0))->type != XML_READER_TYPE_ELEMENT
@@ -141,13 +131,13 @@ int srcdiff_measure::compute_similarity(int & text_original_length, int & text_m
                                                     nodes_modified.at(set_modified.at(0))->name, nodes_modified.at(set_modified.at(0))->ns->href)
         && (nodes_original.at(set_original.at(0))->name != "block" || nodes_modified.at(set_modified.at(0))->name != "block"))) {
 
-    return MAX_INT;
+    a_similarity = MAX_INT;
 
   }
 
   class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
 
-  compute_ses(ses, text_original_length, text_modified_length);
+  compute_ses(ses);
 
   edit * edits = ses.get_script();
 
@@ -171,24 +161,19 @@ int srcdiff_measure::compute_similarity(int & text_original_length, int & text_m
 
   }
 
-  delete_similarity = text_original_length - delete_similarity;
-  insert_similarity = text_modified_length - insert_similarity;
+  delete_similarity = original_len - delete_similarity;
+  insert_similarity = modified_len - insert_similarity;
 
-  int similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
+  a_similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
 
-  if(similarity <= 0)
-    similarity = 0;
-
-  return similarity;
+  if(a_similarity <= 0)
+    a_similarity = 0;
 
 }
 
-void srcdiff_measure::compute_measures(int & similarity, int & difference, int & text_original_length, int & text_modified_length) {
+void srcdiff_measure::compute_measures() {
 
   diff_nodes dnodes = { nodes_original, nodes_modified };
-
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, rbuf_original.nodes.at(set_original.at(0))->name);
-  //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_modified.at(set_modified.at(0))->name);
 
   if((xmlReaderTypes)nodes_original.at(set_original.at(0))->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)nodes_modified.at(set_modified.at(0))->type != XML_READER_TYPE_ELEMENT
@@ -197,8 +182,8 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
                                                     nodes_modified.at(set_modified.at(0))->name, nodes_modified.at(set_modified.at(0))->ns->href)
         && (nodes_original.at(set_original.at(0))->name != "block" || nodes_modified.at(set_modified.at(0))->name != "block"))) {
 
-    similarity = MAX_INT;
-    difference = MAX_INT;
+    a_similarity = MAX_INT;
+    a_difference = MAX_INT;
 
     return;
 
@@ -206,17 +191,17 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
 
   class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
 
-  compute_ses_important_text(ses, text_original_length, text_modified_length);
+  compute_ses_important_text(ses);
 
   edit * edits = ses.get_script();
 
-  similarity = 0, difference = 0;
+  a_similarity = 0, a_difference = 0;
 
   int delete_similarity = 0;
   int insert_similarity = 0;
   for(; edits; edits = edits->next) {
 
-    difference += edits->length;
+    a_difference += edits->length;
 
     switch(edits->operation) {
 
@@ -234,13 +219,13 @@ void srcdiff_measure::compute_measures(int & similarity, int & difference, int &
 
   }
 
-  delete_similarity = text_original_length - delete_similarity;
-  insert_similarity = text_modified_length - insert_similarity;
+  delete_similarity = original_len - delete_similarity;
+  insert_similarity = modified_len - insert_similarity;
 
-  similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
+  a_similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
 
-  if(similarity <= 0)
-    similarity = 0;
+  if(a_similarity <= 0)
+    a_similarity = 0;
 
 }
 
@@ -270,7 +255,7 @@ static bool is_significant(int & node_pos, const srcml_nodes & nodes, const void
 
 }
 
-void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference, int & children_original_length, int & children_modified_length) {
+void srcdiff_measure::compute_syntax_measures() {
 
   diff_nodes dnodes = { nodes_original, nodes_modified };
 
@@ -281,8 +266,8 @@ void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference
                                                     nodes_modified.at(set_modified.at(0))->name, nodes_modified.at(set_modified.at(0))->ns->href)
         && (nodes_original.at(set_original.at(0))->name != "block" || nodes_modified.at(set_modified.at(0))->name != "block"))) {
 
-    similarity = 0;
-    difference = MAX_INT;
+    a_similarity = 0;
+    a_difference = MAX_INT;
 
     return;
 
@@ -293,19 +278,19 @@ void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference
   // collect subset of nodes
   node_sets next_node_sets_original = set_original.size() > 1 ? node_sets(nodes_original, set_original.at(1), set_original.back(), is_significant) : node_sets(nodes_original);
   node_sets next_node_sets_modified = set_modified.size() > 1 ? node_sets(nodes_modified, set_modified.at(1), set_modified.back(), is_significant) : node_sets(nodes_modified);
-  children_original_length = next_node_sets_original.size();
-  children_modified_length = next_node_sets_modified.size();
-  int distance = ses.compute((const void *)&next_node_sets_original, children_original_length, (const void *)&next_node_sets_modified, children_modified_length);
+  original_len = next_node_sets_original.size();
+  modified_len = next_node_sets_modified.size();
+  int distance = ses.compute((const void *)&next_node_sets_original, original_len, (const void *)&next_node_sets_modified, modified_len);
 
   edit * edits = ses.get_script();
 
-  similarity = 0, difference = 0;
+  a_similarity = 0, a_difference = 0;
 
   int delete_similarity = 0;
   int insert_similarity = 0;
   for(; edits; edits = edits->next) {
 
-    difference += edits->length;
+    a_difference += edits->length;
 
     switch(edits->operation) {
 
@@ -323,12 +308,12 @@ void srcdiff_measure::compute_syntax_measures(int & similarity, int & difference
 
   }
 
-  delete_similarity = children_original_length - delete_similarity;
-  insert_similarity = children_modified_length - insert_similarity;
+  delete_similarity = original_len - delete_similarity;
+  insert_similarity = modified_len - insert_similarity;
 
-  similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
+  a_similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
 
-  if(similarity <= 0)
-    similarity = 0;
+  if(a_similarity <= 0)
+    a_similarity = 0;
 
 }
