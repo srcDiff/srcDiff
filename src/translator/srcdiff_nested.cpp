@@ -213,8 +213,8 @@ bool is_nestable_internal(const node_set & structure_one, const srcml_nodes & no
   return false;
 }
 
-bool srcdiff_nested::is_same_nestable(const node_set & structure_one, const srcml_nodes & nodes_one
-                      , const node_set & structure_two, const srcml_nodes & nodes_two) {
+bool srcdiff_nested::is_same_nestable(const node_set & structure_one, const srcml_nodes & nodes_one,
+                                      const node_set & structure_two, const srcml_nodes & nodes_two) {
 
   if(!is_nestable_internal(structure_one, nodes_one, structure_two, nodes_two))
     return false;
@@ -268,15 +268,15 @@ bool is_better_nest_no_recursion(const srcml_nodes & nodes_outer, const node_set
 
       if(match < set.size()) {
 
-        srcdiff_text_measure measure(nodes_outer, nodes_inner, set.at(match), node_set_inner);
-        measure.compute();
+        srcdiff_text_measure match_measure(nodes_outer, nodes_inner, set.at(match), node_set_inner);
+        match_measure.compute();
 
         double min_size = text_outer_length < text_inner_length ? text_outer_length : text_inner_length;
-        double nest_min_size = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
+        double nest_min_size = match_measure.original_length() < match_measure.modified_length() ? match_measure.original_length() : match_measure.modified_length();
 
-        if((measure.similarity() >= similarity && measure.difference() <= difference)
-         || ((nest_min_size / measure.similarity()) < (min_size / similarity)
-            && !srcdiff_nested::reject_match_nested(measure.similarity(), measure.difference(), measure.modified_length(), measure.original_length(), nodes_inner, node_set_inner, nodes_outer, node_set_outer)))
+        if((match_measure.similarity() >= similarity && match_measure.difference() <= difference)
+         || ((nest_min_size / match_measure.similarity()) < (min_size / similarity)
+            && !srcdiff_nested::reject_match_nested(match_measure.similarity(), match_measure.difference(), match_measure.modified_length(), match_measure.original_length(), nodes_inner, node_set_inner, nodes_outer, node_set_outer)))
           return true;
     
       }
@@ -318,18 +318,18 @@ bool is_better_nest(const srcml_nodes & nodes_outer, const node_set & node_set_o
 
       if(match < set.size()) {
 
-        srcdiff_text_measure measure(nodes_outer, nodes_inner, set.at(match), node_set_inner);
-        measure.compute();
+        srcdiff_text_measure match_measure(nodes_outer, nodes_inner, set.at(match), node_set_inner);
+        match_measure.compute();
 
         double min_size = text_outer_length < text_inner_length ? text_outer_length : text_inner_length;
-        double nest_min_size = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
+        double nest_min_size = match_measure.original_length() < match_measure.modified_length() ? match_measure.original_length() : match_measure.modified_length();
 
-        if((measure.similarity() >= similarity && measure.difference() <= difference)
-         || ((nest_min_size / measure.similarity()) < (min_size / similarity)
-            && !srcdiff_nested::reject_match_nested(measure.similarity(), measure.difference(), measure.modified_length(), measure.original_length(), nodes_inner, node_set_inner, nodes_outer, node_set_outer))
-//         || ((nest_min_size / measure.difference()) > (min_size / difference))
+        if((match_measure.similarity() >= similarity && match_measure.difference() <= difference)
+         || ((nest_min_size / match_measure.similarity()) < (min_size / similarity)
+            && !srcdiff_nested::reject_match_nested(match_measure.similarity(), match_measure.difference(), match_measure.modified_length(), match_measure.original_length(), nodes_inner, node_set_inner, nodes_outer, node_set_outer))
+//         || ((nest_min_size / match_measure.difference()) > (min_size / difference))
          )
-          return !is_better_nest_no_recursion(nodes_inner, node_set_inner, nodes_outer, node_set_outer, measure.similarity(), measure.difference(), measure.modified_length(), measure.original_length());
+          return !is_better_nest_no_recursion(nodes_inner, node_set_inner, nodes_outer, node_set_outer, match_measure.similarity(), match_measure.difference(), match_measure.modified_length(), match_measure.original_length());
 
       }
 

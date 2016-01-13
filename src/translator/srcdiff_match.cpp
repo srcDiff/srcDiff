@@ -1332,15 +1332,15 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
 
   }
 
-  srcdiff_syntax_measure measure(nodes_original, nodes_modified, set_original, set_modified);
-  measure.compute();
+  srcdiff_syntax_measure syntax_measure(nodes_original, nodes_modified, set_original, set_modified);
+  syntax_measure.compute();
 
-  int min_child_length = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
-  int max_child_length = measure.original_length() < measure.modified_length() ? measure.modified_length() : measure.original_length();
+  int min_child_length = syntax_measure.original_length() < syntax_measure.modified_length() ? syntax_measure.original_length() : syntax_measure.modified_length();
+  int max_child_length = syntax_measure.original_length() < syntax_measure.modified_length() ? syntax_measure.modified_length() : syntax_measure.original_length();
 
   if(min_child_length > 1) { 
 
-    if(2 * measure.similarity() >= min_child_length && measure.difference() <= min_child_length)
+    if(2 * syntax_measure.similarity() >= min_child_length && syntax_measure.difference() <= min_child_length)
       return false;
 
   }
@@ -1365,15 +1365,15 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
   if(!child_node_sets_original.empty() && !child_node_sets_modified.empty()
     && nodes_original.at(child_node_sets_original.back().at(0))->name == "block" && nodes_modified.at(child_node_sets_modified.back().at(0))->name == "block") {
 
-    srcdiff_syntax_measure measure(nodes_original, nodes_modified, child_node_sets_original.back(), child_node_sets_modified.back());
-    measure.compute();
+    srcdiff_syntax_measure syntax_measure(nodes_original, nodes_modified, child_node_sets_original.back(), child_node_sets_modified.back());
+    syntax_measure.compute();
 
-    min_child_length = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
-    max_child_length = measure.original_length() < measure.modified_length() ? measure.modified_length() : measure.original_length();      
+    min_child_length = syntax_measure.original_length() < syntax_measure.modified_length() ? syntax_measure.original_length() : syntax_measure.modified_length();
+    max_child_length = syntax_measure.original_length() < syntax_measure.modified_length() ? syntax_measure.modified_length() : syntax_measure.original_length();      
 
     if(min_child_length > 1) { 
 
-      if(2 * measure.similarity() >= min_child_length && measure.difference() <= min_child_length)
+      if(2 * syntax_measure.similarity() >= min_child_length && syntax_measure.difference() <= min_child_length)
         return false;
 
     }
