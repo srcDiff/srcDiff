@@ -159,7 +159,7 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
   if(pos_original.size() != 0 && pos_modified.size()) {
 
-    srcdiff_match match(out.get_nodes_original(), out.get_nodes_modified(), original_sets, modified_sets);
+    srcdiff_match match(original_sets, modified_sets);
     matches = match.match_differences();
 
   }

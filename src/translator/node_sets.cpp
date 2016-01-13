@@ -9,7 +9,7 @@ bool node_sets::is_non_white_space(int & node_pos, const srcml_nodes & node_list
 
 }
 
-node_sets::node_sets(const srcml_nodes & nodes) : node_list(node_list) {}
+node_sets::node_sets(const srcml_nodes & node_list) : node_list(node_list) {}
 
 node_sets::node_sets(const node_sets & sets) : node_list(sets.node_list) {
 

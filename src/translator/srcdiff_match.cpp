@@ -22,24 +22,23 @@ struct difference {
 
 };
 
-bool srcdiff_match::is_match_default(const srcml_nodes & nodes_original, const node_sets & node_sets_original, int start_pos_original,
-              const srcml_nodes & nodes_modified, const node_sets & node_sets_modified, int start_pos_modified,
-              const srcdiff_measure & measure) {
+bool srcdiff_match::is_match_default(const node_sets & sets_original, int start_pos_original,
+                                     const node_sets & sets_modified, int start_pos_modified,
+                                     const srcdiff_measure & measure) {
 
   return !(measure.similarity() == MAX_INT 
           || reject_match(measure,
-                          nodes_original, node_sets_original.at(start_pos_original), nodes_modified, node_sets_modified.at(start_pos_modified))
-          || srcdiff_nested::is_better_nested(nodes_original, node_sets_original, start_pos_original, nodes_modified, node_sets_modified, start_pos_modified,
+                          sets_original.at(start_pos_original),
+                          sets_modified.at(start_pos_modified))
+          || srcdiff_nested::is_better_nested(sets_original.nodes(), sets_original, start_pos_original, sets_modified.nodes(), sets_modified, start_pos_modified,
                                               measure));
 
 }
 
 
-srcdiff_match::srcdiff_match(const srcml_nodes & nodes_original, const srcml_nodes & nodes_modified,
-                             const node_sets & node_sets_original, const node_sets & node_sets_modified,
+srcdiff_match::srcdiff_match(const node_sets & node_sets_original, const node_sets & node_sets_modified,
                              const is_match_func & is_match)
-  : nodes_original(nodes_original), nodes_modified(nodes_modified),
-    node_sets_original(node_sets_original), node_sets_modified(node_sets_modified),
+  : node_sets_original(node_sets_original), node_sets_modified(node_sets_modified),
     is_match(is_match) {}
 
 static offset_pair * create_linked_list(int olength, int nlength, difference * differences) {
@@ -131,26 +130,6 @@ offset_pair * srcdiff_match::match_differences() {
 
   */
 
-  /*
-    fprintf(stderr, "HERE\n");
-
-    for(int original_pos = 0; original_pos < edits->length; ++original_pos) {
-
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_original.at(node_sets_original.at(edits->offset_sequence_one + original_pos)->at(0))->name);
-
-    }
-
-    fprintf(stderr, "HERE\n");
-
-    for(int modified_pos = 0; modified_pos < edit_next->length; ++modified_pos) {
-
-    fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, nodes_modified.at(node_sets_modified.at(edit_next->offset_sequence_two + modified_pos)->at(0))->name);
-
-    }
-
-    fprintf(stderr, "HERE\n");
-*/
-
   //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 
   int olength = node_sets_original.size();
@@ -174,7 +153,7 @@ offset_pair * srcdiff_match::match_differences() {
       int unmatched = 0;
 
       // check if unmatched
-      if(!is_match(nodes_original, node_sets_original, j, nodes_modified, node_sets_modified, i, measure)) {
+      if(!is_match(node_sets_original, j, node_sets_modified, i, measure)) {
 
         similarity = 0;
         unmatched = 1;
@@ -777,17 +756,17 @@ bool if_has_else(const srcml_nodes & nodes, const node_set & set) {
 
 }
 
-bool if_then_equal(const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
+bool if_then_equal(const node_set & set_original, const node_set & set_modified) {
 
-  diff_nodes dnodes = { nodes_original, nodes_modified };
+  diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
 
-  node_sets node_sets_original = node_sets(nodes_original, set_original.at(1), set_original.back());
-  node_sets node_sets_modified = node_sets(nodes_modified, set_modified.at(1), set_modified.back());
+  node_sets node_sets_original = node_sets(set_original.nodes(), set_original.at(1), set_original.back());
+  node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back());
 
   node_sets::iterator then_original;
   for(then_original = node_sets_original.begin(); then_original != node_sets_original.end(); ++then_original) {
 
-    if(nodes_original.at(then_original->at(0))->name == "then") {
+    if(set_original.nodes().at(then_original->at(0))->name == "then") {
 
       break;
 
@@ -798,7 +777,7 @@ bool if_then_equal(const srcml_nodes & nodes_original, const node_set & set_orig
   node_sets::iterator then_modified;
   for(then_modified = node_sets_modified.begin(); then_modified != node_sets_modified.end(); ++then_modified) {
 
-    if(nodes_modified.at(then_modified->at(0))->name == "then") {
+    if(set_modified.nodes().at(then_modified->at(0))->name == "then") {
 
       break;
 
@@ -812,21 +791,21 @@ bool if_then_equal(const srcml_nodes & nodes_original, const node_set & set_orig
 
 }
 
-bool for_control_matches(const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
+bool for_control_matches(const node_set & set_original, const node_set & set_modified) {
 
-  diff_nodes dnodes = { nodes_original, nodes_modified };
+  diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
 
-  node_sets node_sets_original = node_sets(nodes_original, set_original.at(1), set_original.back());
-  node_sets node_sets_modified = node_sets(nodes_modified, set_modified.at(1), set_modified.back());
+  node_sets node_sets_original = node_sets(set_original.nodes(), set_original.at(1), set_original.back());
+  node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back());
 
   node_sets::size_type control_pos_original;
   for(control_pos_original = 0; control_pos_original < node_sets_original.size(); ++control_pos_original)
-    if(nodes_original.at(node_sets_original.at(control_pos_original).front())->name == "control")
+    if(set_original.nodes().at(node_sets_original.at(control_pos_original).front())->name == "control")
       break;
 
   node_sets::size_type control_pos_modified;
   for(control_pos_modified = 0; control_pos_modified < node_sets_modified.size(); ++control_pos_modified)
-    if(nodes_modified.at(node_sets_modified.at(control_pos_modified).front())->name == "control")
+    if(set_modified.nodes().at(node_sets_modified.at(control_pos_modified).front())->name == "control")
       break;
 
   bool matches = control_pos_original != node_sets_original.size() && control_pos_modified != node_sets_modified.size() 
@@ -1014,16 +993,17 @@ bool srcdiff_match::is_interchangeable_match(const std::string & original_tag, c
 }
 
 bool reject_match_same(const srcdiff_measure & measure,
-  const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
+                       const node_set & set_original,
+                       const node_set & set_modified) {
 
   int original_pos = set_original.at(0);
   int modified_pos = set_modified.at(0);
 
-  const std::string & original_tag = nodes_original.at(original_pos)->name;
-  const std::string & modified_tag = nodes_modified.at(modified_pos)->name;
+  const std::string & original_tag = set_original.nodes().at(original_pos)->name;
+  const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
 
-  const std::string & original_uri = nodes_original.at(original_pos)->ns->href;
-  const std::string & modified_uri = nodes_modified.at(modified_pos)->ns->href;
+  const std::string & original_uri = set_original.nodes().at(original_pos)->ns->href;
+  const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns->href;
 
   if(original_tag != modified_tag) return true;
 
@@ -1037,19 +1017,19 @@ bool reject_match_same(const srcdiff_measure & measure,
     || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier")
     return false;
 
-  if(original_tag == "name" && nodes_original.at(original_pos)->is_simple && nodes_modified.at(modified_pos)->is_simple) return false;
-  if(original_tag == "name" && nodes_original.at(original_pos)->is_simple != nodes_modified.at(modified_pos)->is_simple) return true;
+  if(original_tag == "name" && set_original.nodes().at(original_pos)->is_simple && set_modified.nodes().at(modified_pos)->is_simple) return false;
+  if(original_tag == "name" && set_original.nodes().at(original_pos)->is_simple != set_modified.nodes().at(modified_pos)->is_simple) return true;
 
   if((original_tag == "expr" || original_tag == "expr_stmt") && measure.similarity() > 0 && measure.difference() <= measure.max_length()) return false;
 
   // may need to refine to if child only single name
-  if(original_tag == "expr" && nodes_original.at(original_pos)->parent && (*nodes_original.at(original_pos)->parent)->name == "argument") return false;
-  if(original_tag == "expr" && is_single_name_expr(nodes_original, original_pos) && is_single_name_expr(nodes_modified, modified_pos)) return false;
+  if(original_tag == "expr" && set_original.nodes().at(original_pos)->parent && (*set_original.nodes().at(original_pos)->parent)->name == "argument") return false;
+  if(original_tag == "expr" && is_single_name_expr(set_original.nodes(), original_pos) && is_single_name_expr(set_modified.nodes(), modified_pos)) return false;
 
   if(original_tag == "block") {
 
-    bool is_pseudo_original = bool(find_attribute(nodes_original.at(original_pos), "type"));
-    bool is_pseudo_modified = bool(find_attribute(nodes_modified.at(modified_pos), "type"));
+    bool is_pseudo_original = bool(find_attribute(set_original.nodes().at(original_pos), "type"));
+    bool is_pseudo_modified = bool(find_attribute(set_modified.nodes().at(modified_pos), "type"));
 
     if(is_pseudo_original == is_pseudo_modified) {
 
@@ -1061,22 +1041,22 @@ bool reject_match_same(const srcdiff_measure & measure,
 
       if(is_pseudo_original) {
 
-        node_sets node_sets_original = node_sets(nodes_original, set_original.at(1), set_original.back());
-        node_sets node_sets_modified = node_sets(nodes_modified, set_modified.at(0), set_modified.back() + 1);
+        node_sets node_sets_original = node_sets(set_original.nodes(), set_original.at(1), set_original.back());
+        node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(0), set_modified.back() + 1);
 
         int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
-        srcdiff_nested::check_nestable(node_sets_original, nodes_original, 0, node_sets_original.size(), node_sets_modified, nodes_modified, 0, 1,
+        srcdiff_nested::check_nestable(node_sets_original, set_original.nodes(), 0, node_sets_original.size(), node_sets_modified, set_modified.nodes(), 0, 1,
                       start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
 
         is_reject = !(operation == SES_INSERT);
 
       } else {
 
-        node_sets node_sets_original = node_sets(nodes_original, set_original.at(0), set_original.back() + 1);
-        node_sets node_sets_modified = node_sets(nodes_modified, set_modified.at(1), set_modified.back());
+        node_sets node_sets_original = node_sets(set_original.nodes(), set_original.at(0), set_original.back() + 1);
+        node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back());
 
         int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
-        srcdiff_nested::check_nestable(node_sets_original, nodes_original, 0, 1, node_sets_modified, nodes_modified, 0, node_sets_modified.size(),
+        srcdiff_nested::check_nestable(node_sets_original, set_original.nodes(), 0, 1, node_sets_modified, set_modified.nodes(), 0, node_sets_modified.size(),
                       start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
 
         is_reject = !(operation == SES_DELETE);
@@ -1089,18 +1069,18 @@ bool reject_match_same(const srcdiff_measure & measure,
 
   }
 
-  // if(is_single_call_expr(nodes_original, original_pos) && is_single_call_expr(nodes_modified, modified_pos)) {
+  // if(is_single_call_expr(set_original.nodes(), original_pos) && is_single_call_expr(set_modified.nodes(), modified_pos)) {
 
-  //   while(nodes_original.at(original_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-  //     || nodes_original.at(original_pos)->name != "call")
+  //   while(set_original.nodes().at(original_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+  //     || set_original.nodes().at(original_pos)->name != "call")
   //     ++original_pos;
 
-  //   while(nodes_modified.at(modified_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-  //     || nodes_modified.at(modified_pos)->name != "call")
+  //   while(set_modified.nodes().at(modified_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
+  //     || set_modified.nodes().at(modified_pos)->name != "call")
   //     ++modified_pos;
 
-  //   std::vector<std::string> original_names = get_call_name(nodes_original, original_pos);
-  //   std::vector<std::string> modified_names = get_call_name(nodes_modified, modified_pos);
+  //   std::vector<std::string> original_names = get_call_name(set_original.nodes(), original_pos);
+  //   std::vector<std::string> modified_names = get_call_name(set_modified.nodes(), modified_pos);
 
   //   if(name_list_similarity(original_names, modified_names)) return false;
 
@@ -1108,15 +1088,15 @@ bool reject_match_same(const srcdiff_measure & measure,
 
   if(original_tag == "call") {
 
-    std::vector<std::string> original_names = get_call_name(nodes_original, original_pos);
-    std::vector<std::string> modified_names = get_call_name(nodes_modified, modified_pos);
+    std::vector<std::string> original_names = get_call_name(set_original.nodes(), original_pos);
+    std::vector<std::string> modified_names = get_call_name(set_modified.nodes(), modified_pos);
 
     if(name_list_similarity(original_names, modified_names)) return false;
 
   } else if(original_tag == "decl" || original_tag == "decl_stmt" || original_tag == "parameter" || original_tag == "param") {
 
-    std::string original_name = get_decl_name(nodes_original, original_pos);
-    std::string modified_name = get_decl_name(nodes_modified, modified_pos);
+    std::string original_name = get_decl_name(set_original.nodes(), original_pos);
+    std::string modified_name = get_decl_name(set_modified.nodes(), modified_pos);
 
     if(original_name == modified_name && original_name != "") return false;
 
@@ -1124,82 +1104,83 @@ bool reject_match_same(const srcdiff_measure & measure,
          || original_tag == "constructor" || original_tag == "constructor_decl"
          || original_tag == "destructor"  || original_tag == "destructor_decl") {
 
-    std::string original_name = get_function_type_name(nodes_original, original_pos);
-    std::string modified_name = get_function_type_name(nodes_modified, modified_pos);
+    std::string original_name = get_function_type_name(set_original.nodes(), original_pos);
+    std::string modified_name = get_function_type_name(set_modified.nodes(), modified_pos);
 
     if(original_name == modified_name) return false;
 
   } else if(original_tag == "if" && original_uri == SRCML_SRC_NAMESPACE_HREF) {
 
-    std::string original_condition = get_condition(nodes_original, original_pos);
-    std::string modified_condition = get_condition(nodes_modified, modified_pos);
+    std::string original_condition = get_condition(set_original.nodes(), original_pos);
+    std::string modified_condition = get_condition(set_modified.nodes(), modified_pos);
 
-    bool original_has_block = conditional_has_block(nodes_original, set_original);
-    bool modified_has_block = conditional_has_block(nodes_modified, set_modified);
+    bool original_has_block = conditional_has_block(set_original.nodes(), set_original);
+    bool modified_has_block = conditional_has_block(set_modified.nodes(), set_modified);
 
-    bool original_has_else = if_has_else(nodes_original, set_original);
-    bool modified_has_else = if_has_else(nodes_modified, set_modified);
+    bool original_has_else = if_has_else(set_original.nodes(), set_original);
+    bool modified_has_else = if_has_else(set_modified.nodes(), set_modified);
 
-    if(if_then_equal(nodes_original, set_original, nodes_modified, set_modified) || (original_condition == modified_condition
+    if(if_then_equal(set_original, set_modified) || (original_condition == modified_condition
       && (original_has_block == modified_has_block || original_has_else == modified_has_else || ((original_has_block || !original_has_else) && (modified_has_block || !modified_has_else)))))
      return false;
 
   } else if(original_tag == "while" || original_tag == "switch") {
 
-    std::string original_condition = get_condition(nodes_original, original_pos);
-    std::string modified_condition = get_condition(nodes_modified, modified_pos);
+    std::string original_condition = get_condition(set_original.nodes(), original_pos);
+    std::string modified_condition = get_condition(set_modified.nodes(), modified_pos);
 
     if(original_condition == modified_condition) return false;
 
   } else if(original_tag == "for" || original_tag == "foreach") {
 
-    if(for_control_matches(nodes_original, set_original, nodes_modified, set_modified))
+    if(for_control_matches(set_original, set_modified))
       return false;
 
   } else if(original_tag == "case") { 
 
-    std::string original_expr = get_case_expr(nodes_original, original_pos);
-    std::string modified_expr = get_case_expr(nodes_modified, modified_pos);
+    std::string original_expr = get_case_expr(set_original.nodes(), original_pos);
+    std::string modified_expr = get_case_expr(set_modified.nodes(), modified_pos);
 
     if(original_expr == modified_expr) return false;
 
   } else if(original_tag == "class" || original_tag == "struct" || original_tag == "union" || original_tag == "enum") {
 
-    std::string original_name = get_class_type_name(nodes_original, original_pos);
-    std::string modified_name = get_class_type_name(nodes_modified, modified_pos);
+    std::string original_name = get_class_type_name(set_original.nodes(), original_pos);
+    std::string modified_name = get_class_type_name(set_modified.nodes(), modified_pos);
 
     if(original_name == modified_name && original_name != "") return false;
 
   }
 
-  bool is_reject = srcdiff_match::reject_similarity(measure, nodes_original, set_original, nodes_modified, set_modified);
+  bool is_reject = srcdiff_match::reject_similarity(measure, set_original, set_modified);
   return is_reject;
 
 }
 
 bool reject_match_interchangeable(const srcdiff_measure & measure,
-  const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
+                                  const node_set & set_original,
+                                  const node_set & set_modified) {
 
   int original_pos = set_original.at(0);
   int modified_pos = set_modified.at(0);
 
-  const std::string & original_tag = nodes_original.at(original_pos)->name;
-  const std::string & modified_tag = nodes_modified.at(modified_pos)->name;
+  const std::string & original_tag = set_original.nodes().at(original_pos)->name;
+  const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
 
-  const std::string & original_uri = nodes_original.at(original_pos)->ns->href;
-  const std::string & modified_uri = nodes_modified.at(modified_pos)->ns->href;
+  const std::string & original_uri = set_original.nodes().at(original_pos)->ns->href;
+  const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns->href;
 
   std::string original_name;
   if(original_tag == "class" || original_tag == "struct" || original_tag == "union" || original_tag == "enum") {
 
-      original_name = get_class_type_name(nodes_original, original_pos);
+      original_name = get_class_type_name(set_original.nodes(), original_pos);
 
   }
 
   std::string modified_name;
   if(modified_tag == "class" || modified_tag == "struct" || modified_tag == "union" || modified_tag == "enum") {
 
-      modified_name = get_class_type_name(nodes_original, original_pos);
+      modified_name = get_class_type_name(set_original.nodes(), original_pos);
     
   }
 
@@ -1208,14 +1189,14 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
   std::string original_condition;
   if(original_tag == "if" || original_tag == "while" || original_tag == "for" || original_tag == "foreach") {
 
-    original_condition = get_condition(nodes_original, original_pos);
+    original_condition = get_condition(set_original.nodes(), original_pos);
 
   }
 
   std::string modified_condition;
   if(modified_tag == "if" || modified_tag == "while" || modified_tag == "for" || modified_tag == "foreach") {
 
-    modified_condition = get_condition(nodes_modified, modified_pos);
+    modified_condition = get_condition(set_modified.nodes(), modified_pos);
 
   }
 
@@ -1225,19 +1206,19 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
   if(  (original_tag == "expr_stmt" || original_tag == "decl_stmt" || original_tag == "return")
     && (modified_tag == "expr_stmt" || modified_tag == "decl_stmt" || modified_tag == "return")) {
 
-    node_set expr_original(nodes_original);
-    node_set expr_modified(nodes_modified);
+    node_set expr_original(set_original.nodes());
+    node_set expr_modified(set_modified.nodes());
     if(original_tag == "decl_stmt" || modified_tag == "decl_stmt") {
 
       if(original_tag == "decl_stmt") {
 
-        expr_modified = get_first_expr_child(nodes_modified, modified_pos);
+        expr_modified = get_first_expr_child(set_modified.nodes(), modified_pos);
 
         if(!expr_modified.empty()) {
 
-          node_sets sets = node_sets(nodes_original, set_original.at(1), set_original.back(), srcdiff_nested::is_match,
-                                    &nodes_modified.at(expr_modified.at(0)));
-          int match = srcdiff_nested::best_match(nodes_original, sets, nodes_modified, expr_modified);
+          node_sets sets = node_sets(set_original.nodes(), set_original.at(1), set_original.back(), srcdiff_nested::is_match,
+                                    &set_modified.nodes().at(expr_modified.at(0)));
+          int match = srcdiff_nested::best_match(set_original.nodes(), sets, set_modified.nodes(), expr_modified);
 
           if(match < sets.size())
             expr_original = sets.at(match);
@@ -1246,13 +1227,13 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
       } else {
 
-        expr_original = get_first_expr_child(nodes_original, original_pos);
+        expr_original = get_first_expr_child(set_original.nodes(), original_pos);
 
         if(!expr_original.empty()) {
 
-          node_sets sets = node_sets(nodes_modified, set_modified.at(1), set_modified.back(), srcdiff_nested::is_match,
-                                    &nodes_original.at(expr_original.at(0)));
-          int match = srcdiff_nested::best_match(nodes_modified, sets, nodes_original, expr_original);
+          node_sets sets = node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back(), srcdiff_nested::is_match,
+                                    &set_original.nodes().at(expr_original.at(0)));
+          int match = srcdiff_nested::best_match(set_modified.nodes(), sets, set_original.nodes(), expr_original);
 
           if(match < sets.size())
             expr_modified = sets.at(match);
@@ -1263,8 +1244,8 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
     } else {
 
-      expr_original = get_first_expr_child(nodes_original, original_pos);
-      expr_modified = get_first_expr_child(nodes_modified, modified_pos);
+      expr_original = get_first_expr_child(set_original.nodes(), original_pos);
+      expr_modified = get_first_expr_child(set_modified.nodes(), modified_pos);
 
     }
 
@@ -1273,7 +1254,7 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
       srcdiff_text_measure expr_measure(expr_original, expr_modified);
       expr_measure.compute();
 
-      bool is_expr_reject = srcdiff_match::reject_similarity(expr_measure, nodes_original, expr_original, nodes_modified, expr_modified);
+      bool is_expr_reject = srcdiff_match::reject_similarity(expr_measure, expr_original, expr_modified);
 
       int min_size = expr_measure.min_length();
       int max_size = expr_measure.max_length();
@@ -1284,40 +1265,42 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
   }
 
-  bool is_reject = srcdiff_match::reject_similarity(measure, nodes_original, set_original, nodes_modified, set_modified);
+  bool is_reject = srcdiff_match::reject_similarity(measure, set_original, set_modified);
   return is_reject;
 
 }
 
 bool srcdiff_match::reject_match(const srcdiff_measure & measure,
-  const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
+                                 const node_set & set_original,
+                                 const node_set & set_modified) {
 
   /** if different prefix should not reach here, however, may want to add that here */
   int original_pos = set_original.at(0);
   int modified_pos = set_modified.at(0);
 
-  const std::string & original_tag = nodes_original.at(original_pos)->name;
-  const std::string & modified_tag = nodes_modified.at(modified_pos)->name;
+  const std::string & original_tag = set_original.nodes().at(original_pos)->name;
+  const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
 
-  const std::string & original_uri = nodes_original.at(original_pos)->ns->href;
-  const std::string & modified_uri = nodes_modified.at(modified_pos)->ns->href;
+  const std::string & original_uri = set_original.nodes().at(original_pos)->ns->href;
+  const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns->href;
 
   if(original_tag == modified_tag && original_uri == modified_uri)
-    return reject_match_same(measure, nodes_original, set_original, nodes_modified, set_modified);
+    return reject_match_same(measure, set_original, set_modified);
   else if(is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri)) 
-    return reject_match_interchangeable(measure, nodes_original, set_original, nodes_modified, set_modified);
+    return reject_match_interchangeable(measure, set_original, set_modified);
   else
     return true;
 
 }
 
 bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
-  const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
+                                      const node_set & set_original,
+                                      const node_set & set_modified) {
 
   if(set_original.size() == 1 && set_modified.size() == 1) {
 
-    const std::string & original_tag = nodes_original.at(set_original.front())->name;
-    const std::string & modified_tag = nodes_modified.at(set_modified.front())->name;
+    const std::string & original_tag = set_original.nodes().at(set_original.front())->name;
+    const std::string & modified_tag = set_modified.nodes().at(set_modified.front())->name;
 
     return original_tag != modified_tag;
 
@@ -1343,25 +1326,25 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
 
   }
 
-  node_sets child_node_sets_original = node_sets(nodes_original, set_original.at(1), set_original.back());
-  node_sets child_node_sets_modified = node_sets(nodes_modified, set_modified.at(1), set_modified.back());    
+  node_sets child_node_sets_original = node_sets(set_original.nodes(), set_original.at(1), set_original.back());
+  node_sets child_node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back());    
 
-  if(!child_node_sets_original.empty() && nodes_original.at(child_node_sets_original.back().at(0))->name == "then") {
+  if(!child_node_sets_original.empty() && set_original.nodes().at(child_node_sets_original.back().at(0))->name == "then") {
 
-    node_sets temp = node_sets(nodes_original, child_node_sets_original.back().at(1), child_node_sets_original.back().back());
+    node_sets temp = node_sets(set_original.nodes(), child_node_sets_original.back().at(1), child_node_sets_original.back().back());
     child_node_sets_original = temp;
 
   }
 
-  if(!child_node_sets_modified.empty() && nodes_modified.at(child_node_sets_modified.back().at(0))->name == "then") {
+  if(!child_node_sets_modified.empty() && set_modified.nodes().at(child_node_sets_modified.back().at(0))->name == "then") {
 
-    node_sets temp = node_sets(nodes_modified, child_node_sets_modified.back().at(1), child_node_sets_modified.back().back());
+    node_sets temp = node_sets(set_modified.nodes(), child_node_sets_modified.back().at(1), child_node_sets_modified.back().back());
     child_node_sets_modified = temp;
 
   }
 
   if(!child_node_sets_original.empty() && !child_node_sets_modified.empty()
-    && nodes_original.at(child_node_sets_original.back().at(0))->name == "block" && nodes_modified.at(child_node_sets_modified.back().at(0))->name == "block") {
+    && set_original.nodes().at(child_node_sets_original.back().at(0))->name == "block" && set_modified.nodes().at(child_node_sets_modified.back().at(0))->name == "block") {
 
     srcdiff_syntax_measure syntax_measure(child_node_sets_original.back(), child_node_sets_modified.back());
     syntax_measure.compute();

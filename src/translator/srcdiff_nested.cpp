@@ -419,12 +419,13 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
     || original_tag == "expr" || original_tag == "expr_stmt" || original_tag == "name") {
 
     bool is_reject = srcdiff_match::reject_similarity(measure,
-      nodes_original, set_original, nodes_modified, set_modified);
+                                                      set_original,
+                                                      set_modified);
     return is_reject;
 
   } else {
 
-    return srcdiff_match::reject_match(measure, nodes_original, set_original, nodes_modified, set_modified);
+    return srcdiff_match::reject_match(measure, set_original, set_modified);
 
   }
 
