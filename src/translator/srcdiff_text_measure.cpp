@@ -6,10 +6,16 @@
 #include <srcdiff_match.hpp>
 #include <srcdiff_diff.hpp>
 
+#include <cassert>
+
 srcdiff_text_measure::srcdiff_text_measure(const srcml_nodes & nodes_original, const srcml_nodes & nodes_modified, const node_set & set_original, const node_set & set_modified) 
   : srcdiff_measure(nodes_original, nodes_modified, set_original, set_modified) {}
 
 void srcdiff_text_measure::compute() {
+
+  if(computed) return;
+
+  computed = true;
 
   diff_nodes dnodes = { nodes_original, nodes_modified };
 

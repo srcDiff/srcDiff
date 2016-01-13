@@ -3,6 +3,8 @@
 
 #include <srcdiff_measure.hpp>
 
+#include <cassert>
+
 class srcdiff_syntax_measure : public srcdiff_measure{
 
 protected:

@@ -37,6 +37,10 @@ static bool is_significant(int & node_pos, const srcml_nodes & nodes, const void
 
 void srcdiff_syntax_measure::compute() {
 
+  if(computed) return;
+
+  computed = true;
+  
   diff_nodes dnodes = { nodes_original, nodes_modified };
 
   if((xmlReaderTypes)nodes_original.at(set_original.at(0))->type != XML_READER_TYPE_ELEMENT

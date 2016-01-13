@@ -1,15 +1,52 @@
 #include <srcdiff_measure.hpp>
 
-srcdiff_measure::srcdiff_measure(const srcml_nodes & nodes_original, const srcml_nodes & nodes_modified, const node_set & set_original, const node_set & set_modified) 
-  : nodes_original(nodes_original), nodes_modified(nodes_modified), set_original(set_original), set_modified(set_modified) {}
+#include <cassert>
 
-int srcdiff_measure::similarity() const { return a_similarity; }
+srcdiff_measure::srcdiff_measure(const srcml_nodes & nodes_original,
+                                 const srcml_nodes & nodes_modified,
+                                 const node_set & set_original,
+                                 const node_set & set_modified) 
+  : nodes_original(nodes_original),
+    nodes_modified(nodes_modified),
+    set_original(set_original),
+    set_modified(set_modified),
+    computed(false),
+    a_similarity(0),
+    a_difference(0),
+    original_len(0),
+    modified_len(0) {}
 
-int srcdiff_measure::difference() const { return a_difference; }
+int srcdiff_measure::similarity() const {
 
-int srcdiff_measure::original_length() const { return original_len; }
+  assert(computed);
 
-int srcdiff_measure::modified_length() const { return modified_len; }
+  return a_similarity;
+
+}
+
+int srcdiff_measure::difference() const {
+
+  assert(computed);
+
+  return a_difference;
+
+}
+
+int srcdiff_measure::original_length() const {
+
+  assert(computed);
+
+  return original_len;
+
+}
+
+int srcdiff_measure::modified_length() const {
+
+  assert(computed);
+
+  return modified_len;
+
+}
 
 void srcdiff_measure::compute_ses(class shortest_edit_script & ses) {
 
