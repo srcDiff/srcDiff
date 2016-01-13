@@ -1276,8 +1276,8 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
       bool is_expr_reject = srcdiff_match::reject_similarity(expr_measure, nodes_original, expr_original, nodes_modified, expr_modified);
 
-      int min_size = expr_measure.original_length() < expr_measure.modified_length() ? expr_measure.original_length() : expr_measure.modified_length();
-      int max_size = expr_measure.original_length() < expr_measure.modified_length() ? expr_measure.modified_length() : expr_measure.original_length();
+      int min_size = expr_measure.min_length();
+      int max_size = expr_measure.max_length();
 
       if(!is_expr_reject && 2 * expr_measure.similarity() > max_size && 2 * expr_measure.difference() < max_size) return false;
 
@@ -1334,8 +1334,8 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
   srcdiff_syntax_measure syntax_measure(nodes_original, nodes_modified, set_original, set_modified);
   syntax_measure.compute();
 
-  int min_child_length = syntax_measure.original_length() < syntax_measure.modified_length() ? syntax_measure.original_length() : syntax_measure.modified_length();
-  int max_child_length = syntax_measure.original_length() < syntax_measure.modified_length() ? syntax_measure.modified_length() : syntax_measure.original_length();
+  int min_child_length = syntax_measure.min_length();
+  int max_child_length = syntax_measure.max_length();
 
   if(min_child_length > 1) { 
 
@@ -1367,8 +1367,8 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
     srcdiff_syntax_measure syntax_measure(nodes_original, nodes_modified, child_node_sets_original.back(), child_node_sets_modified.back());
     syntax_measure.compute();
 
-    min_child_length = syntax_measure.original_length() < syntax_measure.modified_length() ? syntax_measure.original_length() : syntax_measure.modified_length();
-    max_child_length = syntax_measure.original_length() < syntax_measure.modified_length() ? syntax_measure.modified_length() : syntax_measure.original_length();      
+    int min_child_length = syntax_measure.min_length();
+    int max_child_length = syntax_measure.max_length();
 
     if(min_child_length > 1) { 
 
@@ -1379,8 +1379,8 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
 
   }
 
-  int min_size = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
-  int max_size = measure.original_length() < measure.modified_length() ? measure.modified_length() : measure.original_length();
+  int min_size = measure.min_length();
+  int max_size = measure.max_length();
 
 #if DEBUG
   std::cerr << "Similarity: " << measure.similarity() << '\n';
