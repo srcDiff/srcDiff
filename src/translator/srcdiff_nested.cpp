@@ -8,6 +8,7 @@
 #include <srcdiff_match.hpp>
 #include <shortest_edit_script.h>
 
+#include <algorithm>
 #include <cstring>
 
 srcdiff_nested::srcdiff_nested(const srcdiff_many & diff, int start_original, int end_original, int start_modified, int end_modified, int operation)
@@ -235,8 +236,8 @@ bool srcdiff_nested::is_same_nestable(const node_set & structure_one, const srcm
   srcdiff_text_measure measure(nodes_one, nodes_two, structure_one, structure_two);
   measure.compute();
 
-  double min_size = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
-  double match_min_size = measure.original_length() < match_measure.modified_length() ? measure.original_length() : match_measure.modified_length();
+  double min_size = measure.min_length();
+  double match_min_size = std::min(measure.original_length(), match_measure.modified_length());
 
   return (match_measure.similarity() >= measure.similarity() && match_measure.difference() <= measure.difference()) 
   || (match_min_size > 50 && min_size > 50 && (match_min_size / match_measure.similarity()) < (0.9 * (min_size / measure.similarity()))
@@ -271,8 +272,8 @@ bool is_better_nest_no_recursion(const srcml_nodes & nodes_outer, const node_set
         srcdiff_text_measure match_measure(nodes_outer, nodes_inner, set.at(match), node_set_inner);
         match_measure.compute();
 
-        double min_size = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
-        double nest_min_size = match_measure.original_length() < match_measure.modified_length() ? match_measure.original_length() : match_measure.modified_length();
+        double min_size = measure.min_length();
+        double nest_min_size = match_measure.min_length();
 
         if((match_measure.similarity() >= measure.similarity() && match_measure.difference() <= measure.difference())
          || ((nest_min_size / match_measure.similarity()) < (min_size / measure.similarity())
@@ -321,8 +322,8 @@ bool is_better_nest(const srcml_nodes & nodes_outer, const node_set & node_set_o
         srcdiff_text_measure match_measure(nodes_outer, nodes_inner, set.at(match), node_set_inner);
         match_measure.compute();
 
-        double min_size = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
-        double nest_min_size = match_measure.original_length() < match_measure.modified_length() ? match_measure.original_length() : match_measure.modified_length();
+        double min_size = measure.min_length();
+        double nest_min_size = match_measure.min_length();
 
         if((match_measure.similarity() >= measure.similarity() && match_measure.difference() <= measure.difference())
          || ((nest_min_size / match_measure.similarity()) < (min_size / measure.similarity())

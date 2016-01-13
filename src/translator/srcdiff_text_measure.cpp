@@ -6,6 +6,7 @@
 #include <srcdiff_match.hpp>
 #include <srcdiff_diff.hpp>
 
+#include <algorithm>
 #include <cassert>
 
 srcdiff_text_measure::srcdiff_text_measure(const srcml_nodes & nodes_original, const srcml_nodes & nodes_modified, const node_set & set_original, const node_set & set_modified) 
@@ -66,7 +67,7 @@ void srcdiff_text_measure::compute() {
   delete_similarity = original_len - delete_similarity;
   insert_similarity = modified_len - insert_similarity;
 
-  a_similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
+  a_similarity = std::min(delete_similarity, insert_similarity);
 
   if(a_similarity <= 0)
     a_similarity = 0;

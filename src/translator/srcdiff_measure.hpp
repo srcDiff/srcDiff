@@ -31,6 +31,9 @@ public:
 	int original_length() const;
 	int modified_length() const;
 
+	int max_length() const;
+	int min_length() const;
+
 	virtual void compute() = 0;
 
 };
