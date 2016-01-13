@@ -30,7 +30,8 @@ bool srcdiff_match::is_match_default(const node_sets & sets_original, int start_
           || reject_match(measure,
                           sets_original.at(start_pos_original),
                           sets_modified.at(start_pos_modified))
-          || srcdiff_nested::is_better_nested(sets_original.nodes(), sets_original, start_pos_original, sets_modified.nodes(), sets_modified, start_pos_modified,
+          || srcdiff_nested::is_better_nested(sets_original, start_pos_original,
+                                              sets_modified, start_pos_modified,
                                               measure));
 
 }
@@ -1045,7 +1046,7 @@ bool reject_match_same(const srcdiff_measure & measure,
         node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(0), set_modified.back() + 1);
 
         int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
-        srcdiff_nested::check_nestable(node_sets_original, set_original.nodes(), 0, node_sets_original.size(), node_sets_modified, set_modified.nodes(), 0, 1,
+        srcdiff_nested::check_nestable(node_sets_original, 0, node_sets_original.size(), node_sets_modified, 0, 1,
                       start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
 
         is_reject = !(operation == SES_INSERT);
@@ -1056,7 +1057,7 @@ bool reject_match_same(const srcdiff_measure & measure,
         node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back());
 
         int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
-        srcdiff_nested::check_nestable(node_sets_original, set_original.nodes(), 0, 1, node_sets_modified, set_modified.nodes(), 0, node_sets_modified.size(),
+        srcdiff_nested::check_nestable(node_sets_original, 0, 1, node_sets_modified, 0, node_sets_modified.size(),
                       start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
 
         is_reject = !(operation == SES_DELETE);
@@ -1218,7 +1219,7 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
           node_sets sets = node_sets(set_original.nodes(), set_original.at(1), set_original.back(), srcdiff_nested::is_match,
                                     &set_modified.nodes().at(expr_modified.at(0)));
-          int match = srcdiff_nested::best_match(set_original.nodes(), sets, set_modified.nodes(), expr_modified);
+          int match = srcdiff_nested::best_match(sets, expr_modified);
 
           if(match < sets.size())
             expr_original = sets.at(match);
@@ -1233,7 +1234,7 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
           node_sets sets = node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back(), srcdiff_nested::is_match,
                                     &set_original.nodes().at(expr_original.at(0)));
-          int match = srcdiff_nested::best_match(set_modified.nodes(), sets, set_original.nodes(), expr_original);
+          int match = srcdiff_nested::best_match(sets, expr_original);
 
           if(match < sets.size())
             expr_modified = sets.at(match);
