@@ -165,7 +165,7 @@ offset_pair * srcdiff_match::match_differences() {
 
     for(int j = 0; j < olength; ++j) {
 
-      srcdiff_text_measure measure(nodes_original, nodes_modified, node_sets_original.at(j), node_sets_modified.at(i));
+      srcdiff_text_measure measure(node_sets_original.at(j), node_sets_modified.at(i));
       measure.compute();
       int similarity = measure.similarity();
 
@@ -1270,7 +1270,7 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
     if(expr_original.size() && expr_modified.size()) {
 
-      srcdiff_text_measure expr_measure(nodes_original, nodes_modified, expr_original, expr_modified);
+      srcdiff_text_measure expr_measure(expr_original, expr_modified);
       expr_measure.compute();
 
       bool is_expr_reject = srcdiff_match::reject_similarity(expr_measure, nodes_original, expr_original, nodes_modified, expr_modified);
@@ -1330,7 +1330,7 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
 
   }
 
-  srcdiff_syntax_measure syntax_measure(nodes_original, nodes_modified, set_original, set_modified);
+  srcdiff_syntax_measure syntax_measure(set_original, set_modified);
   syntax_measure.compute();
 
   int min_child_length = syntax_measure.min_length();
@@ -1363,7 +1363,7 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
   if(!child_node_sets_original.empty() && !child_node_sets_modified.empty()
     && nodes_original.at(child_node_sets_original.back().at(0))->name == "block" && nodes_modified.at(child_node_sets_modified.back().at(0))->name == "block") {
 
-    srcdiff_syntax_measure syntax_measure(nodes_original, nodes_modified, child_node_sets_original.back(), child_node_sets_modified.back());
+    srcdiff_syntax_measure syntax_measure(child_node_sets_original.back(), child_node_sets_modified.back());
     syntax_measure.compute();
 
     int min_child_length = syntax_measure.min_length();

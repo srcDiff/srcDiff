@@ -3,13 +3,9 @@
 #include <algorithm>
 #include <cassert>
 
-srcdiff_measure::srcdiff_measure(const srcml_nodes & nodes_original,
-                                 const srcml_nodes & nodes_modified,
-                                 const node_set & set_original,
+srcdiff_measure::srcdiff_measure(const node_set & set_original,
                                  const node_set & set_modified) 
-  : nodes_original(nodes_original),
-    nodes_modified(nodes_modified),
-    set_original(set_original),
+  : set_original(set_original),
     set_modified(set_modified),
     computed(false),
     a_similarity(0),
@@ -71,16 +67,16 @@ void srcdiff_measure::compute_ses(class shortest_edit_script & ses) {
   unsigned int olength = set_original.size();
   unsigned int nlength = set_modified.size();
 
-  node_set set_original_text(nodes_original);
+  node_set set_original_text(set_original.nodes());
 
   for(unsigned int i = 0; i < olength; ++i)
-    if(nodes_original.at(set_original.at(i))->is_text() && !nodes_original.at(set_original.at(i))->is_white_space())
+    if(set_original.nodes().at(set_original.at(i))->is_text() && !set_original.nodes().at(set_original.at(i))->is_white_space())
       set_original_text.push_back(set_original.at(i));
 
-  node_set set_modified_text(nodes_modified);
+  node_set set_modified_text(set_modified.nodes());
 
   for(unsigned int i = 0; i < nlength; ++i)
-    if(nodes_modified.at(set_modified.at(i))->is_text() && !nodes_modified.at(set_modified.at(i))->is_white_space())
+    if(set_modified.nodes().at(set_modified.at(i))->is_text() && !set_modified.nodes().at(set_modified.at(i))->is_white_space())
       set_modified_text.push_back(set_modified.at(i));
 
   original_len = set_original_text.size();
@@ -95,68 +91,68 @@ void srcdiff_measure::compute_ses_important_text(class shortest_edit_script & se
   unsigned int olength = set_original.size();
   unsigned int nlength = set_modified.size();
 
-  node_set set_original_text(nodes_original);
+  node_set set_original_text(set_original.nodes());
 
   for(unsigned int i = 0; i < olength; ++i) {
 
-    if(nodes_original.at(set_original.at(i))->name == "operator"
-      || nodes_original.at(set_original.at(i))->name == "modifier") {
+    if(set_original.nodes().at(set_original.at(i))->name == "operator"
+      || set_original.nodes().at(set_original.at(i))->name == "modifier") {
 
-      if(nodes_original.at(set_original.at(i))->extra & 0x1) continue;
+      if(set_original.nodes().at(set_original.at(i))->extra & 0x1) continue;
 
-      if(nodes_original.at(set_original.at(i))->parent && (*nodes_original.at(set_original.at(i))->parent)->name != "name") continue;
+      if(set_original.nodes().at(set_original.at(i))->parent && (*set_original.nodes().at(set_original.at(i))->parent)->name != "name") continue;
 
-      if((set_original.at(i) + 1) < nodes_original.size() && nodes_original.at(set_original.at(i) + 1)->is_text()
-        && (*nodes_original.at(set_original.at(i) + 1)->content == "::")) continue;
+      if((set_original.at(i) + 1) < set_original.nodes().size() && set_original.nodes().at(set_original.at(i) + 1)->is_text()
+        && (*set_original.nodes().at(set_original.at(i) + 1)->content == "::")) continue;
 
-      while(nodes_original.at(set_original.at(i))->type != XML_READER_TYPE_END_ELEMENT)
+      while(set_original.nodes().at(set_original.at(i))->type != XML_READER_TYPE_END_ELEMENT)
         ++i;
 
     }
 
-    if(nodes_original.at(set_original.at(i))->is_text() && !nodes_original.at(set_original.at(i))->is_white_space()
-      && nodes_original.at(set_original.at(i))->content
-      && ((nodes_original.at(set_original.at(i))->parent &&
-          (*nodes_original.at(set_original.at(i))->parent)->name == "operator")
-      ||   (*nodes_original.at(set_original.at(i))->content != "("
-        && *nodes_original.at(set_original.at(i))->content != ")"
-        && *nodes_original.at(set_original.at(i))->content != "{"
-        && *nodes_original.at(set_original.at(i))->content != "}"
-        && *nodes_original.at(set_original.at(i))->content != ";"
-        && *nodes_original.at(set_original.at(i))->content != ",")))
+    if(set_original.nodes().at(set_original.at(i))->is_text() && !set_original.nodes().at(set_original.at(i))->is_white_space()
+      && set_original.nodes().at(set_original.at(i))->content
+      && ((set_original.nodes().at(set_original.at(i))->parent &&
+          (*set_original.nodes().at(set_original.at(i))->parent)->name == "operator")
+      ||   (*set_original.nodes().at(set_original.at(i))->content != "("
+        && *set_original.nodes().at(set_original.at(i))->content != ")"
+        && *set_original.nodes().at(set_original.at(i))->content != "{"
+        && *set_original.nodes().at(set_original.at(i))->content != "}"
+        && *set_original.nodes().at(set_original.at(i))->content != ";"
+        && *set_original.nodes().at(set_original.at(i))->content != ",")))
       set_original_text.push_back(set_original.at(i));
 
   }
 
-  node_set set_modified_text(nodes_modified);
+  node_set set_modified_text(set_modified.nodes());
 
   for(unsigned int i = 0; i < nlength; ++i) {
 
-    if(nodes_modified.at(set_modified.at(i))->name == "operator"
-      || nodes_modified.at(set_modified.at(i))->name == "modifier") {
+    if(set_modified.nodes().at(set_modified.at(i))->name == "operator"
+      || set_modified.nodes().at(set_modified.at(i))->name == "modifier") {
 
-      if(nodes_modified.at(set_modified.at(i))->extra & 0x1) continue;
+      if(set_modified.nodes().at(set_modified.at(i))->extra & 0x1) continue;
 
-      if(nodes_modified.at(set_modified.at(i))->parent && (*nodes_modified.at(set_modified.at(i))->parent)->name != "name") continue;
+      if(set_modified.nodes().at(set_modified.at(i))->parent && (*set_modified.nodes().at(set_modified.at(i))->parent)->name != "name") continue;
 
-      if((set_modified.at(i) + 1) < nodes_modified.size() && nodes_modified.at(set_modified.at(i) + 1)->is_text()
-        && (*nodes_modified.at(set_modified.at(i) + 1)->content == "::")) continue;
+      if((set_modified.at(i) + 1) < set_modified.nodes().size() && set_modified.nodes().at(set_modified.at(i) + 1)->is_text()
+        && (*set_modified.nodes().at(set_modified.at(i) + 1)->content == "::")) continue;
 
-      while(nodes_modified.at(set_modified.at(i))->type != XML_READER_TYPE_END_ELEMENT)
+      while(set_modified.nodes().at(set_modified.at(i))->type != XML_READER_TYPE_END_ELEMENT)
         ++i;
 
     }
 
-    if(nodes_modified.at(set_modified.at(i))->is_text() && !nodes_modified.at(set_modified.at(i))->is_white_space()
-      && nodes_modified.at(set_modified.at(i))->content
-      && ((nodes_modified.at(set_modified.at(i))->parent
-        && (*nodes_modified.at(set_modified.at(i))->parent)->name == "operator")
-      ||  (*nodes_modified.at(set_modified.at(i))->content != "("
-        && *nodes_modified.at(set_modified.at(i))->content != ")"
-        && *nodes_modified.at(set_modified.at(i))->content != "{"
-        && *nodes_modified.at(set_modified.at(i))->content != "}"
-        && *nodes_modified.at(set_modified.at(i))->content != ";"
-        && *nodes_modified.at(set_modified.at(i))->content != ",")))
+    if(set_modified.nodes().at(set_modified.at(i))->is_text() && !set_modified.nodes().at(set_modified.at(i))->is_white_space()
+      && set_modified.nodes().at(set_modified.at(i))->content
+      && ((set_modified.nodes().at(set_modified.at(i))->parent
+        && (*set_modified.nodes().at(set_modified.at(i))->parent)->name == "operator")
+      ||  (*set_modified.nodes().at(set_modified.at(i))->content != "("
+        && *set_modified.nodes().at(set_modified.at(i))->content != ")"
+        && *set_modified.nodes().at(set_modified.at(i))->content != "{"
+        && *set_modified.nodes().at(set_modified.at(i))->content != "}"
+        && *set_modified.nodes().at(set_modified.at(i))->content != ";"
+        && *set_modified.nodes().at(set_modified.at(i))->content != ",")))
       set_modified_text.push_back(set_modified.at(i));
 
   }

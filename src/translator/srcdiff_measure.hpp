@@ -7,8 +7,6 @@
 class srcdiff_measure {
 
 protected:
-	const srcml_nodes & nodes_original;
-	const srcml_nodes & nodes_modified;
 	const node_set & set_original;
 	const node_set & set_modified;
 
@@ -24,7 +22,7 @@ protected:
 
 public:
 
-	srcdiff_measure(const srcml_nodes & nodes_original, const srcml_nodes & nodes_modified, const node_set & set_original, const node_set & set_modified);
+	srcdiff_measure(const node_set & set_original, const node_set & set_modified);
 
 	int similarity()      const;
 	int difference()      const;
