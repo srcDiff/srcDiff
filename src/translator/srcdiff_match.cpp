@@ -24,13 +24,13 @@ struct difference {
 
 bool srcdiff_match::is_match_default(const srcml_nodes & nodes_original, const node_sets & node_sets_original, int start_pos_original,
               const srcml_nodes & nodes_modified, const node_sets & node_sets_modified, int start_pos_modified,
-              int similarity, int difference, int text_original_length, int text_modified_length) {
+              const srcdiff_measure & measure) {
 
-  return !(similarity == MAX_INT 
-          || reject_match(similarity, difference, text_original_length, text_modified_length,
+  return !(measure.similarity() == MAX_INT 
+          || reject_match(measure,
                           nodes_original, node_sets_original.at(start_pos_original), nodes_modified, node_sets_modified.at(start_pos_modified))
           || srcdiff_nested::is_better_nested(nodes_original, node_sets_original, start_pos_original, nodes_modified, node_sets_modified, start_pos_modified,
-                                              similarity, difference, text_original_length, text_modified_length));
+                                              measure));
 
 }
 
@@ -174,8 +174,7 @@ offset_pair * srcdiff_match::match_differences() {
       int unmatched = 0;
 
       // check if unmatched
-      if(!is_match(nodes_original, node_sets_original, j, nodes_modified, node_sets_modified, i,
-                  similarity, measure.difference(), measure.original_length(), measure.modified_length())) {
+      if(!is_match(nodes_original, node_sets_original, j, nodes_modified, node_sets_modified, i, measure)) {
 
         similarity = 0;
         unmatched = 1;
@@ -1014,7 +1013,7 @@ bool srcdiff_match::is_interchangeable_match(const std::string & original_tag, c
 
 }
 
-bool reject_match_same(int similarity, int difference, int text_original_length, int text_modified_length,
+bool reject_match_same(const srcdiff_measure & measure,
   const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
 
   int original_pos = set_original.at(0);
@@ -1041,8 +1040,8 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
   if(original_tag == "name" && nodes_original.at(original_pos)->is_simple && nodes_modified.at(modified_pos)->is_simple) return false;
   if(original_tag == "name" && nodes_original.at(original_pos)->is_simple != nodes_modified.at(modified_pos)->is_simple) return true;
 
-  int max_size = text_original_length > text_modified_length ? text_original_length : text_modified_length;
-  if((original_tag == "expr" || original_tag == "expr_stmt") && similarity > 0 && difference <= max_size) return false;
+  int max_size = measure.original_length() > measure.modified_length() ? measure.original_length() : measure.modified_length();
+  if((original_tag == "expr" || original_tag == "expr_stmt") && measure.similarity() > 0 && measure.difference() <= max_size) return false;
 
   // may need to refine to if child only single name
   if(original_tag == "expr" && nodes_original.at(original_pos)->parent && (*nodes_original.at(original_pos)->parent)->name == "argument") return false;
@@ -1057,7 +1056,7 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
 
       return false;
 
-    } else if(similarity) {
+    } else if(measure.similarity()) {
 
       bool is_reject = true;
 
@@ -1174,12 +1173,12 @@ bool reject_match_same(int similarity, int difference, int text_original_length,
 
   }
 
-  bool is_reject = srcdiff_match::reject_similarity(similarity, difference, text_original_length, text_modified_length, nodes_original, set_original, nodes_modified, set_modified);
+  bool is_reject = srcdiff_match::reject_similarity(measure, nodes_original, set_original, nodes_modified, set_modified);
   return is_reject;
 
 }
 
-bool reject_match_interchangeable(int similarity, int difference, int text_original_length, int text_modified_length,
+bool reject_match_interchangeable(const srcdiff_measure & measure,
   const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
 
   int original_pos = set_original.at(0);
@@ -1275,7 +1274,7 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
       srcdiff_text_measure expr_measure(nodes_original, nodes_modified, expr_original, expr_modified);
       expr_measure.compute();
 
-      bool is_expr_reject = srcdiff_match::reject_similarity(expr_measure.similarity(), expr_measure.difference(), expr_measure.original_length(), expr_measure.modified_length(), nodes_original, expr_original, nodes_modified, expr_modified);
+      bool is_expr_reject = srcdiff_match::reject_similarity(expr_measure, nodes_original, expr_original, nodes_modified, expr_modified);
 
       int min_size = expr_measure.original_length() < expr_measure.modified_length() ? expr_measure.original_length() : expr_measure.modified_length();
       int max_size = expr_measure.original_length() < expr_measure.modified_length() ? expr_measure.modified_length() : expr_measure.original_length();
@@ -1286,12 +1285,12 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
 
   }
 
-  bool is_reject = srcdiff_match::reject_similarity(similarity, difference, text_original_length, text_modified_length, nodes_original, set_original, nodes_modified, set_modified);
+  bool is_reject = srcdiff_match::reject_similarity(measure, nodes_original, set_original, nodes_modified, set_modified);
   return is_reject;
 
 }
 
-bool srcdiff_match::reject_match(int similarity, int difference, int text_original_length, int text_modified_length,
+bool srcdiff_match::reject_match(const srcdiff_measure & measure,
   const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
 
   /** if different prefix should not reach here, however, may want to add that here */
@@ -1305,15 +1304,15 @@ bool srcdiff_match::reject_match(int similarity, int difference, int text_origin
   const std::string & modified_uri = nodes_modified.at(modified_pos)->ns->href;
 
   if(original_tag == modified_tag && original_uri == modified_uri)
-    return reject_match_same(similarity, difference, text_original_length, text_modified_length, nodes_original, set_original, nodes_modified, set_modified);
+    return reject_match_same(measure, nodes_original, set_original, nodes_modified, set_modified);
   else if(is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri)) 
-    return reject_match_interchangeable(similarity, difference, text_original_length, text_modified_length, nodes_original, set_original, nodes_modified, set_modified);
+    return reject_match_interchangeable(measure, nodes_original, set_original, nodes_modified, set_modified);
   else
     return true;
 
 }
 
-bool srcdiff_match::reject_similarity(int similarity, int difference, int text_original_length, int text_modified_length,
+bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
   const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified) {
 
   if(set_original.size() == 1 && set_modified.size() == 1) {
@@ -1380,28 +1379,28 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
 
   }
 
-  int min_size = text_original_length < text_modified_length ? text_original_length : text_modified_length;
-  int max_size = text_original_length < text_modified_length ? text_modified_length : text_original_length;
+  int min_size = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
+  int max_size = measure.original_length() < measure.modified_length() ? measure.modified_length() : measure.original_length();
 
 #if DEBUG
-  std::cerr << "Similarity: " << similarity << '\n';
-  std::cerr << "Difference: " << difference << '\n';
+  std::cerr << "Similarity: " << measure.similarity() << '\n';
+  std::cerr << "Difference: " << measure.difference() << '\n';
   std::cerr << "Min Size: "   << min_size   << '\n';
   std::cerr << "Max Size: "   << max_size   << '\n';
 #endif
 
-  if(difference != 0 && similarity == 0) return true;
+  if(measure.difference() != 0 && measure.similarity() == 0) return true;
 
   /** @todo consider making this configurable.  That is, allow user to specify file or have default file to read from */
-  if(min_size == similarity && difference < 2 * min_size) return false;
+  if(min_size == measure.similarity() && measure.difference() < 2 * min_size) return false;
 
-  if(min_size < 30 && difference > 1.25 * min_size)       return true;
-  else if(min_size >= 30 && difference > 1.05 * min_size) return true;
-  if(difference > max_size)                               return true;
+  if(min_size < 30 && measure.difference() > 1.25 * min_size)       return true;
+  else if(min_size >= 30 && measure.difference() > 1.05 * min_size) return true;
+  if(measure.difference() > max_size)                               return true;
 
-  if(min_size <= 2)                return 2  * similarity <     min_size;
-  else if(min_size <= 3)           return 3  * similarity < 2 * min_size;
-  else if(min_size <= 30)          return 10 * similarity < 7 * min_size;
-  else                             return 2  * similarity <     min_size;
+  if(min_size <= 2)                return 2  * measure.similarity() <     min_size;
+  else if(min_size <= 3)           return 3  * measure.similarity() < 2 * min_size;
+  else if(min_size <= 30)          return 10 * measure.similarity() < 7 * min_size;
+  else                             return 2  * measure.similarity() <     min_size;
 
 }

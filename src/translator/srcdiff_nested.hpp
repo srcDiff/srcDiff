@@ -2,6 +2,7 @@
 #define INCLUDED_SRCDIFF_NESTED_HPP
 
 #include <srcdiff_many.hpp>
+#include <srcdiff_measure.hpp>
 
 class srcdiff_nested : public srcdiff_many {
 
@@ -40,9 +41,9 @@ public:
 
   static bool is_better_nested(const srcml_nodes & nodes_original, const node_sets & node_sets_original, int start_pos_original,
                     const srcml_nodes & nodes_modified, const node_sets & node_sets_modified, int start_pos_modified,
-                    int similarity, int difference, int text_original_length, int text_modified_length);
+                    const srcdiff_measure & measure);
 
-  static bool reject_match_nested(int similarity, int difference, int text_original_length, int text_modified_length,
+  static bool reject_match_nested(const srcdiff_measure & measure,
   const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified);
 
 };

@@ -2,6 +2,7 @@
 #define INCLUDED_SRCDIFF_MATCH_HPP
 
 #include <node_sets.hpp>
+#include <srcdiff_measure.hpp>
 
 struct offset_pair {
 
@@ -33,10 +34,10 @@ class srcdiff_match {
 public:
   typedef std::function<bool (const srcml_nodes & nodes_original, const node_sets & node_sets_original, int start_pos_original,
                     const srcml_nodes & nodes_modified, const node_sets & node_sets_modified, int start_pos_modified,
-                    int similarity, int difference, int text_original_length, int text_modified_length)> is_match_func;
+                    const srcdiff_measure & measure)> is_match_func;
   static bool is_match_default(const srcml_nodes & nodes_original, const node_sets & node_sets_original, int start_pos_original,
               const srcml_nodes & nodes_modified, const node_sets & node_sets_modified, int start_pos_modified,
-              int similarity, int difference, int text_original_length, int text_modified_length);
+              const srcdiff_measure & measure);
 
 protected:
 
@@ -56,9 +57,9 @@ public:
                 const is_match_func & is_match = is_match_default);
   offset_pair * match_differences();
 
-  static bool reject_match(int similarity, int difference, int text_original_length, int text_modified_length,
+  static bool reject_match(const srcdiff_measure & measure,
     const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified);
-  static bool reject_similarity(int similarity, int difference, int text_original_length, int text_modified_length,
+  static bool reject_similarity(const srcdiff_measure & measure,
     const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified);
 
 
