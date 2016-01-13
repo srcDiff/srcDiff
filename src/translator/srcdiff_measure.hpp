@@ -4,8 +4,6 @@
 #include <node_set.hpp>
 #include <shortest_edit_script.hpp>
 
-#include <vector>
-
 class srcdiff_measure {
 
 protected:
@@ -21,7 +19,6 @@ protected:
 	int original_len;
 	int modified_len;
 
-private:
 	void compute_ses(class shortest_edit_script & ses);
 	void compute_ses_important_text(class shortest_edit_script & ses);
 
@@ -34,9 +31,7 @@ public:
 	int original_length() const;
 	int modified_length() const;
 
-	void compute_similarity();
-	void compute_measures();
-	void compute_syntax_measures();
+	virtual void compute() = 0;
 
 };
 

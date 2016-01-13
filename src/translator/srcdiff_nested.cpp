@@ -3,7 +3,7 @@
 #include <srcdiff_constants.hpp>
 #include <srcdiff_change.hpp>
 #include <srcdiff_whitespace.hpp>
-#include <srcdiff_measure.hpp>
+#include <srcdiff_text_measure.hpp>
 #include <srcdiff_compare.hpp>
 #include <srcdiff_match.hpp>
 #include <shortest_edit_script.h>
@@ -159,8 +159,8 @@ int srcdiff_nested::best_match(const srcml_nodes & nodes, const node_sets & set,
       || (match.size() > set.at(0).size() && (match.size()) > (4 * set.at(0).size())))) {
 
       match_pos = 0;
-      srcdiff_measure measure(nodes, nodes_match, set.at(0), match);
-      measure.compute_similarity();
+      srcdiff_text_measure measure(nodes, nodes_match, set.at(0), match);
+      measure.compute();
       match_similarity = measure.similarity();
 
     }
@@ -176,8 +176,8 @@ int srcdiff_nested::best_match(const srcml_nodes & nodes, const node_sets & set,
     if(match.size() > set.at(i).size() && (match.size()) > (4 * set.at(i).size()))
       continue;
 
-    srcdiff_measure measure(nodes, nodes_match, set.at(i), match);
-    measure.compute_similarity();
+    srcdiff_text_measure measure(nodes, nodes_match, set.at(i), match);
+    measure.compute();
     if(measure.similarity() > match_similarity) {
 
       match_pos = i;
@@ -229,11 +229,11 @@ bool srcdiff_nested::is_same_nestable(const node_set & structure_one, const srcm
   if(match >= set.size())
     return false;
 
-  srcdiff_measure match_measure(nodes_one, nodes_two, structure_one, set.at(match));
-  match_measure.compute_measures();
+  srcdiff_text_measure match_measure(nodes_one, nodes_two, structure_one, set.at(match));
+  match_measure.compute();
 
-  srcdiff_measure measure(nodes_one, nodes_two, structure_one, structure_two);
-  measure.compute_measures();
+  srcdiff_text_measure measure(nodes_one, nodes_two, structure_one, structure_two);
+  measure.compute();
 
   double min_size = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
   double match_min_size = measure.original_length() < match_measure.modified_length() ? measure.original_length() : match_measure.modified_length();
@@ -268,8 +268,8 @@ bool is_better_nest_no_recursion(const srcml_nodes & nodes_outer, const node_set
 
       if(match < set.size()) {
 
-        srcdiff_measure measure(nodes_outer, nodes_inner, set.at(match), node_set_inner);
-        measure.compute_measures();
+        srcdiff_text_measure measure(nodes_outer, nodes_inner, set.at(match), node_set_inner);
+        measure.compute();
 
         double min_size = text_outer_length < text_inner_length ? text_outer_length : text_inner_length;
         double nest_min_size = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
@@ -318,8 +318,8 @@ bool is_better_nest(const srcml_nodes & nodes_outer, const node_set & node_set_o
 
       if(match < set.size()) {
 
-        srcdiff_measure measure(nodes_outer, nodes_inner, set.at(match), node_set_inner);
-        measure.compute_measures();
+        srcdiff_text_measure measure(nodes_outer, nodes_inner, set.at(match), node_set_inner);
+        measure.compute();
 
         double min_size = text_outer_length < text_inner_length ? text_outer_length : text_inner_length;
         double nest_min_size = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
@@ -455,8 +455,8 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, co
 
         if(match >= set.size()) continue;
 
-        srcdiff_measure measure(nodes_original, nodes_modified, set.at(match), node_sets_modified.at(j));
-        measure.compute_measures();
+        srcdiff_text_measure measure(nodes_original, nodes_modified, set.at(match), node_sets_modified.at(j));
+        measure.compute();
 
         if(srcdiff_nested::reject_match_nested(measure.similarity(), measure.difference(), measure.original_length(), measure.modified_length(),
                                                nodes_original, set.at(match), nodes_modified, node_sets_modified.at(j)))
@@ -522,8 +522,8 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, co
 
         if(match >= set.size()) continue;
 
-        srcdiff_measure measure(nodes_original, nodes_modified, node_sets_original.at(j), set.at(match));
-        measure.compute_measures();
+        srcdiff_text_measure measure(nodes_original, nodes_modified, node_sets_original.at(j), set.at(match));
+        measure.compute();
 
         if(srcdiff_nested::reject_match_nested(measure.similarity(), measure.difference(), measure.original_length(), measure.modified_length(),
                                                nodes_original, node_sets_original.at(j), nodes_modified, set.at(match)))
@@ -615,8 +615,8 @@ bool srcdiff_nested::check_nestable_predicate(const srcml_nodes & nodes_outer, c
 
   const node_set & match = set.at(match_pos);
 
-  srcdiff_measure measure(nodes_outer, nodes_inner, match, node_sets_inner.at(pos_inner));
-  measure.compute_measures();
+  srcdiff_text_measure measure(nodes_outer, nodes_inner, match, node_sets_inner.at(pos_inner));
+  measure.compute();
 
   if(reject_match_nested(measure.similarity(), measure.difference(), measure.modified_length(), measure.original_length(),
           nodes_outer, match, nodes_inner, node_sets_inner.at(pos_inner)))

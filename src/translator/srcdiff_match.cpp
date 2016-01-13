@@ -1,7 +1,8 @@
 #include <srcdiff_match.hpp>
 
 #include <srcdiff_nested.hpp>
-#include <srcdiff_measure.hpp>
+#include <srcdiff_text_measure.hpp>
+#include <srcdiff_syntax_measure.hpp>
 #include <srcdiff_compare.hpp>
 #include <srcdiff_constants.hpp>
 
@@ -164,8 +165,8 @@ offset_pair * srcdiff_match::match_differences() {
 
     for(int j = 0; j < olength; ++j) {
 
-      srcdiff_measure measure(nodes_original, nodes_modified, node_sets_original.at(j), node_sets_modified.at(i));
-      measure.compute_measures();
+      srcdiff_text_measure measure(nodes_original, nodes_modified, node_sets_original.at(j), node_sets_modified.at(i));
+      measure.compute();
       int similarity = measure.similarity();
 
       //unsigned long long max_similarity = (unsigned long long)-1;
@@ -1271,8 +1272,8 @@ bool reject_match_interchangeable(int similarity, int difference, int text_origi
 
     if(expr_original.size() && expr_modified.size()) {
 
-      srcdiff_measure expr_measure(nodes_original, nodes_modified, expr_original, expr_modified);
-      expr_measure.compute_measures();
+      srcdiff_text_measure expr_measure(nodes_original, nodes_modified, expr_original, expr_modified);
+      expr_measure.compute();
 
       bool is_expr_reject = srcdiff_match::reject_similarity(expr_measure.similarity(), expr_measure.difference(), expr_measure.original_length(), expr_measure.modified_length(), nodes_original, expr_original, nodes_modified, expr_modified);
 
@@ -1331,8 +1332,8 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
 
   }
 
-  srcdiff_measure measure(nodes_original, nodes_modified, set_original, set_modified);
-  measure.compute_syntax_measures();
+  srcdiff_syntax_measure measure(nodes_original, nodes_modified, set_original, set_modified);
+  measure.compute();
 
   int min_child_length = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
   int max_child_length = measure.original_length() < measure.modified_length() ? measure.modified_length() : measure.original_length();
@@ -1364,8 +1365,8 @@ bool srcdiff_match::reject_similarity(int similarity, int difference, int text_o
   if(!child_node_sets_original.empty() && !child_node_sets_modified.empty()
     && nodes_original.at(child_node_sets_original.back().at(0))->name == "block" && nodes_modified.at(child_node_sets_modified.back().at(0))->name == "block") {
 
-    srcdiff_measure measure(nodes_original, nodes_modified, child_node_sets_original.back(), child_node_sets_modified.back());
-    measure.compute_syntax_measures();
+    srcdiff_syntax_measure measure(nodes_original, nodes_modified, child_node_sets_original.back(), child_node_sets_modified.back());
+    measure.compute();
 
     min_child_length = measure.original_length() < measure.modified_length() ? measure.original_length() : measure.modified_length();
     max_child_length = measure.original_length() < measure.modified_length() ? measure.modified_length() : measure.original_length();      
