@@ -584,7 +584,7 @@ int name_list_similarity(std::vector<std::string> name_list_original, std::vecto
   delete_similarity = name_list_original.size() - delete_similarity;
   insert_similarity = name_list_modified.size() - insert_similarity;
 
-  similarity = delete_similarity < insert_similarity ? delete_similarity : insert_similarity;
+  similarity = std::min(delete_similarity, insert_similarity);
 
   if(similarity < 0) similarity = 0;
 
@@ -1040,8 +1040,7 @@ bool reject_match_same(const srcdiff_measure & measure,
   if(original_tag == "name" && nodes_original.at(original_pos)->is_simple && nodes_modified.at(modified_pos)->is_simple) return false;
   if(original_tag == "name" && nodes_original.at(original_pos)->is_simple != nodes_modified.at(modified_pos)->is_simple) return true;
 
-  int max_size = measure.original_length() > measure.modified_length() ? measure.original_length() : measure.modified_length();
-  if((original_tag == "expr" || original_tag == "expr_stmt") && measure.similarity() > 0 && measure.difference() <= max_size) return false;
+  if((original_tag == "expr" || original_tag == "expr_stmt") && measure.similarity() > 0 && measure.difference() <= measure.max_length()) return false;
 
   // may need to refine to if child only single name
   if(original_tag == "expr" && nodes_original.at(original_pos)->parent && (*nodes_original.at(original_pos)->parent)->name == "argument") return false;
