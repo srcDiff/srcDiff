@@ -1,17 +1,17 @@
 #include <node_sets.hpp>
 
-bool node_sets::is_non_white_space(int & node_pos, const srcml_nodes & nodes, const void * context UNUSED) {
+bool node_sets::is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context UNUSED) {
 
-	const std::shared_ptr<srcml_node> & node = nodes[node_pos];
+	const std::shared_ptr<srcml_node> & node = node_list[node_pos];
 
   // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
   return !((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content && node->is_white_space());
 
 }
 
-node_sets::node_sets(const srcml_nodes & nodes) : nodes(nodes) {}
+node_sets::node_sets(const srcml_nodes & nodes) : node_list(node_list) {}
 
-node_sets::node_sets(const node_sets & sets) : nodes(sets.nodes) {
+node_sets::node_sets(const node_sets & sets) : node_list(sets.node_list) {
 
 
 	for(size_type pos = 0; pos < sets.size(); ++pos) {
@@ -22,29 +22,20 @@ node_sets::node_sets(const node_sets & sets) : nodes(sets.nodes) {
 
 }
 
-node_sets::~node_sets() {}
-
-node_sets & node_sets::operator=(node_sets sets) {
-
-    std::swap(data, sets.data);
-    
-	return *this;
-
-}
 	
 // create the node sets for shortest edit script
-node_sets::node_sets(const srcml_nodes & nodes, int start, int end, const node_set_filter & filter, const void * context) : nodes(nodes) {
+node_sets::node_sets(const srcml_nodes & node_list, int start, int end, const node_set_filter & filter, const void * context) : node_list(node_list) {
 
   // runs on a subset of base array
   for(int i = start; i < end; ++i) {
 
     // skip whitespace
-    if(filter(i, nodes, context)) {
+    if(filter(i, node_list, context)) {
 
       // text is separate node if not surrounded by a tag in range
-      if((xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_TEXT || (xmlReaderTypes)nodes.at(i)->type == XML_READER_TYPE_ELEMENT) {
+      if((xmlReaderTypes)node_list.at(i)->type == XML_READER_TYPE_TEXT || (xmlReaderTypes)node_list.at(i)->type == XML_READER_TYPE_ELEMENT) {
 
-	      emplace_back(nodes, i);
+	      emplace_back(node_list, i);
 
       } else {
 
@@ -55,5 +46,22 @@ node_sets::node_sets(const srcml_nodes & nodes, int start, int end, const node_s
     }
 
   }
+
+}
+
+
+node_sets::~node_sets() {}
+
+const srcml_nodes & node_sets::nodes() const {
+
+  return node_list;
+
+}
+
+node_sets & node_sets::operator=(node_sets sets) {
+
+    std::swap(data, sets.data);
+    
+  return *this;
 
 }
