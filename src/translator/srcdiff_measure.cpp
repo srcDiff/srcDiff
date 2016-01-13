@@ -1,5 +1,6 @@
 #include <srcdiff_measure.hpp>
 
+#include <algorithm>
 #include <cassert>
 
 srcdiff_measure::srcdiff_measure(const srcml_nodes & nodes_original,
@@ -47,6 +48,23 @@ int srcdiff_measure::modified_length() const {
   return modified_len;
 
 }
+
+int srcdiff_measure::max_length() const {
+
+  assert(computed);
+
+  return std::max(original_len, modified_len);
+
+}
+
+int srcdiff_measure::min_length() const {
+
+  assert(computed);
+
+  return std::min(original_len, modified_len);
+
+}
+
 
 void srcdiff_measure::compute_ses(class shortest_edit_script & ses) {
 
