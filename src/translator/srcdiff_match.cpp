@@ -708,25 +708,25 @@ std::string get_class_type_name(const srcml_nodes & nodes, int start_pos) {
 
 }
 
-bool conditional_has_block(const srcml_nodes & nodes, const node_set & set) {
+bool conditional_has_block(const node_set & set) {
 
-  node_sets sets = node_sets(nodes, set.at(1), set.back());
+  node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
 
   for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
-    if(nodes.at(itr->at(0))->name == "block" && !bool(find_attribute(nodes.at(itr->at(0)), "type"))) {
+    if(set.nodes().at(itr->at(0))->name == "block" && !bool(find_attribute(set.nodes().at(itr->at(0)), "type"))) {
 
       return true;
 
-    } else if(nodes.at(itr->at(0))->name == "then") {
+    } else if(set.nodes().at(itr->at(0))->name == "then") {
 
       int next_element_pos = itr->at(0) + 1;
-      while(nodes.at(next_element_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT && nodes.at(next_element_pos)->type != (xmlElementType)XML_READER_TYPE_END_ELEMENT)
+      while(set.nodes().at(next_element_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT && set.nodes().at(next_element_pos)->type != (xmlElementType)XML_READER_TYPE_END_ELEMENT)
         ++next_element_pos;
 
-      if(nodes.at(next_element_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-        && nodes.at(next_element_pos)->name == "block"
-        && !bool(find_attribute(nodes.at((next_element_pos)), "type")))
+      if(set.nodes().at(next_element_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
+        && set.nodes().at(next_element_pos)->name == "block"
+        && !bool(find_attribute(set.nodes().at((next_element_pos)), "type")))
         return true;
       else
         return false;
@@ -739,13 +739,13 @@ bool conditional_has_block(const srcml_nodes & nodes, const node_set & set) {
 
 }
 
-bool if_has_else(const srcml_nodes & nodes, const node_set & set) {
+bool if_has_else(const node_set & set) {
 
-  node_sets sets = node_sets(nodes, set.at(1), set.back());
+  node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
 
   for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
-    if(nodes.at(itr->at(0))->name == "else" || nodes.at(itr->at(0))->name == "elseif") {
+    if(set.nodes().at(itr->at(0))->name == "else" || set.nodes().at(itr->at(0))->name == "elseif") {
 
       return true;
 
@@ -1115,11 +1115,11 @@ bool reject_match_same(const srcdiff_measure & measure,
     std::string original_condition = get_condition(set_original.nodes(), original_pos);
     std::string modified_condition = get_condition(set_modified.nodes(), modified_pos);
 
-    bool original_has_block = conditional_has_block(set_original.nodes(), set_original);
-    bool modified_has_block = conditional_has_block(set_modified.nodes(), set_modified);
+    bool original_has_block = conditional_has_block(set_original);
+    bool modified_has_block = conditional_has_block(set_modified);
 
-    bool original_has_else = if_has_else(set_original.nodes(), set_original);
-    bool modified_has_else = if_has_else(set_modified.nodes(), set_modified);
+    bool original_has_else = if_has_else(set_original);
+    bool modified_has_else = if_has_else(set_modified);
 
     if(if_then_equal(set_original, set_modified) || (original_condition == modified_condition
       && (original_has_block == modified_has_block || original_has_else == modified_has_else || ((original_has_block || !original_has_else) && (modified_has_block || !modified_has_else)))))
