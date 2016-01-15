@@ -19,11 +19,12 @@ srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, 
   : srcdiff_output(out), position(position), operation(operation) {}
 
 
-void add_construct(std::map<std::string, IntPairs > & constructs
-                   , const node_sets & sets, const srcml_nodes & nodes
-                   , int offset, int operation) {
+void add_construct(std::map<std::string, IntPairs > & constructs,
+                   const node_sets & sets,
+                   int offset,
+                   int operation) {
 
-  std::string tag = nodes.at(sets.at(offset).at(0))->name;
+  std::string tag = sets.nodes().at(sets.at(offset).at(0))->name;
 
   if(constructs.find(tag) == constructs.end()) {
 
@@ -35,15 +36,17 @@ void add_construct(std::map<std::string, IntPairs > & constructs
 
 }
 
-bool srcdiff_move::is_move(const node_set & set, const srcml_nodes & nodes) {
+bool srcdiff_move::is_move(const node_set & set) {
 
-  return nodes.at(set.at(0))->move;
+  return set.nodes().at(set.at(0))->move;
 
 }
 
-void srcdiff_move::mark_moves(srcml_nodes & nodes_original, const node_sets & node_sets_original
-                , srcml_nodes & nodes_modified, const node_sets & node_sets_modified
-                , edit * edit_script) {
+void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
+                              const node_sets & node_sets_original,
+                              srcml_nodes & nodes_modified,
+                              const node_sets & node_sets_modified,
+                              edit * edit_script) {
 
   std::map<std::string, IntPairs > constructs;
 
@@ -55,7 +58,7 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original, const node_sets & no
 
       for(int i = 0; i < edits->length; ++i) {
 
-        add_construct(constructs, node_sets_modified, nodes_modified, edits->offset_sequence_two + i, SES_INSERT);
+        add_construct(constructs, node_sets_modified, edits->offset_sequence_two + i, SES_INSERT);
 
       }
 
@@ -65,7 +68,7 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original, const node_sets & no
 
       for(int i = 0; i < edits->length; ++i) {
 
-        add_construct(constructs, node_sets_original, nodes_original, edits->offset_sequence_one + i, SES_DELETE);
+        add_construct(constructs, node_sets_original, edits->offset_sequence_one + i, SES_DELETE);
 
       }
 
@@ -119,7 +122,7 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original, const node_sets & no
           continue;
         */
 
-	if(is_move(node_sets_one->at(elements.at(i).first), *nodes_one) || is_move(node_sets_two->at(elements.at(j).first), *nodes_two))
+	if(is_move(node_sets_one->at(elements.at(i).first)) || is_move(node_sets_two->at(elements.at(j).first)))
 		   continue;
 
         ++move_id;
