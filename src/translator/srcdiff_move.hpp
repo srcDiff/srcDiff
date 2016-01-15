@@ -19,11 +19,13 @@ public:
 
 	srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation);
 
-	static bool is_move(const node_set & set, const srcml_nodes & nodes);
+	static bool is_move(const node_set & set);
 
-	static void mark_moves(srcml_nodes & nodes_original, const node_sets & node_sets_original
-	                , srcml_nodes & nodes_modified, const node_sets & node_sets_modified
-	                , edit * edit_script);
+	static void mark_moves(srcml_nodes & nodes_original,
+                           const node_sets & node_sets_original,
+                           srcml_nodes & nodes_modified,
+                           const node_sets & node_sets_modified,
+                           edit * edit_script);
 
 	virtual void output();
 

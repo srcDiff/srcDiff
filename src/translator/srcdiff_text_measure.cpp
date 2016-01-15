@@ -9,8 +9,8 @@
 #include <algorithm>
 #include <cassert>
 
-srcdiff_text_measure::srcdiff_text_measure(const srcml_nodes & nodes_original, const srcml_nodes & nodes_modified, const node_set & set_original, const node_set & set_modified) 
-  : srcdiff_measure(nodes_original, nodes_modified, set_original, set_modified) {}
+srcdiff_text_measure::srcdiff_text_measure(const node_set & set_original, const node_set & set_modified) 
+  : srcdiff_measure(set_original, set_modified) {}
 
 void srcdiff_text_measure::compute() {
 
@@ -18,14 +18,14 @@ void srcdiff_text_measure::compute() {
 
   computed = true;
 
-  diff_nodes dnodes = { nodes_original, nodes_modified };
+  diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
 
-  if((xmlReaderTypes)nodes_original.at(set_original.at(0))->type != XML_READER_TYPE_ELEMENT
-     || (xmlReaderTypes)nodes_modified.at(set_modified.at(0))->type != XML_READER_TYPE_ELEMENT
-     || (srcdiff_compare::node_compare(nodes_original.at(set_original.at(0)), nodes_modified.at(set_modified.at(0))) != 0
-        && !srcdiff_match::is_interchangeable_match(nodes_original.at(set_original.at(0))->name, nodes_original.at(set_original.at(0))->ns->href,
-                                                    nodes_modified.at(set_modified.at(0))->name, nodes_modified.at(set_modified.at(0))->ns->href)
-        && (nodes_original.at(set_original.at(0))->name != "block" || nodes_modified.at(set_modified.at(0))->name != "block"))) {
+  if((xmlReaderTypes)set_original.nodes().at(set_original.at(0))->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)set_modified.nodes().at(set_modified.at(0))->type != XML_READER_TYPE_ELEMENT
+     || (srcdiff_compare::node_compare(set_original.nodes().at(set_original.at(0)), set_modified.nodes().at(set_modified.at(0))) != 0
+        && !srcdiff_match::is_interchangeable_match(set_original.nodes().at(set_original.at(0))->name, set_original.nodes().at(set_original.at(0))->ns->href,
+                                                    set_modified.nodes().at(set_modified.at(0))->name, set_modified.nodes().at(set_modified.at(0))->ns->href)
+        && (set_original.nodes().at(set_original.at(0))->name != "block" || set_modified.nodes().at(set_modified.at(0))->name != "block"))) {
 
     a_similarity = MAX_INT;
     a_difference = MAX_INT;

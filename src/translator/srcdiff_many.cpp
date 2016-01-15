@@ -26,8 +26,8 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
 
       do {
 
-        srcdiff_nested::check_nestable(node_sets_original, out.get_nodes_original(), start_original, end_original + 1
-                        , node_sets_modified, out.get_nodes_modified(), start_modified, end_modified + 1
+        srcdiff_nested::check_nestable(node_sets_original, start_original, end_original + 1
+                        , node_sets_modified, start_modified, end_modified + 1
                         , start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation);
 
         finish_original = node_sets_original.at(end_original).back() + 1;
@@ -159,7 +159,7 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
   if(pos_original.size() != 0 && pos_modified.size()) {
 
-    srcdiff_match match(out.get_nodes_original(), out.get_nodes_modified(), original_sets, modified_sets);
+    srcdiff_match match(original_sets, modified_sets);
     matches = match.match_differences();
 
   }

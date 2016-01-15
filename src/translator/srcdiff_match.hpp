@@ -32,17 +32,15 @@ struct offset_pair {
 class srcdiff_match {
 
 public:
-  typedef std::function<bool (const srcml_nodes & nodes_original, const node_sets & node_sets_original, int start_pos_original,
-                    const srcml_nodes & nodes_modified, const node_sets & node_sets_modified, int start_pos_modified,
-                    const srcdiff_measure & measure)> is_match_func;
-  static bool is_match_default(const srcml_nodes & nodes_original, const node_sets & node_sets_original, int start_pos_original,
-              const srcml_nodes & nodes_modified, const node_sets & node_sets_modified, int start_pos_modified,
-              const srcdiff_measure & measure);
+  typedef std::function<bool (const node_sets & sets_original, int start_pos_original,
+                              const node_sets & sets_modified, int start_pos_modified,
+                              const srcdiff_measure & measure)> is_match_func;
+  static bool is_match_default(const node_sets & sets_original, int start_pos_original,
+                               const node_sets & sets_modified, int start_pos_modified,
+                               const srcdiff_measure & measure);
 
 protected:
 
-  const srcml_nodes & nodes_original;
-  const srcml_nodes & nodes_modified;
   const node_sets & node_sets_original;
   const node_sets & node_sets_modified;
 
@@ -52,16 +50,16 @@ private:
 
 public:
 
-  srcdiff_match(const srcml_nodes & nodes_original, const srcml_nodes & nodes_modified,
-                const node_sets & node_sets_original, const node_sets & node_sets_modified,
+  srcdiff_match(const node_sets & node_sets_original, const node_sets & node_sets_modified,
                 const is_match_func & is_match = is_match_default);
   offset_pair * match_differences();
 
   static bool reject_match(const srcdiff_measure & measure,
-    const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified);
+                           const node_set & set_original,
+                           const node_set & set_modified);
   static bool reject_similarity(const srcdiff_measure & measure,
-    const srcml_nodes & nodes_original, const node_set & set_original, const srcml_nodes & nodes_modified, const node_set & set_modified);
-
+                                const node_set & set_original,
+                                const node_set & set_modified);
 
   static const char * find_attribute(const std::shared_ptr<srcml_node> & node, const char * attr_name);
 

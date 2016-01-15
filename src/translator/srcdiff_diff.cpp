@@ -31,7 +31,7 @@ void srcdiff_diff::output() {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
-  diff_nodes dnodes = { out.get_nodes_original(), out.get_nodes_modified() };
+  diff_nodes dnodes = { node_sets_original.nodes(), node_sets_modified.nodes() };
 
   class shortest_edit_script ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
 

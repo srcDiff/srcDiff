@@ -11,7 +11,7 @@ class node_set : public srcdiff_vector<int> {
 
 private:
 
-	const srcml_nodes & nodes;
+	const srcml_nodes & node_list;
 
 	static bool is_white_space(const std::shared_ptr<srcml_node> & node) {
 
@@ -22,9 +22,9 @@ private:
 
 public:
 
-	node_set(const srcml_nodes & nodes) : nodes(nodes) {}
+	node_set(const srcml_nodes & node_list) : node_list(node_list) {}
 
-	node_set(const node_set & set) : nodes(set.nodes) {
+	node_set(const node_set & set) : node_list(set.node_list) {
 
 		for(size_type pos = 0; pos < set.size(); ++pos) {
 
@@ -34,21 +34,13 @@ public:
 
 	}
 
-	node_set & operator=(node_set set) {
+	node_set(const srcml_nodes & node_list, int & start) : node_list(node_list) {
 
-		std::swap(data, set.data);
-
-		return *this;
-
-	}
-
-	node_set(const srcml_nodes & nodes, int & start) : nodes(nodes) {
-
-	  if((xmlReaderTypes)nodes.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)nodes.at(start)->type != XML_READER_TYPE_ELEMENT) return;
+	  if((xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_ELEMENT) return;
 
 	  push_back(start);
 
-	  if(nodes.at(start)->is_empty || (xmlReaderTypes)nodes.at(start)->type == XML_READER_TYPE_TEXT) return;
+	  if(node_list.at(start)->is_empty || (xmlReaderTypes)node_list.at(start)->type == XML_READER_TYPE_TEXT) return;
 
 	  ++start;
 
@@ -57,23 +49,37 @@ public:
 	  for(; is_open; ++start) {
 
 	    // skip whitespace
-	    if(is_white_space(nodes.at(start)))
+	    if(is_white_space(node_list.at(start)))
 	      continue;
 
 	    push_back(start);
 
 	    // opening tags
-	    if((xmlReaderTypes)nodes.at(start)->type == XML_READER_TYPE_ELEMENT
-	       && !(nodes.at(start)->is_empty))
+	    if((xmlReaderTypes)node_list.at(start)->type == XML_READER_TYPE_ELEMENT
+	       && !(node_list.at(start)->is_empty))
 	      ++is_open;
 
 	    // closing tags
-	    else if((xmlReaderTypes)nodes.at(start)->type == XML_READER_TYPE_END_ELEMENT)
+	    else if((xmlReaderTypes)node_list.at(start)->type == XML_READER_TYPE_END_ELEMENT)
 	      --is_open;
 
 	  }
 
 	  --start;
+	}
+
+	const srcml_nodes & nodes() const {
+
+		return node_list;
+
+	}
+
+	node_set & operator=(node_set set) {
+
+		std::swap(data, set.data);
+
+		return *this;
+
 	}
 
 };
