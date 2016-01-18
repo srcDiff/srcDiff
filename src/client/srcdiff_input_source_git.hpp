@@ -36,16 +36,6 @@ public:
                                  const boost::optional<std::string> & directory_modified, const void * context_modified);
   virtual void process_files_from();
 
-  struct input_context  {
-
-    std::ifstream in;
-
-  };
-
-  input_context * open(const char * uri) const;
-  static int read(void * context, char * buffer, size_t len);
-  static int close(void * context);
-
 };
 
 #endif

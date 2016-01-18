@@ -206,24 +206,27 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
     path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
 
+    std::string path_original_full = original_clone_path + PATH_SEPARATOR + path_original;
+    std::string path_modified_full = modified_clone_path + PATH_SEPARATOR + path_modified;
+
     // skip directories
-    if(is_dir(namelist_original[i], path_original.c_str()) != 0) {
+    if(is_dir(namelist_original[i], path_original_full.c_str()) != 0) {
       ++i;
       continue;
     }
 
-    if(is_dir(namelist_modified[j], path_modified.c_str()) != 0) {
+    if(is_dir(namelist_modified[j], path_modified_full.c_str()) != 0) {
       ++j;
       continue;
     }
 
     // skip over output file
-    if (is_output_file(path_original.c_str(), outstat) == 1) {
+    if (is_output_file(path_original_full.c_str(), outstat) == 1) {
       ++i;
       continue;
     }
 
-    if (is_output_file(path_modified.c_str(), outstat) == 1) {
+    if (is_output_file(path_modified_full.c_str(), outstat) == 1) {
       ++j;
       continue;
     }
@@ -247,13 +250,14 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
 
     // form the full path
     path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
+    std::string path_original_full = original_clone_path + PATH_SEPARATOR + path_original;
 
     // skip directories
-    if(is_dir(namelist_original[i], path_original.c_str()) != 0)
+    if(is_dir(namelist_original[i], path_original_full.c_str()) != 0)
       continue;
 
     // skip over output file
-    if (is_output_file(path_original.c_str(), outstat) != 0) {
+    if (is_output_file(path_original_full.c_str(), outstat) != 0) {
       continue;
     }
 
@@ -267,13 +271,14 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
 
     // form the full path
     path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
+    std::string path_modified_full = modified_clone_path + PATH_SEPARATOR + path_modified;
 
     // skip directories
-    if(is_dir(namelist_modified[j], path_modified.c_str()) != 0)
+    if(is_dir(namelist_modified[j], path_modified_full.c_str()) != 0)
       continue;
 
     // skip over output file
-    if (is_output_file(path_modified.c_str(), outstat) != 0) {
+    if (is_output_file(path_modified_full.c_str(), outstat) != 0) {
       continue;
     }
 
@@ -291,12 +296,26 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
     path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
 
+    std::string path_original_full = original_clone_path + PATH_SEPARATOR + path_original;
+    std::string path_modified_full = modified_clone_path + PATH_SEPARATOR + path_modified;
+
     // skip non-directories
-    if(is_dir(namelist_original[i], path_original.c_str()) != 1) {
+    if(is_dir(namelist_original[i], path_original_full.c_str()) != 1) {
       ++i;
       continue;
     }
-    if(is_dir(namelist_modified[j], path_modified.c_str()) != 1) {
+    if(is_dir(namelist_modified[j], path_modified_full.c_str()) != 1) {
+      ++j;
+      continue;
+    }
+
+    // skip over output file
+    if (is_output_file(path_original_full.c_str(), outstat) == 1) {
+      ++i;
+      continue;
+    }
+
+    if (is_output_file(path_modified_full.c_str(), outstat) == 1) {
       ++j;
       continue;
     }
@@ -319,13 +338,14 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
 
     // form the full path
     path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
+    std::string path_original_full = original_clone_path + PATH_SEPARATOR + path_original;
 
     // skip non-directories
-    if(is_dir(namelist_original[i], path_original.c_str()) != 1)
+    if(is_dir(namelist_original[i], path_original_full.c_str()) != 1)
       continue;
 
     // skip over output file
-    if (is_output_file(path_original.c_str(), outstat) == 1) {
+    if (is_output_file(path_original_full.c_str(), outstat) == 1) {
       continue;
     }
 
@@ -339,13 +359,14 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
 
     // form the full path
     path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
+    std::string path_modified_full = modified_clone_path + PATH_SEPARATOR + path_modified;
 
     // skip non-directories
-    if(is_dir(namelist_modified[j], path_modified.c_str()) != 1)
+    if(is_dir(namelist_modified[j], path_modified_full.c_str()) != 1)
       continue;
 
     // skip over output file
-    if (is_output_file(path_modified.c_str(), outstat) == 1) {
+    if (is_output_file(path_modified_full.c_str(), outstat) == 1) {
       continue;
     }
 
