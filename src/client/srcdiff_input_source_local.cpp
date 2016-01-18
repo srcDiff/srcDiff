@@ -25,7 +25,7 @@ int srcdiff_input_source_local::dir_filter(struct dirent* d) {
 int srcdiff_input_source_local::is_dir(struct dirent * file, const char * filename) {
 
 #ifdef _DIRENT_HAVE_D_TYPE
-  if (file->d_type == DT_DIR)
+  if (file && file->d_type == DT_DIR)
     return 1;
 #endif
 

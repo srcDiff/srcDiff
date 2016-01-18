@@ -36,12 +36,12 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
   int clone_modified_error = pclose(clone_modified_process);
   if(clone_modified_error) throw std::string("Unable to clone " + modified_clone_path.native());
 
-  std::string checkout_original_command("git -C " + original_clone_path.native() + " checkout " + options.git_revision_one);
+  std::string checkout_original_command("git -C " + original_clone_path.native() + " checkout " + quiet_flag + options.git_revision_one);
   FILE * checkout_original_process = popen(checkout_original_command.c_str(), "r");
   int checkout_original_error = pclose(checkout_original_process);
   if(checkout_original_error) throw std::string("Unable to checkout " + options.git_revision_one);
 
-  std::string checkout_modified_command("git -C " + modified_clone_path.native() + " checkout " + options.git_revision_two);
+  std::string checkout_modified_command("git -C " + modified_clone_path.native() + " checkout " + quiet_flag + options.git_revision_two);
   FILE * checkout_modified_process = popen(checkout_modified_command.c_str(), "r");
   int checkout_modified_error = pclose(checkout_modified_process);
   if(checkout_modified_error) throw std::string("Unable to checkout " + options.git_revision_two);
@@ -70,7 +70,10 @@ srcdiff_input_source_git::~srcdiff_input_source_git() {
 
 void srcdiff_input_source_git::consume() {
 
-  directory(std::string(), std::string());
+  if(options.files_from_name)
+    files_from();
+  else
+    directory(std::string(), std::string());
 
 }
 
@@ -90,8 +93,11 @@ void srcdiff_input_source_git::process_file(const boost::optional<std::string> &
 
   if(language_string == SRCML_LANGUAGE_NONE) return;
 
-  std::string path_one = path_original ? original_clone_path.native() + PATH_SEPARATOR + *path_original : std::string();
-  std::string path_two = path_modified ? modified_clone_path.native() + PATH_SEPARATOR + *path_modified : std::string();
+  std::string path_one = path_original ? *path_original : std::string();
+  std::string path_two = path_modified ? *path_modified : std::string();
+
+  std::string path_one_full = path_original ? original_clone_path.native() + PATH_SEPARATOR + *path_original : std::string();
+  std::string path_two_full = path_modified ? modified_clone_path.native() + PATH_SEPARATOR + *path_modified : std::string();
 
   std::string unit_filename = !path_one.empty() ? path_one.substr(directory_length_original) : path_one;
   std::string filename_two =  !path_two.empty() ? path_two.substr(directory_length_modified) : path_two;
@@ -102,9 +108,9 @@ void srcdiff_input_source_git::process_file(const boost::optional<std::string> &
 
   }
 
-  srcdiff_input<srcdiff_input_source_local> input_original(options.archive, path_original, language_string, options.flags, *this);
-  srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_modified, language_string, options.flags, *this);
-  line_diff_range<srcdiff_input_source_local> line_diff_range(path_one, path_two, this);
+  srcdiff_input<srcdiff_input_source_local> input_original(options.archive, path_one_full, language_string, options.flags, *this);
+  srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_two_full, language_string, options.flags, *this);
+  line_diff_range<srcdiff_input_source_local> line_diff_range(path_one_full, path_two_full, this);
 
   translator->translate(input_original, input_modified, line_diff_range, language_string,
                         unit_filename, boost::optional<std::string>());
@@ -368,4 +374,58 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
   
 }
 
-void srcdiff_input_source_git::process_files_from() {}
+void srcdiff_input_source_git::process_files_from() {
+
+  try {
+
+    // translate all the filenames listed in the named file
+    // Use libxml2 routines so that we can handle http:, file:, and gzipped files automagically
+    std::ifstream input(options.files_from_name->c_str());
+    std::string line;
+    while(getline(input, line, '\n'), input) {
+
+      // skip over whitespace
+      // TODO:  Other types of whitespace?  backspace?
+      int white_length = strspn(line.c_str(), " \t\f");
+
+      line.erase(0, white_length);
+
+      // skip blank lines or comment lines
+      if (line[0] == '\0' || line[0] == '#')
+        continue;
+
+      // remove any end whitespace
+      // TODO:  Extract function, and use elsewhere
+      for (int i = line.size() - 1; i != 0; --i) {
+        if (isspace(line[i]))
+          line[i] = 0;
+        else
+          break;
+
+      }
+
+      std::string::size_type sep_pos = line.find('|');
+      std::string path_original = line.substr(0, sep_pos);
+      std::string path_modified = line.substr(sep_pos + 1);
+
+      boost::optional<std::string> path = path_original;
+      std::string path_full = original_clone_path.native() + PATH_SEPARATOR + *path;
+      if(*path == "") {
+
+         path = path_modified;
+         path_full = modified_clone_path.native() + PATH_SEPARATOR + *path;
+
+       }
+
+      if(!is_dir(0, path_full.c_str())) file(path_original, path_modified);
+
+    }
+
+  } catch (uri_stream_error) {
+
+    fprintf(stderr, "%s error: file/URI \'%s\' does not exist.\n", "srcdiff", options.files_from_name->c_str());
+    exit(EXIT_FAILURE);
+
+  }
+
+}
