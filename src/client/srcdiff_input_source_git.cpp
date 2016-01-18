@@ -70,7 +70,7 @@ srcdiff_input_source_git::~srcdiff_input_source_git() {
 
 void srcdiff_input_source_git::consume() {
 
-  directory(std::string(), nullptr, std::string(), nullptr);
+  directory(std::string(), std::string());
 
 }
 
@@ -83,8 +83,8 @@ const char * srcdiff_input_source_git::get_language(const boost::optional<std::s
 
 }
 
-void srcdiff_input_source_git::process_file(const boost::optional<std::string> & path_original, const void * context_original,
-                                            const boost::optional<std::string> & path_modified, const void * context_modified) {
+void srcdiff_input_source_git::process_file(const boost::optional<std::string> & path_original,
+                                            const boost::optional<std::string> & path_modified) {
 
   const char * language_string = get_language(path_original, path_modified);
 
@@ -111,14 +111,8 @@ void srcdiff_input_source_git::process_file(const boost::optional<std::string> &
 
 }
 
-bool operator<(const std::pair<std::string, size_t> & pair_one, const std::pair<std::string, size_t> & pair_two) {
-
-  return pair_one.first < pair_two.first;
-
-}
-
-void srcdiff_input_source_git::process_directory(const boost::optional<std::string> & directory_original, const void * context_original,
-                                                 const boost::optional<std::string> & directory_modified, const void * context_modified) {
+void srcdiff_input_source_git::process_directory(const boost::optional<std::string> & directory_original,
+                                                 const boost::optional<std::string> & directory_modified) {
 
 #ifndef _MSC_BUILD
 
@@ -223,7 +217,7 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     if(comparison >= 0) ++j, file_path_modified = path_modified;
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    file(file_path_original, nullptr, file_path_modified, nullptr);
+    file(file_path_original, file_path_modified);
 
   }
 
@@ -244,7 +238,7 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    file(path_original, nullptr, boost::optional<std::string>(), nullptr);
+    file(path_original, boost::optional<std::string>());
 
   }
 
@@ -265,7 +259,7 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-   file(boost::optional<std::string>(), nullptr, path_modified, nullptr);
+   file(boost::optional<std::string>(), path_modified);
 
   }
 
@@ -311,7 +305,7 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     if(comparison >= 0) ++j, directory_path_two = path_modified;
 
     // process these directories
-    directory(directory_path_one, nullptr, directory_path_two, nullptr);
+    directory(directory_path_one, directory_path_two);
 
   }
 
@@ -332,7 +326,7 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     }
 
     // process this directory
-    directory(path_original, nullptr, boost::optional<std::string>(), nullptr);
+    directory(path_original, boost::optional<std::string>());
 
   }
 
@@ -353,7 +347,7 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     }
 
     // process this directory
-    directory(boost::optional<std::string>(), nullptr, path_modified, nullptr);
+    directory(boost::optional<std::string>(), path_modified);
 
   }
 

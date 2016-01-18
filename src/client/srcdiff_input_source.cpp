@@ -6,8 +6,8 @@ size_t srcdiff_input_source::input_count = 0;
 size_t srcdiff_input_source::input_skipped = 0;
 size_t srcdiff_input_source::input_total = 0;
 
-void srcdiff_input_source::file(const boost::optional<std::string> & path_original, const void * context_original,
-                                const boost::optional<std::string> & path_modified, const void * context_modified) {
+void srcdiff_input_source::file(const boost::optional<std::string> & path_original,
+                                const boost::optional<std::string> & path_modified) {
 
   if(show_input) {
 
@@ -27,12 +27,12 @@ void srcdiff_input_source::file(const boost::optional<std::string> & path_origin
 
   }
 
-  process_file(path_original, context_original, path_modified, context_modified);
+  process_file(path_original, path_modified);
 
 }
 
-void srcdiff_input_source::directory(const boost::optional<std::string> & directory_original, const void * context_original,
-                                     const boost::optional<std::string> & directory_modified, const void * context_modified) {
+void srcdiff_input_source::directory(const boost::optional<std::string> & directory_original,
+                                     const boost::optional<std::string> & directory_modified) {
 
   show_input = !is_option(options.flags, OPTION_QUIET);
 
@@ -46,7 +46,7 @@ void srcdiff_input_source::directory(const boost::optional<std::string> & direct
 
   try {
 
-    process_directory(directory_original, context_original, directory_modified, context_modified);
+    process_directory(directory_original, directory_modified);
 
   } catch(const std::string & error) {
 
