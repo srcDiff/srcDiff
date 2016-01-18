@@ -36,12 +36,12 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
   int clone_modified_error = pclose(clone_modified_process);
   if(clone_modified_error) throw std::string("Unable to clone " + modified_clone_path.native());
 
-  std::string checkout_original_command("git checkout " + options.git_revision_one);
+  std::string checkout_original_command("git checkout -C " + original_clone_path.native() + " " + options.git_revision_one);
   FILE * checkout_original_process = popen(checkout_original_command.c_str(), "r");
   int checkout_original_error = pclose(checkout_original_process);
   if(checkout_original_error) throw std::string("Unable to checkout " + options.git_revision_one);
 
-  std::string checkout_modified_command("git checkout " + options.git_revision_two);
+  std::string checkout_modified_command("git checkout -C " + modified_clone_path.native() + " " + options.git_revision_two);
   FILE * checkout_modified_process = popen(checkout_modified_command.c_str(), "r");
   int checkout_modified_error = pclose(checkout_modified_process);
   if(checkout_modified_error) throw std::string("Unable to checkout " + options.git_revision_two);
