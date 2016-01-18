@@ -9,8 +9,60 @@
 #include <cstring>
 
 #ifndef _MSC_BUILD
-#include <dirent.h>
+
+// file/directory names to ignore when processing a directory
+// const/non-const versions for linux/bsd different declarations
+int srcdiff_input_source_local::dir_filter(const struct dirent* d) {
+
+    return d->d_name[0] != '.';
+}
+
+int srcdiff_input_source_local::dir_filter(struct dirent* d) {
+
+  return dir_filter((const struct dirent*)d);
+}
+
+int srcdiff_input_source_local::is_dir(struct dirent * file, const char * filename) {
+
+#ifdef _DIRENT_HAVE_D_TYPE
+  if (file && file->d_type == DT_DIR)
+    return 1;
 #endif
+
+  // path with current filename
+  // handle directories later after all the filenames
+  struct stat instat = { 0 };
+
+  int stat_status = stat(filename, &instat);
+
+  if(stat_status)
+    return stat_status;
+
+#ifndef _DIRENT_HAVE_D_TYPE
+  if(S_ISDIR(instat.st_mode))
+    return 1;
+#endif
+
+  return 0;
+
+}
+#endif
+
+int srcdiff_input_source_local::is_output_file(const char * filename, const struct stat & outstat) {
+
+  struct stat instat = { 0 };
+
+  int stat_status = stat(filename, &instat);
+
+  if(stat_status)
+    return stat_status;
+
+  if(instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev)
+    return 1;
+
+  return 0;
+
+}
 
 srcdiff_input_source_local::srcdiff_input_source_local(const srcdiff_options & options) : srcdiff_input_source(options) {
 
@@ -68,11 +120,11 @@ void srcdiff_input_source_local::consume() {
         directory_length_original = input_pair.first.back() == '/' ? input_pair.first.size() : input_pair.first.size() + 1;
         directory_length_modified = input_pair.second.back() == '/' ? input_pair.second.size() : input_pair.second.size() + 1;
 
-        directory(input_pair.first, nullptr, input_pair.second, nullptr);
+        directory(input_pair.first, input_pair.second);
 
       } else {
 #endif
-        file(input_pair.first, nullptr, input_pair.second, nullptr);
+        file(input_pair.first, input_pair.second);
 
 #ifndef _MSC_BUILD
       }
@@ -94,8 +146,8 @@ const char * srcdiff_input_source_local::get_language(const boost::optional<std:
 
 }
 
-void srcdiff_input_source_local::process_file(const boost::optional<std::string> & path_original, const void * context_original,
-                                              const boost::optional<std::string> & path_modified, const void * context_modified) {
+void srcdiff_input_source_local::process_file(const boost::optional<std::string> & path_original,
+                                              const boost::optional<std::string> & path_modified) {
 
   const char * language_string = get_language(path_original, path_modified);
 
@@ -122,73 +174,10 @@ void srcdiff_input_source_local::process_file(const boost::optional<std::string>
 
 }
 
-#ifndef _MSC_BUILD
-
-// file/directory names to ignore when processing a directory
-// const/non-const versions for linux/bsd different declarations
-int dir_filter(const struct dirent* d) {
-
-    return d->d_name[0] != '.';
-}
-
-int dir_filter(struct dirent* d) {
-
-  return dir_filter((const struct dirent*)d);
-}
-
-int is_dir(struct dirent * file, const char * filename) {
-
-#ifdef _DIRENT_HAVE_D_TYPE
-  if (file->d_type == DT_DIR)
-    return 1;
-#endif
-
-  // path with current filename
-  // handle directories later after all the filenames
-  struct stat instat = { 0 };
-
-  int stat_status = stat(filename, &instat);
-
-  if(stat_status)
-    return stat_status;
-
-#ifndef _DIRENT_HAVE_D_TYPE
-  if(S_ISDIR(instat.st_mode))
-    return 1;
-#endif
-
-  return 0;
-
-}
-
-#endif
-
-int is_output_file(const char * filename, const struct stat & outstat) {
-
-  struct stat instat = { 0 };
-
-  int stat_status = stat(filename, &instat);
-
-  if(stat_status)
-    return stat_status;
-
-  if(instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev)
-    return 1;
-
-  return 0;
-
-}
-
-void srcdiff_input_source_local::process_directory(const boost::optional<std::string> & directory_original, const void * context_original,
-                                                   const boost::optional<std::string> & directory_modified, const void * context_modified) {
+void srcdiff_input_source_local::process_directory(const boost::optional<std::string> & directory_original,
+                                                   const boost::optional<std::string> & directory_modified) {
 
 #ifndef _MSC_BUILD
-
-#ifdef __MINGW32__
-#define PATH_SEPARATOR '\\'
-#else
-#define PATH_SEPARATOR '/'
-#endif
 
   // collect the filenames in alphabetical order
   struct dirent ** namelist_original;
@@ -278,7 +267,7 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
     if(comparison >= 0) ++j, file_path_modified = path_modified;
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    file(file_path_original, nullptr, file_path_modified, nullptr);
+    file(file_path_original, file_path_modified);
 
   }
 
@@ -298,7 +287,7 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    file(path_original, nullptr, boost::optional<std::string>(), nullptr);
+    file(path_original, boost::optional<std::string>());
 
   }
 
@@ -318,7 +307,7 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-   file(boost::optional<std::string>(), nullptr, path_modified, nullptr);
+   file(boost::optional<std::string>(), path_modified);
 
   }
 
@@ -350,7 +339,7 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
     if(comparison >= 0) ++j, directory_path_two = path_modified;
 
     // process these directories
-    directory(directory_path_one, nullptr, directory_path_two, nullptr);
+    directory(directory_path_one, directory_path_two);
 
   }
 
@@ -370,7 +359,7 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
     }
 
     // process this directory
-    directory(path_original, nullptr, boost::optional<std::string>(), nullptr);
+    directory(path_original, boost::optional<std::string>());
 
   }
 
@@ -390,7 +379,7 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
     }
 
     // process this directory
-    directory(boost::optional<std::string>(), nullptr, path_modified, nullptr);
+    directory(boost::optional<std::string>(), path_modified);
 
   }
 
@@ -406,8 +395,6 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
       free(namelist_modified[j]);
     free(namelist_modified);
   }
-
-#undef PATH_SEPARATOR
 
 #endif
   
@@ -439,7 +426,7 @@ void srcdiff_input_source_local::process_files_from() {
       std::string path_original = line.substr(0, line.find('|'));
       std::string path_modified = line.substr(line.find('|') + 1);
 
-      file(path_original, nullptr, path_modified, nullptr);
+      file(path_original, path_modified);
 
     }
 

@@ -4,31 +4,19 @@
 #ifndef INCLUDED_SRCDIFF_INPUT_SOURCE_GIT_HPP
 #define INCLUDED_SRCDIFF_INPUT_SOURCE_GIT_HPP
 
-#include <srcdiff_input_source.hpp>
-
-#include <git2.h>
+#include <srcdiff_input_source_local.hpp>
 
 #include <boost/filesystem.hpp>
 
-class srcdiff_input_source_git : public srcdiff_input_source {
+class srcdiff_input_source_git : public srcdiff_input_source_local {
 
 protected:
 
 private:
 
-  boost::filesystem::path clone_path;
+  boost::filesystem::path original_clone_path;
+  boost::filesystem::path modified_clone_path;
   bool clean_path;
-
-  git_repository * repo;
-
-  git_oid oid_original;
-  git_oid oid_modified;
-
-  git_commit * commit_original;
-  git_commit * commit_modified;
-
-  git_tree * tree_original;
-  git_tree * tree_modified;
 
 public:
 
@@ -40,24 +28,11 @@ public:
 
   virtual const char * get_language(const boost::optional<std::string> & path_original, const boost::optional<std::string> & path_modified);
 
-  virtual void process_file(const boost::optional<std::string> & path_original, const void * context_original,
-                            const boost::optional<std::string> & path_modified, const void * context_modified);
-  virtual void process_directory(const boost::optional<std::string> & directory_original, const void * context_original,
-                                 const boost::optional<std::string> & directory_modified, const void * context_modified);
+  virtual void process_file(const boost::optional<std::string> & path_original,
+                            const boost::optional<std::string> & path_modified);
+  virtual void process_directory(const boost::optional<std::string> & directory_original,
+                                 const boost::optional<std::string> & directory_modified);
   virtual void process_files_from();
-
-  struct input_context {
-
-    git_blob * blob;
-    git_buf content;
-
-    size_t pos;
-
-  };
-
-  input_context * open(const char * uri) const;
-  static int read(void * context, char * buffer, size_t len);
-  static int close(void * context);
 
 };
 
