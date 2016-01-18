@@ -225,7 +225,7 @@ void srcdiff_input_source_svn::process_file(const boost::optional<std::string> &
   line_diff_range<srcdiff_input_source_svn> line_diff_range(svn_path_original_temp, svn_path_modified_temp, this);
 
   translator->translate(input_original, input_modified, line_diff_range, language_string,
-                        unit_filename, boost::optional<std::string>());
+                        unit_filename, unit_version);
 
 }
 

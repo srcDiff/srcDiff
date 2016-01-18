@@ -33,6 +33,8 @@ protected:
   int directory_length_original;
   int directory_length_modified;
 
+  boost::optional<std::string> unit_version;
+
 private:
 
   static bool show_input;
@@ -43,13 +45,7 @@ private:
 
 public:
 
-  srcdiff_input_source(const srcdiff_options & options) : options(options), translator(0), directory_length_original(0), directory_length_modified(0) {
-
-  show_input = is_option(options.flags, OPTION_VERBOSE) && !is_option(options.flags, OPTION_QUIET);
-
-  }
-
-
+  srcdiff_input_source(const srcdiff_options & options);
   virtual ~srcdiff_input_source() {}
 
   virtual void consume() = 0;

@@ -6,6 +6,20 @@ size_t srcdiff_input_source::input_count = 0;
 size_t srcdiff_input_source::input_skipped = 0;
 size_t srcdiff_input_source::input_total = 0;
 
+srcdiff_input_source::srcdiff_input_source(const srcdiff_options & options) : options(options), translator(0), directory_length_original(0), directory_length_modified(0) {
+
+  if(srcml_archive_get_version(options.archive)
+    && (!srcml_archive_is_full_archive(options.archive)
+      || is_option(options.flags, OPTION_BURST))) {
+
+    unit_version = srcml_archive_get_version(options.archive);
+
+  }
+
+  show_input = is_option(options.flags, OPTION_VERBOSE) && !is_option(options.flags, OPTION_QUIET);
+
+}
+
 void srcdiff_input_source::file(const boost::optional<std::string> & path_original,
                                 const boost::optional<std::string> & path_modified) {
 

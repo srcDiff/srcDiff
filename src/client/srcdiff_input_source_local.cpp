@@ -170,7 +170,7 @@ void srcdiff_input_source_local::process_file(const boost::optional<std::string>
   line_diff_range<srcdiff_input_source_local> line_diff_range(path_one, path_two, this);
 
   translator->translate(input_original, input_modified, line_diff_range, language_string,
-                        unit_filename, boost::optional<std::string>());
+                        unit_filename, unit_version);
 
 }
 
