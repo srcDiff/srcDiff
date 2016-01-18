@@ -46,15 +46,9 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
   int checkout_modified_error = pclose(checkout_modified_process);
   if(checkout_modified_error) throw std::string("Unable to checkout " + options.git_revision_two);
 
-  translator = new srcdiff_translator(options.srcdiff_filename, options.flags, options.methods, options.archive,
-                                      options.unit_filename,
-                                      options.unified_view_context, options.side_by_side_tab_size,
-                                      options.summary_type_str);
 }
 
 srcdiff_input_source_git::~srcdiff_input_source_git() {
-
-  if(translator) delete translator;
 
   if(clean_path) {
 
