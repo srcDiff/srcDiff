@@ -4,9 +4,7 @@
 #ifndef INCLUDED_SRCDIFF_INPUT_SOURCE_GIT_HPP
 #define INCLUDED_SRCDIFF_INPUT_SOURCE_GIT_HPP
 
-#include <srcdiff_input_source.hpp>
-
-#include <git2.h>
+#include <srcdiff_input_source_local.hpp>
 
 #include <boost/filesystem.hpp>
 

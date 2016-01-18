@@ -9,8 +9,60 @@
 #include <cstring>
 
 #ifndef _MSC_BUILD
-#include <dirent.h>
+
+// file/directory names to ignore when processing a directory
+// const/non-const versions for linux/bsd different declarations
+int srcdiff_input_source_local::dir_filter(const struct dirent* d) {
+
+    return d->d_name[0] != '.';
+}
+
+int srcdiff_input_source_local::dir_filter(struct dirent* d) {
+
+  return dir_filter((const struct dirent*)d);
+}
+
+int srcdiff_input_source_local::is_dir(struct dirent * file, const char * filename) {
+
+#ifdef _DIRENT_HAVE_D_TYPE
+  if (file->d_type == DT_DIR)
+    return 1;
 #endif
+
+  // path with current filename
+  // handle directories later after all the filenames
+  struct stat instat = { 0 };
+
+  int stat_status = stat(filename, &instat);
+
+  if(stat_status)
+    return stat_status;
+
+#ifndef _DIRENT_HAVE_D_TYPE
+  if(S_ISDIR(instat.st_mode))
+    return 1;
+#endif
+
+  return 0;
+
+}
+#endif
+
+int srcdiff_input_source_local::is_output_file(const char * filename, const struct stat & outstat) {
+
+  struct stat instat = { 0 };
+
+  int stat_status = stat(filename, &instat);
+
+  if(stat_status)
+    return stat_status;
+
+  if(instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev)
+    return 1;
+
+  return 0;
+
+}
 
 srcdiff_input_source_local::srcdiff_input_source_local(const srcdiff_options & options) : srcdiff_input_source(options) {
 
@@ -122,73 +174,10 @@ void srcdiff_input_source_local::process_file(const boost::optional<std::string>
 
 }
 
-#ifndef _MSC_BUILD
-
-// file/directory names to ignore when processing a directory
-// const/non-const versions for linux/bsd different declarations
-int dir_filter(const struct dirent* d) {
-
-    return d->d_name[0] != '.';
-}
-
-int dir_filter(struct dirent* d) {
-
-  return dir_filter((const struct dirent*)d);
-}
-
-int is_dir(struct dirent * file, const char * filename) {
-
-#ifdef _DIRENT_HAVE_D_TYPE
-  if (file->d_type == DT_DIR)
-    return 1;
-#endif
-
-  // path with current filename
-  // handle directories later after all the filenames
-  struct stat instat = { 0 };
-
-  int stat_status = stat(filename, &instat);
-
-  if(stat_status)
-    return stat_status;
-
-#ifndef _DIRENT_HAVE_D_TYPE
-  if(S_ISDIR(instat.st_mode))
-    return 1;
-#endif
-
-  return 0;
-
-}
-
-#endif
-
-int is_output_file(const char * filename, const struct stat & outstat) {
-
-  struct stat instat = { 0 };
-
-  int stat_status = stat(filename, &instat);
-
-  if(stat_status)
-    return stat_status;
-
-  if(instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev)
-    return 1;
-
-  return 0;
-
-}
-
 void srcdiff_input_source_local::process_directory(const boost::optional<std::string> & directory_original, const void * context_original,
                                                    const boost::optional<std::string> & directory_modified, const void * context_modified) {
 
 #ifndef _MSC_BUILD
-
-#ifdef __MINGW32__
-#define PATH_SEPARATOR '\\'
-#else
-#define PATH_SEPARATOR '/'
-#endif
 
   // collect the filenames in alphabetical order
   struct dirent ** namelist_original;
@@ -406,8 +395,6 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
       free(namelist_modified[j]);
     free(namelist_modified);
   }
-
-#undef PATH_SEPARATOR
 
 #endif
   

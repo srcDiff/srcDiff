@@ -16,7 +16,7 @@
 static std::mutex mutex;
   
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
-  : srcdiff_input_source(options),
+  : srcdiff_input_source_local(options),
     original_clone_path(boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native()),
     modified_clone_path(boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native()),
     clean_path(true) {
@@ -26,25 +26,25 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
 
   std::string clone_original_command("git clone " + quiet_flag + *options.git_url + " "
                                     + original_clone_path.native());
-  FILE * process = popen(clone_original_command.c_str(), "r");
-  int error = pclose(process);
-  if(error) throw std::string("Unable to clone " + original_clone_path.native());
+  FILE * clone_original_process = popen(clone_original_command.c_str(), "r");
+  int clone_original_error = pclose(clone_original_process);
+  if(clone_original_error) throw std::string("Unable to clone " + original_clone_path.native());
 
   std::string clone_modified_command("git clone " + quiet_flag + *options.git_url + " "
                                     + modified_clone_path.native());
-  FILE * process = popen(clone_modified_command.c_str(), "r");
-  int error = pclose(process);
-  if(error) throw std::string("Unable to clone " + modified_clone_path.native());
+  FILE * clone_modified_process = popen(clone_modified_command.c_str(), "r");
+  int clone_modified_error = pclose(clone_modified_process);
+  if(clone_modified_error) throw std::string("Unable to clone " + modified_clone_path.native());
 
   std::string checkout_original_command("git checkout " + options.git_revision_one);
-  FILE * process = popen(checkout_original_command.c_str(), "r");
-  int error = pclose(process);
-  if(error) throw std::string("Unable to checkout " + options.git_revision_one);
+  FILE * checkout_original_process = popen(checkout_original_command.c_str(), "r");
+  int checkout_original_error = pclose(checkout_original_process);
+  if(checkout_original_error) throw std::string("Unable to checkout " + options.git_revision_one);
 
   std::string checkout_modified_command("git checkout " + options.git_revision_two);
-  FILE * process = popen(checkout_modified_command.c_str(), "r");
-  int error = pclose(process);
-  if(error) throw std::string("Unable to checkout " + options.git_revision_two);
+  FILE * checkout_modified_process = popen(checkout_modified_command.c_str(), "r");
+  int checkout_modified_error = pclose(checkout_modified_process);
+  if(checkout_modified_error) throw std::string("Unable to checkout " + options.git_revision_two);
 
   translator = new srcdiff_translator(options.srcdiff_filename, options.flags, options.methods, options.archive,
                                       options.unit_filename,
@@ -61,14 +61,14 @@ srcdiff_input_source_git::~srcdiff_input_source_git() {
     std::string remove_original_command("rm -rf ");
     remove_original_command += original_clone_path.native();
 
-    FILE * process = popen(remove_original_command.c_str(), "r");
-    pclose(process);
+    FILE * remove_original_process = popen(remove_original_command.c_str(), "r");
+    pclose(remove_original_process);
 
     std::string remove_modified_command("rm -rf ");
     remove_modified_command += modified_clone_path.native();
 
-    FILE * process = popen(remove_modified_command.c_str(), "r");
-    pclose(process);
+    FILE * remove_modified_process = popen(remove_modified_command.c_str(), "r");
+    pclose(remove_modified_process);
 
   }
 
@@ -88,12 +88,6 @@ const char * srcdiff_input_source_git::get_language(const boost::optional<std::s
   return srcml_archive_check_extension(options.archive, path->c_str());
 
 }
-
-#ifdef __MINGW32__
-#define PATH_SEPARATOR '\\'
-#else
-#define PATH_SEPARATOR '/'
-#endif
 
 void srcdiff_input_source_git::process_file(const boost::optional<std::string> & path_original, const void * context_original,
                                             const boost::optional<std::string> & path_modified, const void * context_modified) {
@@ -134,28 +128,22 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
 
 #ifndef _MSC_BUILD
 
-#ifdef __MINGW32__
-#define PATH_SEPARATOR '\\'
-#else
-#define PATH_SEPARATOR '/'
-#endif
-
   // collect the filenames in alphabetical order
   struct dirent ** namelist_original;
   struct dirent ** namelist_modified;
 
   std::string directory_original_full
     = directory_original ? 
-      original_clone_path.native() + PATH_SEPARATOR + directory_original
+      original_clone_path.native() + PATH_SEPARATOR + *directory_original
       : std::string();
 
   std::string directory_modified_full
     = directory_modified ? 
-      modified_clone_path.native() + PATH_SEPARATOR + directory_modified
+      modified_clone_path.native() + PATH_SEPARATOR + *directory_modified
       : std::string();
 
-  int n = scandir(directory_original_full, &namelist_original, dir_filter, alphasort);
-  int m = scandir(directory_modified_full, &namelist_modified, dir_filter, alphasort);
+  int n = scandir(directory_original_full.c_str(), &namelist_original, dir_filter, alphasort);
+  int m = scandir(directory_modified_full.c_str(), &namelist_modified, dir_filter, alphasort);
 
   // TODO:  Fix error handling.  What if one is in error?
   if (n < 0 && m < 0) {
@@ -206,8 +194,8 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
     path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
 
-    std::string path_original_full = original_clone_path + PATH_SEPARATOR + path_original;
-    std::string path_modified_full = modified_clone_path + PATH_SEPARATOR + path_modified;
+    std::string path_original_full = original_clone_path.native() + PATH_SEPARATOR + path_original;
+    std::string path_modified_full = modified_clone_path.native() + PATH_SEPARATOR + path_modified;
 
     // skip directories
     if(is_dir(namelist_original[i], path_original_full.c_str()) != 0) {
@@ -250,7 +238,7 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
 
     // form the full path
     path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
-    std::string path_original_full = original_clone_path + PATH_SEPARATOR + path_original;
+    std::string path_original_full = original_clone_path.native() + PATH_SEPARATOR + path_original;
 
     // skip directories
     if(is_dir(namelist_original[i], path_original_full.c_str()) != 0)
@@ -271,7 +259,7 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
 
     // form the full path
     path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
-    std::string path_modified_full = modified_clone_path + PATH_SEPARATOR + path_modified;
+    std::string path_modified_full = modified_clone_path.native() + PATH_SEPARATOR + path_modified;
 
     // skip directories
     if(is_dir(namelist_modified[j], path_modified_full.c_str()) != 0)
@@ -296,8 +284,8 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
     path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
 
-    std::string path_original_full = original_clone_path + PATH_SEPARATOR + path_original;
-    std::string path_modified_full = modified_clone_path + PATH_SEPARATOR + path_modified;
+    std::string path_original_full = original_clone_path.native() + PATH_SEPARATOR + path_original;
+    std::string path_modified_full = modified_clone_path.native() + PATH_SEPARATOR + path_modified;
 
     // skip non-directories
     if(is_dir(namelist_original[i], path_original_full.c_str()) != 1) {
@@ -338,7 +326,7 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
 
     // form the full path
     path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
-    std::string path_original_full = original_clone_path + PATH_SEPARATOR + path_original;
+    std::string path_original_full = original_clone_path.native() + PATH_SEPARATOR + path_original;
 
     // skip non-directories
     if(is_dir(namelist_original[i], path_original_full.c_str()) != 1)
@@ -359,7 +347,7 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
 
     // form the full path
     path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
-    std::string path_modified_full = modified_clone_path + PATH_SEPARATOR + path_modified;
+    std::string path_modified_full = modified_clone_path.native() + PATH_SEPARATOR + path_modified;
 
     // skip non-directories
     if(is_dir(namelist_modified[j], path_modified_full.c_str()) != 1)
@@ -387,8 +375,6 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
       free(namelist_modified[j]);
     free(namelist_modified);
   }
-
-#undef PATH_SEPARATOR
 
 #endif
   

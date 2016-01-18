@@ -17,6 +17,12 @@
 
 #include <boost/optional.hpp>
 
+#ifdef __MINGW32__
+#define PATH_SEPARATOR '\\'
+#else
+#define PATH_SEPARATOR '/'
+#endif
+
 class srcdiff_input_source {
 
 protected:
