@@ -16,44 +16,35 @@
 static std::mutex mutex;
   
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
-  : srcdiff_input_source(options), clone_path(boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native()), clean_path(true), repo(nullptr), oid_original({ 0 }), oid_modified({ 0 }), commit_original(0), commit_modified(0), tree_original(0), tree_modified(0) {
+  : srcdiff_input_source(options),
+    original_clone_path(boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native()),
+    modified_clone_path(boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native()),
+    clean_path(true) {
 
   std::string quiet_flag;
   if(is_option(options.flags, OPTION_QUIET)) quiet_flag = "--quiet ";
 
-  std::string command("git clone " + quiet_flag + *options.git_url + " ");
-  command += clone_path.native();
-
-  FILE * process = popen(command.c_str(), "r");
+  std::string clone_original_command("git clone " + quiet_flag + *options.git_url + " "
+                                    + original_clone_path.native());
+  FILE * process = popen(clone_original_command.c_str(), "r");
   int error = pclose(process);
-  if(error) throw std::string("Unable to clone " + clone_path.native());
+  if(error) throw std::string("Unable to clone " + original_clone_path.native());
 
-  error = git_repository_open(&repo, clone_path.c_str());
-  if(error) throw std::string("Error Opening up cloned repository.");
+  std::string clone_modified_command("git clone " + quiet_flag + *options.git_url + " "
+                                    + modified_clone_path.native());
+  FILE * process = popen(clone_modified_command.c_str(), "r");
+  int error = pclose(process);
+  if(error) throw std::string("Unable to clone " + modified_clone_path.native());
 
-  if(options.git_revision_one == "HEAD")
-    error = git_reference_name_to_id(&oid_original, repo, "HEAD");
-  else
-    error = git_oid_fromstr(&oid_original, options.git_revision_one.c_str());
-  if(error) throw std::string("Error getting base/original revision: " + options.git_revision_one);
+  std::string checkout_original_command("git checkout " + options.git_revision_one);
+  FILE * process = popen(checkout_original_command.c_str(), "r");
+  int error = pclose(process);
+  if(error) throw std::string("Unable to checkout " + options.git_revision_one);
 
-  if(options.git_revision_two == "HEAD")
-    error = git_reference_name_to_id(&oid_modified, repo, "HEAD");
-  else
-    error = git_oid_fromstr(&oid_modified, options.git_revision_two.c_str());
-  if(error) throw std::string("Error getting base/original revision: " + options.git_revision_two);
-
-  git_commit_lookup(&commit_original, repo, &oid_original);
-  if(error) throw std::string("Error looking up base/original commit.");
-
-  git_commit_lookup(&commit_modified, repo, &oid_modified);
-  if(error) throw std::string("Error looking up modified commit.");
-
-  error = git_commit_tree(&tree_original, commit_original);
-  if(error) throw std::string("Error accessing original git commit tree.");
-
-   error = git_commit_tree(&tree_modified, commit_modified);
-  if(error) throw std::string("Error accessing modified git commit tree.");
+  std::string checkout_modified_command("git checkout " + options.git_revision_two);
+  FILE * process = popen(checkout_modified_command.c_str(), "r");
+  int error = pclose(process);
+  if(error) throw std::string("Unable to checkout " + options.git_revision_two);
 
   translator = new srcdiff_translator(options.srcdiff_filename, options.flags, options.methods, options.archive,
                                       options.unit_filename,
@@ -65,20 +56,18 @@ srcdiff_input_source_git::~srcdiff_input_source_git() {
 
   if(translator) delete translator;
 
-  if(tree_original) git_tree_free(tree_original);
-  if(tree_modified) git_tree_free(tree_modified);
-
-  if(commit_original) git_commit_free(commit_original);
-  if(commit_modified) git_commit_free(commit_modified);
-
-  if(repo) git_repository_free(repo);
-
   if(clean_path) {
 
-    std::string command("rm -rf ");
-    command += clone_path.native();
+    std::string remove_original_command("rm -rf ");
+    remove_original_command += original_clone_path.native();
 
-    FILE * process = popen(command.c_str(), "r");
+    FILE * process = popen(remove_original_command.c_str(), "r");
+    pclose(process);
+
+    std::string remove_modified_command("rm -rf ");
+    remove_modified_command += modified_clone_path.native();
+
+    FILE * process = popen(remove_modified_command.c_str(), "r");
     pclose(process);
 
   }
@@ -87,7 +76,7 @@ srcdiff_input_source_git::~srcdiff_input_source_git() {
 
 void srcdiff_input_source_git::consume() {
 
-  directory(std::string(), (const void *)tree_original, std::string(), (const void *)tree_modified);
+  directory(std::string(), nullptr, std::string(), nullptr);
 
 }
 
@@ -100,42 +89,34 @@ const char * srcdiff_input_source_git::get_language(const boost::optional<std::s
 
 }
 
+#ifdef __MINGW32__
+#define PATH_SEPARATOR '\\'
+#else
+#define PATH_SEPARATOR '/'
+#endif
+
 void srcdiff_input_source_git::process_file(const boost::optional<std::string> & path_original, const void * context_original,
                                             const boost::optional<std::string> & path_modified, const void * context_modified) {
 
   const char * language_string = get_language(path_original, path_modified);
 
-  std::string path_one = path_original ? *path_original : "";
-  std::string path_two = path_modified ? *path_modified : "";
-
   if(language_string == SRCML_LANGUAGE_NONE) return;
 
-  std::string unit_filename = !path_one.empty() ? path_one.substr(directory_length_original) : std::string();
-  std::string filename_two  = !path_two.empty() ? path_two.substr(directory_length_modified) : std::string();
+  std::string path_one = path_original ? original_clone_path.native() + PATH_SEPARATOR + *path_original : std::string();
+  std::string path_two = path_modified ? modified_clone_path.native() + PATH_SEPARATOR + *path_modified : std::string();
+
+  std::string unit_filename = !path_one.empty() ? path_one.substr(directory_length_original) : path_one;
+  std::string filename_two =  !path_two.empty() ? path_two.substr(directory_length_modified) : path_two;
   if(path_two.empty() || unit_filename != filename_two) {
 
-    unit_filename += '|';
+    unit_filename += "|";
     unit_filename += filename_two;
 
   }
 
-  const git_oid * blob_oid_original = (const git_oid *)context_original;
-  const git_oid * blob_oid_modified = (const git_oid *)context_modified;
-
-  char * buf_original = new char[GIT_OID_HEXSZ + 1];
-  path_one += '@';
-  path_one += git_oid_tostr(buf_original, GIT_OID_HEXSZ + 1, blob_oid_original);
-  if(buf_original) delete buf_original;
-
-  char * buf_modified = new char[GIT_OID_HEXSZ + 1];
-  path_two += '@';
-  path_two += git_oid_tostr(buf_modified, GIT_OID_HEXSZ + 1, blob_oid_modified);
-  if(buf_modified) delete buf_modified;
-
-  srcdiff_input<srcdiff_input_source_git> input_original(options.archive, path_one, language_string, 0, *this);
-  srcdiff_input<srcdiff_input_source_git> input_modified(options.archive, path_two, language_string, 0, *this);
-
-  line_diff_range<srcdiff_input_source_git> line_diff_range(path_one, path_two, this);
+  srcdiff_input<srcdiff_input_source_local> input_original(options.archive, path_original, language_string, options.flags, *this);
+  srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_modified, language_string, options.flags, *this);
+  line_diff_range<srcdiff_input_source_local> line_diff_range(path_one, path_two, this);
 
   translator->translate(input_original, input_modified, line_diff_range, language_string,
                         unit_filename, boost::optional<std::string>());
@@ -151,27 +132,63 @@ bool operator<(const std::pair<std::string, size_t> & pair_one, const std::pair<
 void srcdiff_input_source_git::process_directory(const boost::optional<std::string> & directory_original, const void * context_original,
                                                  const boost::optional<std::string> & directory_modified, const void * context_modified) {
 
+#ifndef _MSC_BUILD
+
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'
 #else
 #define PATH_SEPARATOR '/'
 #endif
 
-  const git_tree * current_tree_original = (const git_tree *)context_original;
-  const git_tree * current_tree_modified = (const git_tree *)context_modified;
+  // collect the filenames in alphabetical order
+  struct dirent ** namelist_original;
+  struct dirent ** namelist_modified;
+
+  std::string directory_original_full
+    = directory_original ? 
+      original_clone_path.native() + PATH_SEPARATOR + directory_original
+      : std::string();
+
+  std::string directory_modified_full
+    = directory_modified ? 
+      modified_clone_path.native() + PATH_SEPARATOR + directory_modified
+      : std::string();
+
+  int n = scandir(directory_original_full, &namelist_original, dir_filter, alphasort);
+  int m = scandir(directory_modified_full, &namelist_modified, dir_filter, alphasort);
+
+  // TODO:  Fix error handling.  What if one is in error?
+  if (n < 0 && m < 0) {
+
+    throw std::string("Directories '" + (directory_original ? *directory_original : "")
+      + "' and '" + (directory_modified ? *directory_modified : "") + "' could not be opened");
+
+  } else if(n < 0) {
+
+    throw std::string("Directory '" + (directory_original ? *directory_original : "") + "' could not be opened");
+
+  } else if(m < 0){
+
+    throw std::string("Directory '" + (directory_modified ? *directory_modified : "") + "' could not be opened");
+
+
+  }
 
   std::string path_original;
   int basesize_original = 0;
+
   if(directory_original) {
 
-    path_original = *directory_original;
-    if (!path_original.empty() && path_original.back() != PATH_SEPARATOR) path_original += PATH_SEPARATOR;
-    basesize_original = path_original.size();
+    // start of path from directory name
+   path_original = *directory_original;
+   if (!path_original.empty() && path_original.back() != PATH_SEPARATOR) path_original += PATH_SEPARATOR;
+   basesize_original = path_original.size();
 
   }
 
   std::string path_modified;
   int basesize_modified = 0;
+
   if(directory_modified) {
 
     path_modified = *directory_modified;
@@ -180,221 +197,180 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
 
   }
 
-  size_t count_original = git_tree_entrycount(current_tree_original);
-  std::vector<std::pair<std::string, size_t>> names_original;
-  names_original.reserve(count_original);
-  for(size_t i = 0; i < count_original; ++i) {
+  // process all non-directory files
+  int i = 0;
+  int j = 0;
+  while (i < n && j < m) {
 
-    git_tree_entry * entry_original = (git_tree_entry *)git_tree_entry_byindex(current_tree_original, i);
-    if (entry_original) names_original.push_back(std::make_pair(path_original.replace(basesize_original, std::string::npos, git_tree_entry_name(entry_original)), i));
+    // form the full path
+    path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
+    path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
 
-  }
-  sort(names_original.begin(), names_original.end(), operator<);
+    // skip directories
+    if(is_dir(namelist_original[i], path_original.c_str()) != 0) {
+      ++i;
+      continue;
+    }
 
-  size_t count_modified = git_tree_entrycount(current_tree_modified);
-  std::vector<std::pair<std::string, size_t>> names_modified;
-  names_modified.reserve(count_modified);
-  for(size_t i = 0; i < count_modified; ++i) {
+    if(is_dir(namelist_modified[j], path_modified.c_str()) != 0) {
+      ++j;
+      continue;
+    }
 
-    git_tree_entry * entry_modified = (git_tree_entry *)git_tree_entry_byindex(current_tree_modified, i);
-    if (entry_modified) names_modified.push_back(std::make_pair(path_modified.replace(basesize_modified, std::string::npos, git_tree_entry_name(entry_modified)), i));
+    // skip over output file
+    if (is_output_file(path_original.c_str(), outstat) == 1) {
+      ++i;
+      continue;
+    }
 
-  }
-  sort(names_modified.begin(), names_modified.end(), operator<);
+    if (is_output_file(path_modified.c_str(), outstat) == 1) {
+      ++j;
+      continue;
+    }
 
-  // process files first
+    // is this a common, inserted, or deleted file?
+    int comparison = strcoll(namelist_original[i]->d_name, namelist_modified[j]->d_name);
 
-  std::vector<std::pair<std::string, size_t>>::size_type pos_original = 0;
-  std::vector<std::pair<std::string, size_t>>::size_type pos_modified = 0;
-  while(pos_original < count_original && pos_modified < count_modified) {
-
-    git_tree_entry * entry_original = (git_tree_entry *)git_tree_entry_byindex(current_tree_original, names_original.at(pos_original).second);
-    git_tree_entry * entry_modified = (git_tree_entry *)git_tree_entry_byindex(current_tree_modified, names_modified.at(pos_modified).second);
-
-    if(!entry_original || git_tree_entry_type(entry_original) == GIT_OBJ_TREE) { ++pos_original; continue; }
-    if(!entry_modified || git_tree_entry_type(entry_modified) == GIT_OBJ_TREE) { ++pos_modified; continue; }
-
-    int comparison = names_original.at(pos_original).first.compare(names_modified.at(pos_modified).first);
 
     boost::optional<std::string> file_path_original;
     boost::optional<std::string> file_path_modified;
-    const git_oid * blob_oid_original = 0;
-    const git_oid * blob_oid_modified = 0;
-    
-    if(comparison <= 0) file_path_original = names_original.at(pos_original).first, blob_oid_original = git_tree_entry_id(entry_original), ++pos_original;
-    if(comparison >= 0) file_path_modified = names_modified.at(pos_modified).first, blob_oid_modified = git_tree_entry_id(entry_modified), ++pos_modified;
+    if(comparison <= 0) ++i, file_path_original = path_original;
+    if(comparison >= 0) ++j, file_path_modified = path_modified;
 
-    file(file_path_original, blob_oid_original, file_path_modified, blob_oid_modified);
+    // translate the file listed in the input file using the directory and filename extracted from the path
+    file(file_path_original, nullptr, file_path_modified, nullptr);
 
   }
 
-  while(pos_original < count_original) {
+  // process all non-directory files that are remaining in the original version
+  for ( ; i < n; ++i) {
 
-    git_tree_entry * entry_original = (git_tree_entry *)git_tree_entry_byindex(current_tree_original, names_original.at(pos_original).second);
-    if(!entry_original || git_tree_entry_type(entry_original) == GIT_OBJ_TREE) { ++pos_original; continue; }
+    // form the full path
+    path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
 
-    boost::optional<std::string> file_path_original = names_original.at(pos_original).first;
-    const git_oid * blob_oid_original = git_tree_entry_id(entry_original);
-    file(file_path_original, blob_oid_original, boost::optional<std::string>(), 0);
+    // skip directories
+    if(is_dir(namelist_original[i], path_original.c_str()) != 0)
+      continue;
 
-    ++pos_original;
-
-  }
-
-  while(pos_modified < count_modified) {
-
-    git_tree_entry * entry_modified = (git_tree_entry *)git_tree_entry_byindex(current_tree_modified, names_modified.at(pos_modified).second);
-    if(!entry_modified || git_tree_entry_type(entry_modified) == GIT_OBJ_TREE) { ++pos_modified; continue; }
-
-    boost::optional<std::string> file_path_modified = names_modified.at(pos_modified).first;
-    const git_oid * blob_oid_modified = git_tree_entry_id(entry_modified);
-    file(boost::optional<std::string>(), 0, file_path_modified, blob_oid_modified);
-
-    ++pos_modified;
-
-  }
-
-  // process directories
-
-  pos_original = 0;
-  pos_modified = 0;
-  while(pos_original < count_original && pos_modified < count_modified) {
-
-    git_tree_entry * entry_original = (git_tree_entry *)git_tree_entry_byindex(current_tree_original, names_original.at(pos_original).second);
-    git_tree_entry * entry_modified = (git_tree_entry *)git_tree_entry_byindex(current_tree_modified, names_modified.at(pos_modified).second);
-
-    if(!entry_original || git_tree_entry_type(entry_original) != GIT_OBJ_TREE) { ++pos_original; continue; }
-    if(!entry_modified || git_tree_entry_type(entry_modified) != GIT_OBJ_TREE) { ++pos_modified; continue; }
-
-    int comparison = names_original.at(pos_original).first.compare(names_modified.at(pos_modified).first);
-
-    boost::optional<std::string> path_one;
-    boost::optional<std::string> path_two;
-
-    git_tree * subtree_original = nullptr;
-    git_tree * subtree_modified = nullptr;
-
-    if(comparison <= 0) {
-
-      path_one = names_original.at(pos_original).first;
-      int error = git_tree_lookup(&subtree_original, repo, git_tree_entry_id(entry_original));
-      if(error) throw std::string("Error accessing git commit tree.");   
-
-      ++pos_original;
-
+    // skip over output file
+    if (is_output_file(path_original.c_str(), outstat) != 0) {
+      continue;
     }
 
-    if(comparison >= 0) {
+    // translate the file listed in the input file using the directory and filename extracted from the path
+    file(path_original, nullptr, boost::optional<std::string>(), nullptr);
 
-      path_two = names_modified.at(pos_modified).first;
-      int error = git_tree_lookup(&subtree_modified, repo, git_tree_entry_id(entry_modified));
-      if(error) throw std::string("Error accessing git commit tree.");
+  }
 
-      ++pos_modified; 
+  // process all non-directory files that are remaining in the modified version
+  for ( ; j < m; ++j) {
 
+    // form the full path
+    path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
+
+    // skip directories
+    if(is_dir(namelist_modified[j], path_modified.c_str()) != 0)
+      continue;
+
+    // skip over output file
+    if (is_output_file(path_modified.c_str(), outstat) != 0) {
+      continue;
     }
 
-    directory(path_one, subtree_original, path_two, subtree_modified);
-
-    if(subtree_original) git_tree_free(subtree_original);
-    if(subtree_modified) git_tree_free(subtree_modified);
+    // translate the file listed in the input file using the directory and filename extracted from the path
+   file(boost::optional<std::string>(), nullptr, path_modified, nullptr);
 
   }
 
-  while(pos_original < count_original) {
+  // process all directories
+  i = 0;
+  j = 0;
+  while (i < n && j < m) {
 
-    git_tree_entry * entry_original = (git_tree_entry *)git_tree_entry_byindex(current_tree_original, names_original.at(pos_original).second);
-    if(!entry_original || git_tree_entry_type(entry_original) != GIT_OBJ_TREE) { ++pos_original; continue; }
+    // form the full path
+    path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
+    path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
 
-    boost::optional<std::string> path_one = names_original.at(pos_original).first;
-    git_tree * subtree_original = nullptr;
-    int error = git_tree_lookup(&subtree_original, repo, git_tree_entry_id(entry_original));
-    if(error) throw std::string("Error accessing git commit tree.");       
+    // skip non-directories
+    if(is_dir(namelist_original[i], path_original.c_str()) != 1) {
+      ++i;
+      continue;
+    }
+    if(is_dir(namelist_modified[j], path_modified.c_str()) != 1) {
+      ++j;
+      continue;
+    }
 
-    directory(path_one, subtree_original, boost::optional<std::string>(), nullptr);
+    // is this a common, inserted, or deleted directory?
+    int comparison = strcoll(namelist_original[i]->d_name, namelist_modified[j]->d_name);
 
-    if(subtree_original) git_tree_free(subtree_original);
+    boost::optional<std::string> directory_path_one;
+    boost::optional<std::string> directory_path_two;
+    if(comparison <= 0) ++i, directory_path_one = path_original;
+    if(comparison >= 0) ++j, directory_path_two = path_modified;
 
-    ++pos_original;
+    // process these directories
+    directory(directory_path_one, nullptr, directory_path_two, nullptr);
 
   }
 
-  while(pos_modified < count_modified) {
+  // process all directories that remain in the original version
+  for ( ; i < n; ++i) {
 
-    git_tree_entry * entry_modified = (git_tree_entry *)git_tree_entry_byindex(current_tree_modified, names_modified.at(pos_modified).second);
-    if(!entry_modified || git_tree_entry_type(entry_modified) != GIT_OBJ_TREE) { ++pos_modified; continue; }
+    // form the full path
+    path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
 
-    boost::optional<std::string> path_two = names_modified.at(pos_modified).first;
-    git_tree * subtree_modified = nullptr;
-    int error = git_tree_lookup(&subtree_modified, repo, git_tree_entry_id(entry_modified));
-    if(error) throw std::string("Error accessing git commit tree.");
+    // skip non-directories
+    if(is_dir(namelist_original[i], path_original.c_str()) != 1)
+      continue;
 
-    directory(boost::optional<std::string>(), nullptr, path_two, subtree_modified);
+    // skip over output file
+    if (is_output_file(path_original.c_str(), outstat) == 1) {
+      continue;
+    }
 
-    if(subtree_modified) git_tree_free(subtree_modified);
+    // process this directory
+    directory(path_original, nullptr, boost::optional<std::string>(), nullptr);
 
-    ++pos_modified;
+  }
 
+  // process all directories that remain in the modified version
+  for ( ; j < m; ++j) {
+
+    // form the full path
+    path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
+
+    // skip non-directories
+    if(is_dir(namelist_modified[j], path_modified.c_str()) != 1)
+      continue;
+
+    // skip over output file
+    if (is_output_file(path_modified.c_str(), outstat) == 1) {
+      continue;
+    }
+
+    // process this directory
+    directory(boost::optional<std::string>(), nullptr, path_modified, nullptr);
+
+  }
+
+  // all done with this directory
+  if (n > 0) {
+    for (int i = 0; i < n; ++i)
+      free(namelist_original[i]);
+    free(namelist_original);
+  }
+
+  if (m > 0) {
+    for (int j = 0; j < m; ++j)
+      free(namelist_modified[j]);
+    free(namelist_modified);
   }
 
 #undef PATH_SEPARATOR
 
+#endif
+  
 }
 
 void srcdiff_input_source_git::process_files_from() {}
-
-srcdiff_input_source_git::input_context * srcdiff_input_source_git::open(const char * uri) const {
-
-  input_context * context = new input_context;
-
-  char * at_pos = index(uri, '@');
-  const std::string path(uri, at_pos - uri);
-  std::string oid_str(at_pos + 1);
-
-  git_oid oid = { 0 };
-
-  mutex.lock();
-  git_oid_fromstr(&oid, oid_str.c_str());
-
-  git_blob_lookup(&context->blob, repo, &oid);
-
-  context->content = { 0 };
-
-  int error = git_blob_filtered_content(&context->content, context->blob, path.c_str(), true);
-  mutex.unlock();
-
-  context->pos = 0;
-
-  return context;
-
-}
-
-int srcdiff_input_source_git::read(void * context, char * buffer, size_t len) {
-
-  input_context * ctx = (input_context *)context;
-
-  int remaining = ctx->content.size - ctx->pos;
-
-  int length = remaining >= len ? len : remaining;
-
-  memcpy((void *)buffer, (void *)(ctx->content.ptr + ctx->pos), length);
-
-  ctx->pos += length;
-
-  return length;
-
-}
-
-int srcdiff_input_source_git::close(void * context) {
-
-  input_context * ctx = (input_context *)context;
-
-  git_buf_free(&ctx->content);
-
-  git_blob_free(ctx->blob);
-
-  delete ctx;
-
-  return 1;
-
-}

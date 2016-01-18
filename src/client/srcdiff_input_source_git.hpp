@@ -10,25 +10,15 @@
 
 #include <boost/filesystem.hpp>
 
-class srcdiff_input_source_git : public srcdiff_input_source {
+class srcdiff_input_source_git : public srcdiff_input_source_local {
 
 protected:
 
 private:
 
-  boost::filesystem::path clone_path;
+  boost::filesystem::path original_clone_path;
+  boost::filesystem::path modified_clone_path;
   bool clean_path;
-
-  git_repository * repo;
-
-  git_oid oid_original;
-  git_oid oid_modified;
-
-  git_commit * commit_original;
-  git_commit * commit_modified;
-
-  git_tree * tree_original;
-  git_tree * tree_modified;
 
 public:
 
@@ -46,12 +36,9 @@ public:
                                  const boost::optional<std::string> & directory_modified, const void * context_modified);
   virtual void process_files_from();
 
-  struct input_context {
+  struct input_context  {
 
-    git_blob * blob;
-    git_buf content;
-
-    size_t pos;
+    std::ifstream in;
 
   };
 
