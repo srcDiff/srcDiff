@@ -16,25 +16,37 @@
 static std::mutex mutex;
   
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
-  : srcdiff_input_source_local(options),
-    original_clone_path(boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native()),
-    modified_clone_path(boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native()),
-    clean_path(true) {
+  : srcdiff_input_source_local(options), clean_path(false) {
 
   std::string quiet_flag;
   if(is_option(options.flags, OPTION_QUIET)) quiet_flag = "--quiet ";
 
-  std::string clone_original_command("git clone " + quiet_flag + *options.git_url + " "
-                                    + original_clone_path.native());
-  FILE * clone_original_process = popen(clone_original_command.c_str(), "r");
-  int clone_original_error = pclose(clone_original_process);
-  if(clone_original_error) throw std::string("Unable to clone " + original_clone_path.native());
+  std::string::size_type comma_pos = options.git_url->find(',');
+  if(comma_pos != std::string::npos) {
 
-  std::string clone_modified_command("git clone " + quiet_flag + *options.git_url + " "
-                                    + modified_clone_path.native());
-  FILE * clone_modified_process = popen(clone_modified_command.c_str(), "r");
-  int clone_modified_error = pclose(clone_modified_process);
-  if(clone_modified_error) throw std::string("Unable to clone " + modified_clone_path.native());
+    original_clone_path = options.git_url->substr(0, comma_pos);
+    modified_clone_path = options.git_url->substr(comma_pos + 1);
+
+  } else {
+
+    clean_path = true;
+
+    original_clone_path = boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native();
+    modified_clone_path = boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native();
+
+    std::string clone_original_command("git clone " + quiet_flag + *options.git_url + " "
+                                      + original_clone_path.native());
+    FILE * clone_original_process = popen(clone_original_command.c_str(), "r");
+    int clone_original_error = pclose(clone_original_process);
+    if(clone_original_error) throw std::string("Unable to clone " + original_clone_path.native());
+
+    std::string clone_modified_command("git clone " + quiet_flag + *options.git_url + " "
+                                      + modified_clone_path.native());
+    FILE * clone_modified_process = popen(clone_modified_command.c_str(), "r");
+    int clone_modified_error = pclose(clone_modified_process);
+    if(clone_modified_error) throw std::string("Unable to clone " + modified_clone_path.native());
+
+  }
 
   std::string checkout_original_command("git -C " + original_clone_path.native() + " checkout " + quiet_flag + options.git_revision_one);
   FILE * checkout_original_process = popen(checkout_original_command.c_str(), "r");

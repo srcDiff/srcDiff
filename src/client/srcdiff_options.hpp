@@ -117,6 +117,8 @@ struct srcdiff_options
   boost::optional<std::string> git_url;
   std::string git_revision_one;
   std::string git_revision_two;
+  boost::optional<std::string> original_repository;
+  boost::optional<std::string> modified_repository;
 #endif
 
 };
