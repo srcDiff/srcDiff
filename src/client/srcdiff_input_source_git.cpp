@@ -48,15 +48,73 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
 
   }
 
-  std::string checkout_original_command("git -C " + original_clone_path.native() + " checkout " + quiet_flag + options.git_revision_one);
-  FILE * checkout_original_process = popen(checkout_original_command.c_str(), "r");
-  int checkout_original_error = pclose(checkout_original_process);
-  if(checkout_original_error) throw std::string("Unable to checkout " + options.git_revision_one);
+  if(options.files_from_name) {
 
-  std::string checkout_modified_command("git -C " + modified_clone_path.native() + " checkout " + quiet_flag + options.git_revision_two);
-  FILE * checkout_modified_process = popen(checkout_modified_command.c_str(), "r");
-  int checkout_modified_error = pclose(checkout_modified_process);
-  if(checkout_modified_error) throw std::string("Unable to checkout " + options.git_revision_two);
+    std::string original_files, modified_files;
+    std::ifstream input(options.files_from_name->c_str());
+    std::string line;
+    while(getline(input, line, '\n'), input) {
+
+      // skip over whitespace
+      // TODO:  Other types of whitespace?  backspace?
+      int white_length = strspn(line.c_str(), " \t\f");
+
+      line.erase(0, white_length);
+
+      // skip blank lines or comment lines
+      if (line[0] == '\0' || line[0] == '#')
+        continue;
+
+      // remove any end whitespace
+      // TODO:  Extract function, and use elsewhere
+      for (int i = line.size() - 1; i != 0; --i) {
+        if (isspace(line[i]))
+          line[i] = 0;
+        else
+          break;
+
+      }
+
+      std::string::size_type sep_pos = line.find('|');
+      std::string path_original = line.substr(0, sep_pos);
+      std::string path_modified = line.substr(sep_pos + 1);
+
+      if(original_files.empty())
+        original_files += path_original;
+      else
+        original_files += " " + path_original;
+
+      if(modified_files.empty())
+        modified_files += path_modified;
+      else
+        modified_files += " " + path_modified;
+
+    }
+
+    std::string checkout_original_command("git -C " + original_clone_path.native() + " checkout " + quiet_flag + options.git_revision_one + original_files);
+    FILE * checkout_original_process = popen(checkout_original_command.c_str(), "r");
+    int checkout_original_error = pclose(checkout_original_process);
+    if(checkout_original_error) throw std::string("Unable to checkout " + options.git_revision_one);
+
+    std::string checkout_modified_command("git -C " + modified_clone_path.native() + " checkout " + quiet_flag + options.git_revision_two + modified_files);
+    FILE * checkout_modified_process = popen(checkout_modified_command.c_str(), "r");
+    int checkout_modified_error = pclose(checkout_modified_process);
+    if(checkout_modified_error) throw std::string("Unable to checkout " + options.git_revision_two);
+
+
+  } else {
+
+    std::string checkout_original_command("git -C " + original_clone_path.native() + " checkout " + quiet_flag + options.git_revision_one);
+    FILE * checkout_original_process = popen(checkout_original_command.c_str(), "r");
+    int checkout_original_error = pclose(checkout_original_process);
+    if(checkout_original_error) throw std::string("Unable to checkout " + options.git_revision_one);
+
+    std::string checkout_modified_command("git -C " + modified_clone_path.native() + " checkout " + quiet_flag + options.git_revision_two);
+    FILE * checkout_modified_process = popen(checkout_modified_command.c_str(), "r");
+    int checkout_modified_error = pclose(checkout_modified_process);
+    if(checkout_modified_error) throw std::string("Unable to checkout " + options.git_revision_two);
+
+  }
 
 }
 
