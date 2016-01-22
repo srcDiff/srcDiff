@@ -2,8 +2,6 @@
 
 #include <srcdiff_input.hpp>
 
-#include <mutex>
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -12,8 +10,6 @@
 #include <cstdio>
 
 #include <uri_stream.hpp>
-
-static std::mutex mutex;
   
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
   : srcdiff_input_source_local(options), clean_path(false) {
