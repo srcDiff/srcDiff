@@ -14,7 +14,8 @@
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
   : srcdiff_input_source_local(options), clean_path(false) {
 
-  arg_max = sysconf(_SC_ARG_MAX);
+  // half is what is used by gxargs
+  arg_max = sysconf(_SC_ARG_MAX) / 2;
 
   std::string quiet_flag;
   if(is_option(options.flags, OPTION_QUIET)) quiet_flag = "--quiet ";
