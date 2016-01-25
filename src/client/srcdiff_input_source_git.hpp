@@ -14,6 +14,8 @@ protected:
 
 private:
 
+  long arg_max;
+
   boost::filesystem::path original_clone_path;
   boost::filesystem::path modified_clone_path;
   bool clean_path;

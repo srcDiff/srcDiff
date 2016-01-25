@@ -14,6 +14,8 @@
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
   : srcdiff_input_source_local(options), clean_path(false) {
 
+  arg_max = sysconf(_SC_ARG_MAX);
+
   std::string quiet_flag;
   if(is_option(options.flags, OPTION_QUIET)) quiet_flag = "--quiet ";
 
@@ -80,12 +82,18 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
 
     }
 
-    std::string checkout_original_command("git -C " + original_clone_path.native() + " checkout " + quiet_flag + options.git_revision_one + original_files);
+    std::string checkout_original_command("git -C " + original_clone_path.native() + " checkout " + quiet_flag + options.git_revision_one);
+    if((checkout_original_command.size() + original_files.size()) <= arg_max)
+      checkout_original_command += original_files;
+
     FILE * checkout_original_process = popen(checkout_original_command.c_str(), "r");
     int checkout_original_error = pclose(checkout_original_process);
     if(checkout_original_error) throw std::string("Unable to checkout " + options.git_revision_one);
 
-    std::string checkout_modified_command("git -C " + modified_clone_path.native() + " checkout " + quiet_flag + options.git_revision_two + modified_files);
+    std::string checkout_modified_command("git -C " + modified_clone_path.native() + " checkout " + quiet_flag + options.git_revision_two);
+    if((checkout_modified_command.size() + modified_files.size()) <= arg_max)
+      checkout_modified_command += modified_files;
+
     FILE * checkout_modified_process = popen(checkout_modified_command.c_str(), "r");
     int checkout_modified_error = pclose(checkout_modified_process);
     if(checkout_modified_error) throw std::string("Unable to checkout " + options.git_revision_two);
