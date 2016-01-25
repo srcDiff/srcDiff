@@ -84,7 +84,6 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
 
     }
 
-
     if((checkout_original_command.size() + original_files.size()) <= arg_max)
       checkout_original_command += original_files;
 
