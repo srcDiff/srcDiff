@@ -81,10 +81,10 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
       std::string path_modified = line.substr(sep_pos + 1);
 
       if(!path_original.empty())
-        original_files += " " + path_original;
+        original_files += " \"" + path_original + '"';
 
       if(!path_modified.empty())
-        modified_files += " " + path_modified;
+        modified_files += " \"" + path_modified + '"';
 
     }
 
