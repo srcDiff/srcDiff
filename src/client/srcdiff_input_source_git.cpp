@@ -14,7 +14,8 @@
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
   : srcdiff_input_source_local(options), clean_path(false) {
 
-  arg_max = sysconf(_SC_ARG_MAX);
+  // half is what is used by gxargs
+  arg_max = sysconf(_SC_ARG_MAX) / 2;
 
   std::string quiet_flag;
   if(is_option(options.flags, OPTION_QUIET)) quiet_flag = "--quiet ";
@@ -79,8 +80,11 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
       std::string path_original = line.substr(0, sep_pos);
       std::string path_modified = line.substr(sep_pos + 1);
 
-      original_files += " " + path_original;
-      modified_files += " " + path_modified;
+      if(!path_original.empty())
+        original_files += " \"" + path_original + '"';
+
+      if(!path_modified.empty())
+        modified_files += " \"" + path_modified + '"';
 
     }
 
