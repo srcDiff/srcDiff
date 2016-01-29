@@ -10,20 +10,18 @@
 #include <cassert>
 
 srcdiff_text_measure::srcdiff_text_measure(const node_set & set_original, const node_set & set_modified) 
-  : srcdiff_measure(set_original, set_modified) {}
+  : srcdiff_measure(set_original, set_modified),
+    set_original_text(set_original.nodes()),
+    set_modified_text(set_modified.nodes()) {}
 
-void srcdiff_text_measure::compute_ses(class shortest_edit_script & ses) {
+void srcdiff_text_measure::collect_text(class shortest_edit_script & ses) {
 
   unsigned int olength = set_original.size();
   unsigned int nlength = set_modified.size();
 
-  node_set set_original_text(set_original.nodes());
-
   for(unsigned int i = 0; i < olength; ++i)
     if(set_original.nodes().at(set_original.at(i))->is_text() && !set_original.nodes().at(set_original.at(i))->is_white_space())
       set_original_text.push_back(set_original.at(i));
-
-  node_set set_modified_text(set_modified.nodes());
 
   for(unsigned int i = 0; i < nlength; ++i)
     if(set_modified.nodes().at(set_modified.at(i))->is_text() && !set_modified.nodes().at(set_modified.at(i))->is_white_space())
@@ -32,16 +30,12 @@ void srcdiff_text_measure::compute_ses(class shortest_edit_script & ses) {
   original_len = set_original_text.size();
   modified_len = set_modified_text.size();
 
-  ses.compute((const void *)&set_original_text, set_original_text.size(), (const void *)&set_modified_text, set_modified_text.size());
-
 }
 
-void srcdiff_text_measure::compute_ses_important_text(class shortest_edit_script & ses) {
+void srcdiff_text_measure::collect_important_text(class shortest_edit_script & ses) {
 
   unsigned int olength = set_original.size();
   unsigned int nlength = set_modified.size();
-
-  node_set set_original_text(set_original.nodes());
 
   for(unsigned int i = 0; i < olength; ++i) {
 
@@ -73,8 +67,6 @@ void srcdiff_text_measure::compute_ses_important_text(class shortest_edit_script
       set_original_text.push_back(set_original.at(i));
 
   }
-
-  node_set set_modified_text(set_modified.nodes());
 
   for(unsigned int i = 0; i < nlength; ++i) {
 
@@ -110,8 +102,6 @@ void srcdiff_text_measure::compute_ses_important_text(class shortest_edit_script
   original_len = set_original_text.size();
   modified_len = set_modified_text.size();
 
-  ses.compute((const void *)&set_original_text, set_original_text.size(), (const void *)&set_modified_text, set_modified_text.size());
-
 }
 
 void srcdiff_text_measure::compute() {
@@ -139,6 +129,7 @@ void srcdiff_text_measure::compute() {
   class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
 
   compute_ses_important_text(ses);
+  ses.compute((const void *)&set_original_text, set_original_text.size(), (const void *)&set_modified_text, set_modified_text.size());
 
   edit * edits = ses.get_script();
 
