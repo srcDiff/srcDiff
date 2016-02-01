@@ -170,6 +170,36 @@ void srcdiff_text_measure::compute() {
 
   } else {
 
+    // std::sort(set_original_text.begin(), set_original_text.end());
+    // std::sort(set_modified_text.begin(), set_modified_text.end());
+
+    // int i = 0, j = 0;
+    // while(i < original_len && j < modified_len) {
+
+    //   if(set_original_text.at(i) == set_modified_text.at(j)) {
+
+    //     ++a_similarity;
+    //     ++i;
+    //     ++j;
+
+    //   } else {
+
+    //     ++a_difference;
+    //     if(set_original_text.at(i) < set_modified_text.at(j))
+    //       ++i;
+    //     else
+    //       ++j;
+
+    //   }
+
+    // }
+
+    // if(i < original_len)
+    //   a_difference += original_len - i;
+
+    // if(j < modified_len)
+    //   a_difference += modified_len - j;
+
     for(int i = 0, j = 1; j < original_len && j < modified_len; ++i, ++j)
       if(  set_original_text.at(i) == set_modified_text.at(i)
         && set_original_text.at(j) == set_modified_text.at(j))
