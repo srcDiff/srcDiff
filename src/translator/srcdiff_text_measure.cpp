@@ -132,41 +132,41 @@ void srcdiff_text_measure::compute() {
 
   if(set_original_text.size() < 1000 || set_modified_text.size() < 1000) {
 
-  ses.compute((const void *)&set_original_text, set_original_text.size(), (const void *)&set_modified_text, set_modified_text.size());
+    ses.compute((const void *)&set_original_text, set_original_text.size(), (const void *)&set_modified_text, set_modified_text.size());
 
-  edit * edits = ses.get_script();
+    edit * edits = ses.get_script();
 
-  a_similarity = 0, a_difference = 0;
+    a_similarity = 0, a_difference = 0;
 
-  int delete_similarity = 0;
-  int insert_similarity = 0;
-  for(; edits; edits = edits->next) {
+    int delete_similarity = 0;
+    int insert_similarity = 0;
+    for(; edits; edits = edits->next) {
 
-    a_difference += edits->length;
+      a_difference += edits->length;
 
-    switch(edits->operation) {
+      switch(edits->operation) {
 
-      case SES_DELETE :
+        case SES_DELETE :
 
-        delete_similarity += edits->length;
-        break;
+          delete_similarity += edits->length;
+          break;
 
-      case SES_INSERT :
+        case SES_INSERT :
 
-        insert_similarity += edits->length;
-        break;
+          insert_similarity += edits->length;
+          break;
 
-      }
+        }
 
-  }
+    }
 
-  delete_similarity = original_len - delete_similarity;
-  insert_similarity = modified_len - insert_similarity;
+    delete_similarity = original_len - delete_similarity;
+    insert_similarity = modified_len - insert_similarity;
 
-  a_similarity = std::min(delete_similarity, insert_similarity);
+    a_similarity = std::min(delete_similarity, insert_similarity);
 
-  if(a_similarity <= 0)
-    a_similarity = 0;
+    if(a_similarity <= 0)
+      a_similarity = 0;
 
   } else {
 
