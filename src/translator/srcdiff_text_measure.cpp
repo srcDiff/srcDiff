@@ -170,8 +170,9 @@ void srcdiff_text_measure::compute() {
 
   } else {
 
-    for(int i = 0; i < original_len && i < modified_len; ++i)
-      if(set_original_text.at(i) == set_modified_text.at(i))
+    for(int i = 0, j = 1; j < original_len && j < modified_len; ++i, ++j)
+      if(  set_original_text.at(i) == set_modified_text.at(i)
+        && set_original_text.at(j) == set_modified_text.at(j))
         ++a_similarity;
       else
         ++a_difference;
