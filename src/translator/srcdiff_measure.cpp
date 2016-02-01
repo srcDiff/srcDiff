@@ -63,8 +63,6 @@ int srcdiff_measure::min_length() const {
 
 void srcdiff_measure::process_edit_script(const edit * edit_script) {
 
-    a_similarity = 0, a_difference = 0;
-
     int delete_similarity = 0;
     int insert_similarity = 0;
     for(const edit * edits = edit_script; edits; edits = edits->next) {
