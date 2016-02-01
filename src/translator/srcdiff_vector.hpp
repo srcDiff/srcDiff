@@ -7,7 +7,7 @@ template <typename T>
 class srcdiff_vector {
 
 protected:
-	std::vector<T> data;
+	std::vector<T> vec;
 
 public:
 
@@ -16,11 +16,11 @@ public:
 	typedef typename std::vector<T>::const_iterator const_iterator;
 
 	srcdiff_vector() {}
-	srcdiff_vector(const srcdiff_vector & vec) : data(vec.data) {}
+	srcdiff_vector(const srcdiff_vector & srcdiff_vec) : vec(srcdiff_vec.vec) {}
 
-	srcdiff_vector & operator=(srcdiff_vector vec) {
+	srcdiff_vector & operator=(srcdiff_vector srcdiff_vec) {
 
-		std::swap(data, vec.data);
+		std::swap(vec, srcdiff_vec.vec);
 
 		return *this;
 
@@ -28,98 +28,104 @@ public:
 
 	T & at(size_type pos) {
 
-		return data.at(pos);
+		return vec.at(pos);
 
 	}
 
 	const T & at(size_type pos) const {
 
-		return data.at(pos);
+		return vec.at(pos);
 
 	}
 
 	T & operator[](size_type pos) {
 
-		return data[pos];
+		return vec[pos];
 
 	}
 
 	const T & operator[](size_type pos) const {
 
-		return data[pos];
+		return vec[pos];
 
 	}
 
 	T & front() {
 
-		return data.front();
+		return vec.front();
 
 	}
 
 	const T & front() const {
 
-		return data.front();
+		return vec.front();
 
 	}
 
 	T & back() {
 
-		return data.back();
+		return vec.back();
 
 	}
 
 	const T & back() const {
 
-		return data.back();
+		return vec.back();
+
+	}
+
+	const T * data() const {
+
+		return vec.data();
 
 	}
 
 	iterator begin() {
 
-		return data.begin();
+		return vec.begin();
 
 	}
 
 	const_iterator begin() const {
 
-		return data.begin();
+		return vec.begin();
 
 	}
 
 	iterator end() {
 
-		return data.end();
+		return vec.end();
 
 	}
 
 	const_iterator end() const {
 
-		return data.end();
+		return vec.end();
 
 	}
 
 	bool empty() const {
 
-		return data.empty();
+		return vec.empty();
 
 	}
 
 	size_type size() const {
 
-		return data.size();
+		return vec.size();
 
 	}
 
 	void push_back(T t) {
 
-		data.push_back(t);
+		vec.push_back(t);
 
 	}
 
 	template<class... Args>
 	void emplace_back(Args &&... args) {
 
-		data.template emplace_back<Args...>(args...);
+		vec.template emplace_back<Args...>(args...);
 
 	}
 

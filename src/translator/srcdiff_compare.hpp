@@ -10,6 +10,8 @@ namespace srcdiff_compare {
 
 	const void * node_index(int idx, const void *s, const void * context);
 
+	const void * node_array_index(int idx, const void *s, const void * context);
+
 	int node_index_compare(const void * node1, const void * node2, const void * context);
 
 	// diff node comparison function

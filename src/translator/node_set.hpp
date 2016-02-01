@@ -28,7 +28,7 @@ public:
 
 		for(size_type pos = 0; pos < set.size(); ++pos) {
 
-			push_back(set.data[pos]);
+			push_back(set.vec[pos]);
 
 		}
 
@@ -76,7 +76,7 @@ public:
 
 	node_set & operator=(node_set set) {
 
-		std::swap(data, set.data);
+		std::swap(vec, set.vec);
 
 		return *this;
 

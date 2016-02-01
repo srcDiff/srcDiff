@@ -139,16 +139,25 @@ void srcdiff_text_measure::compute() {
     
   } else {
 
-    // int num_blocks = std::min(original_len / SIZE_THRESHOLD,
-    //                           modified_len / SIZE_THRESHOLD);
-    // for(int i = 0; i < num_blocks; ++i) {
+    int num_blocks = std::min(original_len / SIZE_THRESHOLD,
+                              modified_len / SIZE_THRESHOLD);
+    for(int i = 0; i < num_blocks; ++i) {
 
-    //   int similarity = 0, difference = 0;
+      class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
+      int original_size = std::min(SIZE_THRESHOLD, original_len - SIZE_THRESHOLD * i);
+      int modified_size = std::min(SIZE_THRESHOLD, modified_len - SIZE_THRESHOLD * i);
+      ses.compute((const void *)(set_original_text.data() + SIZE_THRESHOLD * i),
+                  original_size,
+                  (const void *)(set_modified_text.data() + SIZE_THRESHOLD * i),
+                  modified_size);
 
-    //  ses.compute((const void *)&set_original_text, SIZE_THRESHOLD, (const void *)&set_modified_text, modified_len);
+      int similarity = 0, difference = 0;
+      process_edit_script(ses.get_script(), similarity, difference);
 
+      a_similarity += similarity;
+      a_difference += difference;
 
-    // }
+    }
 
     // std::sort(set_original_text.begin(), set_original_text.end());
     // std::sort(set_modified_text.begin(), set_modified_text.end());

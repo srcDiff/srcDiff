@@ -60,7 +60,7 @@ const srcml_nodes & node_sets::nodes() const {
 
 node_sets & node_sets::operator=(node_sets sets) {
 
-    std::swap(data, sets.data);
+    std::swap(vec, sets.vec);
     
   return *this;
 
