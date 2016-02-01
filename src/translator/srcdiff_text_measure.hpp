@@ -16,8 +16,8 @@ public:
 
 	srcdiff_text_measure(const node_set & set_original, const node_set & set_modified);
 
-    void collect_text(class shortest_edit_script & ses);
-    void collect_important_text(class shortest_edit_script & ses);
+    void collect_text();
+    void collect_important_text();
 
 	virtual void compute();
 

@@ -14,7 +14,7 @@ srcdiff_text_measure::srcdiff_text_measure(const node_set & set_original, const 
     set_original_text(set_original.nodes()),
     set_modified_text(set_modified.nodes()) {}
 
-void srcdiff_text_measure::collect_text(class shortest_edit_script & ses) {
+void srcdiff_text_measure::collect_text() {
 
   unsigned int olength = set_original.size();
   unsigned int nlength = set_modified.size();
@@ -32,7 +32,7 @@ void srcdiff_text_measure::collect_text(class shortest_edit_script & ses) {
 
 }
 
-void srcdiff_text_measure::collect_important_text(class shortest_edit_script & ses) {
+void srcdiff_text_measure::collect_important_text() {
 
   unsigned int olength = set_original.size();
   unsigned int nlength = set_modified.size();
@@ -128,7 +128,7 @@ void srcdiff_text_measure::compute() {
 
   class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
 
-  collect_important_text(ses);
+  collect_important_text();
 
   if(original_len < 1000 || modified_len < 1000) {
 
