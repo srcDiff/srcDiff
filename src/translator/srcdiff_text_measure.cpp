@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <cassert>
 
-const int SIZE_THRESHOLD = 1000;
+const int SIZE_THRESHOLD = 500;
 
 srcdiff_text_measure::srcdiff_text_measure(const node_set & set_original, const node_set & set_modified) 
   : srcdiff_measure(set_original, set_modified),
