@@ -139,9 +139,11 @@ void srcdiff_text_measure::compute() {
     
   } else {
 
-    int num_blocks = std::min(original_len / SIZE_THRESHOLD,
-                              modified_len / SIZE_THRESHOLD);
-    for(int i = 0; i < num_blocks; ++i) {
+    int original_blocks = original_len / SIZE_THRESHOLD;
+    int modified_blocks = modified_len / SIZE_THRESHOLD;
+    int num_blocks = std::min(original_blocks, modified_blocks);
+    int i = 0;
+    for(; i < num_blocks; ++i) {
 
       class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
       int original_size = std::min(SIZE_THRESHOLD, original_len - SIZE_THRESHOLD * i);
@@ -158,6 +160,12 @@ void srcdiff_text_measure::compute() {
       a_difference += difference;
 
     }
+
+    if(original_blocks > num_blocks)
+      a_difference += original_len - num_blocks * SIZE_THRESHOLD;
+
+    if(modified_blocks > num_blocks)
+      a_difference += modified_len - num_blocks * SIZE_THRESHOLD;
 
     // std::sort(set_original_text.begin(), set_original_text.end());
     // std::sort(set_modified_text.begin(), set_modified_text.end());
