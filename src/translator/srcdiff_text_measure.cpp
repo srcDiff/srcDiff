@@ -130,9 +130,9 @@ void srcdiff_text_measure::compute() {
 
   collect_important_text(ses);
 
-  if(set_original_text.size() < 1000 || set_modified_text.size() < 1000) {
+  if(original_len < 1000 || modified_len < 1000) {
 
-    ses.compute((const void *)&set_original_text, set_original_text.size(), (const void *)&set_modified_text, set_modified_text.size());
+    ses.compute((const void *)&set_original_text, original_len, (const void *)&set_modified_text, modified_len);
 
     edit * edits = ses.get_script();
 
@@ -170,7 +170,7 @@ void srcdiff_text_measure::compute() {
 
   } else {
 
-    for(int i = 0; i < set_original_text.size() && i < set_modified_text.size(); ++i)
+    for(int i = 0; i < original_len && i < modified_len; ++i)
       if(set_original_text.at(i) == set_modified_text.at(i))
         ++a_similarity;
       else
