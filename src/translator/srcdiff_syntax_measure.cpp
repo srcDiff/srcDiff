@@ -68,38 +68,6 @@ void srcdiff_syntax_measure::compute() {
   modified_len = next_node_sets_modified.size();
   int distance = ses.compute((const void *)&next_node_sets_original, original_len, (const void *)&next_node_sets_modified, modified_len);
 
-  edit * edits = ses.get_script();
-
-  a_similarity = 0, a_difference = 0;
-
-  int delete_similarity = 0;
-  int insert_similarity = 0;
-  for(; edits; edits = edits->next) {
-
-    a_difference += edits->length;
-
-    switch(edits->operation) {
-
-      case SES_DELETE :
-
-        delete_similarity += edits->length;
-        break;
-
-      case SES_INSERT :
-
-        insert_similarity += edits->length;
-        break;
-
-      }
-
-  }
-
-  delete_similarity = original_len - delete_similarity;
-  insert_similarity = modified_len - insert_similarity;
-
-  a_similarity = std::min(delete_similarity, insert_similarity);
-
-  if(a_similarity <= 0)
-    a_similarity = 0;
+  process_edit_script(ses.get_script());
 
 }

@@ -134,40 +134,8 @@ void srcdiff_text_measure::compute() {
 
     ses.compute((const void *)&set_original_text, original_len, (const void *)&set_modified_text, modified_len);
 
-    edit * edits = ses.get_script();
-
-    a_similarity = 0, a_difference = 0;
-
-    int delete_similarity = 0;
-    int insert_similarity = 0;
-    for(; edits; edits = edits->next) {
-
-      a_difference += edits->length;
-
-      switch(edits->operation) {
-
-        case SES_DELETE :
-
-          delete_similarity += edits->length;
-          break;
-
-        case SES_INSERT :
-
-          insert_similarity += edits->length;
-          break;
-
-        }
-
-    }
-
-    delete_similarity = original_len - delete_similarity;
-    insert_similarity = modified_len - insert_similarity;
-
-    a_similarity = std::min(delete_similarity, insert_similarity);
-
-    if(a_similarity <= 0)
-      a_similarity = 0;
-
+    process_edit_script(ses.get_script());
+    
   } else {
 
     // std::sort(set_original_text.begin(), set_original_text.end());

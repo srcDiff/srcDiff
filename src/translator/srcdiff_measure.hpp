@@ -17,6 +17,8 @@ protected:
 	int original_len;
 	int modified_len;
 
+	void process_edit_script(const edit * edit_script);
+
 public:
 
 	srcdiff_measure(const node_set & set_original, const node_set & set_modified);
