@@ -128,7 +128,7 @@ void srcdiff_text_measure::compute() {
 
   class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
 
-  compute_ses_important_text(ses);
+  collect_important_text(ses);
   ses.compute((const void *)&set_original_text, set_original_text.size(), (const void *)&set_modified_text, set_modified_text.size());
 
   edit * edits = ses.get_script();
