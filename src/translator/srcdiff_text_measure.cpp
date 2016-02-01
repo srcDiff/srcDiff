@@ -129,6 +129,9 @@ void srcdiff_text_measure::compute() {
   class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
 
   collect_important_text(ses);
+
+  if(set_original_text.size() < 1000 || set_modified_text.size() < 1000) {
+
   ses.compute((const void *)&set_original_text, set_original_text.size(), (const void *)&set_modified_text, set_modified_text.size());
 
   edit * edits = ses.get_script();
@@ -164,5 +167,15 @@ void srcdiff_text_measure::compute() {
 
   if(a_similarity <= 0)
     a_similarity = 0;
+
+  } else {
+
+    for(int i = 0; i < set_original_text.size() && i < set_modified_text.size(); ++i)
+      if(set_original_text.at(i) == set_modified_text.at(i))
+        ++a_similarity;
+      else
+        ++a_difference;
+
+  }
 
 }
