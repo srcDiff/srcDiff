@@ -59,13 +59,14 @@ void srcdiff_syntax_measure::compute() {
 
   }
 
-  class shortest_edit_script ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
 
   // collect subset of nodes
   node_sets next_node_sets_original = set_original.size() > 1 ? node_sets(set_original.nodes(), set_original.at(1), set_original.back(), is_significant) : node_sets(set_original.nodes());
   node_sets next_node_sets_modified = set_modified.size() > 1 ? node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back(), is_significant) : node_sets(set_modified.nodes());
   original_len = next_node_sets_original.size();
   modified_len = next_node_sets_modified.size();
+
+  class shortest_edit_script ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
   int distance = ses.compute((const void *)&next_node_sets_original, original_len, (const void *)&next_node_sets_modified, modified_len);
 
   process_edit_script(ses.get_script(), a_similarity, a_difference);
