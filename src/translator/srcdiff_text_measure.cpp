@@ -134,7 +134,7 @@ void srcdiff_text_measure::compute() {
 
     ses.compute((const void *)&set_original_text, original_len, (const void *)&set_modified_text, modified_len);
 
-    process_edit_script(ses.get_script());
+    process_edit_script(ses.get_script(), a_similarity, a_difference);
     
   } else {
 

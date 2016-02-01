@@ -68,6 +68,6 @@ void srcdiff_syntax_measure::compute() {
   modified_len = next_node_sets_modified.size();
   int distance = ses.compute((const void *)&next_node_sets_original, original_len, (const void *)&next_node_sets_modified, modified_len);
 
-  process_edit_script(ses.get_script());
+  process_edit_script(ses.get_script(), a_similarity, a_difference);
 
 }
