@@ -10,6 +10,8 @@ class shortest_edit_script {
   
 private:
 
+  const static int SIZE_THRESHOLD;
+
   edit * edit_script;
   const void * context;
   int (*compare)(const void * item_one, const void * item_two, const void * context);
@@ -18,13 +20,13 @@ private:
 
 public:
 
-  static const int SIZE_THRESHOLD = 500;
-
   shortest_edit_script(int (*compare)(const void * item_one, const void * item_two, const void * context),
                      const void * (*accessor)(int index, const void * structure, const void * context),
                                         const void * context, int threshold = 1000);
 
   ~shortest_edit_script();
+
+  static int get_size_threshold();
 
   edit * get_script();
 
@@ -69,7 +71,7 @@ int shortest_edit_script::compute(const T & structure_one, const T & structure_t
 
           }
 
-          distance += shortest_edit_script_hybrid((const void *)(structure_one.data() + offset_one), size_one, (const void *)(structure_two.data() + offset_two), size_two, &edits, compare, accessor, context, threshold);        
+          distance += shortest_edit_script_hybrid((const void *)(structure_one.data() + offset_one), current_size_one, (const void *)(structure_two.data() + offset_two), current_size_two, &edits, compare, accessor, context, threshold);        
 
           if(edit_script == nullptr) {
 

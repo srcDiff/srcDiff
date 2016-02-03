@@ -9,8 +9,6 @@
 #include <algorithm>
 #include <cassert>
 
-const int SIZE_THRESHOLD = 500;
-
 srcdiff_text_measure::srcdiff_text_measure(const node_set & set_original, const node_set & set_modified) 
   : srcdiff_measure(set_original, set_modified),
     set_original_text(set_original.nodes()),
@@ -130,7 +128,7 @@ void srcdiff_text_measure::compute() {
 
   collect_important_text();
 
-  if(original_len < SIZE_THRESHOLD && modified_len < SIZE_THRESHOLD) {
+  if(original_len < shortest_edit_script::get_size_threshold() && modified_len < shortest_edit_script::get_size_threshold()) {
 
     class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
     ses.compute((const void *)&set_original_text, original_len, (const void *)&set_modified_text, modified_len);
