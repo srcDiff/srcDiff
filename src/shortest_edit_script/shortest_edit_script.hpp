@@ -42,7 +42,6 @@ int shortest_edit_script::compute(std::vector<T> structure_one, std::vector<T> s
 
     if(size_one > SIZE_THRESHOLD || size_two > SIZE_THRESHOLD) {
 
-        edit * edits = nullptr;
         int distance = 0;
 
         int blocks_one = ceil(size_one / SIZE_THRESHOLD);
@@ -50,8 +49,10 @@ int shortest_edit_script::compute(std::vector<T> structure_one, std::vector<T> s
         int num_blocks = std::max(blocks_one, blocks_two);
 
         int i = 0;
+        edit * last_edit = nullptr;
         for(; i < num_blocks; ++i) {
 
+          edit * edits = nullptr;
           int current_size_one = 0, offset_one = 0;
           if(i < blocks_one) {
 
@@ -69,6 +70,21 @@ int shortest_edit_script::compute(std::vector<T> structure_one, std::vector<T> s
           }
 
           distance += shortest_edit_script_hybrid((const void *)(structure_one.data() + offset_one), size_one, (const void *)(structure_two.data() + offset_two), size_two, &edits, compare, accessor, context, threshold);        
+
+          if(edit_script == nullptr) {
+
+            edit_script = edits;
+            for(last_edit = edit_script; last_edit->next != nullptr; last_edit = last_edit->next)
+              ;
+
+          }
+          else {
+
+            for(last_edit->next = edits; last_edit->next != nullptr; last_edit = last_edit->next)
+              ;
+
+          }
+
 
         }
 
