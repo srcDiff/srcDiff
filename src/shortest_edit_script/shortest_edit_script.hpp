@@ -29,13 +29,13 @@ public:
   edit * get_script();
 
   template<typename T>
-  int compute(std::vector<T> structure_one, std::vector<T> structure_two);
+  int compute(const T & structure_one, const T & structure_two);
   int compute(const void * structure_one, int size_one, const void * structure_two, int size_two);
 
 };
 
 template<typename T>
-int shortest_edit_script::compute(std::vector<T> structure_one, std::vector<T> structure_two) {
+int shortest_edit_script::compute(const T & structure_one, const T & structure_two) {
 
     const int size_one = structure_one.size();
     const int size_two = structure_two.size();

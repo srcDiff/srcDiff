@@ -139,33 +139,9 @@ void srcdiff_text_measure::compute() {
     
   } else {
 
-    int original_blocks = original_len / SIZE_THRESHOLD;
-    int modified_blocks = modified_len / SIZE_THRESHOLD;
-    int num_blocks = std::min(original_blocks, modified_blocks);
-    int i = 0;
-    for(; i < num_blocks; ++i) {
-
-      class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
-      int original_size = std::min(SIZE_THRESHOLD, original_len - SIZE_THRESHOLD * i);
-      int modified_size = std::min(SIZE_THRESHOLD, modified_len - SIZE_THRESHOLD * i);
-      ses.compute((const void *)(set_original_text.data() + SIZE_THRESHOLD * i),
-                  original_size,
-                  (const void *)(set_modified_text.data() + SIZE_THRESHOLD * i),
-                  modified_size);
-
-      int similarity = 0, difference = 0;
-      process_edit_script(ses.get_script(), similarity, difference);
-
-      a_similarity += similarity;
-      a_difference += difference;
-
-    }
-
-    if(original_blocks > num_blocks)
-      a_difference += original_len - num_blocks * SIZE_THRESHOLD;
-
-    if(modified_blocks > num_blocks)
-      a_difference += modified_len - num_blocks * SIZE_THRESHOLD;
+    class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
+    ses.compute<node_set>(set_original_text, set_modified_text);
+    process_edit_script(ses.get_script(), a_similarity, a_difference);
 
     // std::sort(set_original_text.begin(), set_original_text.end());
     // std::sort(set_modified_text.begin(), set_modified_text.end());
