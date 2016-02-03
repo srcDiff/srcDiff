@@ -12,6 +12,12 @@ namespace srcdiff_compare {
     return &sets[idx];
   }
 
+  // diff node accessor function
+  const void * node_set_array_index(int idx, const void *s, const void * context) {
+    node_set * sets = (node_set *)s;
+    return &sets[idx];
+  }
+
   const void * node_index(int idx, const void *s, const void * context) {
     node_set & set = *(node_set *)s;
     return &set[idx];

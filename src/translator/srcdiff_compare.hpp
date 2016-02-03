@@ -8,6 +8,8 @@ namespace srcdiff_compare {
 	// diff node accessor function
 	const void * node_set_index(int idx, const void *s, const void * context);
 
+	const void * node_set_array_index(int idx, const void *s, const void * context);
+	
 	const void * node_index(int idx, const void *s, const void * context);
 
 	const void * node_array_index(int idx, const void *s, const void * context);
