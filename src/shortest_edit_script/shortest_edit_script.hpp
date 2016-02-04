@@ -76,17 +76,16 @@ int shortest_edit_script::compute(const T & structure_one, const T & structure_t
           if(edit_script == nullptr) {
 
             edit_script = edits;
-            for(last_edit = edit_script; last_edit->next != nullptr; last_edit = last_edit->next)
+            for(last_edit = edit_script; last_edit && last_edit->next != nullptr; last_edit = last_edit->next)
               ;
 
           }
           else {
 
-            for(last_edit->next = edits; last_edit->next != nullptr; last_edit = last_edit->next)
+            for(last_edit->next = edits; last_edit && last_edit->next != nullptr; last_edit = last_edit->next)
               ;
 
           }
-
 
         }
 
