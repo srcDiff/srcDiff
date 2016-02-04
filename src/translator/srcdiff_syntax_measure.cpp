@@ -66,9 +66,18 @@ void srcdiff_syntax_measure::compute() {
   original_len = next_node_sets_original.size();
   modified_len = next_node_sets_modified.size();
 
-  class shortest_edit_script ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
-  int distance = ses.compute((const void *)&next_node_sets_original, original_len, (const void *)&next_node_sets_modified, modified_len);
+  if(original_len < shortest_edit_script::get_size_threshold() && modified_len < shortest_edit_script::get_size_threshold()) {
 
-  process_edit_script(ses.get_script(), a_similarity, a_difference);
+    class shortest_edit_script ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
+    int distance = ses.compute((const void *)&next_node_sets_original, original_len, (const void *)&next_node_sets_modified, modified_len);
+    process_edit_script(ses.get_script(), a_similarity, a_difference);
+
+  } else {
+
+    class shortest_edit_script ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_array_index, &dnodes);
+    ses.compute<node_sets>(next_node_sets_original, next_node_sets_modified);
+    process_edit_script(ses.get_script(), a_similarity, a_difference);
+
+  }
 
 }

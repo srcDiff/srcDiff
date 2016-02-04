@@ -132,51 +132,13 @@ void srcdiff_text_measure::compute() {
 
     class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
     ses.compute((const void *)&set_original_text, original_len, (const void *)&set_modified_text, modified_len);
-
     process_edit_script(ses.get_script(), a_similarity, a_difference);
-    
+  
   } else {
 
     class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
     ses.compute<node_set>(set_original_text, set_modified_text);
     process_edit_script(ses.get_script(), a_similarity, a_difference);
-
-    // std::sort(set_original_text.begin(), set_original_text.end());
-    // std::sort(set_modified_text.begin(), set_modified_text.end());
-
-    // int i = 0, j = 0;
-    // while(i < original_len && j < modified_len) {
-
-    //   if(set_original_text.at(i) == set_modified_text.at(j)) {
-
-    //     ++a_similarity;
-    //     ++i;
-    //     ++j;
-
-    //   } else {
-
-    //     ++a_difference;
-    //     if(set_original_text.at(i) < set_modified_text.at(j))
-    //       ++i;
-    //     else
-    //       ++j;
-
-    //   }
-
-    // }
-
-    // if(i < original_len)
-    //   a_difference += original_len - i;
-
-    // if(j < modified_len)
-    // //   a_difference += modified_len - j;
-
-    // for(int i = 0, j = 1; j < original_len && j < modified_len; ++i, ++j)
-    //   if(  set_original_text.at(i) == set_modified_text.at(i)
-    //     && set_original_text.at(j) == set_modified_text.at(j))
-    //     ++a_similarity;
-    //   else
-    //     ++a_difference;
 
   }
 
