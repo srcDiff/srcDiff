@@ -91,16 +91,14 @@ void srcdiff_single::output_recursive_same() {
 
   out.output_node(out.diff_common_start, SES_COMMON);
 
-  std::shared_ptr<srcml_node> merged_node;
-
   if(srcdiff_compare::node_compare(out.get_nodes_original().at(node_sets_original.at(start_original).at(0)), out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))) == 0) {
 
     out.output_node(out.get_nodes_original().at(node_sets_original.at(start_original).at(0)), SES_COMMON);
 
   } else {
 
-    merged_node = std::make_shared<srcml_node>(*out.get_nodes_original().at(node_sets_original.at(start_original).at(0)));
-
+    std::shared_ptr<srcml_node> merged_node = std::make_shared<srcml_node>(*out.get_nodes_original().at(node_sets_original.at(start_original).at(0)));
+    merged_node->is_empty = out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->is_empty && out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->is_empty;
     merged_node->properties = merge_properties(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->properties,
                                               out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->properties);
 
@@ -129,13 +127,17 @@ void srcdiff_single::output_recursive_same() {
   } else {
 
       // collect subset of nodes
-      node_sets next_set_original
-        = node_sets(out.get_nodes_original(), node_sets_original.at(start_original).at(1)
-                          , node_sets_original.at(start_original).back());
+      node_sets next_set_original(out.get_nodes_original());
+      if(!out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->is_empty)
+        next_set_original = node_sets(out.get_nodes_original(),
+                                      node_sets_original.at(start_original).at(1),
+                                      node_sets_original.at(start_original).back());
 
-      node_sets next_set_modified
-        = node_sets(out.get_nodes_modified(), node_sets_modified.at(start_modified).at(1)
-                          , node_sets_modified.at(start_modified).back());
+      node_sets next_set_modified(out.get_nodes_modified());
+      if(!out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->is_empty)
+        next_set_modified = node_sets(out.get_nodes_modified(),
+                                      node_sets_modified.at(start_modified).at(1),
+                                      node_sets_modified.at(start_modified).back());
 
       srcdiff_diff diff(out, next_set_original, next_set_modified);
       diff.output();
@@ -181,7 +183,7 @@ void srcdiff_single::output_recursive_interchangeable() {
 
   const std::shared_ptr<srcml_node> & keyword_node_original = out.get_nodes_original().at(node_sets_original.at(start_original).at(original_collect_start_pos));
   const std::shared_ptr<srcml_node> & keyword_node_modified = out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(1));
-  bool is_keyword = keyword_node_original->is_text() && !keyword_node_original->is_white_space();
+  bool is_keyword  = keyword_node_original->is_text() && !keyword_node_original->is_white_space();
   bool is_keywords = is_keyword
                      && keyword_node_modified->is_text() && !keyword_node_modified->is_white_space();
   bool is_same_keyword = is_keywords && srcdiff_compare::node_compare(keyword_node_original, keyword_node_modified) == 0;

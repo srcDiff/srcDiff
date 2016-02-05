@@ -465,9 +465,6 @@ void srcdiff_output::output_node_inner(const srcml_node & node) {
   switch (node.type) {
   case XML_READER_TYPE_ELEMENT:
 
-    // record if this is an empty element since it will be erased by the attribute copying
-    isemptyelement = node.extra & 0x1;
-
     // start the element
     srcml_write_start_element(wstate->unit, node.ns->prefix ? node.ns->prefix->c_str() : 0, node.name.c_str(), 0);
 
@@ -483,10 +480,8 @@ void srcdiff_output::output_node_inner(const srcml_node & node) {
     }
 
     // end now if this is an empty element
-    if (isemptyelement) {
-
+    if (node.is_empty)
       srcml_write_end_element(wstate->unit);
-    }
 
     break;
 
