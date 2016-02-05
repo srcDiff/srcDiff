@@ -109,7 +109,7 @@ void srcdiff_single::output_recursive_same() {
   ++out.last_output_original();
   ++out.last_output_modified();
 
-  // compare subset of nodes
+  // diff comments differently then source-code
   if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "comment") {
 
     // collect subset of nodes
