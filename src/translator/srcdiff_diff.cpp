@@ -35,7 +35,7 @@ void srcdiff_diff::output() {
 
   class shortest_edit_script ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_array_index, &dnodes);
 
-  int distance = ses.compute<node_sets>(node_sets_original, node_sets_modified);
+  int distance = ses.compute<node_sets>(node_sets_original, node_sets_modified, false);
 
   edit * edit_script = ses.get_script();
 

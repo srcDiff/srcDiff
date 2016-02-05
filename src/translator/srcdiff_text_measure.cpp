@@ -128,18 +128,8 @@ void srcdiff_text_measure::compute() {
 
   collect_important_text();
 
-  if(original_len < shortest_edit_script::get_size_threshold() && modified_len < shortest_edit_script::get_size_threshold()) {
-
-    class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_index, &dnodes);
-    ses.compute((const void *)&set_original_text, original_len, (const void *)&set_modified_text, modified_len);
-    process_edit_script(ses.get_script(), a_similarity, a_difference);
-  
-  } else {
-
-    class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
-    ses.compute<node_set>(set_original_text, set_modified_text);
-    process_edit_script(ses.get_script(), a_similarity, a_difference);
-
-  }
+  class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
+  ses.compute<node_set>(set_original_text, set_modified_text, false);
+  process_edit_script(ses.get_script(), a_similarity, a_difference);
 
 }

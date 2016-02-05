@@ -31,18 +31,18 @@ public:
   edit * get_script();
 
   template<typename T>
-  int compute(const T & structure_one, const T & structure_two);
+  int compute(const T & structure_one, const T & structure_two, bool approximate);
   int compute(const void * structure_one, int size_one, const void * structure_two, int size_two);
 
 };
 
 template<typename T>
-int shortest_edit_script::compute(const T & structure_one, const T & structure_two) {
+int shortest_edit_script::compute(const T & structure_one, const T & structure_two, bool approximate) {
 
     const int size_one = structure_one.size();
     const int size_two = structure_two.size();
 
-    if(size_one > SIZE_THRESHOLD || size_two > SIZE_THRESHOLD) {
+    if(approximate && (size_one > SIZE_THRESHOLD || size_two > SIZE_THRESHOLD)) {
 
         int distance = 0;
 
