@@ -231,7 +231,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
          && (*element_stack.back()->properties.front().value) == "string";
 
       // cycle through characters
-      for (; (*characters) != 0;) {
+      while((*characters) != 0) {
 
         const char * characters_start = characters;
 
