@@ -12,6 +12,9 @@ private:
     node_set set_original_text;
     node_set set_modified_text;
 
+    void unigrams(node_set & collected_set_original,
+                  node_set & collected_set_modified);
+
 public:
 
 	srcdiff_text_measure(const node_set & set_original, const node_set & set_modified);

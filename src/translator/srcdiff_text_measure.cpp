@@ -104,6 +104,35 @@ void srcdiff_text_measure::collect_important_text() {
 
 }
 
+void srcdiff_text_measure::unigrams(node_set & collected_set_original,
+                                    node_set & collected_set_modified) {
+
+  std::sort(collected_set_original.begin(), collected_set_original.end());
+  std::sort(collected_set_modified.begin(), collected_set_modified.end());
+
+  int i = 0, j = 0;
+  while(i < original_len && j < modified_len) {
+
+   if(collected_set_original.at(i) == collected_set_modified.at(j)) {
+
+     ++a_similarity;
+     ++i;
+     ++j;
+
+   } else {
+
+     ++a_difference;
+     if(collected_set_original.at(i) < collected_set_modified.at(j))
+       ++i;
+     else
+       ++j;
+
+    }
+
+  }
+
+}
+
 void srcdiff_text_measure::compute() {
 
   if(computed) return;
@@ -128,8 +157,17 @@ void srcdiff_text_measure::compute() {
 
   collect_important_text();
 
-  class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
-  ses.compute<node_set>(set_original_text, set_modified_text, false);
-  process_edit_script(ses.get_script(), a_similarity, a_difference);
+  if(    original_len < shortest_edit_script::get_size_threshold()
+      && modified_len < shortest_edit_script::get_size_threshold()) {
+
+    class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
+    ses.compute<node_set>(set_original_text, set_modified_text, false);
+    process_edit_script(ses.get_script(), a_similarity, a_difference);
+
+  } else {
+
+    unigrams(set_original_text, set_modified_text);
+
+  }
 
 }
