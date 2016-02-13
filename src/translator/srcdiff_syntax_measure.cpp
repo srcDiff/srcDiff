@@ -59,7 +59,6 @@ void srcdiff_syntax_measure::compute() {
 
   }
 
-
   // collect subset of nodes
   node_sets next_node_sets_original = set_original.size() > 1 ? node_sets(set_original.nodes(), set_original.at(1), set_original.back(), is_significant) : node_sets(set_original.nodes());
   node_sets next_node_sets_modified = set_modified.size() > 1 ? node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back(), is_significant) : node_sets(set_modified.nodes());
