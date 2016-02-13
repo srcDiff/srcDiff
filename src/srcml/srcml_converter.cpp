@@ -224,6 +224,12 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
       const char * characters = (const char *)xmlTextReaderConstValue(reader);
 
+      bool is_string_literal 
+        = element_stack.back()->name == "literal"
+         && !element_stack.back()->properties.empty()
+         && element_stack.back()->properties.front().name == "type"
+         && (*element_stack.back()->properties.front().value) == "string";
+
       // cycle through characters
       for (; (*characters) != 0;) {
 
@@ -251,41 +257,50 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         // separate non whitespace
         else if(is_separate_token(*characters)) {
 
-          if(*characters == '\\') {
+          bool first = true;
+          while(first || (is_string_literal
+            && (*characters == '"'
+              || *characters == '\\'))) {
 
-            ++characters;
+            first = false;
 
-            if(*characters == 'x') {
-
-              ++characters;
-              size_t pos = 0;
-              while(pos < 2 && isxdigit(*characters))
-                ++pos, ++characters;
-
-              --characters;
-
-            } else if(isdigit(*characters)) {
+            if(*characters == '\\') {
 
               ++characters;
-              size_t pos = 0;
-              while(pos < 2 && *characters >= '0' && *characters <= '7')
-                ++pos, ++characters;
 
-              --characters;
+              if(*characters == 'x') {
 
-            } else if(*characters == 'u') {
+                ++characters;
+                size_t pos = 0;
+                while(pos < 2 && isxdigit(*characters))
+                  ++pos, ++characters;
 
-              characters += 4;
+                --characters;
 
-            } else if(*characters =='U') {
+              } else if(isdigit(*characters)) {
 
-              characters += 8;
+                ++characters;
+                size_t pos = 0;
+                while(pos < 2 && *characters >= '0' && *characters <= '7')
+                  ++pos, ++characters;
+
+                --characters;
+
+              } else if(*characters == 'u') {
+
+                characters += 4;
+
+              } else if(*characters =='U') {
+
+                characters += 8;
+
+              }
 
             }
 
-          }
+            ++characters;
 
-          ++characters;
+          }
 
           // Copy the remainder after (
           text = split_text(characters_start, characters, element_stack.back());
