@@ -37,6 +37,9 @@
 
 #include <boost/any.hpp>
 #include <boost/optional.hpp>
+#ifdef TIMING
+#include <boost/timer/timer.hpp>
+#endif
 
 #include <string>
 
@@ -103,6 +106,10 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
   std::thread thread_modified(std::ref(input_modified), SES_INSERT, std::ref(output.get_nodes_modified()), std::ref(is_modified), burst_config);
 
   thread_modified.join();
+
+#ifdef TIMING
+  boost::timer::auto_cpu_timer t;
+#endif
 
   node_sets set_original(output.get_nodes_original(), 0, output.get_nodes_original().size());
   node_sets set_modified(output.get_nodes_modified(), 0, output.get_nodes_modified().size());

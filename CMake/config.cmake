@@ -30,6 +30,8 @@ option(SVN_ENABLED            "Build in svn source input support"         OFF)
 
 option(GIT_ENABLED            "Build in git source input support"         OFF)
 
+option(TIMING                 "Build with and output timing information"  OFF)
+
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
     # Adding suspected windows include directory for ANTRL
@@ -66,7 +68,17 @@ set(LIBSRCML_INCLUDE_DIR /usr/local/include)
 
 set(Boost_NO_BOOST_CMAKE ON)
 set(Boost_USE_STATIC_LIBS ON)
+
+if(NOT TIMING)
+
 find_package(Boost COMPONENTS program_options filesystem system thread regex date_time REQUIRED)
+
+else()
+
+add_definitions("-DTIMING")
+find_package(Boost COMPONENTS program_options filesystem system thread regex date_time timer chrono REQUIRED)
+
+endif()
 
 find_package(LibXml2 REQUIRED)
 
