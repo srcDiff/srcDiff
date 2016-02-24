@@ -110,7 +110,6 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
 #ifdef TIMING
 {
     boost::timer::auto_cpu_timer t;
-
 #endif
 
   node_sets set_original(output.get_nodes_original(), 0, output.get_nodes_original().size());
