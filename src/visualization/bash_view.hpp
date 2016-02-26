@@ -17,8 +17,13 @@ protected:
 
   static const char * const DELETE_CODE;
   static const char * const INSERT_CODE;
+
   static const char * const COMMON_CODE;
   static const char * const LINE_CODE;
+
+  static const char * const DELETE_CODE_HTML;
+  static const char * const INSERT_CODE_HTML;
+  static const char * const COMMON_CODE_HTML;
 
   static const char * const CARRIAGE_RETURN_SYMBOL;
 
@@ -32,10 +37,12 @@ protected:
 
   bool in_comment;
 
+  bool is_html;
+
 public:
 
   bash_view(const std::string & output_filename, bool ignore_all_whitespace,
-            bool ignore_whitespace, bool ignore_comments);
+            bool ignore_whitespace, bool ignore_comments, bool is_html = false);
   virtual ~bash_view();
 
   void transform(const std::string & srcdiff, const std::string & xml_encoding);

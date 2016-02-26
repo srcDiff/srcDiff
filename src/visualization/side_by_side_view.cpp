@@ -307,21 +307,30 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
 
   for(int i = 0; i < original_lines.size(); ++i) {
 
-    (*output) << bash_view::COMMON_CODE << original_lines[i].first.str();
+    if(!is_html)
+      (*output) << bash_view::COMMON_CODE << original_lines[i].first.str();
+    else
+      (*output) << bash_view::COMMON_CODE_HTML << original_lines[i].first.str();
 
     std::string fill(max_width - original_lines[i].second, ' ');
-    (*output) << bash_view::COMMON_CODE << fill;
+    if(!is_html)
+      (*output) << bash_view::COMMON_CODE << fill;
+    else
+      (*output) << bash_view::COMMON_CODE_HTML << fill;
 
     if(line_operations[i] == bash_view::DELETE)
-      (*output) << " < ";
+      (*output) << (is_html ? " &lt; " : " < ");
     else if(line_operations[i] == bash_view::INSERT)
-      (*output) << " > ";
+      (*output) << (is_html ? " &gt; " : " > ");
     else
       (*output) << " | ";
 
     (*output) << modified_lines[i].first.str();
 
-    (*output) << bash_view::COMMON_CODE << '\n';
+    if(!is_html)
+      (*output) << bash_view::COMMON_CODE << '\n';
+    else
+      (*output) << bash_view::COMMON_CODE_HTML << '\n';
 
   }
 

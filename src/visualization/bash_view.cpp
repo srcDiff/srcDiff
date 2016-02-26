@@ -20,13 +20,17 @@ const char * const bash_view::COMMON_CODE = "\x1b[0m";
 
 const char * const bash_view::LINE_CODE = "\x1b[36m";
 
+const char * const bash_view::DELETE_CODE_HTML = "</span><span style=\"background-color:rgb(255,187,187)\">";
+const char * const bash_view::INSERT_CODE_HTML = "</span><span style=\"background-color:rgb(0,250,108)\">";
+const char * const bash_view::COMMON_CODE_HTML = "</span><span style=\"background-color:white\">";
+
 const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
 bash_view::bash_view(const std::string & output_filename, bool ignore_all_whitespace,
-                     bool ignore_whitespace, bool ignore_comments) 
+                     bool ignore_whitespace, bool ignore_comments, bool is_html) 
   : diff_stack(), ignore_all_whitespace(ignore_all_whitespace),
     ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
-    in_comment(false) {
+    in_comment(false), is_html(is_html) {
 
   if(output_filename != "-")
     output = new std::ofstream(output_filename.c_str());
@@ -67,10 +71,19 @@ void bash_view::reset() {
 
 const char * bash_view::change_operation_to_code(int operation) {
 
-  if(operation == DELETE) return DELETE_CODE;
-  if(operation == INSERT) return INSERT_CODE;
+  if(!is_html) {
 
-  return COMMON_CODE;
+    if(operation == DELETE) return DELETE_CODE;
+    if(operation == INSERT) return INSERT_CODE;
+
+    return COMMON_CODE;
+
+  }
+
+  if(operation == DELETE) return DELETE_CODE_HTML;
+  if(operation == INSERT) return INSERT_CODE_HTML;
+
+    return COMMON_CODE_HTML;
 
 }
 
@@ -100,7 +113,11 @@ void bash_view::output_character(const char c, int operation) {
  * SAX handler function for start of document.
  * Overide for desired behavior.
  */
-void bash_view::startDocument() {}
+void bash_view::startDocument() {
+
+  if(is_html) (*output) << "<html><head></head><body><pre><span>";
+
+}
 
 /**
  * endDocument
@@ -108,7 +125,11 @@ void bash_view::startDocument() {}
  * SAX handler function for end of document.
  * Overide for desired behavior.
  */
-void bash_view::endDocument() {}
+void bash_view::endDocument() {
+
+  if(is_html) (*output) << "</span></pre></body</html>";
+
+}
 
 /**
  * startRoot
