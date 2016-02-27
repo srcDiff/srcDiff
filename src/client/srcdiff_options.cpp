@@ -483,6 +483,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
         "Output as colorized unified diff with provided context. Number is lines of context, 'all' or -1 for entire file, 'function' for encompasing function (default = 3)")
     ("side-by-side,y", boost::program_options::value<int>()->implicit_value(7)->notifier(option_field<&srcdiff_options::side_by_side_tab_size>),
         "Output as colorized side-by-side diff")
+    ("html", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_HTML_VIEW>), "Ignore all whitespace when outputting unified view")
     ("ignore-all-space,W", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>), "Ignore all whitespace when outputting unified view")
     ("ignore-space,w", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_WHITESPACE>), "Ignore whitespace when outputting unified view")
     ("ignore-comments,c", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_COMMENTS>), "Ignore comments when outputting unified view")
@@ -515,6 +516,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     option_dependency(var_map, "ignore-all-space", std::vector<std::string>{"unified", "side-by-side"});
     option_dependency(var_map, "ignore-space", std::vector<std::string>{"unified", "side-by-side"});
     option_dependency(var_map, "ignore-comments", std::vector<std::string>{"unified", "side-by-side"});
+    option_dependency(var_map, "html", std::vector<std::string>{"unified", "side-by-side"});
 
     conflicting_options(var_map, "unified", "side-by-side");
     conflicting_options(var_map, "ignore-all-space", "ignore-space");

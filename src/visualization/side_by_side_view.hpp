@@ -31,7 +31,7 @@ private:
 public:
 
   side_by_side_view(const std::string & output_filename, bool ignore_all_whitespace,
-                    bool ignore_whitespace, bool ignore_comments,
+                    bool ignore_whitespace, bool ignore_comments, bool is_html,
                     int side_by_side_tab_size);
   virtual ~side_by_side_view();
 

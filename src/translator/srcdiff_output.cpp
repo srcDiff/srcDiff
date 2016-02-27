@@ -33,6 +33,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
                                                   flags & OPTION_IGNORE_ALL_WHITESPACE,
                                                   flags & OPTION_IGNORE_WHITESPACE,
                                                   flags & OPTION_IGNORE_COMMENTS,
+                                                  is_option(flags, OPTION_HTML_VIEW),
                                                   unified_view_context);
 
   } else if(is_option(flags, OPTION_SIDE_BY_SIDE_VIEW)) {
@@ -41,6 +42,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
                                                     flags & OPTION_IGNORE_ALL_WHITESPACE,
                                                     flags & OPTION_IGNORE_WHITESPACE,
                                                     flags & OPTION_IGNORE_COMMENTS,
+                                                    is_option(flags, OPTION_HTML_VIEW),
                                                     side_by_side_tab_size);
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
