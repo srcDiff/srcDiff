@@ -483,10 +483,10 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
         "Output as colorized unified diff with provided context. Number is lines of context, 'all' or -1 for entire file, 'function' for encompasing function (default = 3)")
     ("side-by-side,y", boost::program_options::value<int>()->implicit_value(7)->notifier(option_field<&srcdiff_options::side_by_side_tab_size>),
         "Output as colorized side-by-side diff")
-    ("html", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_HTML_VIEW>), "Ignore all whitespace when outputting unified view")
-    ("ignore-all-space,W", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>), "Ignore all whitespace when outputting unified view")
-    ("ignore-space,w", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_WHITESPACE>), "Ignore whitespace when outputting unified view")
-    ("ignore-comments,c", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_COMMENTS>), "Ignore comments when outputting unified view")
+    ("html", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_HTML_VIEW>), "Output unified/side-by-side view in html")
+    ("ignore-all-space,W", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>), "Ignore all whitespace when outputting unified/side-by-side view")
+    ("ignore-space,w", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_WHITESPACE>), "Ignore whitespace when outputting unified/side-by-side view")
+    ("ignore-comments,c", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_COMMENTS>), "Ignore comments when outputting unified/side-by-side view")
 
     ("summary", boost::program_options::value<std::string>()->implicit_value("text")->notifier(option_field<&srcdiff_options::summary_type_str>),
         "Output a summary of the differences.  Options 'text' and/or 'table' summary.   Default 'text'  ")
