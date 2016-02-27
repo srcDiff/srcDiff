@@ -10,7 +10,7 @@
 
 srcdiff_options options;
 
-const unsigned LINE_LENGTH = 150;
+const unsigned LINE_LENGTH = 100;
 
 boost::program_options::options_description general("General Options", LINE_LENGTH);
 boost::program_options::options_description input_file_op("Input file Option", LINE_LENGTH);
