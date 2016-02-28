@@ -69,7 +69,6 @@ protected:
   virtual void output_characters(const std::string ch, int operation) = 0;
   void output_character(const char c, int operation);
 
-
 public:
 
   /**

@@ -95,7 +95,22 @@ void bash_view::output_characters_to_buffer(const std::string ch, int operation,
     out << change_operation_to_code(operation);
 
   last_character_operation = operation;
-  out << ch;  
+
+  if(!is_html) {
+
+    out << ch;
+    return;
+
+  }
+
+  for(std::string::size_type pos = 0; pos < ch.size(); ++pos) {
+
+    if(ch[pos] == '&')      out << "&amp;";
+    else if(ch[pos] == '<') out << "&lt;";
+    else if(ch[pos] == '>') out << "&gt;";
+    else                    out << ch[pos];
+
+  }
 
 }
 
