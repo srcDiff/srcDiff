@@ -22,7 +22,7 @@ const char * const bash_view::LINE_CODE = "\x1b[36m";
 
 const char * const bash_view::DELETE_CODE_HTML = "</span><span style=\"background-color: rgb(255,187,187); font-weight: bold;\">";
 const char * const bash_view::INSERT_CODE_HTML = "</span><span style=\"background-color: rgb(0,250,108)  ; font-weight: bold;\">";
-const char * const bash_view::COMMON_CODE_HTML = "</span><span style=\"background-color: white\">";
+const char * const bash_view::COMMON_CODE_HTML = "</span><span style=\"background-color: transparent\">";
 
 const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
