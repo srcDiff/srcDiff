@@ -323,6 +323,10 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
       (*output) << (is_html ? " &lt; " : " < ");
     else if(line_operations[i] == bash_view::INSERT)
       (*output) << (is_html ? " &gt; " : " > ");
+    else if(line_operations[i] == bash_view::COMMON)
+      (*output) << "   ";
+    else if(line_operations[i] == 0)
+      (*output) << "   ";
     else
       (*output) << " | ";
 
