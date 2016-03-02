@@ -304,21 +304,27 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
 
   if(is_html) {
 
-    (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\"><pre>";
+    (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\">";
+    (*output) << "<table><tr><th>Original</th></tr><tr><td><pre>";
     for(int i = 0; i < original_lines.size(); ++i) {
 
-     (*output) << "<span><span>" << bash_view::COMMON_CODE_HTML << original_lines[i].first.str() << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
+     (*output) << "<span><span>" << bash_view::COMMON_CODE_HTML;
+     (*output) << original_lines[i].first.str();
+     (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
 
     }
-    (*output) << "</pre></div>";
+    (*output) << "</pre></td></tr></table></div>";
 
-    (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\"><pre>";
+    (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\">";
+    (*output) << "<table><tr><th>Modified</th></tr><tr><td><pre>";
     for(int i = 0; i < modified_lines.size(); ++i) {
 
-     (*output) << "<span><span>" << bash_view::COMMON_CODE_HTML << modified_lines[i].first.str() << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
+     (*output) << "<span><span>" << bash_view::COMMON_CODE_HTML;
+     (*output) << modified_lines[i].first.str();
+     (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
 
     }
-    (*output) << "</pre></div>";
+    (*output) << "</pre></td></tr></table></div>";
 
   } else {
 
