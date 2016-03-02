@@ -20,9 +20,9 @@ const char * const bash_view::COMMON_CODE = "\x1b[0m";
 
 const char * const bash_view::LINE_CODE = "\x1b[36m";
 
-const char * const bash_view::DELETE_CODE_HTML = "</span><span style=\"background-color: rgb(255,187,187); font-weight: bold;\">";
-const char * const bash_view::INSERT_CODE_HTML = "</span><span style=\"background-color: rgb(0,250,108)  ; font-weight: bold;\">";
-const char * const bash_view::COMMON_CODE_HTML = "</span><span style=\"background-color: transparent\">";
+const char * const bash_view::DELETE_CODE_HTML = "</span></span><span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: black; background-color: rgb(255,187,187); font-weight: bold;\">";
+const char * const bash_view::INSERT_CODE_HTML = "</span></span><span><span style=\"background-color: rgb(0,250,108)  ; font-weight: bold;\">";
+const char * const bash_view::COMMON_CODE_HTML = "</span></span><span><span style=\"background-color: transparent\">";
 
 const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
@@ -130,7 +130,7 @@ void bash_view::output_character(const char c, int operation) {
  */
 void bash_view::startDocument() {
 
-  if(is_html) (*output) << "<html><head></head><body><pre><span>";
+  if(is_html) (*output) << "<html><head></head><body><pre><span><span>";
 
 }
 
@@ -142,7 +142,7 @@ void bash_view::startDocument() {
  */
 void bash_view::endDocument() {
 
-  if(is_html) (*output) << "</span></pre></body</html>";
+  if(is_html) (*output) << "</span></span></pre></body></html>";
 
 }
 
