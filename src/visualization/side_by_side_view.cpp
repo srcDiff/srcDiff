@@ -319,8 +319,10 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
 
     }
 
+    (*output) << "<div style=\"font-family: courier, monospace;\">";
+
     (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\">";
-    (*output) << "<table><tr><th>Original</th></tr><tr><td><pre>";
+    (*output) << "<table><tr><th><strong>Original</strong></th></tr><tr><td><pre>";
 
     int line_number = 1;
     for(int i = 0; i < original_lines.size(); ++i) {
@@ -346,7 +348,7 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
     (*output) << "</pre></td></tr></table></div>";
 
     (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\">";
-    (*output) << "<table><tr><th>Modified</th></tr><tr><td><pre>";
+    (*output) << "<table><tr><th><strong>Modified</strong></th></tr><tr><td><pre>";
 
     line_number = 1;
     for(int i = 0; i < modified_lines.size(); ++i) {
@@ -370,6 +372,8 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
 
     }
     (*output) << "</pre></td></tr></table></div>";
+
+    (*output) << "</div>";
 
   } else {
 
