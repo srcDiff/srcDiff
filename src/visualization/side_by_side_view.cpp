@@ -6,6 +6,7 @@
 
 #include <cstring>
 #include <cassert>
+#include <iomanip>
 
 side_by_side_view::side_by_side_view(const std::string & output_filename,
                                      bool ignore_all_whitespace, bool ignore_whitespace,
@@ -304,13 +305,30 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
 
   if(is_html) {
 
+    int magnitude = 0;
+    size_t lines = line_operations.size();
+    while(lines > 0) {
+
+      lines /= 10;
+      ++magnitude;
+
+    }
+
     (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\">";
     (*output) << "<table><tr><th>Original</th></tr><tr><td><pre>";
+
     for(int i = 0; i < original_lines.size(); ++i) {
 
-     (*output) << "<span><span>" << bash_view::COMMON_CODE_HTML;
-     (*output) << original_lines[i].first.str();
-     (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
+      (*output) << "<span><span style=\"color: grey\">";
+
+      if(line_operations[i] != bash_view::INSERT)
+        (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << (i + 1) << ' ';
+      else
+        (*output) << std::string(' ', magnitude + 1);
+
+      (*output) << bash_view::COMMON_CODE_HTML;
+      (*output) << original_lines[i].first.str();
+      (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
 
     }
     (*output) << "</pre></td></tr></table></div>";
@@ -319,9 +337,16 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
     (*output) << "<table><tr><th>Modified</th></tr><tr><td><pre>";
     for(int i = 0; i < modified_lines.size(); ++i) {
 
-     (*output) << "<span><span>" << bash_view::COMMON_CODE_HTML;
-     (*output) << modified_lines[i].first.str();
-     (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
+      (*output) << "<span><span style=\"color: grey\">";
+
+      if(line_operations[i] != bash_view::DELETE)
+        (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << (i + 1) << ' ';
+      else
+        (*output) << std::string(' ', magnitude + 1);
+
+      (*output) << bash_view::COMMON_CODE_HTML;
+      (*output) << modified_lines[i].first.str();
+      (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
 
     }
     (*output) << "</pre></td></tr></table></div>";
