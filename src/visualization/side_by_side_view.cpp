@@ -317,14 +317,21 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
     (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\">";
     (*output) << "<table><tr><th>Original</th></tr><tr><td><pre>";
 
+    int line_number = 1;
     for(int i = 0; i < original_lines.size(); ++i) {
 
       (*output) << "<span><span style=\"color: grey\">";
 
-      if(line_operations[i] != bash_view::INSERT)
-        (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << (i + 1) << ' ';
-      else
+      if(line_operations[i] != bash_view::INSERT) {
+
+        (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
+        ++line_number;
+
+      } else {
+
         (*output) << std::string(' ', magnitude + 1);
+
+      }
 
       (*output) << bash_view::COMMON_CODE_HTML;
       (*output) << original_lines[i].first.str();
@@ -335,14 +342,22 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
 
     (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\">";
     (*output) << "<table><tr><th>Modified</th></tr><tr><td><pre>";
+
+    line_number = 1;
     for(int i = 0; i < modified_lines.size(); ++i) {
 
       (*output) << "<span><span style=\"color: grey\">";
 
-      if(line_operations[i] != bash_view::DELETE)
-        (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << (i + 1) << ' ';
-      else
+      if(line_operations[i] != bash_view::DELETE) {
+
+        (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
+        ++line_number;
+
+      } else {
+
         (*output) << std::string(' ', magnitude + 1);
+
+      }
 
       (*output) << bash_view::COMMON_CODE_HTML;
       (*output) << modified_lines[i].first.str();
@@ -359,21 +374,15 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
 
     for(int i = 0; i < original_lines.size(); ++i) {
 
-      if(!is_html)
-        (*output) << bash_view::COMMON_CODE << original_lines[i].first.str();
-      else
-        (*output) << bash_view::COMMON_CODE_HTML << original_lines[i].first.str();
+      (*output) << bash_view::COMMON_CODE << original_lines[i].first.str();
 
       std::string fill(max_width - original_lines[i].second, ' ');
-      if(!is_html)
-        (*output) << bash_view::COMMON_CODE << fill;
-      else
-        (*output) << bash_view::COMMON_CODE_HTML << fill;
+      (*output) << bash_view::COMMON_CODE << fill;
 
       if(line_operations[i] == bash_view::DELETE)
-        (*output) << (is_html ? " &lt; " : " < ");
+        (*output) << " < ";
       else if(line_operations[i] == bash_view::INSERT)
-        (*output) << (is_html ? " &gt; " : " > ");
+        (*output) << " > ";
       else if(line_operations[i] == bash_view::COMMON)
         (*output) << "   ";
       else if(line_operations[i] == 0)
@@ -383,10 +392,8 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
 
       (*output) << modified_lines[i].first.str();
 
-      if(!is_html)
-        (*output) << bash_view::COMMON_CODE << '\n';
-      else
-        (*output) << bash_view::COMMON_CODE_HTML << '\n';
+      (*output) << bash_view::COMMON_CODE << '\n';
+
 
     }
 

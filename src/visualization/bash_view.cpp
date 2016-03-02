@@ -130,7 +130,7 @@ void bash_view::output_character(const char c, int operation) {
  */
 void bash_view::startDocument() {
 
-  if(is_html) (*output) << "<html><head></head><body>";
+  if(is_html) (*output) << "<html><head></head><body style=\"font-family: courier, monospace\">";
 
 }
 
