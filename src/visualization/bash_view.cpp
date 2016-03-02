@@ -130,7 +130,7 @@ void bash_view::output_character(const char c, int operation) {
  */
 void bash_view::startDocument() {
 
-  if(is_html) (*output) << "<html><head></head><body><pre><span><span>";
+  if(is_html) (*output) << "<html><head></head><body>";
 
 }
 
@@ -142,7 +142,7 @@ void bash_view::startDocument() {
  */
 void bash_view::endDocument() {
 
-  if(is_html) (*output) << "</span></span></pre></body></html>";
+  if(is_html) (*output) << "</body></html>";
 
 }
 

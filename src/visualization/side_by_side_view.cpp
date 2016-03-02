@@ -302,40 +302,62 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
 
   }
 
-  int max_width = 0;
-  for(const std::pair<std::ostringstream, int> & line : original_lines)
-    max_width = std::max(max_width, line.second);
+  if(is_html) {
 
-  for(int i = 0; i < original_lines.size(); ++i) {
+    (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\"><pre>";
+    for(int i = 0; i < original_lines.size(); ++i) {
 
-    if(!is_html)
-      (*output) << bash_view::COMMON_CODE << original_lines[i].first.str();
-    else
-      (*output) << bash_view::COMMON_CODE_HTML << original_lines[i].first.str();
+     (*output) << "<span><span>" << bash_view::COMMON_CODE_HTML << original_lines[i].first.str() << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
 
-    std::string fill(max_width - original_lines[i].second, ' ');
-    if(!is_html)
-      (*output) << bash_view::COMMON_CODE << fill;
-    else
-      (*output) << bash_view::COMMON_CODE_HTML << fill;
+    }
+    (*output) << "</pre></div>";
 
-    if(line_operations[i] == bash_view::DELETE)
-      (*output) << (is_html ? " &lt; " : " < ");
-    else if(line_operations[i] == bash_view::INSERT)
-      (*output) << (is_html ? " &gt; " : " > ");
-    else if(line_operations[i] == bash_view::COMMON)
-      (*output) << "   ";
-    else if(line_operations[i] == 0)
-      (*output) << "   ";
-    else
-      (*output) << " | ";
+    (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\"><pre>";
+    for(int i = 0; i < modified_lines.size(); ++i) {
 
-    (*output) << modified_lines[i].first.str();
+     (*output) << "<span><span>" << bash_view::COMMON_CODE_HTML << modified_lines[i].first.str() << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
 
-    if(!is_html)
-      (*output) << bash_view::COMMON_CODE << '\n';
-    else
-      (*output) << bash_view::COMMON_CODE_HTML << '\n';
+    }
+    (*output) << "</pre></div>";
+
+  } else {
+
+    int max_width = 0;
+    for(const std::pair<std::ostringstream, int> & line : original_lines)
+      max_width = std::max(max_width, line.second);
+
+    for(int i = 0; i < original_lines.size(); ++i) {
+
+      if(!is_html)
+        (*output) << bash_view::COMMON_CODE << original_lines[i].first.str();
+      else
+        (*output) << bash_view::COMMON_CODE_HTML << original_lines[i].first.str();
+
+      std::string fill(max_width - original_lines[i].second, ' ');
+      if(!is_html)
+        (*output) << bash_view::COMMON_CODE << fill;
+      else
+        (*output) << bash_view::COMMON_CODE_HTML << fill;
+
+      if(line_operations[i] == bash_view::DELETE)
+        (*output) << (is_html ? " &lt; " : " < ");
+      else if(line_operations[i] == bash_view::INSERT)
+        (*output) << (is_html ? " &gt; " : " > ");
+      else if(line_operations[i] == bash_view::COMMON)
+        (*output) << "   ";
+      else if(line_operations[i] == 0)
+        (*output) << "   ";
+      else
+        (*output) << " | ";
+
+      (*output) << modified_lines[i].first.str();
+
+      if(!is_html)
+        (*output) << bash_view::COMMON_CODE << '\n';
+      else
+        (*output) << bash_view::COMMON_CODE_HTML << '\n';
+
+    }
 
   }
 
