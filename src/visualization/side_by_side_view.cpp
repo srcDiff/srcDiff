@@ -193,7 +193,12 @@ void side_by_side_view::characters(const char * ch, int len) {
         else
           line_operations.back() |= bash_view::COMMON;
 
+      } else {
+
+        line_operations.back() |= diff_stack.back();
+
       }
+
 
       add_new_line();
       continue;
