@@ -1015,6 +1015,7 @@ bool reject_match_same(const srcdiff_measure & measure,
     || original_tag == "attribute_list" || original_tag == "association_list" || original_tag == "protocol_list"
     || original_tag == "member_init_list" || original_tag == "member_list"
     || original_tag == "argument"
+    || original_tag == "range"
     || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier")
     return false;
 

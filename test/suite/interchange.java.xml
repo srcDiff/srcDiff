@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Java" url="interchange">
+
+<unit language="Java" filename="interchange|interchange">
+<for>for<diff:insert><diff:ws> </diff:ws></diff:insert><control>(<init><diff:delete type="replace"><decl><type><name>int</name></type><diff:ws> </diff:ws><name>i</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><literal type="number">0</literal></expr></init></decl>;</diff:delete><diff:insert type="replace"><decl><type><name>String</name></type><diff:ws> </diff:ws><name>action</name><diff:ws> </diff:ws><range>:<diff:ws> </diff:ws><expr><name>actions</name></expr></range></decl></diff:insert></init><diff:delete><diff:ws> </diff:ws><condition><expr><name>i</name><diff:ws> </diff:ws><operator>&lt;</operator><diff:ws> </diff:ws><name><name>actions</name><operator>.</operator><name>length</name></name></expr>;</condition><diff:ws> </diff:ws><incr><expr><name>i</name><operator>++</operator></expr></incr></diff:delete>)</control>
+<block>{
+  
+  <if>if <condition>(<expr><call><name><name>actionHash</name><operator>.</operator><name>containsKey</name></name><argument_list>(<argument><expr><name><diff:delete type="replace"><name>actions</name><index>[<expr><name>i</name></expr>]</index></diff:delete><diff:insert type="replace">action</diff:insert></name></expr></argument>)</argument_list></call></expr>)</condition><then><diff:delete><diff:ws> </diff:ws></diff:delete>
+  <block>{
+    
+    <decl_stmt><decl><type><name>E</name></type> <name>oldAction</name> <init>= <expr><call><name><name>actionHash</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><name><diff:delete type="replace"><name>actions</name><index>[<expr><name>i</name></expr>]</index></diff:delete><diff:insert type="replace">action</diff:insert></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
+    <expr_stmt><expr><call><name><name>overriddenActions</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name><diff:delete type="replace"><name>actions</name><index>[<expr><name>i</name></expr>]</index></diff:delete><diff:insert type="replace">action</diff:insert></name></expr></argument>, <argument><expr><name>oldAction</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  }</block></then></if>
+  <expr_stmt><expr><call><name><name>actionHash</name><operator>.</operator><name>put</name></name><argument_list>(<argument><expr><name><diff:delete type="replace"><name>actions</name><index>[<expr><name>i</name></expr>]</index></diff:delete><diff:insert type="replace">action</diff:insert></name></expr></argument>,<diff:insert><diff:ws> </diff:ws></diff:insert><argument><expr><name>actionSet</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+}</block></for></unit>
+
+</unit>

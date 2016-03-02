@@ -62,6 +62,9 @@ void srcdiff_text_measure::collect_important_text() {
         && *set_original.nodes().at(set_original.at(i))->content != ")"
         && *set_original.nodes().at(set_original.at(i))->content != "{"
         && *set_original.nodes().at(set_original.at(i))->content != "}"
+        && *set_original.nodes().at(set_original.at(i))->content != "["
+        && *set_original.nodes().at(set_original.at(i))->content != "]"
+        && *set_original.nodes().at(set_original.at(i))->content != ":"
         && *set_original.nodes().at(set_original.at(i))->content != ";"
         && *set_original.nodes().at(set_original.at(i))->content != ",")))
       set_original_text.push_back(set_original.at(i));
@@ -93,6 +96,9 @@ void srcdiff_text_measure::collect_important_text() {
         && *set_modified.nodes().at(set_modified.at(i))->content != ")"
         && *set_modified.nodes().at(set_modified.at(i))->content != "{"
         && *set_modified.nodes().at(set_modified.at(i))->content != "}"
+        && *set_modified.nodes().at(set_modified.at(i))->content != "["
+        && *set_modified.nodes().at(set_modified.at(i))->content != "]"
+        && *set_modified.nodes().at(set_modified.at(i))->content != ":"
         && *set_modified.nodes().at(set_modified.at(i))->content != ";"
         && *set_modified.nodes().at(set_modified.at(i))->content != ",")))
       set_modified_text.push_back(set_modified.at(i));
