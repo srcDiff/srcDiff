@@ -72,9 +72,10 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
        && operation != bash_view::COMMON)
       real_operation = bash_view::COMMON;
 
-    output_characters_to_buffer(ch, real_operation, original_lines.back().first,
+    output_characters_to_buffer(ch, real_operation,
+                                std::get<0>(original_lines.back()),
                                 last_character_operation_original);
-    original_lines.back().second += size;
+    std::get<1>(original_lines.back()) += size;
 
   }
 
@@ -87,9 +88,10 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
        && operation != bash_view::COMMON)
       real_operation = bash_view::COMMON;
 
-    output_characters_to_buffer(ch, real_operation, modified_lines.back().first,
+    output_characters_to_buffer(ch, real_operation,
+                                std::get<0>(modified_lines.back()),
                                 last_character_operation_modified);
-    modified_lines.back().second += size;
+    std::get<1>(modified_lines.back()) += size;
 
   }
 
@@ -101,10 +103,10 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 void side_by_side_view::add_new_line() {
 
   last_character_operation_original = COMMON;
-  original_lines.emplace_back(std::ostringstream(), 0);
+  original_lines.emplace_back(std::ostringstream(), 0, 0);
 
   last_character_operation_modified = COMMON;
-  modified_lines.emplace_back(std::ostringstream(), 0);
+  modified_lines.emplace_back(std::ostringstream(), 0, 0);
 
   line_operations.push_back(0);
 
@@ -341,7 +343,7 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
       }
 
       (*output) << bash_view::COMMON_CODE_HTML;
-      (*output) << original_lines[i].first.str();
+      (*output) << std::get<0>(original_lines[i]).str();
       (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
 
     }
@@ -367,7 +369,7 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
       }
 
       (*output) << bash_view::COMMON_CODE_HTML;
-      (*output) << modified_lines[i].first.str();
+      (*output) << std::get<0>(modified_lines[i]).str();
       (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
 
     }
@@ -378,14 +380,14 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
   } else {
 
     int max_width = 0;
-    for(const std::pair<std::ostringstream, int> & line : original_lines)
-      max_width = std::max(max_width, line.second);
+    for(const std::tuple<std::ostringstream, int, size_t> & line : original_lines)
+      max_width = std::max(max_width, std::get<1>(line));
 
     for(int i = 0; i < original_lines.size(); ++i) {
 
-      (*output) << bash_view::COMMON_CODE << original_lines[i].first.str();
+      (*output) << bash_view::COMMON_CODE << std::get<0>(original_lines[i]).str();
 
-      std::string fill(max_width - original_lines[i].second, ' ');
+      std::string fill(max_width - std::get<1>(original_lines[i]), ' ');
       (*output) << bash_view::COMMON_CODE << fill;
 
       if(line_operations[i] == bash_view::DELETE)
@@ -399,7 +401,7 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
       else
         (*output) << " | ";
 
-      (*output) << modified_lines[i].first.str();
+      (*output) << std::get<0>(modified_lines[i]).str();
 
       (*output) << bash_view::COMMON_CODE << '\n';
 

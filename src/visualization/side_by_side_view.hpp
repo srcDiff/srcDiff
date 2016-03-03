@@ -18,9 +18,9 @@ private:
   std::vector<int> line_operations;
 
   int last_character_operation_original;
-  std::vector<std::pair<std::ostringstream, int>> original_lines;
+  std::vector<std::tuple<std::ostringstream, int, size_t>> original_lines;
   int last_character_operation_modified;
-  std::vector<std::pair<std::ostringstream, int>> modified_lines;
+  std::vector<std::tuple<std::ostringstream, int, size_t>> modified_lines;
 
   bool change_starting_line_original;
   bool change_starting_line_modified;
