@@ -115,6 +115,110 @@ void side_by_side_view::add_new_line() {
 
 }
 
+void output_html() {
+
+  int magnitude = 0;
+  size_t lines = line_operations.size();
+  while(lines > 0) {
+
+    lines /= 10;
+    ++magnitude;
+
+  }
+
+  (*output) << "<div style=\"font-family: courier, monospace;\">";
+
+  (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\">";
+  (*output) << "<table><tr><th><strong>Original</strong></th></tr><tr><td><pre>";
+
+  int line_number = 1;
+  for(int i = 0; i < original_lines.size(); ++i) {
+
+    (*output) << "<span><span style=\"color: grey\">";
+
+
+    if(line_operations[i] != bash_view::INSERT) {
+
+      (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
+
+    } else {
+
+      (*output) << std::string(' ', magnitude + 1);
+
+    }
+
+    line_number += std::get<2>(original_lines[i]);
+
+    (*output) << bash_view::COMMON_CODE_HTML;
+    (*output) << std::get<0>(original_lines[i]).str();
+    (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
+
+  }
+  (*output) << "</pre></td></tr></table></div>";
+
+  (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\">";
+  (*output) << "<table><tr><th><strong>Modified</strong></th></tr><tr><td><pre>";
+
+  line_number = 1;
+  for(int i = 0; i < modified_lines.size(); ++i) {
+
+    (*output) << "<span><span style=\"color: grey\">";
+
+    if(line_operations[i] != bash_view::DELETE) {
+
+      (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
+
+    } else {
+
+      (*output) << std::string(' ', magnitude + 1);
+
+    }
+
+    line_number += std::get<2>(modified_lines[i]);
+
+    (*output) << bash_view::COMMON_CODE_HTML;
+    (*output) << std::get<0>(modified_lines[i]).str();
+    (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
+
+  }
+  (*output) << "</pre></td></tr></table></div>";
+
+  (*output) << "</div>";
+
+}
+
+void output_bash() {
+
+    int max_width = 0;
+    for(const std::tuple<std::ostringstream, int, size_t> & line : original_lines)
+      max_width = std::max(max_width, std::get<1>(line));
+
+    for(int i = 0; i < original_lines.size(); ++i) {
+
+      (*output) << bash_view::COMMON_CODE << std::get<0>(original_lines[i]).str();
+
+      std::string fill(max_width - std::get<1>(original_lines[i]), ' ');
+      (*output) << bash_view::COMMON_CODE << fill;
+
+      if(line_operations[i] == bash_view::DELETE)
+        (*output) << " < ";
+      else if(line_operations[i] == bash_view::INSERT)
+        (*output) << " > ";
+      else if(line_operations[i] == bash_view::COMMON)
+        (*output) << "   ";
+      else if(line_operations[i] == 0)
+        (*output) << "   ";
+      else
+        (*output) << " | ";
+
+      (*output) << std::get<0>(modified_lines[i]).str();
+
+      (*output) << bash_view::COMMON_CODE << '\n';
+
+    }
+
+}
+
 void side_by_side_view::start_element(const std::string & local_name, 
                                          const char * prefix, const char * URI,
                                          int num_namespaces,
@@ -315,107 +419,9 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
 
   }
 
-  if(is_html) {
-
-    int magnitude = 0;
-    size_t lines = line_operations.size();
-    while(lines > 0) {
-
-      lines /= 10;
-      ++magnitude;
-
-    }
-
-    (*output) << "<div style=\"font-family: courier, monospace;\">";
-
-    (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\">";
-    (*output) << "<table><tr><th><strong>Original</strong></th></tr><tr><td><pre>";
-
-    int line_number = 1;
-    for(int i = 0; i < original_lines.size(); ++i) {
-
-      (*output) << "<span><span style=\"color: grey\">";
-
-
-      if(line_operations[i] != bash_view::INSERT) {
-
-        (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
-
-      } else {
-
-        (*output) << std::string(' ', magnitude + 1);
-
-      }
-
-      line_number += std::get<2>(original_lines[i]);
-
-      (*output) << bash_view::COMMON_CODE_HTML;
-      (*output) << std::get<0>(original_lines[i]).str();
-      (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
-
-    }
-    (*output) << "</pre></td></tr></table></div>";
-
-    (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\">";
-    (*output) << "<table><tr><th><strong>Modified</strong></th></tr><tr><td><pre>";
-
-    line_number = 1;
-    for(int i = 0; i < modified_lines.size(); ++i) {
-
-      (*output) << "<span><span style=\"color: grey\">";
-
-      if(line_operations[i] != bash_view::DELETE) {
-
-        (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
-
-      } else {
-
-        (*output) << std::string(' ', magnitude + 1);
-
-      }
-
-      line_number += std::get<2>(modified_lines[i]);
-
-      (*output) << bash_view::COMMON_CODE_HTML;
-      (*output) << std::get<0>(modified_lines[i]).str();
-      (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
-
-    }
-    (*output) << "</pre></td></tr></table></div>";
-
-    (*output) << "</div>";
-
-  } else {
-
-    int max_width = 0;
-    for(const std::tuple<std::ostringstream, int, size_t> & line : original_lines)
-      max_width = std::max(max_width, std::get<1>(line));
-
-    for(int i = 0; i < original_lines.size(); ++i) {
-
-      (*output) << bash_view::COMMON_CODE << std::get<0>(original_lines[i]).str();
-
-      std::string fill(max_width - std::get<1>(original_lines[i]), ' ');
-      (*output) << bash_view::COMMON_CODE << fill;
-
-      if(line_operations[i] == bash_view::DELETE)
-        (*output) << " < ";
-      else if(line_operations[i] == bash_view::INSERT)
-        (*output) << " > ";
-      else if(line_operations[i] == bash_view::COMMON)
-        (*output) << "   ";
-      else if(line_operations[i] == 0)
-        (*output) << "   ";
-      else
-        (*output) << " | ";
-
-      (*output) << std::get<0>(modified_lines[i]).str();
-
-      (*output) << bash_view::COMMON_CODE << '\n';
-
-
-    }
-
-  }
+  if(is_html)
+    output_html();
+  else
+    output_bash();
 
 }

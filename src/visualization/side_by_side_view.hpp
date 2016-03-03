@@ -49,6 +49,9 @@ private:
   void output_characters(const std::string ch, int operation);
   void add_new_line();
 
+  void output_html();
+  void output_bash();
+
 public:
 
   /**
