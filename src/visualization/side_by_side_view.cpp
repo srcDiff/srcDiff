@@ -201,6 +201,11 @@ void side_by_side_view::characters(const char * ch, int len) {
 
       }
 
+      if(diff_stack.back() != bash_view::INSERT)
+        ++std::get<2>(original_lines.back());
+
+      if(diff_stack.back() != bash_view::DELETE)
+        ++std::get<2>(modified_lines.back());
 
       add_new_line();
       continue;
@@ -331,16 +336,18 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
 
       (*output) << "<span><span style=\"color: grey\">";
 
+
       if(line_operations[i] != bash_view::INSERT) {
 
         (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
-        ++line_number;
 
       } else {
 
         (*output) << std::string(' ', magnitude + 1);
 
       }
+
+      line_number += std::get<2>(original_lines[i]);
 
       (*output) << bash_view::COMMON_CODE_HTML;
       (*output) << std::get<0>(original_lines[i]).str();
@@ -360,13 +367,14 @@ void side_by_side_view::endUnit(const char * localname, const char * prefix,
       if(line_operations[i] != bash_view::DELETE) {
 
         (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
-        ++line_number;
 
       } else {
 
         (*output) << std::string(' ', magnitude + 1);
 
       }
+
+      line_number += std::get<2>(modified_lines[i]);
 
       (*output) << bash_view::COMMON_CODE_HTML;
       (*output) << std::get<0>(modified_lines[i]).str();
