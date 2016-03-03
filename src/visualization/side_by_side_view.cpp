@@ -115,7 +115,7 @@ void side_by_side_view::add_new_line() {
 
 }
 
-void output_html() {
+void side_by_side_view::output_html() {
 
   int magnitude = 0;
   size_t lines = line_operations.size();
@@ -187,7 +187,7 @@ void output_html() {
 
 }
 
-void output_bash() {
+void side_by_side_view::output_bash() {
 
     int max_width = 0;
     for(const std::tuple<std::ostringstream, int, size_t> & line : original_lines)
