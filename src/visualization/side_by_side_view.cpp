@@ -174,10 +174,10 @@ void side_by_side_view::output_html() {
 
     }
 
-    line_number += std::get<2>(modified_lines[i]);
+    line_number += std::get<LINE_INCR>(modified_lines[i]);
 
     (*output) << bash_view::COMMON_CODE_HTML;
-    (*output) << std::get<0>(modified_lines[i]).str();
+    (*output) << std::get<STREAM>(modified_lines[i]).str();
     (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
 
   }
@@ -197,7 +197,7 @@ void side_by_side_view::output_bash() {
 
       (*output) << bash_view::COMMON_CODE << std::get<0>(original_lines[i]).str();
 
-      std::string fill(max_width - std::get<1>(original_lines[i]), ' ');
+      std::string fill(max_width - std::get<OPERATION>(original_lines[i]), ' ');
       (*output) << bash_view::COMMON_CODE << fill;
 
       if(line_operations[i] == bash_view::DELETE)

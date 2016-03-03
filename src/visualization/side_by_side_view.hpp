@@ -17,6 +17,10 @@ private:
 
   std::vector<int> line_operations;
 
+  static const constexpr int STREAM    = 0;
+  static const constexpr int OPERATION = 1;
+  static const constexpr int LINE_INCR = 2;
+
   int last_character_operation_original;
   std::vector<std::tuple<std::ostringstream, int, size_t>> original_lines;
   int last_character_operation_modified;
