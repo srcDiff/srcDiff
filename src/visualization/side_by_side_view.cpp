@@ -126,9 +126,8 @@ void side_by_side_view::output_html() {
 
   }
 
-  (*output) << "<div style=\"font-family: courier, monospace;\">";
+  (*output) << "<div style=\"font-family: courier, monospace;\"><table style=\"border-collapse: collapse;\"><tr><td style=\"border: 1px solid black;\">";
 
-  (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\">";
   (*output) << "<table><tr><th><strong>Original</strong></th></tr><tr><td><pre>";
 
   int line_number = 1;
@@ -154,9 +153,9 @@ void side_by_side_view::output_html() {
     (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
 
   }
-  (*output) << "</pre></td></tr></table></div>";
+  (*output) << "</pre></td></tr></table></td>";
 
-  (*output) << "<div style=\"float: left; border: 1px solid black; border-collapse: collapse; padding: 5px;\">";
+  (*output) << "<td style=\"border: 1px solid black; border-collapse: collapse;\">";
   (*output) << "<table><tr><th><strong>Modified</strong></th></tr><tr><td><pre>";
 
   line_number = 1;
@@ -181,9 +180,9 @@ void side_by_side_view::output_html() {
     (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
 
   }
-  (*output) << "</pre></td></tr></table></div>";
+  (*output) << "</pre></td></tr></table>";
 
-  (*output) << "</div>";
+  (*output) << "</td></tr></table></div>";
 
 }
 
