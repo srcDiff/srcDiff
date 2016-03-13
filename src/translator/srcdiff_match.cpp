@@ -26,13 +26,19 @@ bool srcdiff_match::is_match_default(const node_sets & sets_original, int start_
                                      const node_sets & sets_modified, int start_pos_modified,
                                      const srcdiff_measure & measure) {
 
-  return !(measure.similarity() == MAX_INT 
-          || reject_match(measure,
-                          sets_original.at(start_pos_original),
-                          sets_modified.at(start_pos_modified))
-          || srcdiff_nested::is_better_nested(sets_original, start_pos_original,
-                                              sets_modified, start_pos_modified,
-                                              measure));
+  if(measure.similarity() == MAX_INT) return false;
+
+  if(reject_match(measure,
+                  sets_original.at(start_pos_original),
+                  sets_modified.at(start_pos_modified)))
+    return false;
+
+  if(srcdiff_nested::is_better_nested(sets_original, start_pos_original,
+                                      sets_modified, start_pos_modified,
+                                      measure))
+    return false;
+
+  return true;
 
 }
 
@@ -1373,11 +1379,10 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
   std::cerr << "Max Size: "   << max_size   << '\n';
 #endif
 
+  /** @todo consider making this configurable.  That is, allow user to specify file or have default file to read from */
   if(measure.difference() != 0 && measure.similarity() == 0) return true;
 
-  /** @todo consider making this configurable.  That is, allow user to specify file or have default file to read from */
   if(min_size == measure.similarity() && measure.difference() < 2 * min_size) return false;
-
   if(min_size < 30 && measure.difference() > 1.25 * min_size)       return true;
   else if(min_size >= 30 && measure.difference() > 1.05 * min_size) return true;
   if(measure.difference() > max_size)                               return true;
