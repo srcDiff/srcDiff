@@ -415,18 +415,36 @@ bool check_nest_name(const node_set & set_original,
     if(is_call_name_original && !is_call_name_modified
       && set_modified.nodes().at(modified_pos)->is_simple) {
 
-      // check if begins correctlu
-      return false;
+      int simple_name_pos = set_original.at(1);
+      if(set_original.nodes().at(simple_name_pos)->name == "name") {
+
+        diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
+        node_set inner_set(set_original.nodes(), simple_name_pos);
+        return srcdiff_compare::node_set_syntax_compare(&inner_set, 
+                                                        &set_modified,
+                                                        &dnodes) != 0;
+
+      }
 
     }
 
     if(is_call_name_modified && !is_call_name_original
       && set_original.nodes().at(original_pos)->is_simple) {
 
-      // check if begins correctlu
-      return false;
+      int simple_name_pos = set_modified.at(1);
+      if(set_modified.nodes().at(simple_name_pos)->name == "name") {
+
+        diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
+        node_set inner_set(set_modified.nodes(), simple_name_pos);
+        return srcdiff_compare::node_set_syntax_compare(&set_original,
+                                                        &inner_set,
+                                                        &dnodes) != 0;
+
+      }
 
     }
+
+    return true;
 
   }
 
