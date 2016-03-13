@@ -397,18 +397,16 @@ static bool is_decl_stmt_from_expr(const srcml_nodes & nodes, int pos) {
 }
 
 bool check_nest_name(const node_set & set_original,
-                     const node_set & set_modified) {
+                     boost::optional<std::shared_ptr<srcml_node>> parent_original,
+                     const node_set & set_modified,
+                     boost::optional<std::shared_ptr<srcml_node>> parent_modified) {
 
   int original_pos = set_original.at(0);
   int modified_pos = set_modified.at(0);
 
-  bool is_call_name_original 
-    = set_original.nodes().at(original_pos)->parent
-      && (*set_original.nodes().at(original_pos)->parent)->name == "call";
+  bool is_call_name_original = parent_original && (*parent_original)->name == "call";
 
-  bool is_call_name_modified 
-    = set_modified.nodes().at(modified_pos)->parent
-      && (*set_modified.nodes().at(modified_pos)->parent)->name == "call";
+  bool is_call_name_modified = parent_modified && (*parent_modified)->name == "call";
 
   if(set_original.nodes().at(original_pos)->is_simple != set_modified.nodes().at(modified_pos)->is_simple) {
 
@@ -470,7 +468,10 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
   // if interchanging decl_stmt always nest expr into init or argument
   if(original_tag == "expr" && (is_decl_stmt_from_expr(set_original.nodes(), original_pos) || is_decl_stmt_from_expr(set_modified.nodes(), modified_pos))) return false;
 
-  if(original_tag == "name" && check_nest_name(set_original, set_modified)) return true;
+  if(original_tag == "name"
+    && check_nest_name(set_original, set_original.nodes().at(original_pos)->parent,
+                       set_modified, set_modified.nodes().at(modified_pos)->parent))
+    return true;
 
   if(original_tag == "then" || original_tag == "block" || original_tag == "comment"
     || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier"
