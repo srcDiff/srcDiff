@@ -9,10 +9,11 @@
 #include <algorithm>
 #include <cassert>
 
-srcdiff_text_measure::srcdiff_text_measure(const node_set & set_original, const node_set & set_modified) 
+srcdiff_text_measure::srcdiff_text_measure(const node_set & set_original, const node_set & set_modified, bool important_only) 
   : srcdiff_measure(set_original, set_modified),
     set_original_text(set_original.nodes()),
-    set_modified_text(set_modified.nodes()) {}
+    set_modified_text(set_modified.nodes()),
+    important_only(important_only) {}
 
 void srcdiff_text_measure::collect_text() {
 
@@ -161,7 +162,10 @@ void srcdiff_text_measure::compute() {
 
   }
 
-  collect_important_text();
+  if(important_only)
+    collect_important_text();
+  else
+    collect_text();
 
   if(    original_len < shortest_edit_script::get_size_threshold()
       && modified_len < shortest_edit_script::get_size_threshold()) {

@@ -2,7 +2,7 @@
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="return">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="return|return">
-<return>return<diff:delete type="replace"><diff:ws> </diff:ws><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name></expr>;</diff:delete><diff:insert type="replace">;</diff:insert></return>
+<return>return<diff:delete><diff:ws> </diff:ws><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name></expr></diff:delete>;</return>
 </unit>
 
 </unit>

@@ -28,7 +28,9 @@ bool srcdiff_match::is_match_default(const node_sets & sets_original, int start_
 
   if(measure.similarity() == MAX_INT) return false;
 
-  if(reject_match(measure,
+  if(reject_similarity_match_only(sets_original.at(start_pos_original),
+                                   sets_modified.at(start_pos_modified))
+    && reject_match(measure,
                   sets_original.at(start_pos_original),
                   sets_modified.at(start_pos_modified)))
     return false;
@@ -1391,5 +1393,26 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
   else if(min_size <= 3)           return 3  * measure.similarity() < 2 * min_size;
   else if(min_size <= 30)          return 10 * measure.similarity() < 7 * min_size;
   else                             return 2  * measure.similarity() <     min_size;
+
+}
+
+
+bool srcdiff_match::reject_similarity_match_only(const node_set & set_original,
+                                                 const node_set & set_modified) {
+
+  int original_pos = set_original.at(0);
+  int modified_pos = set_modified.at(0);
+
+  if(srcdiff_compare::node_compare(set_original.nodes().at(original_pos),
+                                  set_modified.nodes().at(modified_pos)) != 0)
+    return true;
+
+  srcdiff_text_measure complete_measure(set_original, set_modified, false);
+  complete_measure.compute();
+  int min_size = complete_measure.min_length();
+
+  if(min_size == 0) return true;
+
+  return min_size != complete_measure.similarity();
 
 }

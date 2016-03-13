@@ -61,6 +61,9 @@ public:
                                 const node_set & set_original,
                                 const node_set & set_modified);
 
+  static bool reject_similarity_match_only(const node_set & set_original,
+                                           const node_set & set_modified);
+
   static const char * find_attribute(const std::shared_ptr<srcml_node> & node, const char * attr_name);
 
   static bool is_interchangeable_match(const std::string & original_tag, const std::string & original_uri,

@@ -50,19 +50,15 @@
 }</block>;</enum></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
-<diff:delete type="replace"><enum>enum<diff:ws> </diff:ws><block>{<diff:ws>
+<enum>enum <block>{
 
-</diff:ws><decl><name>a</name></decl>,<diff:ws>
+<diff:delete><decl><name>a</name></decl>,<diff:ws>
 </diff:ws><decl><name>b</name></decl>,<diff:ws>
 </diff:ws><decl><name>c</name></decl>,<diff:ws>
 </diff:ws><decl><name>d</name></decl>,<diff:ws>
-</diff:ws><decl><name>e</name></decl><diff:ws>
+</diff:ws><decl><name>e</name></decl></diff:delete>
 
-</diff:ws>}</block>;</enum></diff:delete><diff:insert type="replace"><enum>enum<diff:ws> </diff:ws><block>{<diff:ws>
-
-
-
-</diff:ws>}</block>;</enum></diff:insert>
+}</block>;</enum>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
