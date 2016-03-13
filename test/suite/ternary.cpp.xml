@@ -16,4 +16,7 @@
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="ternary|ternary">
 <return>return <diff:delete><expr><ternary><condition><expr><call><name><name>changedShapes</name><operator>.</operator><name>isEmpty</name></name><argument_list>()</argument_list></call></expr><diff:ws> </diff:ws>?</condition><then><diff:ws> </diff:ws><expr><literal type="number">0</literal></expr></then><else>:<diff:ws> </diff:ws><diff:common><expr><operator>new</operator> <call><name>KoShapeReorderCommand</name><argument_list>(<argument><expr><name>changedShapes</name></expr></argument>, <argument><expr><name>newIndexes</name></expr></argument>, <argument><expr><name>parent</name></expr></argument>)</argument_list></call></expr></diff:common></else></ternary></expr></diff:delete>;</return></unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="ternary|ternary">
+<expr_stmt><diff:delete><expr><ternary><condition><diff:common><expr><diff:delete><call><name><diff:common><name>a</name></diff:common><operator>.</operator><name>foo</name></name><argument_list>()</argument_list></call></diff:delete></expr></diff:common><diff:ws> </diff:ws>?</condition><then><diff:ws> </diff:ws><expr><name>b</name></expr><diff:ws> </diff:ws></then><else>:<diff:ws> </diff:ws><expr><name>a</name></expr></else></ternary></expr></diff:delete>;</expr_stmt></unit>
+
 </unit>

@@ -408,41 +408,39 @@ bool check_nest_name(const node_set & set_original,
 
   bool is_call_name_modified = parent_modified && (*parent_modified)->name == "call";
 
-  if(set_original.nodes().at(original_pos)->is_simple != set_modified.nodes().at(modified_pos)->is_simple) {
+  if(is_call_name_original && !is_call_name_modified
+    && set_modified.nodes().at(modified_pos)->is_simple) {
 
-    if(is_call_name_original && !is_call_name_modified
-      && set_modified.nodes().at(modified_pos)->is_simple) {
+    int simple_name_pos
+      = set_original.nodes().at(set_original.at(0))->is_simple ?
+          set_original.at(0) : set_original.at(1);
+    if(set_original.nodes().at(simple_name_pos)->name == "name") {
 
-      int simple_name_pos = set_original.at(1);
-      if(set_original.nodes().at(simple_name_pos)->name == "name") {
-
-        diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
-        node_set inner_set(set_original.nodes(), simple_name_pos);
-        return srcdiff_compare::node_set_syntax_compare(&inner_set, 
-                                                        &set_modified,
-                                                        &dnodes) != 0;
-
-      }
+      diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
+      node_set inner_set(set_original.nodes(), simple_name_pos);
+      return srcdiff_compare::node_set_syntax_compare(&inner_set, 
+                                                      &set_modified,
+                                                      &dnodes) == 0;
 
     }
 
-    if(is_call_name_modified && !is_call_name_original
-      && set_original.nodes().at(original_pos)->is_simple) {
+  }
 
-      int simple_name_pos = set_modified.at(1);
-      if(set_modified.nodes().at(simple_name_pos)->name == "name") {
+  if(is_call_name_modified && !is_call_name_original
+    && set_original.nodes().at(original_pos)->is_simple) {
 
-        diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
-        node_set inner_set(set_modified.nodes(), simple_name_pos);
-        return srcdiff_compare::node_set_syntax_compare(&set_original,
-                                                        &inner_set,
-                                                        &dnodes) != 0;
+    int simple_name_pos
+      = set_modified.nodes().at(set_modified.at(0))->is_simple ?
+          set_modified.at(0) : set_modified.at(1);
+    if(set_modified.nodes().at(simple_name_pos)->name == "name") {
 
-      }
+      diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
+      node_set inner_set(set_modified.nodes(), simple_name_pos);
+      return srcdiff_compare::node_set_syntax_compare(&set_original,
+                                                      &inner_set,
+                                                      &dnodes) == 0;
 
     }
-
-    return true;
 
   }
 
@@ -469,7 +467,8 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
   if(original_tag == "expr" && (is_decl_stmt_from_expr(set_original.nodes(), original_pos) || is_decl_stmt_from_expr(set_modified.nodes(), modified_pos))) return false;
 
   if(original_tag == "name"
-    && check_nest_name(set_original, set_original.nodes().at(original_pos)->parent,
+    && set_original.nodes().at(original_pos)->is_simple != set_modified.nodes().at(modified_pos)->is_simple
+    && !check_nest_name(set_original, set_original.nodes().at(original_pos)->parent,
                        set_modified, set_modified.nodes().at(modified_pos)->parent))
     return true;
 
@@ -543,7 +542,9 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, in
             while((*parent_modified)->name == "name")
               parent_modified = (*parent_modified)->parent;
 
-            if((*parent_original)->name != (*parent_modified)->name)
+            if((*parent_original)->name != (*parent_modified)->name
+              && !check_nest_name(set.at(match), parent_original,
+                                  node_sets_modified.at(j), parent_modified))
               continue;
 
         }
@@ -611,7 +612,9 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, in
             while(parent_modified && (*parent_modified)->name == "name")
               parent_modified = (*parent_modified)->parent;
 
-            if((*parent_original)->name != (*parent_modified)->name)
+            if((*parent_original)->name != (*parent_modified)->name
+              && !check_nest_name(node_sets_original.at(j), parent_original,
+                                  set.at(match), parent_modified))
               continue;
 
         }
