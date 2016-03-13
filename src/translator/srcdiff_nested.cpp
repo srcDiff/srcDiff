@@ -401,23 +401,23 @@ bool check_nest_name(const node_set & set_original,
 
   int original_pos = set_original.at(0);
   int modified_pos = set_modified.at(0);
-/*
+
   bool is_call_name_original 
     = set_original.nodes().at(original_pos)->parent
-      && set_original.nodes().at(original_pos)->name == "call";
+      && (*set_original.nodes().at(original_pos)->parent)->name == "call";
 
   bool is_call_name_modified 
     = set_modified.nodes().at(modified_pos)->parent
-      && set_modified.nodes().at(modified_pos)->name == "call";
+      && (*set_modified.nodes().at(modified_pos)->parent)->name == "call";
 
   if(is_call_name_original && !is_call_name_modified
     && set_modified.nodes().at(modified_pos)->is_simple)
     return false;
 
-  if(is_call_name_original && !is_call_name_modified
-    && set_modified.nodes().at(modified_pos)->is_simple)
+  if(is_call_name_modified && !is_call_name_original
+    && set_original.nodes().at(original_pos)->is_simple)
     return false;
-*/
+
   return set_original.nodes().at(original_pos)->is_simple != set_modified.nodes().at(modified_pos)->is_simple;
 
 }
