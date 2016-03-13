@@ -181,3 +181,18 @@ void srcdiff_text_measure::compute() {
   }
 
 }
+
+int srcdiff_text_measure::number_match_beginning() {
+
+      collect_important_text();
+
+      int count = 0;
+      while(count < set_original_text.size() & count < set_modified_text.size()
+        && srcdiff_compare::node_compare(
+          set_original_text.nodes().at(set_original_text.at(count)), 
+          set_modified_text.nodes().at(set_modified_text.at(count))) == 0)
+        ++count;
+
+      return count;
+
+}

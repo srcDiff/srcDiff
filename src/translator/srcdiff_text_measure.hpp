@@ -26,6 +26,7 @@ public:
     void collect_important_text();
 
 	virtual void compute();
+    virtual int number_match_beginning();
 
 };
 

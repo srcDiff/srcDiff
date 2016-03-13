@@ -404,41 +404,35 @@ bool check_nest_name(const node_set & set_original,
   int original_pos = set_original.at(0);
   int modified_pos = set_modified.at(0);
 
-  bool is_call_name_original = parent_original && (*parent_original)->name == "call";
+  if(set_original.nodes().at(original_pos)->name == "text") return false;
+  if(set_modified.nodes().at(modified_pos)->name == "text") return false;
 
+  bool is_call_name_original = parent_original && (*parent_original)->name == "call";
   bool is_call_name_modified = parent_modified && (*parent_modified)->name == "call";
 
-  if(is_call_name_original && !is_call_name_modified
-    && set_modified.nodes().at(modified_pos)->is_simple) {
+  if(is_call_name_original && !is_call_name_modified) {
 
-    int simple_name_pos
-      = set_original.nodes().at(set_original.at(0))->is_simple ?
-          set_original.at(0) : set_original.at(1);
+    int simple_name_pos = set_original.at(0);
     if(set_original.nodes().at(simple_name_pos)->name == "name") {
 
-      diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
       node_set inner_set(set_original.nodes(), simple_name_pos);
-      return srcdiff_compare::node_set_syntax_compare(&inner_set, 
-                                                      &set_modified,
-                                                      &dnodes) == 0;
+      srcdiff_text_measure measure(inner_set, set_modified);
+      int count = measure.number_match_beginning();
+      return 2 * count >= measure.max_length();
 
     }
 
   }
 
-  if(is_call_name_modified && !is_call_name_original
-    && set_original.nodes().at(original_pos)->is_simple) {
+  if(is_call_name_modified && !is_call_name_original) {
 
-    int simple_name_pos
-      = set_modified.nodes().at(set_modified.at(0))->is_simple ?
-          set_modified.at(0) : set_modified.at(1);
+    int simple_name_pos = set_modified.at(0);
     if(set_modified.nodes().at(simple_name_pos)->name == "name") {
 
-      diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
       node_set inner_set(set_modified.nodes(), simple_name_pos);
-      return srcdiff_compare::node_set_syntax_compare(&set_original,
-                                                      &inner_set,
-                                                      &dnodes) == 0;
+      srcdiff_text_measure measure(set_original, inner_set);
+      int count = measure.number_match_beginning();
+      return 2 * count >= measure.max_length();
 
     }
 

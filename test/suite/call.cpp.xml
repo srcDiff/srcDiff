@@ -30,4 +30,13 @@
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="call|call">
 <expr_stmt><expr><diff:insert><call><name><diff:common><name>a</name></diff:common><operator>.</operator><name>b</name></name><argument_list>()</argument_list></call></diff:insert></expr>;</expr_stmt></unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="call|call">
+<expr_stmt><expr><diff:delete><call><diff:common><name><name>a</name><operator>.</operator><name>b</name><diff:delete><operator>.</operator><name>c</name></diff:delete></name></diff:common><argument_list>()</argument_list></call></diff:delete></expr>;</expr_stmt>
+</unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="call|call">
+<expr_stmt><expr><diff:delete><call><diff:common><name><name>a</name><operator>.</operator><name>b</name><operator>.</operator><name><diff:delete type="replace">c</diff:delete><diff:insert type="replace">d</diff:insert></name></name></diff:common><argument_list>()</argument_list></call></diff:delete></expr>;</expr_stmt>
+</unit>
+
+
 </unit>
