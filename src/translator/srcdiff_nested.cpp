@@ -693,10 +693,10 @@ bool srcdiff_nested::check_nestable_predicate(const node_sets & node_sets_outer,
 
   if(node_sets_inner.nodes().at(node_sets_inner.at(pos_inner).at(0))->name == "name") {
 
-      if(!node_sets_inner.nodes().at(node_sets_inner.at(pos_inner).at(0))->parent || !node_sets_outer.nodes().at(match.at(0))->parent)
+      if(!node_sets_inner.nodes().at(node_sets_inner.at(pos_inner).at(0))->parent || !set.nodes().at(match.at(0))->parent)
         return true;
 
-      boost::optional<std::shared_ptr<srcml_node>> parent_outer = node_sets_outer.nodes().at(match.at(0))->parent;
+      boost::optional<std::shared_ptr<srcml_node>> parent_outer = set.nodes().at(match.at(0))->parent;
       while((*parent_outer)->name == "name")
         parent_outer = (*parent_outer)->parent;
 
@@ -704,7 +704,9 @@ bool srcdiff_nested::check_nestable_predicate(const node_sets & node_sets_outer,
       while((*parent_inner)->name == "name")
         parent_inner = (*parent_inner)->parent;
 
-      if((*parent_outer)->name != (*parent_inner)->name)
+      if((*parent_outer)->name != (*parent_inner)->name
+        && !check_nest_name(match, parent_outer,
+                            node_sets_inner.at(pos_inner), parent_inner))
         return true;
 
   }
