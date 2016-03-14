@@ -335,4 +335,10 @@
 <diff:delete type="replace"><decl_stmt><decl><type><name>String</name></type><diff:ws> </diff:ws><name>redirectPath</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><call><name><name>rmWebApp</name><operator>.</operator><name>getRedirectPath</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>uri</name></expr></init></decl>;</decl_stmt></diff:delete><diff:insert type="replace"><return>return;</return></diff:insert>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
+<diff:delete type="convert"><decl_stmt><diff:insert type="convert"><expr_stmt><diff:delete><decl><type><name>foo</name></type><diff:ws> </diff:ws><name>bar</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><diff:common><expr><diff:delete><call><name>get</name><argument_list>()</argument_list></call><operator>.</operator></diff:delete><call><diff:insert><name><name>bar</name><operator>.</operator><diff:common><name>call</name></diff:common></name></diff:insert><argument_list>(<argument><expr><name>foobar</name></expr></argument>)</argument_list></call></expr></diff:common></init></decl></diff:delete><diff:common>;</diff:common></expr_stmt></diff:insert></decl_stmt></diff:delete></unit>
+
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
+<diff:delete type="convert"><expr_stmt><diff:insert type="convert"><decl_stmt><decl><type><name>foo</name></type><diff:ws> </diff:ws><name>bar</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><diff:common><expr><diff:insert><call><name>get</name><argument_list>()</argument_list></call><operator>.</operator></diff:insert><call><diff:delete><name><name>bar</name><operator>.</operator><diff:common><name>call</name></diff:common></name></diff:delete><argument_list>(<argument><expr><name>foobar</name></expr></argument>)</argument_list></call></expr></diff:common></init></decl><diff:common>;</diff:common></decl_stmt></diff:insert></expr_stmt></diff:delete></unit>
+
 </unit>
