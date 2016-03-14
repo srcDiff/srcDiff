@@ -258,12 +258,15 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         else if(is_separate_token(*characters)) {
 
           bool first = true;
+          bool last_was_collect = (*characters == '"' || *characters == '\\');
           // merge consecutive espace \ and "
-          while(first || (is_string_literal
-            && (*characters == '"'
-              || *characters == '\\'))) {
+          while(first
+                 || (is_string_literal && last_was_collect
+                  && (*characters == '"'
+                    || *characters == '\\'))) {
 
             first = false;
+            last_was_collect = (*characters == '"' || *characters == '\\');
 
             if(*characters == '\\') {
 
