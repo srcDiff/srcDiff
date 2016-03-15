@@ -142,7 +142,7 @@ void side_by_side_view::output_html() {
 
     } else {
 
-      (*output) << std::string(' ', magnitude + 1);
+      (*output) << std::string(magnitude + 1, ' ');
 
     }
 
@@ -169,7 +169,7 @@ void side_by_side_view::output_html() {
 
     } else {
 
-      (*output) << std::string(' ', magnitude + 1);
+      (*output) << std::string(magnitude + 1, ' ');
 
     }
 
