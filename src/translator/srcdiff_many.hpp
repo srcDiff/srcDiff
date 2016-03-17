@@ -14,13 +14,13 @@ protected:
 
 private:
 
-	typedef std::pair<int, int> IntPair;
-	typedef std::vector<IntPair> IntPairs;
-  	typedef std::vector<IntPairs> Moves;
+	typedef std::pair<int, int> int_pair;
+	typedef std::vector<int_pair> int_pairs;
+  	typedef std::vector<int_pairs> moves;
 
  	void output_unmatched(int start_original, int end_original, int start_modified, int end_modified);
 
-	Moves determine_operations();
+	moves determine_operations();
   
 public:
 

@@ -106,14 +106,14 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
 
 }
 
-srcdiff_many::Moves srcdiff_many::determine_operations() {
+srcdiff_many::moves srcdiff_many::determine_operations() {
 
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
   offset_pair * matches = NULL;
 
-  IntPairs original_moved;
+  int_pairs original_moved;
   std::vector<int> pos_original;
   node_sets original_sets(out.get_nodes_original());
 
@@ -123,11 +123,11 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
     if(out.get_nodes_original().at(node_sets_original.at(index).at(0))->move) {
 
-      original_moved.push_back(IntPair(MOVE, 0));
+      original_moved.push_back(int_pair(MOVE, 0));
 
     } else {
 
-      original_moved.push_back(IntPair(SES_DELETE, 0));
+      original_moved.push_back(int_pair(SES_DELETE, 0));
       pos_original.push_back(i);
       original_sets.push_back(node_sets_original.at(index));
 
@@ -135,7 +135,7 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
   }
 
-  IntPairs modified_moved;
+  int_pairs modified_moved;
   std::vector<int> pos_modified;
   node_sets modified_sets(out.get_nodes_modified());
 
@@ -145,11 +145,11 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
     if(out.get_nodes_modified().at(node_sets_modified.at(index).at(0))->move) {
 
-      modified_moved.push_back(IntPair(MOVE, 0));
+      modified_moved.push_back(int_pair(MOVE, 0));
 
     } else {
 
-      modified_moved.push_back(IntPair(SES_INSERT, 0));
+      modified_moved.push_back(int_pair(SES_INSERT, 0));
       pos_modified.push_back(i);
       modified_sets.push_back(node_sets_modified.at(index));
 
@@ -184,7 +184,7 @@ srcdiff_many::Moves srcdiff_many::determine_operations() {
 
   }
 
-  srcdiff_many::Moves moves;
+  srcdiff_many::moves moves;
   moves.push_back(original_moved);
   moves.push_back(modified_moved);
 
@@ -197,9 +197,9 @@ void srcdiff_many::output() {
   edit * edits = edit_script;
   edit * edit_next = edit_script->next;
 
-  srcdiff_many::Moves moves = determine_operations();
-  IntPairs original_moved = moves.at(0);
-  IntPairs modified_moved = moves.at(1);
+  srcdiff_many::moves moves = determine_operations();
+  int_pairs original_moved = moves.at(0);
+  int_pairs modified_moved = moves.at(1);
 
   unsigned int i = 0;
   unsigned int j = 0;
