@@ -204,7 +204,7 @@ static bool is_separate_token(const char character) {
 
   return character == '(' || character ==')'  || character == '['  || character == ']'
       || character == ',' || character == '"' || character == '\'' || character == '\\'
-      || character == ';';
+      || character == ';' || character == "{" || character == "}";
 
 }
 
