@@ -130,7 +130,7 @@ bool is_nest_type(const node_set & structure,
     return false;
 
     if(structure.nodes().at(structure.at(0))->ns->href != SRCML_SRC_NAMESPACE_HREF)
-    return -1;
+    return true;
 
   for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i)
     if(structure.nodes().at(structure.at(0))->name == nesting[type_index].possible_nest_items[i]
