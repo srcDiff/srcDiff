@@ -98,6 +98,12 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
                                           node_sets_modified.at(start_modified).at(0), finish_modified,
                                           2);
 
+       if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "throw"
+          && out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "throw")
+          output_replace_inner_whitespace(node_sets_original.at(start_original).at(0), finish_original,
+                                          node_sets_modified.at(start_modified).at(0), finish_modified,
+                                          2);
+
     }
 
     output_change_whitespace(finish_original, finish_modified);
