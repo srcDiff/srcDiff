@@ -16,8 +16,8 @@ protected:
 
 private:
 
-static bool check_nestable_predicate(const node_sets & node_sets_outer, int pos_outer, int end_outer,
-                                     const node_sets & node_sets_inner, int pos_inner, int end_inner);
+static bool check_nestable_predicate(const node_sets & node_sets_outer, int pos_outer, int start_outer, int end_outer,
+                                     const node_sets & node_sets_inner, int pos_inner, int start_inner, int end_inner);
 public:
 
   static bool is_match(int & node_pos, const srcml_nodes & nodes, const void * context);

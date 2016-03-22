@@ -670,8 +670,10 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, in
 
 }
 
-bool srcdiff_nested::check_nestable_predicate(const node_sets & node_sets_outer, int pos_outer, int end_outer,
-                                              const node_sets & node_sets_inner, int pos_inner, int end_inner) {
+bool srcdiff_nested::check_nestable_predicate(const node_sets & node_sets_outer,
+                                              int pos_outer, int start_outer, int end_outer,
+                                              const node_sets & node_sets_inner,
+                                              int pos_inner, int start_inner, int end_inner) {
 
   if(node_sets_inner.nodes().at(node_sets_inner.at(pos_inner).at(0))->move) return true;
 
@@ -701,6 +703,12 @@ bool srcdiff_nested::check_nestable_predicate(const node_sets & node_sets_outer,
     return true;
 
   if(pos_inner + 1 < end_inner && is_better_nest(node_sets_inner.at(pos_inner + 1), node_sets_outer.at(pos_outer), measure))
+    return true;
+
+  if(node_sets_inner.nodes().at(node_sets_inner.at(pos_inner).at(0))->name == "name"
+    && node_sets_inner.nodes().at(node_sets_inner.at(pos_inner).at(0))->parent && (*node_sets_inner.nodes().at(node_sets_inner.at(pos_inner).at(0))->parent)->name == "expr"
+    && node_sets_outer.nodes().at(node_sets_outer.at(pos_outer).at(0))->parent && (*node_sets_outer.nodes().at(node_sets_outer.at(pos_outer).at(0))->parent)->name == "expr"
+    && ((end_outer - start_outer) > 1 || (end_inner - start_inner) > 1))
     return true;
 
   if(node_sets_inner.nodes().at(node_sets_inner.at(pos_inner).at(0))->name == "name") {
@@ -767,8 +775,8 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, int st
 
     for(int j = start_modified; j < end_modified; ++j) {
 
-      if(check_nestable_predicate(node_sets_original, i, end_original,
-                                  node_sets_modified, j, end_modified))
+      if(check_nestable_predicate(node_sets_original, i, start_original, end_original,
+                                  node_sets_modified, j, start_modified, end_modified))
         continue;
 
       valid_nests_original.push_back(j);
@@ -778,8 +786,8 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, int st
 
       for(int k = j + 1; k < end_modified; ++k) {
 
-        if(check_nestable_predicate(node_sets_original, i, end_original,
-                                    node_sets_modified, k, end_modified))
+        if(check_nestable_predicate(node_sets_original, i, start_original, end_original,
+                                    node_sets_modified, k, start_modified, end_modified))
           continue;
 
         valid_nests_original.push_back(k);
@@ -800,8 +808,8 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, int st
 
     for(int j = start_original; j < end_original; ++j) {
 
-      if(check_nestable_predicate(node_sets_modified, i, end_modified,
-                                  node_sets_original, j, end_original))
+      if(check_nestable_predicate(node_sets_modified, i, start_modified, end_modified,
+                                  node_sets_original, j, start_original, end_original))
         continue;
 
       valid_nests_modified.push_back(j);
@@ -811,8 +819,8 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, int st
 
       for(int k = j + 1; k < end_original; ++k) {
       
-        if(check_nestable_predicate(node_sets_modified, i, end_modified,
-                                    node_sets_original, k, end_original))
+        if(check_nestable_predicate(node_sets_modified, i, start_modified, end_modified,
+                                    node_sets_original, k, start_original, end_original))
           continue;
 
         valid_nests_modified.push_back(k);

@@ -24,7 +24,7 @@
 <expr_stmt><expr><diff:insert><call><name>qBound</name><argument_list>(<argument><expr><literal type="number">10</literal></expr></argument>,<diff:ws> </diff:ws><argument><expr><diff:common><name>boldness</name></diff:common></expr></argument>,<diff:ws> </diff:ws><argument><expr><literal type="number">90</literal></expr></argument>)</argument_list></call></diff:insert> <operator>*</operator> <literal type="number">10</literal></expr>;</expr_stmt></unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="call|call">
-<expr_stmt><expr><diff:insert><call><name><diff:common><name>treeRoot</name></diff:common><operator>.</operator><name>insert</name></name><diff:delete><diff:ws> </diff:ws><operator>&lt;&lt;</operator></diff:delete><argument_list>(<argument><expr><name>index</name></expr></argument>,<diff:common> </diff:common><argument><expr><diff:common><call><name><name>root</name><operator>-&gt;</operator><name>styleId</name></name><argument_list>()</argument_list></call></diff:common></expr></argument>)</argument_list></call></diff:insert></expr>;</expr_stmt>
+<expr_stmt><expr><diff:delete><name>treeRoot</name><diff:ws> </diff:ws><operator>&lt;&lt;</operator></diff:delete><diff:insert><call><name><name>treeRoot</name><operator>.</operator><name>insert</name></name><argument_list>(<argument><expr><name>index</name></expr></argument>,<diff:common> </diff:common><argument><expr><diff:common><call><name><name>root</name><operator>-&gt;</operator><name>styleId</name></name><argument_list>()</argument_list></call></diff:common></expr></argument>)</argument_list></call></diff:insert></expr>;</expr_stmt>
 </unit>
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="call|call">
