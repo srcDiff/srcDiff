@@ -703,7 +703,6 @@ bool srcdiff_nested::check_nestable_predicate(const node_sets & node_sets_outer,
   if(pos_inner + 1 < end_inner && is_better_nest(node_sets_inner.at(pos_inner + 1), node_sets_outer.at(pos_outer), measure))
     return true;
 
-
   if(node_sets_inner.nodes().at(node_sets_inner.at(pos_inner).at(0))->name == "name") {
 
       if(!node_sets_inner.nodes().at(node_sets_inner.at(pos_inner).at(0))->parent || !set.nodes().at(match.at(0))->parent)
