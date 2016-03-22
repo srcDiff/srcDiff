@@ -208,6 +208,13 @@ static bool is_separate_token(const char character) {
 
 }
 
+static bool is_comment_separate(const char character) {
+
+
+  return character == '/' || character == '*' || character == '!';
+
+}
+
 // collect the differences
 srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
@@ -306,8 +313,11 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
           }
 
-          // Copy the remainder after (
           text = split_text(characters_start, characters, element_stack.back());
+
+        } else if(element_stack.back()->name == "comment" && is_comment_separate(*characters)) {
+
+          text = split_text(characters_start, ++characters, element_stack.back());
 
         } else {
 
