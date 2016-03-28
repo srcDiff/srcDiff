@@ -317,7 +317,10 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
         } else if(element_stack.back()->name == "comment" && is_comment_separate(*characters)) {
 
-          text = split_text(characters_start, ++characters, element_stack.back());
+          while((*characters) != 0 && is_comment_separate(*characters))
+            ++characters;
+
+          text = split_text(characters_start, characters, element_stack.back());
 
         } else {
 
