@@ -160,24 +160,9 @@ bool srcdiff_nested::is_match(int & node_pos, const srcml_nodes & nodes, const v
 int srcdiff_nested::best_match(const node_sets & sets, const node_set & match) {
 
   int match_pos = sets.size();
-  int match_similarity = 0;
+  int match_similarity = -1;
 
-  if(sets.size() > 0) {
-
-    if(!((sets.at(0).size() > match.size() && (sets.at(0).size()) > (4 * match.size()))
-      || (match.size() > sets.at(0).size() && (match.size()) > (4 * sets.at(0).size())))) {
-
-      match_pos = 0;
-      srcdiff_text_measure measure(sets.at(0), match);
-      measure.compute();
-      match_similarity = measure.similarity();
-
-    }
-
-  } else
-    return 1;
-
-  for(unsigned int i = 1; i < sets.size(); ++i) {
+  for(unsigned int i = 0; i < sets.size(); ++i) {
 
     if(sets.at(i).size() > match.size() && (sets.at(i).size()) > (4 * match.size()))
       continue;
