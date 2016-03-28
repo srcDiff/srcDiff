@@ -32,8 +32,8 @@ static bool is_significant(int & node_pos, const srcml_nodes & nodes, const void
 
   }
 
-  return !node->is_text() && node->name != "operator"
-      && node->name != "literal" && node->name != "modifier";
+  return !node->is_text() && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT
+    && node->name != "operator" && node->name != "literal" && node->name != "modifier";
 
 }
 

@@ -5,7 +5,7 @@ bool node_sets::is_non_white_space(int & node_pos, const srcml_nodes & node_list
 	const std::shared_ptr<srcml_node> & node = node_list[node_pos];
 
   // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
-  return !((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content && node->is_white_space());
+  return (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT || ((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content && !node->is_white_space());
 
 }
 
@@ -38,7 +38,7 @@ node_sets::node_sets(const srcml_nodes & node_list, int start, int end, const no
 	      emplace_back(node_list, i);
 
       } else {
-
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
 	      return;
 
       }
