@@ -320,7 +320,7 @@ bool is_better_nest(const node_set & node_set_outer,
       double nest_min_size = match_measure.min_length();
 
       /** in addition to being a valid match
-          must have > or = similarity < or = difference and a better ratio of size to similarity
+          must have > or = similarity < or = difference or a better ratio of size to similarity
       */
       if((match_measure.similarity() >= measure.similarity() && match_measure.difference() <= measure.difference())
        || ((nest_min_size / match_measure.similarity()) < (min_size / measure.similarity())
