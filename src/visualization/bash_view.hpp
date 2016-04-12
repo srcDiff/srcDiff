@@ -2,6 +2,9 @@
 #define INCLUDED_BASH_VIEW_HPP
 
 #include <srcSAXHandler.hpp>
+
+#include <monokai.hpp>
+
 #include <vector>
 #include <string>
 #include <fstream>
@@ -33,6 +36,7 @@ protected:
   std::ostream * output;
 
   bool syntax_highlight;
+  monokai highlighter;
 
   bool ignore_all_whitespace;
   bool ignore_whitespace;

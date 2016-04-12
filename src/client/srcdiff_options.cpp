@@ -487,6 +487,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("ignore-all-space,W", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>), "Ignore all whitespace when outputting unified/side-by-side view")
     ("ignore-space,w", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_WHITESPACE>), "Ignore whitespace when outputting unified/side-by-side view")
     ("ignore-comments,c", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_COMMENTS>), "Ignore comments when outputting unified/side-by-side view")
+    ("highlight", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SYNTAX_HIGHLIGHTING>)->default_value(true), "Syntax-hightlighting of unified/side-by-side view")
     ("no-highlight", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_SYNTAX_HIGHLIGHTING>), "No syntax-hightlighting of unified/side-by-side view")
 
     ("summary", boost::program_options::value<std::string>()->implicit_value("text")->notifier(option_field<&srcdiff_options::summary_type_str>),

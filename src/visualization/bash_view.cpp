@@ -33,7 +33,8 @@ bash_view::bash_view(const std::string & output_filename,
                      bool ignore_whitespace,
                      bool ignore_comments,
                      bool is_html) 
-  : diff_stack(), syntax_highlight(syntax_highlight), ignore_all_whitespace(ignore_all_whitespace),
+  : diff_stack(), syntax_highlight(syntax_highlight), highlighter(), 
+    ignore_all_whitespace(ignore_all_whitespace),
     ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
     in_comment(false), is_html(is_html), close_num_span(0) {
 
@@ -123,6 +124,15 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
 
   last_character_operation = operation;
 
+  std::string highlight;
+  if(syntax_highlight) {
+
+    highlight = highlighter.token2color(ch);
+    if(highlight != "")
+      out << highlight;
+
+  }
+
   if(!is_html) {
 
     out << ch;
@@ -140,6 +150,9 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
     else                    out << ch[pos];
 
   }
+
+  if(highlight != "")
+    out << "</span>";
 
 }
 
