@@ -102,6 +102,13 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 
 void side_by_side_view::add_new_line() {
 
+  // either both are empty or they are not
+  if(!original_lines.empty()) {
+
+    end_buffer(std::get<STREAM>(original_lines.back()));
+    end_buffer(std::get<STREAM>(modified_lines.back()));
+  }
+
   last_character_operation_original = COMMON;
   original_lines.emplace_back(std::ostringstream(""), 0, 0);
 
@@ -133,9 +140,7 @@ void side_by_side_view::output_html() {
   int line_number = 1;
   for(int i = 0; i < original_lines.size(); ++i) {
 
-    (*output) << "<span><span style=\"color: grey\">";
-
-
+    (*output) << "<span style=\"color: grey\">";
     if(line_operations[i] != bash_view::INSERT) {
 
       (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
@@ -145,12 +150,12 @@ void side_by_side_view::output_html() {
       (*output) << std::string(magnitude + 1, ' ');
 
     }
-
     line_number += std::get<2>(original_lines[i]);
+    (*output) << "</span>";
 
     (*output) << bash_view::COMMON_CODE_HTML;
     (*output) << std::get<0>(original_lines[i]).str();
-    (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
+    (*output) << bash_view::COMMON_CODE_HTML << '\n';  
 
   }
   (*output) << "</pre></td></tr></table></td>";
@@ -161,8 +166,7 @@ void side_by_side_view::output_html() {
   line_number = 1;
   for(int i = 0; i < modified_lines.size(); ++i) {
 
-    (*output) << "<span><span style=\"color: grey\">";
-
+    (*output) << "<span style=\"color: grey\">";
     if(line_operations[i] != bash_view::DELETE) {
 
       (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
@@ -172,12 +176,12 @@ void side_by_side_view::output_html() {
       (*output) << std::string(magnitude + 1, ' ');
 
     }
-
     line_number += std::get<LINE_INCR>(modified_lines[i]);
+    (*output) << "</span>";
 
     (*output) << bash_view::COMMON_CODE_HTML;
     (*output) << std::get<STREAM>(modified_lines[i]).str();
-    (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
+    (*output) << bash_view::COMMON_CODE_HTML << '\n';  
 
   }
   (*output) << "</pre></td></tr></table>";
@@ -363,41 +367,16 @@ void side_by_side_view::characters(const char * ch, int len) {
 
 }
 
-/**
- * startUnit
- * @param localname the name of the profile tag
- * @param prefix the tag prefix
- * @param URI the namespace of tag
- * @param num_namespaces number of namespaces definitions
- * @param namespaces the defined namespaces
- * @param num_attributes the number of attributes on the tag
- * @param attributes list of attributes
- *
- * SAX handler function for start of an unit.
- * Overide for desired behavior.
- */
-void side_by_side_view::startUnit(const char * localname, const char * prefix,
-                                  const char * URI, int num_namespaces,
-                                  const struct srcsax_namespace * namespaces,
-                                  int num_attributes,
-                                  const struct srcsax_attribute * attributes) {
+void side_by_side_view::start_unit(const std::string & local_name, const char * prefix, const char * URI,
+                                      int num_namespaces, const struct srcsax_namespace * namespaces,
+                                      int num_attributes, const struct srcsax_attribute * attributes) {
 
     diff_stack.push_back(bash_view::COMMON);
     add_new_line();
 
 }
 
-/**
- * endUnit
- * @param localname the name of the profile tag
- * @param prefix the tag prefix
- * @param URI the namespace of tag
- *
- * SAX handler function for end of an unit.
- * Overide for desired behavior.
- */
-void side_by_side_view::endUnit(const char * localname, const char * prefix,
-                                const char * URI) {
+void side_by_side_view::end_unit(const std::string & local_name, const char * prefix, const char * URI) {
 
   if((!change_ending_space_original.empty() || !change_ending_space_modified.empty())) {
 

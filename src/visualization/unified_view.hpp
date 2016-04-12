@@ -62,7 +62,13 @@ private:
   bool in_mode(context_mode mode);
 
   void output_additional_context();
-
+  virtual void start_unit(const std::string & local_name, const char * prefix,
+                          const char * URI, int num_namespaces,
+                          const struct srcsax_namespace * namespaces,
+                          int num_attributes,
+                          const struct srcsax_attribute * attributes);
+  virtual void end_unit(const std::string & local_name, const char * prefix,
+                        const char * URI);
   virtual void start_element(const std::string & local_name, const char * prefix, const char * URI,
                             int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
                             const struct srcsax_attribute * attributes);

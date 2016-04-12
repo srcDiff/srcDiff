@@ -39,6 +39,8 @@ protected:
 
   bool is_html;
 
+  unsigned int close_num_span;
+
 public:
 
   bash_view(const std::string & output_filename, bool ignore_all_whitespace,
@@ -52,6 +54,13 @@ protected:
 
   virtual void reset_internal() = 0;
 
+  virtual void start_unit(const std::string & local_name, const char * prefix,
+                          const char * URI, int num_namespaces,
+                          const struct srcsax_namespace * namespaces,
+                          int num_attributes,
+                          const struct srcsax_attribute * attributes) = 0;
+  virtual void end_unit(const std::string & local_name, const char * prefix,
+                        const char * URI) = 0;
   virtual void start_element(const std::string & local_name, const char * prefix,
                              const char * URI, int num_namespaces,
                              const struct srcsax_namespace * namespaces,
@@ -61,13 +70,16 @@ protected:
                            const char * URI) = 0;
   virtual void characters(const char * ch, int len) = 0;
 
-  const char * change_operation_to_code(int operation);
-
+  void end_buffer(std::ostream & out);
   void output_characters_to_buffer(const std::string ch, int operation,
                                    std::ostream & out,
                                    int & last_character_operation);
   virtual void output_characters(const std::string ch, int operation) = 0;
   void output_character(const char c, int operation);
+
+private:
+  const char * change_operation_to_code(int operation);
+  std::string close_spans();
 
 public:
 

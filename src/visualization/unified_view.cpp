@@ -104,12 +104,19 @@ void unified_view::output_characters(const std::string ch, int operation) {
 
 }
 
+void unified_view::start_unit(const std::string & local_name, 
+                                 const char * prefix, const char * URI,
+                                 int num_namespaces,
+                                 const struct srcsax_namespace * namespaces,
+                                 int num_attributes,
+                                 const struct srcsax_attribute * attributes) {}
+
 void unified_view::start_element(const std::string & local_name, 
-                                         const char * prefix, const char * URI,
-                                         int num_namespaces,
-                                         const struct srcsax_namespace * namespaces,
-                                         int num_attributes,
-                                         const struct srcsax_attribute * attributes) {
+                                 const char * prefix, const char * URI,
+                                 int num_namespaces,
+                                 const struct srcsax_namespace * namespaces,
+                                 int num_attributes,
+                                 const struct srcsax_attribute * attributes) {
 
 
   if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
@@ -150,6 +157,9 @@ void unified_view::start_element(const std::string & local_name,
   }
 
 }
+
+void unified_view::end_unit(const std::string & local_name, const char * prefix,
+                               const char * URI) {}
 
 void unified_view::end_element(const std::string & local_name, const char * prefix,
                                const char * URI) {

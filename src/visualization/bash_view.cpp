@@ -20,9 +20,9 @@ const char * const bash_view::COMMON_CODE = "\x1b[0m";
 
 const char * const bash_view::LINE_CODE = "\x1b[36m";
 
-const char * const bash_view::DELETE_CODE_HTML = "</span></span><span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: black; background-color: rgb(255,187,187); font-weight: bold;\">";
-const char * const bash_view::INSERT_CODE_HTML = "</span></span><span><span style=\"background-color: rgb(0,250,108)  ; font-weight: bold;\">";
-const char * const bash_view::COMMON_CODE_HTML = "</span></span><span><span style=\"background-color: transparent\">";
+const char * const bash_view::DELETE_CODE_HTML = "<span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: black; background-color: rgb(255,187,187); font-weight: bold;\">";
+const char * const bash_view::INSERT_CODE_HTML = "<span style=\"background-color: rgb(0,250,108)  ; font-weight: bold;\">";
+const char * const bash_view::COMMON_CODE_HTML = "<span style=\"background-color: transparent\">";
 
 const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
@@ -30,7 +30,7 @@ bash_view::bash_view(const std::string & output_filename, bool ignore_all_whites
                      bool ignore_whitespace, bool ignore_comments, bool is_html) 
   : diff_stack(), ignore_all_whitespace(ignore_all_whitespace),
     ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
-    in_comment(false), is_html(is_html) {
+    in_comment(false), is_html(is_html), close_num_span(0) {
 
   if(output_filename != "-")
     output = new std::ofstream(output_filename.c_str());
@@ -64,6 +64,7 @@ void bash_view::reset() {
 
   diff_stack.clear();
   in_comment = false;
+  close_num_span = 0;
 
   reset_internal();
 
@@ -87,12 +88,31 @@ const char * bash_view::change_operation_to_code(int operation) {
 
 }
 
+std::string bash_view::close_spans() {
+
+  if(!is_html) return std::string();
+
+  std::string spans;
+  for(unsigned int i = 0; i < close_num_span; ++i)
+    spans += "</span>";
+
+  return spans;
+
+}
+
+void bash_view::end_buffer(std::ostream & out) {
+
+  out << close_spans();
+  close_num_span = 0;
+
+}
+
 void bash_view::output_characters_to_buffer(const std::string ch, int operation,
                                             std::ostream & out,
                                             int & last_character_operation) {
 
   if(operation != last_character_operation)
-    out << change_operation_to_code(operation);
+    out << close_spans() << change_operation_to_code(operation);
 
   last_character_operation = operation;
 
@@ -102,6 +122,8 @@ void bash_view::output_characters_to_buffer(const std::string ch, int operation,
     return;
 
   }
+
+  close_num_span = operation == bash_view::DELETE ? 2 : 1;
 
   for(std::string::size_type pos = 0; pos < ch.size(); ++pos) {
 
@@ -180,7 +202,12 @@ void bash_view::startRoot(const char * localname, const char * prefix, const cha
 void bash_view::startUnit(const char * localname, const char * prefix, const char * URI,
                           int num_namespaces, const struct srcsax_namespace * namespaces,
                           int num_attributes,
-                          const struct srcsax_attribute * attributes) {}
+                          const struct srcsax_attribute * attributes) {
+
+  const std::string local_name(localname);
+  start_unit(local_name, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
+
+}
 
 /**
  * startElement
@@ -231,7 +258,12 @@ void bash_view::endRoot(const char * localname, const char * prefix, const char 
  * SAX handler function for end of an unit.
  * Overide for desired behavior.
  */
-void bash_view::endUnit(const char * localname, const char * prefix, const char * URI) {}
+void bash_view::endUnit(const char * localname, const char * prefix, const char * URI) {
+
+  const std::string local_name(localname);
+  end_unit(local_name, prefix, URI);
+
+}
 
 /**
  * endElement
