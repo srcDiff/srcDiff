@@ -374,10 +374,9 @@ void side_by_side_view::characters(const char * ch, int len) {
 }
 
 void side_by_side_view::start_unit(const std::string & local_name, const char * prefix, const char * URI,
-                                      int num_namespaces, const struct srcsax_namespace * namespaces,
-                                      int num_attributes, const struct srcsax_attribute * attributes) {
+                                   int num_namespaces, const struct srcsax_namespace * namespaces,
+                                   int num_attributes, const struct srcsax_attribute * attributes) {
 
-    diff_stack.push_back(bash_view::COMMON);
     add_new_line();
 
 }

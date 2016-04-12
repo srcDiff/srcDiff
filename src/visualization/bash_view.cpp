@@ -211,6 +211,8 @@ void bash_view::startUnit(const char * localname, const char * prefix, const cha
                           int num_attributes,
                           const struct srcsax_attribute * attributes) {
 
+  diff_stack.push_back(bash_view::COMMON);
+
   const std::string local_name(localname);
   start_unit(local_name, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
 
@@ -269,6 +271,8 @@ void bash_view::endUnit(const char * localname, const char * prefix, const char 
 
   const std::string local_name(localname);
   end_unit(local_name, prefix, URI);
+
+  diff_stack.pop_back();
 
 }
 
