@@ -100,11 +100,7 @@ void unified_view::output_additional_context() {
 
 void unified_view::output_characters(const std::string ch, int operation) {
 
-  if(operation != last_character_operation)
-    (*output) << change_operation_to_code(operation);
-
-  last_character_operation = operation;
-  (*output) << ch;
+  output_characters_to_buffer(ch, operation, *output, last_character_operation);
 
 }
 
