@@ -100,14 +100,14 @@ void unified_view::output_additional_context() {
 
 }
 
-void unified_view::output_characters(const std::string ch, int operation) {
+void unified_view::output_characters(const std::string & ch, int operation) {
 
-  output_characters_to_buffer(ch, operation, close_num_spans, *output, last_character_operation);
+  output_characters_to_buffer(*output, ch, operation, last_character_operation, close_num_spans);
 
 }
 
 void unified_view::start_unit(const std::string & local_name, 
-                                 const char * prefix, const char * URI,
+                              const char * prefix, const char * URI,
                                  int num_namespaces,
                                  const struct srcsax_namespace * namespaces,
                                  int num_attributes,

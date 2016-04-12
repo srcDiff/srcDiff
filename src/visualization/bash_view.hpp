@@ -71,12 +71,12 @@ protected:
   virtual void characters(const char * ch, int len) = 0;
 
   void end_buffer(std::ostream & out, unsigned int & close_num_span);
-  void output_characters_to_buffer(const std::string ch,
+  void output_characters_to_buffer(std::ostream & out,
+                                   const std::string & ch,
                                    int operation,
-                                   unsigned int & close_num_span,
-                                   std::ostream & out,
-                                   int & last_character_operation);
-  virtual void output_characters(const std::string ch, int operation) = 0;
+                                   int & last_character_operation,
+                                   unsigned int & close_num_span);
+  virtual void output_characters(const std::string & ch, int operation) = 0;
   void output_character(const char c, int operation);
 
 private:

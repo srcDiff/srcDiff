@@ -38,7 +38,7 @@ void side_by_side_view::reset_internal() {
 
 }
 
-void side_by_side_view::output_characters(const std::string ch, int operation) {
+void side_by_side_view::output_characters(const std::string & ch, int operation) {
 
   if(original_lines.empty()) add_new_line();
 
@@ -72,10 +72,9 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
        && operation != bash_view::COMMON)
       real_operation = bash_view::COMMON;
 
-    output_characters_to_buffer(ch, real_operation,
-                                std::get<CLOSE_SPANS>(original_lines.back()),
-                                std::get<STREAM>(original_lines.back()),
-                                last_character_operation_original);
+    output_characters_to_buffer(std::get<STREAM>(original_lines.back()),
+                                ch, real_operation, last_character_operation_original,
+                                std::get<CLOSE_SPANS>(original_lines.back()));
     std::get<OPERATION>(original_lines.back()) += size;
 
   }
@@ -89,10 +88,9 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
        && operation != bash_view::COMMON)
       real_operation = bash_view::COMMON;
 
-    output_characters_to_buffer(ch, real_operation,
-                                std::get<CLOSE_SPANS>(modified_lines.back()),
-                                std::get<STREAM>(modified_lines.back()),
-                                last_character_operation_modified);
+    output_characters_to_buffer(std::get<STREAM>(modified_lines.back()),
+                                ch, real_operation, last_character_operation_modified,
+                                std::get<CLOSE_SPANS>(modified_lines.back()));
     std::get<OPERATION>(modified_lines.back()) += size;
 
   }

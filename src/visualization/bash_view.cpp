@@ -107,11 +107,11 @@ void bash_view::end_buffer(std::ostream & out, unsigned int & close_num_span) {
 
 }
 
-void bash_view::output_characters_to_buffer(const std::string ch,
+void bash_view::output_characters_to_buffer(std::ostream & out,
+                                            const std::string & ch,
                                             int operation,
-                                            unsigned int & close_num_span,
-                                            std::ostream & out,
-                                            int & last_character_operation) {
+                                            int & last_character_operation,
+                                            unsigned int & close_num_span) {
 
   if(operation != last_character_operation)
     out << close_spans(close_num_span) << change_operation_to_code(operation);

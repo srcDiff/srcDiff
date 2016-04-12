@@ -58,7 +58,7 @@ private:
                            const char * URI);
   virtual void characters(const char * ch, int len);
 
-  void output_characters(const std::string ch, int operation);
+  void output_characters(const std::string & ch, int operation);
   void add_new_line();
 
   void output_html();

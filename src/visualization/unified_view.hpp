@@ -80,7 +80,7 @@ private:
 
   context_mode context_string_to_id(const std::string & context_type_str) const;
 
-  virtual void output_characters(const std::string ch, int operation);
+  virtual void output_characters(const std::string & ch, int operation);
 
 public:
 
