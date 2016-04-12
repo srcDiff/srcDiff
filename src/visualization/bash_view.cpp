@@ -159,7 +159,7 @@ void bash_view::output_character(const char c, int operation) {
  */
 void bash_view::startDocument() {
 
-  if(is_html) (*output) << "<!DOCTYPE html>\n<html><head><meta charset=\"UTF-8\"><title>Tool3</title></head><body>";
+  if(is_html) (*output) << "<!DOCTYPE html>\n<html><head><meta charset=\"UTF-8\"><title>srcDiff</title></head><body>";
 
 }
 
