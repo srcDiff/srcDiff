@@ -17,7 +17,8 @@ unified_view::unified_view(const std::string & output_filename,
                 context_type(context_type), length(0), is_after_additional(false),
                 after_edit_count(0), last_context_line((unsigned)-1),
                 change_starting_line(false), change_ending_space(),
-                change_ending_operation(bash_view::COMMON) {
+                change_ending_operation(bash_view::COMMON),
+                close_num_spans(0) {
 
   if(context_type.type() == typeid(size_t)) {
 
@@ -57,6 +58,7 @@ void unified_view::reset_internal() {
   change_starting_line = false;
   change_ending_space = "";
   change_ending_operation = bash_view::COMMON;
+  close_num_spans = 0;
 
 }
 
@@ -100,7 +102,7 @@ void unified_view::output_additional_context() {
 
 void unified_view::output_characters(const std::string ch, int operation) {
 
-  output_characters_to_buffer(ch, operation, *output, last_character_operation);
+  output_characters_to_buffer(ch, operation, close_num_spans, *output, last_character_operation);
 
 }
 

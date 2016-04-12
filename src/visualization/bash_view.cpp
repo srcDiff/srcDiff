@@ -88,7 +88,7 @@ const char * bash_view::change_operation_to_code(int operation) {
 
 }
 
-std::string bash_view::close_spans() {
+std::string bash_view::close_spans(unsigned int close_num_span) {
 
   if(!is_html) return std::string();
 
@@ -100,19 +100,21 @@ std::string bash_view::close_spans() {
 
 }
 
-void bash_view::end_buffer(std::ostream & out) {
+void bash_view::end_buffer(std::ostream & out, unsigned int & close_num_span) {
 
-  out << close_spans();
+  out << close_spans(close_num_span);
   close_num_span = 0;
 
 }
 
-void bash_view::output_characters_to_buffer(const std::string ch, int operation,
+void bash_view::output_characters_to_buffer(const std::string ch,
+                                            int operation,
+                                            unsigned int & close_num_span,
                                             std::ostream & out,
                                             int & last_character_operation) {
 
   if(operation != last_character_operation)
-    out << close_spans() << change_operation_to_code(operation);
+    out << close_spans(close_num_span) << change_operation_to_code(operation);
 
   last_character_operation = operation;
 

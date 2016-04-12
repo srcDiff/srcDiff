@@ -48,6 +48,8 @@ private:
   std::string change_ending_space;
   int change_ending_operation;
 
+  unsigned int close_num_spans;
+
 public:
 
   unified_view(const std::string & output_filename, bool ignore_all_whitespace,

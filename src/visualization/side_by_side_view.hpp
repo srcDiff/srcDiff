@@ -17,14 +17,15 @@ private:
 
   std::vector<int> line_operations;
 
-  static const constexpr int STREAM    = 0;
-  static const constexpr int OPERATION = 1;
-  static const constexpr int LINE_INCR = 2;
+  static const constexpr int STREAM      = 0;
+  static const constexpr int OPERATION   = 1;
+  static const constexpr int CLOSE_SPANS = 2;
+  static const constexpr int LINE_INCR   = 3;
 
   int last_character_operation_original;
-  std::vector<std::tuple<std::ostringstream, int, size_t>> original_lines;
+  std::vector<std::tuple<std::ostringstream, int, unsigned int, size_t>> original_lines;
   int last_character_operation_modified;
-  std::vector<std::tuple<std::ostringstream, int, size_t>> modified_lines;
+  std::vector<std::tuple<std::ostringstream, int, unsigned int, size_t>> modified_lines;
 
   bool change_starting_line_original;
   bool change_starting_line_modified;

@@ -73,9 +73,10 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
       real_operation = bash_view::COMMON;
 
     output_characters_to_buffer(ch, real_operation,
-                                std::get<0>(original_lines.back()),
+                                std::get<CLOSE_SPANS>(original_lines.back()),
+                                std::get<STREAM>(original_lines.back()),
                                 last_character_operation_original);
-    std::get<1>(original_lines.back()) += size;
+    std::get<OPERATION>(original_lines.back()) += size;
 
   }
 
@@ -89,9 +90,10 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
       real_operation = bash_view::COMMON;
 
     output_characters_to_buffer(ch, real_operation,
-                                std::get<0>(modified_lines.back()),
+                                std::get<CLOSE_SPANS>(modified_lines.back()),
+                                std::get<STREAM>(modified_lines.back()),
                                 last_character_operation_modified);
-    std::get<1>(modified_lines.back()) += size;
+    std::get<OPERATION>(modified_lines.back()) += size;
 
   }
 
@@ -105,15 +107,16 @@ void side_by_side_view::add_new_line() {
   // either both are empty or they are not
   if(!original_lines.empty()) {
 
-    end_buffer(std::get<STREAM>(original_lines.back()));
-    end_buffer(std::get<STREAM>(modified_lines.back()));
+    end_buffer(std::get<STREAM>(original_lines.back()), std::get<CLOSE_SPANS>(original_lines.back()));
+    end_buffer(std::get<STREAM>(modified_lines.back()), std::get<CLOSE_SPANS>(modified_lines.back()));
+
   }
 
   last_character_operation_original = COMMON;
-  original_lines.emplace_back(std::ostringstream(""), 0, 0);
+  original_lines.emplace_back(std::ostringstream(""), 0, 0, 0);
 
   last_character_operation_modified = COMMON;
-  modified_lines.emplace_back(std::ostringstream(""), 0, 0);
+  modified_lines.emplace_back(std::ostringstream(""), 0, 0, 0);
 
   line_operations.push_back(0);
 
@@ -150,12 +153,12 @@ void side_by_side_view::output_html() {
       (*output) << std::string(magnitude + 1, ' ');
 
     }
-    line_number += std::get<2>(original_lines[i]);
+    line_number += std::get<LINE_INCR>(original_lines[i]);
     (*output) << "</span>";
 
     (*output) << bash_view::COMMON_CODE_HTML;
-    (*output) << std::get<0>(original_lines[i]).str();
-    (*output) << bash_view::COMMON_CODE_HTML << '\n';  
+    (*output) << std::get<STREAM>(original_lines[i]).str();
+    (*output) << bash_view::COMMON_CODE_HTML << "\n</span>";  
 
   }
   (*output) << "</pre></td></tr></table></td>";
@@ -181,7 +184,7 @@ void side_by_side_view::output_html() {
 
     (*output) << bash_view::COMMON_CODE_HTML;
     (*output) << std::get<STREAM>(modified_lines[i]).str();
-    (*output) << bash_view::COMMON_CODE_HTML << '\n';  
+    (*output) << bash_view::COMMON_CODE_HTML << "\n</span>";  
 
   }
   (*output) << "</pre></td></tr></table>";
@@ -193,12 +196,12 @@ void side_by_side_view::output_html() {
 void side_by_side_view::output_bash() {
 
     int max_width = 0;
-    for(const std::tuple<std::ostringstream, int, size_t> & line : original_lines)
-      max_width = std::max(max_width, std::get<1>(line));
+    for(const std::tuple<std::ostringstream, int, unsigned int, size_t> & line : original_lines)
+      max_width = std::max(max_width, std::get<OPERATION>(line));
 
     for(int i = 0; i < original_lines.size(); ++i) {
 
-      (*output) << bash_view::COMMON_CODE << std::get<0>(original_lines[i]).str();
+      (*output) << bash_view::COMMON_CODE << std::get<STREAM>(original_lines[i]).str();
 
       std::string fill(max_width - std::get<OPERATION>(original_lines[i]), ' ');
       (*output) << bash_view::COMMON_CODE << fill;
@@ -214,7 +217,7 @@ void side_by_side_view::output_bash() {
       else
         (*output) << " | ";
 
-      (*output) << std::get<0>(modified_lines[i]).str();
+      (*output) << std::get<STREAM>(modified_lines[i]).str();
 
       (*output) << bash_view::COMMON_CODE << '\n';
 
@@ -309,10 +312,10 @@ void side_by_side_view::characters(const char * ch, int len) {
       }
 
       if(diff_stack.back() != bash_view::INSERT)
-        ++std::get<2>(original_lines.back());
+        ++std::get<LINE_INCR>(original_lines.back());
 
       if(diff_stack.back() != bash_view::DELETE)
-        ++std::get<2>(modified_lines.back());
+        ++std::get<LINE_INCR>(modified_lines.back());
 
       add_new_line();
       continue;

@@ -70,8 +70,10 @@ protected:
                            const char * URI) = 0;
   virtual void characters(const char * ch, int len) = 0;
 
-  void end_buffer(std::ostream & out);
-  void output_characters_to_buffer(const std::string ch, int operation,
+  void end_buffer(std::ostream & out, unsigned int & close_num_span);
+  void output_characters_to_buffer(const std::string ch,
+                                   int operation,
+                                   unsigned int & close_num_span,
                                    std::ostream & out,
                                    int & last_character_operation);
   virtual void output_characters(const std::string ch, int operation) = 0;
@@ -79,7 +81,7 @@ protected:
 
 private:
   const char * change_operation_to_code(int operation);
-  std::string close_spans();
+  std::string close_spans(unsigned int close_num_span);
 
 public:
 
