@@ -9,6 +9,7 @@
 #include <cassert>
 
 
+int bash_view::UNSET  = 0;
 int bash_view::COMMON = 1 << 0;
 int bash_view::DELETE = 1 << 1;
 int bash_view::INSERT = 1 << 2;
@@ -26,9 +27,13 @@ const char * const bash_view::COMMON_CODE_HTML = "<span style=\"background-color
 
 const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
-bash_view::bash_view(const std::string & output_filename, bool ignore_all_whitespace,
-                     bool ignore_whitespace, bool ignore_comments, bool is_html) 
-  : diff_stack(), ignore_all_whitespace(ignore_all_whitespace),
+bash_view::bash_view(const std::string & output_filename,
+                     bool syntax_highlight,
+                     bool ignore_all_whitespace,
+                     bool ignore_whitespace,
+                     bool ignore_comments,
+                     bool is_html) 
+  : diff_stack(), syntax_highlight(syntax_highlight), ignore_all_whitespace(ignore_all_whitespace),
     ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
     in_comment(false), is_html(is_html), close_num_span(0) {
 
@@ -154,7 +159,7 @@ void bash_view::output_character(const char c, int operation) {
  */
 void bash_view::startDocument() {
 
-  if(is_html) (*output) << "<!DOCTYPE html>\n<html><head><meta charset=\"UTF-8\"><title>Tool3</title></head><body>";
+  if(is_html) (*output) << "<!DOCTYPE html>\n<html><head><meta charset=\"UTF-8\"><title>srcDiff</title></head><body>";
 
 }
 
@@ -205,6 +210,8 @@ void bash_view::startUnit(const char * localname, const char * prefix, const cha
                           int num_namespaces, const struct srcsax_namespace * namespaces,
                           int num_attributes,
                           const struct srcsax_attribute * attributes) {
+
+  diff_stack.push_back(bash_view::COMMON);
 
   const std::string local_name(localname);
   start_unit(local_name, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
@@ -264,6 +271,8 @@ void bash_view::endUnit(const char * localname, const char * prefix, const char 
 
   const std::string local_name(localname);
   end_unit(local_name, prefix, URI);
+
+  diff_stack.pop_back();
 
 }
 

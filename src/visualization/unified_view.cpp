@@ -8,10 +8,17 @@
 #include <cassert>
 
 unified_view::unified_view(const std::string & output_filename,
-                           bool ignore_all_whitespace, bool ignore_whitespace,
-                           bool ignore_comments, bool is_html, boost::any context_type)
-              : bash_view(output_filename, ignore_all_whitespace, ignore_whitespace,
-                          ignore_comments, is_html),
+                           bool syntax_highlight,
+                           bool ignore_all_whitespace,
+                           bool ignore_whitespace,
+                           bool ignore_comments,
+                           bool is_html,
+                           boost::any context_type)
+              : bash_view(output_filename, syntax_highlight, 
+                          ignore_all_whitespace,
+                          ignore_whitespace,
+                          ignore_comments,
+                          is_html),
                 last_character_operation(bash_view::COMMON), modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
                 is_after_change(false), wait_change(true), in_function(),
                 context_type(context_type), length(0), is_after_additional(false),

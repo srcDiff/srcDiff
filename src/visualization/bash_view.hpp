@@ -11,6 +11,7 @@ class bash_view : public srcSAXHandler {
 
 protected:
 
+  static int UNSET;
   static int COMMON;
   static int DELETE;
   static int INSERT;
@@ -31,6 +32,8 @@ protected:
 
   std::ostream * output;
 
+  bool syntax_highlight;
+
   bool ignore_all_whitespace;
   bool ignore_whitespace;
   bool ignore_comments;
@@ -43,8 +46,12 @@ protected:
 
 public:
 
-  bash_view(const std::string & output_filename, bool ignore_all_whitespace,
-            bool ignore_whitespace, bool ignore_comments, bool is_html);
+  bash_view(const std::string & output_filename,
+            bool syntax_highlight, 
+            bool ignore_all_whitespace,
+            bool ignore_whitespace,
+            bool ignore_comments,
+            bool is_html);
   virtual ~bash_view();
 
   void transform(const std::string & srcdiff, const std::string & xml_encoding);
