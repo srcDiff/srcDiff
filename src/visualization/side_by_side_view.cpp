@@ -9,11 +9,18 @@
 #include <iomanip>
 
 side_by_side_view::side_by_side_view(const std::string & output_filename,
-                                     bool ignore_all_whitespace, bool ignore_whitespace,
-                                     bool ignore_comments, bool is_html,
+                                     bool syntax_highlight,
+                                     bool ignore_all_whitespace,
+                                     bool ignore_whitespace,
+                                     bool ignore_comments,
+                                     bool is_html,
                                      int side_by_side_tab_size)
-  : bash_view(output_filename, ignore_all_whitespace, ignore_whitespace,
-              ignore_comments, is_html),
+  : bash_view(output_filename,
+              syntax_highlight,
+              ignore_all_whitespace,
+              ignore_whitespace,
+              ignore_comments,
+              is_html),
     side_by_side_tab_size(side_by_side_tab_size), line_operations(),
     last_character_operation_original(bash_view::COMMON), original_lines(),
     last_character_operation_modified(bash_view::COMMON), modified_lines() {}

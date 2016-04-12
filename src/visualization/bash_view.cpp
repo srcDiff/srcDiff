@@ -27,9 +27,13 @@ const char * const bash_view::COMMON_CODE_HTML = "<span style=\"background-color
 
 const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
-bash_view::bash_view(const std::string & output_filename, bool ignore_all_whitespace,
-                     bool ignore_whitespace, bool ignore_comments, bool is_html) 
-  : diff_stack(), ignore_all_whitespace(ignore_all_whitespace),
+bash_view::bash_view(const std::string & output_filename,
+                     bool syntax_highlight,
+                     bool ignore_all_whitespace,
+                     bool ignore_whitespace,
+                     bool ignore_comments,
+                     bool is_html) 
+  : diff_stack(), syntax_highlight(syntax_highlight), ignore_all_whitespace(ignore_all_whitespace),
     ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
     in_comment(false), is_html(is_html), close_num_span(0) {
 

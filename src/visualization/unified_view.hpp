@@ -52,8 +52,12 @@ private:
 
 public:
 
-  unified_view(const std::string & output_filename, bool ignore_all_whitespace,
-               bool ignore_whitespace, bool ignore_comments, bool is_html,
+  unified_view(const std::string & output_filename,
+               bool syntax_highlight,
+               bool ignore_all_whitespace,
+               bool ignore_whitespace,
+               bool ignore_comments,
+               bool is_html,
                boost::any context_type);
   virtual ~unified_view();
 
