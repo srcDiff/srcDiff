@@ -11,6 +11,7 @@ class bash_view : public srcSAXHandler {
 
 protected:
 
+  static int UNSET;
   static int COMMON;
   static int DELETE;
   static int INSERT;

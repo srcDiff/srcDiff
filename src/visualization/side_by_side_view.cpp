@@ -110,11 +110,11 @@ void side_by_side_view::add_new_line() {
 
   }
 
-  last_character_operation_original = COMMON;
-  original_lines.emplace_back(std::ostringstream(""), 0, 0, 0);
+  last_character_operation_original = bash_view::UNSET;
+  original_lines.emplace_back(std::ostringstream(""), bash_view::UNSET, 0, 0);
 
-  last_character_operation_modified = COMMON;
-  modified_lines.emplace_back(std::ostringstream(""), 0, 0, 0);
+  last_character_operation_modified = bash_view::UNSET;
+  modified_lines.emplace_back(std::ostringstream(""), bash_view::UNSET, 0, 0);
 
   line_operations.push_back(0);
 
@@ -154,7 +154,6 @@ void side_by_side_view::output_html() {
     line_number += std::get<LINE_INCR>(original_lines[i]);
     (*output) << "</span>";
 
-    (*output) << bash_view::COMMON_CODE_HTML;
     (*output) << std::get<STREAM>(original_lines[i]).str();
     (*output) << bash_view::COMMON_CODE_HTML << "\n</span>";  
 
@@ -180,7 +179,6 @@ void side_by_side_view::output_html() {
     line_number += std::get<LINE_INCR>(modified_lines[i]);
     (*output) << "</span>";
 
-    (*output) << bash_view::COMMON_CODE_HTML;
     (*output) << std::get<STREAM>(modified_lines[i]).str();
     (*output) << bash_view::COMMON_CODE_HTML << "\n</span>";  
 

@@ -9,6 +9,7 @@
 #include <cassert>
 
 
+int bash_view::UNSET  = 0;
 int bash_view::COMMON = 1 << 0;
 int bash_view::DELETE = 1 << 1;
 int bash_view::INSERT = 1 << 2;
