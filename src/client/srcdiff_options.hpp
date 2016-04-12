@@ -85,6 +85,9 @@ const OPTION_TYPE OPTION_IGNORE_WHITESPACE     = ull(1) << __COUNTER__;
 const OPTION_TYPE OPTION_IGNORE_COMMENTS       = ull(1) << __COUNTER__;
 
 // @srcdiff
+const OPTION_TYPE OPTION_SYNTAX_HIGHLIGHTING   = ull(1) << __COUNTER__;
+
+// @srcdiff
 const OPTION_TYPE OPTION_SUMMARY               = ull(1) << __COUNTER__;
 
 // @srcdiff
