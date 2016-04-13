@@ -128,8 +128,10 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
   if(syntax_highlight) {
 
     highlight = highlighter.token2color(ch);
-    if(highlight != "")
+    if(!highlight.empty()) {
+      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
       out << highlight;
+    }
 
   }
 
@@ -151,7 +153,7 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
 
   }
 
-  if(highlight != "")
+  if(!highlight.empty())
     out << "</span>";
 
 }
