@@ -293,13 +293,7 @@ void side_by_side_view::characters(const char * ch, int len) {
 
   for(int i = 0; i < len; ++i) {
 
-    std::string str;
-    if(ch[i] == '\t')
-      str.append(side_by_side_tab_size, ' ');
-    else
-      str.append(1, ch[i]);
-
-    if(str[0] == '\n') {
+    if(ch[i] == '\n') {
 
       if(!ignore_all_whitespace && !ignore_whitespace) {
 
@@ -325,7 +319,21 @@ void side_by_side_view::characters(const char * ch, int len) {
 
     }
 
-    if(isspace(str[0]) && ignore_whitespace && diff_stack.back() != bash_view::COMMON) {
+    if(isspace(ch[i]) && ignore_whitespace && diff_stack.back() != bash_view::COMMON) {
+
+      std::string str;
+      do {
+
+        if(ch[i] == '\t')
+          str.append(side_by_side_tab_size, ' ');
+        else
+          str.append(1, ch[i]);
+
+        ++i;
+
+      } while(i < len && isspace(ch[i]) && ch[i] != '\n');
+
+      --i;
 
       bool output = true;
       if(!change_starting_line_original && diff_stack.back() == bash_view::DELETE) {
@@ -348,6 +356,16 @@ void side_by_side_view::characters(const char * ch, int len) {
 
       assert(change_ending_space_original.empty()
              || change_ending_space_modified.empty());
+
+      std::string str;
+      do {
+
+        str.append(1, ch[i]);
+        ++i;
+
+      } while(i < len && !isspace(ch[i]));
+
+      --i;
 
       if(!change_ending_space_original.empty()) {
 
