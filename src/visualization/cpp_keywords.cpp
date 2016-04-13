@@ -32,6 +32,10 @@ cpp_keywords::cpp_keywords(const monokai & theme) {
         { "goto",         theme.keyword_color_html },
         { "return",       theme.keyword_color_html },
 
+        { "namespace",    theme.keyword_color_html },
+        { "typename",     theme.storage_color_html },
+        { "using",        theme.storage_color_html },
+
         { "and",          theme.keyword_color_html },
         { "and_eq",       theme.keyword_color_html },
         { "bitand",       theme.keyword_color_html },
@@ -56,8 +60,8 @@ cpp_keywords::cpp_keywords(const monokai & theme) {
         { "virtual",      theme.storage_color_html },
         { "volatile",     theme.storage_color_html },
 
-
-        { "typename",     theme.storage_color_html },
+        { "explicit",     theme.storage_color_html },
+        { "export",     theme.storage_color_html },
 
         { "auto",         theme.type_color_html },
         { "bool",         theme.type_color_html },
@@ -74,7 +78,9 @@ cpp_keywords::cpp_keywords(const monokai & theme) {
         { "short",        theme.type_color_html },
         { "signed",       theme.type_color_html },
         { "struct",       theme.type_color_html },
+        { "template",     theme.type_color_html },
         { "true",         theme.type_color_html },
+        { "typedef",      theme.type_color_html },
         { "union",        theme.type_color_html },
         { "unsigned",     theme.type_color_html },
         { "void",         theme.type_color_html },
