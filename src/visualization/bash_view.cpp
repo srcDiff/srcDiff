@@ -128,10 +128,8 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
   if(syntax_highlight) {
 
     highlight = highlighter.token2color(ch);
-    if(!highlight.empty()) {
-      fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+    if(!highlight.empty())
       out << highlight;
-    }
 
   }
 

@@ -11,9 +11,11 @@
 
 #include <unordered_map>
 #include <iostream>
+#include <cpp_keywords.hpp>
 
 class monokai {
 
+public:
     std::string function_name_color_html;
     std::string class_name_color_html;
     std::string storage_type_color_html;
@@ -24,7 +26,8 @@ class monokai {
     std::string string_color_html;
     std::string comment_color_html;
 
-    std::unordered_map<std::string, std::string>  token2color_map;
+private:
+    cpp_keywords keywords;
 
 public:
 
@@ -39,41 +42,7 @@ public:
         storage_type_color_html  = "<span style=\"color: rgb(102, 217, 239);\">";
         class_name_color_html    = "<span style=\"color: rgb(249, 38, 114);\">";
         function_name_color_html = "<span style=\"color: rgb(249, 38, 114);\">";
-
-        token2color_map = {
-
-            { "if",       keyword_color_html },
-            { "else",     keyword_color_html },
-            { "while",    keyword_color_html },
-            { "for",      keyword_color_html },
-            { "do",       keyword_color_html },
-            { "switch",   keyword_color_html },
-
-            { "case",     keyword_color_html },
-            { "default",  keyword_color_html },
-
-            { "try",      keyword_color_html },
-            { "catch",    keyword_color_html },
-
-            { "break",    keyword_color_html },
-            { "return",   keyword_color_html },
-            { "continue", keyword_color_html },
-            { "goto",     keyword_color_html },
-
-            { "and",      keyword_color_html },
-            { "and_eq",   keyword_color_html },
-            { "bitand",   keyword_color_html },
-            { "bitor",    keyword_color_html },
-            { "compl",    keyword_color_html },
-            { "not",      keyword_color_html },
-            { "not_eq",   keyword_color_html },
-            { "or",       keyword_color_html },
-            { "or_eq",    keyword_color_html },
-            { "xor",      keyword_color_html },
-            { "xor_eq",   keyword_color_html }
-
-
-        };
+        keywords = cpp_keywords(*this);
 
     }
 
@@ -81,7 +50,7 @@ public:
 
         try {
 
-            return token2color_map.at(token);
+            return keywords.color(token);
 
         } catch(const std::out_of_range & e) {
 
