@@ -60,8 +60,12 @@ cpp_keywords::cpp_keywords(const monokai & theme) {
         { "virtual",      theme.storage_color_html },
         { "volatile",     theme.storage_color_html },
 
+        { "private",      theme.keyword_color_html },
+        { "protected",    theme.keyword_color_html },
+        { "public",       theme.keyword_color_html },
+
         { "explicit",     theme.storage_color_html },
-        { "export",     theme.storage_color_html },
+        { "export",       theme.storage_color_html },
 
         { "auto",         theme.type_color_html },
         { "bool",         theme.type_color_html },
