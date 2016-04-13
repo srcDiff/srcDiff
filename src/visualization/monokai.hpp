@@ -16,12 +16,12 @@
 class monokai {
 
 public:
+    std::string keyword_color_html;
+    std::string storage_color_html;
     std::string function_name_color_html;
     std::string class_name_color_html;
-    std::string storage_type_color_html;
-    std::string storage_color_html;
-    std::string keyword_color_html;
-    std::string constant_color_html;
+    std::string type_color_html;
+    std::string call_color_html;
     std::string number_color_html;
     std::string string_color_html;
     std::string comment_color_html;
@@ -34,14 +34,15 @@ public:
     monokai() {
 
         keyword_color_html       = "<span style=\"color: rgb(249, 38, 114);\">";
+        storage_color_html       = "<span style=\"color: rgb(166, 226, 46);\">";
+        class_name_color_html    = "<span style=\"color: rgb(166, 226, 46);\">";
+        function_name_color_html = "<span style=\"color: rgb(249, 38, 114);\">";
+        type_color_html          = "<span style=\"color: rgb(102, 217, 239);\">";
+        call_color_html          = "<span style=\"color: rgb(102, 217, 239);\">";
+
         comment_color_html       = "<span style=\"color: rgb(117, 113, 94);\">";
         string_color_html        = "<span style=\"color: rgb(230, 219, 116);\">";
         number_color_html        = "<span style=\"color: rgb(174, 129, 255);\">";
-        constant_color_html      = "<span style=\"color: rgb(174, 129, 255);\">";
-        storage_color_html       = "<span style=\"color: rgb(249, 38, 114);\">";
-        storage_type_color_html  = "<span style=\"color: rgb(102, 217, 239);\">";
-        class_name_color_html    = "<span style=\"color: rgb(249, 38, 114);\">";
-        function_name_color_html = "<span style=\"color: rgb(249, 38, 114);\">";
         keywords = cpp_keywords(*this);
 
     }
