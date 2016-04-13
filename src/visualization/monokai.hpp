@@ -58,7 +58,20 @@ public:
             { "break",    keyword_color_html },
             { "return",   keyword_color_html },
             { "continue", keyword_color_html },
-            { "goto",     keyword_color_html }
+            { "goto",     keyword_color_html },
+
+            { "and",      keyword_color_html },
+            { "and_eq",   keyword_color_html },
+            { "bitand",   keyword_color_html },
+            { "bitor",    keyword_color_html },
+            { "compl",    keyword_color_html },
+            { "not",      keyword_color_html },
+            { "not_eq",   keyword_color_html },
+            { "or",       keyword_color_html },
+            { "or_eq",    keyword_color_html },
+            { "xor",      keyword_color_html },
+            { "xor_eq",   keyword_color_html }
+
 
         };
 
