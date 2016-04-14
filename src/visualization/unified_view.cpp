@@ -90,7 +90,7 @@ void unified_view::output_additional_context() {
   size_t line_insert = line_number_insert + 1 - additional_context.size();
 
   if(wait_change && last_context_line != (line_number_delete - 1))
-    (*output) << bash_view::COMMON_CODE << LINE_CODE << "@@ -" << line_delete << " +" << line_insert << " @@" << bash_view::COMMON_CODE << '\n';
+    (*output) << theme.common_color << LINE_CODE << "@@ -" << line_delete << " +" << line_insert << " @@" << theme.common_color << '\n';
 
   if(additional_context.empty()) return;
 

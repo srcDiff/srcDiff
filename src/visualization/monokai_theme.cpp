@@ -29,6 +29,12 @@ monokai_theme::monokai_theme(bool is_html) {
         number_color  = "<span style=\"color: rgb(174, 129, 255);\">";
         string_color  = "<span style=\"color: rgb(230, 219, 116);\">";
 
+    } else {
+
+        common_color = "\x1b[0m";
+        delete_color = "\x1b[9;48;5;210;1m";
+        insert_color = "\x1b[48;5;120;1m";
+
     }
 
     keywords = cpp_keywords(*this);

@@ -19,10 +19,6 @@ protected:
   static int DELETE;
   static int INSERT;
 
-  static const char * const DELETE_CODE;
-  static const char * const INSERT_CODE;
-
-  static const char * const COMMON_CODE;
   static const char * const LINE_CODE;
 
   static const char * const CARRIAGE_RETURN_SYMBOL;

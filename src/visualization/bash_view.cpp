@@ -14,11 +14,6 @@ int bash_view::COMMON = 1 << 0;
 int bash_view::DELETE = 1 << 1;
 int bash_view::INSERT = 1 << 2;
 
-const char * const bash_view::DELETE_CODE = "\x1b[9;48;5;210;1m";
-const char * const bash_view::INSERT_CODE = "\x1b[48;5;120;1m";
-
-const char * const bash_view::COMMON_CODE = "\x1b[0m";
-
 const char * const bash_view::LINE_CODE = "\x1b[36m";
 
 const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
@@ -74,19 +69,10 @@ void bash_view::reset() {
 
 std::string bash_view::change_operation_to_code(int operation) {
 
-  if(!is_html) {
-
-    if(operation == DELETE) return DELETE_CODE;
-    if(operation == INSERT) return INSERT_CODE;
-
-    return COMMON_CODE;
-
-  }
-
   if(operation == DELETE) return theme.delete_color;
   if(operation == INSERT) return theme.insert_color;
 
-    return theme.common_color;
+  return theme.common_color;
 
 }
 

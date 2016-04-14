@@ -204,10 +204,10 @@ void side_by_side_view::output_bash() {
 
     for(int i = 0; i < original_lines.size(); ++i) {
 
-      (*output) << bash_view::COMMON_CODE << std::get<STREAM>(original_lines[i]).str();
+      (*output) << theme.common_color << std::get<STREAM>(original_lines[i]).str();
 
       std::string fill(max_width - std::get<OPERATION>(original_lines[i]), ' ');
-      (*output) << bash_view::COMMON_CODE << fill;
+      (*output) << theme.common_color << fill;
 
       if(line_operations[i] == bash_view::DELETE)
         (*output) << " < ";
@@ -222,7 +222,7 @@ void side_by_side_view::output_bash() {
 
       (*output) << std::get<STREAM>(modified_lines[i]).str();
 
-      (*output) << bash_view::COMMON_CODE << '\n';
+      (*output) << theme.common_color << '\n';
 
     }
 
