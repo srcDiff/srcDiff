@@ -40,11 +40,11 @@ monokai_theme::monokai_theme(bool is_html) {
 
         keyword_color = "\x1b[38;5;204m";
         storage_color = "\x1b[38;5;204m";
-        type_color    = "\x1b[38;5;102m";
+        type_color    = "\x1b[38;5;117m";
 
-        // comment_color = "<span style=\"color: rgb(117, 113, 94);\">";
-        // number_color  = "<span style=\"color: rgb(174, 129, 255);\">";
-        // string_color  = "<span style=\"color: rgb(230, 219, 116);\">";
+        comment_color = "\x1b[38;5;102m";
+        number_color  = "\x1b[38;5;141m";
+        string_color  = "\x1b[38;5;222m";
 
     }
 
