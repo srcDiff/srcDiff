@@ -141,7 +141,7 @@ void side_by_side_view::output_html() {
 
   }
 
-  (*output) << "<div><table style=\"border-collapse: collapse;\"><tr><td style=\"border: 1px solid black;\">";
+  (*output) << "<div><table style=\"border-collapse: collapse;\"><tr><td style=\"border: 1px solid " + theme.text_color + ";\">";
 
   (*output) << "<table><tr><th><strong>Original</strong></th></tr><tr><td><pre>";
 
@@ -167,7 +167,7 @@ void side_by_side_view::output_html() {
   }
   (*output) << "</pre></td></tr></table></td>";
 
-  (*output) << "<td style=\"border: 1px solid black; border-collapse: collapse;\">";
+  (*output) << "<td style=\"border: 1px solid  " + theme.text_color + ";\">";
   (*output) << "<table><tr><th><strong>Modified</strong></th></tr><tr><td><pre>";
 
   line_number = 1;

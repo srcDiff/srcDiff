@@ -7,6 +7,7 @@
  */
 
 #include <cpp_keywords.hpp>
+
 #include <monokai_theme.hpp>
 
 cpp_keywords::cpp_keywords(const monokai_theme & theme) {
