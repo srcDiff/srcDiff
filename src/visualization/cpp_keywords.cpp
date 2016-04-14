@@ -96,15 +96,7 @@ cpp_keywords::cpp_keywords(const monokai & theme) {
 
 std::string cpp_keywords::color(const std::string & token) const {
 
-    try {
-
-        return color_map.at(token);
-
-    } catch(const std::out_of_range & e) {
-
-        return "";
-
-    }
+    return color_map.at(token);
 
 }
 
