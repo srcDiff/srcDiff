@@ -112,6 +112,7 @@ struct srcdiff_options
   boost::any unified_view_context;
   int side_by_side_tab_size;
   boost::optional<std::string> summary_type_str;
+  std::string theme;
 
 #if SVN
   boost::optional<std::string> svn_url;

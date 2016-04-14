@@ -10,6 +10,7 @@
 
 side_by_side_view::side_by_side_view(const std::string & output_filename,
                                      bool syntax_highlight,
+                                     const std::string & theme,
                                      bool ignore_all_whitespace,
                                      bool ignore_whitespace,
                                      bool ignore_comments,
@@ -17,6 +18,7 @@ side_by_side_view::side_by_side_view(const std::string & output_filename,
                                      int side_by_side_tab_size)
   : bash_view(output_filename,
               syntax_highlight,
+              theme,
               ignore_all_whitespace,
               ignore_whitespace,
               ignore_comments,
@@ -141,14 +143,14 @@ void side_by_side_view::output_html() {
 
   }
 
-  (*output) << "<div><table style=\"border-collapse: collapse;\"><tr><td style=\"border: 1px solid " + theme.text_color + ";\">";
+  (*output) << "<div><table style=\"border-collapse: collapse;\"><tr><td style=\"border: 1px solid " + theme->text_color + ";\">";
 
   (*output) << "<table><tr><th><strong>Original</strong></th></tr><tr><td><pre>";
 
   int line_number = 1;
   for(int i = 0; i < original_lines.size(); ++i) {
 
-    (*output) << "<span style=\"color: " + theme.line_number_color + ";\">";
+    (*output) << "<span style=\"color: " + theme->line_number_color + ";\">";
     if(line_operations[i] != bash_view::INSERT) {
 
       (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
@@ -162,18 +164,18 @@ void side_by_side_view::output_html() {
     (*output) << "</span>";
 
     (*output) << std::get<STREAM>(original_lines[i]).str();
-    (*output) << theme.common_color << "\n</span>";  
+    (*output) << theme->common_color << "\n</span>";  
 
   }
   (*output) << "</pre></td></tr></table></td>";
 
-  (*output) << "<td style=\"border: 1px solid  " + theme.text_color + ";\">";
+  (*output) << "<td style=\"border: 1px solid  " + theme->text_color + ";\">";
   (*output) << "<table><tr><th><strong>Modified</strong></th></tr><tr><td><pre>";
 
   line_number = 1;
   for(int i = 0; i < modified_lines.size(); ++i) {
 
-    (*output) << "<span style=\"color: " + theme.line_number_color + ";\">";
+    (*output) << "<span style=\"color: " + theme->line_number_color + ";\">";
     if(line_operations[i] != bash_view::DELETE) {
 
       (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
@@ -187,7 +189,7 @@ void side_by_side_view::output_html() {
     (*output) << "</span>";
 
     (*output) << std::get<STREAM>(modified_lines[i]).str();
-    (*output) << theme.common_color << "\n</span>";  
+    (*output) << theme->common_color << "\n</span>";  
 
   }
   (*output) << "</pre></td></tr></table>";
@@ -204,10 +206,10 @@ void side_by_side_view::output_bash() {
 
     for(int i = 0; i < original_lines.size(); ++i) {
 
-      (*output) << theme.common_color << std::get<STREAM>(original_lines[i]).str();
+      (*output) << theme->common_color << std::get<STREAM>(original_lines[i]).str();
 
       std::string fill(max_width - std::get<OPERATION>(original_lines[i]), ' ');
-      (*output) << theme.common_color << fill;
+      (*output) << theme->common_color << fill;
 
       if(line_operations[i] == bash_view::DELETE)
         (*output) << " < ";
@@ -222,7 +224,7 @@ void side_by_side_view::output_bash() {
 
       (*output) << std::get<STREAM>(modified_lines[i]).str();
 
-      (*output) << theme.common_color << '\n';
+      (*output) << theme->common_color << '\n';
 
     }
 

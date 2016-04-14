@@ -9,12 +9,15 @@
 
 unified_view::unified_view(const std::string & output_filename,
                            bool syntax_highlight,
+                           const std::string & theme,
                            bool ignore_all_whitespace,
                            bool ignore_whitespace,
                            bool ignore_comments,
                            bool is_html,
                            boost::any context_type)
-              : bash_view(output_filename, syntax_highlight, 
+              : bash_view(output_filename,
+                          syntax_highlight, 
+                          theme,
                           ignore_all_whitespace,
                           ignore_whitespace,
                           ignore_comments,
@@ -90,7 +93,7 @@ void unified_view::output_additional_context() {
   size_t line_insert = line_number_insert + 1 - additional_context.size();
 
   if(wait_change && last_context_line != (line_number_delete - 1))
-    (*output) << theme.common_color << theme.line_number_color << "@@ -" << line_delete << " +" << line_insert << " @@" << theme.common_color << '\n';
+    (*output) << theme->common_color << theme->line_number_color << "@@ -" << line_delete << " +" << line_insert << " @@" << theme->common_color << '\n';
 
   if(additional_context.empty()) return;
 

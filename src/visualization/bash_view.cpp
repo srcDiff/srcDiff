@@ -5,6 +5,7 @@
 #include <shortest_edit_script.hpp>
 #include <type_query.hpp>
 
+#include <default_theme.hpp>
 #include <monokai_theme.hpp>
 
 #include <cstring>
@@ -20,11 +21,12 @@ const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
 bash_view::bash_view(const std::string & output_filename,
                      bool syntax_highlight,
+                     const std::string & theme, 
                      bool ignore_all_whitespace,
                      bool ignore_whitespace,
                      bool ignore_comments,
                      bool is_html) 
-  : diff_stack(), syntax_highlight(syntax_highlight), theme(monokai_theme(is_html)), 
+  : diff_stack(), syntax_highlight(syntax_highlight), theme(theme == "default" ? (theme_t *)new default_theme(is_html) : (theme_t *)new monokai_theme(is_html)), 
     ignore_all_whitespace(ignore_all_whitespace),
     ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
     in_comment(false), is_html(is_html), close_num_span(0) {
@@ -44,6 +46,8 @@ bash_view::~bash_view() {
     delete output;
 
   }
+
+  delete theme;
   
 }
 
@@ -69,10 +73,10 @@ void bash_view::reset() {
 
 std::string bash_view::change_operation_to_code(int operation) {
 
-  if(operation == DELETE) return theme.delete_color;
-  if(operation == INSERT) return theme.insert_color;
+  if(operation == DELETE) return theme->delete_color;
+  if(operation == INSERT) return theme->insert_color;
 
-  return theme.common_color;
+  return theme->common_color;
 
 }
 
@@ -109,7 +113,7 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
   std::string highlight;
   if(syntax_highlight) {
 
-    highlight = theme.token2color(ch, srcml_element_stack.back());
+    highlight = theme->token2color(ch, srcml_element_stack.back());
     if(!highlight.empty())
       out << highlight;
 
@@ -120,7 +124,7 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
     out << ch;
 
     if(!highlight.empty()) {
-      out << theme.common_color;
+      out << theme->common_color;
       if(operation != bash_view::COMMON)
         out << change_operation_to_code(operation);
     }
@@ -169,11 +173,11 @@ void bash_view::startDocument() {
     (*output) << "<meta charset=\"UTF-8\">\n";
     (*output) << "<title>srcDiff</title>\n";
     (*output) << "</head>\n";
-    (*output) << "<body style=\"font-family: courier, monospace; background-color: " + theme.background_color + "; color: " + theme.text_color + ";\">\n";
+    (*output) << "<body style=\"font-family: courier, monospace; background-color: " + theme->background_color + "; color: " + theme->text_color + ";\">\n";
 
   } else {
 
-    (*output) << theme.common_color;
+    (*output) << theme->common_color;
 
   }
 

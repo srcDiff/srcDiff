@@ -32,9 +32,12 @@ srcdiff_translator::srcdiff_translator(const std::string & srcdiff_filename,
                                        const boost::optional<std::string> & unit_filename,
                                        const boost::any & unified_view_context,
                                        int side_by_side_tab_size,
+                                       const std::string & theme,
                                        const boost::optional<std::string> & summary_type_str)
   : archive(archive), flags(flags), output(archive, srcdiff_filename, flags, method,
-                                           unified_view_context, side_by_side_tab_size,
+                                           unified_view_context,
+                                           side_by_side_tab_size,
+                                           theme,
                                            summary_type_str),
     unit_filename(unit_filename) {}
 
