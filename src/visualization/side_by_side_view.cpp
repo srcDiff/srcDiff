@@ -141,7 +141,7 @@ void side_by_side_view::output_html() {
 
   }
 
-  (*output) << "<div style=\"font-family: courier, monospace;\"><table style=\"border-collapse: collapse;\"><tr><td style=\"border: 1px solid black;\">";
+  (*output) << "<div><table style=\"border-collapse: collapse;\"><tr><td style=\"border: 1px solid black;\">";
 
   (*output) << "<table><tr><th><strong>Original</strong></th></tr><tr><td><pre>";
 
