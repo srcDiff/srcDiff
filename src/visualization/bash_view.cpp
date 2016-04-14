@@ -110,6 +110,8 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
 
   last_character_operation = operation;
 
+  if(ch.empty()) return;
+
   std::string highlight;
   if(syntax_highlight) {
 
