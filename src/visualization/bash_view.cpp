@@ -219,10 +219,20 @@ void bash_view::endDocument() {
  * SAX handler function for start of the root profile.
  * Overide for desired behavior.
  */
-void bash_view::startRoot(const char * localname, const char * prefix, const char * URI,
-                          int num_namespaces, const struct srcsax_namespace * namespaces,
+void bash_view::startRoot(const char * localname,
+                          const char * prefix,
+                          const char * URI,
+                          int num_namespaces,
+                          const struct srcsax_namespace * namespaces,
                           int num_attributes,
-                          const struct srcsax_attribute * attributes) {}
+                          const struct srcsax_attribute * attributes) {
+
+  diff_stack.push_back(bash_view::COMMON);
+
+  const std::string local_name(localname);
+  start_root(local_name, prefix, URI, num_namespaces, namespaces, num_attributes, attributes); 
+
+}
 
 /**
  * startUnit
@@ -237,8 +247,11 @@ void bash_view::startRoot(const char * localname, const char * prefix, const cha
  * SAX handler function for start of an unit.
  * Overide for desired behavior.
  */
-void bash_view::startUnit(const char * localname, const char * prefix, const char * URI,
-                          int num_namespaces, const struct srcsax_namespace * namespaces,
+void bash_view::startUnit(const char * localname,
+                          const char * prefix,
+                          const char * URI,
+                          int num_namespaces,
+                          const struct srcsax_namespace * namespaces,
                           int num_attributes,
                           const struct srcsax_attribute * attributes) {
 
@@ -262,8 +275,10 @@ void bash_view::startUnit(const char * localname, const char * prefix, const cha
  * SAX handler function for start of an profile.
  * Overide for desired behavior.
  */
-void bash_view::startElement(const char * localname, const char * prefix,
-                             const char * URI, int num_namespaces,
+void bash_view::startElement(const char * localname,
+                             const char * prefix,
+                             const char * URI,
+                             int num_namespaces,
                              const struct srcsax_namespace * namespaces,
                              int num_attributes,
                              const struct srcsax_attribute * attributes) {
@@ -306,7 +321,14 @@ void bash_view::startElement(const char * localname, const char * prefix,
  * SAX handler function for end of the root profile.
  * Overide for desired behavior.
  */
-void bash_view::endRoot(const char * localname, const char * prefix, const char * URI) {}
+void bash_view::endRoot(const char * localname, const char * prefix, const char * URI) {
+
+  const std::string local_name(localname);
+  end_root(local_name, prefix, URI);
+
+  diff_stack.pop_back();
+
+}
 
 /**
  * endUnit
@@ -335,7 +357,8 @@ void bash_view::endUnit(const char * localname, const char * prefix, const char 
  * SAX handler function for end of an profile.
  * Overide for desired behavior.
  */
-void bash_view::endElement(const char * localname, const char * prefix,
+void bash_view::endElement(const char * localname,
+                           const char * prefix,
                            const char * URI) {
 
   const std::string local_name(localname);

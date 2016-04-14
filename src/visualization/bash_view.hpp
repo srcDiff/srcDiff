@@ -58,19 +58,34 @@ protected:
 
   virtual void reset_internal() = 0;
 
-  virtual void start_unit(const std::string & local_name, const char * prefix,
-                          const char * URI, int num_namespaces,
+  virtual void start_root(const std::string & local_name,
+                          const char * prefix,
+                          const char * URI,
+                          int num_namespaces,
                           const struct srcsax_namespace * namespaces,
                           int num_attributes,
                           const struct srcsax_attribute * attributes) = 0;
-  virtual void end_unit(const std::string & local_name, const char * prefix,
+  virtual void start_unit(const std::string & local_name,
+                          const char * prefix,
+                          const char * URI,
+                          int num_namespaces,
+                          const struct srcsax_namespace * namespaces,
+                          int num_attributes,
+                          const struct srcsax_attribute * attributes) = 0;
+  virtual void end_root(const std::string & local_name,
+                        const char * prefix,
                         const char * URI) = 0;
-  virtual void start_element(const std::string & local_name, const char * prefix,
+  virtual void end_unit(const std::string & local_name,
+                        const char * prefix,
+                        const char * URI) = 0;
+  virtual void start_element(const std::string & local_name,
+                             const char * prefix,
                              const char * URI, int num_namespaces,
                              const struct srcsax_namespace * namespaces,
                              int num_attributes,
                              const struct srcsax_attribute * attributes) = 0;
-  virtual void end_element(const std::string & local_name, const char * prefix,
+  virtual void end_element(const std::string & local_name,
+                           const char * prefix,
                            const char * URI) = 0;
   virtual void characters(const char * ch, int len) = 0;
 
