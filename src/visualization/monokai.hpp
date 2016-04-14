@@ -16,6 +16,11 @@
 class monokai {
 
 public:
+
+    std::string common_color_html;
+    std::string delete_color_html;
+    std::string insert_color_html;
+
     std::string keyword_color_html;
     std::string storage_color_html;
     std::string function_name_color_html;
@@ -32,6 +37,10 @@ private:
 public:
 
     monokai() {
+
+        common_color_html = "<span style=\"background-color: transparent\">";
+        delete_color_html = "<span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: black; background-color: rgb(255,187,187); font-weight: bold;\">";
+        insert_color_html = "<span style=\"background-color: rgb(0,250,108)  ; font-weight: bold;\">";
 
         keyword_color_html       = "<span style=\"color: rgb(249, 38, 114);\">";
         storage_color_html       = "<span style=\"color: rgb(166, 226, 46);\">";

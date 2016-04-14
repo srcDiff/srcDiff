@@ -25,10 +25,6 @@ protected:
   static const char * const COMMON_CODE;
   static const char * const LINE_CODE;
 
-  static const char * const DELETE_CODE_HTML;
-  static const char * const INSERT_CODE_HTML;
-  static const char * const COMMON_CODE_HTML;
-
   static const char * const CARRIAGE_RETURN_SYMBOL;
 
   std::vector<int> diff_stack;
@@ -36,7 +32,7 @@ protected:
   std::ostream * output;
 
   bool syntax_highlight;
-  monokai highlighter;
+  monokai theme;
 
   bool ignore_all_whitespace;
   bool ignore_whitespace;
@@ -91,7 +87,7 @@ protected:
   void output_character(const char c, int operation);
 
 private:
-  const char * change_operation_to_code(int operation);
+  std::string change_operation_to_code(int operation);
   std::string close_spans(unsigned int close_num_span);
 
 public:

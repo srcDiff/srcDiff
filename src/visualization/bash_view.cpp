@@ -21,10 +21,6 @@ const char * const bash_view::COMMON_CODE = "\x1b[0m";
 
 const char * const bash_view::LINE_CODE = "\x1b[36m";
 
-const char * const bash_view::DELETE_CODE_HTML = "<span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: black; background-color: rgb(255,187,187); font-weight: bold;\">";
-const char * const bash_view::INSERT_CODE_HTML = "<span style=\"background-color: rgb(0,250,108)  ; font-weight: bold;\">";
-const char * const bash_view::COMMON_CODE_HTML = "<span style=\"background-color: transparent\">";
-
 const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
 bash_view::bash_view(const std::string & output_filename,
@@ -33,7 +29,7 @@ bash_view::bash_view(const std::string & output_filename,
                      bool ignore_whitespace,
                      bool ignore_comments,
                      bool is_html) 
-  : diff_stack(), syntax_highlight(syntax_highlight), highlighter(), 
+  : diff_stack(), syntax_highlight(syntax_highlight), theme(), 
     ignore_all_whitespace(ignore_all_whitespace),
     ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
     in_comment(false), is_html(is_html), close_num_span(0) {
@@ -76,7 +72,7 @@ void bash_view::reset() {
 
 }
 
-const char * bash_view::change_operation_to_code(int operation) {
+std::string bash_view::change_operation_to_code(int operation) {
 
   if(!is_html) {
 
@@ -87,10 +83,10 @@ const char * bash_view::change_operation_to_code(int operation) {
 
   }
 
-  if(operation == DELETE) return DELETE_CODE_HTML;
-  if(operation == INSERT) return INSERT_CODE_HTML;
+  if(operation == DELETE) return theme.delete_color_html;
+  if(operation == INSERT) return theme.insert_color_html;
 
-    return COMMON_CODE_HTML;
+    return theme.common_color_html;
 
 }
 
@@ -127,7 +123,7 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
   std::string highlight;
   if(syntax_highlight) {
 
-    highlight = highlighter.token2color(ch, srcml_element_stack.back());
+    highlight = theme.token2color(ch, srcml_element_stack.back());
     if(!highlight.empty())
       out << highlight;
 

@@ -162,7 +162,7 @@ void side_by_side_view::output_html() {
     (*output) << "</span>";
 
     (*output) << std::get<STREAM>(original_lines[i]).str();
-    (*output) << bash_view::COMMON_CODE_HTML << "\n</span>";  
+    (*output) << theme.common_color_html << "\n</span>";  
 
   }
   (*output) << "</pre></td></tr></table></td>";
@@ -187,7 +187,7 @@ void side_by_side_view::output_html() {
     (*output) << "</span>";
 
     (*output) << std::get<STREAM>(modified_lines[i]).str();
-    (*output) << bash_view::COMMON_CODE_HTML << "\n</span>";  
+    (*output) << theme.common_color_html << "\n</span>";  
 
   }
   (*output) << "</pre></td></tr></table>";
