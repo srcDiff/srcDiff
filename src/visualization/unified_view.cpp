@@ -216,8 +216,8 @@ void unified_view::characters(const char * ch, int len) {
    is_after_change = false;
    wait_change = false;
 
-   output->write(context.c_str(), context.size());
-   context = "";
+   output->write(context.str().c_str(), context.str().size());
+   context = std::ostringstream();
 
   }
 
@@ -272,7 +272,8 @@ void unified_view::characters(const char * ch, int len) {
     if(wait_change) {
 
       assert(!skip);
-      context.append(&ch[i], 1);
+      std::string character(1, ch[i]);
+      output_characters_to_buffer(context, character, bash_view::COMMON, last_character_operation, close_num_spans);
 
     } else if(!skip) {
 
@@ -325,7 +326,7 @@ void unified_view::characters(const char * ch, int len) {
         if(in_mode(LINE) && (!in_mode(FUNCTION) || !in_function.size()) && length >= number_context_lines)
           additional_context.pop_front(), --length;
 
-        additional_context.push_back(context);
+        additional_context.push_back(context.str());
         ++length;
 
       }
@@ -333,7 +334,7 @@ void unified_view::characters(const char * ch, int len) {
       if(diff_stack.back() != INSERT) ++line_number_delete;
       if(diff_stack.back() != DELETE) ++line_number_insert;
 
-      context = "";
+      context = std::ostringstream();
 
     }
 

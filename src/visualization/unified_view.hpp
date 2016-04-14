@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <list>
+#include <sstream>
 #include <fstream>
 #include <iostream>
 
@@ -28,7 +29,7 @@ private:
   size_t line_number_delete;
   size_t line_number_insert;
 
-  std::string context;
+  std::ostringstream context;
 
   size_t number_context_lines;
 
