@@ -6,14 +6,14 @@
  *  @author Michael John Decker <mdecker6@kent.edu>
  */
 
-#ifndef INCLUDED_MONOKAI_HPP
-#define INCLUDED_MONOKAI_HPP
+#ifndef INCLUDED_MONOKAI_THEME_HPP
+#define INCLUDED_MONOKAI_THEME_HPP
 
 #include <unordered_map>
 #include <iostream>
 #include <cpp_keywords.hpp>
 
-class monokai {
+class monokai_theme {
 
 public:
 
@@ -36,7 +36,7 @@ private:
 
 public:
 
-    monokai() {
+    monokai_theme() {
 
         common_color_html = "<span style=\"background-color: transparent\">";
         delete_color_html = "<span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: black; background-color: rgb(255,187,187); font-weight: bold;\">";

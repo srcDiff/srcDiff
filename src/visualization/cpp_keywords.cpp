@@ -7,9 +7,9 @@
  */
 
 #include <cpp_keywords.hpp>
-#include <monokai.hpp>
+#include <monokai_theme.hpp>
 
-cpp_keywords::cpp_keywords(const monokai & theme) {
+cpp_keywords::cpp_keywords(const monokai_theme & theme) {
 
     color_map = {
 

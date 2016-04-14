@@ -12,7 +12,7 @@
 #include <unordered_map>
 #include <string>
 
-class monokai;
+class monokai_theme;
 
 class cpp_keywords {
 
@@ -21,7 +21,7 @@ class cpp_keywords {
 public:
 
     cpp_keywords() {}
-    cpp_keywords(const monokai & theme);
+    cpp_keywords(const monokai_theme & theme);
 
     std::string color(const std::string & token) const;
 

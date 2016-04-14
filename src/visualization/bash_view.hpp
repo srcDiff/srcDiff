@@ -3,7 +3,7 @@
 
 #include <srcSAXHandler.hpp>
 
-#include <monokai.hpp>
+#include <monokai_theme.hpp>
 
 #include <vector>
 #include <string>
@@ -32,7 +32,7 @@ protected:
   std::ostream * output;
 
   bool syntax_highlight;
-  monokai theme;
+  monokai_theme theme;
 
   bool ignore_all_whitespace;
   bool ignore_whitespace;
