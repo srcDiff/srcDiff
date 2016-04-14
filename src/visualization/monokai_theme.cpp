@@ -12,8 +12,8 @@ monokai_theme::monokai_theme(bool is_html) {
 
     if(is_html) {
 
-        background_color = "rgb(39 , 40, 34)";
-        text_color       = "rgb(248 , 248, 242)";
+        background_color  = "rgb(39 , 40, 34)";
+        text_color        = "rgb(248 , 248, 242)";
         line_number_color = "grey";
 
         common_color = "<span style=\"background-color: transparent\">";
@@ -32,22 +32,19 @@ monokai_theme::monokai_theme(bool is_html) {
 
     } else {
 
-        background_color = "40";
-        text_color = "37";
         line_number_color = "\x1b[36m";
 
-        common_color = "\x1b[0m\x1b[" + background_color + ";" + text_color + "m";
+        common_color = "\x1b[0m";
         delete_color = "\x1b[9;48;5;210;1m";
         insert_color = "\x1b[48;5;120;1m";
 
-        keyword_color = "\x1b[38;5;188m";
-        storage_color = "\x1b[38;5;188m";
-        // type_color    = "<span style=\"color: rgb(102, 217, 239);\">";
+        keyword_color = "\x1b[38;5;204m";
+        storage_color = "\x1b[38;5;204m";
+        type_color    = "\x1b[38;5;102m";
 
         // comment_color = "<span style=\"color: rgb(117, 113, 94);\">";
         // number_color  = "<span style=\"color: rgb(174, 129, 255);\">";
         // string_color  = "<span style=\"color: rgb(230, 219, 116);\">";
-
 
     }
 

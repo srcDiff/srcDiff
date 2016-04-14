@@ -116,6 +116,13 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
   if(!is_html) {
 
     out << ch;
+
+    if(!highlight.empty()) {
+      out << theme.common_color;
+      if(operation != bash_view::COMMON)
+        out << change_operation_to_code(operation);
+    }
+
     return;
 
   }
@@ -164,7 +171,7 @@ void bash_view::startDocument() {
 
   } else {
 
-    (*output) << "\x1b[" + theme.background_color + ";" + theme.text_color + "m";
+    (*output) << theme.common_color;
 
   }
 
