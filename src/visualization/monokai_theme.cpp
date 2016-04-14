@@ -38,6 +38,15 @@ monokai_theme::monokai_theme(bool is_html) {
         delete_color = "\x1b[9;48;5;210;1m";
         insert_color = "\x1b[48;5;120;1m";
 
+        keyword_color = "\x1b[38;5;188m";
+        storage_color = "\x1b[38;5;188m";
+        // type_color    = "<span style=\"color: rgb(102, 217, 239);\">";
+
+        // comment_color = "<span style=\"color: rgb(117, 113, 94);\">";
+        // number_color  = "<span style=\"color: rgb(174, 129, 255);\">";
+        // string_color  = "<span style=\"color: rgb(230, 219, 116);\">";
+
+
     }
 
     keywords = cpp_keywords(*this);
