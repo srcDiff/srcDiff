@@ -236,7 +236,8 @@ void unified_view::characters(const char * ch, int len) {
   for(int i = 0; i < len; ++i) {
 
     bool skip = false;
-    if(isspace(ch[i])) {
+    bool is_space = isspace(ch[i]);
+    if(is_space) {
 
       if(ignore_whitespace && diff_stack.back() != bash_view::COMMON) {
 
@@ -269,11 +270,25 @@ void unified_view::characters(const char * ch, int len) {
 
     }
 
+    std::string str(1, ch[i]);
+    if(!is_space || ch[i] != '\n') {
+
+      ++i;
+      while(i < len && isspace(ch[i]) == is_space && ch[i] != '\n') {
+
+        str += ch[i];
+        ++i;
+
+      }
+
+      --i;
+
+    }
+
     if(wait_change) {
 
       assert(!skip);
-      std::string character(1, ch[i]);
-      output_characters_to_buffer(context, character, bash_view::COMMON, last_character_operation, close_num_spans);
+      output_characters_to_buffer(context, str, bash_view::COMMON, last_character_operation, close_num_spans);
 
     } else if(!skip) {
 
@@ -284,7 +299,7 @@ void unified_view::characters(const char * ch, int len) {
 
       } else {
 
-        output_character(ch[i], diff_stack.back());
+        output_characters(str, diff_stack.back());
 
       }
 
