@@ -32,9 +32,11 @@ monokai_theme::monokai_theme(bool is_html) {
 
     } else {
 
+        background_color = "40";
+        text_color = "37";
         line_number_color = "\x1b[36m";
 
-        common_color = "\x1b[0m";
+        common_color = "\x1b[0m\x1b[" + background_color + ";" + text_color + "m";
         delete_color = "\x1b[9;48;5;210;1m";
         insert_color = "\x1b[48;5;120;1m";
 

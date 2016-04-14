@@ -162,6 +162,10 @@ void bash_view::startDocument() {
     (*output) << "</head>\n";
     (*output) << "<body style=\"font-family: courier, monospace; background-color: " + theme.background_color + "; color: " + theme.text_color + ";\">\n";
 
+  } else {
+
+    (*output) << "\x1b[" + theme.background_color + ";" + theme.text_color + "m";
+
   }
 
 }
@@ -174,7 +178,16 @@ void bash_view::startDocument() {
  */
 void bash_view::endDocument() {
 
-  if(is_html) (*output) << "</body></html>";
+  if(is_html) {
+
+    (*output) << "</body>\n";
+    (*output) << "</html>\n";
+
+  } else {
+
+    (*output) << "\x1b[0m";
+
+  }
 
 }
 
