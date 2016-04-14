@@ -29,7 +29,7 @@ bash_view::bash_view(const std::string & output_filename,
                      bool ignore_whitespace,
                      bool ignore_comments,
                      bool is_html) 
-  : diff_stack(), syntax_highlight(syntax_highlight), theme(), 
+  : diff_stack(), syntax_highlight(syntax_highlight), theme(is_html), 
     ignore_all_whitespace(ignore_all_whitespace),
     ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
     in_comment(false), is_html(is_html), close_num_span(0) {
