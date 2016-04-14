@@ -127,7 +127,7 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
   std::string highlight;
   if(syntax_highlight) {
 
-    highlight = highlighter.token2color(ch);
+    highlight = highlighter.token2color(ch, srcml_element_stack.back());
     if(!highlight.empty())
       out << highlight;
 
@@ -251,6 +251,25 @@ void bash_view::startElement(const char * localname, const char * prefix,
                              const struct srcsax_attribute * attributes) {
 
   const std::string local_name(localname);
+
+  if(local_name == "literal") {
+
+    std::string literal_type;
+    for(int i = 0; i < num_attributes; ++i) {
+
+      if(std::string(attributes[i].localname) == "type") {
+
+        literal_type = attributes[i].value;
+        break;
+
+      }
+
+    }
+
+    if(literal_type == "string")
+      srcml_element_stack.back() += "_string";
+
+  }
 
   if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF && local_name == "comment")
     in_comment = true;

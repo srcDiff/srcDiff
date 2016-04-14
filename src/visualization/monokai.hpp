@@ -47,7 +47,7 @@ public:
 
     }
 
-    std::string token2color(const std::string & token) {
+    std::string token2color(const std::string & token, const std::string & parent) {
 
         try {
 
@@ -55,9 +55,13 @@ public:
 
         } catch(const std::out_of_range & e) {
 
-            return "";
+            if(parent == "comment")        return comment_color_html;
+            if(parent == "literal")        return number_color_html;
+            if(parent == "literal_string") return string_color_html;
 
         }
+
+        return "";
 
     }
 
