@@ -176,7 +176,7 @@ void bash_view::startDocument() {
     (*output) << "<meta charset=\"UTF-8\">\n";
     (*output) << "<title>srcDiff</title>\n";
     (*output) << "</head>\n";
-    (*output) << "<body style=\"font-family: courier, monospace; background-color: " + theme.background_color + "\">\n";
+    (*output) << "<body style=\"font-family: courier, monospace; background-color: " + theme.background_color + "; color: " + theme.text_color + ";\">\n";
 
   }
 
