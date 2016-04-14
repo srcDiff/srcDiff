@@ -99,7 +99,7 @@ void unified_view::output_additional_context() {
 
   for(std::list<std::string>::const_iterator citr = additional_context.begin(); citr != additional_context.end(); ++citr) {
 
-    output_characters(*citr, bash_view::COMMON);
+    (*output) << *citr;
 
     ++line_delete, ++line_insert;
 
