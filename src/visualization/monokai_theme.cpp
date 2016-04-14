@@ -1,14 +1,14 @@
 /**
- *  @file monokai.hpp
+ *  @file monokai_theme.cpp
  *
- *  Specifies monokai color scheme for syntax highlighting.
+ *  Specifies monokai color scheme.
  *
  *  @author Michael John Decker <mdecker6@kent.edu>
  */
 
 #include <monokai_theme.hpp>
 
-monokai_theme::monokai_theme(bool is_html) {
+monokai_theme::monokai_theme(bool is_html) : theme_t(is_html) {
 
     if(is_html) {
 
@@ -30,42 +30,8 @@ monokai_theme::monokai_theme(bool is_html) {
         number_color  = "<span style=\"color: rgb(174, 129, 255);\">";
         string_color  = "<span style=\"color: rgb(230, 219, 116);\">";
 
-    } else {
-
-        line_number_color = "\x1b[36m";
-
-        common_color = "\x1b[0m";
-        delete_color = "\x1b[9;48;5;210;1m";
-        insert_color = "\x1b[48;5;120;1m";
-
-        keyword_color = "\x1b[38;5;204m";
-        storage_color = "\x1b[38;5;204m";
-        type_color    = "\x1b[38;5;117m";
-
-        comment_color = "\x1b[38;5;102m";
-        number_color  = "\x1b[38;5;141m";
-        string_color  = "\x1b[38;5;222m";
-
     }
 
     keywords = cpp_keywords(*this);
-
-}
-
-std::string monokai_theme::token2color(const std::string & token, const std::string & parent) const {
-
-    try {
-
-        return keywords.color(token);
-
-    } catch(const std::out_of_range & e) {
-
-        if(parent == "comment")        return comment_color;
-        if(parent == "literal")        return number_color;
-        if(parent == "literal_string") return string_color;
-
-    }
-
-    return "";
 
 }

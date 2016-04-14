@@ -1,7 +1,7 @@
 /**
- *  @file monokai.hpp
+ *  @file monokai_theme.hpp
  *
- *  Specifies monokai color scheme for syntax highlighting.
+ *  Specifies monokai color scheme.
  *
  *  @author Michael John Decker <mdecker6@kent.edu>
  */
@@ -9,33 +9,14 @@
 #ifndef INCLUDED_MONOKAI_THEME_HPP
 #define INCLUDED_MONOKAI_THEME_HPP
 
-#include <cpp_keywords.hpp>
+#include <theme.hpp>
 
 #include <string>
 #include <iostream>
 
-class monokai_theme {
+class monokai_theme : public theme_t {
 
-public:
-
-    std::string background_color;
-    std::string text_color;
-    std::string line_number_color;
-
-    std::string common_color;
-    std::string delete_color;
-    std::string insert_color;
-
-    std::string keyword_color;
-    std::string storage_color;
-    std::string type_color;
-    std::string comment_color;
-    std::string number_color;
-    std::string string_color;
-
-private:
-    cpp_keywords keywords;
-
+private: 
 public:
 
     monokai_theme(bool is_html);
