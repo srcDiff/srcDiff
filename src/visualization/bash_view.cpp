@@ -83,10 +83,10 @@ std::string bash_view::change_operation_to_code(int operation) {
 
   }
 
-  if(operation == DELETE) return theme.delete_color_html;
-  if(operation == INSERT) return theme.insert_color_html;
+  if(operation == DELETE) return theme.delete_color;
+  if(operation == INSERT) return theme.insert_color;
 
-    return theme.common_color_html;
+    return theme.common_color;
 
 }
 

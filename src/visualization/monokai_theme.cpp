@@ -10,22 +10,27 @@
 
 monokai_theme::monokai_theme(bool is_html) {
 
-    background_color = "rgb(39 , 40, 34)";
-    text_color       = "rgb(248 , 248, 242)";
+    if(is_html) {
 
-    common_color = "<span style=\"background-color: transparent\">";
-    delete_color = "<span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: " + text_color + "; background-color: rgb(255, 94, 94); font-weight: bold;\">";
-    insert_color = "<span style=\"background-color: rgb(0 , 187, 81)  ; font-weight: bold;\">";
-    // delete_color = "<span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: black; background-color: rgb(255,187,187); font-weight: bold;\">";
-    // insert_color = "<span style=\"background-color: rgb(0 , 250, 108)  ; font-weight: bold;\">";
+        background_color = "rgb(39 , 40, 34)";
+        text_color       = "rgb(248 , 248, 242)";
 
-    keyword_color = "<span style=\"color: rgb(249, 38, 114);\">";
-    storage_color = "<span style=\"color: rgb(166, 226, 46);\">";
-    type_color    = "<span style=\"color: rgb(102, 217, 239);\">";
+        common_color = "<span style=\"background-color: transparent\">";
+        delete_color = "<span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: " + text_color + "; background-color: rgb(255, 94, 94); font-weight: bold;\">";
+        insert_color = "<span style=\"background-color: rgb(0 , 187, 81)  ; font-weight: bold;\">";
+        // delete_color = "<span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: black; background-color: rgb(255,187,187); font-weight: bold;\">";
+        // insert_color = "<span style=\"background-color: rgb(0 , 250, 108)  ; font-weight: bold;\">";
 
-    comment_color = "<span style=\"color: rgb(117, 113, 94);\">";
-    number_color  = "<span style=\"color: rgb(174, 129, 255);\">";
-    string_color  = "<span style=\"color: rgb(230, 219, 116);\">";
+        keyword_color = "<span style=\"color: rgb(249, 38, 114);\">";
+        storage_color = "<span style=\"color: rgb(166, 226, 46);\">";
+        type_color    = "<span style=\"color: rgb(102, 217, 239);\">";
+
+        comment_color = "<span style=\"color: rgb(117, 113, 94);\">";
+        number_color  = "<span style=\"color: rgb(174, 129, 255);\">";
+        string_color  = "<span style=\"color: rgb(230, 219, 116);\">";
+
+    }
+
     keywords = cpp_keywords(*this);
 
 }
@@ -38,9 +43,9 @@ std::string monokai_theme::token2color(const std::string & token, const std::str
 
     } catch(const std::out_of_range & e) {
 
-        if(parent == "comment")        return comment_color_html;
-        if(parent == "literal")        return number_color_html;
-        if(parent == "literal_string") return string_color_html;
+        if(parent == "comment")        return comment_color;
+        if(parent == "literal")        return number_color;
+        if(parent == "literal_string") return string_color;
 
     }
 
