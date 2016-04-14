@@ -489,10 +489,9 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("ignore-comments,c", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_COMMENTS>), "Ignore comments when outputting unified/side-by-side view")
     ("highlight", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SYNTAX_HIGHLIGHTING>)->default_value(true), "Syntax-hightlighting of unified/side-by-side view")
     ("no-highlight", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_SYNTAX_HIGHLIGHTING>), "No syntax-hightlighting of unified/side-by-side view")
-    ("theme", boost::program_options::value<std::string>()->default_value("default"), "Select theme for syntax-hightlighting.  default or monokai")
+    ("theme", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::theme>)->default_value("default"), "Select theme for syntax-hightlighting.  default or monokai")
 
-    ("summary", boost::program_options::value<std::string>()->implicit_value("text")->notifier(option_field<&srcdiff_options::summary_type_str>),
-        "Output a summary of the differences.  Options 'text' and/or 'table' summary.   Default 'text'  ")
+    ("summary", boost::program_options::value<std::string>()->implicit_value("text")->notifier(option_field<&srcdiff_options::summary_type_str>), "Output a summary of the differences.  Options 'text' and/or 'table' summary.   Default 'text'  ")
 #endif
 
   ;

@@ -28,6 +28,22 @@ default_theme::default_theme(bool is_html) : theme_t(is_html) {
         number_color  = "<span style=\"color: rgb(174, 129, 255);\">";
         string_color  = "<span style=\"color: rgb(230, 219, 116);\">";
 
+    } else {
+
+        line_number_color = "\x1b[36m";
+
+        common_color = "\x1b[0m";
+        delete_color = "\x1b[9;48;5;210;1m";
+        insert_color = "\x1b[48;5;120;1m";
+
+        keyword_color = "\x1b[38;5;204m";
+        storage_color = "\x1b[38;5;204m";
+        type_color    = "\x1b[38;5;117m";
+
+        comment_color = "\x1b[38;5;102m";
+        number_color  = "\x1b[38;5;141m";
+        string_color  = "\x1b[38;5;222m";
+
     }
 
     keywords = cpp_keywords(*this);
