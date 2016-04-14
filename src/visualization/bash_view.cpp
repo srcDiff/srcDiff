@@ -14,8 +14,6 @@ int bash_view::COMMON = 1 << 0;
 int bash_view::DELETE = 1 << 1;
 int bash_view::INSERT = 1 << 2;
 
-const char * const bash_view::LINE_CODE = "\x1b[36m";
-
 const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
 bash_view::bash_view(const std::string & output_filename,

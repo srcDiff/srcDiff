@@ -20,6 +20,7 @@ public:
 
     std::string background_color;
     std::string text_color;
+    std::string line_number_color;
 
     std::string common_color;
     std::string delete_color;

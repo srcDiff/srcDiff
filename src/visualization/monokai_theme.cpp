@@ -14,6 +14,7 @@ monokai_theme::monokai_theme(bool is_html) {
 
         background_color = "rgb(39 , 40, 34)";
         text_color       = "rgb(248 , 248, 242)";
+        line_number_color = "grey";
 
         common_color = "<span style=\"background-color: transparent\">";
         delete_color = "<span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: " + text_color + "; background-color: rgb(255, 94, 94); font-weight: bold;\">";
@@ -30,6 +31,8 @@ monokai_theme::monokai_theme(bool is_html) {
         string_color  = "<span style=\"color: rgb(230, 219, 116);\">";
 
     } else {
+
+        line_number_color = "\x1b[36m";
 
         common_color = "\x1b[0m";
         delete_color = "\x1b[9;48;5;210;1m";

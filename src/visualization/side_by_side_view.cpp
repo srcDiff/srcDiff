@@ -148,7 +148,7 @@ void side_by_side_view::output_html() {
   int line_number = 1;
   for(int i = 0; i < original_lines.size(); ++i) {
 
-    (*output) << "<span style=\"color: grey\">";
+    (*output) << "<span style=\"color: " + theme.line_number_color + ";\">";
     if(line_operations[i] != bash_view::INSERT) {
 
       (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
@@ -173,7 +173,7 @@ void side_by_side_view::output_html() {
   line_number = 1;
   for(int i = 0; i < modified_lines.size(); ++i) {
 
-    (*output) << "<span style=\"color: grey\">";
+    (*output) << "<span style=\"color: " + theme.line_number_color + ";\">";
     if(line_operations[i] != bash_view::DELETE) {
 
       (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
