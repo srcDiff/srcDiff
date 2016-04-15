@@ -382,12 +382,22 @@ void unified_view::characters(const char * ch, int len) {
           wait_change = true;
           last_context_line = line_number_delete;
 
+          end_buffer(context, close_num_spans);
+          last_character_operation = bash_view::UNSET;      
+
         }
 
       } else if(wait_change && ((in_mode(LINE) && (!in_mode(FUNCTION) || !in_function.size()) && number_context_lines != 0) || (in_mode(FUNCTION) && in_function.size()))) {
 
         if(in_mode(LINE) && (!in_mode(FUNCTION) || !in_function.size()) && length >= number_context_lines)
           additional_context.pop_front(), --length;
+
+        if(!in_mode(ALL)) {
+
+          end_buffer(context, close_num_spans);
+          last_character_operation = bash_view::UNSET;
+
+        }
 
         additional_context.push_back(context.str());
         ++length;
