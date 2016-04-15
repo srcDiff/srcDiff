@@ -92,8 +92,14 @@ void unified_view::output_additional_context() {
   size_t line_delete = line_number_delete + 1 - additional_context.size();
   size_t line_insert = line_number_insert + 1 - additional_context.size();
 
-  if(wait_change && last_context_line != (line_number_delete - 1))
-    (*output) << theme->common_color << theme->line_number_color << "@@ -" << line_delete << " +" << line_insert << " @@" << theme->common_color << '\n';
+  if(wait_change && last_context_line != (line_number_delete - 1)) {
+
+    if(!is_html)
+      (*output) << theme->common_color << theme->line_number_color << "@@ -" << line_delete << " +" << line_insert << " @@" << theme->common_color << '\n';
+    else
+      (*output) << "<span style=\"color:" << theme->line_number_color << ";\">@@ -" << line_delete << " +" << line_insert << " @@" << "</span>\n";
+
+  }
 
   if(additional_context.empty()) return;
 
@@ -138,7 +144,7 @@ void unified_view::start_unit(const std::string & local_name,
                               const struct srcsax_namespace * namespaces,
                               int num_attributes,
                               const struct srcsax_attribute * attributes) {
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
   if(is_html)
     (*output) << "<pre>";
 
