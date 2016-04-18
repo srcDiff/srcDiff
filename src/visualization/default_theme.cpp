@@ -22,7 +22,7 @@ default_theme::default_theme(bool is_html) : theme_t(is_html) {
 
         keyword_color = "<span style=\"color: rgb(249, 38, 114);\">";
         storage_color = "<span style=\"color: rgb(166, 226, 46);\">";
-        type_color    = "<span style=\"color: rgb(82, 197, 219);\">";
+        type_color    = "<span style=\"color: rgb(62, 177, 1999);\">";
 
         comment_color = "<span style=\"color: rgb(117, 113, 94);\">";
         number_color  = "<span style=\"color: rgb(174, 129, 255);\">";
