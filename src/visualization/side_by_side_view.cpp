@@ -393,18 +393,6 @@ void side_by_side_view::characters(const char * ch, int len) {
 
 }
 
-void side_by_side_view::start_root(const std::string & local_name,
-                                   const char * prefix,
-                                   const char * URI,
-                                   int num_namespaces,
-                                   const struct srcsax_namespace * namespaces,
-                                   int num_attributes,
-                                   const struct srcsax_attribute * attributes) {
-
-  add_new_line();
-
-}
-
 void side_by_side_view::start_unit(const std::string & local_name,
                                    const char * prefix,
                                    const char * URI,
@@ -414,36 +402,6 @@ void side_by_side_view::start_unit(const std::string & local_name,
                                    const struct srcsax_attribute * attributes) {
 
     add_new_line();
-
-}
-
-void side_by_side_view::end_root(const std::string & local_name,
-                                 const char * prefix,
-                                 const char * URI) {
-
-  if((!change_ending_space_original.empty() || !change_ending_space_modified.empty())) {
-
-    assert(change_ending_space_original.empty() || change_ending_space_modified.empty());
-    if(!change_ending_space_original.empty()) {
-
-      output_characters(change_ending_space_original, bash_view::COMMON);
-      change_ending_space_original = "";
-
-    }
-
-    if(!change_ending_space_modified.empty()) {
-
-      output_characters(change_ending_space_modified, bash_view::COMMON);
-      change_ending_space_modified = "";
-
-    }
-
-  }
-
-  if(is_html)
-    output_html();
-  else
-    output_bash();
 
 }
 
