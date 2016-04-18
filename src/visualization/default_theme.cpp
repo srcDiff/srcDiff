@@ -26,27 +26,31 @@ default_theme::default_theme(bool is_html) : theme_t(is_html) {
 
         comment_color = "<span style=\"color: rgb(110, 110, 110);\">";
         number_color  = "<span style=\"color: rgb(255, 0, 255);\">";
-        string_color  = "<span style=\"color: rgb(255, 127, 0);\">";
+        string_color  = "<span style=\"color: rgb(255, 128, 0);\">";
 
         function_name_color = "<span style=\"color: rgb(0, 160, 64);\">";
-        class_name_color    = "<span style=\"color: rgb(0, 180, 64);\">";
-        call_name_color     = "<span style=\"color: rgb(50, 150, 225);\">";
+        class_name_color    = "<span style=\"color: rgb(0, 160, 64);\">";
+        call_name_color     = "<span style=\"color: rgb(50, 140, 215);\">";
 
     } else {
 
         line_number_color = "\x1b[36m";
 
         common_color = "\x1b[0m";
-        delete_color = "\x1b[9;48;5;210;1m";
+        delete_color = "\x1b[9;48;5;217;1m";
         insert_color = "\x1b[48;5;120;1m";
 
-        keyword_color = "\x1b[38;5;204m";
-        storage_color = "\x1b[38;5;204m";
-        type_color    = "\x1b[38;5;117m";
+        keyword_color = "\x1b[38;5;198m";
+        storage_color = "\x1b[38;5;198m";
+        type_color    = "\x1b[38;5;68m";
 
         comment_color = "\x1b[38;5;102m";
-        number_color  = "\x1b[38;5;141m";
-        string_color  = "\x1b[38;5;222m";
+        number_color  = "\x1b[38;5;201m";
+        string_color  = "\x1b[38;5;208m";
+
+        function_name_color = "\x1b[38;5;28m";
+        class_name_color    = "\x1b[38;5;28m";
+        call_name_color     = "\x1b[38;5;68m";
 
     }
 
