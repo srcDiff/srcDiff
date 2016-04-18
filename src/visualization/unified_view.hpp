@@ -105,36 +105,6 @@ private:
 
   virtual void output_characters(const std::string & ch, int operation);
 
-public:
-
-  /**
-   * startUnit
-   * @param localname the name of the profile tag
-   * @param prefix the tag prefix
-   * @param URI the namespace of tag
-   * @param num_namespaces number of namespaces definitions
-   * @param namespaces the defined namespaces
-   * @param num_attributes the number of attributes on the tag
-   * @param attributes list of attributes
-   *
-   * SAX handler function for start of an unit.
-   * Overide for desired behaviour.
-   */
-  virtual void startUnit(const char * localname, const char * prefix, const char * URI,
-                         int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                         const struct srcsax_attribute * attributes);
-
-  /**
-   * endUnit
-   * @param localname the name of the profile tag
-   * @param prefix the tag prefix
-   * @param URI the namespace of tag
-   *
-   * SAX handler function for end of an unit.
-   * Overide for desired behaviour.
-   */
-  virtual void endUnit(const char * localname, const char * prefix, const char * URI);
-
 };
 
 #endif

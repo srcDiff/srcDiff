@@ -27,7 +27,7 @@ unified_view::unified_view(const std::string & output_filename,
                 context_type(context_type), length(0), is_after_additional(false),
                 after_edit_count(0), last_context_line((unsigned)-1),
                 change_starting_line(false), change_ending_space(),
-                change_ending_operation(bash_view::COMMON),
+                change_ending_operation(bash_view::UNSET),
                 close_num_spans(0) {
 
   if(context_type.type() == typeid(size_t)) {
@@ -67,7 +67,7 @@ void unified_view::reset_internal() {
   last_character_operation = bash_view::UNSET;
   change_starting_line = false;
   change_ending_space = "";
-  change_ending_operation = bash_view::COMMON;
+  change_ending_operation = bash_view::UNSET;
   close_num_spans = 0;
 
 }
@@ -204,6 +204,14 @@ void unified_view::end_root(const std::string & local_name,
 
   if(is_archive) return;
 
+  if(!change_ending_space.empty()) {
+
+    output_characters(change_ending_space, bash_view::COMMON);
+    change_ending_space = "";
+    change_ending_operation = bash_view::COMMON;
+
+  }
+
   if(is_html)
     (*output) << "</pre>";
 
@@ -212,6 +220,15 @@ void unified_view::end_root(const std::string & local_name,
 void unified_view::end_unit(const std::string & local_name,
                             const char * prefix,
                             const char * URI) {
+
+  if(!change_ending_space.empty()) {
+
+    output_characters(change_ending_space, bash_view::COMMON);
+    change_ending_space = "";
+    change_ending_operation = bash_view::COMMON;
+
+  }
+
   if(is_html)
     (*output) << "</pre>";
 
@@ -273,7 +290,7 @@ void unified_view::characters(const char * ch, int len) {
 
     output_characters(change_ending_space, bash_view::COMMON);
     change_ending_space = "";
-    change_ending_operation = bash_view::COMMON;
+    change_ending_operation = bash_view::UNSET;
 
   }
 
@@ -310,7 +327,7 @@ void unified_view::characters(const char * ch, int len) {
 
         output_characters(change_ending_space, diff_stack.back());
         change_ending_space = "";
-        change_ending_operation = bash_view::COMMON;
+        change_ending_operation = bash_view::UNSET;
 
       }
 
@@ -359,7 +376,7 @@ void unified_view::characters(const char * ch, int len) {
 
         output_characters(change_ending_space, bash_view::COMMON);
         change_ending_space = "";
-        change_ending_operation = bash_view::COMMON;
+        change_ending_operation = bash_view::UNSET;
 
       }
 
@@ -414,52 +431,5 @@ void unified_view::characters(const char * ch, int len) {
   }
 
   if(diff_stack.back() != bash_view::COMMON) is_after_change  = true;
-
-}
-
-/**
- * startUnit
- * @param localname the name of the profile tag
- * @param prefix the tag prefix
- * @param URI the namespace of tag
- * @param num_namespaces number of namespaces definitions
- * @param namespaces the defined namespaces
- * @param num_attributes the number of attributes on the tag
- * @param attributes list of attributes
- *
- * SAX handler function for start of an unit.
- * Overide for desired behavior.
- */
-void unified_view::startUnit(const char * localname, const char * prefix,
-                             const char * URI, int num_namespaces,
-                             const struct srcsax_namespace * namespaces,
-                             int num_attributes,
-                             const struct srcsax_attribute * attributes) {
-
-    diff_stack.push_back(bash_view::COMMON);
-    output_characters("", bash_view::COMMON);
-
-}
-
-/**
- * endUnit
- * @param localname the name of the profile tag
- * @param prefix the tag prefix
- * @param URI the namespace of tag
- *
- * SAX handler function for end of an unit.
- * Overide for desired behavior.
- */
-void unified_view::endUnit(const char * localname, const char * prefix, const char * URI) {
-
-  if(!change_ending_space.empty()) {
-
-    output_characters(change_ending_space, bash_view::COMMON);
-    change_ending_space = "";
-    change_ending_operation = bash_view::COMMON;
-
-  }
-
-  output_characters("", bash_view::COMMON);
 
 }
