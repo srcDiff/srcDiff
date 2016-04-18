@@ -12,6 +12,21 @@
 
 cpp_keywords::cpp_keywords(const theme_t & theme) : keywords_t(theme) {
 
+/*
+
+    abstract    continue    for new switch
+    assert***   default goto*   package synchronized
+    boolean do  if  private this
+    break   double  implements  protected   throw
+    byte    else    import  public  throws
+    case    enum****    instanceof  return  transient
+    catch   extends int short   try
+    char    final   interface   static  void
+    class   finally long    strictfp**  volatile
+    const*  float   native  super   while
+
+*/
+
     color_map = {
 
         { "do",           theme.keyword_color },
@@ -26,6 +41,7 @@ cpp_keywords::cpp_keywords(const theme_t & theme) : keywords_t(theme) {
 
         { "try",          theme.keyword_color },
         { "catch",        theme.keyword_color },
+        { "finally",      theme.keyword_color },
         { "throw",        theme.keyword_color },
 
         { "break",        theme.keyword_color },
@@ -33,63 +49,42 @@ cpp_keywords::cpp_keywords(const theme_t & theme) : keywords_t(theme) {
         { "goto",         theme.keyword_color },
         { "return",       theme.keyword_color },
 
-        { "namespace",    theme.keyword_color },
-        { "typename",     theme.storage_color },
-        { "using",        theme.storage_color },
+        { "synchronized", theme.keyword_color },
+        { "abstract",     theme.keyword_color },
 
-        { "and",          theme.keyword_color },
-        { "and_eq",       theme.keyword_color },
-        { "bitand",       theme.keyword_color },
-        { "bitor",        theme.keyword_color },
-        { "compl",        theme.keyword_color },
-        { "not",          theme.keyword_color },
-        { "not_eq",       theme.keyword_color },
-        { "or",           theme.keyword_color },
-        { "or_eq",        theme.keyword_color },
-        { "xor",          theme.keyword_color },
-        { "xor_eq",       theme.keyword_color },
+        { "package",      theme.keyword_color },
+        { "import",       theme.keyword_color },
+
+        { "assert",       theme.keyword_color },
         { "new",          theme.keyword_color },
+        { "instanceof",   theme.keyword_color },
 
-        { "const",        theme.storage_color },
-        { "constexpr",    theme.storage_color },
-        { "extern",       theme.storage_color },
-        { "inline",       theme.storage_color },
-        { "mutable",      theme.storage_color },
-        { "register",     theme.storage_color },
         { "static",       theme.storage_color },
-        { "thread_local", theme.storage_color },
-        { "virtual",      theme.storage_color },
+        { "native",       theme.storage_color },
+        { "strictfp",     theme.storage_color },
+        { "transient",    theme.storage_color },
         { "volatile",     theme.storage_color },
 
         { "private",      theme.keyword_color },
         { "protected",    theme.keyword_color },
         { "public",       theme.keyword_color },
 
+        { "const",        theme.storage_color },
         { "explicit",     theme.storage_color },
-        { "export",       theme.storage_color },
 
-        { "auto",         theme.type_color },
-        { "bool",         theme.type_color },
+        { "boolean"       theme.type_color },
+        { "byte"          theme.type_color },
         { "char",         theme.type_color },
-        { "char16_t",     theme.type_color },
-        { "char32_t",     theme.type_color },
         { "class",        theme.type_color },
         { "double",       theme.type_color },
         { "enum",         theme.type_color },
-        { "false",        theme.type_color },
+        { "final",        theme.type_color },
         { "float",        theme.type_color },
         { "int",          theme.type_color },
+        { "interface",    theme.type_color },
         { "long",         theme.type_color },
         { "short",        theme.type_color },
-        { "signed",       theme.type_color },
-        { "struct",       theme.type_color },
-        { "template",     theme.type_color },
-        { "true",         theme.type_color },
-        { "typedef",      theme.type_color },
-        { "union",        theme.type_color },
-        { "unsigned",     theme.type_color },
         { "void",         theme.type_color },
-        { "wchar_t",      theme.type_color }
 
     };
 
