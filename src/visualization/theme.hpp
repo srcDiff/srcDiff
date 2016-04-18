@@ -41,7 +41,13 @@ protected:
 public:
 
     theme_t(bool is_html);
-    std::string token2color(const std::string & token, const std::vector<std::string> & element_stack) const;
+    std::string token2color(const std::string & token,
+                            bool in_comment,
+                            bool in_literal,
+                            bool in_string,
+                            bool in_function_name,
+                            bool in_class_name,
+                            bool in_call_name) const;
 
 };
 

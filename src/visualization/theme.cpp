@@ -10,21 +10,18 @@
 
 theme_t::theme_t(bool is_html) {}
 
-std::string theme_t::token2color(const std::string & token, const std::vector<std::string> & srcdiff_elements) const {
+std::string theme_t::token2color(const std::string & token,
+                                 bool in_comment,
+                                 bool in_literal,
+                                 bool in_string,
+                                 bool in_function_name,
+                                 bool in_class_name,
+                                 bool in_call_name) const {
 
-	std::vector<std::string>::size_type parent_pos = srcdiff_elements.size() - 1;
-	while( parent_pos > 0
-		&& (   srcdiff_elements.at(parent_pos) == "diff:common"
-			|| srcdiff_elements.at(parent_pos) == "diff:delete"
-			|| srcdiff_elements.at(parent_pos) == "diff:insert"
-			|| srcdiff_elements.at(parent_pos) == "diff:ws"))
-		--parent_pos;
 
-	const std::string & parent = srcdiff_elements.at(parent_pos);
-
-    if(parent == "comment")        return comment_color;
-    if(parent == "literal")        return number_color;
-    if(parent == "literal_string") return string_color;
+    if(in_comment) return comment_color;
+    if(in_literal) return number_color;
+    if(in_string)  return string_color;
 
     try {
 

@@ -39,10 +39,15 @@ bash_view::bash_view(const std::string & output_filename,
                      bool is_html) 
   : diff_stack(), syntax_highlight(syntax_highlight),
     theme(to_lower(theme) == "default" ? (theme_t *)new default_theme(is_html) : (theme_t *)new monokai_theme(is_html)), 
-    in_function_name(false), in_class_name(false), in_call_name(false),
+    in_comment(false),
+    in_literal(false),
+    in_string(false),
+    in_function_name(false),
+    in_class_name(false),
+    in_call_name(false),
     ignore_all_whitespace(ignore_all_whitespace),
     ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
-    in_comment(false), is_html(is_html), close_num_span(0) {
+    is_html(is_html), close_num_span(0) {
 
   if(output_filename != "-")
     output = new std::ofstream(output_filename.c_str());
@@ -77,7 +82,14 @@ void bash_view::transform(const std::string & srcdiff, const std::string & xml_e
 void bash_view::reset() {
 
   diff_stack.clear();
+
   in_comment = false;
+  in_literal = false;
+  in_string = false;
+  in_function_name = false;
+  in_class_name = false;
+  in_call_name = false;
+
   close_num_span = 0;
 
   reset_internal();
@@ -128,7 +140,13 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
   std::string highlight;
   if(syntax_highlight) {
 
-    highlight = theme->token2color(ch, srcml_element_stack);
+    highlight = theme->token2color(ch,
+                                   in_comment,
+                                   in_literal,
+                                   in_string,
+                                   in_function_name,
+                                   in_class_name,
+                                   in_call_name);
     if(!highlight.empty())
       out << highlight;
 
@@ -298,7 +316,9 @@ void bash_view::startElement(const char * localname,
 
   const std::string local_name(localname);
 
-  if(local_name == "literal") {
+  if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "comment")
+    in_comment = true;
+  else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "literal") {
 
     std::string literal_type;
     for(int i = 0; i < num_attributes; ++i) {
@@ -313,12 +333,11 @@ void bash_view::startElement(const char * localname,
     }
 
     if(literal_type == "string")
-      srcml_element_stack.back() += "_string";
+      in_string = true;
+    else
+      in_literal = true;
 
   }
-
-  if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF && local_name == "comment")
-    in_comment = true;
 
   start_element(local_name, prefix, URI, num_namespaces, namespaces,
                 num_attributes, attributes);
@@ -375,8 +394,14 @@ void bash_view::endElement(const char * localname,
                            const char * URI) {
 
   const std::string local_name(localname);
-  if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF && local_name == "comment")
+  if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "comment")
     in_comment = false;
+  else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "literal") {
+
+    in_literal = false;
+    in_string = false;
+
+  }
 
   end_element(local_name, prefix, URI);
 
