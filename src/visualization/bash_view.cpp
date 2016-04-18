@@ -37,7 +37,9 @@ bash_view::bash_view(const std::string & output_filename,
                      bool ignore_whitespace,
                      bool ignore_comments,
                      bool is_html) 
-  : diff_stack(), syntax_highlight(syntax_highlight), theme(to_lower(theme) == "default" ? (theme_t *)new default_theme(is_html) : (theme_t *)new monokai_theme(is_html)), 
+  : diff_stack(), syntax_highlight(syntax_highlight),
+    theme(to_lower(theme) == "default" ? (theme_t *)new default_theme(is_html) : (theme_t *)new monokai_theme(is_html)), 
+    in_function_name(false), in_class_name(false), in_call_name(false),
     ignore_all_whitespace(ignore_all_whitespace),
     ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
     in_comment(false), is_html(is_html), close_num_span(0) {

@@ -30,6 +30,10 @@ protected:
   bool syntax_highlight;
   theme_t * theme;
 
+  bool in_function_name;
+  bool in_class_name;
+  bool in call_name;
+
   bool ignore_all_whitespace;
   bool ignore_whitespace;
   bool ignore_comments;
