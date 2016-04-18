@@ -22,15 +22,15 @@ default_theme::default_theme(bool is_html) : theme_t(is_html) {
 
         keyword_color = "<span style=\"color: rgb(249, 38, 114);\">";
         storage_color = "<span style=\"color: rgb(249, 38, 114);\">";
-        type_color    = "<span style=\"color: rgb(42, 157, 185);\">";
+        type_color    = "<span style=\"color: rgb(50, 150, 225);\">";
 
         comment_color = "<span style=\"color: rgb(117, 113, 94);\">";
-        number_color  = "<span style=\"color: rgb(174, 129, 255);\">";
+        number_color  = "<span style=\"color: rgb(150, 105, 255);\">";
         string_color  = "<span style=\"color: rgb(205, 145, 0);\">";
 
         function_name_color = "<span style=\"color: rgb(166, 226, 46);\">";
         class_name_color    = "<span style=\"color: rgb(166, 226, 46);\">";
-        call_name_color     = "<span style=\"color: rgb(42, 157, 185);\">";
+        call_name_color     = "<span style=\"color: rgb(50, 150, 225);\">";
 
     } else {
 
