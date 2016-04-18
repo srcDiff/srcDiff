@@ -19,7 +19,7 @@ monokai_theme::monokai_theme(bool is_html) : theme_t(is_html) {
         common_color = "<span style=\"background-color: transparent\">";
         // delete_color = "<span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: " + text_color + "; background-color: rgb(255, 94, 94); font-weight: bold;\">";
         // insert_color = "<span style=\"background-color: rgb(0 , 187, 81); font-weight: bold;\">";
-        delete_color = "<span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: " + text_color + "; background-color: rgba(255, 187 ,187, 0.7); font-weight: bold;\">";
+        delete_color = "<span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: " + text_color + "; background-color: rgba(255, 187 ,187, 0.55); font-weight: bold;\">";
         insert_color = "<span style=\"background-color: rgba(187 , 255, 187, 0.7); font-weight: bold;\">";
 
         keyword_color = "<span style=\"color: rgb(249, 38, 114);\">";
