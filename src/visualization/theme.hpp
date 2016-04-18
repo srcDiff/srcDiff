@@ -30,9 +30,14 @@ public:
     std::string keyword_color;
     std::string storage_color;
     std::string type_color;
+
     std::string comment_color;
     std::string number_color;
     std::string string_color;
+
+    std::string function_name_color;
+    std::string class_name_color;
+    std::string call_name_color;
 
 protected:
 

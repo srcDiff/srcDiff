@@ -19,9 +19,12 @@ std::string theme_t::token2color(const std::string & token,
                                  bool in_call_name) const {
 
 
-    if(in_comment) return comment_color;
-    if(in_literal) return number_color;
-    if(in_string)  return string_color;
+    if(in_comment)       return comment_color;
+    if(in_literal)       return number_color;
+    if(in_string)        return string_color;
+    if(in_function_name) return function_name_color;
+    if(in_class_name)    return class_name_color;
+    if(in_call_name)     return class_name_color;
 
     try {
 

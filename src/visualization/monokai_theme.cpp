@@ -30,6 +30,10 @@ monokai_theme::monokai_theme(bool is_html) : theme_t(is_html) {
         number_color  = "<span style=\"color: rgb(174, 129, 255);\">";
         string_color  = "<span style=\"color: rgb(230, 219, 116);\">";
 
+        function_name_color = "<span style=\"color: rgb(166, 226, 46);\">";
+        class_name_color    = "<span style=\"color: rgb(166, 226, 46);\">";
+        call_name_color     = "<span style=\"color: rgb(102, 217, 239);\">";
+
     }
 
     keywords = cpp_keywords(*this);
