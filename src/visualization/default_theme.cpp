@@ -24,12 +24,12 @@ default_theme::default_theme(bool is_html) : theme_t(is_html) {
         storage_color = "<span style=\"color: rgb(249, 38, 114);\">";
         type_color    = "<span style=\"color: rgb(50, 150, 225);\">";
 
-        comment_color = "<span style=\"color: rgb(117, 113, 94);\">";
+        comment_color = "<span style=\"color: rgb(110, 110, 110);\">";
         number_color  = "<span style=\"color: rgb(255, 0, 255);\">";
         string_color  = "<span style=\"color: rgb(255, 127, 0);\">";
 
-        function_name_color = "<span style=\"color: rgb(166, 226, 46);\">";
-        class_name_color    = "<span style=\"color: rgb(166, 226, 46);\">";
+        function_name_color = "<span style=\"color: rgb(0, 160, 64);\">";
+        class_name_color    = "<span style=\"color: rgb(0, 180, 64);\">";
         call_name_color     = "<span style=\"color: rgb(50, 150, 225);\">";
 
     } else {
