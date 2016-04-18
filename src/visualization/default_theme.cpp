@@ -16,9 +16,9 @@ default_theme::default_theme(bool is_html) : theme_t(is_html) {
         text_color        = "black";
         line_number_color = "grey";
 
-        common_color = "<span style=\"background-color: transparent\">";
+        common_color = "<span style=\"background-color: transparent;\">";
         delete_color = "<span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: black; background-color: rgb(255,187,187); font-weight: bold;\">";
-        insert_color = "<span style=\"background-color: rgb(0 , 250, 108)  ; font-weight: bold;\">";
+        insert_color = "<span style=\"background-color: rgb(0 , 250, 108); font-weight: bold;\">";
 
         keyword_color = "<span style=\"color: rgb(249, 38, 114);\">";
         storage_color = "<span style=\"color: rgb(166, 226, 46);\">";
