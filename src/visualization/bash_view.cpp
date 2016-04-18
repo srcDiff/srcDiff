@@ -8,6 +8,8 @@
 #include <default_theme.hpp>
 #include <monokai_theme.hpp>
 
+#include <type_query.hpp>
+
 #include <cstring>
 #include <cctype>
 #include <cassert>
@@ -316,9 +318,11 @@ void bash_view::startElement(const char * localname,
 
   const std::string local_name(localname);
 
-  if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "comment")
+  if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "comment") {
+
     in_comment = true;
-  else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "literal") {
+
+  } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "literal") {
 
     std::string literal_type;
     for(int i = 0; i < num_attributes; ++i) {
@@ -336,6 +340,17 @@ void bash_view::startElement(const char * localname,
       in_string = true;
     else
       in_literal = true;
+
+  } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "name"
+            && srcml_element_stack.size() > 1) {
+
+    const std::string & parent = srcml_element_stack.at(srcml_element_stack.size() - 2);
+    if(is_function_type(parent))
+      in_function_name = true;
+    else if(is_class_type(parent))
+      in_class_name = true;
+    else
+      ;
 
   }
 
@@ -394,12 +409,25 @@ void bash_view::endElement(const char * localname,
                            const char * URI) {
 
   const std::string local_name(localname);
-  if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "comment")
+  if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "comment") {
+
     in_comment = false;
-  else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "literal") {
+
+  } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "literal") {
 
     in_literal = false;
     in_string = false;
+
+  } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "name") {
+
+    const std::string & parent = srcml_element_stack.back();
+    if(is_function_type(parent))
+      in_function_name = false;
+    else if(is_class_type(parent))
+      in_class_name = false;
+    else
+      ;
+
 
   }
 
