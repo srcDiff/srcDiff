@@ -26,7 +26,7 @@ monokai_theme::monokai_theme(bool is_html) : theme_t(is_html) {
         storage_color = "<span style=\"color: rgb(166, 226, 46);\">";
         type_color    = "<span style=\"color: rgb(102, 217, 239);\">";
 
-        comment_color = "<span style=\"color: rgb(117, 113, 94);\">";
+        comment_color = "<span style=\"color: rgb(157, 152, 132);\">";
         number_color  = "<span style=\"color: rgb(174, 129, 255);\">";
         string_color  = "<span style=\"color: rgb(230, 219, 116);\">";
 
