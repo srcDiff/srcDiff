@@ -9,6 +9,7 @@
 #include <monokai_theme.hpp>
 
 #include <cstring>
+#include <cctype>
 #include <cassert>
 
 
@@ -19,6 +20,16 @@ int bash_view::INSERT = 1 << 2;
 
 const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
+static std::string to_lower(const std::string & str) {
+
+  std::string lower(str);
+  for(char & character : lower)
+    character = std::tolower(character);
+
+  return lower;
+
+}
+
 bash_view::bash_view(const std::string & output_filename,
                      bool syntax_highlight,
                      const std::string & theme, 
@@ -26,7 +37,7 @@ bash_view::bash_view(const std::string & output_filename,
                      bool ignore_whitespace,
                      bool ignore_comments,
                      bool is_html) 
-  : diff_stack(), syntax_highlight(syntax_highlight), theme(theme == "default" ? (theme_t *)new default_theme(is_html) : (theme_t *)new monokai_theme(is_html)), 
+  : diff_stack(), syntax_highlight(syntax_highlight), theme(to_lower(theme) == "default" ? (theme_t *)new default_theme(is_html) : (theme_t *)new monokai_theme(is_html)), 
     ignore_all_whitespace(ignore_all_whitespace),
     ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
     in_comment(false), is_html(is_html), close_num_span(0) {
