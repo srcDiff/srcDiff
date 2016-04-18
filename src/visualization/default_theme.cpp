@@ -25,7 +25,7 @@ default_theme::default_theme(bool is_html) : theme_t(is_html) {
         type_color    = "<span style=\"color: rgb(50, 150, 225);\">";
 
         comment_color = "<span style=\"color: rgb(117, 113, 94);\">";
-        number_color  = "<span style=\"color: rgb(150, 105, 255);\">";
+        number_color  = "<span style=\"color: rgb(255, 0, 255);\">";
         string_color  = "<span style=\"color: rgb(205, 145, 0);\">";
 
         function_name_color = "<span style=\"color: rgb(166, 226, 46);\">";
