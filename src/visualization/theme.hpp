@@ -9,7 +9,7 @@
 #ifndef INCLUDED_THEME_HPP
 #define INCLUDED_THEME_HPP
 
-#include <cpp_keywords.hpp>
+#include <keywords.hpp>
 
 #include <vector>
 #include <string>
@@ -41,11 +41,14 @@ public:
 
 protected:
 
-    cpp_keywords keywords;
+    keywords_t * keywords;
 
 public:
 
     theme_t(bool is_html);
+    ~theme_t();
+
+    void set_langauge(const std::string & language);
     std::string token2color(const std::string & token,
                             bool in_comment,
                             bool in_literal,

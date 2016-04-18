@@ -260,7 +260,22 @@ void bash_view::startRoot(const char * localname,
                           int num_attributes,
                           const struct srcsax_attribute * attributes) {
 
+  if(is_archive) return;
+
   diff_stack.push_back(bash_view::COMMON);
+
+  std::string langauge;
+  for(int i = 0; i < num_attributes; ++i) {
+
+    if(std::string(attributes[i].localname) == "language") {
+
+      langauge = attributes[i].value;
+      break;
+
+    }
+
+  }
+  theme->set_langauge(langauge);
 
   const std::string local_name(localname);
   start_root(local_name, prefix, URI, num_namespaces, namespaces, num_attributes, attributes); 
@@ -289,6 +304,19 @@ void bash_view::startUnit(const char * localname,
                           const struct srcsax_attribute * attributes) {
 
   diff_stack.push_back(bash_view::COMMON);
+
+  std::string langauge;
+  for(int i = 0; i < num_attributes; ++i) {
+
+    if(std::string(attributes[i].localname) == "language") {
+
+      langauge = attributes[i].value;
+      break;
+
+    }
+
+  }
+  theme->set_langauge(langauge);
 
   const std::string local_name(localname);
   start_unit(local_name, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
@@ -369,6 +397,8 @@ void bash_view::startElement(const char * localname,
  * Overide for desired behavior.
  */
 void bash_view::endRoot(const char * localname, const char * prefix, const char * URI) {
+
+  if(is_archive) return;
 
   const std::string local_name(localname);
   end_root(local_name, prefix, URI);

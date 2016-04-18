@@ -1,5 +1,5 @@
 /**
- *  @file monokai.hpp
+ *  @file theme.hpp
  *
  *  Specifies color scheme for syntax highlighting.
  *
@@ -8,7 +8,21 @@
 
 #include <theme.hpp>
 
-theme_t::theme_t(bool is_html) {}
+#include <cpp_keywords.hpp>
+
+theme_t::theme_t(bool is_html) : keywords(nullptr) {}
+theme_t::~theme_t() {
+
+    if(keywords) delete keywords;
+
+}
+
+void theme_t::set_langauge(const std::string & language) {
+
+    if(language == "C++") keywords = new cpp_keywords(*this);
+    // if(language == "Java") keywords = new jvaa_keywords(*this);
+
+}
 
 std::string theme_t::token2color(const std::string & token,
                                  bool in_comment,
@@ -27,7 +41,7 @@ std::string theme_t::token2color(const std::string & token,
 
     try {
 
-        return keywords.color(token);
+        return keywords->color(token);
 
     } catch(const std::out_of_range & e) {}
 

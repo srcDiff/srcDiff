@@ -401,8 +401,6 @@ void side_by_side_view::start_root(const std::string & local_name,
                                    int num_attributes,
                                    const struct srcsax_attribute * attributes) {
 
-  if(is_archive) return;
-
   add_new_line();
 
 }
@@ -422,8 +420,6 @@ void side_by_side_view::start_unit(const std::string & local_name,
 void side_by_side_view::end_root(const std::string & local_name,
                                  const char * prefix,
                                  const char * URI) {
-
-  if(is_archive) return;
 
   if((!change_ending_space_original.empty() || !change_ending_space_modified.empty())) {
 

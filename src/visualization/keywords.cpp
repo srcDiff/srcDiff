@@ -1,16 +1,16 @@
 /**
- *  @file cpp_keywords.cpp
+ *  @file keyword.cpp
  *
- *  Specifies cpp_keywords color scheme for syntax highlighting.
+ *  Specifies keyword color scheme for syntax highlighting.
  *
  *  @author Michael John Decker <mdecker6@kent.edu>
  */
 
-#include <cpp_keywords.hpp>
+#include <keywords.hpp>
 
 #include <theme.hpp>
 
-cpp_keywords::cpp_keywords(const theme_t & theme) : keywords_t(theme) {
+keywords_t::keywords_t(const theme_t & theme) {
 
     color_map = {
 
@@ -92,5 +92,12 @@ cpp_keywords::cpp_keywords(const theme_t & theme) : keywords_t(theme) {
         { "wchar_t",      theme.type_color }
 
     };
+
+}
+
+
+std::string keywords_t::color(const std::string & token) const {
+
+    return color_map.at(token);
 
 }

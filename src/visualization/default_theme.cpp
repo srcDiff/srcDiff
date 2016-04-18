@@ -50,6 +50,4 @@ default_theme::default_theme(bool is_html) : theme_t(is_html) {
 
     }
 
-    keywords = cpp_keywords(*this);
-
 }

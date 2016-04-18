@@ -130,8 +130,6 @@ void unified_view::start_root(const std::string & local_name,
                               int num_attributes,
                               const struct srcsax_attribute * attributes) {
 
-  if(is_archive) return;
-
   if(is_html)
     (*output) << "<pre>";
 
@@ -201,8 +199,6 @@ void unified_view::start_element(const std::string & local_name,
 void unified_view::end_root(const std::string & local_name,
                             const char * prefix,
                             const char * URI) {
-
-  if(is_archive) return;
 
   if(!change_ending_space.empty()) {
 
