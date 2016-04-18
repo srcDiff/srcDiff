@@ -349,8 +349,8 @@ void bash_view::startElement(const char * localname,
       in_function_name = true;
     else if(is_class_type(parent))
       in_class_name = true;
-    else
-      ;
+    else if(is_call(parent))
+      in_call_name = true;
 
   }
 
@@ -425,9 +425,8 @@ void bash_view::endElement(const char * localname,
       in_function_name = false;
     else if(is_class_type(parent))
       in_class_name = false;
-    else
-      ;
-
+    else if(is_call(parent))
+      in_call_name = false;
 
   }
 
