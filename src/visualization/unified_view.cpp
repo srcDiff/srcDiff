@@ -22,7 +22,7 @@ unified_view::unified_view(const std::string & output_filename,
                           ignore_whitespace,
                           ignore_comments,
                           is_html),
-                last_character_operation(bash_view::COMMON), modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
+                last_character_operation(bash_view::UNSET), modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
                 is_after_change(false), wait_change(true), in_function(),
                 context_type(context_type), length(0), is_after_additional(false),
                 after_edit_count(0), last_context_line((unsigned)-1),
@@ -64,7 +64,7 @@ void unified_view::reset_internal() {
   is_after_additional = false;
   after_edit_count = 0;
   last_context_line = -1;
-  last_character_operation = bash_view::COMMON;
+  last_character_operation = bash_view::UNSET;
   change_starting_line = false;
   change_ending_space = "";
   change_ending_operation = bash_view::COMMON;
@@ -277,8 +277,8 @@ void unified_view::characters(const char * ch, int len) {
 
   }
 
-  if(last_character_operation == bash_view::COMMON && diff_stack.back() != bash_view::COMMON
-     && ignore_whitespace)
+  if((last_character_operation == bash_view::UNSET || last_character_operation == bash_view::COMMON)
+     && diff_stack.back() != bash_view::COMMON && ignore_whitespace)
     change_starting_line = true;
 
   for(int i = 0; i < len; ++i) {

@@ -115,7 +115,7 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
   std::string highlight;
   if(syntax_highlight) {
 
-    highlight = theme->token2color(ch, srcml_element_stack.back());
+    highlight = theme->token2color(ch, srcml_element_stack);
     if(!highlight.empty())
       out << highlight;
 

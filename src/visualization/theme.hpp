@@ -11,6 +11,7 @@
 
 #include <cpp_keywords.hpp>
 
+#include <vector>
 #include <string>
 #include <iostream>
 
@@ -34,12 +35,13 @@ public:
     std::string string_color;
 
 protected:
+
     cpp_keywords keywords;
 
 public:
 
     theme_t(bool is_html);
-    std::string token2color(const std::string & token, const std::string & parent) const;
+    std::string token2color(const std::string & token, const std::vector<std::string> & element_stack) const;
 
 };
 
