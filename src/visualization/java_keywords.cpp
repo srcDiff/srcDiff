@@ -1,31 +1,16 @@
 /**
- *  @file cpp_keywords.cpp
+ *  @file java_keywords.cpp
  *
- *  Specifies cpp_keywords color scheme for syntax highlighting.
+ *  Specifies java_keywords color scheme for syntax highlighting.
  *
  *  @author Michael John Decker <mdecker6@kent.edu>
  */
 
-#include <cpp_keywords.hpp>
+#include <java_keywords.hpp>
 
 #include <theme.hpp>
 
-cpp_keywords::cpp_keywords(const theme_t & theme) : keywords_t(theme) {
-
-/*
-
-    abstract    continue    for new switch
-    assert***   default goto*   package synchronized
-    boolean do  if  private this
-    break   double  implements  protected   throw
-    byte    else    import  public  throws
-    case    enum****    instanceof  return  transient
-    catch   extends int short   try
-    char    final   interface   static  void
-    class   finally long    strictfp**  volatile
-    const*  float   native  super   while
-
-*/
+java_keywords::java_keywords(const theme_t & theme) : keywords_t(theme) {
 
     color_map = {
 
@@ -72,8 +57,8 @@ cpp_keywords::cpp_keywords(const theme_t & theme) : keywords_t(theme) {
         { "const",        theme.storage_color },
         { "explicit",     theme.storage_color },
 
-        { "boolean"       theme.type_color },
-        { "byte"          theme.type_color },
+        { "boolean",      theme.type_color },
+        { "byte",         theme.type_color },
         { "char",         theme.type_color },
         { "class",        theme.type_color },
         { "double",       theme.type_color },

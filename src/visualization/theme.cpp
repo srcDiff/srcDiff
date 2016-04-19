@@ -9,6 +9,7 @@
 #include <theme.hpp>
 
 #include <cpp_keywords.hpp>
+#include <java_keywords.hpp>
 
 theme_t::theme_t(bool is_html) : keywords(nullptr) {}
 theme_t::~theme_t() {
@@ -19,8 +20,8 @@ theme_t::~theme_t() {
 
 void theme_t::set_langauge(const std::string & language) {
 
-    if(language == "C++") keywords = new cpp_keywords(*this);
-    // if(language == "Java") keywords = new jvaa_keywords(*this);
+    if(language == "C++")  keywords = new cpp_keywords(*this);
+    if(language == "Java") keywords = new java_keywords(*this);
 
 }
 
