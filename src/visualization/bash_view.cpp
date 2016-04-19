@@ -5,32 +5,51 @@
 #include <shortest_edit_script.hpp>
 #include <type_query.hpp>
 
+#include <default_theme.hpp>
+#include <monokai_theme.hpp>
+
+#include <type_query.hpp>
+
 #include <cstring>
+#include <cctype>
 #include <cassert>
 
 
+int bash_view::UNSET  = 0;
 int bash_view::COMMON = 1 << 0;
 int bash_view::DELETE = 1 << 1;
 int bash_view::INSERT = 1 << 2;
 
-const char * const bash_view::DELETE_CODE = "\x1b[9;48;5;210;1m";
-const char * const bash_view::INSERT_CODE = "\x1b[48;5;120;1m";
-
-const char * const bash_view::COMMON_CODE = "\x1b[0m";
-
-const char * const bash_view::LINE_CODE = "\x1b[36m";
-
-const char * const bash_view::DELETE_CODE_HTML = "</span></span><span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: black; background-color: rgb(255,187,187); font-weight: bold;\">";
-const char * const bash_view::INSERT_CODE_HTML = "</span></span><span><span style=\"background-color: rgb(0,250,108)  ; font-weight: bold;\">";
-const char * const bash_view::COMMON_CODE_HTML = "</span></span><span><span style=\"background-color: transparent\">";
-
 const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
-bash_view::bash_view(const std::string & output_filename, bool ignore_all_whitespace,
-                     bool ignore_whitespace, bool ignore_comments, bool is_html) 
-  : diff_stack(), ignore_all_whitespace(ignore_all_whitespace),
+static std::string to_lower(const std::string & str) {
+
+  std::string lower(str);
+  for(char & character : lower)
+    character = std::tolower(character);
+
+  return lower;
+
+}
+
+bash_view::bash_view(const std::string & output_filename,
+                     bool syntax_highlight,
+                     const std::string & theme, 
+                     bool ignore_all_whitespace,
+                     bool ignore_whitespace,
+                     bool ignore_comments,
+                     bool is_html) 
+  : diff_stack(), syntax_highlight(syntax_highlight),
+    theme(to_lower(theme) == "default" ? (theme_t *)new default_theme(is_html) : (theme_t *)new monokai_theme(is_html)), 
+    in_comment(false),
+    in_literal(false),
+    in_string(false),
+    in_function_name(false),
+    in_class_name(false),
+    in_call_name(false),
+    ignore_all_whitespace(ignore_all_whitespace),
     ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
-    in_comment(false), is_html(is_html) {
+    is_html(is_html), close_num_span(0) {
 
   if(output_filename != "-")
     output = new std::ofstream(output_filename.c_str());
@@ -47,6 +66,8 @@ bash_view::~bash_view() {
     delete output;
 
   }
+
+  delete theme;
   
 }
 
@@ -63,45 +84,91 @@ void bash_view::transform(const std::string & srcdiff, const std::string & xml_e
 void bash_view::reset() {
 
   diff_stack.clear();
+
   in_comment = false;
+  in_literal = false;
+  in_string = false;
+  in_function_name = false;
+  in_class_name = false;
+  in_call_name = false;
+
+  close_num_span = 0;
 
   reset_internal();
 
 }
 
-const char * bash_view::change_operation_to_code(int operation) {
+std::string bash_view::change_operation_to_code(int operation) {
 
-  if(!is_html) {
+  if(operation == DELETE) return theme->delete_color;
+  if(operation == INSERT) return theme->insert_color;
 
-    if(operation == DELETE) return DELETE_CODE;
-    if(operation == INSERT) return INSERT_CODE;
-
-    return COMMON_CODE;
-
-  }
-
-  if(operation == DELETE) return DELETE_CODE_HTML;
-  if(operation == INSERT) return INSERT_CODE_HTML;
-
-    return COMMON_CODE_HTML;
+  return theme->common_color;
 
 }
 
-void bash_view::output_characters_to_buffer(const std::string ch, int operation,
-                                            std::ostream & out,
-                                            int & last_character_operation) {
+std::string bash_view::close_spans(unsigned int close_num_span) {
+
+  if(!is_html) return std::string();
+
+  std::string spans;
+  for(unsigned int i = 0; i < close_num_span; ++i)
+    spans += "</span>";
+
+  return spans;
+
+}
+
+void bash_view::end_buffer(std::ostream & out, unsigned int & close_num_span) {
+
+  out << close_spans(close_num_span);
+  close_num_span = 0;
+
+}
+
+void bash_view::output_characters_to_buffer(std::ostream & out,
+                                            const std::string & ch,
+                                            int operation,
+                                            int & last_character_operation,
+                                            unsigned int & close_num_span) {
 
   if(operation != last_character_operation)
-    out << change_operation_to_code(operation);
+    out << close_spans(close_num_span) << change_operation_to_code(operation);
 
   last_character_operation = operation;
+
+  if(ch.empty()) return;
+
+  std::string highlight;
+  if(syntax_highlight) {
+
+    highlight = theme->token2color(ch,
+                                   in_comment,
+                                   in_literal,
+                                   in_string,
+                                   in_function_name,
+                                   in_class_name,
+                                   in_call_name);
+    if(!highlight.empty())
+      out << highlight;
+
+  }
 
   if(!is_html) {
 
     out << ch;
+
+    if(!highlight.empty()) {
+      out << theme->common_color;
+      if(operation != bash_view::COMMON)
+        out << change_operation_to_code(operation);
+    }
+
     return;
 
   }
+
+  close_num_span = operation == bash_view::DELETE ? 2 : 1;
 
   for(std::string::size_type pos = 0; pos < ch.size(); ++pos) {
 
@@ -111,6 +178,9 @@ void bash_view::output_characters_to_buffer(const std::string ch, int operation,
     else                    out << ch[pos];
 
   }
+
+  if(!highlight.empty())
+    out << "</span>";
 
 }
 
@@ -130,7 +200,21 @@ void bash_view::output_character(const char c, int operation) {
  */
 void bash_view::startDocument() {
 
-  if(is_html) (*output) << "<!DOCTYPE html>\n<html><head><meta charset=\"UTF-8\"><title>Tool3</title></head><body>";
+  if(is_html) {
+
+    (*output) << "<!DOCTYPE html>\n";
+    (*output) << "<html>\n";
+    (*output) << "<head>\n";
+    (*output) << "<meta charset=\"UTF-8\">\n";
+    (*output) << "<title>srcDiff</title>\n";
+    (*output) << "</head>\n";
+    (*output) << "<body style=\"font-family: courier, monospace; background-color: " + theme->background_color + "; color: " + theme->text_color + ";\">\n";
+
+  } else {
+
+    (*output) << theme->common_color;
+
+  }
 
 }
 
@@ -142,7 +226,16 @@ void bash_view::startDocument() {
  */
 void bash_view::endDocument() {
 
-  if(is_html) (*output) << "</body></html>";
+  if(is_html) {
+
+    (*output) << "</body>\n";
+    (*output) << "</html>\n";
+
+  } else {
+
+    (*output) << "\x1b[0m";
+
+  }
 
 }
 
@@ -159,8 +252,11 @@ void bash_view::endDocument() {
  * SAX handler function for start of the root profile.
  * Overide for desired behavior.
  */
-void bash_view::startRoot(const char * localname, const char * prefix, const char * URI,
-                          int num_namespaces, const struct srcsax_namespace * namespaces,
+void bash_view::startRoot(const char * localname,
+                          const char * prefix,
+                          const char * URI,
+                          int num_namespaces,
+                          const struct srcsax_namespace * namespaces,
                           int num_attributes,
                           const struct srcsax_attribute * attributes) {}
 
@@ -177,10 +273,33 @@ void bash_view::startRoot(const char * localname, const char * prefix, const cha
  * SAX handler function for start of an unit.
  * Overide for desired behavior.
  */
-void bash_view::startUnit(const char * localname, const char * prefix, const char * URI,
-                          int num_namespaces, const struct srcsax_namespace * namespaces,
+void bash_view::startUnit(const char * localname,
+                          const char * prefix,
+                          const char * URI,
+                          int num_namespaces,
+                          const struct srcsax_namespace * namespaces,
                           int num_attributes,
-                          const struct srcsax_attribute * attributes) {}
+                          const struct srcsax_attribute * attributes) {
+
+  diff_stack.push_back(bash_view::COMMON);
+
+  std::string langauge;
+  for(int i = 0; i < num_attributes; ++i) {
+
+    if(std::string(attributes[i].localname) == "language") {
+
+      langauge = attributes[i].value;
+      break;
+
+    }
+
+  }
+  theme->set_langauge(langauge);
+
+  const std::string local_name(localname);
+  start_unit(local_name, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
+
+}
 
 /**
  * startElement
@@ -195,16 +314,51 @@ void bash_view::startUnit(const char * localname, const char * prefix, const cha
  * SAX handler function for start of an profile.
  * Overide for desired behavior.
  */
-void bash_view::startElement(const char * localname, const char * prefix,
-                             const char * URI, int num_namespaces,
+void bash_view::startElement(const char * localname,
+                             const char * prefix,
+                             const char * URI,
+                             int num_namespaces,
                              const struct srcsax_namespace * namespaces,
                              int num_attributes,
                              const struct srcsax_attribute * attributes) {
 
   const std::string local_name(localname);
 
-  if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF && local_name == "comment")
+  if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "comment") {
+
     in_comment = true;
+
+  } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "literal") {
+
+    std::string literal_type;
+    for(int i = 0; i < num_attributes; ++i) {
+
+      if(std::string(attributes[i].localname) == "type") {
+
+        literal_type = attributes[i].value;
+        break;
+
+      }
+
+    }
+
+    if(literal_type == "string")
+      in_string = true;
+    else
+      in_literal = true;
+
+  } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "name"
+            && srcml_element_stack.size() > 1) {
+
+    const std::string & parent = srcml_element_stack.at(srcml_element_stack.size() - 2);
+    if(is_function_type(parent))
+      in_function_name = true;
+    else if(is_class_type(parent))
+      in_class_name = true;
+    else if(is_call(parent))
+      in_call_name = true;
+
+  }
 
   start_element(local_name, prefix, URI, num_namespaces, namespaces,
                 num_attributes, attributes);
@@ -231,7 +385,14 @@ void bash_view::endRoot(const char * localname, const char * prefix, const char 
  * SAX handler function for end of an unit.
  * Overide for desired behavior.
  */
-void bash_view::endUnit(const char * localname, const char * prefix, const char * URI) {}
+void bash_view::endUnit(const char * localname, const char * prefix, const char * URI) {
+
+  const std::string local_name(localname);
+  end_unit(local_name, prefix, URI);
+
+  diff_stack.pop_back();
+
+}
 
 /**
  * endElement
@@ -242,12 +403,31 @@ void bash_view::endUnit(const char * localname, const char * prefix, const char 
  * SAX handler function for end of an profile.
  * Overide for desired behavior.
  */
-void bash_view::endElement(const char * localname, const char * prefix,
+void bash_view::endElement(const char * localname,
+                           const char * prefix,
                            const char * URI) {
 
   const std::string local_name(localname);
-  if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF && local_name == "comment")
+  if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "comment") {
+
     in_comment = false;
+
+  } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "literal") {
+
+    in_literal = false;
+    in_string = false;
+
+  } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "name") {
+
+    const std::string & parent = srcml_element_stack.back();
+    if(is_function_type(parent))
+      in_function_name = false;
+    else if(is_class_type(parent))
+      in_class_name = false;
+    else if(is_call(parent))
+      in_call_name = false;
+
+  }
 
   end_element(local_name, prefix, URI);
 

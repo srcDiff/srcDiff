@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <list>
+#include <sstream>
 #include <fstream>
 #include <iostream>
 
@@ -28,7 +29,7 @@ private:
   size_t line_number_delete;
   size_t line_number_insert;
 
-  std::string context;
+  std::ostringstream context;
 
   size_t number_context_lines;
 
@@ -48,10 +49,17 @@ private:
   std::string change_ending_space;
   int change_ending_operation;
 
+  unsigned int close_num_spans;
+
 public:
 
-  unified_view(const std::string & output_filename, bool ignore_all_whitespace,
-               bool ignore_whitespace, bool ignore_comments, bool is_html,
+  unified_view(const std::string & output_filename,
+               bool syntax_highlight,
+               const std::string & theme,
+               bool ignore_all_whitespace,
+               bool ignore_whitespace,
+               bool ignore_comments,
+               bool is_html,
                boost::any context_type);
   virtual ~unified_view();
 
@@ -63,46 +71,30 @@ private:
 
   void output_additional_context();
 
-  virtual void start_element(const std::string & local_name, const char * prefix, const char * URI,
-                            int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                            const struct srcsax_attribute * attributes);
-  virtual void end_element(const std::string & local_name, const char * prefix,
+  virtual void start_unit(const std::string & local_name,
+                          const char * prefix,
+                          const char * URI,
+                          int num_namespaces,
+                          const struct srcsax_namespace * namespaces,
+                          int num_attributes,
+                          const struct srcsax_attribute * attributes);
+  virtual void end_unit(const std::string & local_name,
+                        const char * prefix,
+                        const char * URI);
+  virtual void start_element(const std::string & local_name,
+                             const char * prefix,
+                             const char * URI, int num_namespaces,
+                             const struct srcsax_namespace * namespaces,
+                             int num_attributes,
+                             const struct srcsax_attribute * attributes);
+  virtual void end_element(const std::string & local_name,
+                           const char * prefix,
                            const char * URI);
   virtual void characters(const char * ch, int len);
 
   context_mode context_string_to_id(const std::string & context_type_str) const;
 
-  virtual void output_characters(const std::string ch, int operation);
-
-public:
-
-  /**
-   * startUnit
-   * @param localname the name of the profile tag
-   * @param prefix the tag prefix
-   * @param URI the namespace of tag
-   * @param num_namespaces number of namespaces definitions
-   * @param namespaces the defined namespaces
-   * @param num_attributes the number of attributes on the tag
-   * @param attributes list of attributes
-   *
-   * SAX handler function for start of an unit.
-   * Overide for desired behaviour.
-   */
-  virtual void startUnit(const char * localname, const char * prefix, const char * URI,
-                         int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                         const struct srcsax_attribute * attributes);
-
-  /**
-   * endUnit
-   * @param localname the name of the profile tag
-   * @param prefix the tag prefix
-   * @param URI the namespace of tag
-   *
-   * SAX handler function for end of an unit.
-   * Overide for desired behaviour.
-   */
-  virtual void endUnit(const char * localname, const char * prefix, const char * URI);
+  virtual void output_characters(const std::string & ch, int operation);
 
 };
 

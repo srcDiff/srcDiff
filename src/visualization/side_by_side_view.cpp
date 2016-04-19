@@ -9,11 +9,20 @@
 #include <iomanip>
 
 side_by_side_view::side_by_side_view(const std::string & output_filename,
-                                     bool ignore_all_whitespace, bool ignore_whitespace,
-                                     bool ignore_comments, bool is_html,
+                                     bool syntax_highlight,
+                                     const std::string & theme,
+                                     bool ignore_all_whitespace,
+                                     bool ignore_whitespace,
+                                     bool ignore_comments,
+                                     bool is_html,
                                      int side_by_side_tab_size)
-  : bash_view(output_filename, ignore_all_whitespace, ignore_whitespace,
-              ignore_comments, is_html),
+  : bash_view(output_filename,
+              syntax_highlight,
+              theme,
+              ignore_all_whitespace,
+              ignore_whitespace,
+              ignore_comments,
+              is_html),
     side_by_side_tab_size(side_by_side_tab_size), line_operations(),
     last_character_operation_original(bash_view::COMMON), original_lines(),
     last_character_operation_modified(bash_view::COMMON), modified_lines() {}
@@ -38,7 +47,7 @@ void side_by_side_view::reset_internal() {
 
 }
 
-void side_by_side_view::output_characters(const std::string ch, int operation) {
+void side_by_side_view::output_characters(const std::string & ch, int operation) {
 
   if(original_lines.empty()) add_new_line();
 
@@ -72,10 +81,10 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
        && operation != bash_view::COMMON)
       real_operation = bash_view::COMMON;
 
-    output_characters_to_buffer(ch, real_operation,
-                                std::get<0>(original_lines.back()),
-                                last_character_operation_original);
-    std::get<1>(original_lines.back()) += size;
+    output_characters_to_buffer(std::get<STREAM>(original_lines.back()),
+                                ch, real_operation, last_character_operation_original,
+                                std::get<CLOSE_SPANS>(original_lines.back()));
+    std::get<OPERATION>(original_lines.back()) += size;
 
   }
 
@@ -88,10 +97,10 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
        && operation != bash_view::COMMON)
       real_operation = bash_view::COMMON;
 
-    output_characters_to_buffer(ch, real_operation,
-                                std::get<0>(modified_lines.back()),
-                                last_character_operation_modified);
-    std::get<1>(modified_lines.back()) += size;
+    output_characters_to_buffer(std::get<STREAM>(modified_lines.back()),
+                                ch, real_operation, last_character_operation_modified,
+                                std::get<CLOSE_SPANS>(modified_lines.back()));
+    std::get<OPERATION>(modified_lines.back()) += size;
 
   }
 
@@ -102,11 +111,19 @@ void side_by_side_view::output_characters(const std::string ch, int operation) {
 
 void side_by_side_view::add_new_line() {
 
-  last_character_operation_original = COMMON;
-  original_lines.emplace_back(std::ostringstream(""), 0, 0);
+  // either both are empty or they are not
+  if(!original_lines.empty()) {
 
-  last_character_operation_modified = COMMON;
-  modified_lines.emplace_back(std::ostringstream(""), 0, 0);
+    end_buffer(std::get<STREAM>(original_lines.back()), std::get<CLOSE_SPANS>(original_lines.back()));
+    end_buffer(std::get<STREAM>(modified_lines.back()), std::get<CLOSE_SPANS>(modified_lines.back()));
+
+  }
+
+  last_character_operation_original = bash_view::UNSET;
+  original_lines.emplace_back(std::ostringstream(""), bash_view::UNSET, 0, 0);
+
+  last_character_operation_modified = bash_view::UNSET;
+  modified_lines.emplace_back(std::ostringstream(""), bash_view::UNSET, 0, 0);
 
   line_operations.push_back(0);
 
@@ -126,16 +143,14 @@ void side_by_side_view::output_html() {
 
   }
 
-  (*output) << "<div style=\"font-family: courier, monospace;\"><table style=\"border-collapse: collapse;\"><tr><td style=\"border: 1px solid black;\">";
+  (*output) << "<div><table style=\"border-collapse: collapse;\"><tr><td style=\"border: 1px solid " + theme->text_color + ";\">";
 
   (*output) << "<table><tr><th><strong>Original</strong></th></tr><tr><td><pre>";
 
   int line_number = 1;
   for(int i = 0; i < original_lines.size(); ++i) {
 
-    (*output) << "<span><span style=\"color: grey\">";
-
-
+    (*output) << "<span style=\"color: " + theme->line_number_color + ";\">";
     if(line_operations[i] != bash_view::INSERT) {
 
       (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
@@ -145,24 +160,22 @@ void side_by_side_view::output_html() {
       (*output) << std::string(magnitude + 1, ' ');
 
     }
+    line_number += std::get<LINE_INCR>(original_lines[i]);
+    (*output) << "</span>";
 
-    line_number += std::get<2>(original_lines[i]);
-
-    (*output) << bash_view::COMMON_CODE_HTML;
-    (*output) << std::get<0>(original_lines[i]).str();
-    (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
+    (*output) << std::get<STREAM>(original_lines[i]).str();
+    (*output) << theme->common_color << "\n</span>";  
 
   }
   (*output) << "</pre></td></tr></table></td>";
 
-  (*output) << "<td style=\"border: 1px solid black; border-collapse: collapse;\">";
+  (*output) << "<td style=\"border: 1px solid  " + theme->text_color + ";\">";
   (*output) << "<table><tr><th><strong>Modified</strong></th></tr><tr><td><pre>";
 
   line_number = 1;
   for(int i = 0; i < modified_lines.size(); ++i) {
 
-    (*output) << "<span><span style=\"color: grey\">";
-
+    (*output) << "<span style=\"color: " + theme->line_number_color + ";\">";
     if(line_operations[i] != bash_view::DELETE) {
 
       (*output) << std::right << std::setw(magnitude) << std::setfill(' ') << line_number << ' ';
@@ -172,12 +185,11 @@ void side_by_side_view::output_html() {
       (*output) << std::string(magnitude + 1, ' ');
 
     }
-
     line_number += std::get<LINE_INCR>(modified_lines[i]);
+    (*output) << "</span>";
 
-    (*output) << bash_view::COMMON_CODE_HTML;
     (*output) << std::get<STREAM>(modified_lines[i]).str();
-    (*output) << bash_view::COMMON_CODE_HTML << '\n' << "</span></span>";  
+    (*output) << theme->common_color << "\n</span>";  
 
   }
   (*output) << "</pre></td></tr></table>";
@@ -189,15 +201,15 @@ void side_by_side_view::output_html() {
 void side_by_side_view::output_bash() {
 
     int max_width = 0;
-    for(const std::tuple<std::ostringstream, int, size_t> & line : original_lines)
-      max_width = std::max(max_width, std::get<1>(line));
+    for(const std::tuple<std::ostringstream, int, unsigned int, size_t> & line : original_lines)
+      max_width = std::max(max_width, std::get<OPERATION>(line));
 
     for(int i = 0; i < original_lines.size(); ++i) {
 
-      (*output) << bash_view::COMMON_CODE << std::get<0>(original_lines[i]).str();
+      (*output) << theme->common_color << std::get<STREAM>(original_lines[i]).str();
 
       std::string fill(max_width - std::get<OPERATION>(original_lines[i]), ' ');
-      (*output) << bash_view::COMMON_CODE << fill;
+      (*output) << theme->common_color << fill;
 
       if(line_operations[i] == bash_view::DELETE)
         (*output) << " < ";
@@ -210,9 +222,9 @@ void side_by_side_view::output_bash() {
       else
         (*output) << " | ";
 
-      (*output) << std::get<0>(modified_lines[i]).str();
+      (*output) << std::get<STREAM>(modified_lines[i]).str();
 
-      (*output) << bash_view::COMMON_CODE << '\n';
+      (*output) << theme->common_color << '\n';
 
     }
 
@@ -283,13 +295,7 @@ void side_by_side_view::characters(const char * ch, int len) {
 
   for(int i = 0; i < len; ++i) {
 
-    std::string str;
-    if(ch[i] == '\t')
-      str.append(side_by_side_tab_size, ' ');
-    else
-      str.append(1, ch[i]);
-
-    if(str[0] == '\n') {
+    if(ch[i] == '\n') {
 
       if(!ignore_all_whitespace && !ignore_whitespace) {
 
@@ -305,17 +311,31 @@ void side_by_side_view::characters(const char * ch, int len) {
       }
 
       if(diff_stack.back() != bash_view::INSERT)
-        ++std::get<2>(original_lines.back());
+        ++std::get<LINE_INCR>(original_lines.back());
 
       if(diff_stack.back() != bash_view::DELETE)
-        ++std::get<2>(modified_lines.back());
+        ++std::get<LINE_INCR>(modified_lines.back());
 
       add_new_line();
       continue;
 
     }
 
-    if(isspace(str[0]) && ignore_whitespace && diff_stack.back() != bash_view::COMMON) {
+    if(isspace(ch[i]) && ignore_whitespace && diff_stack.back() != bash_view::COMMON) {
+
+      std::string str;
+      do {
+
+        if(ch[i] == '\t')
+          str.append(side_by_side_tab_size, ' ');
+        else
+          str.append(1, ch[i]);
+
+        ++i;
+
+      } while(i < len && isspace(ch[i]) && ch[i] != '\n');
+
+      --i;
 
       bool output = true;
       if(!change_starting_line_original && diff_stack.back() == bash_view::DELETE) {
@@ -338,6 +358,16 @@ void side_by_side_view::characters(const char * ch, int len) {
 
       assert(change_ending_space_original.empty()
              || change_ending_space_modified.empty());
+
+      std::string str;
+      do {
+
+        str.append(1, ch[i]);
+        ++i;
+
+      } while(i < len && !isspace(ch[i]));
+
+      --i;
 
       if(!change_ending_space_original.empty()) {
 
@@ -363,41 +393,19 @@ void side_by_side_view::characters(const char * ch, int len) {
 
 }
 
-/**
- * startUnit
- * @param localname the name of the profile tag
- * @param prefix the tag prefix
- * @param URI the namespace of tag
- * @param num_namespaces number of namespaces definitions
- * @param namespaces the defined namespaces
- * @param num_attributes the number of attributes on the tag
- * @param attributes list of attributes
- *
- * SAX handler function for start of an unit.
- * Overide for desired behavior.
- */
-void side_by_side_view::startUnit(const char * localname, const char * prefix,
-                                  const char * URI, int num_namespaces,
-                                  const struct srcsax_namespace * namespaces,
-                                  int num_attributes,
-                                  const struct srcsax_attribute * attributes) {
+void side_by_side_view::start_unit(const std::string & local_name,
+                                   const char * prefix,
+                                   const char * URI,
+                                   int num_namespaces,
+                                   const struct srcsax_namespace * namespaces,
+                                   int num_attributes,
+                                   const struct srcsax_attribute * attributes) {
 
-    diff_stack.push_back(bash_view::COMMON);
     add_new_line();
 
 }
 
-/**
- * endUnit
- * @param localname the name of the profile tag
- * @param prefix the tag prefix
- * @param URI the namespace of tag
- *
- * SAX handler function for end of an unit.
- * Overide for desired behavior.
- */
-void side_by_side_view::endUnit(const char * localname, const char * prefix,
-                                const char * URI) {
+void side_by_side_view::end_unit(const std::string & local_name, const char * prefix, const char * URI) {
 
   if((!change_ending_space_original.empty() || !change_ending_space_modified.empty())) {
 

@@ -8,16 +8,27 @@
 #include <cassert>
 
 unified_view::unified_view(const std::string & output_filename,
-                           bool ignore_all_whitespace, bool ignore_whitespace,
-                           bool ignore_comments, bool is_html, boost::any context_type)
-              : bash_view(output_filename, ignore_all_whitespace, ignore_whitespace,
-                          ignore_comments, is_html),
-                last_character_operation(bash_view::COMMON), modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
+                           bool syntax_highlight,
+                           const std::string & theme,
+                           bool ignore_all_whitespace,
+                           bool ignore_whitespace,
+                           bool ignore_comments,
+                           bool is_html,
+                           boost::any context_type)
+              : bash_view(output_filename,
+                          syntax_highlight, 
+                          theme,
+                          ignore_all_whitespace,
+                          ignore_whitespace,
+                          ignore_comments,
+                          is_html),
+                last_character_operation(bash_view::UNSET), modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
                 is_after_change(false), wait_change(true), in_function(),
                 context_type(context_type), length(0), is_after_additional(false),
                 after_edit_count(0), last_context_line((unsigned)-1),
                 change_starting_line(false), change_ending_space(),
-                change_ending_operation(bash_view::COMMON) {
+                change_ending_operation(bash_view::UNSET),
+                close_num_spans(0) {
 
   if(context_type.type() == typeid(size_t)) {
 
@@ -53,10 +64,11 @@ void unified_view::reset_internal() {
   is_after_additional = false;
   after_edit_count = 0;
   last_context_line = -1;
-  last_character_operation = bash_view::COMMON;
+  last_character_operation = bash_view::UNSET;
   change_starting_line = false;
   change_ending_space = "";
-  change_ending_operation = bash_view::COMMON;
+  change_ending_operation = bash_view::UNSET;
+  close_num_spans = 0;
 
 }
 
@@ -80,14 +92,20 @@ void unified_view::output_additional_context() {
   size_t line_delete = line_number_delete + 1 - additional_context.size();
   size_t line_insert = line_number_insert + 1 - additional_context.size();
 
-  if(wait_change && last_context_line != (line_number_delete - 1))
-    (*output) << bash_view::COMMON_CODE << LINE_CODE << "@@ -" << line_delete << " +" << line_insert << " @@" << bash_view::COMMON_CODE << '\n';
+  if(wait_change && last_context_line != (line_number_delete - 1)) {
+
+    if(!is_html)
+      (*output) << theme->common_color << theme->line_number_color << "@@ -" << line_delete << " +" << line_insert << " @@" << theme->common_color << '\n';
+    else
+      (*output) << "<span style=\"color:" << theme->line_number_color << ";\">@@ -" << line_delete << " +" << line_insert << " @@" << "</span>\n";
+
+  }
 
   if(additional_context.empty()) return;
 
   for(std::list<std::string>::const_iterator citr = additional_context.begin(); citr != additional_context.end(); ++citr) {
 
-    output_characters(*citr, bash_view::COMMON);
+    (*output) << *citr;
 
     ++line_delete, ++line_insert;
 
@@ -98,22 +116,32 @@ void unified_view::output_additional_context() {
 
 }
 
-void unified_view::output_characters(const std::string ch, int operation) {
+void unified_view::output_characters(const std::string & ch, int operation) {
 
-  if(operation != last_character_operation)
-    (*output) << change_operation_to_code(operation);
-
-  last_character_operation = operation;
-  (*output) << ch;
+  output_characters_to_buffer(*output, ch, operation, last_character_operation, close_num_spans);
 
 }
 
-void unified_view::start_element(const std::string & local_name, 
-                                         const char * prefix, const char * URI,
-                                         int num_namespaces,
-                                         const struct srcsax_namespace * namespaces,
-                                         int num_attributes,
-                                         const struct srcsax_attribute * attributes) {
+void unified_view::start_unit(const std::string & local_name,
+                              const char * prefix,
+                              const char * URI,
+                              int num_namespaces,
+                              const struct srcsax_namespace * namespaces,
+                              int num_attributes,
+                              const struct srcsax_attribute * attributes) {
+
+  if(is_html)
+    (*output) << "<pre>";
+
+}
+
+void unified_view::start_element(const std::string & local_name,
+                                 const char * prefix,
+                                 const char * URI,
+                                 int num_namespaces,
+                                 const struct srcsax_namespace * namespaces,
+                                 int num_attributes,
+                                 const struct srcsax_attribute * attributes) {
 
 
   if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
@@ -155,7 +183,25 @@ void unified_view::start_element(const std::string & local_name,
 
 }
 
-void unified_view::end_element(const std::string & local_name, const char * prefix,
+void unified_view::end_unit(const std::string & local_name,
+                            const char * prefix,
+                            const char * URI) {
+
+  if(!change_ending_space.empty()) {
+
+    output_characters(change_ending_space, bash_view::COMMON);
+    change_ending_space = "";
+    change_ending_operation = bash_view::COMMON;
+
+  }
+
+  if(is_html)
+    (*output) << "</pre>";
+
+}
+
+void unified_view::end_element(const std::string & local_name,
+                               const char * prefix,
                                const char * URI) {
 
     if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
@@ -201,8 +247,8 @@ void unified_view::characters(const char * ch, int len) {
    is_after_change = false;
    wait_change = false;
 
-   output->write(context.c_str(), context.size());
-   context = "";
+   output->write(context.str().c_str(), context.str().size());
+   context = std::ostringstream();
 
   }
 
@@ -210,18 +256,19 @@ void unified_view::characters(const char * ch, int len) {
 
     output_characters(change_ending_space, bash_view::COMMON);
     change_ending_space = "";
-    change_ending_operation = bash_view::COMMON;
+    change_ending_operation = bash_view::UNSET;
 
   }
 
-  if(last_character_operation == bash_view::COMMON && diff_stack.back() != bash_view::COMMON
-     && ignore_whitespace)
+  if((last_character_operation == bash_view::UNSET || last_character_operation == bash_view::COMMON)
+     && diff_stack.back() != bash_view::COMMON && ignore_whitespace)
     change_starting_line = true;
 
   for(int i = 0; i < len; ++i) {
 
     bool skip = false;
-    if(isspace(ch[i])) {
+    bool is_space = isspace(ch[i]);
+    if(is_space) {
 
       if(ignore_whitespace && diff_stack.back() != bash_view::COMMON) {
 
@@ -246,7 +293,7 @@ void unified_view::characters(const char * ch, int len) {
 
         output_characters(change_ending_space, diff_stack.back());
         change_ending_space = "";
-        change_ending_operation = bash_view::COMMON;
+        change_ending_operation = bash_view::UNSET;
 
       }
 
@@ -254,10 +301,25 @@ void unified_view::characters(const char * ch, int len) {
 
     }
 
+    std::string str(1, ch[i]);
+    if(!is_space || ch[i] != '\n') {
+
+      ++i;
+      while(i < len && isspace(ch[i]) == is_space && ch[i] != '\n') {
+
+        str += ch[i];
+        ++i;
+
+      }
+
+      --i;
+
+    }
+
     if(wait_change) {
 
       assert(!skip);
-      context.append(&ch[i], 1);
+      output_characters_to_buffer(context, str, bash_view::COMMON, last_character_operation, close_num_spans);
 
     } else if(!skip) {
 
@@ -268,7 +330,7 @@ void unified_view::characters(const char * ch, int len) {
 
       } else {
 
-        output_character(ch[i], diff_stack.back());
+        output_characters(str, diff_stack.back());
 
       }
 
@@ -280,7 +342,7 @@ void unified_view::characters(const char * ch, int len) {
 
         output_characters(change_ending_space, bash_view::COMMON);
         change_ending_space = "";
-        change_ending_operation = bash_view::COMMON;
+        change_ending_operation = bash_view::UNSET;
 
       }
 
@@ -303,6 +365,9 @@ void unified_view::characters(const char * ch, int len) {
           wait_change = true;
           last_context_line = line_number_delete;
 
+          end_buffer(context, close_num_spans);
+          last_character_operation = bash_view::UNSET;      
+
         }
 
       } else if(wait_change && ((in_mode(LINE) && (!in_mode(FUNCTION) || !in_function.size()) && number_context_lines != 0) || (in_mode(FUNCTION) && in_function.size()))) {
@@ -310,7 +375,14 @@ void unified_view::characters(const char * ch, int len) {
         if(in_mode(LINE) && (!in_mode(FUNCTION) || !in_function.size()) && length >= number_context_lines)
           additional_context.pop_front(), --length;
 
-        additional_context.push_back(context);
+        if(!in_mode(ALL)) {
+
+          end_buffer(context, close_num_spans);
+          last_character_operation = bash_view::UNSET;
+
+        }
+
+        additional_context.push_back(context.str());
         ++length;
 
       }
@@ -318,59 +390,12 @@ void unified_view::characters(const char * ch, int len) {
       if(diff_stack.back() != INSERT) ++line_number_delete;
       if(diff_stack.back() != DELETE) ++line_number_insert;
 
-      context = "";
+      context = std::ostringstream();
 
     }
 
   }
 
   if(diff_stack.back() != bash_view::COMMON) is_after_change  = true;
-
-}
-
-/**
- * startUnit
- * @param localname the name of the profile tag
- * @param prefix the tag prefix
- * @param URI the namespace of tag
- * @param num_namespaces number of namespaces definitions
- * @param namespaces the defined namespaces
- * @param num_attributes the number of attributes on the tag
- * @param attributes list of attributes
- *
- * SAX handler function for start of an unit.
- * Overide for desired behavior.
- */
-void unified_view::startUnit(const char * localname, const char * prefix,
-                             const char * URI, int num_namespaces,
-                             const struct srcsax_namespace * namespaces,
-                             int num_attributes,
-                             const struct srcsax_attribute * attributes) {
-
-    diff_stack.push_back(bash_view::COMMON);
-    output_characters("", bash_view::COMMON);
-
-}
-
-/**
- * endUnit
- * @param localname the name of the profile tag
- * @param prefix the tag prefix
- * @param URI the namespace of tag
- *
- * SAX handler function for end of an unit.
- * Overide for desired behavior.
- */
-void unified_view::endUnit(const char * localname, const char * prefix, const char * URI) {
-
-  if(!change_ending_space.empty()) {
-
-    output_characters(change_ending_space, bash_view::COMMON);
-    change_ending_space = "";
-    change_ending_operation = bash_view::COMMON;
-
-  }
-
-  output_characters("", bash_view::COMMON);
 
 }

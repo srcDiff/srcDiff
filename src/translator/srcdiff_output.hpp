@@ -140,9 +140,13 @@ private:
 
 public:
 
-  srcdiff_output(srcml_archive * archive, const std::string & srcdiff_filename,
-                 const OPTION_TYPE & flags, const METHOD_TYPE & method,
-                 const boost::any & unified_view_context, int side_by_side_tab_size,
+  srcdiff_output(srcml_archive * archive,
+                 const std::string & srcdiff_filename,
+                 const OPTION_TYPE & flags,
+                 const METHOD_TYPE & method,
+                 const boost::any & unified_view_context,
+                 int side_by_side_tab_size,
+                 const std::string & theme,
                  const boost::optional<std::string> & summary_type_str);
   virtual ~srcdiff_output();
 

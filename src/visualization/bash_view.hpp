@@ -2,6 +2,9 @@
 #define INCLUDED_BASH_VIEW_HPP
 
 #include <srcSAXHandler.hpp>
+
+#include <theme.hpp>
+
 #include <vector>
 #include <string>
 #include <fstream>
@@ -11,19 +14,12 @@ class bash_view : public srcSAXHandler {
 
 protected:
 
+  static int UNSET;
   static int COMMON;
   static int DELETE;
   static int INSERT;
 
-  static const char * const DELETE_CODE;
-  static const char * const INSERT_CODE;
-
-  static const char * const COMMON_CODE;
   static const char * const LINE_CODE;
-
-  static const char * const DELETE_CODE_HTML;
-  static const char * const INSERT_CODE_HTML;
-  static const char * const COMMON_CODE_HTML;
 
   static const char * const CARRIAGE_RETURN_SYMBOL;
 
@@ -31,18 +27,33 @@ protected:
 
   std::ostream * output;
 
+  bool syntax_highlight;
+  theme_t * theme;
+
+  bool in_comment;
+  bool in_literal;
+  bool in_string;
+  bool in_function_name;
+  bool in_class_name;
+  bool in_call_name;
+
   bool ignore_all_whitespace;
   bool ignore_whitespace;
   bool ignore_comments;
 
-  bool in_comment;
-
   bool is_html;
+
+  unsigned int close_num_span;
 
 public:
 
-  bash_view(const std::string & output_filename, bool ignore_all_whitespace,
-            bool ignore_whitespace, bool ignore_comments, bool is_html);
+  bash_view(const std::string & output_filename,
+            bool syntax_highlight,
+            const std::string & theme, 
+            bool ignore_all_whitespace,
+            bool ignore_whitespace,
+            bool ignore_comments,
+            bool is_html);
   virtual ~bash_view();
 
   void transform(const std::string & srcdiff, const std::string & xml_encoding);
@@ -52,22 +63,39 @@ protected:
 
   virtual void reset_internal() = 0;
 
-  virtual void start_element(const std::string & local_name, const char * prefix,
+  virtual void start_unit(const std::string & local_name,
+                          const char * prefix,
+                          const char * URI,
+                          int num_namespaces,
+                          const struct srcsax_namespace * namespaces,
+                          int num_attributes,
+                          const struct srcsax_attribute * attributes) = 0;
+  virtual void end_unit(const std::string & local_name,
+                        const char * prefix,
+                        const char * URI) = 0;
+  virtual void start_element(const std::string & local_name,
+                             const char * prefix,
                              const char * URI, int num_namespaces,
                              const struct srcsax_namespace * namespaces,
                              int num_attributes,
                              const struct srcsax_attribute * attributes) = 0;
-  virtual void end_element(const std::string & local_name, const char * prefix,
+  virtual void end_element(const std::string & local_name,
+                           const char * prefix,
                            const char * URI) = 0;
   virtual void characters(const char * ch, int len) = 0;
 
-  const char * change_operation_to_code(int operation);
-
-  void output_characters_to_buffer(const std::string ch, int operation,
-                                   std::ostream & out,
-                                   int & last_character_operation);
-  virtual void output_characters(const std::string ch, int operation) = 0;
+  void end_buffer(std::ostream & out, unsigned int & close_num_span);
+  void output_characters_to_buffer(std::ostream & out,
+                                   const std::string & ch,
+                                   int operation,
+                                   int & last_character_operation,
+                                   unsigned int & close_num_span);
+  virtual void output_characters(const std::string & ch, int operation) = 0;
   void output_character(const char c, int operation);
+
+private:
+  std::string change_operation_to_code(int operation);
+  std::string close_spans(unsigned int close_num_span);
 
 public:
 

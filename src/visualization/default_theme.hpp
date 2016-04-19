@@ -1,0 +1,27 @@
+/**
+ *  @file default_theme.hpp
+ *
+ *  Specifies default color scheme.
+ *
+ *  @author Michael John Decker <mdecker6@kent.edu>
+ */
+
+#ifndef INCLUDED_DEFAULT_THEME_HPP
+#define INCLUDED_DEFAULT_THEME_HPP
+
+#include <theme.hpp>
+
+#include <string>
+#include <iostream>
+
+class default_theme : public theme_t {
+
+private: 
+public:
+
+    default_theme(bool is_html);
+    std::string token2color(const std::string & token, const std::string & parent) const;
+
+};
+
+#endif
