@@ -26,7 +26,7 @@ public:
     character_diff(const std::string & original, const std::string & modified);
 
     void compute();
-    void output(bash_view & view, const std::string & type);
+void output(bash_view & view, const std::string & type);
 
 };
 

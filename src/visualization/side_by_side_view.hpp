@@ -3,6 +3,8 @@
 
 #include <bash_view.hpp>
 
+#include <versioned_string.hpp>
+
 #include <vector>
 #include <string>
 #include <fstream>
@@ -32,6 +34,9 @@ private:
 
   std::string change_ending_space_original;
   std::string change_ending_space_modified;
+
+  bool save_text;
+  versioned_string saved_text;
 
 public:
 
@@ -71,13 +76,13 @@ private:
                            const char * URI);
   virtual void characters(const char * ch, int len);
 
-  void output_characters(const std::string & ch, int operation);
   void add_new_line();
 
   void output_html();
   void output_bash();
 
 public:
+  void output_characters(const std::string & ch, int operation);
 
 };
 

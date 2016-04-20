@@ -94,6 +94,8 @@ private:
 
   context_mode context_string_to_id(const std::string & context_type_str) const;
 
+public:
+  
   virtual void output_characters(const std::string & ch, int operation);
 
 };

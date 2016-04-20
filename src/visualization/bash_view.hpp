@@ -13,12 +13,14 @@
 
 class bash_view : public srcSAXHandler {
 
-protected:
+public:
 
   static int UNSET;
   static int COMMON;
   static int DELETE;
   static int INSERT;
+
+protected:
 
   static const char * const LINE_CODE;
 
@@ -93,8 +95,11 @@ protected:
                                    int operation,
                                    int & last_character_operation,
                                    unsigned int & close_num_span);
-  virtual void output_characters(const std::string & ch, int operation) = 0;
   void output_character(const char c, int operation);
+
+public:
+
+  virtual void output_characters(const std::string & ch, int operation) = 0;
 
 private:
   std::string change_operation_to_code(int operation);
