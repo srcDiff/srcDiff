@@ -18,13 +18,13 @@ static const void * access_char(int index, const void * structure, const void * 
 
 }
 
-character_diff::character_diff(const std::string & original, const std::string & modified)
+character_diff::character_diff(const versioned_string & str)
     : ses(compare_char, access_char, nullptr),
-      original_str(original), modified_str(modified) {}
+      str(str) {}
 
 void character_diff::compute() {
 
-    ses.compute<std::string>(original_str, modified_str, false);
+    ses.compute<std::string>(str.original(), str.modified(), false);
 
 }
 
@@ -34,7 +34,7 @@ void character_diff::output(bash_view & view, const std::string & type) {
     for(const edit * edits = ses.get_script(); edits; edits = edits->next)
       difference += edits->length;
 
-    int min_size = std::min(original_str.size(), modified_str.size());
+    int min_size = std::min(str.original().size(), str.modified().size());
     if(  (type == "name" && 5 * difference < min_size)
       ||  (type == "operator" && difference <= min_size)) {
 
@@ -43,12 +43,12 @@ void character_diff::output(bash_view & view, const std::string & type) {
 
         if(edits->operation == SES_DELETE 
            && last_diff_original < edits->offset_sequence_one)
-          view.output_characters(original_str.substr(last_diff_original, 
+          view.output_characters(str.original().substr(last_diff_original, 
                                             edits->offset_sequence_one),
                             bash_view::COMMON);
         else if(edits->operation == SES_INSERT && edits->offset_sequence_one != 0
                 && last_diff_original <= edits->offset_sequence_one)
-          view.output_characters(original_str.substr(last_diff_original, 
+          view.output_characters(str.original().substr(last_diff_original, 
                                             edits->offset_sequence_one),
                             bash_view::COMMON);
 
@@ -57,7 +57,7 @@ void character_diff::output(bash_view & view, const std::string & type) {
 
         case SES_INSERT:
 
-          view.output_characters(modified_str.substr(edits->offset_sequence_two, edits->length), bash_view::INSERT);
+          view.output_characters(str.modified().substr(edits->offset_sequence_two, edits->length), bash_view::INSERT);
 
           // update for common
           last_diff_original = edits->offset_sequence_one;
@@ -66,7 +66,7 @@ void character_diff::output(bash_view & view, const std::string & type) {
 
         case SES_DELETE:
 
-          view.output_characters(original_str.substr(edits->offset_sequence_one, edits->length), bash_view::DELETE);
+          view.output_characters(str.original().substr(edits->offset_sequence_one, edits->length), bash_view::DELETE);
 
           // update for common
           last_diff_original = edits->offset_sequence_one + edits->length;
@@ -76,14 +76,14 @@ void character_diff::output(bash_view & view, const std::string & type) {
 
       }
 
-      if(last_diff_original < (signed)original_str.size())
-        view.output_characters(original_str.substr(last_diff_original), bash_view::COMMON);
+      if(last_diff_original < (signed)str.original().size())
+        view.output_characters(str.original().substr(last_diff_original), bash_view::COMMON);
 
 
     } else {
 
-      view.output_characters(original_str, bash_view::DELETE);
-      view.output_characters(modified_str, bash_view::INSERT);
+      view.output_characters(str.original(), bash_view::DELETE);
+      view.output_characters(str.modified(), bash_view::INSERT);
 
     }
 

@@ -36,6 +36,7 @@ private:
   std::string change_ending_space_modified;
 
   bool save_text;
+  std::string saved_type;
   versioned_string saved_text;
 
 public:
