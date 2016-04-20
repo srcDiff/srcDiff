@@ -36,6 +36,20 @@ void theme_t::set_langauge(const std::string & language) {
 
 }
 
+bool theme_t::is_keyword(const std::string & token) const {
+
+    try {
+
+        keywords->color(token);
+        return true;
+
+    } catch(const std::out_of_range & e) {}
+
+    return false;
+
+
+}
+
 std::string theme_t::token2color(const std::string & token,
                                  bool in_comment,
                                  bool in_literal,

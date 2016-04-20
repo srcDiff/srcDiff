@@ -23,9 +23,12 @@ side_by_side_view::side_by_side_view(const std::string & output_filename,
               ignore_whitespace,
               ignore_comments,
               is_html),
-    side_by_side_tab_size(side_by_side_tab_size), line_operations(),
-    last_character_operation_original(bash_view::COMMON), original_lines(),
-    last_character_operation_modified(bash_view::COMMON), modified_lines() {}
+    side_by_side_tab_size(side_by_side_tab_size),
+    line_operations(),
+    last_character_operation_original(bash_view::COMMON),
+    original_lines(),
+    last_character_operation_modified(bash_view::COMMON),
+    modified_lines() {}
 
 side_by_side_view::~side_by_side_view() {}
 
@@ -42,8 +45,8 @@ void side_by_side_view::reset_internal() {
   change_starting_line_original = true;
   change_starting_line_modified = true;
 
-  change_ending_space_original = "";
-  change_ending_space_modified = "";
+  change_ending_space_original.clear();
+  change_ending_space_modified.clear();
 
 }
 
@@ -385,7 +388,27 @@ void side_by_side_view::characters(const char * ch, int len) {
   
       }
 
-      output_characters(str, diff_stack.back());
+      if(srcml_element_stack.size() > 1 && srcml_element_stack.back() == "diff:delete" 
+        && (srcml_element_stack.at(srcml_element_stack.size() - 2) == "name"
+          || srcml_element_stack.at(srcml_element_stack.size() - 2) == "operator")) {
+        
+        assert(!save_text);
+
+        save_text = true;
+        saved_type = srcml_element_stack.at(srcml_element_stack.size() - 2);
+
+      }
+
+      if(save_text) {
+
+        saved_text.append(ch, len, 
+          diff_stack.back() == bash_view::DELETE ? SRCDIFF_DELETE : SRCDIFF_INSERT);
+
+      } else {
+
+        output_characters(str, diff_stack.back());
+
+      }
 
     }
 
