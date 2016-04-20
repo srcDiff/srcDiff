@@ -290,12 +290,21 @@ void side_by_side_view::end_element(const std::string & local_name, const char *
       change_ending_space_modified = "";
 
     }
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
     save_text = false;
-  
-    character_diff char_diff(saved_text);
-    char_diff.compute();
-    char_diff.output(*this, saved_type);
+
+    if(theme->is_keyword(saved_text.original()) || theme->is_keyword(saved_text.modified())) {
+
+      output_characters(saved_text.original(), bash_view::DELETE);
+      output_characters(saved_text.modified(), bash_view::INSERT);
+
+    } else {
+
+      character_diff char_diff(saved_text);
+      char_diff.compute();
+      char_diff.output(*this, saved_type);
+
+    }
 
     saved_text.clear();
 

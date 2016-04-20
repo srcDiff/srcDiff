@@ -51,6 +51,7 @@ public:
     ~theme_t();
 
     void set_langauge(const std::string & language);
+    bool is_keyword(const std::string & token) const;
     std::string token2color(const std::string & token,
                             bool in_comment,
                             bool in_literal,
