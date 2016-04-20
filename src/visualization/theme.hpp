@@ -57,7 +57,8 @@ public:
                             bool in_string,
                             bool in_function_name,
                             bool in_class_name,
-                            bool in_call_name) const;
+                            bool in_call_name,
+                            bool in_preprocessor_directive) const;
 
 };
 

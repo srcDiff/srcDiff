@@ -38,6 +38,8 @@ protected:
   bool in_class_name;
   bool in_call_name;
 
+  bool in_preprocessor_directive;
+
   bool ignore_all_whitespace;
   bool ignore_whitespace;
   bool ignore_comments;

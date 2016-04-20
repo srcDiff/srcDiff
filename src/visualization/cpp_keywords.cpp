@@ -93,18 +93,6 @@ cpp_keywords::cpp_keywords(const theme_t & theme) : keywords_t(theme) {
         { "void",         theme.type_color },
         { "wchar_t",      theme.type_color },
 
-        { "include",      theme.keyword_color }, 
-        { "define",       theme.keyword_color }, 
-        { "elif",         theme.keyword_color }, 
-        { "endif",        theme.keyword_color }, 
-        { "error",        theme.keyword_color }, 
-        { "warning",      theme.keyword_color }, 
-        { "ifdef",        theme.keyword_color }, 
-        { "ifndef",       theme.keyword_color }, 
-        { "line",         theme.keyword_color }, 
-        { "pragma",       theme.keyword_color }, 
-        { "undef",        theme.keyword_color }, 
-
         { "signals",      theme.keyword_color }, 
         { "foreach",      theme.keyword_color }, 
         { "forever",      theme.keyword_color },

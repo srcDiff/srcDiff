@@ -47,6 +47,7 @@ bash_view::bash_view(const std::string & output_filename,
     in_function_name(false),
     in_class_name(false),
     in_call_name(false),
+    in_preprocessor_directive(false),
     ignore_all_whitespace(ignore_all_whitespace),
     ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
     is_html(is_html), close_num_span(0) {
@@ -91,6 +92,7 @@ void bash_view::reset() {
   in_function_name = false;
   in_class_name = false;
   in_call_name = false;
+  in_preprocessor_directive = false;
 
   close_num_span = 0;
 
@@ -148,7 +150,8 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
                                    in_string,
                                    in_function_name,
                                    in_class_name,
-                                   in_call_name);
+                                   in_call_name,
+                                   in_preprocessor_directive);
     if(!highlight.empty())
       out << highlight;
 
@@ -358,6 +361,10 @@ void bash_view::startElement(const char * localname,
     else if(is_call(parent))
       in_call_name = true;
 
+  } else if(URI == SRCML_CPP_NAMESPACE_HREF && local_name == "directive") {
+
+    in_preprocessor_directive = true;
+
   }
 
   start_element(local_name, prefix, URI, num_namespaces, namespaces,
@@ -426,6 +433,10 @@ void bash_view::endElement(const char * localname,
       in_class_name = false;
     else if(is_call(parent))
       in_call_name = false;
+
+  } else if(URI == SRCML_CPP_NAMESPACE_HREF && local_name == "directive") {
+
+    in_preprocessor_directive = false;
 
   }
 

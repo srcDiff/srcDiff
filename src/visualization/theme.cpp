@@ -42,7 +42,8 @@ std::string theme_t::token2color(const std::string & token,
                                  bool in_string,
                                  bool in_function_name,
                                  bool in_class_name,
-                                 bool in_call_name) const {
+                                 bool in_call_name,
+                                 bool in_preprocessor_directive) const {
     
     if(in_comment)       return comment_color;
     if(in_literal)       return number_color;
@@ -55,6 +56,8 @@ std::string theme_t::token2color(const std::string & token,
         if(in_call_name)     return call_name_color;
 
     }
+
+    if(in_preprocessor_directive) return keyword_color;
 
     try {
 
