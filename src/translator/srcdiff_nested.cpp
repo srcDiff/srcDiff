@@ -71,9 +71,14 @@ const nest_info nesting[] = {
   { "foreach",       block_nest_types       },
   { "control",       for_control_nest_types },
   { "function",      block_nest_types       },
+
   { "class",         class_nest_types       },
   { "struct",        class_nest_types       },
-  { "union",         class_nest_types       },
+  { "enum",          class_nest_types       },
+  { "public",        class_nest_types       },
+  { "private",       class_nest_types       },
+  { "protected",     class_nest_types       },
+
   { "call",          call_nest_types        },
   { "argument_list", call_nest_types        },
   { "argument",      call_nest_types        },

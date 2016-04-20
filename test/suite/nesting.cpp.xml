@@ -9,4 +9,15 @@
     </diff:ws><diff:common><expr_stmt><expr><name><name>profile_identifiers</name><index>[<expr><call><name><name>name_change_identifiers</name><operator>.</operator><name>back</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name><name>first</name><operator>.</operator><name>modified</name></name><argument_list>()</argument_list></call></expr>]</index></name><operator>.</operator><call><name>erase</name><argument_list>(<argument><expr><call><name><name>name_change_identifiers</name><operator>.</operator><name>back</name></name><argument_list>()</argument_list></call><operator>.</operator><name>first</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></diff:common></block></then></if></diff:insert>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="nesting|nesting">
+<diff:insert><struct>struct<diff:ws> </diff:ws><name>view_options</name><diff:ws> </diff:ws><block>{<public type="default"><diff:ws>
+	</diff:ws><decl_stmt><decl><type><name><name>std</name><operator>::</operator><name>string</name></name></type><diff:ws> </diff:ws><name>theme</name></decl>;</decl_stmt><diff:ws>
+	</diff:ws><diff:common><decl_stmt><decl><type><name><name>boost</name><operator>::</operator><name>any</name></name></type> <name>unified_view_context</name></decl>;</decl_stmt>
+<diff:insert><diff:ws>	</diff:ws></diff:insert><decl_stmt><decl><type><name>int</name></type> <name>side_by_side_tab_size</name></decl>;</decl_stmt></diff:common><diff:ws>
+</diff:ws></public>}</block><diff:ws> </diff:ws><decl><name>view</name></decl>;</struct></diff:insert>
+
+<decl_stmt><decl><type><name><name>boost</name><operator>::</operator><name><name>optional</name><argument_list type="generic">&lt;<argument><expr><name><name>std</name><operator>::</operator><name>string</name></name></expr></argument>&gt;</argument_list></name></name></type> <name>summary_type_str</name></decl>;</decl_stmt>
+<diff:delete><decl_stmt><decl><type><name><name>std</name><operator>::</operator><name>string</name></name></type><diff:ws> </diff:ws><name>theme</name></decl>;</decl_stmt><diff:ws>
+</diff:ws></diff:delete></unit>
+
 </unit>
