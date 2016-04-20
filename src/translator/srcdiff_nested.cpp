@@ -471,7 +471,8 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
 
   if(original_tag == "then" || original_tag == "block" || original_tag == "comment"
     || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier"
-    || original_tag == "expr" || original_tag == "expr_stmt" || original_tag == "name") {
+    || original_tag == "expr" || original_tag == "expr_stmt" || original_tag == "name"
+    || original_tag == "number" || original_tag == "file") {
 
     bool is_reject = srcdiff_match::reject_similarity(measure,
                                                       set_original,

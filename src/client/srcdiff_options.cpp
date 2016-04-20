@@ -522,7 +522,6 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     option_dependency(var_map, "ignore-comments", std::vector<std::string>{"unified", "side-by-side"});
     option_dependency(var_map, "html", std::vector<std::string>{"unified", "side-by-side"});
     option_dependency(var_map, "highlight", std::vector<std::string>{"unified", "side-by-side"});
-    option_dependency(var_map, "no-highlight", std::vector<std::string>{"unified", "side-by-side"});
 
     conflicting_options(var_map, "unified", "side-by-side");
     conflicting_options(var_map, "ignore-all-space", "ignore-space");

@@ -201,17 +201,23 @@ srcml_nodes srcml_converter::create_nodes() const {
 
 static bool is_separate_token(const char character) {
 
-
   return character == '(' || character ==')'  || character == '['  || character == ']'
       || character == ',' || character == '"' || character == '\'' || character == '\\'
       || character == ';' || character == '{' || character == '}';
 
 }
 
-static bool is_comment_separate(const char character) {
+static bool is_comment_separate(const std::string & parent, const char character) {
 
-
+  if(parent != "comment") return false;
   return character == '/' || character == '*' || character == '!';
+
+}
+
+static bool is_cpp_file_separate(const std::string & parent, const char character) {
+
+  if(parent != "file") return false;
+  return character == '<' || character == '>';
 
 }
 
@@ -258,6 +264,20 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
             ++characters;
 
             text = split_text(characters_start, characters, element_stack.back());
+
+        } else if(is_comment_separate(element_stack.back()->name, *characters)) {
+
+          while((*characters) != 0 && is_comment_separate(element_stack.back()->name, *characters))
+            ++characters;
+
+          text = split_text(characters_start, characters, element_stack.back());
+
+        } else if(is_cpp_file_separate(element_stack.back()->name, *characters)) {
+
+          while((*characters) != 0 && is_cpp_file_separate(element_stack.back()->name, *characters))
+            ++characters;
+
+          text = split_text(characters_start, characters, element_stack.back());
 
         }
 
@@ -315,16 +335,13 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
           text = split_text(characters_start, characters, element_stack.back());
 
-        } else if(element_stack.back()->name == "comment" && is_comment_separate(*characters)) {
-
-          while((*characters) != 0 && is_comment_separate(*characters))
-            ++characters;
-
-          text = split_text(characters_start, characters, element_stack.back());
-
         } else {
 
-          while((*characters) != 0 && !isspace(*characters) && !is_separate_token(*characters))
+          while((*characters) != 0 
+                && !isspace(*characters)
+                && !is_comment_separate(element_stack.back()->name, *characters)
+                && !is_cpp_file_separate(element_stack.back()->name, *characters)
+                && !is_separate_token(*characters))
             ++characters;
 
           // Copy the remainder after (

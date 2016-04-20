@@ -1024,7 +1024,8 @@ bool reject_match_same(const srcdiff_measure & measure,
     || original_tag == "member_init_list" || original_tag == "member_list"
     || original_tag == "argument"
     || original_tag == "range"
-    || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier")
+    || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier"
+    || original_tag == "number" || original_tag == "file")
     return false;
 
   if(original_tag == "name" && set_original.nodes().at(original_pos)->is_simple && set_modified.nodes().at(modified_pos)->is_simple) return false;

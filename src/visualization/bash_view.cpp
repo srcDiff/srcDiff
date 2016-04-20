@@ -361,6 +361,15 @@ void bash_view::startElement(const char * localname,
     else if(is_call(parent))
       in_call_name = true;
 
+  } else if(URI == SRCML_CPP_NAMESPACE_HREF
+            && (local_name == "literal" || local_name == "file")) {
+
+      in_string = true;
+
+  } else if(URI == SRCML_CPP_NAMESPACE_HREF && local_name == "number") {
+
+      in_literal = true;
+
   } else if(URI == SRCML_CPP_NAMESPACE_HREF && local_name == "directive") {
 
     in_preprocessor_directive = true;
@@ -433,6 +442,14 @@ void bash_view::endElement(const char * localname,
       in_class_name = false;
     else if(is_call(parent))
       in_call_name = false;
+
+  } else if(URI == SRCML_CPP_NAMESPACE_HREF
+            && ( local_name == "literal"
+              || local_name == "file"
+              || local_name == "number")) {
+
+    in_literal = false;
+    in_string = false;
 
   } else if(URI == SRCML_CPP_NAMESPACE_HREF && local_name == "directive") {
 
