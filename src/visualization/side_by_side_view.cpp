@@ -1,7 +1,6 @@
 #include <side_by_side_view.hpp>
 
 #include <srcdiff_constants.hpp>
-#include <character_diff.hpp>
 
 #include <algorithm>
 
@@ -29,10 +28,7 @@ side_by_side_view::side_by_side_view(const std::string & output_filename,
     last_character_operation_original(bash_view::COMMON),
     original_lines(),
     last_character_operation_modified(bash_view::COMMON),
-    modified_lines(),
-    save_text(false),
-    saved_type(),
-    saved_text() {}
+    modified_lines() {}
 
 side_by_side_view::~side_by_side_view() {}
 
@@ -52,9 +48,6 @@ void side_by_side_view::reset_internal() {
   change_ending_space_original.clear();
   change_ending_space_modified.clear();
 
-  save_text = false,
-  saved_type.clear();
-  saved_text.clear();
 }
 
 void side_by_side_view::output_characters(const std::string & ch, int operation) {
@@ -273,42 +266,6 @@ void side_by_side_view::start_element(const std::string & local_name,
 void side_by_side_view::end_element(const std::string & local_name, const char * prefix,
                                const char * URI) {
 
-  if(save_text && (local_name == "name" || local_name == "operator"))  {
-
-    if(!change_ending_space_original.empty()) {
-
-      output_characters(change_ending_space_original,
-                        last_character_operation_original);
-      change_ending_space_original = "";
-
-    }
-
-    if(!change_ending_space_modified.empty()) {
-
-      output_characters(change_ending_space_modified,
-                        last_character_operation_modified);
-      change_ending_space_modified = "";
-
-    }
-
-    save_text = false;
-
-    if(theme->is_keyword(saved_text.original()) || theme->is_keyword(saved_text.modified())) {
-
-      output_characters(saved_text.original(), bash_view::DELETE);
-      output_characters(saved_text.modified(), bash_view::INSERT);
-
-    } else {
-
-      character_diff char_diff(saved_text);
-      char_diff.compute();
-      char_diff.output(*this, saved_type);
-
-    }
-
-    saved_text.clear();
-
-  }
   if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
     if(local_name == "common" || local_name == "delete" || local_name == "insert")
@@ -336,25 +293,6 @@ void side_by_side_view::characters(const char * ch, int len) {
       change_ending_space_modified = "";
 
     }
-
-  }
-
-  if(srcml_element_stack.size() > 1 && srcml_element_stack.back() == "diff:delete" 
-    && (srcml_element_stack.at(srcml_element_stack.size() - 2) == "name"
-      || srcml_element_stack.at(srcml_element_stack.size() - 2) == "operator")) {
-    assert(!save_text);
-
-    save_text = true;
-    saved_type = srcml_element_stack.at(srcml_element_stack.size() - 2);
-
-  }
-
-  if(save_text) {
-
-    saved_text.append(ch, len, 
-      diff_stack.back() == bash_view::DELETE ? SRCDIFF_DELETE : SRCDIFF_INSERT);
-
-    return;
 
   }
 
@@ -450,7 +388,27 @@ void side_by_side_view::characters(const char * ch, int len) {
   
       }
 
-      output_characters(str, diff_stack.back());
+      if(srcml_element_stack.size() > 1 && srcml_element_stack.back() == "diff:delete" 
+        && (srcml_element_stack.at(srcml_element_stack.size() - 2) == "name"
+          || srcml_element_stack.at(srcml_element_stack.size() - 2) == "operator")) {
+        
+        assert(!save_text);
+
+        save_text = true;
+        saved_type = srcml_element_stack.at(srcml_element_stack.size() - 2);
+
+      }
+
+      if(save_text) {
+
+        saved_text.append(ch, len, 
+          diff_stack.back() == bash_view::DELETE ? SRCDIFF_DELETE : SRCDIFF_INSERT);
+
+      } else {
+
+        output_characters(str, diff_stack.back());
+
+      }
 
     }
 

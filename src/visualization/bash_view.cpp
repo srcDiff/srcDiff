@@ -3,12 +3,12 @@
 #include <srcdiff_constants.hpp>
 
 #include <shortest_edit_script.hpp>
+#include <character_diff.hpp>
+
 #include <type_query.hpp>
 
 #include <default_theme.hpp>
 #include <monokai_theme.hpp>
-
-#include <type_query.hpp>
 
 #include <cstring>
 #include <cctype>
@@ -49,8 +49,13 @@ bash_view::bash_view(const std::string & output_filename,
     in_call_name(false),
     in_preprocessor_directive(false),
     ignore_all_whitespace(ignore_all_whitespace),
-    ignore_whitespace(ignore_whitespace), ignore_comments(ignore_comments),
-    is_html(is_html), close_num_span(0) {
+    ignore_whitespace(ignore_whitespace),
+    ignore_comments(ignore_comments),
+    is_html(is_html),
+    close_num_span(0),
+    save_text(false),
+    saved_type(),
+    saved_text()  {
 
   if(output_filename != "-")
     output = new std::ofstream(output_filename.c_str());
@@ -95,6 +100,10 @@ void bash_view::reset() {
   in_preprocessor_directive = false;
 
   close_num_span = 0;
+
+  save_text = false,
+  saved_type.clear();
+  saved_text.clear();
 
   reset_internal();
 
@@ -454,6 +463,26 @@ void bash_view::endElement(const char * localname,
   } else if(URI == SRCML_CPP_NAMESPACE_HREF && local_name == "directive") {
 
     in_preprocessor_directive = false;
+
+  }
+
+  if(save_text && (local_name == "name" || local_name == "operator"))  {
+
+    if(theme->is_keyword(saved_text.original()) || theme->is_keyword(saved_text.modified())) {
+
+      output_characters(saved_text.original(), bash_view::DELETE);
+      output_characters(saved_text.modified(), bash_view::INSERT);
+
+    } else {
+
+      character_diff char_diff(saved_text);
+      char_diff.compute();
+      char_diff.output(*this, saved_type);
+
+    }
+
+    save_text = false;
+    saved_text.clear();
 
   }
 

@@ -5,6 +5,8 @@
 
 #include <theme.hpp>
 
+#include <versioned_string.hpp>
+
 #include <vector>
 #include <string>
 #include <fstream>
@@ -49,6 +51,10 @@ protected:
   bool is_html;
 
   unsigned int close_num_span;
+
+  bool save_text;
+  std::string saved_type;
+  versioned_string saved_text;
 
 public:
 

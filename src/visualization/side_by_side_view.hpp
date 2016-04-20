@@ -3,8 +3,6 @@
 
 #include <bash_view.hpp>
 
-#include <versioned_string.hpp>
-
 #include <vector>
 #include <string>
 #include <fstream>
@@ -34,10 +32,6 @@ private:
 
   std::string change_ending_space_original;
   std::string change_ending_space_modified;
-
-  bool save_text;
-  std::string saved_type;
-  versioned_string saved_text;
 
 public:
 
