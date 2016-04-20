@@ -137,7 +137,6 @@ void option_field(const std::string & arg) { options.*field = arg; }
 template<boost::optional<std::string> srcdiff_options::*field>
 void option_field(const std::string & arg) { options.*field = arg; }
 
-#ifndef _MSC_BUILD
 template<>
 void option_field<&srcdiff_options::files_from_name>(const std::string & arg) {
 
@@ -154,8 +153,6 @@ void option_field<&srcdiff_options::summary_type_str>(const std::string & arg) {
   options.flags |= OPTION_SUMMARY;
 
 }
-
-#endif
 
 #if SVN
 template<>
@@ -192,44 +189,6 @@ void option_field<&srcdiff_options::git_url>(const std::string & arg) {
   srcml_archive_enable_full_archive(options.archive);
 
 }
-#endif
-
-template<boost::any srcdiff_options::*field>
-void option_field(const std::string & arg) { options.*field = arg; }
-
-#ifndef _MSC_BUILD
-template<>
-void option_field<&srcdiff_options::unified_view_context>(const std::string & arg) {
-
-  try {
-
-    options.unified_view_context = (size_t)std::stoll(arg);
-
-  } catch(std::invalid_argument) {
-
-    options.unified_view_context = arg;
-
-  }
-
-  options.flags |= OPTION_UNIFIED_VIEW;
-
-}
-
-#endif
-
-template<int srcdiff_options::*field>
-void option_field(const int & arg) { options.*field = arg; }
-
-#ifndef _MSC_BUILD
-template<>
-void option_field<&srcdiff_options::side_by_side_tab_size>(const int & arg) {
-
-  options.side_by_side_tab_size = arg;
-
-  options.flags |= OPTION_SIDE_BY_SIDE_VIEW;
-
-}
-
 #endif
 
 enum srcml_bool_field { ARCHIVE };
@@ -400,6 +359,41 @@ std::pair<std::string, std::string> parse_xmlns(const std::string & arg) {
 
 }
 
+template<int srcdiff_options::view_options::*field>
+void option_field(const int & arg) { options.view.*field = arg; }
+
+template<std::string srcdiff_options::view_options::*field>
+void option_field(const std::string & arg) { options.view.*field = arg; }
+
+template<boost::any srcdiff_options::view_options::*field>
+void option_field(const std::string & arg) { options.view.*field = arg; }
+
+template<>
+void option_field<&srcdiff_options::view_options::unified_view_context>(const std::string & arg) {
+
+  try {
+
+    options.view.unified_view_context = (size_t)std::stoll(arg);
+
+  } catch(std::invalid_argument) {
+
+    options.view.unified_view_context = arg;
+
+  }
+
+  options.flags |= OPTION_UNIFIED_VIEW;
+
+}
+
+template<>
+void option_field<&srcdiff_options::view_options::side_by_side_tab_size>(const int & arg) {
+
+  options.view.side_by_side_tab_size = arg;
+
+  options.flags |= OPTION_SIDE_BY_SIDE_VIEW;
+
+}
+
 const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
   options.archive = srcml_archive_create();
@@ -479,17 +473,17 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("srcml", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCML>), "Also, output the original and modified srcML of each file when burst enabled")
 
 #ifndef _MSC_BUILD
-    ("unified,u", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::unified_view_context>),
+    ("unified,u", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::view_options::unified_view_context>),
         "Output as colorized unified diff with provided context. Number is lines of context, 'all' or -1 for entire file, 'function' for encompasing function (default = 3)")
-    ("side-by-side,y", boost::program_options::value<int>()->implicit_value(7)->notifier(option_field<&srcdiff_options::side_by_side_tab_size>),
+    ("side-by-side,y", boost::program_options::value<int>()->implicit_value(7)->notifier(option_field<&srcdiff_options::view_options::side_by_side_tab_size>),
         "Output as colorized side-by-side diff")
     ("html", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_HTML_VIEW>), "Output unified/side-by-side view in html")
     ("ignore-all-space,W", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>), "Ignore all whitespace when outputting unified/side-by-side view")
     ("ignore-space,w", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_WHITESPACE>), "Ignore whitespace when outputting unified/side-by-side view")
     ("ignore-comments,c", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_COMMENTS>), "Ignore comments when outputting unified/side-by-side view")
-    ("highlight", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SYNTAX_HIGHLIGHTING>)->default_value(true), "Syntax-hightlighting of unified/side-by-side view")
+    ("highlight",boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SYNTAX_HIGHLIGHTING>), "Syntax-hightlighting of unified/side-by-side view")
     ("no-highlight", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_SYNTAX_HIGHLIGHTING>), "No syntax-hightlighting of unified/side-by-side view")
-    ("theme", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::theme>)->default_value("default"), "Select theme for syntax-hightlighting.  default or monokai")
+    ("theme", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::view_options::theme>)->default_value("default"), "Select theme for syntax-hightlighting.  default or monokai")
 
     ("summary", boost::program_options::value<std::string>()->implicit_value("text")->notifier(option_field<&srcdiff_options::summary_type_str>), "Output a summary of the differences.  Options 'text' and/or 'table' summary.   Default 'text'  ")
 #endif
@@ -519,6 +513,8 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     option_dependency(var_map, "ignore-space", std::vector<std::string>{"unified", "side-by-side"});
     option_dependency(var_map, "ignore-comments", std::vector<std::string>{"unified", "side-by-side"});
     option_dependency(var_map, "html", std::vector<std::string>{"unified", "side-by-side"});
+    option_dependency(var_map, "highlight", std::vector<std::string>{"unified", "side-by-side"});
+    option_dependency(var_map, "no-highlight", std::vector<std::string>{"unified", "side-by-side"});
 
     conflicting_options(var_map, "unified", "side-by-side");
     conflicting_options(var_map, "ignore-all-space", "ignore-space");

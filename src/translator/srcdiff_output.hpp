@@ -2,6 +2,7 @@
 #define INCLUDED_SRCDIFF_OUTPUT_HPP
 
 #include <srcml_nodes.hpp>
+#include <srcdiff_options.hpp>
 #include <line_diff_range.hpp>
 #include <color_diff.hpp>
 
@@ -144,9 +145,7 @@ public:
                  const std::string & srcdiff_filename,
                  const OPTION_TYPE & flags,
                  const METHOD_TYPE & method,
-                 const boost::any & unified_view_context,
-                 int side_by_side_tab_size,
-                 const std::string & theme,
+                 const srcdiff_options::view_options & view,
                  const boost::optional<std::string> & summary_type_str);
   virtual ~srcdiff_output();
 

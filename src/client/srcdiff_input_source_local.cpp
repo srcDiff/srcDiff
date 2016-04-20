@@ -68,9 +68,7 @@ srcdiff_input_source_local::srcdiff_input_source_local(const srcdiff_options & o
 
   translator = new srcdiff_translator(options.srcdiff_filename, options.flags, options.methods, options.archive,
                                       options.unit_filename,
-                                      options.unified_view_context,
-                                      options.side_by_side_tab_size,
-                                      options.theme,
+                                      options.view,
                                       options.summary_type_str);
 
   outstat = { 0 };

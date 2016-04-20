@@ -15,9 +15,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
                                const std::string & srcdiff_filename,
                                const OPTION_TYPE & flags,
                                const METHOD_TYPE & method,
-                               const boost::any & unified_view_context,
-                               int side_by_side_tab_size,
-                               const std::string & theme,
+                               const srcdiff_options::view_options & view,
                                const boost::optional<std::string> & summary_type_str)
  : archive(archive), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
@@ -33,23 +31,23 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
 
      bashview = std::make_shared<unified_view>(srcdiff_filename,
                                                is_option(flags, OPTION_SYNTAX_HIGHLIGHTING),
-                                               theme,
+                                               view.theme,
                                                is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),
                                                is_option(flags, OPTION_IGNORE_WHITESPACE),
                                                is_option(flags, OPTION_IGNORE_COMMENTS),
                                                is_option(flags, OPTION_HTML_VIEW),
-                                               unified_view_context);
+                                               view.unified_view_context);
 
   } else if(is_option(flags, OPTION_SIDE_BY_SIDE_VIEW)) {
 
      bashview = std::make_shared<side_by_side_view>(srcdiff_filename,
                                                     is_option(flags, OPTION_SYNTAX_HIGHLIGHTING),
-                                                    theme,
+                                                    view.theme,
                                                     is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),
                                                     is_option(flags, OPTION_IGNORE_WHITESPACE),
                                                     is_option(flags, OPTION_IGNORE_COMMENTS),
                                                     is_option(flags, OPTION_HTML_VIEW),
-                                                    side_by_side_tab_size);
+                                                    view.side_by_side_tab_size);
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
 

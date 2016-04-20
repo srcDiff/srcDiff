@@ -109,10 +109,13 @@ struct srcdiff_options
   OPTION_TYPE flags;
   METHOD_TYPE methods;
 
-  boost::any unified_view_context;
-  int side_by_side_tab_size;
+  struct view_options {
+    std::string theme;
+    boost::any unified_view_context;
+    int side_by_side_tab_size;
+  } view;
+
   boost::optional<std::string> summary_type_str;
-  std::string theme;
 
 #if SVN
   boost::optional<std::string> svn_url;
