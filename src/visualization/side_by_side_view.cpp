@@ -24,9 +24,15 @@ side_by_side_view::side_by_side_view(const std::string & output_filename,
               ignore_whitespace,
               ignore_comments,
               is_html),
-    side_by_side_tab_size(side_by_side_tab_size), line_operations(),
-    last_character_operation_original(bash_view::COMMON), original_lines(),
-    last_character_operation_modified(bash_view::COMMON), modified_lines() {}
+    side_by_side_tab_size(side_by_side_tab_size),
+    line_operations(),
+    last_character_operation_original(bash_view::COMMON),
+    original_lines(),
+    last_character_operation_modified(bash_view::COMMON),
+    modified_lines(),
+    save_text(false),
+    saved_type(),
+    saved_text() {}
 
 side_by_side_view::~side_by_side_view() {}
 
@@ -43,9 +49,12 @@ void side_by_side_view::reset_internal() {
   change_starting_line_original = true;
   change_starting_line_modified = true;
 
-  change_ending_space_original = "";
-  change_ending_space_modified = "";
+  change_ending_space_original.clear();
+  change_ending_space_modified.clear();
 
+  save_text = false,
+  saved_type.clear();
+  saved_text.clear();
 }
 
 void side_by_side_view::output_characters(const std::string & ch, int operation) {
