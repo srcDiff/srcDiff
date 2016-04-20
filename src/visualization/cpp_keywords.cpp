@@ -33,7 +33,10 @@ cpp_keywords::cpp_keywords(const theme_t & theme) : keywords_t(theme) {
         { "goto",         theme.keyword_color },
         { "return",       theme.keyword_color },
 
+        { "operator",     theme.keyword_color },
         { "namespace",    theme.keyword_color },
+        { "sizeof",       theme.keyword_color },
+
         { "typename",     theme.storage_color },
         { "using",        theme.storage_color },
 
@@ -60,6 +63,7 @@ cpp_keywords::cpp_keywords(const theme_t & theme) : keywords_t(theme) {
         { "thread_local", theme.storage_color },
         { "virtual",      theme.storage_color },
         { "volatile",     theme.storage_color },
+        { "__volatile__", theme.storage_color },
 
         { "private",      theme.keyword_color },
         { "protected",    theme.keyword_color },
@@ -87,7 +91,28 @@ cpp_keywords::cpp_keywords(const theme_t & theme) : keywords_t(theme) {
         { "union",        theme.type_color },
         { "unsigned",     theme.type_color },
         { "void",         theme.type_color },
-        { "wchar_t",      theme.type_color }
+        { "wchar_t",      theme.type_color },
+
+        { "include",      theme.keyword_color }, 
+        { "define",       theme.keyword_color }, 
+        { "elif",         theme.keyword_color }, 
+        { "endif",        theme.keyword_color }, 
+        { "error",        theme.keyword_color }, 
+        { "warning",      theme.keyword_color }, 
+        { "ifdef",        theme.keyword_color }, 
+        { "ifndef",       theme.keyword_color }, 
+        { "line",         theme.keyword_color }, 
+        { "pragma",       theme.keyword_color }, 
+        { "undef",        theme.keyword_color }, 
+
+        { "signals",      theme.keyword_color }, 
+        { "foreach",      theme.keyword_color }, 
+        { "forever",      theme.keyword_color },
+        { "emit",         theme.keyword_color },  
+
+        { "__block",      theme.storage_color }, 
+        { "__weak",       theme.storage_color }, 
+        { "__strong",     theme.storage_color }, 
 
     };
 
