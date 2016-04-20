@@ -11,7 +11,18 @@
 #include <cpp_keywords.hpp>
 #include <java_keywords.hpp>
 
-theme_t::theme_t(bool is_html) : keywords(nullptr) {}
+theme_t::theme_t(const std::string & highlight_level, bool is_html) : keywords(nullptr) {
+
+    if(highlight_level == "full")
+        level = FULL;
+    else if(highlight_level == "partial")
+        level = PARTIAL;
+    else
+        level = NONE;
+
+}
+
+
 theme_t::~theme_t() {
 
     if(keywords) delete keywords;
@@ -36,9 +47,14 @@ std::string theme_t::token2color(const std::string & token,
     if(in_comment)       return comment_color;
     if(in_literal)       return number_color;
     if(in_string)        return string_color;
-    if(in_function_name) return function_name_color;
-    if(in_class_name)    return class_name_color;
-    if(in_call_name)     return call_name_color;
+
+    if(level == FULL) {
+
+        if(in_function_name) return function_name_color;
+        if(in_class_name)    return class_name_color;
+        if(in_call_name)     return call_name_color;
+
+    }
 
     try {
 

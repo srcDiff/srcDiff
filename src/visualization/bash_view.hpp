@@ -10,6 +10,7 @@
 #include <fstream>
 #include <iostream>
 
+
 class bash_view : public srcSAXHandler {
 
 protected:
@@ -48,7 +49,7 @@ protected:
 public:
 
   bash_view(const std::string & output_filename,
-            bool syntax_highlight,
+            const std::string & syntax_highlight,
             const std::string & theme, 
             bool ignore_all_whitespace,
             bool ignore_whitespace,

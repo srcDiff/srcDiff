@@ -85,9 +85,6 @@ const OPTION_TYPE OPTION_IGNORE_WHITESPACE     = ull(1) << __COUNTER__;
 const OPTION_TYPE OPTION_IGNORE_COMMENTS       = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_SYNTAX_HIGHLIGHTING   = ull(1) << __COUNTER__;
-
-// @srcdiff
 const OPTION_TYPE OPTION_SUMMARY               = ull(1) << __COUNTER__;
 
 // @srcdiff
@@ -110,6 +107,7 @@ struct srcdiff_options
   METHOD_TYPE methods;
 
   struct view_options {
+    std::string syntax_highlight;
     std::string theme;
     boost::any unified_view_context;
     int side_by_side_tab_size;

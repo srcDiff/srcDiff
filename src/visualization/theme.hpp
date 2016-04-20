@@ -43,9 +43,11 @@ protected:
 
     keywords_t * keywords;
 
+    enum level_t { NONE, PARTIAL, FULL } level;
+
 public:
 
-    theme_t(bool is_html);
+    theme_t(const std::string & highlight_level, bool is_html);
     ~theme_t();
 
     void set_langauge(const std::string & language);

@@ -365,8 +365,18 @@ void option_field(const int & arg) { options.view.*field = arg; }
 template<std::string srcdiff_options::view_options::*field>
 void option_field(const std::string & arg) { options.view.*field = arg; }
 
+template<boost::optional<std::string> srcdiff_options::view_options::*field>
+void option_field(const std::string & arg) { options.view.*field = arg; }
+
 template<boost::any srcdiff_options::view_options::*field>
 void option_field(const std::string & arg) { options.view.*field = arg; }
+
+template<>
+void option_field<&srcdiff_options::view_options::syntax_highlight>(const std::string & arg) {
+
+  options.view.syntax_highlight = arg;
+
+}
 
 template<>
 void option_field<&srcdiff_options::view_options::unified_view_context>(const std::string & arg) {
@@ -472,7 +482,6 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("burst", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_BURST>), "Output each input file to a single srcDiff document.  -o gives output directory")
     ("srcml", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCML>), "Also, output the original and modified srcML of each file when burst enabled")
 
-#ifndef _MSC_BUILD
     ("unified,u", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::view_options::unified_view_context>),
         "Output as colorized unified diff with provided context. Number is lines of context, 'all' or -1 for entire file, 'function' for encompasing function (default = 3)")
     ("side-by-side,y", boost::program_options::value<int>()->implicit_value(7)->notifier(option_field<&srcdiff_options::view_options::side_by_side_tab_size>),
@@ -481,12 +490,11 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("ignore-all-space,W", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>), "Ignore all whitespace when outputting unified/side-by-side view")
     ("ignore-space,w", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_WHITESPACE>), "Ignore whitespace when outputting unified/side-by-side view")
     ("ignore-comments,c", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_COMMENTS>), "Ignore comments when outputting unified/side-by-side view")
-    ("highlight",boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SYNTAX_HIGHLIGHTING>), "Syntax-hightlighting of unified/side-by-side view")
-    ("no-highlight", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_SYNTAX_HIGHLIGHTING>), "No syntax-hightlighting of unified/side-by-side view")
+    ("highlight", boost::program_options::value<std::string>()->implicit_value("full")->notifier(option_field<&srcdiff_options::view_options::syntax_highlight>)->default_value("full"), "Syntax-hightlighting for unified/side-by-side view.  none, partial, or full (default)")
     ("theme", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::view_options::theme>)->default_value("default"), "Select theme for syntax-hightlighting.  default or monokai")
 
     ("summary", boost::program_options::value<std::string>()->implicit_value("text")->notifier(option_field<&srcdiff_options::summary_type_str>), "Output a summary of the differences.  Options 'text' and/or 'table' summary.   Default 'text'  ")
-#endif
+
 
   ;
 

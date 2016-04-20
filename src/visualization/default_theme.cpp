@@ -8,7 +8,8 @@
 
 #include <default_theme.hpp>
 
-default_theme::default_theme(bool is_html) : theme_t(is_html) {
+default_theme::default_theme(const std::string & highlight_level, bool is_html)
+    : theme_t(highlight_level, is_html) {
 
     if(is_html) {
 

@@ -33,14 +33,14 @@ static std::string to_lower(const std::string & str) {
 }
 
 bash_view::bash_view(const std::string & output_filename,
-                     bool syntax_highlight,
+                     const std::string & syntax_highlight,
                      const std::string & theme, 
                      bool ignore_all_whitespace,
                      bool ignore_whitespace,
                      bool ignore_comments,
                      bool is_html) 
-  : diff_stack(), syntax_highlight(syntax_highlight),
-    theme(to_lower(theme) == "default" ? (theme_t *)new default_theme(is_html) : (theme_t *)new monokai_theme(is_html)), 
+  : diff_stack(), syntax_highlight(to_lower(syntax_highlight) != "none"),
+    theme(to_lower(theme) == "default" ? (theme_t *)new default_theme(to_lower(syntax_highlight), is_html) : (theme_t *)new monokai_theme(to_lower(syntax_highlight), is_html)), 
     in_comment(false),
     in_literal(false),
     in_string(false),

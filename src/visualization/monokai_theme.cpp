@@ -8,7 +8,8 @@
 
 #include <monokai_theme.hpp>
 
-monokai_theme::monokai_theme(bool is_html) : theme_t(is_html) {
+monokai_theme::monokai_theme(const std::string & highlight_level, bool is_html)
+    : theme_t(highlight_level, is_html) {
 
     if(is_html) {
 

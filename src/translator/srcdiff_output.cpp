@@ -30,7 +30,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
   } else if(is_option(flags, OPTION_UNIFIED_VIEW)) {
 
      bashview = std::make_shared<unified_view>(srcdiff_filename,
-                                               is_option(flags, OPTION_SYNTAX_HIGHLIGHTING),
+                                               view.syntax_highlight,
                                                view.theme,
                                                is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),
                                                is_option(flags, OPTION_IGNORE_WHITESPACE),
@@ -41,7 +41,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
   } else if(is_option(flags, OPTION_SIDE_BY_SIDE_VIEW)) {
 
      bashview = std::make_shared<side_by_side_view>(srcdiff_filename,
-                                                    is_option(flags, OPTION_SYNTAX_HIGHLIGHTING),
+                                                    view.syntax_highlight,
                                                     view.theme,
                                                     is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),
                                                     is_option(flags, OPTION_IGNORE_WHITESPACE),
