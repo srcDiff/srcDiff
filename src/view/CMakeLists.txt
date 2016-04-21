@@ -19,9 +19,9 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-file(GLOB VISUALIZATION_HEADERS *.hpp)
-file(GLOB VISUALIZATION_SOURCE *.cpp)
+file(GLOB VIEW_HEADERS *.hpp)
+file(GLOB VIEW_SOURCE *.cpp)
 
 # srcdiff
-add_library(visualization OBJECT ${VISUALIZATION_HEADERS} ${VISUALIZATION_SOURCE})
+add_library(view OBJECT ${VIEW_HEADERS} ${VIEW_SOURCE})
 

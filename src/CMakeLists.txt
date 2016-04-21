@@ -24,7 +24,7 @@ add_subdirectory(shortest_edit_script)
 add_subdirectory(srcml)
 add_subdirectory(translator)
 add_subdirectory(project)
-add_subdirectory(visualization)
+add_subdirectory(view)
 if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 add_subdirectory(summary)
 endif()
@@ -48,11 +48,11 @@ macro(build_library LIBRARY_NAME LIBRARY_TYPE)
 if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> 
     $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:project>
-    $<TARGET_OBJECTS:visualization> $<TARGET_OBJECTS:summary>)
+    $<TARGET_OBJECTS:view> $<TARGET_OBJECTS:summary>)
 else()
     add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> 
     $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:project>
-    $<TARGET_OBJECTS:visualization>)
+    $<TARGET_OBJECTS:view>)
 endif()
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")

@@ -29,7 +29,7 @@ include(srcdiff)
 
 # setup project includes
 include_directories(src/shortest_edit_script src/translator src/windows src/client src/srcml
-					src/visualization src/summary src/project
+					src/view src/summary src/project
 					src/srcSAX/src/srcsax src/srcSAX/src/cpp src/srcSAX/src/windows)
 
 # include sub directories
