@@ -388,27 +388,7 @@ void side_by_side_view::characters(const char * ch, int len) {
   
       }
 
-      if(srcml_element_stack.size() > 1 && srcml_element_stack.back() == "diff:delete" 
-        && (srcml_element_stack.at(srcml_element_stack.size() - 2) == "name"
-          || srcml_element_stack.at(srcml_element_stack.size() - 2) == "operator")) {
-        
-        assert(!save_text);
-
-        save_text = true;
-        saved_type = srcml_element_stack.at(srcml_element_stack.size() - 2);
-
-      }
-
-      if(save_text) {
-
-        saved_text.append(ch, len, 
-          diff_stack.back() == bash_view::DELETE ? SRCDIFF_DELETE : SRCDIFF_INSERT);
-
-      } else {
-
-        output_characters(str, diff_stack.back());
-
-      }
+      output_characters(str, diff_stack.back());
 
     }
 

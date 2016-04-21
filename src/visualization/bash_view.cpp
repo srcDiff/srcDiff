@@ -143,6 +143,14 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
                                             int & last_character_operation,
                                             unsigned int & close_num_span) {
 
+  if(save_text) {
+
+    saved_text.append(ch.c_str(), ch.size(),
+      diff_stack.back() == bash_view::DELETE ? SRCDIFF_DELETE : SRCDIFF_INSERT);
+    return;
+
+  }
+
   if(operation != last_character_operation)
     out << close_spans(close_num_span) << change_operation_to_code(operation);
 
@@ -436,6 +444,8 @@ void bash_view::endElement(const char * localname,
 
   if(save_text && (local_name == "name" || local_name == "operator"))  {
 
+    save_text = false;
+
     if(theme->is_keyword(saved_text.original()) || theme->is_keyword(saved_text.modified())) {
 
       output_characters(saved_text.original(), bash_view::DELETE);
@@ -449,7 +459,6 @@ void bash_view::endElement(const char * localname,
 
     }
 
-    save_text = false;
     saved_text.clear();
 
   }
@@ -510,6 +519,17 @@ void bash_view::charactersRoot(const char * ch, int len) {}
  * Overide for desired behavior.
  */
 void bash_view::charactersUnit(const char * ch, int len) {
+
+  if(srcml_element_stack.size() > 1 && srcml_element_stack.back() == "diff:delete" 
+    && (srcml_element_stack.at(srcml_element_stack.size() - 2) == "name"
+      || srcml_element_stack.at(srcml_element_stack.size() - 2) == "operator")) {
+    
+    assert(!save_text);
+
+    save_text = true;
+    saved_type = srcml_element_stack.at(srcml_element_stack.size() - 2);
+
+  }
 
   characters(ch, len);
 
