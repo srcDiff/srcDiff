@@ -15,19 +15,19 @@ unified_view::unified_view(const std::string & output_filename,
                            bool ignore_comments,
                            bool is_html,
                            boost::any context_type)
-              : bash_view(output_filename,
+              : view_t(output_filename,
                           syntax_highlight, 
                           theme,
                           ignore_all_whitespace,
                           ignore_whitespace,
                           ignore_comments,
                           is_html),
-                last_character_operation(bash_view::UNSET), modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
+                last_character_operation(view_t::UNSET), modes(LINE), line_number_delete(0), line_number_insert(0), number_context_lines(3),
                 is_after_change(false), wait_change(true), in_function(),
                 context_type(context_type), length(0), is_after_additional(false),
                 after_edit_count(0), last_context_line((unsigned)-1),
                 change_starting_line(false), change_ending_space(),
-                change_ending_operation(bash_view::UNSET),
+                change_ending_operation(view_t::UNSET),
                 close_num_spans(0) {
 
   if(context_type.type() == typeid(size_t)) {
@@ -64,10 +64,10 @@ void unified_view::reset_internal() {
   is_after_additional = false;
   after_edit_count = 0;
   last_context_line = -1;
-  last_character_operation = bash_view::UNSET;
+  last_character_operation = view_t::UNSET;
   change_starting_line = false;
   change_ending_space = "";
-  change_ending_operation = bash_view::UNSET;
+  change_ending_operation = view_t::UNSET;
   close_num_spans = 0;
 
 }
@@ -149,20 +149,20 @@ void unified_view::start_element(const std::string & local_name,
     if(ignore_comments && in_comment) return;
 
     if(local_name == "common")
-     diff_stack.push_back(bash_view::COMMON);
+     diff_stack.push_back(view_t::COMMON);
     else if(local_name == "delete")
      diff_stack.push_back(DELETE);
     else if(local_name == "insert")
      diff_stack.push_back(INSERT);
     else if(local_name == "ws" && ignore_all_whitespace)
-      diff_stack.push_back(bash_view::COMMON);
+      diff_stack.push_back(view_t::COMMON);
     
   } else {
 
     if(local_name == "comment") {
 
       if(ignore_comments)
-        diff_stack.push_back(bash_view::COMMON);
+        diff_stack.push_back(view_t::COMMON);
 
     }
 
@@ -189,9 +189,9 @@ void unified_view::end_unit(const std::string & local_name,
 
   if(!change_ending_space.empty()) {
 
-    output_characters(change_ending_space, bash_view::COMMON);
+    output_characters(change_ending_space, view_t::COMMON);
     change_ending_space = "";
-    change_ending_operation = bash_view::COMMON;
+    change_ending_operation = view_t::COMMON;
 
   }
 
@@ -239,7 +239,7 @@ void unified_view::end_element(const std::string & local_name,
 
 void unified_view::characters(const char * ch, int len) {
 
-  if(diff_stack.back() != bash_view::COMMON) {
+  if(diff_stack.back() != view_t::COMMON) {
 
    output_additional_context();
 
@@ -254,14 +254,14 @@ void unified_view::characters(const char * ch, int len) {
 
   if(!change_ending_space.empty() && change_ending_operation != diff_stack.back()) {
 
-    output_characters(change_ending_space, bash_view::COMMON);
+    output_characters(change_ending_space, view_t::COMMON);
     change_ending_space = "";
-    change_ending_operation = bash_view::UNSET;
+    change_ending_operation = view_t::UNSET;
 
   }
 
-  if((last_character_operation == bash_view::UNSET || last_character_operation == bash_view::COMMON)
-     && diff_stack.back() != bash_view::COMMON && ignore_whitespace)
+  if((last_character_operation == view_t::UNSET || last_character_operation == view_t::COMMON)
+     && diff_stack.back() != view_t::COMMON && ignore_whitespace)
     change_starting_line = true;
 
   for(int i = 0; i < len; ++i) {
@@ -270,11 +270,11 @@ void unified_view::characters(const char * ch, int len) {
     bool is_space = isspace(ch[i]);
     if(is_space) {
 
-      if(ignore_whitespace && diff_stack.back() != bash_view::COMMON) {
+      if(ignore_whitespace && diff_stack.back() != view_t::COMMON) {
 
         if(change_starting_line) {
 
-          output_character(ch[i], bash_view::COMMON);
+          output_character(ch[i], view_t::COMMON);
 
         } else {
 
@@ -293,7 +293,7 @@ void unified_view::characters(const char * ch, int len) {
 
         output_characters(change_ending_space, diff_stack.back());
         change_ending_space = "";
-        change_ending_operation = bash_view::UNSET;
+        change_ending_operation = view_t::UNSET;
 
       }
 
@@ -319,14 +319,14 @@ void unified_view::characters(const char * ch, int len) {
     if(wait_change) {
 
       assert(!skip);
-      output_characters_to_buffer(context, str, bash_view::COMMON, last_character_operation, close_num_spans);
+      output_characters_to_buffer(context, str, view_t::COMMON, last_character_operation, close_num_spans);
 
     } else if(!skip) {
 
-      if(diff_stack.back() != bash_view::COMMON && ch[i] == '\n') {
+      if(diff_stack.back() != view_t::COMMON && ch[i] == '\n') {
 
         output_characters(CARRIAGE_RETURN_SYMBOL, diff_stack.back());
-        output_character(ch[i], bash_view::COMMON);
+        output_character(ch[i], view_t::COMMON);
 
       } else {
 
@@ -340,13 +340,13 @@ void unified_view::characters(const char * ch, int len) {
 
       if(!change_ending_space.empty()) {
 
-        output_characters(change_ending_space, bash_view::COMMON);
+        output_characters(change_ending_space, view_t::COMMON);
         change_ending_space = "";
-        change_ending_operation = bash_view::UNSET;
+        change_ending_operation = view_t::UNSET;
 
       }
 
-      if(diff_stack.back() != bash_view::COMMON)
+      if(diff_stack.back() != view_t::COMMON)
         change_starting_line = true;
 
       if(is_after_change) {
@@ -366,7 +366,7 @@ void unified_view::characters(const char * ch, int len) {
           last_context_line = line_number_delete;
 
           end_buffer(context, close_num_spans);
-          last_character_operation = bash_view::UNSET;      
+          last_character_operation = view_t::UNSET;      
 
         }
 
@@ -378,7 +378,7 @@ void unified_view::characters(const char * ch, int len) {
         if(!in_mode(ALL)) {
 
           end_buffer(context, close_num_spans);
-          last_character_operation = bash_view::UNSET;
+          last_character_operation = view_t::UNSET;
 
         }
 
@@ -396,6 +396,6 @@ void unified_view::characters(const char * ch, int len) {
 
   }
 
-  if(diff_stack.back() != bash_view::COMMON) is_after_change  = true;
+  if(diff_stack.back() != view_t::COMMON) is_after_change  = true;
 
 }

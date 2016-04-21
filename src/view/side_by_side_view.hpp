@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SIDE_BY_SIDE_VIEW_HPP
 #define INCLUDED_SIDE_BY_SIDE_VIEW_HPP
 
-#include <bash_view.hpp>
+#include <view.hpp>
 
 #include <vector>
 #include <string>
@@ -9,7 +9,7 @@
 #include <sstream>
 #include <iostream>
 
-class side_by_side_view : public bash_view {
+class side_by_side_view : public view_t {
 
 private:
 

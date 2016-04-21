@@ -1,4 +1,4 @@
-#include <bash_view.hpp>
+#include <view.hpp>
 
 #include <srcdiff_constants.hpp>
 
@@ -15,12 +15,12 @@
 #include <cassert>
 
 
-int bash_view::UNSET  = 0;
-int bash_view::COMMON = 1 << 0;
-int bash_view::DELETE = 1 << 1;
-int bash_view::INSERT = 1 << 2;
+int view_t::UNSET  = 0;
+int view_t::COMMON = 1 << 0;
+int view_t::DELETE = 1 << 1;
+int view_t::INSERT = 1 << 2;
 
-const char * const bash_view::CARRIAGE_RETURN_SYMBOL = "\u23CE";
+const char * const view_t::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 
 static std::string to_lower(const std::string & str) {
 
@@ -32,7 +32,7 @@ static std::string to_lower(const std::string & str) {
 
 }
 
-bash_view::bash_view(const std::string & output_filename,
+view_t::view_t(const std::string & output_filename,
                      const std::string & syntax_highlight,
                      const std::string & theme, 
                      bool ignore_all_whitespace,
@@ -64,7 +64,7 @@ bash_view::bash_view(const std::string & output_filename,
 
 }
 
-bash_view::~bash_view() {
+view_t::~view_t() {
 
   if(output != &std::cout) {
 
@@ -77,7 +77,7 @@ bash_view::~bash_view() {
   
 }
 
-void bash_view::transform(const std::string & srcdiff, const std::string & xml_encoding) {
+void view_t::transform(const std::string & srcdiff, const std::string & xml_encoding) {
 
   srcSAXController controller(srcdiff, xml_encoding.c_str());
 
@@ -87,7 +87,7 @@ void bash_view::transform(const std::string & srcdiff, const std::string & xml_e
 
 }
 
-void bash_view::reset() {
+void view_t::reset() {
 
   diff_stack.clear();
 
@@ -109,7 +109,7 @@ void bash_view::reset() {
 
 }
 
-std::string bash_view::change_operation_to_code(int operation) {
+std::string view_t::change_operation_to_code(int operation) {
 
   if(operation == DELETE) return theme->delete_color;
   if(operation == INSERT) return theme->insert_color;
@@ -118,7 +118,7 @@ std::string bash_view::change_operation_to_code(int operation) {
 
 }
 
-std::string bash_view::close_spans(unsigned int close_num_span) {
+std::string view_t::close_spans(unsigned int close_num_span) {
 
   if(!is_html) return std::string();
 
@@ -130,14 +130,14 @@ std::string bash_view::close_spans(unsigned int close_num_span) {
 
 }
 
-void bash_view::end_buffer(std::ostream & out, unsigned int & close_num_span) {
+void view_t::end_buffer(std::ostream & out, unsigned int & close_num_span) {
 
   out << close_spans(close_num_span);
   close_num_span = 0;
 
 }
 
-void bash_view::output_characters_to_buffer(std::ostream & out,
+void view_t::output_characters_to_buffer(std::ostream & out,
                                             const std::string & ch,
                                             int operation,
                                             int & last_character_operation,
@@ -146,7 +146,7 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
   if(save_text) {
 
     saved_text.append(ch.c_str(), ch.size(),
-      diff_stack.back() == bash_view::DELETE ? SRCDIFF_DELETE : SRCDIFF_INSERT);
+      diff_stack.back() == view_t::DELETE ? SRCDIFF_DELETE : SRCDIFF_INSERT);
     return;
 
   }
@@ -180,7 +180,7 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
 
     if(!highlight.empty()) {
       out << theme->common_color;
-      if(operation != bash_view::COMMON)
+      if(operation != view_t::COMMON)
         out << change_operation_to_code(operation);
     }
 
@@ -188,7 +188,7 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
 
   }
 
-  close_num_span = operation == bash_view::DELETE ? 2 : 1;
+  close_num_span = operation == view_t::DELETE ? 2 : 1;
 
   for(std::string::size_type pos = 0; pos < ch.size(); ++pos) {
 
@@ -204,7 +204,7 @@ void bash_view::output_characters_to_buffer(std::ostream & out,
 
 }
 
-void bash_view::output_character(const char c, int operation) {
+void view_t::output_character(const char c, int operation) {
 
   std::string ch;
   ch += c;
@@ -218,7 +218,7 @@ void bash_view::output_character(const char c, int operation) {
  * SAX handler function for start of document.
  * Overide for desired behavior.
  */
-void bash_view::startDocument() {
+void view_t::startDocument() {
 
   if(is_html) {
 
@@ -244,7 +244,7 @@ void bash_view::startDocument() {
  * SAX handler function for end of document.
  * Overide for desired behavior.
  */
-void bash_view::endDocument() {
+void view_t::endDocument() {
 
   if(is_html) {
 
@@ -272,7 +272,7 @@ void bash_view::endDocument() {
  * SAX handler function for start of the root profile.
  * Overide for desired behavior.
  */
-void bash_view::startRoot(const char * localname,
+void view_t::startRoot(const char * localname,
                           const char * prefix,
                           const char * URI,
                           int num_namespaces,
@@ -293,7 +293,7 @@ void bash_view::startRoot(const char * localname,
  * SAX handler function for start of an unit.
  * Overide for desired behavior.
  */
-void bash_view::startUnit(const char * localname,
+void view_t::startUnit(const char * localname,
                           const char * prefix,
                           const char * URI,
                           int num_namespaces,
@@ -301,7 +301,7 @@ void bash_view::startUnit(const char * localname,
                           int num_attributes,
                           const struct srcsax_attribute * attributes) {
 
-  diff_stack.push_back(bash_view::COMMON);
+  diff_stack.push_back(view_t::COMMON);
 
   std::string langauge;
   for(int i = 0; i < num_attributes; ++i) {
@@ -334,7 +334,7 @@ void bash_view::startUnit(const char * localname,
  * SAX handler function for start of an profile.
  * Overide for desired behavior.
  */
-void bash_view::startElement(const char * localname,
+void view_t::startElement(const char * localname,
                              const char * prefix,
                              const char * URI,
                              int num_namespaces,
@@ -407,7 +407,7 @@ void bash_view::startElement(const char * localname,
  * SAX handler function for end of the root profile.
  * Overide for desired behavior.
  */
-void bash_view::endRoot(const char * localname, const char * prefix, const char * URI) {}
+void view_t::endRoot(const char * localname, const char * prefix, const char * URI) {}
 
 /**
  * endUnit
@@ -418,7 +418,7 @@ void bash_view::endRoot(const char * localname, const char * prefix, const char 
  * SAX handler function for end of an unit.
  * Overide for desired behavior.
  */
-void bash_view::endUnit(const char * localname, const char * prefix, const char * URI) {
+void view_t::endUnit(const char * localname, const char * prefix, const char * URI) {
 
   const std::string local_name(localname);
   end_unit(local_name, prefix, URI);
@@ -436,7 +436,7 @@ void bash_view::endUnit(const char * localname, const char * prefix, const char 
  * SAX handler function for end of an profile.
  * Overide for desired behavior.
  */
-void bash_view::endElement(const char * localname,
+void view_t::endElement(const char * localname,
                            const char * prefix,
                            const char * URI) {
 
@@ -448,8 +448,8 @@ void bash_view::endElement(const char * localname,
 
     if(theme->is_keyword(saved_text.original()) || theme->is_keyword(saved_text.modified())) {
 
-      output_characters(saved_text.original(), bash_view::DELETE);
-      output_characters(saved_text.modified(), bash_view::INSERT);
+      output_characters(saved_text.original(), view_t::DELETE);
+      output_characters(saved_text.modified(), view_t::INSERT);
 
     } else {
 
@@ -508,7 +508,7 @@ void bash_view::endElement(const char * localname,
  * SAX handler function for character handling at the root level.
  * Overide for desired behavior.
  */
-void bash_view::charactersRoot(const char * ch, int len) {}
+void view_t::charactersRoot(const char * ch, int len) {}
 
 /**
  * charactersUnit
@@ -518,7 +518,7 @@ void bash_view::charactersRoot(const char * ch, int len) {}
  * SAX handler function for character handling within a unit.
  * Overide for desired behavior.
  */
-void bash_view::charactersUnit(const char * ch, int len) {
+void view_t::charactersUnit(const char * ch, int len) {
 
   if(srcml_element_stack.size() > 1 && srcml_element_stack.back() == "diff:delete" 
     && (srcml_element_stack.at(srcml_element_stack.size() - 2) == "name"

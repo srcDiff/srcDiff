@@ -359,35 +359,35 @@ std::pair<std::string, std::string> parse_xmlns(const std::string & arg) {
 
 }
 
-template<int srcdiff_options::view_options::*field>
-void option_field(const int & arg) { options.view.*field = arg; }
+template<int srcdiff_options::view_options_t::*field>
+void option_field(const int & arg) { options.view_options.*field = arg; }
 
-template<std::string srcdiff_options::view_options::*field>
-void option_field(const std::string & arg) { options.view.*field = arg; }
+template<std::string srcdiff_options::view_options_t::*field>
+void option_field(const std::string & arg) { options.view_options.*field = arg; }
 
-template<boost::optional<std::string> srcdiff_options::view_options::*field>
-void option_field(const std::string & arg) { options.view.*field = arg; }
+template<boost::optional<std::string> srcdiff_options::view_options_t::*field>
+void option_field(const std::string & arg) { options.view_options.*field = arg; }
 
-template<boost::any srcdiff_options::view_options::*field>
-void option_field(const std::string & arg) { options.view.*field = arg; }
+template<boost::any srcdiff_options::view_options_t::*field>
+void option_field(const std::string & arg) { options.view_options.*field = arg; }
 
 template<>
-void option_field<&srcdiff_options::view_options::syntax_highlight>(const std::string & arg) {
+void option_field<&srcdiff_options::view_options_t::syntax_highlight>(const std::string & arg) {
 
-  options.view.syntax_highlight = arg;
+  options.view_options.syntax_highlight = arg;
 
 }
 
 template<>
-void option_field<&srcdiff_options::view_options::unified_view_context>(const std::string & arg) {
+void option_field<&srcdiff_options::view_options_t::unified_view_context>(const std::string & arg) {
 
   try {
 
-    options.view.unified_view_context = (size_t)std::stoll(arg);
+    options.view_options.unified_view_context = (size_t)std::stoll(arg);
 
   } catch(std::invalid_argument) {
 
-    options.view.unified_view_context = arg;
+    options.view_options.unified_view_context = arg;
 
   }
 
@@ -396,9 +396,9 @@ void option_field<&srcdiff_options::view_options::unified_view_context>(const st
 }
 
 template<>
-void option_field<&srcdiff_options::view_options::side_by_side_tab_size>(const int & arg) {
+void option_field<&srcdiff_options::view_options_t::side_by_side_tab_size>(const int & arg) {
 
-  options.view.side_by_side_tab_size = arg;
+  options.view_options.side_by_side_tab_size = arg;
 
   options.flags |= OPTION_SIDE_BY_SIDE_VIEW;
 
@@ -482,16 +482,16 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("burst", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_BURST>), "Output each input file to a single srcDiff document.  -o gives output directory")
     ("srcml", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCML>), "Also, output the original and modified srcML of each file when burst enabled")
 
-    ("unified,u", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::view_options::unified_view_context>),
+    ("unified,u", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::view_options_t::unified_view_context>),
         "Output as colorized unified diff with provided context. Number is lines of context, 'all' or -1 for entire file, 'function' for encompasing function (default = 3)")
-    ("side-by-side,y", boost::program_options::value<int>()->implicit_value(7)->notifier(option_field<&srcdiff_options::view_options::side_by_side_tab_size>),
+    ("side-by-side,y", boost::program_options::value<int>()->implicit_value(7)->notifier(option_field<&srcdiff_options::view_options_t::side_by_side_tab_size>),
         "Output as colorized side-by-side diff")
     ("html", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_HTML_VIEW>), "Output unified/side-by-side view in html")
     ("ignore-all-space,W", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>), "Ignore all whitespace when outputting unified/side-by-side view")
     ("ignore-space,w", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_WHITESPACE>), "Ignore whitespace when outputting unified/side-by-side view")
     ("ignore-comments,c", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_COMMENTS>), "Ignore comments when outputting unified/side-by-side view")
-    ("highlight", boost::program_options::value<std::string>()->implicit_value("full")->notifier(option_field<&srcdiff_options::view_options::syntax_highlight>)->default_value("full"), "Syntax-hightlighting for unified/side-by-side view.  none, partial, or full (default)")
-    ("theme", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::view_options::theme>)->default_value("default"), "Select theme for syntax-hightlighting.  default or monokai")
+    ("highlight", boost::program_options::value<std::string>()->implicit_value("full")->notifier(option_field<&srcdiff_options::view_options_t::syntax_highlight>)->default_value("full"), "Syntax-hightlighting for unified/side-by-side view.  none, partial, or full (default)")
+    ("theme", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::view_options_t::theme>)->default_value("default"), "Select theme for syntax-hightlighting.  default or monokai")
 
     ("summary", boost::program_options::value<std::string>()->implicit_value("text")->notifier(option_field<&srcdiff_options::summary_type_str>), "Output a summary of the differences.  Options 'text' and/or 'table' summary.   Default 'text'  ")
 

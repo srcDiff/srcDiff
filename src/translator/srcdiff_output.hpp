@@ -6,7 +6,7 @@
 #include <line_diff_range.hpp>
 #include <color_diff.hpp>
 
-#include <bash_view.hpp>
+#include <view.hpp>
 #include <unified_view.hpp>
 #include <side_by_side_view.hpp>
 
@@ -106,7 +106,7 @@ protected:
 
   std::shared_ptr<color_diff> colordiff;
 
-  std::shared_ptr<bash_view> bashview;
+  std::shared_ptr<view_t> view;
 
 #ifndef _MSC_BUILD
   std::shared_ptr<srcdiff_summary> summary;
@@ -145,7 +145,7 @@ public:
                  const std::string & srcdiff_filename,
                  const OPTION_TYPE & flags,
                  const METHOD_TYPE & method,
-                 const srcdiff_options::view_options & view,
+                 const srcdiff_options::view_options_t & view_options,
                  const boost::optional<std::string> & summary_type_str);
   virtual ~srcdiff_output();
 
@@ -198,7 +198,7 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
     char * xml = 0;
     size_t size = 0;
     srcml_unit_get_xml_standalone(wstate->unit, "UTF-8", &xml, &size);
-    bashview->transform(xml, "UTF-8");
+    view->transform(xml, "UTF-8");
     srcml_memory_free((char *)xml);
 
   } else if(is_option(flags, OPTION_SUMMARY)) {

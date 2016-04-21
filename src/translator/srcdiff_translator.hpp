@@ -62,7 +62,7 @@ public:
   // constructor
   srcdiff_translator(const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method, srcml_archive * archive,
                      const boost::optional<std::string> & unit_filename,
-                     const srcdiff_options::view_options & view,
+                     const srcdiff_options::view_options_t & view_options,
                      const boost::optional<std::string> & summary_type_str);
 
   // destructor

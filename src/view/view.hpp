@@ -13,7 +13,7 @@
 #include <iostream>
 
 
-class bash_view : public srcSAXHandler {
+class view_t : public srcSAXHandler {
 
 public:
 
@@ -58,14 +58,14 @@ protected:
 
 public:
 
-  bash_view(const std::string & output_filename,
+  view_t(const std::string & output_filename,
             const std::string & syntax_highlight,
             const std::string & theme, 
             bool ignore_all_whitespace,
             bool ignore_whitespace,
             bool ignore_comments,
             bool is_html);
-  virtual ~bash_view();
+  virtual ~view_t();
 
   void transform(const std::string & srcdiff, const std::string & xml_encoding);
   void reset();

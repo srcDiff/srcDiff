@@ -1,7 +1,7 @@
 #ifndef INCLUDED_UNIFIED_VIEW_HPP
 #define INCLUDED_UNIFIED_VIEW_HPP
 
-#include <bash_view.hpp>
+#include <view.hpp>
 
 #include <boost/any.hpp>
 
@@ -12,7 +12,7 @@
 #include <fstream>
 #include <iostream>
 
-class unified_view : public bash_view {
+class unified_view : public view_t {
 
 private:
 

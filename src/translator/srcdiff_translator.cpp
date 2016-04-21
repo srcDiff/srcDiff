@@ -30,13 +30,13 @@ srcdiff_translator::srcdiff_translator(const std::string & srcdiff_filename,
                                        const METHOD_TYPE & method,
                                        srcml_archive * archive,
                                        const boost::optional<std::string> & unit_filename,
-                                       const srcdiff_options::view_options & view,
+                                       const srcdiff_options::view_options_t & view_options,
                                        const boost::optional<std::string> & summary_type_str)
   : archive(archive), flags(flags), output(archive,
                                            srcdiff_filename,
                                            flags,
                                            method,
-                                           view,
+                                           view_options,
                                            summary_type_str),
     unit_filename(unit_filename) {}
 

@@ -12,7 +12,7 @@
 #include <shortest_edit_script.hpp>
 #include <versioned_string.hpp>
 
-class bash_view;
+class view_t;
 
 class character_diff {
 
@@ -26,7 +26,7 @@ public:
     character_diff(const versioned_string & original);
 
     void compute();
-void output(bash_view & view, const std::string & type);
+void output(view_t & view, const std::string & type);
 
 };
 

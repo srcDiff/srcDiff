@@ -106,12 +106,12 @@ struct srcdiff_options
   OPTION_TYPE flags;
   METHOD_TYPE methods;
 
-  struct view_options {
+  struct view_options_t {
     std::string syntax_highlight;
     std::string theme;
     boost::any unified_view_context;
     int side_by_side_tab_size;
-  } view;
+  } view_options;
 
   boost::optional<std::string> summary_type_str;
 

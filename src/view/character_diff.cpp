@@ -1,6 +1,6 @@
 #include <character_diff.hpp>
 
-#include <bash_view.hpp>
+#include <view.hpp>
 
 static int compare_char(const void * item_one, const void * item_two, const void * context) {
 
@@ -28,7 +28,7 @@ void character_diff::compute() {
 
 }
 
-void character_diff::output(bash_view & view, const std::string & type) {
+void character_diff::output(view_t & view, const std::string & type) {
 
     int difference = 0;
     for(const edit * edits = ses.get_script(); edits; edits = edits->next)
@@ -45,19 +45,19 @@ void character_diff::output(bash_view & view, const std::string & type) {
            && last_diff_original < edits->offset_sequence_one)
           view.output_characters(str.original().substr(last_diff_original, 
                                             edits->offset_sequence_one),
-                            bash_view::COMMON);
+                            view_t::COMMON);
         else if(edits->operation == SES_INSERT && edits->offset_sequence_one != 0
                 && last_diff_original <= edits->offset_sequence_one)
           view.output_characters(str.original().substr(last_diff_original, 
                                             edits->offset_sequence_one),
-                            bash_view::COMMON);
+                            view_t::COMMON);
 
         // handle pure delete or insert
         switch (edits->operation) {
 
         case SES_INSERT:
 
-          view.output_characters(str.modified().substr(edits->offset_sequence_two, edits->length), bash_view::INSERT);
+          view.output_characters(str.modified().substr(edits->offset_sequence_two, edits->length), view_t::INSERT);
 
           // update for common
           last_diff_original = edits->offset_sequence_one;
@@ -66,7 +66,7 @@ void character_diff::output(bash_view & view, const std::string & type) {
 
         case SES_DELETE:
 
-          view.output_characters(str.original().substr(edits->offset_sequence_one, edits->length), bash_view::DELETE);
+          view.output_characters(str.original().substr(edits->offset_sequence_one, edits->length), view_t::DELETE);
 
           // update for common
           last_diff_original = edits->offset_sequence_one + edits->length;
@@ -77,13 +77,13 @@ void character_diff::output(bash_view & view, const std::string & type) {
       }
 
       if(last_diff_original < (signed)str.original().size())
-        view.output_characters(str.original().substr(last_diff_original), bash_view::COMMON);
+        view.output_characters(str.original().substr(last_diff_original), view_t::COMMON);
 
 
     } else {
 
-      view.output_characters(str.original(), bash_view::DELETE);
-      view.output_characters(str.modified(), bash_view::INSERT);
+      view.output_characters(str.original(), view_t::DELETE);
+      view.output_characters(str.modified(), view_t::INSERT);
 
     }
 
