@@ -433,6 +433,27 @@ void bash_view::endElement(const char * localname,
                            const char * URI) {
 
   const std::string local_name(localname);
+
+  if(save_text && (local_name == "name" || local_name == "operator"))  {
+
+    if(theme->is_keyword(saved_text.original()) || theme->is_keyword(saved_text.modified())) {
+
+      output_characters(saved_text.original(), bash_view::DELETE);
+      output_characters(saved_text.modified(), bash_view::INSERT);
+
+    } else {
+
+      character_diff char_diff(saved_text);
+      char_diff.compute();
+      char_diff.output(*this, saved_type);
+
+    }
+
+    save_text = false;
+    saved_text.clear();
+
+  }
+
   if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "comment") {
 
     in_comment = false;
@@ -463,26 +484,6 @@ void bash_view::endElement(const char * localname,
   } else if(URI == SRCML_CPP_NAMESPACE_HREF && local_name == "directive") {
 
     in_preprocessor_directive = false;
-
-  }
-
-  if(save_text && (local_name == "name" || local_name == "operator"))  {
-
-    if(theme->is_keyword(saved_text.original()) || theme->is_keyword(saved_text.modified())) {
-
-      output_characters(saved_text.original(), bash_view::DELETE);
-      output_characters(saved_text.modified(), bash_view::INSERT);
-
-    } else {
-
-      character_diff char_diff(saved_text);
-      char_diff.compute();
-      char_diff.output(*this, saved_type);
-
-    }
-
-    save_text = false;
-    saved_text.clear();
 
   }
 
