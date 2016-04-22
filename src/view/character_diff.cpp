@@ -31,7 +31,7 @@ void character_diff::compute() {
 void character_diff::output(view_t & view, const std::string & type) {
 
     int difference = 0;
-    int num_consecutive_edits;
+    int num_consecutive_edits = 0;
     for(const edit * edits = ses.get_script(); edits; edits = edits->next) {
 
       num_consecutive_edits += 1;
@@ -39,10 +39,26 @@ void character_diff::output(view_t & view, const std::string & type) {
 
     }
 
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, num_consecutive_edits);
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, str.original().size());
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, str.modified().size());
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, ses.get_script()->offset_sequence_one);
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, ses.get_script()->offset_sequence_two);
+    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, ses.get_script()->length);
+
     int min_size = std::min(str.original().size(), str.modified().size());
     bool is_diff_name = type == "name" && 5 * difference < min_size;
     bool is_diff_operator = type == "operator" && difference <= min_size;
-    if(is_diff_name || is_diff_operator) {
+    bool is_delete_consecutive = num_consecutive_edits == 1 
+      && ses.get_script()->operation == SES_DELETE 
+      && (ses.get_script()->offset_sequence_one == 0
+        || (ses.get_script()->offset_sequence_one + ses.get_script()->length == str.original().size()));
+    bool is_insert_consecutive = num_consecutive_edits == 1 
+      && ses.get_script()->operation == SES_INSERT 
+      && (ses.get_script()->offset_sequence_two == 0
+        || (ses.get_script()->offset_sequence_two + ses.get_script()->length == str.modified().size()));
+
+    if(is_diff_name || is_diff_operator || is_delete_consecutive || is_insert_consecutive) {
 
       int last_diff_original = 0;
       for(const edit * edits = ses.get_script(); edits; edits = edits->next) {
