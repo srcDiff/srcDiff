@@ -31,12 +31,18 @@ void character_diff::compute() {
 void character_diff::output(view_t & view, const std::string & type) {
 
     int difference = 0;
-    for(const edit * edits = ses.get_script(); edits; edits = edits->next)
+    int num_consecutive_edits;
+    for(const edit * edits = ses.get_script(); edits; edits = edits->next) {
+
+      num_consecutive_edits += 1;
       difference += edits->length;
 
+    }
+
     int min_size = std::min(str.original().size(), str.modified().size());
-    if(  (type == "name" && 5 * difference < min_size)
-      ||  (type == "operator" && difference <= min_size)) {
+    bool is_diff_name = type == "name" && 5 * difference < min_size;
+    bool is_diff_operator = type == "operator" && difference <= min_size;
+    if(is_diff_name || is_diff_operator) {
 
       int last_diff_original = 0;
       for(const edit * edits = ses.get_script(); edits; edits = edits->next) {
