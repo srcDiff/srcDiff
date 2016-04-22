@@ -39,13 +39,6 @@ void character_diff::output(view_t & view, const std::string & type) {
 
     }
 
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, num_consecutive_edits);
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, str.original().size());
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, str.modified().size());
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, ses.get_script()->offset_sequence_one);
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, ses.get_script()->offset_sequence_two);
-    fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, ses.get_script()->length);
-
     int min_size = std::min(str.original().size(), str.modified().size());
     bool is_diff_name = type == "name" && 5 * difference < min_size;
     bool is_diff_operator = type == "operator" && difference <= min_size;
