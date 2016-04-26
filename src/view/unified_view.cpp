@@ -375,12 +375,8 @@ void unified_view::characters(const char * ch, int len) {
         if(in_mode(LINE) && (!in_mode(FUNCTION) || !in_function.size()) && length >= number_context_lines)
           additional_context.pop_front(), --length;
 
-        if(!in_mode(ALL)) {
-
-          end_buffer(context, close_num_spans);
-          last_character_operation = view_t::UNSET;
-
-        }
+        end_buffer(context, close_num_spans);
+        last_character_operation = view_t::UNSET;
 
         additional_context.push_back(context.str());
         ++length;
