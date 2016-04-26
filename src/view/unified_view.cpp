@@ -92,7 +92,7 @@ void unified_view::output_additional_context() {
   size_t line_delete = line_number_delete + 1 - additional_context.size();
   size_t line_insert = line_number_insert + 1 - additional_context.size();
 
-  if(wait_change && last_context_line != (line_number_delete - 1)) {
+  if(number_context_lines != -1 && wait_change && last_context_line != (line_number_delete - 1)) {
 
     if(!is_html)
       (*output) << theme->common_color << theme->line_number_color << "@@ -" << line_delete << " +" << line_insert << " @@" << theme->common_color << '\n';
