@@ -864,16 +864,22 @@ void srcdiff_nested::output() {
     const std::string & structure_original = out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name;
     if(structure_original == "if" || structure_original == "elseif") {
 
-        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then", end_pos);
+        if(structure_original == "elseif") {
+
+          advance_to_child(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "if");
+          ++start_pos;
+        }
+
+        advance_to_child(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then");
 
     } else if(structure_original == "while") {
 
-        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition", end_pos);
+        advance_to_child(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition");
         ++start_pos;
 
     } else if(structure_original == "for") {
 
-        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control", end_pos);
+        advance_to_child(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control");
         ++start_pos;
 
     }
@@ -910,18 +916,25 @@ void srcdiff_nested::output() {
     size_t end_pos = node_sets_modified.at(end_modified - 1).back();
 
     const std::string & structure_modified = out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name;
+
     if(structure_modified == "if" || structure_modified == "elseif") {
 
-        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then", end_pos);
+        if(structure_modified == "elseif") {
+
+          advance_to_child(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "if");
+          ++start_pos;
+        }
+
+        advance_to_child(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then");
 
     } else if(structure_modified == "while") {
 
-        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition", end_pos);
+        advance_to_child(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition");
         ++start_pos;
 
     } else if(structure_modified == "for") {
 
-        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control", end_pos);
+        advance_to_child(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control");
         ++start_pos;
 
     }
