@@ -12,6 +12,6 @@ void advance_to_tag(srcml_nodes & nodes,
 					unsigned int & pos,
                     xmlElementType type,
                     const std::string & name,
-                    const std::string & no_pass_ends);
+                    std::size_t end_pos);
 
 #endif

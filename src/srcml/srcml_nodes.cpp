@@ -4,19 +4,22 @@ void advance_to_tag(srcml_nodes & nodes,
 										unsigned int & pos,
                     xmlElementType type,
                     const std::string & name,
-                    const std::string & no_pass_end) {
+                    std::size_t end_pos) {
 
 	srcml_nodes::size_type size = nodes.size();
+  std::size_t end = end_pos < size ? end_pos : size;
 
 	int start_pos = pos;
 
-  while(start_pos < size
-  			&& !(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-  						&& nodes.at(start_pos)->name == no_pass_end)
-  			&& !(nodes.at(start_pos)->type == type
-  						&& nodes.at(start_pos)->name == name)
-  			)
+  while(start_pos < end) {
+
+      if(nodes.at(start_pos)->type == type
+              && nodes.at(start_pos)->name == name)
+        break;
+
     ++start_pos; 
+
+  }
 
   pos = start_pos;
 

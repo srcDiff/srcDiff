@@ -859,25 +859,25 @@ void srcdiff_nested::output() {
   if(operation == SES_DELETE) {
 
     unsigned int start_pos = node_sets_original.at(start_original).at(1);
+    size_t end_pos = node_sets_original.at(end_original - 1).back();
 
     const std::string & structure_original = out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name;
     if(structure_original == "if" || structure_original == "elseif") {
 
-        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then", structure_original);
+        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then", end_pos);
 
     } else if(structure_original == "while") {
 
-        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition", structure_original);
+        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition", end_pos);
         ++start_pos;
 
     } else if(structure_original == "for") {
 
-        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control", structure_original);
+        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control", end_pos);
         ++start_pos;
 
     }
 
-    size_t end_pos = node_sets_original.at(end_original - 1).back();
     if(structure_original == "elseif") {
 
       while(end_pos > start_pos && out.get_nodes_original().at(end_pos)->name != "if")
@@ -907,25 +907,25 @@ void srcdiff_nested::output() {
   } else {
 
     unsigned int start_pos = node_sets_modified.at(start_modified).at(1);
+    size_t end_pos = node_sets_modified.at(end_modified - 1).back();
 
     const std::string & structure_modified = out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name;
     if(structure_modified == "if" || structure_modified == "elseif") {
 
-        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then", structure_modified);
+        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then", end_pos);
 
     } else if(structure_modified == "while") {
 
-        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition", structure_modified);
+        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition", end_pos);
         ++start_pos;
 
     } else if(structure_modified == "for") {
 
-        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control", structure_modified);
+        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control", end_pos);
         ++start_pos;
 
     }
 
-    size_t end_pos = node_sets_modified.at(end_modified - 1).back();
     if(structure_modified == "elseif") {
 
       while(end_pos > start_pos && out.get_nodes_modified().at(end_pos)->name != "if")
