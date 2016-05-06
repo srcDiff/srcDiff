@@ -13,9 +13,12 @@ srcdiff_text_measure::srcdiff_text_measure(const node_set & set_original, const 
   : srcdiff_measure(set_original, set_modified),
     set_original_text(set_original.nodes()),
     set_modified_text(set_modified.nodes()),
-    important_only(important_only) {}
+    important_only(important_only),
+    text_collected(false) {}
 
 void srcdiff_text_measure::collect_text() {
+
+  text_collected = true;
 
   unsigned int olength = set_original.size();
   unsigned int nlength = set_modified.size();
@@ -33,78 +36,53 @@ void srcdiff_text_measure::collect_text() {
 
 }
 
+void srcdiff_text_measure::collect_text_node_set(const node_set & set, node_set & set_text) {
+
+  std::size_t length = set.size();
+
+  for(unsigned int i = 0; i < length; ++i) {
+
+    if(set.nodes().at(set.at(i))->name == "operator"
+      || set.nodes().at(set.at(i))->name == "modifier") {
+
+      if(set.nodes().at(set.at(i))->extra & 0x1) continue;
+
+      if(set.nodes().at(set.at(i))->parent && (*set.nodes().at(set.at(i))->parent)->name != "name") continue;
+
+      if((set.at(i) + 1) < set.nodes().size() && set.nodes().at(set.at(i) + 1)->is_text()
+        && (*set.nodes().at(set.at(i) + 1)->content == "::")) continue;
+
+      while(set.nodes().at(set.at(i))->type != XML_READER_TYPE_END_ELEMENT)
+        ++i;
+
+    }
+
+    if(set.nodes().at(set.at(i))->is_text() && !set.nodes().at(set.at(i))->is_white_space()
+      && set.nodes().at(set.at(i))->content
+      && ((set.nodes().at(set.at(i))->parent &&
+          (*set.nodes().at(set.at(i))->parent)->name == "operator")
+      ||   (*set.nodes().at(set.at(i))->content != "("
+        && *set.nodes().at(set.at(i))->content != ")"
+        && *set.nodes().at(set.at(i))->content != "{"
+        && *set.nodes().at(set.at(i))->content != "}"
+        && *set.nodes().at(set.at(i))->content != "["
+        && *set.nodes().at(set.at(i))->content != "]"
+        && *set.nodes().at(set.at(i))->content != ":"
+        && *set.nodes().at(set.at(i))->content != ";"
+        && *set.nodes().at(set.at(i))->content != ",")))
+      set_text.push_back(set.at(i));
+
+  }
+
+
+}
+ 
 void srcdiff_text_measure::collect_important_text() {
 
-  unsigned int olength = set_original.size();
-  unsigned int nlength = set_modified.size();
+  text_collected = true;
 
-  for(unsigned int i = 0; i < olength; ++i) {
-
-    if(set_original.nodes().at(set_original.at(i))->name == "operator"
-      || set_original.nodes().at(set_original.at(i))->name == "modifier") {
-
-      if(set_original.nodes().at(set_original.at(i))->extra & 0x1) continue;
-
-      if(set_original.nodes().at(set_original.at(i))->parent && (*set_original.nodes().at(set_original.at(i))->parent)->name != "name") continue;
-
-      if((set_original.at(i) + 1) < set_original.nodes().size() && set_original.nodes().at(set_original.at(i) + 1)->is_text()
-        && (*set_original.nodes().at(set_original.at(i) + 1)->content == "::")) continue;
-
-      while(set_original.nodes().at(set_original.at(i))->type != XML_READER_TYPE_END_ELEMENT)
-        ++i;
-
-    }
-
-    if(set_original.nodes().at(set_original.at(i))->is_text() && !set_original.nodes().at(set_original.at(i))->is_white_space()
-      && set_original.nodes().at(set_original.at(i))->content
-      && ((set_original.nodes().at(set_original.at(i))->parent &&
-          (*set_original.nodes().at(set_original.at(i))->parent)->name == "operator")
-      ||   (*set_original.nodes().at(set_original.at(i))->content != "("
-        && *set_original.nodes().at(set_original.at(i))->content != ")"
-        && *set_original.nodes().at(set_original.at(i))->content != "{"
-        && *set_original.nodes().at(set_original.at(i))->content != "}"
-        && *set_original.nodes().at(set_original.at(i))->content != "["
-        && *set_original.nodes().at(set_original.at(i))->content != "]"
-        && *set_original.nodes().at(set_original.at(i))->content != ":"
-        && *set_original.nodes().at(set_original.at(i))->content != ";"
-        && *set_original.nodes().at(set_original.at(i))->content != ",")))
-      set_original_text.push_back(set_original.at(i));
-
-  }
-
-  for(unsigned int i = 0; i < nlength; ++i) {
-
-    if(set_modified.nodes().at(set_modified.at(i))->name == "operator"
-      || set_modified.nodes().at(set_modified.at(i))->name == "modifier") {
-
-      if(set_modified.nodes().at(set_modified.at(i))->extra & 0x1) continue;
-
-      if(set_modified.nodes().at(set_modified.at(i))->parent && (*set_modified.nodes().at(set_modified.at(i))->parent)->name != "name") continue;
-
-      if((set_modified.at(i) + 1) < set_modified.nodes().size() && set_modified.nodes().at(set_modified.at(i) + 1)->is_text()
-        && (*set_modified.nodes().at(set_modified.at(i) + 1)->content == "::")) continue;
-
-      while(set_modified.nodes().at(set_modified.at(i))->type != XML_READER_TYPE_END_ELEMENT)
-        ++i;
-
-    }
-
-    if(set_modified.nodes().at(set_modified.at(i))->is_text() && !set_modified.nodes().at(set_modified.at(i))->is_white_space()
-      && set_modified.nodes().at(set_modified.at(i))->content
-      && ((set_modified.nodes().at(set_modified.at(i))->parent
-        && (*set_modified.nodes().at(set_modified.at(i))->parent)->name == "operator")
-      ||  (*set_modified.nodes().at(set_modified.at(i))->content != "("
-        && *set_modified.nodes().at(set_modified.at(i))->content != ")"
-        && *set_modified.nodes().at(set_modified.at(i))->content != "{"
-        && *set_modified.nodes().at(set_modified.at(i))->content != "}"
-        && *set_modified.nodes().at(set_modified.at(i))->content != "["
-        && *set_modified.nodes().at(set_modified.at(i))->content != "]"
-        && *set_modified.nodes().at(set_modified.at(i))->content != ":"
-        && *set_modified.nodes().at(set_modified.at(i))->content != ";"
-        && *set_modified.nodes().at(set_modified.at(i))->content != ",")))
-      set_modified_text.push_back(set_modified.at(i));
-
-  }
+  collect_text_node_set(set_original, set_original_text);
+  collect_text_node_set(set_modified, set_modified_text);
 
   original_len = set_original_text.size();
   modified_len = set_modified_text.size();
@@ -162,10 +140,14 @@ void srcdiff_text_measure::compute() {
 
   }
 
-  if(important_only)
-    collect_important_text();
-  else
-    collect_text();
+  if(!text_collected) {
+
+    if(important_only)
+      collect_important_text();
+    else
+      collect_text();
+
+  }
 
   if(    original_len < shortest_edit_script::get_size_threshold()
       && modified_len < shortest_edit_script::get_size_threshold()) {
