@@ -11,6 +11,7 @@ typedef std::vector<std::shared_ptr<srcml_node>> srcml_nodes;
 void advance_to_tag(srcml_nodes & nodes,
 					unsigned int & pos,
                     xmlElementType type,
-                    const std::string & name);
+                    const std::string & name,
+                    const std::string & no_pass_ends);
 
 #endif

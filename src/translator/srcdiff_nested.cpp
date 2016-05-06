@@ -860,24 +860,25 @@ void srcdiff_nested::output() {
 
     unsigned int start_pos = node_sets_original.at(start_original).at(1);
 
-    if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "if" || out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "elseif") {
+    const std::string & structure_original = out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name;
+    if(structure_original == "if" || structure_original == "elseif") {
 
-        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then");
+        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then", structure_original);
 
-    } else if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "while") {
+    } else if(structure_original == "while") {
 
-        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition");
+        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition", structure_original);
         ++start_pos;
 
-    } else if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "for") {
+    } else if(structure_original == "for") {
 
-        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control");
+        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control", structure_original);
         ++start_pos;
 
     }
 
     size_t end_pos = node_sets_original.at(end_original - 1).back();
-    if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "elseif") {
+    if(structure_original == "elseif") {
 
       while(end_pos > start_pos && out.get_nodes_original().at(end_pos)->name != "if")
         --end_pos;
@@ -907,24 +908,25 @@ void srcdiff_nested::output() {
 
     unsigned int start_pos = node_sets_modified.at(start_modified).at(1);
 
-    if(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "if" || out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "elseif") {
+    const std::string & structure_modified = out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name;
+    if(structure_modified == "if" || structure_modified == "elseif") {
 
-        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then");
+        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then", structure_modified);
 
-    } else if(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "while") {
+    } else if(structure_modified == "while") {
 
-        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition");
+        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition", structure_modified);
         ++start_pos;
 
-    } else if(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "for") {
+    } else if(structure_modified == "for") {
 
-        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control");
+        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control", structure_modified);
         ++start_pos;
 
     }
 
     size_t end_pos = node_sets_modified.at(end_modified - 1).back();
-    if(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "elseif") {
+    if(structure_modified == "elseif") {
 
       while(end_pos > start_pos && out.get_nodes_modified().at(end_pos)->name != "if")
         --end_pos;
