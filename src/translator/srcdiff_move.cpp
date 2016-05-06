@@ -122,8 +122,8 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
           continue;
         */
 
-	if(is_move(node_sets_one->at(elements.at(i).first)) || is_move(node_sets_two->at(elements.at(j).first)))
-		   continue;
+      	if(is_move(node_sets_one->at(elements.at(i).first)) || is_move(node_sets_two->at(elements.at(j).first)))
+		     continue;
 
         ++move_id;
         std::shared_ptr<srcml_node> start_node_one = std::make_shared<srcml_node>(*nodes_one->at(node_sets_one->at(elements.at(i).first).at(0)));
