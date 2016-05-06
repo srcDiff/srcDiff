@@ -9,6 +9,7 @@
 #include <srcdiff_compare.hpp>
 #include <srcdiff_match.hpp>
 #include <shortest_edit_script.hpp>
+#include <srcdiff_edit_correction.hpp>
 
 #include <cstring>
 #include <methods.hpp>
@@ -45,6 +46,9 @@ void srcdiff_diff::output() {
     exit(distance);
   }
 
+  srcdiff_edit_correction corrector(node_sets_original, node_sets_modified, edit_script);
+  edit_script = corrector.correct();
+
   srcdiff_move::mark_moves(out.get_nodes_original(), node_sets_original, out.get_nodes_modified(), node_sets_modified, edit_script);
 
   int last_diff_original = 0;
@@ -73,6 +77,7 @@ void srcdiff_diff::output() {
 
     // output area in common
     output_common(diff_end_original, diff_end_modified);
+
     // detect and change
     edit * edit_next = edits->next;
 
