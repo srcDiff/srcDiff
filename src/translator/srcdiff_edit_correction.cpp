@@ -1,6 +1,7 @@
 #include <srcdiff_edit_correction.hpp>
 
 #include <srcdiff_text_measure.hpp>
+#include <srcdiff_match.hpp>
 
 #include <iostream>
 
@@ -39,11 +40,6 @@ edit * srcdiff_edit_correction::correct() {
 
 		}
 
-		std::size_t original_set_pos = delete_edit->offset_sequence_one;
-		std::size_t modified_set_pos = insert_edit->offset_sequence_two;
-
-		srcdiff_text_measure measure(sets_original.at(original_set_pos), sets_modified.at(modified_set_pos));
-		measure.compute();
 
 		std::size_t common_pos = edit_script->operation == SES_DELETE ? 
 			edit_script->offset_sequence_one + edit_script->length
@@ -52,6 +48,28 @@ edit * srcdiff_edit_correction::correct() {
 		const node_set & common_set = sets_original.at(common_pos);
 		node_set common_set_text(sets_original.nodes());
 		srcdiff_text_measure::collect_text_node_set(common_set, common_set_text);
+
+		std::size_t original_set_pos = delete_edit->offset_sequence_one;
+		std::size_t modified_set_pos = insert_edit->offset_sequence_two;
+
+		const node_set & set_original = sets_original.at(original_set_pos);
+		const node_set & set_modified = sets_modified.at(modified_set_pos);
+
+	  	int original_pos = set_original.at(0);
+	  	int modified_pos = set_modified.at(0);
+
+		const std::string & original_tag = set_original.nodes().at(original_pos)->name;
+	    const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
+
+		const std::string & original_uri = set_original.nodes().at(original_pos)->ns->href;
+		const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns->href;
+
+		if(!(original_tag == modified_tag && original_uri == modified_uri)
+			&& !srcdiff_match::is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri))
+			continue;
+
+		srcdiff_text_measure measure(set_original, set_modified);
+		measure.compute();
 
 		if(measure.min_length() >= 0.9 * measure.similarity()
 			&& 3 * common_set_text.size() < measure.similarity()) {
