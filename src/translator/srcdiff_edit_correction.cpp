@@ -14,15 +14,15 @@ edit * srcdiff_edit_correction::correct() {
 
 	for(edit * edit_script = edits; edit_script != nullptr; edit_script = edit_script->next) {
 
-		if(edit_script->length != 1) continue;
+		if(edit_script->length > 3) continue;
 
 		if(edit_script->next == nullptr) continue;
-		if(edit_script->next->length != 1) continue;
+		if(edit_script->next->length > 3) continue;
 
 		if(edit_script->operation == edit_script->next->operation) continue;
 
 		int common_length = edit_script->next->offset_sequence_one - edit_script->offset_sequence_one;
-		if(edit_script->operation == SES_DELETE) --common_length;
+		if(edit_script->operation == SES_DELETE) common_length -= edit_script->length;
 		if(common_length != 1) continue;
 
 		// move mistaken as common
@@ -40,7 +40,6 @@ edit * srcdiff_edit_correction::correct() {
 
 		}
 
-
 		std::size_t common_pos = edit_script->operation == SES_DELETE ? 
 			edit_script->offset_sequence_one + edit_script->length
 			: edit_script->next->offset_sequence_one - 1;
@@ -49,69 +48,95 @@ edit * srcdiff_edit_correction::correct() {
 		node_set common_set_text(sets_original.nodes());
 		srcdiff_text_measure::collect_text_node_set(common_set, common_set_text);
 
-		std::size_t original_set_pos = delete_edit->offset_sequence_one;
-		std::size_t modified_set_pos = insert_edit->offset_sequence_two;
+		for(int i = 0; i < delete_edit->length; ++i) {
 
-		const node_set & set_original = sets_original.at(original_set_pos);
-		const node_set & set_modified = sets_modified.at(modified_set_pos);
+			for(int j = 0; j < insert_edit->length; ++j) {
 
-	  	int original_pos = set_original.at(0);
-	  	int modified_pos = set_modified.at(0);
+				std::size_t original_set_pos = delete_edit->offset_sequence_one + i;
+				std::size_t modified_set_pos = insert_edit->offset_sequence_two + j;
 
-		const std::string & original_tag = set_original.nodes().at(original_pos)->name;
-	    const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
+				const node_set & set_original = sets_original.at(original_set_pos);
+				const node_set & set_modified = sets_modified.at(modified_set_pos);
 
-		const std::string & original_uri = set_original.nodes().at(original_pos)->ns->href;
-		const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns->href;
+			  	int original_pos = set_original.at(0);
+			  	int modified_pos = set_modified.at(0);
 
-		if(!(original_tag == modified_tag && original_uri == modified_uri)
-			&& !srcdiff_match::is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri))
-			continue;
+				const std::string & original_tag = set_original.nodes().at(original_pos)->name;
+			    const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
 
-		srcdiff_text_measure measure(set_original, set_modified);
-		measure.compute();
+				const std::string & original_uri = set_original.nodes().at(original_pos)->ns->href;
+				const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns->href;
 
-		if(measure.min_length() >= 0.9 * measure.similarity()
-			&& 3 * common_set_text.size() < measure.similarity()) {
+				if(!(original_tag == modified_tag && original_uri == modified_uri)
+					&& !srcdiff_match::is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri))
+					continue;
 
-			++delete_edit->length;
-			++insert_edit->length;
+				if(set_original.size() >= 3 * set_modified.size())
+					continue;
 
-			if(edit_script->operation == SES_DELETE) {
+				if(set_modified.size() >= 3 * set_original.size())
+					continue;
 
-				--insert_edit->offset_sequence_two;
+				if(set_original.size() < 3 * common_set.size())
+					continue;
 
-			} else {
+				if(set_modified.size() < 3 * common_set.size())
+					continue;
 
-				--delete_edit->offset_sequence_one;
-				delete_edit->offset_sequence_two -= 2;
-				insert_edit->offset_sequence_one += 2;
-				
-			}
+				srcdiff_text_measure measure(set_original, set_modified);
+				measure.compute();
 
-			if(edit_script->operation == SES_INSERT) {
+				if(measure.min_length() >= 0.9 * measure.similarity()
+					&& 3 * common_set_text.size() < measure.similarity()) {
 
-				if(edit_script->previous)
-					edit_script->previous->next = delete_edit;
-	
-				delete_edit->previous = edit_script->previous;
+					++delete_edit->length;
+					++insert_edit->length;
 
-				edit * after = delete_edit->next;
+					if(edit_script->operation == SES_DELETE) {
 
-				delete_edit->next = insert_edit;
-				insert_edit->previous = delete_edit;
-				insert_edit->next = after;
-				if(after)
-					after->previous = insert_edit;
+						--insert_edit->offset_sequence_two;
 
-				if(insert_edit == edits)
-					edits = delete_edit;
+					} else {
+
+						--delete_edit->offset_sequence_one;
+						delete_edit->offset_sequence_two -= insert_edit->length;
+						insert_edit->offset_sequence_one += delete_edit->length;
+						
+					}
+
+					if(edit_script->operation == SES_INSERT) {
+
+						if(edit_script->previous)
+							edit_script->previous->next = delete_edit;
+			
+						delete_edit->previous = edit_script->previous;
+
+						edit * after = delete_edit->next;
+
+						delete_edit->next = insert_edit;
+						insert_edit->previous = delete_edit;
+						insert_edit->next = after;
+						if(after)
+							after->previous = insert_edit;
+
+						if(insert_edit == edits)
+							edits = delete_edit;
+
+					}
+
+					edit_script = insert_edit;
+					goto end_move_check;
+
+				}
 
 			}
 
 		}
 
+end_move_check:
+	(void)0;
 		// choose smaller move
+
 	}
 
 	return edits;
