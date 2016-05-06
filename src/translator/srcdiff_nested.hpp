@@ -1,6 +1,8 @@
 #ifndef INCLUDED_SRCDIFF_NESTED_HPP
 #define INCLUDED_SRCDIFF_NESTED_HPP
 
+#include <srcml_nodes.hpp>
+#include <node_sets.hpp>
 #include <srcdiff_many.hpp>
 #include <srcdiff_measure.hpp>
 

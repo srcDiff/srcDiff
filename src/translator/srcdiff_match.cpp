@@ -783,6 +783,8 @@ bool if_then_equal(const node_set & set_original, const node_set & set_modified)
 
   }
 
+  if(then_original == node_sets_original.end()) return false;
+
   node_sets::iterator then_modified;
   for(then_modified = node_sets_modified.begin(); then_modified != node_sets_modified.end(); ++then_modified) {
 
@@ -793,6 +795,8 @@ bool if_then_equal(const node_set & set_original, const node_set & set_modified)
     }
 
   }
+
+  if(then_modified == node_sets_modified.end()) return false;
 
   bool then_is_equal = srcdiff_compare::node_set_syntax_compare((void *)&*then_original, (void *)&*then_modified, (void *)&dnodes) == 0;
 

@@ -862,24 +862,16 @@ void srcdiff_nested::output() {
 
     if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "if" || out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "elseif") {
 
-        while(!(out.get_nodes_original().at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-          && out.get_nodes_original().at(start_pos)->name == "then"))
-          ++start_pos;
+        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then");
 
     } else if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "while") {
 
-        while(!(out.get_nodes_original().at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && out.get_nodes_original().at(start_pos)->name == "condition"))
-          ++start_pos;
-
+        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition");
         ++start_pos;
 
     } else if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "for") {
 
-        while(!(out.get_nodes_original().at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && out.get_nodes_original().at(start_pos)->name == "control"))
-          ++start_pos;
-
+        advance_to_tag(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control");
         ++start_pos;
 
     }
@@ -917,24 +909,16 @@ void srcdiff_nested::output() {
 
     if(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "if" || out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "elseif") {
 
-        while(!(out.get_nodes_modified().at(start_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-          && out.get_nodes_modified().at(start_pos)->name == "then"))
-          ++start_pos;
+        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then");
 
     } else if(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "while") {
 
-        while(!(out.get_nodes_modified().at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && out.get_nodes_modified().at(start_pos)->name == "condition"))
-          ++start_pos;
-
+        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition");
         ++start_pos;
 
     } else if(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "for") {
 
-        while(!(out.get_nodes_modified().at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
-          && out.get_nodes_modified().at(start_pos)->name == "control"))
-          ++start_pos;
-
+        advance_to_tag(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control");
         ++start_pos;
 
     }
