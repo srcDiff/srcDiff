@@ -15,4 +15,20 @@
 <diff:insert move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:insert><diff:insert><diff:ws>
 </diff:ws></diff:insert></unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="move|move">
+<diff:delete move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:delete><diff:ws>
+</diff:ws></diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block>{
+
+	<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
+	<expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+	<expr_stmt><expr><name>d</name></expr>;</expr_stmt>
+	<expr_stmt><expr><name>e</name></expr>;</expr_stmt>
+	<expr_stmt><expr><name>f</name></expr>;</expr_stmt>
+<diff:delete type="replace"><diff:ws>	</diff:ws><expr_stmt><expr><name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:ws>	</diff:ws><expr_stmt><expr><name>h</name></expr>;</expr_stmt></diff:insert>
+
+}</block></then></if>
+<diff:insert move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:insert><diff:insert><diff:ws>
+</diff:ws></diff:insert><expr_stmt><expr><name>bar</name></expr>;</expr_stmt><diff:delete><diff:ws>
+</diff:ws></diff:delete></unit>
+
 </unit>
