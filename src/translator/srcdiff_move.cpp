@@ -12,14 +12,14 @@
 int move_id = 0;
 const std::string move("move");
 
-typedef std::tuple<int, int> IntPair;
-typedef std::vector<IntPair> IntPairs;
+typedef std::tuple<int, int> move_info;
+typedef std::vector<move_info> move_infos;
 
 srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation)
   : srcdiff_output(out), position(position), operation(operation) {}
 
 
-void add_construct(std::map<std::string, IntPairs > & constructs,
+void add_construct(std::map<std::string, move_infos > & constructs,
                    const node_sets & sets,
                    int offset,
                    int operation) {
@@ -28,11 +28,11 @@ void add_construct(std::map<std::string, IntPairs > & constructs,
 
   if(constructs.find(tag) == constructs.end()) {
 
-    constructs[tag] = IntPairs();
+    constructs[tag] = move_infos();
 
   }
 
-  constructs[tag].push_back(IntPair(offset, operation));
+  constructs[tag].push_back(move_info(offset, operation));
 
 }
 
@@ -48,7 +48,7 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
                               const node_sets & node_sets_modified,
                               edit * edit_script) {
 
-  std::map<std::string, IntPairs > constructs;
+  std::map<std::string, move_infos > constructs;
 
   for(edit * edits = edit_script; edits; edits = edits->next) {
 
@@ -78,12 +78,12 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
   }
 
-  for(std::map<std::string, IntPairs>::const_iterator construct = constructs.begin(); construct != constructs.end(); ++construct) {
+  for(std::map<std::string, move_infos>::const_iterator construct = constructs.begin(); construct != constructs.end(); ++construct) {
 
     if(construct->first == "text")
       continue;
 
-    IntPairs elements = construct->second;
+    move_infos elements = construct->second;
 
     for(unsigned int i = 0; i < elements.size(); ++i) {
 
