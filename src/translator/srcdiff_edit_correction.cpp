@@ -2,6 +2,7 @@
 
 #include <srcdiff_text_measure.hpp>
 #include <srcdiff_match.hpp>
+#include <srcdiff_compare.hpp>
 
 #include <iostream>
 
@@ -135,7 +136,7 @@ edit * srcdiff_edit_correction::correct() {
 
 end_move_check:
 	(void)0;
-		// choose smaller move
+		/** @todo choose smaller move */
 
 	}
 
