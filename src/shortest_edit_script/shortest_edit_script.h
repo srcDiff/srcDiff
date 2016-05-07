@@ -64,7 +64,7 @@ void free_shortest_edit_script(struct edit * edit_script);
 /*
   Check if next edit is a change.
 */
-int is_change(struct edit * edit_script);
+int is_change(const struct edit * edit_script);
 
 #ifdef __cplusplus
 }

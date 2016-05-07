@@ -366,7 +366,7 @@ struct edit * copy_edit(struct edit * edit) {
   return new_edit;
 }
 
-int is_change(struct edit * edit_script) {
+int is_change(const struct edit * edit_script) {
 
   return edit_script->operation == SES_DELETE && edit_script->next != NULL && edit_script->next->operation == SES_INSERT
     && (edit_script->offset_sequence_one + edit_script->length) == edit_script->next->offset_sequence_one;
