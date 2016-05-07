@@ -7,6 +7,8 @@
 #include <srcdiff_match.hpp>
 #include <type_query.hpp>
 
+#include <unordered_map>
+
 #define MOVE 3
 
 srcdiff_many::srcdiff_many(const srcdiff_diff & diff, edit * edit_script) : srcdiff_diff(diff), edit_script(edit_script) {}
@@ -222,7 +224,7 @@ void srcdiff_many::output() {
     for(; end_modified < modified_moved.size() && (modified_moved.at(end_modified).first == SES_INSERT || modified_moved.at(end_modified).first == MOVE); ++end_modified)
       ;
 
-    std::map<int, int> move_list;
+    std::unordered_map<int, int> move_list(end_original - start_original);
     for(int pos = start_original; pos < end_original; ++pos) {
 
       if(original_moved.at(pos).first == MOVE) {
@@ -239,7 +241,7 @@ void srcdiff_many::output() {
       if(modified_moved.at(pos).first == MOVE) {
 
         int move_id = node_sets_modified.nodes().at(node_sets_modified.at(edit_next->offset_sequence_two + pos).at(0))->move;
-        std::map<int, int>::iterator itr = move_list.find(move_id);
+        std::unordered_map<int, int>::iterator itr = move_list.find(move_id);
         if(itr != move_list.end()) {
 
           original_moved.at(itr->second).first = SES_COMMON;
