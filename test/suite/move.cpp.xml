@@ -23,7 +23,9 @@
 	<expr_stmt><expr><name>c</name></expr>;</expr_stmt>
 	<expr_stmt><expr><name>d</name></expr>;</expr_stmt>
 	<expr_stmt><expr><name>e</name></expr>;</expr_stmt>
-	<expr_stmt><expr><name>f</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>g</name></expr>;</expr_stmt>
+    <expr_stmt><expr><name>h</name></expr>;</expr_stmt>
 <diff:delete type="replace"><diff:ws>	</diff:ws><expr_stmt><expr><name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:ws>	</diff:ws><expr_stmt><expr><name>h</name></expr>;</expr_stmt></diff:insert>
 
 }</block></then></if>

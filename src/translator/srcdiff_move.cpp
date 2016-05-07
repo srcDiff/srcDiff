@@ -12,7 +12,7 @@
 int move_id = 0;
 const std::string move("move");
 
-typedef std::pair<int, int> IntPair;
+typedef std::tuple<int, int> IntPair;
 typedef std::vector<IntPair> IntPairs;
 
 srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation)
@@ -93,7 +93,7 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
       const node_sets * node_sets_one = &node_sets_original;
       const node_sets * node_sets_two = &node_sets_modified;
 
-      if(elements.at(i).second == SES_INSERT) {
+      if(std::get<1>(elements.at(i)) == SES_INSERT) {
 
        nodes_one = &nodes_modified;
        nodes_two = &nodes_original;
@@ -103,48 +103,48 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
       }
 
-      if(nodes_one->at(node_sets_one->at(elements.at(i).first).at(0))->move)
+      if(nodes_one->at(node_sets_one->at(std::get<0>(elements.at(i))).at(0))->move)
         continue;
 
       for(unsigned int j = i + 1; j < elements.size(); ++j) {
 
-        if(elements.at(i).second == elements.at(j).second)
+        if(std::get<1>(elements.at(i)) == std::get<1>(elements.at(j)))
           continue;
 
         diff_nodes diff_set = { *nodes_one, *nodes_two };
 
-        if(srcdiff_compare::node_set_syntax_compare(&node_sets_one->at(elements.at(i).first)
-                                   , &node_sets_two->at(elements.at(j).first), &diff_set) != 0)
+        if(srcdiff_compare::node_set_syntax_compare(&node_sets_one->at(std::get<0>(elements.at(i)))
+                                   , &node_sets_two->at(std::get<0>(elements.at(j))), &diff_set) != 0)
           continue;
         /*
-          if(compute_difference(nodes_one, node_sets_one->at(elements.at(i).first)
-          , nodes_two, node_sets_two->at(elements.at(j).first)) != 0)
+          if(compute_difference(nodes_one, node_sets_one->at(std::get<0>(elements.at(i)))
+          , nodes_two, node_sets_two->at(std::get<0>(elements.at(j)))) != 0)
           continue;
         */
 
-      	if(is_move(node_sets_one->at(elements.at(i).first)) || is_move(node_sets_two->at(elements.at(j).first)))
+      	if(is_move(node_sets_one->at(std::get<0>(elements.at(i)))) || is_move(node_sets_two->at(std::get<0>(elements.at(j)))))
 		     continue;
 
         ++move_id;
-        std::shared_ptr<srcml_node> start_node_one = std::make_shared<srcml_node>(*nodes_one->at(node_sets_one->at(elements.at(i).first).at(0)));
+        std::shared_ptr<srcml_node> start_node_one = std::make_shared<srcml_node>(*nodes_one->at(node_sets_one->at(std::get<0>(elements.at(i))).at(0)));
         start_node_one->move = move_id;
 
-        std::shared_ptr<srcml_node> start_node_two = std::make_shared<srcml_node>(*nodes_two->at(node_sets_two->at(elements.at(j).first).at(0)));
+        std::shared_ptr<srcml_node> start_node_two = std::make_shared<srcml_node>(*nodes_two->at(node_sets_two->at(std::get<0>(elements.at(j))).at(0)));
         start_node_two->move = move_id;
 
-        nodes_one->at(node_sets_one->at(elements.at(i).first).at(0)) = start_node_one;
-        nodes_two->at(node_sets_two->at(elements.at(j).first).at(0)) = start_node_two;
+        nodes_one->at(node_sets_one->at(std::get<0>(elements.at(i))).at(0)) = start_node_one;
+        nodes_two->at(node_sets_two->at(std::get<0>(elements.at(j))).at(0)) = start_node_two;
 
         if(!start_node_one->is_empty) {
 
-          std::shared_ptr<srcml_node> end_node_one = std::make_shared<srcml_node>(*nodes_one->at(node_sets_one->at(elements.at(i).first).back()));
+          std::shared_ptr<srcml_node> end_node_one = std::make_shared<srcml_node>(*nodes_one->at(node_sets_one->at(std::get<0>(elements.at(i))).back()));
           end_node_one->move = move_id;
 
-          std::shared_ptr<srcml_node> end_node_two = std::make_shared<srcml_node>(*nodes_two->at(node_sets_two->at(elements.at(j).first).back()));
+          std::shared_ptr<srcml_node> end_node_two = std::make_shared<srcml_node>(*nodes_two->at(node_sets_two->at(std::get<0>(elements.at(j))).back()));
           end_node_two->move = move_id;
 
-          nodes_one->at(node_sets_one->at(elements.at(i).first).back()) = end_node_one;
-          nodes_two->at(node_sets_two->at(elements.at(j).first).back()) = end_node_two;
+          nodes_one->at(node_sets_one->at(std::get<0>(elements.at(i))).back()) = end_node_one;
+          nodes_two->at(node_sets_two->at(std::get<0>(elements.at(j))).back()) = end_node_two;
 
         }
 

@@ -87,7 +87,7 @@ edit * srcdiff_edit_correction::correct() {
 				srcdiff_text_measure measure(set_original, set_modified);
 				measure.compute();
 
-				if(measure.min_length() >= 0.9 * measure.similarity()
+				if(measure.similarity() >= 0.9 * measure.min_length()
 					&& 3 * common_set_text.size() < measure.similarity()) {
 
 					++delete_edit->length;
