@@ -158,7 +158,11 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
 }
 
+static std::map<int, int> id2attribute;
+
 void srcdiff_move::output() {
+
+  static int attribute_id = 0;
 
   // store current diff if is any
   std::shared_ptr<reader_state> rbuf = rbuf_original;
@@ -175,7 +179,22 @@ void srcdiff_move::output() {
 
   int id = rbuf->nodes.at(position)->move;
 
-  start_node->properties.emplace_back(move, std::to_string(id));
+
+  std::map<int, int>::iterator itr = id2attribute.find(id);
+  int output_id = 0;
+  if(itr == id2attribute.end()) {
+
+    output_id = ++attribute_id;
+    id2attribute[id] = output_id;
+
+  } else {
+
+    output_id = itr->second;
+    id2attribute.erase(itr);
+
+  }
+
+  start_node->properties.emplace_back(move, std::to_string(output_id));
 
   output_node(start_node, operation, true);
 
