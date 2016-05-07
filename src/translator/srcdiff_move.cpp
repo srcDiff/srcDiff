@@ -22,9 +22,7 @@ srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, 
 void add_construct(std::map<std::string, move_infos > & constructs,
                    const node_sets & sets,
                    int offset,
-                   int operation,
-                   const edit * anedit,
-                   int edit_pos) {
+                   int operation) {
 
   std::string tag = sets.nodes().at(sets.at(offset).at(0))->name;
 
@@ -34,7 +32,7 @@ void add_construct(std::map<std::string, move_infos > & constructs,
 
   }
 
-  constructs[tag].push_back(move_info(offset, operation, anedit, edit_pos));
+  constructs[tag].push_back(move_info(offset, operation));
 
 }
 
@@ -60,7 +58,7 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
       for(int i = 0; i < edits->length; ++i) {
 
-        add_construct(constructs, node_sets_modified, edits->offset_sequence_two + i, SES_INSERT, edits, i);
+        add_construct(constructs, node_sets_modified, edits->offset_sequence_two + i, SES_INSERT);
 
       }
 
@@ -70,7 +68,7 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
       for(int i = 0; i < edits->length; ++i) {
 
-        add_construct(constructs, node_sets_original, edits->offset_sequence_one + i, SES_DELETE, edits, i);
+        add_construct(constructs, node_sets_original, edits->offset_sequence_one + i, SES_DELETE);
 
       }
 
@@ -126,22 +124,6 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
       	if(is_move(node_sets_one->at(std::get<0>(elements.at(i)))) || is_move(node_sets_two->at(std::get<0>(elements.at(j)))))
 		     continue;
-
-        if(std::get<1>(elements.at(i)) == SES_DELETE) {
-
-          if(is_change(std::get<2>(elements.at(i)))
-            && std::get<2>(elements.at(i))->next == std::get<2>(elements.at(j))
-            && std::abs(std::get<3>(elements.at(i)) - std::get<3>(elements.at(j))) <= 1)
-            continue;
-
-        } else {
-
-          if(is_change(std::get<2>(elements.at(j)))
-            && std::get<2>(elements.at(j))->next == std::get<2>(elements.at(i))
-            && std::abs(std::get<3>(elements.at(i)) - std::get<3>(elements.at(j))) <= 1)
-            continue;
-
-        }
 
         ++move_id;
         std::shared_ptr<srcml_node> start_node_one = std::make_shared<srcml_node>(*nodes_one->at(node_sets_one->at(std::get<0>(elements.at(i))).at(0)));
