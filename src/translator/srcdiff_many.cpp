@@ -207,9 +207,57 @@ void srcdiff_many::output() {
   int_pairs original_moved = moves.at(0);
   int_pairs modified_moved = moves.at(1);
 
+  for(unsigned int i = 0, j = 0; i < original_moved.size() && j < modified_moved.size(); ++i, ++j) {
+
+    unsigned int start_original = i;
+
+    unsigned int start_modified = j;
+
+    unsigned int end_original = start_original;
+
+    unsigned int end_modified = start_modified;
+
+    for(; end_original < original_moved.size() && (original_moved.at(end_original).first == SES_DELETE || original_moved.at(end_original).first == MOVE); ++end_original)
+      ;
+    for(; end_modified < modified_moved.size() && (modified_moved.at(end_modified).first == SES_INSERT || modified_moved.at(end_modified).first == MOVE); ++end_modified)
+      ;
+
+    std::map<int, int> move_list;
+    for(int pos = start_original; pos < end_original; ++pos) {
+
+      if(original_moved.at(pos).first == MOVE) {
+
+        int move_id = node_sets_original.nodes().at(node_sets_original.at(edits->offset_sequence_one + pos).at(0))->move;
+        move_list.emplace(move_id, pos);
+
+      }
+
+    }
+
+    for(int pos = start_modified; pos < end_modified; ++pos) {
+
+      if(modified_moved.at(pos).first == MOVE) {
+
+        int move_id = node_sets_modified.nodes().at(node_sets_modified.at(edit_next->offset_sequence_two + pos).at(0))->move;
+        std::map<int, int>::iterator itr = move_list.find(move_id);
+        if(itr != move_list.end()) {
+
+          original_moved.at(itr->second).first = SES_COMMON;
+          original_moved.at(itr->second).second = pos;
+
+          modified_moved.at(pos).first = SES_COMMON;
+          modified_moved.at(pos).second = itr->second;
+
+        }
+        
+      }
+
+    }
+
+  }
+
   unsigned int i = 0;
   unsigned int j = 0;
-
   for(; i < original_moved.size() && j < modified_moved.size(); ++i, ++j) {
 
     unsigned int start_original = i;
@@ -227,7 +275,7 @@ void srcdiff_many::output() {
 
     // output diffs until match
     output_unmatched(edits->offset_sequence_one + start_original, edits->offset_sequence_one + end_original - 1, 
-                      edit_next->offset_sequence_two + start_modified, edit_next->offset_sequence_two + end_modified - 1);
+                     edit_next->offset_sequence_two + start_modified, edit_next->offset_sequence_two + end_modified - 1);
 
     i = end_original;
     j = end_modified;
@@ -258,7 +306,7 @@ void srcdiff_many::output() {
 
   }
 
-  output_unmatched(edits->offset_sequence_one + i, edits->offset_sequence_one + original_moved.size() - 1
-                   , edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + modified_moved.size() - 1);
+  output_unmatched(edits->offset_sequence_one + i, edits->offset_sequence_one + original_moved.size() - 1,
+                   edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + modified_moved.size() - 1);
 
 }
