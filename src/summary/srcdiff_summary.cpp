@@ -636,7 +636,7 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         } else if(full_name == "expr_stmt") {
 
             expr_stmt_pos.emplace_back(is_interchange ? profile_stack.size() - 2 : profile_stack.size() - 1);
-            left_hand_side.emplace_back(true);
+            left_hand_side.push_back(true);
             collect_lhs.emplace_back(versioned_string());
             collect_rhs.emplace_back(versioned_string());
 
