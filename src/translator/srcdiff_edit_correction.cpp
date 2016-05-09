@@ -25,6 +25,10 @@ static void split_change(edit * delete_edit, edit * insert_edit, int original_po
 	edit * modified_previous = insert_edit->previous;
 	edit * modified_next = insert_edit->next;
 
+	edit * common_edit = (struct edit *)malloc(sizeof(struct edit));
+	if(common_edit == nullptr)
+		throw std::bad_alloc();
+
 	edit * left_delete = nullptr, * right_delete = nullptr,
 		 * left_insert = nullptr, * right_insert = nullptr;
 
@@ -38,11 +42,21 @@ static void split_change(edit * delete_edit, edit * insert_edit, int original_po
 	else
 		right_insert = insert_edit;
 
-	if(original_pos != 0 && original_pos != (original_length - 1))
-		right_delete = (struct edit *)malloc(sizeof(struct edit));
+	if(original_pos != 0 && original_pos != (original_length - 1)) {
 
-	if(modified_pos != 0 && modified_pos != (modified_length - 1))
+		right_delete = (struct edit *)malloc(sizeof(struct edit));
+		if(right_delete == nullptr)
+			throw std::bad_alloc();
+
+	}
+
+	if(modified_pos != 0 && modified_pos != (modified_length - 1)) {
+
 		right_insert = (struct edit *)malloc(sizeof(struct edit));
+		if(right_insert == nullptr)
+			throw std::bad_alloc();
+
+	}
 
 	if(left_delete) {
 
@@ -260,6 +274,8 @@ edit * srcdiff_edit_correction::correct() {
 					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << insert_edit->offset_sequence_one << '\n';
 					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << insert_edit->offset_sequence_two << '\n';
 					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << insert_edit->length << "\n\n";
+
+					split_change(delete_edit, insert_edit, i, j);
 
 					goto end_move_check;
 
