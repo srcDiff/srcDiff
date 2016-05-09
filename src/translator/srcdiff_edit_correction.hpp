@@ -19,6 +19,9 @@ private:
 	const node_sets & sets_modified;
 	edit * edits;
 
+private:
+	edit * split_change(edit * delete_edit, edit * insert_edit, int original_pos, int modified_pos);
+
 public:
 	srcdiff_edit_correction(const node_sets & sets_original,
 							const node_sets & sets_modified,

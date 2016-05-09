@@ -11,7 +11,7 @@ srcdiff_edit_correction::srcdiff_edit_correction(const node_sets & sets_original
 						                         edit * edit_script) 
 	: sets_original(sets_original), sets_modified(sets_modified), edits(edit_script) {}
 
-static edit * split_change(edit * delete_edit, edit * insert_edit, int original_pos, int modified_pos) {
+edit * srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_edit, int original_pos, int modified_pos) {
 
 	int original_sequence_one_offset = delete_edit->offset_sequence_one;
 	int original_sequence_two_offset = delete_edit->offset_sequence_two;
@@ -162,6 +162,17 @@ static edit * split_change(edit * delete_edit, edit * insert_edit, int original_
 
 	}
 
+	if(delete_edit == edits) {
+
+		if(left_delete)
+			edits = left_delete;
+		else if(left_insert)
+			edits = left_insert;
+		else
+			edits = common_edit;
+
+	}
+
 	if(right_insert)
 		return right_insert;
 	else if(right_delete)
@@ -178,6 +189,7 @@ edit * srcdiff_edit_correction::correct() {
 		if(edit_script->length > 3) continue;
 
 		if(edit_script->next == nullptr) continue;
+		if(edit_script->next->operation == SES_COMMON) continue;
 		if(edit_script->next->length > 3) continue;
 
 		if(edit_script->operation == edit_script->next->operation) continue;
@@ -286,16 +298,6 @@ edit * srcdiff_edit_correction::correct() {
 					}
 
 					edit_script = split_change(delete_edit, insert_edit, i, j);
-
-					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << original_set_pos << '\n';
-					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << modified_set_pos << "\n\n";
-
-					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << delete_edit->offset_sequence_one << '\n';
-					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << delete_edit->offset_sequence_two << '\n';
-					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << delete_edit->length << "\n\n";
-					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << insert_edit->offset_sequence_one << '\n';
-					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << insert_edit->offset_sequence_two << '\n';
-					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << insert_edit->length << "\n\n";
 
 					goto end_move_check;
 
