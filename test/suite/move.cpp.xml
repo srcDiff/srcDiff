@@ -82,4 +82,25 @@
   <expr_stmt><expr><call><name>output_change</name><argument_list>(<argument><expr><call><name><name>node_sets_original</name><operator>.</operator><name>at</name></name><argument_list>(<argument><expr><name>end_original</name> <operator>-</operator> <literal type="number">1</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>back</name><argument_list>()</argument_list></call> <operator>+</operator> <literal type="number">1</literal></expr></argument>, <argument><expr><call><name><name>out</name><operator>.</operator><name>last_output_modified</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="move|move">
+<diff:insert move="1"><expr_stmt><expr><name>save_text</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><literal type="boolean">false</literal></expr>;</expr_stmt></diff:insert><diff:insert><diff:ws>
+
+</diff:ws></diff:insert><if>if<condition>(<expr><call><name><name>theme</name><operator>-&gt;</operator><name>is_keyword</name></name><argument_list>(<argument><expr><call><name><name>saved_text</name><operator>.</operator><name>original</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call> <operator>||</operator> <call><name><name>theme</name><operator>-&gt;</operator><name>is_keyword</name></name><argument_list>(<argument><expr><call><name><name>saved_text</name><operator>.</operator><name>modified</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
+
+  <expr_stmt><expr><call><name>output_characters</name><argument_list>(<argument><expr><call><name><name>saved_text</name><operator>.</operator><name>original</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>bash_view</name><operator>::</operator><name>DELETE</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  <expr_stmt><expr><call><name>output_characters</name><argument_list>(<argument><expr><call><name><name>saved_text</name><operator>.</operator><name>modified</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name><name>bash_view</name><operator>::</operator><name>INSERT</name></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+}</block></then> <else>else <block>{
+
+  <function_decl><type><name>character_diff</name></type> <name>char_diff</name><parameter_list>(<parameter><decl><type><name>saved_text</name></type></decl></parameter>)</parameter_list>;</function_decl>
+  <expr_stmt><expr><call><name><name>char_diff</name><operator>.</operator><name>compute</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+  <expr_stmt><expr><call><name><name>char_diff</name><operator>.</operator><name>output</name></name><argument_list>(<argument><expr><operator>*</operator><name>this</name></expr></argument>, <argument><expr><name>saved_type</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+
+}</block></else></if>
+
+<diff:delete move="1"><expr_stmt><expr><name>save_text</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><literal type="boolean">false</literal></expr>;</expr_stmt></diff:delete><diff:delete><diff:ws>
+</diff:ws></diff:delete><expr_stmt><expr><call><name><name>saved_text</name><operator>.</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
+</unit>
+
+
 </unit>
