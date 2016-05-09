@@ -123,10 +123,10 @@ void side_by_side_view::add_new_line() {
   }
 
   last_character_operation_original = view_t::UNSET;
-  original_lines.emplace_back(std::ostringstream(""), view_t::UNSET, 0, 0);
+  original_lines.emplace_back("", view_t::UNSET, 0, 0);
 
   last_character_operation_modified = view_t::UNSET;
-  modified_lines.emplace_back(std::ostringstream(""), view_t::UNSET, 0, 0);
+  modified_lines.emplace_back("", view_t::UNSET, 0, 0);
 
   line_operations.push_back(0);
 
