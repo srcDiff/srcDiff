@@ -137,8 +137,8 @@ edit * srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_e
 	if(right_delete) {
 
 		right_delete->operation = SES_DELETE;
-		right_delete->offset_sequence_one = original_pos + 1;
-		right_delete->offset_sequence_two = modified_pos + 1;
+		right_delete->offset_sequence_one = common_edit->offset_sequence_one + 1;
+		right_delete->offset_sequence_two = common_edit->offset_sequence_two + 1;
 		right_delete->length = original_length - original_pos - 1;
 		right_delete->previous = common_edit;
 		right_delete->next = right_insert ? right_insert : modified_next;
@@ -153,7 +153,7 @@ edit * srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_e
 		if(right_delete)
 			right_insert->offset_sequence_one = right_delete->offset_sequence_one + right_delete->length;
 		else
-			right_insert->offset_sequence_one = original_pos + 1;
+			right_insert->offset_sequence_one = common_edit->offset_sequence_one + 1;
 
 		right_insert->offset_sequence_two = modified_pos + 1;
 		right_insert->length = modified_length - modified_pos - 1;
