@@ -25,10 +25,6 @@ static void split_change(edit * delete_edit, edit * insert_edit, int original_po
 	edit * modified_previous = insert_edit->previous;
 	edit * modified_next = insert_edit->next;
 
-	edit * common_edit = (struct edit *)malloc(sizeof(struct edit));
-	if(common_edit == nullptr)
-		throw std::bad_alloc();
-
 	edit * left_delete = nullptr, * right_delete = nullptr,
 		 * left_insert = nullptr, * right_insert = nullptr;
 
@@ -45,87 +41,90 @@ static void split_change(edit * delete_edit, edit * insert_edit, int original_po
 	if(original_pos != 0 && original_pos != (original_length - 1)) {
 
 		right_delete = (struct edit *)malloc(sizeof(struct edit));
-		if(right_delete == nullptr)
+		if(right_delete == nullptr) {
+
+			free(common_edit);
 			throw std::bad_alloc();
+
+		}
 
 	}
 
 	if(modified_pos != 0 && modified_pos != (modified_length - 1)) {
 
 		right_insert = (struct edit *)malloc(sizeof(struct edit));
-		if(right_insert == nullptr)
+		if(right_insert == nullptr) {
+
+			free(common_edit);
+			if(original_pos != 0 && original_pos != (original_length - 1))
+				free(right_delete);
 			throw std::bad_alloc();
+
+		}
 
 	}
 
+	edit * common_edit = (struct edit *)malloc(sizeof(struct edit));
+	if(common_edit == nullptr)
+		throw std::bad_alloc();
+	common_edit->operation = SES_COMMON;
+	common_edit->offset_sequence_one = original_sequence_one_offset + original_pos;
+	common_edit->offset_sequence_two = modified_sequence_two_offset + modified_pos;
+	common_edit->length = 1;
+
+	if(left_insert)
+		common_edit->previous = left_insert;
+	else if(left_delete)
+		common_edit->previous = left_delete;
+	else
+		common_edit->previous = original_previous;
+
+	if(right_delete)
+		common_edit->next = right_delete;
+	else if(right_insert)
+		common_edit->next = right_insert;
+	else
+		common_edit->next = modified_next;
+
 	if(left_delete) {
 
+		left_delete->operation = SES_DELETE;
 		left_delete->offset_sequence_one = original_sequence_one_offset;
 		left_delete->offset_sequence_two = original_sequence_two_offset;
 		left_delete->length = original_pos;
 		left_delete->previous = original_previous;
-
-
-		/*
-		 
-		 	Has to be at least one insert or delete (common broke).
-		 	Could either be left of common (insert), then either right of common
-		 	(right_delete first, then right_insert).
-
-		*/
-		if(left_insert)
-			left_delete->next = left_insert;
-		else if(right_delete)
-			left_delete->next = right_delete;
-		else
-			left_delete->next = right_insert;
+		left_delete->next = left_insert ? left_insert : common_edit;
 
 	}
 
 	if(left_insert) {
 
+		left_insert->operation = SES_INSERT;
+
 		int offset_one = left_delete ? left_delete->offset_sequence_one + left_delete->length : modified_sequence_one_offset;
 		left_insert->offset_sequence_one = offset_one;
 		left_insert->offset_sequence_two = modified_sequence_two_offset;
 		left_insert->length = modified_pos;
-
-		// if left its previous else original_previous
 		left_insert->previous = left_delete ? left_delete : original_previous;
-
-		/*
-			If right delete it is next.
-			Else if right insert it is next.
-			Else there both delete and insert are completely before split
-			and they point to next edit modified_next
-		*/
-		if(right_delete)
-			left_insert->next = right_delete;
-		else if(right_insert)
-			left_insert->next = right_insert;
-		else
-			left_insert->next = modified_next;
+		left_insert->next = common_edit;
 
 	}
 
 	if(right_delete) {
 
+		right_delete->operation = SES_DELETE;
 		right_delete->offset_sequence_one = original_pos + 1;
 		right_delete->offset_sequence_two = modified_pos + 1;
 		right_delete->length = original_length - original_pos - 1;
-
-		if(left_insert)
-			right_delete->previous = left_insert;
-		else if(left_delete)
-			right_delete->previous = left_delete;
-		else
-			right_delete->previous = original_previous;
-
+		right_delete->previous = common_edit;
 		right_delete->next = right_insert ? right_insert : modified_next;
 
 
 	}
 
 	if(right_insert) {
+
+		right_insert->operation = SES_INSERT;
 
 		int offset_one = 0;
 		if(right_delete)
@@ -135,14 +134,7 @@ static void split_change(edit * delete_edit, edit * insert_edit, int original_po
 
 		right_insert->offset_sequence_two = modified_pos + 1;
 		right_insert->length = modified_length - modified_pos - 1;
-
-		if(right_delete)
-			right_insert->previous = right_delete;
-		else if(left_insert)
-			right_insert->previous = left_insert;
-		else
-			right_insert->previous = left_delete;
-
+		right_insert->previous = right_delete ? right_delete : common_edit;
 		right_insert->next = modified_next;
 
 	}
