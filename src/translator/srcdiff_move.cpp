@@ -12,7 +12,7 @@
 int move_id = 0;
 const std::string move("move");
 
-typedef std::tuple<int, int, const edit *, int> move_info;
+typedef std::tuple<int, int> move_info;
 typedef std::vector<move_info> move_infos;
 
 srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation)

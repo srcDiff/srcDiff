@@ -26,6 +26,6 @@ namespace srcdiff_compare {
 
 	const void * string_index(int idx, const void * s, const void * context);
 
-};
+}
 
 #endif
