@@ -16,10 +16,14 @@ static void split_change(edit * delete_edit, edit * insert_edit, int original_po
 	int original_sequence_one_offset = delete_edit->offset_sequence_one;
 	int original_sequence_two_offset = delete_edit->offset_sequence_two;
 	int original_length = delete_edit->length;
+	edit * original_previous = delete_edit->previous;
+	edit * original_next = delete_edit->next;
 
 	int modified_sequence_one_offset = insert_edit->offset_sequence_one;
 	int modified_sequence_two_offset = insert_edit->offset_sequence_two;
 	int modified_length = insert_edit->length;
+	edit * modified_previous = insert_edit->previous;
+	edit * modified_next = insert_edit->next;
 
 	edit * left_delete = nullptr, * right_delete = nullptr,
 		 * left_insert = nullptr, * right_insert = nullptr;
@@ -39,6 +43,95 @@ static void split_change(edit * delete_edit, edit * insert_edit, int original_po
 
 	if(modified_pos != 0 && modified_pos != (modified_length - 1))
 		right_insert = (struct edit *)malloc(sizeof(struct edit));
+
+	if(left_delete) {
+
+		left_delete->offset_sequence_one = original_sequence_one_offset;
+		left_delete->offset_sequence_two = original_sequence_two_offset;
+		left_delete->length = original_pos;
+		left_delete->previous = original_previous;
+
+
+		/*
+		 
+		 	Has to be at least one insert or delete (common broke).
+		 	Could either be left of common (insert), then either right of common
+		 	(right_delete first, then right_insert).
+
+		*/
+		if(left_insert)
+			left_delete->next = left_insert;
+		else if(right_delete)
+			left_delete->next = right_delete;
+		else
+			left_delete->next = right_insert;
+
+	}
+
+	if(left_insert) {
+
+		int offset_one = left_delete ? left_delete->offset_sequence_one + left_delete->length : modified_sequence_one_offset;
+		left_insert->offset_sequence_one = offset_one;
+		left_insert->offset_sequence_two = modified_sequence_two_offset;
+		left_insert->length = modified_pos;
+
+		// if left its previous else original_previous
+		left_insert->previous = left_delete ? left_delete : original_previous;
+
+		/*
+			If right delete it is next.
+			Else if right insert it is next.
+			Else there both delete and insert are completely before split
+			and they point to next edit modified_next
+		*/
+		if(right_delete)
+			left_insert->next = right_delete;
+		else if(right_insert)
+			left_insert->next = right_insert;
+		else
+			left_insert->next = modified_next;
+
+	}
+
+	if(right_delete) {
+
+		right_delete->offset_sequence_one = original_pos + 1;
+		right_delete->offset_sequence_two = modified_pos + 1;
+		right_delete->length = original_length - original_pos - 1;
+
+		if(left_insert)
+			right_delete->previous = left_insert;
+		else if(left_delete)
+			right_delete->previous = left_delete;
+		else
+			right_delete->previous = original_previous;
+
+		right_delete->next = right_insert ? right_insert : modified_next;
+
+
+	}
+
+	if(right_insert) {
+
+		int offset_one = 0;
+		if(right_delete)
+			right_insert->offset_sequence_one = right_delete->offset_sequence_one + right_delete->length;
+		else
+			right_insert->offset_sequence_one = original_pos + 1;
+
+		right_insert->offset_sequence_two = modified_pos + 1;
+		right_insert->length = modified_length - modified_pos - 1;
+
+		if(right_delete)
+			right_insert->previous = right_delete;
+		else if(left_insert)
+			right_insert->previous = left_insert;
+		else
+			right_insert->previous = left_delete;
+
+		right_insert->next = modified_next;
+
+	}
 
 }
 
@@ -156,7 +249,18 @@ edit * srcdiff_edit_correction::correct() {
 
 					}
 
-					edit_script = insert_edit;
+					edit_script = insert_edit;				
+
+					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << original_set_pos << '\n';
+					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << modified_set_pos << "\n\n";
+
+					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << delete_edit->offset_sequence_one << '\n';
+					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << delete_edit->offset_sequence_two << '\n';
+					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << delete_edit->length << "\n\n";
+					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << insert_edit->offset_sequence_one << '\n';
+					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << insert_edit->offset_sequence_two << '\n';
+					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << insert_edit->length << "\n\n";
+
 					goto end_move_check;
 
 				}
