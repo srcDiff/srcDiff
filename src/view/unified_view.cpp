@@ -248,7 +248,7 @@ void unified_view::characters(const char * ch, int len) {
    wait_change = false;
 
    output->write(context.str().c_str(), context.str().size());
-   context = std::ostringstream();
+   context.str("");
 
   }
 
@@ -386,7 +386,7 @@ void unified_view::characters(const char * ch, int len) {
       if(diff_stack.back() != INSERT) ++line_number_delete;
       if(diff_stack.back() != DELETE) ++line_number_insert;
 
-      context = std::ostringstream();
+      context.str("");
 
     }
 

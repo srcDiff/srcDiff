@@ -84,7 +84,7 @@ void side_by_side_view::output_characters(const std::string & ch, int operation)
        && operation != view_t::COMMON)
       real_operation = view_t::COMMON;
 
-    output_characters_to_buffer(std::get<STREAM>(original_lines.back()),
+    output_characters_to_buffer(*std::get<STREAM>(original_lines.back()),
                                 ch, real_operation, last_character_operation_original,
                                 std::get<CLOSE_SPANS>(original_lines.back()));
     std::get<OPERATION>(original_lines.back()) += size;
@@ -100,7 +100,7 @@ void side_by_side_view::output_characters(const std::string & ch, int operation)
        && operation != view_t::COMMON)
       real_operation = view_t::COMMON;
 
-    output_characters_to_buffer(std::get<STREAM>(modified_lines.back()),
+    output_characters_to_buffer(*std::get<STREAM>(modified_lines.back()),
                                 ch, real_operation, last_character_operation_modified,
                                 std::get<CLOSE_SPANS>(modified_lines.back()));
     std::get<OPERATION>(modified_lines.back()) += size;
@@ -117,16 +117,16 @@ void side_by_side_view::add_new_line() {
   // either both are empty or they are not
   if(!original_lines.empty()) {
 
-    end_buffer(std::get<STREAM>(original_lines.back()), std::get<CLOSE_SPANS>(original_lines.back()));
-    end_buffer(std::get<STREAM>(modified_lines.back()), std::get<CLOSE_SPANS>(modified_lines.back()));
+    end_buffer(*std::get<STREAM>(original_lines.back()), std::get<CLOSE_SPANS>(original_lines.back()));
+    end_buffer(*std::get<STREAM>(modified_lines.back()), std::get<CLOSE_SPANS>(modified_lines.back()));
 
   }
 
   last_character_operation_original = view_t::UNSET;
-  original_lines.emplace_back("", view_t::UNSET, 0, 0);
+  original_lines.emplace_back(std::make_shared<std::ostringstream>(), view_t::UNSET, 0, 0);
 
   last_character_operation_modified = view_t::UNSET;
-  modified_lines.emplace_back("", view_t::UNSET, 0, 0);
+  modified_lines.emplace_back(std::make_shared<std::ostringstream>(), view_t::UNSET, 0, 0);
 
   line_operations.push_back(0);
 
@@ -166,7 +166,7 @@ void side_by_side_view::output_html() {
     line_number += std::get<LINE_INCR>(original_lines[i]);
     (*output) << "</span>";
 
-    (*output) << std::get<STREAM>(original_lines[i]).str();
+    (*output) << std::get<STREAM>(original_lines[i])->str();
     (*output) << theme->common_color << "\n</span>";  
 
   }
@@ -191,7 +191,7 @@ void side_by_side_view::output_html() {
     line_number += std::get<LINE_INCR>(modified_lines[i]);
     (*output) << "</span>";
 
-    (*output) << std::get<STREAM>(modified_lines[i]).str();
+    (*output) << std::get<STREAM>(modified_lines[i])->str();
     (*output) << theme->common_color << "\n</span>";  
 
   }
@@ -204,12 +204,12 @@ void side_by_side_view::output_html() {
 void side_by_side_view::output_bash() {
 
     int max_width = 0;
-    for(const std::tuple<std::ostringstream, int, unsigned int, size_t> & line : original_lines)
+    for(const std::tuple<std::shared_ptr<std::ostringstream>, int, unsigned int, size_t> & line : original_lines)
       max_width = std::max(max_width, std::get<OPERATION>(line));
 
     for(int i = 0; i < original_lines.size(); ++i) {
 
-      (*output) << theme->common_color << std::get<STREAM>(original_lines[i]).str();
+      (*output) << theme->common_color << std::get<STREAM>(original_lines[i])->str();
 
       std::string fill(max_width - std::get<OPERATION>(original_lines[i]), ' ');
       (*output) << theme->common_color << fill;
@@ -225,7 +225,7 @@ void side_by_side_view::output_bash() {
       else
         (*output) << " | ";
 
-      (*output) << std::get<STREAM>(modified_lines[i]).str();
+      (*output) << std::get<STREAM>(modified_lines[i])->str();
 
       (*output) << theme->common_color << '\n';
 
