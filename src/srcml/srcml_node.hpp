@@ -72,7 +72,7 @@ public:
 
   xmlElementType type;
   std::string name;
-  boost::optional<srcml_ns> ns;
+  srcml_ns ns;
   boost::optional<std::string> content;
   std::list<srcml_attr> properties;
   unsigned short extra;
@@ -89,11 +89,9 @@ public:
 
   srcml_node(const xmlNode & node, bool is_archive);
 
-  srcml_node(xmlElementType type = XML_ELEMENT_NODE, const std::string & name = std::string(), const boost::optional<srcml_ns> & ns = boost::optional<srcml_ns>(),
+  srcml_node(xmlElementType type = XML_ELEMENT_NODE, const std::string & name = std::string(), const srcml_ns & ns = srcml_ns(),
     const boost::optional<std::string> & content = boost::optional<std::string>(), const std::list<srcml_attr> & properties = std::list<srcml_attr>(),
     unsigned short extra = 0, const boost::optional<std::shared_ptr<srcml_node>> & parent = boost::optional<std::shared_ptr<srcml_node>>(), bool is_empty = false);
-
-  srcml_node(xmlElementType type, const std::string & name, const srcml_ns & ns);
 
   srcml_node(const srcml_node & node);
 

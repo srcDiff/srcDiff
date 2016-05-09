@@ -57,13 +57,13 @@ namespace srcdiff_compare {
     if(node1->is_empty != node2->is_empty)
       return 1;
 
-    if(node1->ns->prefix || node2->ns->prefix) {
+    if(node1->ns.prefix || node2->ns.prefix) {
 
-      if(!node1->ns->prefix)
+      if(!node1->ns.prefix)
         return 1;
-      else if(!node2->ns->prefix)
+      else if(!node2->ns.prefix)
         return 1;
-      else if(*node1->ns->prefix != *node2->ns->prefix) 
+      else if(*node1->ns.prefix != *node2->ns.prefix) 
       return 1;
 
     }

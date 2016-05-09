@@ -426,7 +426,7 @@ void srcdiff_output::output_text_as_node(const std::string & text, int operation
 
   if(text.size() == 0) return;
 
-  output_node(std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_TEXT, "text", boost::optional<srcml_node::srcml_ns>(), text), operation);
+  output_node(std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_TEXT, "text", srcml_node::srcml_ns(), text), operation);
 
 }
 
@@ -472,7 +472,7 @@ void srcdiff_output::output_node_inner(const srcml_node & node) {
   case XML_READER_TYPE_ELEMENT:
 
     // start the element
-    srcml_write_start_element(wstate->unit, node.ns->prefix ? node.ns->prefix->c_str() : 0, node.name.c_str(), 0);
+    srcml_write_start_element(wstate->unit, node.ns.prefix ? node.ns.prefix->c_str() : 0, node.name.c_str(), 0);
 
     // copy all the attributes
     {

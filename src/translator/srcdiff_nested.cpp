@@ -105,7 +105,7 @@ int is_block_type(const node_set & structure) {
   if((xmlReaderTypes)structure.nodes().at(structure.at(0))->type != XML_READER_TYPE_ELEMENT)
     return -1;
 
-  if(structure.nodes().at(structure.at(0))->ns->href != SRCML_SRC_NAMESPACE_HREF)
+  if(structure.nodes().at(structure.at(0))->ns.href != SRCML_SRC_NAMESPACE_HREF)
     return -1;
 
   for(int i = 0; nesting[i].type; ++i)
@@ -134,7 +134,7 @@ bool is_nest_type(const node_set & structure,
   if((xmlReaderTypes)structure.nodes().at(structure.at(0))->type != XML_READER_TYPE_ELEMENT)
     return false;
 
-    if(structure.nodes().at(structure.at(0))->ns->href != SRCML_SRC_NAMESPACE_HREF)
+    if(structure.nodes().at(structure.at(0))->ns.href != SRCML_SRC_NAMESPACE_HREF)
     return true;
 
   for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i)
@@ -455,8 +455,8 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
   const std::string & original_tag = set_original.nodes().at(original_pos)->name;
   const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
 
-  const std::string & original_uri = set_original.nodes().at(original_pos)->ns->href;
-  const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns->href;
+  const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
+  const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
 
   if(original_tag != modified_tag && !srcdiff_match::is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri)) return true;
 

@@ -65,8 +65,8 @@ edit * srcdiff_edit_correction::correct() {
 				const std::string & original_tag = set_original.nodes().at(original_pos)->name;
 			    const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
 
-				const std::string & original_uri = set_original.nodes().at(original_pos)->ns->href;
-				const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns->href;
+				const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
+				const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
 
 				if(!(original_tag == modified_tag && original_uri == modified_uri)
 					&& !srcdiff_match::is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri))

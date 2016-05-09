@@ -1015,8 +1015,8 @@ bool reject_match_same(const srcdiff_measure & measure,
   const std::string & original_tag = set_original.nodes().at(original_pos)->name;
   const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
 
-  const std::string & original_uri = set_original.nodes().at(original_pos)->ns->href;
-  const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns->href;
+  const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
+  const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
 
   if(original_tag != modified_tag) return true;
 
@@ -1182,8 +1182,8 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
   const std::string & original_tag = set_original.nodes().at(original_pos)->name;
   const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
 
-  const std::string & original_uri = set_original.nodes().at(original_pos)->ns->href;
-  const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns->href;
+  const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
+  const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
 
   std::string original_name;
   if(original_tag == "class" || original_tag == "struct" || original_tag == "union" || original_tag == "enum") {
@@ -1296,8 +1296,8 @@ bool srcdiff_match::reject_match(const srcdiff_measure & measure,
   const std::string & original_tag = set_original.nodes().at(original_pos)->name;
   const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
 
-  const std::string & original_uri = set_original.nodes().at(original_pos)->ns->href;
-  const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns->href;
+  const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
+  const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
 
   if(original_tag == modified_tag && original_uri == modified_uri)
     return reject_match_same(measure, set_original, set_modified);
