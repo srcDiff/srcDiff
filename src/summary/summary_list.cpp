@@ -429,7 +429,7 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
     const std::shared_ptr<profile_t> & start_profile = profile->child_change_profiles[pos];
 
     /** @todo may want to optimze to enum */
-    std::map<std::string, std::vector<const std::shared_ptr<profile_t>>> entity_deleted, entity_inserted;
+    std::map<std::string, std::vector<std::shared_ptr<profile_t>>> entity_deleted, entity_inserted;
     for(; pos < profile->child_change_profiles.size() && profile->child_change_profiles[pos]->is_replace; ++pos) {
 
         const std::shared_ptr<profile_t> & replace_profile = profile->child_change_profiles[pos];                    
@@ -457,7 +457,7 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
     size_t number_deleted_types  = entity_deleted.size();
     bool is_comment_deleted = entity_deleted.find("comment") != entity_deleted.end();
     size_t number_syntax_deletions = 0;
-    std::for_each(entity_deleted.begin(), entity_deleted.end(), [&number_syntax_deletions] (const std::pair<std::string, std::vector<const std::shared_ptr<profile_t>>> & entity) {
+    std::for_each(entity_deleted.begin(), entity_deleted.end(), [&number_syntax_deletions] (const std::pair<std::string, std::vector<std::shared_ptr<profile_t>>> & entity) {
 
         if(entity.first != "comment")
             number_syntax_deletions += entity.second.size();
@@ -467,7 +467,7 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
     size_t number_inserted_types = entity_inserted.size();
     bool is_comment_inserted = entity_inserted.find("comment") != entity_inserted.end();
     size_t number_syntax_insertions = 0;
-    std::for_each(entity_inserted.begin(), entity_inserted.end(), [&number_syntax_insertions] (const std::pair<std::string, std::vector<const std::shared_ptr<profile_t>>> & entity) {
+    std::for_each(entity_inserted.begin(), entity_inserted.end(), [&number_syntax_insertions] (const std::pair<std::string, std::vector<std::shared_ptr<profile_t>>> & entity) {
 
         if(entity.first != "comment")
             number_syntax_insertions += entity.second.size();
@@ -506,9 +506,9 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
 
         if(number_deleted_types == 1 || (entity_deleted["comment"].size() != 0 && number_deleted_types == 2)) {
 
-            std::map<std::string, std::vector<const std::shared_ptr<profile_t>>>::const_iterator entity
+            std::map<std::string, std::vector<std::shared_ptr<profile_t>>>::const_iterator entity
             = std::find_if_not(entity_deleted.begin(), entity_deleted.end(),
-                [](const std::pair<std::string, std::vector<const std::shared_ptr<profile_t>>> & entity) { return entity.first == "comment"; });
+                [](const std::pair<std::string, std::vector<std::shared_ptr<profile_t>>> & entity) { return entity.first == "comment"; });
 
             number_original = entity->second.size();
             original_type = get_type_string(entity->second.back());
@@ -534,9 +534,9 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
 
         if(number_inserted_types == 1 || (entity_inserted["comment"].size() != 0 && number_inserted_types == 2)) {
 
-            std::map<std::string, std::vector<const std::shared_ptr<profile_t>>>::const_iterator entity
+            std::map<std::string, std::vector<std::shared_ptr<profile_t>>>::const_iterator entity
             = std::find_if_not(entity_inserted.begin(), entity_inserted.end(),
-                [](const std::pair<std::string, std::vector<const std::shared_ptr<profile_t>>> & entity) { return entity.first == "comment"; });
+                [](const std::pair<std::string, std::vector<std::shared_ptr<profile_t>>> & entity) { return entity.first == "comment"; });
 
             number_modified = entity->second.size();
             modified_type = get_type_string(entity->second.back());
