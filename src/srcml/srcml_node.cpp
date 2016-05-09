@@ -62,7 +62,7 @@ bool srcml_node::srcml_attr::operator!=(const srcml_attr & attr) const {
 
 }
 
-srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type), extra(node.extra), is_empty(node.extra), free(false), move(0), is_simple(true) {
+srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type), ns(), extra(node.extra), is_empty(node.extra), free(false), move(0), is_simple(true) {
 
   name = std::string((const char *)node.name);
 
