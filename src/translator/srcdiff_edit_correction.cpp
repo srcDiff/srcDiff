@@ -11,6 +11,37 @@ srcdiff_edit_correction::srcdiff_edit_correction(const node_sets & sets_original
 						                         edit * edit_script) 
 	: sets_original(sets_original), sets_modified(sets_modified), edits(edit_script) {}
 
+static void split_change(edit * delete_edit, edit * insert_edit, int original_pos, int modified_pos) {
+
+	int original_sequence_one_offset = delete_edit->offset_sequence_one;
+	int original_sequence_two_offset = delete_edit->offset_sequence_two;
+	int original_length = delete_edit->length;
+
+	int modified_sequence_one_offset = insert_edit->offset_sequence_one;
+	int modified_sequence_two_offset = insert_edit->offset_sequence_two;
+	int modified_length = insert_edit->length;
+
+	edit * left_delete = nullptr, * right_delete = nullptr,
+		 * left_insert = nullptr, * right_insert = nullptr;
+
+	if(original_pos != 0)
+		left_delete = delete_edit;
+	else
+		right_delete = delete_edit;
+
+	if(modified_pos != 0)
+		left_insert = insert_edit;
+	else
+		right_insert = insert_edit;
+
+	if(original_pos != 0 && original_pos != (original_length - 1))
+		right_delete = (struct edit *)malloc(sizeof(struct edit));
+
+	if(modified_pos != 0 && modified_pos != (modified_length - 1))
+		right_insert = (struct edit *)malloc(sizeof(struct edit));
+
+}
+
 edit * srcdiff_edit_correction::correct() {
 
 	for(edit * edit_script = edits; edit_script != nullptr; edit_script = edit_script->next) {
