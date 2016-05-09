@@ -59,12 +59,12 @@ protected:
 public:
 
   view_t(const std::string & output_filename,
-            const std::string & syntax_highlight,
-            const std::string & theme, 
-            bool ignore_all_whitespace,
-            bool ignore_whitespace,
-            bool ignore_comments,
-            bool is_html);
+         const std::string & syntax_highlight,
+         const std::string & theme, 
+         bool ignore_all_whitespace,
+         bool ignore_whitespace,
+         bool ignore_comments,
+         bool is_html);
   virtual ~view_t();
 
   void transform(const std::string & srcdiff, const std::string & xml_encoding);
