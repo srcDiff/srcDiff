@@ -11,7 +11,7 @@ srcdiff_edit_correction::srcdiff_edit_correction(const node_sets & sets_original
 						                         edit * edit_script) 
 	: sets_original(sets_original), sets_modified(sets_modified), edits(edit_script) {}
 
-static void split_change(edit * delete_edit, edit * insert_edit, int original_pos, int modified_pos) {
+static edit * split_change(edit * delete_edit, edit * insert_edit, int original_pos, int modified_pos) {
 
 	int original_sequence_one_offset = delete_edit->offset_sequence_one;
 	int original_sequence_two_offset = delete_edit->offset_sequence_two;
@@ -87,6 +87,28 @@ static void split_change(edit * delete_edit, edit * insert_edit, int original_po
 	else
 		common_edit->next = modified_next;
 
+	if(original_previous) {
+
+		if(left_delete)
+			original_previous->next = left_delete;
+		else if(left_insert)
+			original_previous->next = left_insert;
+		else
+			original_previous->next = common_edit;
+
+	}
+
+	if(modified_next) {
+
+		if(right_insert)
+			modified_next->previous = right_insert;
+		else if(right_delete)
+			modified_next->previous = right_delete;
+		else
+			modified_next->previous = common_edit;
+
+	}
+
 	if(left_delete) {
 
 		left_delete->operation = SES_DELETE;
@@ -140,10 +162,17 @@ static void split_change(edit * delete_edit, edit * insert_edit, int original_po
 
 	}
 
+	if(right_insert)
+		return right_insert;
+	else if(right_delete)
+		return right_delete;
+	else
+		return common_edit;
+
 }
 
 edit * srcdiff_edit_correction::correct() {
-	return edits;
+
 	for(edit * edit_script = edits; edit_script != nullptr; edit_script = edit_script->next) {
 
 		if(edit_script->length > 3) continue;
@@ -256,19 +285,17 @@ edit * srcdiff_edit_correction::correct() {
 
 					}
 
-					edit_script = insert_edit;				
+					edit_script = split_change(delete_edit, insert_edit, i, j);
 
-					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << original_set_pos << '\n';
-					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << modified_set_pos << "\n\n";
+					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << original_set_pos << '\n';
+					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << modified_set_pos << "\n\n";
 
-					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << delete_edit->offset_sequence_one << '\n';
-					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << delete_edit->offset_sequence_two << '\n';
-					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << delete_edit->length << "\n\n";
-					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << insert_edit->offset_sequence_one << '\n';
-					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << insert_edit->offset_sequence_two << '\n';
-					std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << insert_edit->length << "\n\n";
-
-					split_change(delete_edit, insert_edit, i, j);
+					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << delete_edit->offset_sequence_one << '\n';
+					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << delete_edit->offset_sequence_two << '\n';
+					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << delete_edit->length << "\n\n";
+					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << insert_edit->offset_sequence_one << '\n';
+					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << insert_edit->offset_sequence_two << '\n';
+					// std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << insert_edit->length << "\n\n";
 
 					goto end_move_check;
 

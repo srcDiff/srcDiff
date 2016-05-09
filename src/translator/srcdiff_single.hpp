@@ -1,9 +1,9 @@
 #ifndef INCLUDED_SRCDIFFSINGLE_HPP
 #define INCLUDED_SRCDIFFSINGLE_HPP
 
-#include <srcdiff_many.hpp>
+#include <srcdiff_diff.hpp>
 
-class srcdiff_single : public srcdiff_many {
+class srcdiff_single : public srcdiff_diff {
 
 protected:
 
@@ -17,7 +17,7 @@ private:
 
 public:
 
-	srcdiff_single(const srcdiff_many & diff, unsigned int start_original, unsigned int start_modified);
+	srcdiff_single(const srcdiff_diff & diff, unsigned int start_original, unsigned int start_modified);
 
 	virtual void output();
 

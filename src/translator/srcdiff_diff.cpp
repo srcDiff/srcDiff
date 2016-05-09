@@ -2,6 +2,7 @@
 
 #include <srcdiff_many.hpp>
 #include <srcdiff_change.hpp>
+#include <srcdiff_single.hpp>
 #include <srcdiff_whitespace.hpp>
 #include <srcdiff_common.hpp>
 #include <srcdiff_move.hpp>
@@ -59,6 +60,16 @@ void srcdiff_diff::output() {
   edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
+    std::cerr << "ops: " << edits->operation;
+    if(edits->next) {
+      std::cerr << ", " << edits->next->operation;
+
+      if(edits->next->next)
+        std::cerr << ", " << edits->next->next->operation;
+
+    }
+    std::cerr << '\n';
+
     // determine ending position to output
     diff_end_original = out.last_output_original();
     diff_end_modified = out.last_output_modified();
@@ -99,28 +110,43 @@ void srcdiff_diff::output() {
       // handle pure delete or insert
       switch (edits->operation) {
 
-      case SES_INSERT:
+        case SES_COMMON:
 
-        //fprintf(stderr, "HERE\n");
-        output_pure(0, node_sets_modified.at(edits->offset_sequence_two + edits->length - 1).back() + 1);
+          if((xmlReaderTypes)out.get_nodes_original().at(node_sets_original.at(edits->offset_sequence_one).at(0))->type != XML_READER_TYPE_TEXT) {
+
+            srcdiff_single diff(*this, edits->offset_sequence_one, edit_next->offset_sequence_two);
+            diff.output();
+
+          } else {
+
+            // syntax mismatch
+            output_change_whitespace(node_sets_original.at(edits->offset_sequence_one).back() + 1,
+              node_sets_modified.at(edit_next->offset_sequence_two).back() + 1);
+
+          }
+
+        case SES_INSERT:
+
+          //fprintf(stderr, "HERE\n");
+          output_pure(0, node_sets_modified.at(edits->offset_sequence_two + edits->length - 1).back() + 1);
 
 
-        // update for common
-        last_diff_original = edits->offset_sequence_one;
-        last_diff_modified = edits->offset_sequence_two + edits->length;
+          // update for common
+          last_diff_original = edits->offset_sequence_one;
+          last_diff_modified = edits->offset_sequence_two + edits->length;
 
-        break;
+          break;
 
-      case SES_DELETE:
+        case SES_DELETE:
 
-        //fprintf(stderr, "HERE\n");
-        output_pure(node_sets_original.at(edits->offset_sequence_one + edits->length - 1).back() + 1, 0);
+          //fprintf(stderr, "HERE\n");
+          output_pure(node_sets_original.at(edits->offset_sequence_one + edits->length - 1).back() + 1, 0);
 
-        // update for common
-        last_diff_original = edits->offset_sequence_one + edits->length;
-        last_diff_modified = edits->offset_sequence_two;
+          // update for common
+          last_diff_original = edits->offset_sequence_one + edits->length;
+          last_diff_modified = edits->offset_sequence_two;
 
-        break;
+          break;
       }
       
     }

@@ -15,7 +15,7 @@
 const std::string convert("convert");
 const srcml_node::srcml_attr diff_type(DIFF_TYPE, convert);
 
-srcdiff_single::srcdiff_single(const srcdiff_many & diff, unsigned int start_original, unsigned int start_modified) : srcdiff_many(diff), start_original(start_original), start_modified(start_modified) {}
+srcdiff_single::srcdiff_single(const srcdiff_diff & diff, unsigned int start_original, unsigned int start_modified) : srcdiff_diff(diff), start_original(start_original), start_modified(start_modified) {}
 
 static std::list<srcml_node::srcml_attr> merge_properties(const std::list<srcml_node::srcml_attr> & properties_original, const std::list<srcml_node::srcml_attr> & properties_modified) {
 
