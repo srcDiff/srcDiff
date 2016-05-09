@@ -60,16 +60,6 @@ void srcdiff_diff::output() {
   edit * edits = edit_script;
   for (; edits; edits = edits->next) {
 
-    std::cerr << "ops: " << edits->operation;
-    if(edits->next) {
-      std::cerr << ", " << edits->next->operation;
-
-      if(edits->next->next)
-        std::cerr << ", " << edits->next->next->operation;
-
-    }
-    std::cerr << '\n';
-
     // determine ending position to output
     diff_end_original = out.last_output_original();
     diff_end_modified = out.last_output_modified();
@@ -114,7 +104,7 @@ void srcdiff_diff::output() {
 
           if((xmlReaderTypes)out.get_nodes_original().at(node_sets_original.at(edits->offset_sequence_one).at(0))->type != XML_READER_TYPE_TEXT) {
 
-            srcdiff_single diff(*this, edits->offset_sequence_one, edit_next->offset_sequence_two);
+            srcdiff_single diff(*this, edits->offset_sequence_one, edits->offset_sequence_two);
             diff.output();
 
           } else {

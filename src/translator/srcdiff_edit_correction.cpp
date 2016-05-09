@@ -68,6 +68,7 @@ edit * srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_e
 		throw std::bad_alloc();
 
 	}
+
 	common_edit->operation = SES_COMMON;
 	common_edit->offset_sequence_one = original_sequence_one_offset + original_pos;
 	common_edit->offset_sequence_two = modified_sequence_two_offset + modified_pos;
@@ -124,7 +125,7 @@ edit * srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_e
 
 		left_insert->operation = SES_INSERT;
 
-		int offset_one = left_delete ? left_delete->offset_sequence_one + left_delete->length : modified_sequence_one_offset;
+		int offset_one = left_delete ? left_delete->offset_sequence_one + left_delete->length : original_sequence_one_offset;
 		left_insert->offset_sequence_one = offset_one;
 		left_insert->offset_sequence_two = modified_sequence_two_offset;
 		left_insert->length = modified_pos;
@@ -141,7 +142,6 @@ edit * srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_e
 		right_delete->length = original_length - original_pos - 1;
 		right_delete->previous = common_edit;
 		right_delete->next = right_insert ? right_insert : modified_next;
-
 
 	}
 
@@ -259,6 +259,8 @@ edit * srcdiff_edit_correction::correct() {
 				srcdiff_text_measure measure(set_original, set_modified);
 				measure.compute();
 
+				std::size_t new_original_offset = i;
+				std::size_t new_modified_offset = j;
 				if(measure.similarity() >= 0.9 * measure.min_length()
 					&& 3 * common_set_text.size() < measure.similarity()) {
 
@@ -268,12 +270,15 @@ edit * srcdiff_edit_correction::correct() {
 					if(edit_script->operation == SES_DELETE) {
 
 						--insert_edit->offset_sequence_two;
+						++new_modified_offset;
 
 					} else {
 
 						--delete_edit->offset_sequence_one;
+						++new_original_offset;
 						delete_edit->offset_sequence_two -= insert_edit->length;
 						insert_edit->offset_sequence_one += delete_edit->length;
+
 						
 					}
 
@@ -297,7 +302,7 @@ edit * srcdiff_edit_correction::correct() {
 
 					}
 
-					edit_script = split_change(delete_edit, insert_edit, i, j);
+					edit_script = split_change(delete_edit, insert_edit, new_original_offset, new_modified_offset);
 
 					goto end_move_check;
 
