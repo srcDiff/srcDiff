@@ -240,15 +240,21 @@ void srcdiff_many::output() {
 
       if(modified_moved.at(pos).first == MOVE) {
 
-        int move_id = node_sets_modified.nodes().at(node_sets_modified.at(edit_next->offset_sequence_two + pos).at(0))->move;
+        const node_set & move_set = node_sets_modified.at(edit_next->offset_sequence_two + pos);
+        int move_id = node_sets_modified.nodes().at(move_set.at(0))->move;
         std::unordered_map<int, int>::iterator itr = move_list.find(move_id);
         if(itr != move_list.end()) {
 
+          const node_set & original_set = node_sets_original.at(edit_next->offset_sequence_one + itr->second);
+          node_sets_original.nodes().at(original_set.at(0))->move = 0;
+          node_sets_original.nodes().at(original_set.back())->move = 0;         
           original_moved.at(itr->second).first = SES_COMMON;
           original_moved.at(itr->second).second = pos;
 
           modified_moved.at(pos).first = SES_COMMON;
           modified_moved.at(pos).second = itr->second;
+          node_sets_modified.nodes().at(move_set.at(0))->move = 0;
+          node_sets_modified.nodes().at(move_set.back())->move = 0;
 
         }
         
