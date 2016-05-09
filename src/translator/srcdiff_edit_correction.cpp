@@ -41,12 +41,8 @@ static void split_change(edit * delete_edit, edit * insert_edit, int original_po
 	if(original_pos != 0 && original_pos != (original_length - 1)) {
 
 		right_delete = (struct edit *)malloc(sizeof(struct edit));
-		if(right_delete == nullptr) {
-
-			free(common_edit);
+		if(right_delete == nullptr)
 			throw std::bad_alloc();
-
-		}
 
 	}
 
@@ -54,8 +50,6 @@ static void split_change(edit * delete_edit, edit * insert_edit, int original_po
 
 		right_insert = (struct edit *)malloc(sizeof(struct edit));
 		if(right_insert == nullptr) {
-
-			free(common_edit);
 			if(original_pos != 0 && original_pos != (original_length - 1))
 				free(right_delete);
 			throw std::bad_alloc();
@@ -65,8 +59,15 @@ static void split_change(edit * delete_edit, edit * insert_edit, int original_po
 	}
 
 	edit * common_edit = (struct edit *)malloc(sizeof(struct edit));
-	if(common_edit == nullptr)
+	if(common_edit == nullptr) {
+
+		if(original_pos != 0 && original_pos != (original_length - 1))
+			free(right_delete);
+		if(modified_pos != 0 && modified_pos != (modified_length - 1))
+			free(right_insert);
 		throw std::bad_alloc();
+
+	}
 	common_edit->operation = SES_COMMON;
 	common_edit->offset_sequence_one = original_sequence_one_offset + original_pos;
 	common_edit->offset_sequence_two = modified_sequence_two_offset + modified_pos;
@@ -142,7 +143,7 @@ static void split_change(edit * delete_edit, edit * insert_edit, int original_po
 }
 
 edit * srcdiff_edit_correction::correct() {
-
+	return edits;
 	for(edit * edit_script = edits; edit_script != nullptr; edit_script = edit_script->next) {
 
 		if(edit_script->length > 3) continue;
