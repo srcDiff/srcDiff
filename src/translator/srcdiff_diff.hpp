@@ -7,13 +7,6 @@
 
 #include <vector>
 
-struct diff_nodes {
-
-  const srcml_nodes & nodes_original;
-  const srcml_nodes & nodes_modified;
-
-};
-
 class srcdiff_diff {
 
 protected:

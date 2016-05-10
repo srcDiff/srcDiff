@@ -3,6 +3,13 @@
 
 #include <node_sets.hpp>
 
+struct diff_nodes {
+
+  const srcml_nodes & nodes_original;
+  const srcml_nodes & nodes_modified;
+
+};
+
 namespace srcdiff_compare {
 
 	// diff node accessor function
