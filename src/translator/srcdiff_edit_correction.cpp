@@ -155,7 +155,7 @@ edit * srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_e
 		else
 			right_insert->offset_sequence_one = common_edit->offset_sequence_one + 1;
 
-		right_insert->offset_sequence_two = modified_pos + 1;
+		right_insert->offset_sequence_two = common_edit->offset_sequence_two + 1;
 		right_insert->length = modified_length - modified_pos - 1;
 		right_insert->previous = right_delete ? right_delete : common_edit;
 		right_insert->next = modified_next;
