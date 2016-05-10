@@ -12,7 +12,7 @@
 int move_id = 0;
 const std::string move("move");
 
-typedef std::tuple<int, int> move_info;
+typedef std::tuple<int, int, edit *> move_info;
 typedef std::vector<move_info> move_infos;
 
 srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation)
@@ -22,7 +22,8 @@ srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, 
 void add_construct(std::map<std::string, move_infos > & constructs,
                    const node_sets & sets,
                    int offset,
-                   int operation) {
+                   int operation,
+                   edit * edits) {
 
   std::string tag = sets.nodes().at(sets.at(offset).at(0))->name;
 
@@ -32,7 +33,7 @@ void add_construct(std::map<std::string, move_infos > & constructs,
 
   }
 
-  constructs[tag].push_back(move_info(offset, operation));
+  constructs[tag].push_back(move_info(offset, operation, edits));
 
 }
 
@@ -52,29 +53,51 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
   for(edit * edits = edit_script; edits; edits = edits->next) {
 
+    if(is_change(edits)) {
+
+      for(int i = 0; i < edits->length; ++i) {
+
+        add_construct(constructs, node_sets_original, edits->offset_sequence_one + i, SES_DELETE, edits);
+
+      }
+
+      edit * next_edit = edits->next;
+      for(int i = 0; i < next_edit->length; ++i) {
+
+        add_construct(constructs, node_sets_modified, next_edit->offset_sequence_two + i, SES_INSERT, edits);
+
+      }
+
+      edits = edits->next;
+      continue;
+    }
+
     switch(edits->operation) {
 
-    case SES_INSERT :
+      case SES_COMMON:
+        break;
 
-      for(int i = 0; i < edits->length; ++i) {
+      case SES_INSERT :
 
-        add_construct(constructs, node_sets_modified, edits->offset_sequence_two + i, SES_INSERT);
+        for(int i = 0; i < edits->length; ++i) {
+
+          add_construct(constructs, node_sets_modified, edits->offset_sequence_two + i, SES_INSERT, edits);
+
+        }
+
+        break;
+
+      case SES_DELETE :
+
+        for(int i = 0; i < edits->length; ++i) {
+
+          add_construct(constructs, node_sets_original, edits->offset_sequence_one + i, SES_DELETE, edits);
+
+        }
+
+        break;
 
       }
-
-      break;
-
-    case SES_DELETE :
-
-      for(int i = 0; i < edits->length; ++i) {
-
-        add_construct(constructs, node_sets_original, edits->offset_sequence_one + i, SES_DELETE);
-
-      }
-
-      break;
-
-    }
 
   }
 
@@ -122,8 +145,11 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
           continue;
         */
 
-      	if(is_move(node_sets_one->at(std::get<0>(elements.at(i)))) || is_move(node_sets_two->at(std::get<0>(elements.at(j)))))
-		     continue;
+        if(is_move(node_sets_one->at(std::get<0>(elements.at(i)))) || is_move(node_sets_two->at(std::get<0>(elements.at(j)))))
+         continue;
+
+        if(std::get<2>(elements.at(i)) == std::get<2>(elements.at(j)))
+          continue;
 
         ++move_id;
         std::shared_ptr<srcml_node> start_node_one = std::make_shared<srcml_node>(*nodes_one->at(node_sets_one->at(std::get<0>(elements.at(i))).at(0)));
@@ -158,8 +184,6 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
 }
 
-static std::map<int, int> id2attribute;
-
 void srcdiff_move::output() {
 
   static int attribute_id = 0;
@@ -179,22 +203,7 @@ void srcdiff_move::output() {
 
   int id = rbuf->nodes.at(position)->move;
 
-
-  std::map<int, int>::iterator itr = id2attribute.find(id);
-  int output_id = 0;
-  if(itr == id2attribute.end()) {
-
-    output_id = ++attribute_id;
-    id2attribute[id] = output_id;
-
-  } else {
-
-    output_id = itr->second;
-    id2attribute.erase(itr);
-
-  }
-
-  start_node->properties.emplace_back(move, std::to_string(output_id));
+  start_node->properties.emplace_back(move, std::to_string(id));
 
   output_node(start_node, operation, true);
 

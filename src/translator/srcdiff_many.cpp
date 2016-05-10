@@ -209,62 +209,6 @@ void srcdiff_many::output() {
   int_pairs original_moved = moves.at(0);
   int_pairs modified_moved = moves.at(1);
 
-  // assumption only one common pair possible
-  for(unsigned int i = 0, j = 0; i < original_moved.size() && j < modified_moved.size(); ++i, ++j) {
-
-    unsigned int start_original = i;
-
-    unsigned int start_modified = j;
-
-    unsigned int end_original = start_original;
-
-    unsigned int end_modified = start_modified;
-
-    for(; end_original < original_moved.size() && (original_moved.at(end_original).first == SES_DELETE || original_moved.at(end_original).first == MOVE); ++end_original)
-      ;
-    for(; end_modified < modified_moved.size() && (modified_moved.at(end_modified).first == SES_INSERT || modified_moved.at(end_modified).first == MOVE); ++end_modified)
-      ;
-
-    std::unordered_map<int, int> move_list(end_original - start_original);
-    for(int pos = start_original; pos < end_original; ++pos) {
-
-      if(original_moved.at(pos).first == MOVE) {
-
-        int move_id = node_sets_original.nodes().at(node_sets_original.at(edits->offset_sequence_one + pos).at(0))->move;
-        move_list.emplace(move_id, pos);
-
-      }
-
-    }
-
-    for(int pos = start_modified; pos < end_modified; ++pos) {
-
-      if(modified_moved.at(pos).first == MOVE) {
-
-        const node_set & move_set = node_sets_modified.at(edit_next->offset_sequence_two + pos);
-        int move_id = node_sets_modified.nodes().at(move_set.at(0))->move;
-        std::unordered_map<int, int>::iterator itr = move_list.find(move_id);
-        if(itr != move_list.end()) {
-
-          const node_set & original_set = node_sets_original.at(edit_next->offset_sequence_one + itr->second);
-          node_sets_original.nodes().at(original_set.at(0))->move = 0;
-          node_sets_original.nodes().at(original_set.back())->move = 0;         
-          original_moved.at(itr->second).first = SES_COMMON;
-          original_moved.at(itr->second).second = pos;
-
-          modified_moved.at(pos).first = SES_COMMON;
-          modified_moved.at(pos).second = itr->second;
-          node_sets_modified.nodes().at(move_set.at(0))->move = 0;
-          node_sets_modified.nodes().at(move_set.back())->move = 0;
-
-        }
-        
-      }
-
-    }
-
-  }
-
   unsigned int i = 0;
   unsigned int j = 0;
   for(; i < original_moved.size() && j < modified_moved.size(); ++i, ++j) {
