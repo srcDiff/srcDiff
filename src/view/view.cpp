@@ -371,7 +371,7 @@ void view_t::startElement(const char * localname,
 
     }
 
-    if(literal_type == "string")
+    if(literal_type == "string" || literal_type == "char")
       in_string = true;
     else
       in_literal = true;
