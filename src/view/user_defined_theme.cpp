@@ -21,44 +21,57 @@ private:
     int red;
     int green;
     int blue;
+    int alpha;
 
 public:
 
     color_t()
         : red(0xff),
           green(0xff),
-          blue(0xff) {}
+          blue(0xff),
+          alpha(0xff) {}
 
     color_t(const color_t & that)
         : red(that.red),
           green(that.green),
-          blue(that.blue) {}
+          blue(that.blue),
+          alpha(that.alpha) {}
 
-    color_t(const std::string hex_string) {
+    color_t(const std::string hex_string) : alpha(255) {
 
-        if(hex_string.size() != 6 || 
-            !(std::isdigit(hex_string[0])
+        if((hex_string.size() != 6 && hex_string.size() != 8)
+          || !(std::isdigit(hex_string[0])
                 || (hex_string[0] >= 'a' && hex_string[0] <='f')
                 || (hex_string[0] >= 'A' && hex_string[0] <='F')))
             throw boost::program_options::error("invalid value for color '" + hex_string + "', must be hex: e.g., xxxxxx");
 
-        red = std::stoi(hex_string.substr(1, 2), 0, 16);
-        green = std::stoi(hex_string.substr(3, 2), 0, 16);
-        blue = std::stoi(hex_string.substr(5, 2), 0, 16);
+        red = std::stoi(hex_string.substr(0, 2), 0, 16);
+        green = std::stoi(hex_string.substr(2, 2), 0, 16);
+        blue = std::stoi(hex_string.substr(4, 2), 0, 16);
+
+        if(hex_string.size() == 8 )
+            alpha = std::stoi(hex_string.substr(6, 2), 0, 16);
+
 
     }
 
     std::string to_html() const {
 
-        return std::string("rgb(") + std::to_string(red) + ", "
+        if(alpha == 0)
+            return "transparent";
+
+        return std::string("rgba(") + std::to_string(red) + ", "
             + std::to_string(green) + ", "
-            + std::to_string(blue) + ')';
+            + std::to_string(blue) + ", "
+            + std::to_string(alpha) + ')';
 
     }
 
     std::string to_ansi() const {
 
-        return "";
+        int ansi_color = 16 + 36 * (red / 43) + 6 * (green / 43) + (blue / 43);
+
+        return std::to_string(ansi_color);
 
     }
 
@@ -160,23 +173,23 @@ user_defined_theme::user_defined_theme(const std::string & highlight_level,
 
     } else {
 
-        line_number_color = "\x1b[" + vm["line-number-color-color"].as<color_t>().to_ansi() + 'm';
+        line_number_color = "\x1b[" + vm["line-number-color"].as<color_t>().to_ansi() + 'm';
 
-        common_color = "\x1b[" + vm["common-color"].as<color_t>().to_ansi() + 'm';
-        delete_color = "\x1b[" + vm["delete-color"].as<color_t>().to_ansi() + 'm';
-        insert_color = "\x1b[" + vm["insert-color"].as<color_t>().to_ansi() + 'm';
+        common_color = "\x1b[38;5;" + vm["common-color"].as<color_t>().to_ansi() + 'm';
+        delete_color = "\x1b[9;48;5;" + vm["delete-color"].as<color_t>().to_ansi() + ";1m";
+        insert_color = "\x1b[48;5;" + vm["insert-color"].as<color_t>().to_ansi() + ";1m";
 
-        keyword_color = "\x1b[" + vm["keyword-color"].as<color_t>().to_ansi() + 'm';
-        storage_color = "\x1b[" + vm["storage-color"].as<color_t>().to_ansi() + 'm';
-        type_color    = "\x1b[" + vm["type-color"].as<color_t>().to_ansi() + 'm';
+        keyword_color = "\x1b[38;5;" + vm["keyword-color"].as<color_t>().to_ansi() + 'm';
+        storage_color = "\x1b[38;5;" + vm["storage-color"].as<color_t>().to_ansi() + 'm';
+        type_color    = "\x1b[38;5;" + vm["type-color"].as<color_t>().to_ansi() + 'm';
 
-        comment_color = "\x1b[" + vm["comment-color"].as<color_t>().to_ansi() + 'm';
-        number_color  = "\x1b[" + vm["number-color"].as<color_t>().to_ansi() + 'm';
-        string_color  = "\x1b[" + vm["string-color"].as<color_t>().to_ansi() + 'm';
+        comment_color = "\x1b[38;5;" + vm["comment-color"].as<color_t>().to_ansi() + 'm';
+        number_color  = "\x1b[38;5;" + vm["number-color"].as<color_t>().to_ansi() + 'm';
+        string_color  = "\x1b[38;5;" + vm["string-color"].as<color_t>().to_ansi() + 'm';
 
-        function_name_color = "\x1b[" + vm["function-name-color"].as<color_t>().to_ansi() + 'm';
-        class_name_color    = "\x1b[" + vm["class-name-color"].as<color_t>().to_ansi() + 'm';
-        call_name_color     = "\x1b[" + vm["call-name-color"].as<color_t>().to_ansi() + 'm';
+        function_name_color = "\x1b[38;5;" + vm["function-name-color"].as<color_t>().to_ansi() + 'm';
+        class_name_color    = "\x1b[38;5;" + vm["class-name-color"].as<color_t>().to_ansi() + 'm';
+        call_name_color     = "\x1b[38;5;" + vm["call-name-color"].as<color_t>().to_ansi() + 'm';
 
     }
 
