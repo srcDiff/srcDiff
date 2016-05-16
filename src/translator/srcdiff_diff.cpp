@@ -108,7 +108,7 @@ void srcdiff_diff::output() {
 
           } else {
 
-            // syntax mismatch
+            // common text nodes
             output_common(node_sets_original.at(edits->offset_sequence_one).back() + 1,
                           node_sets_modified.at(edits->offset_sequence_two).back() + 1);
 
