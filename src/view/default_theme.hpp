@@ -20,7 +20,6 @@ private:
 public:
 
     default_theme(const std::string & highlight_level, bool is_html);
-    std::string token2color(const std::string & token, const std::string & parent) const;
 
 };
 

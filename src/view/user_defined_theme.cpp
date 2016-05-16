@@ -1,14 +1,19 @@
 /**
- *  @file default_theme.cpp
+ *  @file user_defined_theme.cpp
  *
- *  Specifies default color scheme.
+ *  Specifies monokai color scheme.
  *
  *  @author Michael John Decker <mdecker6@kent.edu>
  */
 
-#include <default_theme.hpp>
+#include <user_defined_theme.hpp>
 
-default_theme::default_theme(const std::string & highlight_level, bool is_html)
+void parse_user_definition_file(const std::string & theme_file) {
+
+
+}
+
+user_defined_theme::user_defined_theme(const std::string & highlight_level, bool is_html)
     : theme_t(highlight_level, is_html) {
 
     if(is_html) {
