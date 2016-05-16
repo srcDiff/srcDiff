@@ -9,12 +9,14 @@
 srcdiff_edit_correction::srcdiff_edit_correction(const node_sets & sets_original,
                                                  const node_sets & sets_modified,
                                                  edit * edit_script) 
-    : sets_original(sets_original), sets_modified(sets_modified), edits(edit_script) {}
+    : sets_original(sets_original),
+      sets_modified(sets_modified),
+      edits(edit_script) {}
 
 void srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_edit,
-                                             int original_pos, int modified_pos,
-                                             edit *& start_edits,
-                                             edit *& last_edits) {
+                                           int original_pos, int modified_pos,
+                                           edit *& start_edits,
+                                           edit *& last_edits) {
 
     int original_sequence_one_offset = delete_edit->offset_sequence_one;
     int original_sequence_two_offset = delete_edit->offset_sequence_two;
@@ -188,10 +190,10 @@ void srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_edi
 
     last_edits = last_edit;
 
-    if(original_length == 1)
+    if(original_length == 1 && delete_edit)
         free(delete_edit);
 
-    if(modified_length == 1)
+    if(modified_length == 1 && insert_edit)
         free(insert_edit);
 
 }
@@ -227,7 +229,12 @@ edit * srcdiff_edit_correction::correct_common_inner(edit * change_edit) {
 
             edit * start_edits = nullptr;
             edit * last_edits = nullptr;
-            split_change(delete_edit, insert_edit, i, j, start_edits, last_edits);
+            split_change(delete_edit,
+                         insert_edit,
+                         i,
+                         j,
+                         start_edits, 
+                         last_edits);
 
             return last_edits;
 
@@ -380,10 +387,12 @@ edit * srcdiff_edit_correction::correct() {
                     }
 
                     edit * last_edits = nullptr;
-                    split_change(delete_edit, insert_edit,
-                                               new_original_offset, new_modified_offset,
-                                               edit_script,
-                                               last_edits);
+                    split_change(delete_edit,
+                                 insert_edit,
+                                 new_original_offset,
+                                 new_modified_offset,
+                                 edit_script,
+                                 last_edits);
                     edit_script = correct_common(edit_script);
 
                     goto end_move_check;
