@@ -17,7 +17,7 @@ monokai_theme::monokai_theme(const std::string & highlight_level, bool is_html)
         text_color        = "rgb(248 , 248, 242)";
         line_number_color = "grey";
 
-        common_color = "<span style=\"background-color: transparent\">";
+        common_color = "<span style=\"background-color: " + background_color + ";\">";
         delete_color = "<span style=\"color:grey; text-decoration: line-through;\"><span style=\"color: " + text_color + "; background-color: rgba(255, 187 ,187, 0.6); font-weight: bold;\">";
         insert_color = "<span style=\"background-color: rgba(187 , 255, 187, 0.7); font-weight: bold;\">";
 

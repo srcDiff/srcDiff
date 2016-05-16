@@ -17,7 +17,7 @@ default_theme::default_theme(const std::string & highlight_level, bool is_html)
         text_color        = "black";
         line_number_color = "grey";
 
-        common_color = "<span style=\"background-color: transparent;\">";
+        common_color = "<span style=\"background-color: " + background_color + ";\">";
         delete_color = "<span style=\"color: rgb(160, 160, 160); text-decoration: line-through;\"><span style=\"color: black; background-color: rgb(255,187,187); font-weight: bold;\">";
         insert_color = "<span style=\"background-color: rgb(0 , 250, 108); font-weight: bold;\">";
 

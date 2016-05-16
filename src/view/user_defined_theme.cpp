@@ -104,7 +104,6 @@ boost::program_options::variables_map parse_user_definition_file(const std::stri
     // Declare the supported options.
     boost::program_options::options_description desc("Theme options");
     desc.add_options()
-        ("background-color" ,   boost::program_options::value<color_t>(), "" )
         ("text-color"       ,   boost::program_options::value<color_t>(), "" )
         ("line-number-color",   boost::program_options::value<color_t>(), "" )
 
@@ -151,7 +150,7 @@ user_defined_theme::user_defined_theme(const std::string & highlight_level,
 
     if(is_html) {
 
-        background_color  = vm["background-color"].as<color_t>().to_html();
+        background_color  = vm["common-color"].as<color_t>().to_html();
         text_color        = vm["text-color"].as<color_t>().to_html();
         line_number_color = vm["line-number-color"].as<color_t>().to_html();
 
@@ -173,11 +172,11 @@ user_defined_theme::user_defined_theme(const std::string & highlight_level,
 
     } else {
 
-        background_color  = "\x1b[38;5;" + vm["background-color"].as<color_t>().to_ansi() + 'm';
+        background_color  = "\x1b[38;5;" + vm["common-color"].as<color_t>().to_ansi() + 'm';
         text_color        = "\x1b[38;5;" + vm["text-color"].as<color_t>().to_ansi() + 'm';
         line_number_color = "\x1b[38;5;" + vm["line-number-color"].as<color_t>().to_ansi() + 'm';
 
-        common_color = "\x1b[0m\x1b[48;5;" + vm["common-color"].as<color_t>().to_ansi() + 'm';
+        common_color = "\x1b[0m\x1b[48;5;" + vm["common-color"].as<color_t>().to_ansi() + 'm' + text_color;
         delete_color = "\x1b[9;48;5;" + vm["delete-color"].as<color_t>().to_ansi() + ";1m";
         insert_color = "\x1b[48;5;" + vm["insert-color"].as<color_t>().to_ansi() + ";1m";
 
