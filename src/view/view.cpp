@@ -9,6 +9,7 @@
 
 #include <default_theme.hpp>
 #include <monokai_theme.hpp>
+#include <user_defined_theme.hpp>
 
 #include <cstring>
 #include <cctype>
@@ -33,14 +34,13 @@ static std::string to_lower(const std::string & str) {
 }
 
 view_t::view_t(const std::string & output_filename,
-                     const std::string & syntax_highlight,
-                     const std::string & theme, 
-                     bool ignore_all_whitespace,
-                     bool ignore_whitespace,
-                     bool ignore_comments,
-                     bool is_html) 
+               const std::string & syntax_highlight,
+               const std::string & theme, 
+               bool ignore_all_whitespace,
+               bool ignore_whitespace,
+               bool ignore_comments,
+               bool is_html) 
   : diff_stack(), syntax_highlight(to_lower(syntax_highlight) != "none"),
-    theme(to_lower(theme) == "default" ? (theme_t *)new default_theme(to_lower(syntax_highlight), is_html) : (theme_t *)new monokai_theme(to_lower(syntax_highlight), is_html)), 
     in_comment(false),
     in_literal(false),
     in_string(false),
@@ -56,6 +56,15 @@ view_t::view_t(const std::string & output_filename,
     save_text(false),
     saved_type(),
     saved_text()  {
+
+    const std::string theme_lower = to_lower(theme);
+    const std::string syntax_level = to_lower(syntax_highlight);
+    if(theme_lower == "default")
+      this->theme = (theme_t *)new default_theme(syntax_level, is_html);
+    else if(theme_lower == "monokai")
+      this->theme = (theme_t *)new monokai_theme(to_lower(syntax_highlight), is_html);
+    else
+      this->theme = (theme_t *)new user_defined_theme(to_lower(syntax_highlight), is_html, theme);
 
   if(output_filename != "-")
     output = new std::ofstream(output_filename.c_str());

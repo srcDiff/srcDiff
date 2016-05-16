@@ -7,10 +7,13 @@
  */
 
 #include <user_defined_theme.hpp>
+
 #include <boost/program_options.hpp>
+
 #include <stdexcept>
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 
 class color_t {
 
@@ -26,25 +29,28 @@ public:
           green(0xff),
           blue(0xff) {}
 
-    color_t(const std::string color_hex) {
-
-        if(color_hex.size() != 7 || color_hex[0] != '#')
-            throw boost::program_options::error("invalid value for color, must be hex #ffffff");
-
-        red = std::stoi(color_hex.substr(1, 2), 0, 16);
-        green = std::stoi(color_hex.substr(3, 2), 0, 16);
-        blue = std::stoi(color_hex.substr(5, 2), 0, 16);
-
-    }
-
     color_t(const color_t & that)
         : red(that.red),
           green(that.green),
           blue(that.blue) {}
 
-    friend std::ostream & operator>>(std::ostream & out, const color_t & color) {
+    color_t(const std::string hex_string) {
 
-        out << '#' << std::hex << color.red << color.green << color.blue;
+        if(hex_string.size() != 6 || 
+            !(std::isdigit(hex_string[0])
+                || (hex_string[0] >= 'a' && hex_string[0] <='f')
+                || (hex_string[0] >= 'A' && hex_string[0] <='F')))
+            throw boost::program_options::error("invalid value for color '" + hex_string + "', must be hex: e.g., xxxxxx");
+
+        red = std::stoi(hex_string.substr(1, 2), 0, 16);
+        green = std::stoi(hex_string.substr(3, 2), 0, 16);
+        blue = std::stoi(hex_string.substr(5, 2), 0, 16);
+
+    }
+
+    friend std::ostream & operator<<(std::ostream & out, const color_t & color) {
+
+        out << '#' << std::hex << color.red << color.green << color.    blue;
 
         return out;
 
@@ -52,13 +58,21 @@ public:
 
     friend std::istream & operator>>(std::istream & in, color_t & color) {
 
+        std::string hex_string;
+        in >> hex_string;
+        color = color_t(hex_string);
+
         return in;
 
     }
 
 };
 
-void parse_user_definition_file(const std::string & theme_file) {
+void parse_user_definition_file(const std::string & theme_filename) {
+
+    std::ifstream theme_file(theme_filename.c_str());
+    if(!theme_file)
+        throw std::string("unable to open '" + theme_filename + '\'');
 
     // Declare the supported options.
     boost::program_options::options_description desc("Theme options");
@@ -88,7 +102,7 @@ void parse_user_definition_file(const std::string & theme_file) {
 
 try {
 
-    boost::program_options::store(boost::program_options::parse_config_file<char>(theme_file.c_str(), desc), vm);
+    boost::program_options::store(boost::program_options::parse_config_file<char>(theme_file, desc), vm);
     boost::program_options::notify(vm);
 
   } catch(const boost::program_options::error & e) {
@@ -100,8 +114,12 @@ try {
 
 }
 
-user_defined_theme::user_defined_theme(const std::string & highlight_level, bool is_html)
+user_defined_theme::user_defined_theme(const std::string & highlight_level,
+                                       bool is_html,
+                                       const std::string & theme_filename)
     : theme_t(highlight_level, is_html) {
+
+    parse_user_definition_file(theme_filename);
 
     if(is_html) {
 

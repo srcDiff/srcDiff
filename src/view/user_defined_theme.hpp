@@ -17,11 +17,13 @@
 class user_defined_theme : public theme_t {
 
 private:
-	void parse_user_definition_file(const std::string & theme_file);
+	// void parse_user_definition_file(const std::string & theme_file);
 
 public:
 
-    user_defined_theme(const std::string & highlight_level, bool is_html);
+    user_defined_theme(const std::string & highlight_level,
+    				   bool is_html,
+    				   const std::string & theme_filename);
 
 };
 
