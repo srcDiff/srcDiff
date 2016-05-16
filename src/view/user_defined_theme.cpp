@@ -49,7 +49,7 @@ public:
         green = std::stoi(hex_string.substr(2, 2), 0, 16);
         blue = std::stoi(hex_string.substr(4, 2), 0, 16);
 
-        if(hex_string.size() == 8 )
+        if(hex_string.size() == 8)
             alpha = std::stoi(hex_string.substr(6, 2), 0, 16);
 
 
@@ -173,9 +173,11 @@ user_defined_theme::user_defined_theme(const std::string & highlight_level,
 
     } else {
 
-        line_number_color = "\x1b[" + vm["line-number-color"].as<color_t>().to_ansi() + 'm';
+        background_color  = "\x1b[38;5;" + vm["background-color"].as<color_t>().to_ansi() + 'm';
+        text_color        = "\x1b[38;5;" + vm["text-color"].as<color_t>().to_ansi() + 'm';
+        line_number_color = "\x1b[38;5;" + vm["line-number-color"].as<color_t>().to_ansi() + 'm';
 
-        common_color = "\x1b[38;5;" + vm["common-color"].as<color_t>().to_ansi() + 'm';
+        common_color = "\x1b[0m\x1b[48;5;" + vm["common-color"].as<color_t>().to_ansi() + 'm';
         delete_color = "\x1b[9;48;5;" + vm["delete-color"].as<color_t>().to_ansi() + ";1m";
         insert_color = "\x1b[48;5;" + vm["insert-color"].as<color_t>().to_ansi() + ";1m";
 
