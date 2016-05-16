@@ -410,8 +410,20 @@ bool check_nest_name(const node_set & set_original,
 
   bool is_call_name_original = parent_original && (*parent_original)->name == "call";
   bool is_expr_name_original = parent_original && (*parent_original)->name == "expr";
+  // java does not have an expr in generics
+  bool is_argument_name_original = parent_original && (*parent_original)->name == "argument";
+  bool is_type_name_original = parent_original && (*parent_original)->name == "type";
+
   bool is_call_name_modified = parent_modified && (*parent_modified)->name == "call";
   bool is_expr_name_modified = parent_modified && (*parent_modified)->name == "expr";
+  // java does not have an expr in generics
+  bool is_argument_name_modified = parent_modified && (*parent_modified)->name == "argument";
+  bool is_type_name_modified = parent_modified && (*parent_modified)->name == "type";
+
+  if(is_type_name_original && (is_expr_name_modified || is_argument_name_modified))
+    return true;
+  if(is_type_name_modified && (is_expr_name_original || is_argument_name_original))
+    return true;
 
   if(is_call_name_original && is_expr_name_modified) {
 
