@@ -7,9 +7,96 @@
  */
 
 #include <user_defined_theme.hpp>
+#include <boost/program_options.hpp>
+#include <stdexcept>
+#include <iostream>
+#include <iomanip>
+
+class color_t {
+
+private:
+    int red;
+    int green;
+    int blue;
+
+public:
+
+    color_t()
+        : red(0xff),
+          green(0xff),
+          blue(0xff) {}
+
+    color_t(const std::string color_hex) {
+
+        if(color_hex.size() != 7 || color_hex[0] != '#')
+            throw boost::program_options::error("invalid value for color, must be hex #ffffff");
+
+        red = std::stoi(color_hex.substr(1, 2), 0, 16);
+        green = std::stoi(color_hex.substr(3, 2), 0, 16);
+        blue = std::stoi(color_hex.substr(5, 2), 0, 16);
+
+    }
+
+    color_t(const color_t & that)
+        : red(that.red),
+          green(that.green),
+          blue(that.blue) {}
+
+    friend std::ostream & operator>>(std::ostream & out, const color_t & color) {
+
+        out << '#' << std::hex << color.red << color.green << color.blue;
+
+        return out;
+
+    }
+
+    friend std::istream & operator>>(std::istream & in, color_t & color) {
+
+        return in;
+
+    }
+
+};
 
 void parse_user_definition_file(const std::string & theme_file) {
 
+    // Declare the supported options.
+    boost::program_options::options_description desc("Theme options");
+    desc.add_options()
+        ("background-color" ,   boost::program_options::value<color_t>(), "" )
+        ("text-color"       ,   boost::program_options::value<color_t>(), "" )
+        ("line-number-color",   boost::program_options::value<color_t>(), "" )
+
+        ("common-color",        boost::program_options::value<color_t>(), "" )
+        ("delete-color",        boost::program_options::value<color_t>(), "" )
+        ("insert-color",        boost::program_options::value<color_t>(), "" )
+
+        ("keyword-color",       boost::program_options::value<color_t>(), "" )
+        ("storage-color",       boost::program_options::value<color_t>(), "" )
+        ("type-color"   ,       boost::program_options::value<color_t>(), "" )
+
+        ("comment-color",       boost::program_options::value<color_t>(), "" )
+        ("number-color" ,       boost::program_options::value<color_t>(), "" )
+        ("string-color" ,       boost::program_options::value<color_t>(), "" )
+
+        ("function-name-color", boost::program_options::value<color_t>(), "" )
+        ("class-name-color"   , boost::program_options::value<color_t>(), "" )
+        ("call-name-color"    , boost::program_options::value<color_t>(), "" )
+    ;
+
+    boost::program_options::variables_map vm;
+
+try {
+
+    boost::program_options::store(boost::program_options::parse_config_file<char>(theme_file.c_str(), desc), vm);
+    boost::program_options::notify(vm);
+
+  } catch(const boost::program_options::error & e) {
+
+    std::cerr << "Exception: " << e.what() << '\n';
+    exit(1);
+
+  }
 
 }
 
