@@ -33,12 +33,12 @@ void srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_edi
 
     if(original_pos != 0)
         left_delete = delete_edit;
-    else
+    else if(original_length != 1)
         right_delete = delete_edit;
 
     if(modified_pos != 0)
         left_insert = insert_edit;
-    else
+    else if(modified_length != 1)
         right_insert = insert_edit;
 
     if(original_pos != 0 && original_pos != (original_length - 1)) {
@@ -187,6 +187,12 @@ void srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_edi
         last_edit = common_edit;
 
     last_edits = last_edit;
+
+    if(original_length == 1)
+        free(delete_edit);
+
+    if(modified_length == 1)
+        free(insert_edit);
 
 }
 

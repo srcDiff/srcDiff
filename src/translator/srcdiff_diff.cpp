@@ -81,7 +81,6 @@ void srcdiff_diff::output() {
 
     // detect and change
     edit * edit_next = edits->next;
-
     if(is_change(edits)) {
 
       //      fprintf(stderr, "HERE\n");
@@ -110,8 +109,8 @@ void srcdiff_diff::output() {
           } else {
 
             // syntax mismatch
-            output_change_whitespace(node_sets_original.at(edits->offset_sequence_one).back() + 1,
-              node_sets_modified.at(edit_next->offset_sequence_two).back() + 1);
+            output_common(node_sets_original.at(edits->offset_sequence_one).back() + 1,
+                          node_sets_modified.at(edits->offset_sequence_two).back() + 1);
 
           }
 
