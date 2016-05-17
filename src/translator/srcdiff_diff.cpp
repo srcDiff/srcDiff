@@ -49,6 +49,7 @@ void srcdiff_diff::output() {
 
   srcdiff_edit_correction corrector(node_sets_original, node_sets_modified, edit_script);
   edit_script = corrector.correct();
+  ses.set_script(edit_script);
 
   srcdiff_move::mark_moves(out.get_nodes_original(), node_sets_original, out.get_nodes_modified(), node_sets_modified, edit_script);
 

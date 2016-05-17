@@ -29,6 +29,7 @@ public:
   static int get_size_threshold();
 
   edit * get_script();
+  void set_script(edit * edit_script);
 
   template<typename T>
   int compute(const T & structure_one, const T & structure_two, bool approximate);
