@@ -301,19 +301,55 @@ void srcdiff_edit_correction::correct() {
         edit * insert_edit = nullptr;
         if(edit_script->operation == SES_DELETE) {
 
-            delete_edit = edit_script;
-            insert_edit = edit_script->next;
+            delete_edit = copy_edit(edit_script);
+            insert_edit = copy_edit(edit_script->next);
 
         } else {
 
-            delete_edit = edit_script->next;
-            insert_edit = edit_script;
+            delete_edit = copy_edit(edit_script->next);
+            insert_edit = copy_edit(edit_script);
 
         }
 
-        std::size_t common_pos = edit_script->operation == SES_DELETE ? 
-            edit_script->offset_sequence_one + edit_script->length
-            : edit_script->next->offset_sequence_one - 1;
+        ++delete_edit->length;
+        ++insert_edit->length;
+
+        std::size_t original_offset = 0;
+        std::size_t modified_offset = 0;
+        if(edit_script->operation == SES_DELETE) {
+
+            original_offset = delete_edit->length - 1;
+            modified_offset = 0;
+
+            --insert_edit->offset_sequence_two;
+
+        } else {
+
+            original_offset = 0;
+            modified_offset = insert_edit->length - 1;
+
+            --delete_edit->offset_sequence_one;
+            delete_edit->offset_sequence_two -= insert_edit->length;
+            insert_edit->offset_sequence_one += delete_edit->length;
+
+        }
+
+        edit * before = edit_script->previous;
+        edit * after = edit_script->next->next;
+
+        if(edit_script->operation == SES_INSERT) {
+
+            delete_edit->previous = edit_script->previous;
+
+            edit * after = delete_edit->next;
+
+            delete_edit->next = insert_edit;
+            insert_edit->previous = delete_edit;
+            insert_edit->next = after;
+
+        }
+
+        std::size_t common_pos = delete_edit->offset_sequence_one + original_offset;
 
         const node_set & common_set = sets_original.at(common_pos);
         node_set common_set_text(sets_original.nodes());
@@ -321,7 +357,11 @@ void srcdiff_edit_correction::correct() {
 
         for(int i = 0; i < delete_edit->length; ++i) {
 
+            if(i == original_offset) continue;
+
             for(int j = 0; j < insert_edit->length; ++j) {
+
+                if(j == modified_offset) continue;
 
                 std::size_t original_set_pos = delete_edit->offset_sequence_one + i;
                 std::size_t modified_set_pos = insert_edit->offset_sequence_two + j;
@@ -357,53 +397,25 @@ void srcdiff_edit_correction::correct() {
                 srcdiff_text_measure measure(set_original, set_modified);
                 measure.compute();
 
-                std::size_t new_original_offset = i;
-                std::size_t new_modified_offset = j;
                 if(measure.similarity() >= 0.9 * measure.min_length()
                     && 3 * common_set_text.size() < measure.similarity()) {
 
-                    ++delete_edit->length;
-                    ++insert_edit->length;
+                    if(before)
+                        before->next = delete_edit;
+                    if(after)
+                        after->previous = insert_edit;
 
-                    if(edit_script->operation == SES_DELETE) {
+                    free(edit_script);
+                    free(edit_script->next);
 
-                        --insert_edit->offset_sequence_two;
-                        ++new_modified_offset;
-
-                    } else {
-
-                        --delete_edit->offset_sequence_one;
-                        ++new_original_offset;
-                        delete_edit->offset_sequence_two -= insert_edit->length;
-                        insert_edit->offset_sequence_one += delete_edit->length;
-    
-                    }
-
-                    if(edit_script->operation == SES_INSERT) {
-
-                        if(edit_script->previous)
-                            edit_script->previous->next = delete_edit;
-            
-                        delete_edit->previous = edit_script->previous;
-
-                        edit * after = delete_edit->next;
-
-                        delete_edit->next = insert_edit;
-                        insert_edit->previous = delete_edit;
-                        insert_edit->next = after;
-                        if(after)
-                            after->previous = insert_edit;
-
-                        if(insert_edit == ses.get_script())
-                            ses.set_script(delete_edit);
-
-                    }
+                    if(edit_script == ses.get_script() || edit_script->next == ses.get_script())
+                        ses.set_script(delete_edit);
 
                     edit * last_edits = nullptr;
                     split_change(delete_edit,
                                  insert_edit,
-                                 new_original_offset,
-                                 new_modified_offset,
+                                 i,
+                                 j,
                                  edit_script,
                                  last_edits);
                     edit_script = correct_common(edit_script);

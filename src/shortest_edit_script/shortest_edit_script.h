@@ -66,6 +66,9 @@ void free_shortest_edit_script(struct edit * edit_script);
 */
 int is_change(const struct edit * edit_script);
 
+// shallow copy of an edit
+struct edit * copy_edit(struct edit * edit);
+
 #ifdef __cplusplus
 }
 #endif
