@@ -299,6 +299,9 @@ void srcdiff_edit_correction::correct() {
         // move mistaken as common
         edit * delete_edit = nullptr;
         edit * insert_edit = nullptr;
+        edit * before = edit_script->previous;
+        edit * after = edit_script->next->next;
+
         if(edit_script->operation == SES_DELETE) {
 
             delete_edit = copy_edit(edit_script);
@@ -334,14 +337,9 @@ void srcdiff_edit_correction::correct() {
 
         }
 
-        edit * before = edit_script->previous;
-        edit * after = edit_script->next->next;
-
         if(edit_script->operation == SES_INSERT) {
 
-            delete_edit->previous = edit_script->previous;
-
-            edit * after = delete_edit->next;
+            delete_edit->previous = before;
 
             delete_edit->next = insert_edit;
             insert_edit->previous = delete_edit;
