@@ -270,6 +270,14 @@ void srcdiff_edit_correction::correct() {
 
     for(edit * edit_script = ses.get_script(); edit_script != nullptr; edit_script = edit_script->next) {
 
+        /**
+            @todo extend to work if change on either side.
+            Maybe form combined delete edit and combined insert edit with common
+            search this for one to break skipping the common in each.
+            switch out edits if accept.
+
+        */
+
         if(edit_script->length > 3) continue;
 
         if(is_change(edit_script)) {
