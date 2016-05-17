@@ -272,9 +272,15 @@ void srcdiff_edit_correction::correct() {
 
         if(edit_script->length > 3) continue;
 
+        if(is_change(edit_script)) {
+            edit_script = edit_script->next;
+            continue;
+        }
+
         if(edit_script->next == nullptr) continue;
         if(edit_script->next->operation == SES_COMMON) continue;
         if(edit_script->next->length > 3) continue;
+        if(is_change(edit_script->next)) continue;
 
         if(edit_script->operation == edit_script->next->operation) continue;
 
@@ -362,8 +368,7 @@ void srcdiff_edit_correction::correct() {
                         ++new_original_offset;
                         delete_edit->offset_sequence_two -= insert_edit->length;
                         insert_edit->offset_sequence_one += delete_edit->length;
-
-                        
+    
                     }
 
                     if(edit_script->operation == SES_INSERT) {
