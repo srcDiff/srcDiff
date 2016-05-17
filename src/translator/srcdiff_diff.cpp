@@ -39,6 +39,9 @@ void srcdiff_diff::output() {
 
   int distance = ses.compute<node_sets>(node_sets_original, node_sets_modified, false);
 
+  srcdiff_edit_correction corrector(node_sets_original, node_sets_modified, ses);
+  corrector.correct();
+
   edit * edit_script = ses.get_script();
 
   if(distance < 0) {
@@ -47,11 +50,11 @@ void srcdiff_diff::output() {
     exit(distance);
   }
 
-  srcdiff_edit_correction corrector(node_sets_original, node_sets_modified, edit_script);
-  edit_script = corrector.correct();
-  ses.set_script(edit_script);
-
-  srcdiff_move::mark_moves(out.get_nodes_original(), node_sets_original, out.get_nodes_modified(), node_sets_modified, edit_script);
+  srcdiff_move::mark_moves(out.get_nodes_original(),
+                           node_sets_original,
+                           out.get_nodes_modified(),
+                           node_sets_modified,
+                           edit_script);
 
   int last_diff_original = 0;
   int last_diff_modified = 0;

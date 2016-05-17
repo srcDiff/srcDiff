@@ -8,10 +8,10 @@
 
 srcdiff_edit_correction::srcdiff_edit_correction(const node_sets & sets_original,
                                                  const node_sets & sets_modified,
-                                                 edit * edit_script) 
+                                                 class shortest_edit_script & ses) 
     : sets_original(sets_original),
       sets_modified(sets_modified),
-      edits(edit_script) {}
+      ses(ses) {}
 
 void srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_edit,
                                            int original_pos, int modified_pos,
@@ -175,8 +175,8 @@ void srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_edi
     else
         start_edit = common_edit;
 
-    if(delete_edit == edits)
-        edits = start_edit;
+    if(delete_edit == ses.get_script())
+       ses.set_script(start_edit);
 
     start_edits = start_edit;
 
@@ -266,9 +266,9 @@ edit * srcdiff_edit_correction::correct_common(edit * start_edit) {
 
 }
 
-edit * srcdiff_edit_correction::correct() {
+void srcdiff_edit_correction::correct() {
 
-    for(edit * edit_script = edits; edit_script != nullptr; edit_script = edit_script->next) {
+    for(edit * edit_script = ses.get_script(); edit_script != nullptr; edit_script = edit_script->next) {
 
         if(edit_script->length > 3) continue;
 
@@ -381,8 +381,8 @@ edit * srcdiff_edit_correction::correct() {
                         if(after)
                             after->previous = insert_edit;
 
-                        if(insert_edit == edits)
-                            edits = delete_edit;
+                        if(insert_edit == ses.get_script())
+                            ses.set_script(delete_edit);
 
                     }
 
@@ -408,7 +408,5 @@ end_move_check:
         /** @todo choose smaller move */
 
     }
-
-    return edits;
 
 }

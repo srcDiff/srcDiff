@@ -17,7 +17,7 @@ class srcdiff_edit_correction {
 private:
 	const node_sets & sets_original;
 	const node_sets & sets_modified;
-	edit * edits;
+	class shortest_edit_script & ses;
 
 private:
 	void split_change(edit * delete_edit, edit * insert_edit,
@@ -30,8 +30,8 @@ private:
 public:
 	srcdiff_edit_correction(const node_sets & sets_original,
 							const node_sets & sets_modified,
-							edit * edit_script);
-	edit * correct();
+							class shortest_edit_script & ses);
+	void correct();
 
 };
 
