@@ -38,7 +38,7 @@ node_sets::node_sets(const srcml_nodes & node_list, int start, int end, const no
 	      emplace_back(node_list, i);
 
       } else {
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+
 	      return;
 
       }
@@ -60,7 +60,7 @@ const srcml_nodes & node_sets::nodes() const {
 
 node_sets & node_sets::operator=(node_sets sets) {
 
-    std::swap(vec, sets.vec);
+    vec.swap(sets.vec);
     
   return *this;
 
