@@ -278,30 +278,44 @@ void srcdiff_edit_correction::correct() {
 
         */
 
+        // save pointer to before edits
+        edit * before = edit_script->previous;
+
+        // guard checks for first edit
+        if(edit_script->operation == SES_COMMON) continue;
         if(edit_script->length > 3) continue;
 
-        if(is_change(edit_script)) {
-            edit_script = edit_script->next;
-            continue;
-        }
+        // adjust if change
+        bool is_change_before = is_change(edit_script);
+        if(is_change_before) edit_script = edit_script->next;
 
+        // temp clause to maintain behaviour while adjusting code
+        if(is_change_before) continue;
+
+        // guard checks for next edit
         if(edit_script->next == nullptr) continue;
         if(edit_script->next->operation == SES_COMMON) continue;
         if(edit_script->next->length > 3) continue;
-        if(is_change(edit_script->next)) continue;
 
-        if(edit_script->operation == edit_script->next->operation) continue;
+        // save pointer to after common
+        bool is_change_after = is_change(edit_script->next);
+
+        // temp clause to maintain behaviour while adjusting code
+        if(is_change_after) continue;
+
+        if(    !is_change_before
+            && !is_change_after
+            && edit_script->operation == edit_script->next->operation) continue;
 
         int common_length = edit_script->next->offset_sequence_one - edit_script->offset_sequence_one;
         if(edit_script->operation == SES_DELETE) common_length -= edit_script->length;
         if(common_length != 1) continue;
 
+        edit * after = is_change_after ? edit_script->next->next->next : edit_script->next->next;
+
         // move mistaken as common
         edit * delete_edit = nullptr;
         edit * insert_edit = nullptr;
-        edit * before = edit_script->previous;
-        edit * after = edit_script->next->next;
-
         if(edit_script->operation == SES_DELETE) {
 
             delete_edit = copy_edit(edit_script);
