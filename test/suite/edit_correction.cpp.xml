@@ -268,4 +268,8 @@
 </diff:ws><expr_stmt><expr><name>e</name></expr>;</expr_stmt></diff:insert>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="edit_correction|edit_correction">
+<constructor><name><name>srcdiff_output</name><operator>::</operator><name>srcdiff_output</name></name><parameter_list>(<diff:delete><parameter><decl><type><specifier>const</specifier><diff:ws> </diff:ws><name>char</name><diff:ws> </diff:ws><modifier>*</modifier></type><diff:ws> </diff:ws><name>prefix</name></decl></parameter>,<diff:ws> </diff:ws></diff:delete><parameter><decl><type><diff:insert><specifier>const</specifier><diff:ws> </diff:ws></diff:insert><name><name>std</name><operator>::</operator><name>string</name></name><diff:insert><diff:ws> </diff:ws><modifier>&amp;</modifier></diff:insert></type> <name>css</name></decl></parameter>, <parameter><decl><type><name>unsigned</name> <name>long</name></type> <name>number_context_lines</name></decl></parameter>)</parameter_list> <block>{}</block></constructor>
+</unit>
+
 </unit>

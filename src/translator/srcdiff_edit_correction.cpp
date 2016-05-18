@@ -442,7 +442,12 @@ void srcdiff_edit_correction::correct() {
                 srcdiff_text_measure measure(set_original, set_modified);
                 measure.compute();
 
-                if(measure.similarity() >= 0.9 * measure.max_length()
+                bool is_similar = measure.max_length() >= 8 
+                    ? (10 * measure.similarity() >= 9 * measure.max_length())
+                    : (3  * measure.similarity() >= 2 * measure.max_length()
+                       && measure.similarity() == measure.min_length());
+
+                if( is_similar
                     && 3 * common_set_text.size() < measure.similarity()) {
 
                     if(before)
