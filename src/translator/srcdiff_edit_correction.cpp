@@ -362,28 +362,6 @@ void srcdiff_edit_correction::correct() {
 
             }
 
-        } else if(is_change_after) {
-
-            if(start_edit->operation == SES_DELETE) {
-
-                original_offset = delete_edit->length - 1;
-                modified_offset = 0;
-
-                delete_edit->length += edit_script->next->length;               
-                --insert_edit->offset_sequence_two;
-
-            } else {
-
-                original_offset = 0;
-                modified_offset = insert_edit->length - 1;
-
-                --delete_edit->offset_sequence_one;
-                delete_edit->offset_sequence_two -= insert_edit->length;
-                insert_edit->offset_sequence_one += delete_edit->length;
-                insert_edit->length += edit_script->next->next->length;
-
-            }
-
         } else {
 
             if(start_edit->operation == SES_DELETE) {
@@ -393,6 +371,9 @@ void srcdiff_edit_correction::correct() {
 
                 --insert_edit->offset_sequence_two;
 
+                if(is_change_after)
+                    delete_edit->length += edit_script->next->length;  
+
             } else {
 
                 original_offset = 0;
@@ -401,6 +382,9 @@ void srcdiff_edit_correction::correct() {
                 --delete_edit->offset_sequence_one;
                 delete_edit->offset_sequence_two -= insert_edit->length;
                 insert_edit->offset_sequence_one += delete_edit->length;
+
+                if(is_change_after)
+                    insert_edit->length += edit_script->next->next->length;
 
             }
 
