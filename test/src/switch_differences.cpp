@@ -211,6 +211,7 @@ int main(int argc, char * argv[]) {
   bool wait_end = false;
   bool output_saved = false;
   std::vector<xmlNodePtr> nodes;
+  int change_depth = 0;
   while(xmlTextReaderRead(reader) == 1) {
 
     xmlNodePtr node = xmlCopyNode(xmlTextReaderCurrentNode(reader), 2);
@@ -237,7 +238,12 @@ int main(int argc, char * argv[]) {
 
         }
 
-        if(wait_end && isendelement(reader)) {
+        if(wait_end && isendelement(reader))
+          --change_depth;
+        else if(wait_end)
+          ++change_depth;
+
+        if(wait_end && isendelement(reader) && change_depth == 0) {
 
           wait_end = false;
           output_saved = true;

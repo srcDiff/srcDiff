@@ -293,8 +293,6 @@ void srcdiff_edit_correction::correct() {
         bool is_change_before = is_change(edit_script);
         if(is_change_before) edit_script = edit_script->next;
 
-        // temp clause to maintain behaviour while adjusting code
-        // if(is_change_before) continue;
         if(is_change_before && edit_script->length > 3) continue;
 
         // guard checks for next edit
@@ -305,14 +303,14 @@ void srcdiff_edit_correction::correct() {
         // save pointer to after common
         bool is_change_after = is_change(edit_script->next);
 
-        // temp clause to maintain behaviour while adjusting code
-        // if(is_change_after) continue;
         if(is_change_after && edit_script->next->next->length > 3) continue;
 
         if(    !is_change_before
             && !is_change_after
             && edit_script->operation == edit_script->next->operation) continue;
 
+        // temp clause to maintain behaviour while adjusting code
+        if(is_change_after && !is_change_before) continue;
 
         int start_offset = start_edit->offset_sequence_one;
         if(start_edit->operation == SES_DELETE) start_offset += start_edit->length;
@@ -436,6 +434,10 @@ void srcdiff_edit_correction::correct() {
 
                 if(j == modified_offset) continue;
 
+                // does not need broken if either of these are true
+                if(i < original_offset && j < modified_offset) continue;
+                if(i > original_offset && j > modified_offset) continue;
+
                 std::size_t original_set_pos = delete_edit->offset_sequence_one + i;
                 std::size_t modified_set_pos = insert_edit->offset_sequence_two + j;
 
@@ -481,7 +483,7 @@ void srcdiff_edit_correction::correct() {
                     // free(edit_script);
                     // free(edit_script->next);
 
-                    if(edit_script == ses.get_script() || edit_script->next == ses.get_script())
+                    if(start_edit == ses.get_script())
                         ses.set_script(delete_edit);
 
                     edit * last_edits = nullptr;
