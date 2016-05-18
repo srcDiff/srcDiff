@@ -309,9 +309,6 @@ void srcdiff_edit_correction::correct() {
             && !is_change_after
             && edit_script->operation == edit_script->next->operation) continue;
 
-        // temp clause to maintain behaviour while adjusting code
-        if(is_change_after && !is_change_before) continue;
-
         int start_offset = start_edit->offset_sequence_one;
         if(start_edit->operation == SES_DELETE) start_offset += start_edit->length;
         int common_length = edit_script->next->offset_sequence_one - start_offset;
@@ -325,7 +322,10 @@ void srcdiff_edit_correction::correct() {
         if(start_edit->operation == SES_DELETE) {
 
             delete_edit = copy_edit(start_edit);
-            insert_edit = copy_edit(start_edit->next);
+            if(!is_change_before && is_change_after)
+                insert_edit = copy_edit(start_edit->next->next);
+            else
+                insert_edit = copy_edit(start_edit->next);
 
         } else {
 
@@ -382,11 +382,6 @@ void srcdiff_edit_correction::correct() {
                 insert_edit->offset_sequence_one += delete_edit->length;
                 insert_edit->length += edit_script->next->next->length;
 
-                delete_edit->previous = before;
-
-                delete_edit->next = insert_edit;
-                insert_edit->previous = delete_edit;
-                insert_edit->next = after;
             }
 
         } else {
@@ -406,16 +401,6 @@ void srcdiff_edit_correction::correct() {
                 --delete_edit->offset_sequence_one;
                 delete_edit->offset_sequence_two -= insert_edit->length;
                 insert_edit->offset_sequence_one += delete_edit->length;
-
-            }
-
-            if(start_edit->operation == SES_INSERT) {
-
-                delete_edit->previous = before;
-
-                delete_edit->next = insert_edit;
-                insert_edit->previous = delete_edit;
-                insert_edit->next = after;
 
             }
 
