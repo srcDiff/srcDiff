@@ -719,6 +719,20 @@ std::string get_class_type_name(const srcml_nodes & nodes, int start_pos) {
 bool conditional_has_block(const node_set & set) {
 
   node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
+  if(set.nodes().at(set.at(0))->name == "elseif") {
+
+    for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
+
+      if(set.nodes().at(itr->at(0))->name == "if") {
+
+        sets = node_sets(sets.nodes(), itr->at(1), itr->back());
+        break;
+
+      }
+
+    }
+
+  }
 
   for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
@@ -749,8 +763,9 @@ bool conditional_has_block(const node_set & set) {
 
 bool if_has_else(const node_set & set) {
 
-  node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
+  if(set.nodes().at(set.at(0))->name == "elseif") return false;
 
+  node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
   for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
     if(set.nodes().at(itr->at(0))->name == "else" || set.nodes().at(itr->at(0))->name == "elseif") {
@@ -1084,23 +1099,6 @@ bool reject_match_same(const srcdiff_measure & measure,
 
   }
 
-  // if(is_single_call_expr(set_original.nodes(), original_pos) && is_single_call_expr(set_modified.nodes(), modified_pos)) {
-
-  //   while(set_original.nodes().at(original_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-  //     || set_original.nodes().at(original_pos)->name != "call")
-  //     ++original_pos;
-
-  //   while(set_modified.nodes().at(modified_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
-  //     || set_modified.nodes().at(modified_pos)->name != "call")
-  //     ++modified_pos;
-
-  //   std::vector<std::string> original_names = get_call_name(set_original.nodes(), original_pos);
-  //   std::vector<std::string> modified_names = get_call_name(set_modified.nodes(), modified_pos);
-
-  //   if(name_list_similarity(original_names, modified_names)) return false;
-
-  // } else 
-
   if(original_tag == "call") {
 
     std::vector<std::string> original_names = get_call_name(set_original.nodes(), original_pos);
@@ -1124,7 +1122,7 @@ bool reject_match_same(const srcdiff_measure & measure,
 
     if(original_name == modified_name) return false;
 
-  } else if(original_tag == "if" && original_uri == SRCML_SRC_NAMESPACE_HREF) {
+  } else if((original_tag == "if" || original_tag == "elseif") && original_uri == SRCML_SRC_NAMESPACE_HREF) {
 
     std::string original_condition = get_condition(set_original.nodes(), original_pos);
     std::string modified_condition = get_condition(set_modified.nodes(), modified_pos);
