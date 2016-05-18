@@ -268,6 +268,7 @@ edit * srcdiff_edit_correction::correct_common(edit * start_edit) {
 
 void srcdiff_edit_correction::correct() {
 
+    // wrongly matched common correction
     for(edit * edit_script = ses.get_script(); edit_script != nullptr; edit_script = edit_script->next) {
 
         /**
@@ -280,6 +281,9 @@ void srcdiff_edit_correction::correct() {
 
         // save pointer to before edits
         edit * before = edit_script->previous;
+
+        // save pointer to starting edit
+        edit * start_edit = edit_script;
 
         // guard checks for first edit
         if(edit_script->operation == SES_COMMON) continue;
@@ -313,18 +317,18 @@ void srcdiff_edit_correction::correct() {
 
         edit * after = is_change_after ? edit_script->next->next->next : edit_script->next->next;
 
-        // move mistaken as common
         edit * delete_edit = nullptr;
         edit * insert_edit = nullptr;
-        if(edit_script->operation == SES_DELETE) {
 
-            delete_edit = copy_edit(edit_script);
-            insert_edit = copy_edit(edit_script->next);
+        if(start_edit->operation == SES_DELETE) {
+
+            delete_edit = copy_edit(start_edit);
+            insert_edit = copy_edit(start_edit->next);
 
         } else {
 
-            delete_edit = copy_edit(edit_script->next);
-            insert_edit = copy_edit(edit_script);
+            delete_edit = copy_edit(start_edit->next);
+            insert_edit = copy_edit(start_edit);
 
         }
 
