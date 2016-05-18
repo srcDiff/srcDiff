@@ -294,7 +294,8 @@ void srcdiff_edit_correction::correct() {
         if(is_change_before) edit_script = edit_script->next;
 
         // temp clause to maintain behaviour while adjusting code
-        if(is_change_before) continue;
+        // if(is_change_before) continue;
+        if(is_change_before && edit_script->length > 3) continue;
 
         // guard checks for next edit
         if(edit_script->next == nullptr) continue;
@@ -305,7 +306,8 @@ void srcdiff_edit_correction::correct() {
         bool is_change_after = is_change(edit_script->next);
 
         // temp clause to maintain behaviour while adjusting code
-        if(is_change_after) continue;
+        // if(is_change_after) continue;
+        if(is_change_after && edit_script->next->next->length > 3) continue;
 
         if(    !is_change_before
             && !is_change_after
@@ -337,6 +339,9 @@ void srcdiff_edit_correction::correct() {
         ++delete_edit->length;
         ++insert_edit->length;
 
+        delete_edit->next = insert_edit;
+        insert_edit->previous = delete_edit;
+
         std::size_t original_offset = 0;
         std::size_t modified_offset = 0;
 
@@ -349,10 +354,12 @@ void srcdiff_edit_correction::correct() {
 
                 delete_edit->length += edit_script->next->length;
                 insert_edit->length += edit_script->next->next->length;
+                insert_edit->offset_sequence_one = delete_edit->offset_sequence_one + delete_edit->length;
 
             } else {
 
-                (edit_script->next->operation == SES_DELETE ? delete_edit : insert_edit) += edit_script->next->length;
+                (edit_script->next->operation == SES_DELETE ? delete_edit->length : insert_edit->length) += edit_script->next->length;
+                insert_edit->offset_sequence_one = delete_edit->offset_sequence_one + delete_edit->length;
 
             }
 
@@ -471,8 +478,8 @@ void srcdiff_edit_correction::correct() {
                     if(after)
                         after->previous = insert_edit;
 
-                    free(edit_script);
-                    free(edit_script->next);
+                    // free(edit_script);
+                    // free(edit_script->next);
 
                     if(edit_script == ses.get_script() || edit_script->next == ses.get_script())
                         ses.set_script(delete_edit);
