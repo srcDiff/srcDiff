@@ -10,7 +10,7 @@ class srcdiff_many : public srcdiff_diff {
 
 protected:
 
-	edit * edit_script;
+	edit_t * edit_script;
 
 private:
 
@@ -24,7 +24,7 @@ private:
   
 public:
 
-	srcdiff_many(const srcdiff_diff & diff, edit * edit_script);
+	srcdiff_many(const srcdiff_diff & diff, edit_t * edit_script);
 	virtual void output();
 
 };

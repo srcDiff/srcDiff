@@ -28,7 +28,7 @@
   Returns Then number of edits or an error code (-1 malloc, -2 otherwise) 
 */
 int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two, int sequence_two_start, int sequence_two_end,
-  struct edit ** edit_script, struct edit ** last_edit,
+  struct edit_t ** edit_script, struct edit_t ** last_edit,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
   // max edit distance
@@ -40,13 +40,13 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
   struct point * last_distance = (struct point *)calloc(max_diagonals, sizeof(struct point));
 
   // hold all allocates
-  struct edit ** edit_pointers = (struct edit **)calloc(max_diagonals, sizeof(struct edit *));
+  struct edit_t ** edit_pointers = (struct edit_t **)calloc(max_diagonals, sizeof(struct edit_t *));
 
   int num_edits = -1;
 
   // internal script of edits
-  //struct edit * script[max_diagonals];
-  struct edit ** script = (struct edit **)calloc(max_diagonals, sizeof(struct edit *));
+  //struct edit_t * script[max_diagonals];
+  struct edit_t ** script = (struct edit_t **)calloc(max_diagonals, sizeof(struct edit_t *));
   if(script == NULL) {
 
     (*edit_script) = NULL;
@@ -93,7 +93,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
       int edit = num_edits % (max_distance + 1);
 
       if(edit == 0)
-        if((edit_pointers[edit_array] = (struct edit *)calloc(max_distance + 1, sizeof(struct edit))) == NULL) {
+        if((edit_pointers[edit_array] = (struct edit_t *)calloc(max_distance + 1, sizeof(struct edit_t))) == NULL) {
 
           // clean allocates
           int i;
@@ -194,7 +194,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
 }
 
 int shortest_edit_script(const void * sequence_one, int sequence_one_end, const void * sequence_two, int sequence_two_end,
-  struct edit ** edit_script, 
+  struct edit_t ** edit_script, 
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {
 
   return shortest_edit_script_inner(sequence_one, 0, sequence_one_end, sequence_two, 0, sequence_two_end, edit_script, 0, compare, accessor, context);
@@ -208,13 +208,13 @@ int shortest_edit_script(const void * sequence_one, int sequence_one_end, const 
 
   Parameter edit_script The shortest edit script to free
 */
-void free_shortest_edit_script(struct edit * edit_script) {
+void free_shortest_edit_script(struct edit_t * edit_script) {
 
   // free memory
   while(edit_script != NULL) {
 
     // set next edit
-    struct edit * temp_edit = edit_script;
+    struct edit_t * temp_edit = edit_script;
     edit_script = edit_script->next;
 
     // free edit
@@ -232,9 +232,9 @@ void free_shortest_edit_script(struct edit * edit_script) {
 
   Returns Then number of edits or an error code (-1 malloc) 
 */
-int make_edit_script(struct edit * start_edit, struct edit ** edit_script, struct edit ** last_edit) {
+int make_edit_script(struct edit_t * start_edit, struct edit_t ** edit_script, struct edit_t ** last_edit) {
 
-  struct edit * current_edit = start_edit;
+  struct edit_t * current_edit = start_edit;
 
   if(edit_script) (*edit_script) = NULL;
   if(last_edit) (*last_edit) = NULL;
@@ -302,7 +302,7 @@ int make_edit_script(struct edit * start_edit, struct edit ** edit_script, struc
     // copy next edit
     if(current_edit->next != NULL) {
 
-      struct edit * next;
+      struct edit_t * next;
       if((next = copy_edit(current_edit->next)) == NULL) {
 
         // free allocated edit
@@ -349,10 +349,10 @@ int make_edit_script(struct edit * start_edit, struct edit ** edit_script, struc
 
   Returns The copied edit or NULL if failed
 */
-struct edit * copy_edit(struct edit * edit) {
+struct edit_t * copy_edit(struct edit_t * edit) {
 
-  struct edit * new_edit;
-  if((new_edit = (struct edit *)malloc(sizeof(struct edit))) == NULL)
+  struct edit_t * new_edit;
+  if((new_edit = (struct edit_t *)malloc(sizeof(struct edit_t))) == NULL)
     return NULL;
 
   // copy contents
@@ -366,7 +366,7 @@ struct edit * copy_edit(struct edit * edit) {
   return new_edit;
 }
 
-int is_change(const struct edit * edit_script) {
+int is_change(const struct edit_t * edit_script) {
 
   return edit_script->operation == SES_DELETE && edit_script->next != NULL && edit_script->next->operation == SES_INSERT
     && (edit_script->offset_sequence_one + edit_script->length) == edit_script->next->offset_sequence_one;
@@ -401,13 +401,13 @@ int main(int argc, char * argv[]) {
   //const char * sequence_one[] = { "a", "b", "c", "d", "f", "g", "h", "j", "q", "z" };
   //const char * sequence_two[] = { "a", "b", "c", "d", "e", "f", "g", "i", "j", "k", "r", "x", "y", "z" };
 
-  struct edit * edit_script;
+  struct edit_t * edit_script;
 
   shortest_edit_script(sequence_one, 4, sequence_two, 4, &edit_script, str_compare, str_accessor, 0);
   //shortest_edit_script(sequence_one, 7, sequence_two, 6, &edit_script, str_compare, str_accessor, 0);
   //shortest_edit_script(sequence_one, 10, sequence_two, 14, &edit_script, str_compare, str_accessor, 0);
 
-  for(struct edit * current_edit = edit_script; current_edit; current_edit = current_edit->next) {
+  for(struct edit_t * current_edit = edit_script; current_edit; current_edit = current_edit->next) {
 
 fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current_edit->offset_sequence_one);
 fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current_edit->offset_sequence_two);

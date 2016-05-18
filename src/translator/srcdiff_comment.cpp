@@ -24,7 +24,7 @@ void srcdiff_comment::output() {
 
   int distance = ses.compute((const void *)&node_sets_original, node_sets_original.size(), (const void *)&node_sets_modified, node_sets_modified.size());
 
-  edit * edit_script = ses.get_script();
+  edit_t * edit_script = ses.get_script();
 
   if(distance < 0) {
 
@@ -37,7 +37,7 @@ void srcdiff_comment::output() {
   int diff_end_original = out.last_output_original();
   int diff_end_modified = out.last_output_modified();
 
-  edit * edits = edit_script;
+  edit_t * edits = edit_script;
   for (; edits; edits = edits->next) {
 
     // determine ending position to output
@@ -59,7 +59,7 @@ void srcdiff_comment::output() {
     output_common(diff_end_original, diff_end_modified);
 
     // detect and change
-    edit * edit_next = edits->next;
+    edit_t * edit_next = edits->next;
     if(is_change(edits)) {
 
       //      fprintf(stderr, "HERE\n");

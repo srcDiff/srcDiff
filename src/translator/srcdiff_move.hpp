@@ -25,7 +25,7 @@ public:
                            const node_sets & node_sets_original,
                            srcml_nodes & nodes_modified,
                            const node_sets & node_sets_modified,
-                           edit * edit_script);
+                           edit_t * edit_script);
 
 	virtual void output();
 

@@ -206,7 +206,7 @@ void sax2_color_diff::startDocument(void* ctx) {
 
   if(data->file_one != "" && data->file_two != "") {
 
-    edit * edit_script;
+    edit_t * edit_script;
 
     int distance = shortest_edit_script(&path_one, path_one.size(), &path_two, path_two.size(), &edit_script, line_compare, line_accessor, NULL);
 
@@ -220,7 +220,7 @@ void sax2_color_diff::startDocument(void* ctx) {
 
     std::string diff;
 
-    edit * edits = edit_script;
+    edit_t * edits = edit_script;
 
     int last_line = 0;
 

@@ -52,7 +52,7 @@ unsigned int line_diff_range<T>::get_length_file_two() const {
 }
 
 template<class T>
-edit * line_diff_range<T>::get_line_diff() {
+edit_t * line_diff_range<T>::get_line_diff() {
 
   return ses.get_script();
 
@@ -83,7 +83,7 @@ std::string line_diff_range<T>::get_line_diff_range() {
 
   std::string diff;
 
-  for(edit * edits = ses.get_script(); edits; edits = edits->next) {
+  for(edit_t * edits = ses.get_script(); edits; edits = edits->next) {
 
     std::stringstream stream;
     
@@ -139,7 +139,7 @@ template<class T>
 bool line_diff_range<T>::is_no_white_space_diff() {
 
 
-  for(edit * edits = ses.get_script(); edits; edits = edits->next) {
+  for(edit_t * edits = ses.get_script(); edits; edits = edits->next) {
 
     if(is_change(edits)) {
 

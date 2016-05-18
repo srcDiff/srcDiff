@@ -18,7 +18,7 @@ extern "C" {
 enum edit_operations { SES_COMMON, SES_DELETE, SES_INSERT };
 
 // single edit script
-struct edit {
+struct edit_t {
 
   int operation;
   int offset_sequence_one;
@@ -26,8 +26,8 @@ struct edit {
   int length;
 
   // links
-  struct edit * next;
-  struct edit * previous;
+  struct edit_t * next;
+  struct edit_t * previous;
 
 };
 
@@ -43,13 +43,13 @@ struct edit {
   Returns The number of edits or an error code (-1 malloc, -2 otherwise) 
 */
 int shortest_edit_script(const void * sequence_one, int sequence_one_size, const void * sequence_two, int sequence_two_size,
-  struct edit ** edit_script, 
+  struct edit_t ** edit_script, 
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context);
 int shortest_edit_script_linear_space(const void * sequence_one, int sequence_one_end, const void * sequence_two, int sequence_two_end,
-  struct edit ** edit_script,
+  struct edit_t ** edit_script,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context);
 int shortest_edit_script_hybrid(const void * sequence_one, int sequence_one_end, const void * sequence_two, int sequence_two_end,
-  struct edit ** edit_script,
+  struct edit_t ** edit_script,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context,
   int threshold);
 
@@ -58,16 +58,16 @@ int shortest_edit_script_hybrid(const void * sequence_one, int sequence_one_end,
 
   Parameter edit_script The shortest edit script to free
 */
-void free_shortest_edit_script(struct edit * edit_script);
+void free_shortest_edit_script(struct edit_t * edit_script);
 
 
 /*
   Check if next edit is a change.
 */
-int is_change(const struct edit * edit_script);
+int is_change(const struct edit_t * edit_script);
 
 // shallow copy of an edit
-struct edit * copy_edit(struct edit * edit);
+struct edit_t * copy_edit(struct edit_t * edit);
 
 #ifdef __cplusplus
 }

@@ -25,13 +25,13 @@ int shortest_edit_script::compute(const void * structure_one, int size_one, cons
 
 }
 
-void shortest_edit_script::set_script(edit * edit_script) {
+void shortest_edit_script::set_script(edit_t * edit_script) {
 
   this->edit_script = edit_script;
 
 }
 
-edit * shortest_edit_script::get_script() {
+edit_t * shortest_edit_script::get_script() {
 
   return edit_script;
 

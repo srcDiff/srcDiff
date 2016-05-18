@@ -32,7 +32,7 @@ void character_diff::output(view_t & view, const std::string & type) {
 
     int difference = 0;
     int num_consecutive_edits = 0;
-    for(const edit * edits = ses.get_script(); edits; edits = edits->next) {
+    for(const edit_t * edits = ses.get_script(); edits; edits = edits->next) {
 
       num_consecutive_edits += 1;
       difference += edits->length;
@@ -54,7 +54,7 @@ void character_diff::output(view_t & view, const std::string & type) {
     if(is_diff_name || is_diff_operator || num_consecutive_edits == 1) {
 
       int last_diff_original = 0;
-      for(const edit * edits = ses.get_script(); edits; edits = edits->next) {
+      for(const edit_t * edits = ses.get_script(); edits; edits = edits->next) {
 
         if(edits->operation == SES_DELETE 
            && last_diff_original < edits->offset_sequence_one)

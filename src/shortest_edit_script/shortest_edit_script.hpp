@@ -12,7 +12,7 @@ private:
 
   const static int SIZE_THRESHOLD;
 
-  edit * edit_script;
+  edit_t * edit_script;
   const void * context;
   int (*compare)(const void * item_one, const void * item_two, const void * context);
   const void * (*accessor)(int index, const void * structure, const void * context);
@@ -28,8 +28,8 @@ public:
 
   static int get_size_threshold();
 
-  edit * get_script();
-  void set_script(edit * edit_script);
+  edit_t * get_script();
+  void set_script(edit_t * edit_script);
 
   template<typename T>
   int compute(const T & structure_one, const T & structure_two, bool approximate);
@@ -52,10 +52,10 @@ int shortest_edit_script::compute(const T & structure_one, const T & structure_t
         int num_blocks = std::max(blocks_one, blocks_two);
 
         int i = 0;
-        edit * last_edit = nullptr;
+        edit_t * last_edit = nullptr;
         for(; i < num_blocks; ++i) {
 
-          edit * edits = nullptr;
+          edit_t * edits = nullptr;
           int current_size_one = 0, offset_one = 0;
           if(i < blocks_one) {
 

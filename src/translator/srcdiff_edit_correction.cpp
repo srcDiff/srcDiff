@@ -13,24 +13,24 @@ srcdiff_edit_correction::srcdiff_edit_correction(const node_sets & sets_original
       sets_modified(sets_modified),
       ses(ses) {}
 
-void srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_edit,
+void srcdiff_edit_correction::split_change(edit_t * delete_edit, edit_t * insert_edit,
                                            int original_pos, int modified_pos,
-                                           edit *& start_edits,
-                                           edit *& last_edits) {
+                                           edit_t *& start_edits,
+                                           edit_t *& last_edits) {
 
     int original_sequence_one_offset = delete_edit->offset_sequence_one;
     int original_sequence_two_offset = delete_edit->offset_sequence_two;
     int original_length = delete_edit->length;
-    edit * original_previous = delete_edit->previous;
-    edit * original_next = delete_edit->next;
+    edit_t * original_previous = delete_edit->previous;
+    edit_t * original_next = delete_edit->next;
 
     int modified_sequence_one_offset = insert_edit->offset_sequence_one;
     int modified_sequence_two_offset = insert_edit->offset_sequence_two;
     int modified_length = insert_edit->length;
-    edit * modified_previous = insert_edit->previous;
-    edit * modified_next = insert_edit->next;
+    edit_t * modified_previous = insert_edit->previous;
+    edit_t * modified_next = insert_edit->next;
 
-    edit * left_delete = nullptr, * right_delete = nullptr,
+    edit_t * left_delete = nullptr, * right_delete = nullptr,
          * left_insert = nullptr, * right_insert = nullptr;
 
     if(original_pos != 0)
@@ -45,7 +45,7 @@ void srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_edi
 
     if(original_pos != 0 && original_pos != (original_length - 1)) {
 
-        right_delete = (struct edit *)malloc(sizeof(struct edit));
+        right_delete = (struct edit_t *)malloc(sizeof(struct edit_t));
         if(right_delete == nullptr)
             throw std::bad_alloc();
 
@@ -53,7 +53,7 @@ void srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_edi
 
     if(modified_pos != 0 && modified_pos != (modified_length - 1)) {
 
-        right_insert = (struct edit *)malloc(sizeof(struct edit));
+        right_insert = (struct edit_t *)malloc(sizeof(struct edit_t));
         if(right_insert == nullptr) {
             if(original_pos != 0 && original_pos != (original_length - 1))
                 free(right_delete);
@@ -63,7 +63,7 @@ void srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_edi
 
     }
 
-    edit * common_edit = (struct edit *)malloc(sizeof(struct edit));
+    edit_t * common_edit = (struct edit_t *)malloc(sizeof(struct edit_t));
     if(common_edit == nullptr) {
 
         if(original_pos != 0 && original_pos != (original_length - 1))
@@ -167,7 +167,7 @@ void srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_edi
 
     }
 
-    edit * start_edit = nullptr;
+    edit_t * start_edit = nullptr;
     if(left_delete)
         start_edit = left_delete;
     else if(left_insert)
@@ -180,7 +180,7 @@ void srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_edi
 
     start_edits = start_edit;
 
-    edit * last_edit = nullptr;
+    edit_t * last_edit = nullptr;
     if(right_insert)
         last_edit = right_insert;
     else if(right_delete)
@@ -198,10 +198,10 @@ void srcdiff_edit_correction::split_change(edit * delete_edit, edit * insert_edi
 
 }
 
-edit * srcdiff_edit_correction::correct_common_inner(edit * change_edit) {
+edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
 
-    edit * delete_edit = change_edit;
-    edit * insert_edit = change_edit->next;
+    edit_t * delete_edit = change_edit;
+    edit_t * insert_edit = change_edit->next;
 
     diff_nodes diff = { sets_original.nodes(), sets_modified.nodes() };
 
@@ -227,8 +227,8 @@ edit * srcdiff_edit_correction::correct_common_inner(edit * change_edit) {
             if(srcdiff_compare::node_set_syntax_compare(&set_original, &set_modified, &diff) != 0)
                 continue;
 
-            edit * start_edits = nullptr;
-            edit * last_edits = nullptr;
+            edit_t * start_edits = nullptr;
+            edit_t * last_edits = nullptr;
             split_change(delete_edit,
                          insert_edit,
                          i,
@@ -246,9 +246,9 @@ edit * srcdiff_edit_correction::correct_common_inner(edit * change_edit) {
 
 }
 
-edit * srcdiff_edit_correction::correct_common(edit * start_edit) {
+edit_t * srcdiff_edit_correction::correct_common(edit_t * start_edit) {
 
-    edit * current = start_edit;
+    edit_t * current = start_edit;
 
     if(is_change(current))
         current = correct_common_inner(current)->next;
@@ -269,7 +269,7 @@ edit * srcdiff_edit_correction::correct_common(edit * start_edit) {
 void srcdiff_edit_correction::correct() {
 
     // wrongly matched common correction
-    for(edit * edit_script = ses.get_script(); edit_script != nullptr; edit_script = edit_script->next) {
+    for(edit_t * edit_script = ses.get_script(); edit_script != nullptr; edit_script = edit_script->next) {
 
         /**
             @todo extend to work if change on either side.
@@ -280,10 +280,10 @@ void srcdiff_edit_correction::correct() {
         */
 
         // save pointer to before edits
-        edit * before = edit_script->previous;
+        edit_t * before = edit_script->previous;
 
         // save pointer to starting edit
-        edit * start_edit = edit_script;
+        edit_t * start_edit = edit_script;
 
         // guard checks for first edit
         if(edit_script->operation == SES_COMMON) continue;
@@ -314,10 +314,10 @@ void srcdiff_edit_correction::correct() {
         int common_length = edit_script->next->offset_sequence_one - start_offset;
         if(common_length != 1) continue;
 
-        edit * after = is_change_after ? edit_script->next->next->next : edit_script->next->next;
+        edit_t * after = is_change_after ? edit_script->next->next->next : edit_script->next->next;
 
-        edit * delete_edit = nullptr;
-        edit * insert_edit = nullptr;
+        edit_t * delete_edit = nullptr;
+        edit_t * insert_edit = nullptr;
 
         if(start_edit->operation == SES_DELETE) {
 
@@ -462,7 +462,7 @@ void srcdiff_edit_correction::correct() {
                     if(start_edit == ses.get_script())
                         ses.set_script(delete_edit);
 
-                    edit * last_edits = nullptr;
+                    edit_t * last_edits = nullptr;
                     split_change(delete_edit,
                                  insert_edit,
                                  i,

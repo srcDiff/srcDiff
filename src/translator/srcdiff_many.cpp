@@ -11,7 +11,7 @@
 
 constexpr int MOVE = int(SES_INSERT) + 1;
 
-srcdiff_many::srcdiff_many(const srcdiff_diff & diff, edit * edit_script) : srcdiff_diff(diff), edit_script(edit_script) {}
+srcdiff_many::srcdiff_many(const srcdiff_diff & diff, edit_t * edit_script) : srcdiff_diff(diff), edit_script(edit_script) {}
 
 void srcdiff_many::output_unmatched(int start_original, int end_original, int start_modified, int end_modified) {
 
@@ -116,8 +116,8 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
 
 srcdiff_many::moves srcdiff_many::determine_operations() {
 
-  edit * edits = edit_script;
-  edit * edit_next = edit_script->next;
+  edit_t * edits = edit_script;
+  edit_t * edit_next = edit_script->next;
 
   offset_pair * matches = NULL;
 
@@ -202,8 +202,8 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
 void srcdiff_many::output() {
 
-  edit * edits = edit_script;
-  edit * edit_next = edit_script->next;
+  edit_t * edits = edit_script;
+  edit_t * edit_next = edit_script->next;
 
   srcdiff_many::moves moves = determine_operations();
   int_pairs original_moved = moves.at(0);

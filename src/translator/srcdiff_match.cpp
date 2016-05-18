@@ -545,7 +545,7 @@ int name_list_similarity(std::vector<std::string> name_list_original, std::vecto
 
   ses.compute(&name_list_original, name_list_original.size(), &name_list_modified, name_list_modified.size());
 
-  edit * edits = ses.get_script();
+  edit_t * edits = ses.get_script();
 
   int similarity = 0;
 

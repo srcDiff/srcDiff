@@ -32,7 +32,7 @@
 */
 
 int shortest_edit_script_hybrid_inner(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two, int sequence_two_start, int sequence_two_end,
-  struct edit ** edit_script, struct edit ** last_edit,
+  struct edit_t ** edit_script, struct edit_t ** last_edit,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context,
   int threshold) {  
 
@@ -54,8 +54,8 @@ int shortest_edit_script_hybrid_inner(const void * sequence_one, int sequence_on
 
     if(edit_distance > 1) {
 
-      struct edit * previous_edits = 0;
-      struct edit * previous_last_edit = 0;
+      struct edit_t * previous_edits = 0;
+      struct edit_t * previous_last_edit = 0;
       if(edit_distance < threshold)
         shortest_edit_script_inner(sequence_one, sequence_one_start, points[0].x, sequence_two, sequence_two_start, points[0].y, &previous_edits, &previous_last_edit, compare, accessor, context);
       else
@@ -67,8 +67,8 @@ int shortest_edit_script_hybrid_inner(const void * sequence_one, int sequence_on
       // for(pos = points[0].x; pos < points[1].x; ++pos)
       //   fprintf(stderr, "%s\n", (const char *)accessor(pos, sequence_one, context));
 
-      struct edit * new_edits = 0;
-      struct edit * next_last_edit = 0;
+      struct edit_t * new_edits = 0;
+      struct edit_t * next_last_edit = 0;
       if(edit_distance < threshold)
         shortest_edit_script_inner(sequence_one, points[1].x, sequence_one_end, sequence_two, points[1].y, sequence_two_end, &new_edits, &next_last_edit, compare, accessor, context);
       else
@@ -84,7 +84,7 @@ int shortest_edit_script_hybrid_inner(const void * sequence_one, int sequence_on
       // fprintf(stderr, "Range Old: %d->%d\n", sequence_one_start, sequence_one_end);
       // fprintf(stderr, "Range New: %d->%d\n", sequence_two_start, sequence_two_end);
       // fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1].x, points[1].y);
-      struct edit * new_edit = (struct edit *)malloc(sizeof(struct edit));
+      struct edit_t * new_edit = (struct edit_t *)malloc(sizeof(struct edit_t));
       new_edit->operation = SES_DELETE;
       new_edit->previous = 0;
       new_edit->next = 0;
@@ -119,7 +119,7 @@ int shortest_edit_script_hybrid_inner(const void * sequence_one, int sequence_on
       // fprintf(stderr, "Range Old: %d->%d\n", sequence_one_start, sequence_one_end);
       // fprintf(stderr, "Range New: %d->%d\n", sequence_two_start, sequence_two_end);
       // fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1].x, points[1].y);
-      struct edit * new_edit = (struct edit *)malloc(sizeof(struct edit));
+      struct edit_t * new_edit = (struct edit_t *)malloc(sizeof(struct edit_t));
       new_edit->operation = SES_INSERT;
       new_edit->previous = 0;
       new_edit->next = 0;
@@ -153,7 +153,7 @@ int shortest_edit_script_hybrid_inner(const void * sequence_one, int sequence_on
 
   } else if((sequence_one_end - sequence_one_start) > 0 || (sequence_two_end - sequence_two_start) > 0) {
 
-    struct edit * new_edit = (struct edit *)malloc(sizeof(struct edit));
+    struct edit_t * new_edit = (struct edit_t *)malloc(sizeof(struct edit_t));
     new_edit->previous = 0;
     new_edit->next = 0;
 
@@ -184,7 +184,7 @@ int shortest_edit_script_hybrid_inner(const void * sequence_one, int sequence_on
 }
 
 int shortest_edit_script_hybrid(const void * sequence_one, int sequence_one_end, const void * sequence_two, int sequence_two_end,
-  struct edit ** edit_script,
+  struct edit_t ** edit_script,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context,
   int threshold) { 
 
@@ -240,13 +240,13 @@ int main(int argc, char * argv[]) {
   //const char * sequence_one[] = { "a", "b", "c", "d", "f", "g", "h", "j", "q", "z" };
   //const char * sequence_two[] = { "a", "b", "c", "d", "e", "f", "g", "i", "j", "k", "r", "x", "y", "z" };
 
-  struct edit * edit_script;
+  struct edit_t * edit_script;
 
   shortest_edit_script_linear_space(sequence_one, 4, sequence_two, 4, &edit_script, str_compare, str_accessor, 0);
   //shortest_edit_script_linear_space(sequence_one, 7, sequence_two, 6, &edit_script, str_compare, str_accessor, 0);
   //shortest_edit_script_linear_space(sequence_one, 10, sequence_two, 14, &edit_script, str_compare, str_accessor, 0);
 
-  for(struct edit * current_edit = edit_script; current_edit; current_edit = current_edit->next) {
+  for(struct edit_t * current_edit = edit_script; current_edit; current_edit = current_edit->next) {
 
 fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current_edit->offset_sequence_one);
 fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current_edit->offset_sequence_two);

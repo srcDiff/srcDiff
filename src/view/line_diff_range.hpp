@@ -40,7 +40,7 @@ public:
   unsigned int get_length_file_one() const;
   unsigned int get_length_file_two() const;
 
-  edit * get_line_diff();
+  edit_t * get_line_diff();
 
   bool is_no_white_space_diff();
 

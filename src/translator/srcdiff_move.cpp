@@ -46,11 +46,11 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
                               const node_sets & node_sets_original,
                               srcml_nodes & nodes_modified,
                               const node_sets & node_sets_modified,
-                              edit * edit_script) {
+                              edit_t * edit_script) {
 
   std::map<std::string, move_infos > constructs;
 
-  for(edit * edits = edit_script; edits; edits = edits->next) {
+  for(edit_t * edits = edit_script; edits; edits = edits->next) {
 
     switch(edits->operation) {
 
