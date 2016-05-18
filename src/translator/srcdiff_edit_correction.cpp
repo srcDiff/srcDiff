@@ -445,7 +445,8 @@ void srcdiff_edit_correction::correct() {
                 bool is_similar = measure.max_length() >= 8 
                     ? (10 * measure.similarity() >= 9 * measure.max_length())
                     : (3  * measure.similarity() >= 2 * measure.max_length()
-                       && measure.similarity() == measure.min_length());
+                       && measure.similarity() == measure.min_length()
+                       && 2 * measure.min_length() >= measure.max_length());
 
                 if( is_similar
                     && 3 * common_set_text.size() < measure.similarity()) {
