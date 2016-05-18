@@ -338,8 +338,9 @@ void srcdiff_edit_correction::correct() {
         ++insert_edit->length;
 
         delete_edit->next = insert_edit;
+        delete_edit->previous = before;
         insert_edit->previous = delete_edit;
-
+        insert_edit->next = after;
         std::size_t original_offset = 0;
         std::size_t modified_offset = 0;
 
@@ -472,7 +473,7 @@ void srcdiff_edit_correction::correct() {
                 srcdiff_text_measure measure(set_original, set_modified);
                 measure.compute();
 
-                if(measure.similarity() >= 0.9 * measure.min_length()
+                if(measure.similarity() >= 0.9 * measure.max_length()
                     && 3 * common_set_text.size() < measure.similarity()) {
 
                     if(before)

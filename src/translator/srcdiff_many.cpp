@@ -109,7 +109,7 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
     }
 
     output_change_whitespace(finish_original, finish_modified);
-              
+
   }
 
 }
