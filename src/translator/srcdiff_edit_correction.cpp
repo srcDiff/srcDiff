@@ -267,7 +267,7 @@ edit * srcdiff_edit_correction::correct_common(edit * start_edit) {
 }
 
 void srcdiff_edit_correction::correct() {
-return;
+
     // wrongly matched common correction
     for(edit * edit_script = ses.get_script(); edit_script != nullptr; edit_script = edit_script->next) {
 
@@ -339,31 +339,54 @@ return;
 
         std::size_t original_offset = 0;
         std::size_t modified_offset = 0;
-        if(edit_script->operation == SES_DELETE) {
+
+        if(is_change_before) {
 
             original_offset = delete_edit->length - 1;
-            modified_offset = 0;
+            modified_offset = insert_edit->length - 1;
 
-            --insert_edit->offset_sequence_two;
+            if(is_change_after) {
+
+                delete_edit->length += edit_script->next->length;
+                insert_edit->length += edit_script->next->next->length;
+
+            } else {
+
+                (edit_script->next->operation == SES_DELETE ? delete_edit : insert_edit) += edit_script->next->length;
+
+            }
+
+        } else if(is_change_after) {
 
         } else {
 
-            original_offset = 0;
-            modified_offset = insert_edit->length - 1;
+            if(edit_script->operation == SES_DELETE) {
 
-            --delete_edit->offset_sequence_one;
-            delete_edit->offset_sequence_two -= insert_edit->length;
-            insert_edit->offset_sequence_one += delete_edit->length;
+                original_offset = delete_edit->length - 1;
+                modified_offset = 0;
 
-        }
+                --insert_edit->offset_sequence_two;
 
-        if(edit_script->operation == SES_INSERT) {
+            } else {
 
-            delete_edit->previous = before;
+                original_offset = 0;
+                modified_offset = insert_edit->length - 1;
 
-            delete_edit->next = insert_edit;
-            insert_edit->previous = delete_edit;
-            insert_edit->next = after;
+                --delete_edit->offset_sequence_one;
+                delete_edit->offset_sequence_two -= insert_edit->length;
+                insert_edit->offset_sequence_one += delete_edit->length;
+
+            }
+
+            if(edit_script->operation == SES_INSERT) {
+
+                delete_edit->previous = before;
+
+                delete_edit->next = insert_edit;
+                insert_edit->previous = delete_edit;
+                insert_edit->next = after;
+
+            }
 
         }
 
