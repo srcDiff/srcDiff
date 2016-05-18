@@ -73,6 +73,7 @@ void srcdiff_diff::output() {
       diff_end_original = node_sets_original.at(edits->offset_sequence_one - 1).back() + 1;
       diff_end_modified = node_sets_modified.at(edits->offset_sequence_two - 1).back() + 1;
 
+      // why is this not <.  Might be able to remove != 0 and change to <.  Can't find where I changed it to this
     } else if(edits->operation == SES_INSERT && edits->offset_sequence_one != 0 && last_diff_original <= edits->offset_sequence_one) {
 
       diff_end_original = node_sets_original.at(edits->offset_sequence_one - 1).back() + 1;

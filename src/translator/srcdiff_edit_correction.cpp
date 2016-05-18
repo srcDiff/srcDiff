@@ -267,7 +267,7 @@ edit * srcdiff_edit_correction::correct_common(edit * start_edit) {
 }
 
 void srcdiff_edit_correction::correct() {
-
+return;
     // wrongly matched common correction
     for(edit * edit_script = ses.get_script(); edit_script != nullptr; edit_script = edit_script->next) {
 
@@ -311,8 +311,10 @@ void srcdiff_edit_correction::correct() {
             && !is_change_after
             && edit_script->operation == edit_script->next->operation) continue;
 
-        int common_length = edit_script->next->offset_sequence_one - edit_script->offset_sequence_one;
-        if(edit_script->operation == SES_DELETE) common_length -= edit_script->length;
+
+        int start_offset = start_edit->offset_sequence_one;
+        if(start_edit->operation == SES_DELETE) start_offset += start_edit->length;
+        int common_length = edit_script->next->offset_sequence_one - start_offset;
         if(common_length != 1) continue;
 
         edit * after = is_change_after ? edit_script->next->next->next : edit_script->next->next;
