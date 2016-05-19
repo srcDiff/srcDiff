@@ -3,6 +3,7 @@
 #include <srcdiff_text_measure.hpp>
 #include <srcdiff_match.hpp>
 #include <srcdiff_compare.hpp>
+#include <list>
 
 #include <iostream>
 
@@ -31,7 +32,7 @@ void srcdiff_edit_correction::split_change(edit_t * delete_edit, edit_t * insert
     edit_t * modified_next = insert_edit->next;
 
     edit_t * left_delete = nullptr, * right_delete = nullptr,
-         * left_insert = nullptr, * right_insert = nullptr;
+           * left_insert = nullptr, * right_insert = nullptr;
 
     if(original_pos != 0)
         left_delete = delete_edit;
@@ -271,19 +272,14 @@ void srcdiff_edit_correction::correct() {
     // wrongly matched common correction
     for(edit_t * edit_script = ses.get_script(); edit_script != nullptr; edit_script = edit_script->next) {
 
-        /**
-            @todo extend to work if change on either side.
-            Maybe form combined delete edit and combined insert edit with common
-            search this for one to break skipping the common in each.
-            switch out edits if accept.
-
-        */
-
         // save pointer to before edits
         edit_t * before = edit_script->previous;
 
         // save pointer to starting edit
         edit_t * start_edit = edit_script;
+
+        std::list<edit_t *> free_edit_list;
+        free_edit_list.push_back(edit_script);
 
         // guard checks for first edit
         if(edit_script->operation == SES_COMMON) continue;
@@ -291,7 +287,12 @@ void srcdiff_edit_correction::correct() {
 
         // adjust if change
         bool is_change_before = is_change(edit_script);
-        if(is_change_before) edit_script = edit_script->next;
+        if(is_change_before) {
+
+            edit_script = edit_script->next;
+            free_edit_list.push_back(edit_script);
+
+        }
 
         if(is_change_before && edit_script->length > 3) continue;
 
@@ -300,10 +301,14 @@ void srcdiff_edit_correction::correct() {
         if(edit_script->next->operation == SES_COMMON) continue;
         if(edit_script->next->length > 3) continue;
 
-        // save pointer to after common
+        free_edit_list.push_back(edit_script->next);
+
         bool is_change_after = is_change(edit_script->next);
 
         if(is_change_after && edit_script->next->next->length > 3) continue;
+
+        if(is_change_after)
+            free_edit_list.push_back(edit_script->next->next);
 
         if(    !is_change_before
             && !is_change_after
@@ -456,8 +461,8 @@ void srcdiff_edit_correction::correct() {
                     if(after)
                         after->previous = insert_edit;
 
-                    // free(edit_script);
-                    // free(edit_script->next);
+                    for(edit_t * edit : free_edit_list)
+                        free(edit);
 
                     if(start_edit == ses.get_script())
                         ses.set_script(delete_edit);
@@ -479,8 +484,12 @@ void srcdiff_edit_correction::correct() {
 
         }
 
+        free(delete_edit);
+        free(insert_edit);
+
 end_move_check:
-    (void)0;
+        (void)0;
+
         /** @todo choose smaller move */
 
     }
