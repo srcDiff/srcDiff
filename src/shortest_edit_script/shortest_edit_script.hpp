@@ -6,11 +6,13 @@
 #include <vector>
 #include <cmath>
 
+#include <boost/optional.hpp>
+
 class shortest_edit_script_t {
   
 private:
 
-  const static int SIZE_THRESHOLD;
+  const static size_t SIZE_THRESHOLD;
 
   edit_t * edit_script;
   const void * context;
@@ -26,7 +28,7 @@ public:
 
   ~shortest_edit_script_t();
 
-  static int get_size_threshold();
+  static size_t get_size_threshold();
 
   edit_t * get_script();
   void set_script(edit_t * edit_script);
@@ -40,59 +42,48 @@ public:
 template<typename T>
 int shortest_edit_script_t::compute(const T & structure_one, const T & structure_two, bool approximate) {
 
-    const int size_one = structure_one.size();
-    const int size_two = structure_two.size();
+    const size_t size_one = structure_one.size();
+    const size_t size_two = structure_two.size();
 
     if(approximate && (size_one > SIZE_THRESHOLD || size_two > SIZE_THRESHOLD)) {
 
-        int distance = 0;
+      std::vector<std::pair<size_t, size_t>> matches;
 
-        int blocks_one = ceil(size_one / SIZE_THRESHOLD);
-        int blocks_two = ceil(size_two / SIZE_THRESHOLD);
-        int num_blocks = std::max(blocks_one, blocks_two);
+      size_t offset_one = 0;
+      size_t offset_two = 0;
+      while(offset_one < size_one && offset_two < size_two) {
 
-        int i = 0;
-        edit_t * last_edit = nullptr;
-        for(; i < num_blocks; ++i) {
+        size_t look_ahead_one = std::min(offset_one + 3, size_one);
+        size_t look_ahead_two = std::min(offset_two + 3, size_two);
 
-          edit_t * edits = nullptr;
-          int current_size_one = 0, offset_one = 0;
-          if(i < blocks_one) {
+        boost::optional<size_t> match_one;
+        boost::optional<size_t> match_two;
 
-            current_size_one = std::min(SIZE_THRESHOLD, size_one - SIZE_THRESHOLD * i);
-            offset_one = SIZE_THRESHOLD * i;
+        for(int pos_one = offset_one; pos_one < look_ahead_one; ++pos_one) {
 
-          }
+          for(int pos_two = offset_two; pos_two < look_ahead_two; ++pos_two) {
 
-          int current_size_two = 0, offset_two = 0;
-          if(i < blocks_two) {
+            const void * left = accessor(pos_one, (const void *)structure_one.data(), context);
+            const void * right = accessor(pos_two, (const void *)structure_two.data(), context);
 
-            current_size_two = std::min(SIZE_THRESHOLD, size_two - SIZE_THRESHOLD * i);
-            offset_two = SIZE_THRESHOLD * i;
+            if(compare(left, right, context) != 0)
+              continue;
 
-          }
-
-          distance += shortest_edit_script_hybrid((const void *)(structure_one.data() + offset_one), current_size_one, (const void *)(structure_two.data() + offset_two), current_size_two, &edits, compare, accessor, context, threshold);        
-
-          if(edits == nullptr) continue;
-
-          if(edit_script == nullptr) {
-
-            edit_script = edits;
-            for(last_edit = edit_script; last_edit->next != nullptr; last_edit = last_edit->next)
-              ;
-
-          }
-          else {
-
-            for(last_edit->next = edits; last_edit->next != nullptr; last_edit = last_edit->next)
-              ;
+            match_one = pos_one;
+            match_two = pos_two;
+            goto end_search;
 
           }
 
         }
 
-        return distance;
+        end_search:
+        if(match_one)
+          matches.push_back(std::make_pair(*match_one, *match_two));
+
+      }
+
+      return 0;
 
     } else {
 
