@@ -6,6 +6,8 @@
 #include <srcdiff_compare.hpp>
 #include <srcml_nodes.hpp>
 
+#include <boost/optional.hpp>
+
 #include <memory>
 
 class node_set : public srcdiff_vector<int> {
@@ -13,6 +15,7 @@ class node_set : public srcdiff_vector<int> {
 private:
 
 	const srcml_nodes & node_list;
+	boost::optional<std::size_t> hash_value;
 
 	static bool is_white_space(const std::shared_ptr<srcml_node> & node) {
 
@@ -69,6 +72,14 @@ public:
 	  --start;
 	}
 
+	node_set & operator=(node_set set) {
+
+		std::swap(vec, set.vec);
+
+		return *this;
+
+	}
+
 	bool operator==(const node_set & that) const {
 
 		diff_nodes diff = { nodes(), that.nodes() };
@@ -82,11 +93,15 @@ public:
 
 	}
 
-	node_set & operator=(node_set set) {
+	boost::optional<std::size_t> hash() const {
 
-		std::swap(vec, set.vec);
+		return hash_value;
 
-		return *this;
+	}
+
+	void hash(std::size_t hash_value) {
+
+		this->hash_value = hash_value;
 
 	}
 
@@ -98,6 +113,9 @@ struct std::hash<node_set> {
 
   std::size_t operator()(const node_set & set) const {
 
+  	if(set.hash())
+  		return *set.hash();
+
 	std::size_t result = 2166136261;
 	for(std::size_t pos = 0, size = set.size(); pos < size; ++pos) {
 
@@ -108,6 +126,7 @@ struct std::hash<node_set> {
 
 	}
 
+	((node_set &)set).hash(result);
     return result;
 
   }

@@ -3,6 +3,7 @@
 #include <srcdiff_diff.hpp>
 
 #include <list>
+#include <node_set.hpp>
 
 namespace srcdiff_compare {
 
@@ -79,6 +80,15 @@ namespace srcdiff_compare {
 
     node_set * node_set1 = (node_set *)e1;
     node_set * node_set2 = (node_set *)e2;
+
+    if(!node_set1->hash())
+      node_set1->hash(std::hash<node_set>()(*node_set1));
+
+    if(!node_set2->hash())
+      node_set2->hash(std::hash<node_set>()(*node_set2));
+
+    if(!(node_set1->hash() == node_set2->hash()))
+      return 1;
 
     for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size();) {
 
