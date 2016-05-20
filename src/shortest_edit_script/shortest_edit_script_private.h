@@ -42,15 +42,6 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
 */
 int make_edit_script(struct edit_t * start_edit, struct edit_t ** edit_script, struct edit_t ** last_edit);
 
-/*
-  Copy a node from the heap.
-
-  Parameter edit          Edit to copy
-
-  Returns The copied edit or NULL if failed
-*/
-struct edit_t * copy_edit(struct edit_t * edit);
-
 int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two, int sequence_two_start, int sequence_two_end,
   struct edit_t ** edit_script, struct edit_t ** last_edit,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context);

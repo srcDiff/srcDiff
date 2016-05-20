@@ -66,7 +66,13 @@ void free_shortest_edit_script(struct edit_t * edit_script);
 */
 int is_change(const struct edit_t * edit_script);
 
-// shallow copy of an edit
+/*
+  Shallow copy of an edit
+
+  Parameter edit          Edit to copy
+
+  Returns The copied edit or NULL if failed
+*/
 struct edit_t * copy_edit(struct edit_t * edit);
 
 #ifdef __cplusplus
