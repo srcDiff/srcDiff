@@ -152,7 +152,7 @@ int shortest_edit_script_t::approximate_compute(const T & structure_one, const T
       edit->operation = SES_INSERT;
       edit->offset_sequence_one = last_match_one + delete_length;
       edit->offset_sequence_two = last_match_two;
-      edit->length = delete_length;
+      edit->length = insert_length;
       edit->previous = last_edit;
       edit->next = nullptr;
 
@@ -202,7 +202,7 @@ int shortest_edit_script_t::approximate_compute(const T & structure_one, const T
     edit->operation = SES_INSERT;
     edit->offset_sequence_one = last_match_one + delete_length;
     edit->offset_sequence_two = last_match_two;
-    edit->length = delete_length;
+    edit->length = insert_length;
     edit->previous = last_edit;
     edit->next = nullptr;
 
