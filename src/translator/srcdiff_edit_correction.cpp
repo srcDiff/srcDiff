@@ -9,7 +9,7 @@
 
 srcdiff_edit_correction::srcdiff_edit_correction(const node_sets & sets_original,
                                                  const node_sets & sets_modified,
-                                                 class shortest_edit_script & ses) 
+                                                 shortest_edit_script_t & ses) 
     : sets_original(sets_original),
       sets_modified(sets_modified),
       ses(ses) {}

@@ -159,10 +159,10 @@ void srcdiff_text_measure::compute() {
 
   }
 
-  if(    original_len < shortest_edit_script::get_size_threshold()
-      && modified_len < shortest_edit_script::get_size_threshold()) {
+  if(    original_len < shortest_edit_script_t::get_size_threshold()
+      && modified_len < shortest_edit_script_t::get_size_threshold()) {
 
-    class shortest_edit_script ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
+    shortest_edit_script_t ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
     ses.compute<node_set>(set_original_text, set_modified_text, false);
     process_edit_script(ses.get_script(), a_similarity, a_difference);
 

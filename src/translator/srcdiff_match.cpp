@@ -541,7 +541,7 @@ std::vector<std::string> get_call_name(const srcml_nodes & nodes, int start_pos)
 
 int name_list_similarity(std::vector<std::string> name_list_original, std::vector<std::string> name_list_modified) {
 
-  class shortest_edit_script ses(srcdiff_compare::string_compare, srcdiff_compare::string_index, 0);
+  shortest_edit_script_t ses(srcdiff_compare::string_compare, srcdiff_compare::string_index, 0);
 
   ses.compute(&name_list_original, name_list_original.size(), &name_list_modified, name_list_modified.size());
 

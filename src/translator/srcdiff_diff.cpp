@@ -35,7 +35,7 @@ void srcdiff_diff::output() {
 
   diff_nodes dnodes = { node_sets_original.nodes(), node_sets_modified.nodes() };
 
-  class shortest_edit_script ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_array_index, &dnodes);
+  shortest_edit_script_t ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_array_index, &dnodes);
 
   int distance = ses.compute<node_sets>(node_sets_original, node_sets_modified, false);
 

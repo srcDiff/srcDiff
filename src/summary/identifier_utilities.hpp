@@ -111,7 +111,7 @@ public:
 
         split_identifier();
 
-        class shortest_edit_script ses(str_compare, str_accessor, nullptr);
+        shortest_edit_script_t ses(str_compare, str_accessor, nullptr);
         ses.compute(&original_identifiers, original_identifiers.size(), &modified_identifiers, modified_identifiers.size());
 
         list_ = std::vector<std::pair<std::string, srcdiff_type>>();

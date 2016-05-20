@@ -22,7 +22,7 @@ private:
 
   const std::string & file_one;
   const std::string & file_two;
-  class shortest_edit_script ses;
+  shortest_edit_script_t ses;
 
   std::vector<std::string> lines_one;
   std::vector<std::string> lines_two;

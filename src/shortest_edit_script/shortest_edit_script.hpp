@@ -6,7 +6,7 @@
 #include <vector>
 #include <cmath>
 
-class shortest_edit_script {
+class shortest_edit_script_t {
   
 private:
 
@@ -20,11 +20,11 @@ private:
 
 public:
 
-  shortest_edit_script(int (*compare)(const void * item_one, const void * item_two, const void * context),
+  shortest_edit_script_t(int (*compare)(const void * item_one, const void * item_two, const void * context),
                      const void * (*accessor)(int index, const void * structure, const void * context),
                                         const void * context, int threshold = 1000);
 
-  ~shortest_edit_script();
+  ~shortest_edit_script_t();
 
   static int get_size_threshold();
 
@@ -38,7 +38,7 @@ public:
 };
 
 template<typename T>
-int shortest_edit_script::compute(const T & structure_one, const T & structure_two, bool approximate) {
+int shortest_edit_script_t::compute(const T & structure_one, const T & structure_two, bool approximate) {
 
     const int size_one = structure_one.size();
     const int size_two = structure_two.size();

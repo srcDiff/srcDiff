@@ -18,7 +18,7 @@ class character_diff {
 
 private:
 
-    class shortest_edit_script ses;
+    shortest_edit_script_t ses;
     const versioned_string & str;
 
 public:
@@ -26,7 +26,7 @@ public:
     character_diff(const versioned_string & original);
 
     void compute();
-void output(view_t & view, const std::string & type);
+	void output(view_t & view, const std::string & type);
 
 };
 
