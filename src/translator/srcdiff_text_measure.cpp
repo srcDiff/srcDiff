@@ -57,19 +57,29 @@ void srcdiff_text_measure::collect_text_node_set(const node_set & set, node_set 
 
     }
 
-    if(set.nodes().at(set.at(i))->is_text() && !set.nodes().at(set.at(i))->is_white_space()
-      && set.nodes().at(set.at(i))->content
-      && ((set.nodes().at(set.at(i))->parent &&
-          (*set.nodes().at(set.at(i))->parent)->name == "operator")
-      ||   (*set.nodes().at(set.at(i))->content != "("
-        && *set.nodes().at(set.at(i))->content != ")"
-        && *set.nodes().at(set.at(i))->content != "{"
-        && *set.nodes().at(set.at(i))->content != "}"
-        && *set.nodes().at(set.at(i))->content != "["
-        && *set.nodes().at(set.at(i))->content != "]"
-        && *set.nodes().at(set.at(i))->content != ":"
-        && *set.nodes().at(set.at(i))->content != ";"
-        && *set.nodes().at(set.at(i))->content != ",")))
+    const std::shared_ptr<srcml_node> & node = set.nodes().at(set.at(i));
+
+    bool is_text = node->is_text() && !node->is_white_space() && node->content;
+    bool is_operator = node->parent && (*node->parent)->name == "operator";
+
+    if(is_operator && is_text
+        && (*node->content == "."
+          || *node->content == "->"
+          || *node->content == ".*"
+          || *node->content == "->*"))
+        continue;
+
+    if(is_text 
+      && (is_operator
+        ||   (*node->content != "("
+          && *node->content != ")"
+          && *node->content != "{"
+          && *node->content != "}"
+          && *node->content != "["
+          && *node->content != "]"
+          && *node->content != ":"
+          && *node->content != ";"
+          && *node->content != ",")))
       set_text.push_back(set.at(i));
 
   }
