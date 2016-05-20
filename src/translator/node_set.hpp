@@ -26,9 +26,9 @@ private:
 
 public:
 
-	node_set(const srcml_nodes & node_list) : node_list(node_list) {}
+	node_set(const srcml_nodes & node_list) : node_list(node_list), hash_value() {}
 
-	node_set(const node_set & set) : node_list(set.node_list) {
+	node_set(const node_set & set) : node_list(set.node_list), hash_value(set.hash_value) {
 
 		for(size_type pos = 0; pos < set.size(); ++pos) {
 
@@ -38,7 +38,7 @@ public:
 
 	}
 
-	node_set(const srcml_nodes & node_list, int & start) : node_list(node_list) {
+	node_set(const srcml_nodes & node_list, int & start) : node_list(node_list), hash_value() {
 
 	  if((xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_ELEMENT) return;
 
