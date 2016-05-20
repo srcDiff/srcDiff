@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCDIFF_COMPARE
 #define INCLUDED_SRCDIFF_COMPARE
 
-#include <node_sets.hpp>
+#include <srcml_nodes.hpp>
 
 struct diff_nodes {
 

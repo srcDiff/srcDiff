@@ -3,6 +3,7 @@
 
 #include <srcdiff_vector.hpp>
 
+#include <srcdiff_compare.hpp>
 #include <srcml_nodes.hpp>
 
 #include <memory>
@@ -66,6 +67,13 @@ public:
 	  }
 
 	  --start;
+	}
+
+	bool operator==(const node_set & that) const {
+
+		diff_nodes diff = { nodes(), that.nodes() };
+		return srcdiff_compare::node_set_syntax_compare(data(), that.data(), &diff) == 0;
+
 	}
 
 	const srcml_nodes & nodes() const {
