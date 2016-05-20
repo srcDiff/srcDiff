@@ -4,6 +4,7 @@
 #include <shortest_edit_script.h>
 
 #include <vector>
+#include <iostream>
 #include <cmath>
 
 #include <boost/optional.hpp>
@@ -78,12 +79,123 @@ int shortest_edit_script_t::compute(const T & structure_one, const T & structure
         }
 
         end_search:
-        if(match_one)
+        if(match_one) {
+
+          offset_one = *match_one + 1;
+          offset_two = *match_two + 1;
           matches.push_back(std::make_pair(*match_one, *match_two));
+
+        } else {
+
+          ++offset_one;
+          ++offset_two;
+
+        }
 
       }
 
-      return 0;
+      int distance = 0;
+      edit_t * last_edit = nullptr;
+      size_t last_match_one = 0;
+      size_t last_match_two = 0;
+      for(const std::pair<size_t, size_t> & pair : matches) {
+
+        size_t delete_length = (std::get<0>(pair) - last_match_one);
+        size_t insert_length = (std::get<1>(pair) - last_match_two);
+
+        distance += delete_length + insert_length;
+
+        if(delete_length) {
+
+          edit_t * edit = (struct edit_t *)malloc(sizeof(struct edit_t));
+          edit->operation = SES_DELETE;
+          edit->offset_sequence_one = last_match_one;
+          edit->offset_sequence_two = last_match_two;
+          edit->length = delete_length;
+          edit->previous = last_edit;
+          edit->next = nullptr;
+
+          if(edit_script == nullptr)
+            edit_script = edit;
+
+          if(last_edit)
+            last_edit->next = edit;
+
+          last_edit = edit;
+
+        }
+
+        if(insert_length) {
+
+          edit_t * edit = (struct edit_t *)malloc(sizeof(struct edit_t));
+          edit->operation = SES_INSERT;
+          edit->offset_sequence_one = last_match_one + delete_length;
+          edit->offset_sequence_two = last_match_two;
+          edit->length = delete_length;
+          edit->previous = last_edit;
+          edit->next = nullptr;
+
+          if(edit_script == nullptr)
+            edit_script = edit;
+
+          if(last_edit)
+            last_edit->next = edit;
+
+          last_edit = edit;
+
+        }
+
+        last_match_one = std::get<0>(pair) + 1;
+        last_match_two = std::get<1>(pair) + 1;
+
+      }
+
+      size_t delete_length = (size_one - last_match_one);
+      size_t insert_length = (size_two - last_match_two);
+
+      distance += delete_length + insert_length;
+
+      if(delete_length) {
+
+        edit_t * edit = (struct edit_t *)malloc(sizeof(struct edit_t));
+        edit->operation = SES_DELETE;
+        edit->offset_sequence_one = last_match_one;
+        edit->offset_sequence_two = last_match_two;
+        edit->length = delete_length;
+        edit->previous = last_edit;
+        edit->next = nullptr;
+
+        if(edit_script == nullptr)
+          edit_script = edit;
+
+        if(last_edit)
+          last_edit->next = edit;
+
+        last_edit = edit;
+
+      }
+
+      if(insert_length) {
+
+        edit_t * edit = (struct edit_t *)malloc(sizeof(struct edit_t));
+        edit->operation = SES_INSERT;
+        edit->offset_sequence_one = last_match_one + delete_length;
+        edit->offset_sequence_two = last_match_two;
+        edit->length = delete_length;
+        edit->previous = last_edit;
+        edit->next = nullptr;
+
+        if(edit_script == nullptr)
+          edit_script = edit;
+
+        if(last_edit)
+          last_edit->next = edit;
+
+        last_edit = edit;
+
+      }
+
+      return distance;
 
     } else {
 
