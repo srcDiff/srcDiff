@@ -8,6 +8,7 @@
 #include <vector>
 #include <map>
 #include <list>
+#include <unordered_set>
 
 int move_id = 0;
 const std::string move("move");
@@ -17,24 +18,6 @@ typedef std::vector<move_info> move_infos;
 
 srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation)
   : srcdiff_output(out), position(position), operation(operation) {}
-
-
-void add_construct(std::map<std::string, move_infos > & constructs,
-                   const node_sets & sets,
-                   int offset,
-                   int operation) {
-
-  std::string tag = sets.nodes().at(sets.at(offset).at(0))->name;
-
-  if(constructs.find(tag) == constructs.end()) {
-
-    constructs[tag] = move_infos();
-
-  }
-
-  constructs[tag].push_back(move_info(offset, operation));
-
-}
 
 bool srcdiff_move::is_move(const node_set & set) {
 
@@ -50,6 +33,11 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
   std::map<std::string, move_infos > constructs;
 
+  typedef std::unordered_multiset<node_set>::iterator lookup_iterator;
+  std::unordered_multiset<node_set> node_set_lookup_table;
+
+  std::vector<const node_set *> delete_sets;
+
   for(edit_t * edits = edit_script; edits; edits = edits->next) {
 
     switch(edits->operation) {
@@ -61,7 +49,9 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
         for(int i = 0; i < edits->length; ++i) {
 
-          add_construct(constructs, node_sets_modified, edits->offset_sequence_two + i, SES_INSERT);
+          if(node_sets_modified.nodes().at(node_sets_modified.at(edits->offset_sequence_two + i).at(0))->is_text())
+            continue;
+          node_set_lookup_table.insert(node_sets_modified.at(edits->offset_sequence_two + i));
 
         }
 
@@ -71,7 +61,9 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
         for(int i = 0; i < edits->length; ++i) {
 
-          add_construct(constructs, node_sets_original, edits->offset_sequence_one + i, SES_DELETE);
+          if(node_sets_original.nodes().at(node_sets_original.at(edits->offset_sequence_one + i).at(0))->is_text())
+            continue;
+          delete_sets.push_back(&node_sets_original.at(edits->offset_sequence_one + i));
 
         }
 
@@ -81,77 +73,39 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
   }
 
-  for(std::map<std::string, move_infos>::const_iterator construct = constructs.begin(); construct != constructs.end(); ++construct) {
+  for(const node_set * set : delete_sets) {
 
-    if(construct->first == "text")
-      continue;
+    std::pair<lookup_iterator, lookup_iterator> range = node_set_lookup_table.equal_range(*set);
 
-    move_infos elements = construct->second;
+    for(lookup_iterator pos = std::get<0>(range); pos != std::get<1>(range); ++pos) {
 
-    for(unsigned int i = 0; i < elements.size(); ++i) {
-
-      srcml_nodes * nodes_one = &nodes_original;
-      srcml_nodes * nodes_two = &nodes_modified;
-
-      const node_sets * node_sets_one = &node_sets_original;
-      const node_sets * node_sets_two = &node_sets_modified;
-
-      if(std::get<1>(elements.at(i)) == SES_INSERT) {
-
-       nodes_one = &nodes_modified;
-       nodes_two = &nodes_original;
-
-        node_sets_one = &node_sets_modified;
-        node_sets_two = &node_sets_original;
-
-      }
-
-      if(nodes_one->at(node_sets_one->at(std::get<0>(elements.at(i))).at(0))->move)
+      if(is_move(*pos))
         continue;
 
-      for(unsigned int j = i + 1; j < elements.size(); ++j) {
+      if(!(*set == *pos))
+        continue;
 
-        if(std::get<1>(elements.at(i)) == std::get<1>(elements.at(j)))
-          continue;
+      ++move_id;
+      std::shared_ptr<srcml_node> start_node_one = std::make_shared<srcml_node>(*set->nodes().at(set->at(0)));
+      start_node_one->move = move_id;
 
-        diff_nodes diff_set = { *nodes_one, *nodes_two };
+      std::shared_ptr<srcml_node> start_node_two = std::make_shared<srcml_node>(*pos->nodes().at(pos->at(0)));
+      start_node_two->move = move_id;
 
-        if(srcdiff_compare::node_set_syntax_compare(&node_sets_one->at(std::get<0>(elements.at(i)))
-                                   , &node_sets_two->at(std::get<0>(elements.at(j))), &diff_set) != 0)
-          continue;
-        /*
-          if(compute_difference(nodes_one, node_sets_one->at(std::get<0>(elements.at(i)))
-          , nodes_two, node_sets_two->at(std::get<0>(elements.at(j)))) != 0)
-          continue;
-        */
+      // breaks const
+      ((srcml_nodes &)set->nodes()).at(set->at(0)) = start_node_one;
+      ((srcml_nodes &)pos->nodes()).at(pos->at(0)) = start_node_two;
 
-        if(is_move(node_sets_one->at(std::get<0>(elements.at(i)))) || is_move(node_sets_two->at(std::get<0>(elements.at(j)))))
-         continue;
+      if(!start_node_one->is_empty) {
 
-        ++move_id;
-        std::shared_ptr<srcml_node> start_node_one = std::make_shared<srcml_node>(*nodes_one->at(node_sets_one->at(std::get<0>(elements.at(i))).at(0)));
-        start_node_one->move = move_id;
+        std::shared_ptr<srcml_node> end_node_one = std::make_shared<srcml_node>(*set->nodes().at(set->back()));
+        end_node_one->move = move_id;
 
-        std::shared_ptr<srcml_node> start_node_two = std::make_shared<srcml_node>(*nodes_two->at(node_sets_two->at(std::get<0>(elements.at(j))).at(0)));
-        start_node_two->move = move_id;
+        std::shared_ptr<srcml_node> end_node_two = std::make_shared<srcml_node>(*pos->nodes().at(pos->back()));
+        end_node_two->move = move_id;
 
-        nodes_one->at(node_sets_one->at(std::get<0>(elements.at(i))).at(0)) = start_node_one;
-        nodes_two->at(node_sets_two->at(std::get<0>(elements.at(j))).at(0)) = start_node_two;
-
-        if(!start_node_one->is_empty) {
-
-          std::shared_ptr<srcml_node> end_node_one = std::make_shared<srcml_node>(*nodes_one->at(node_sets_one->at(std::get<0>(elements.at(i))).back()));
-          end_node_one->move = move_id;
-
-          std::shared_ptr<srcml_node> end_node_two = std::make_shared<srcml_node>(*nodes_two->at(node_sets_two->at(std::get<0>(elements.at(j))).back()));
-          end_node_two->move = move_id;
-
-          nodes_one->at(node_sets_one->at(std::get<0>(elements.at(i))).back()) = end_node_one;
-          nodes_two->at(node_sets_two->at(std::get<0>(elements.at(j))).back()) = end_node_two;
-
-        }
-
-        break;
+        ((srcml_nodes &)set->nodes()).at(set->back()) = end_node_one;
+        ((srcml_nodes &)pos->nodes()).at(pos->back()) = end_node_two;
 
       }
 

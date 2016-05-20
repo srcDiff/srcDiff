@@ -72,7 +72,7 @@ public:
 	bool operator==(const node_set & that) const {
 
 		diff_nodes diff = { nodes(), that.nodes() };
-		return srcdiff_compare::node_set_syntax_compare(data(), that.data(), &diff) == 0;
+		return srcdiff_compare::node_set_syntax_compare((const void *)this, (const void *)&that, &diff) == 0;
 
 	}
 
