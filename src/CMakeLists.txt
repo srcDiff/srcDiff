@@ -63,7 +63,7 @@ else()
     set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME srcdiff)
 endif()
 
-    target_link_libraries(${LIBRARY_NAME} PRIVATE srcsax ${LIBSRCDIFF_LIBRARIES})
+    target_link_libraries(${LIBRARY_NAME} PRIVATE srcsax_static ${LIBSRCDIFF_LIBRARIES})
 
 endmacro()
 
