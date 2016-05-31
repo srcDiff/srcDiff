@@ -1,10 +1,16 @@
 #include <shortest_edit_script.hpp>
 
 const size_t shortest_edit_script_t::SIZE_THRESHOLD = 2048;
-shortest_edit_script_t::shortest_edit_script_t(int (*compare)(const void * item_one, const void * item_two, const void * context)
-                                       , const void * (*accessor)(int index, const void * structure, const void * context)
-                                       , const void * context
-                                       , int threshold) : edit_script(nullptr), context(context), compare(compare), accessor(accessor), threshold(threshold) { }
+shortest_edit_script_t::shortest_edit_script_t(int (*compare)(const void * item_one, const void * item_two, const void * context),
+											   const void * (*accessor)(int index, const void * structure, const void * context),
+											   const void * context,
+											   int threshold)
+	: edit_script(nullptr),
+	  approximate(false),
+	  context(context),
+	  compare(compare),
+	  accessor(accessor),
+	  threshold(threshold) { }
 
 shortest_edit_script_t::~shortest_edit_script_t() {
 
@@ -34,5 +40,11 @@ void shortest_edit_script_t::set_script(edit_t * edit_script) {
 edit_t * shortest_edit_script_t::get_script() {
 
   return edit_script;
+
+}
+
+bool shortest_edit_script_t::is_approximate() const {
+
+	return approximate;
 
 }

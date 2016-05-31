@@ -88,6 +88,7 @@ public:
     xmlBufferPtr buffer;
     xmlTextWriterPtr writer;
     srcml_unit * unit;
+    bool approximate;
 
     const METHOD_TYPE & method;
 
@@ -157,6 +158,7 @@ public:
   virtual void reset();
   virtual void close();
 
+
   virtual const std::string & get_srcdiff_filename() const;
   virtual const srcml_nodes & get_nodes_original() const;
   virtual const srcml_nodes & get_nodes_modified() const;
@@ -168,6 +170,8 @@ public:
   virtual unsigned int & last_output_modified();
   virtual int get_output_state() const;
   METHOD_TYPE method() const;
+
+  bool approximate(bool is_approximate);
 
   virtual bool is_delay_type(int operation);
 

@@ -237,7 +237,6 @@ return rbuf_modified->last_output;
 
 }
 
-
 int srcdiff_output::get_output_state() const {
 
   return wstate->output_diff.back()->operation;
@@ -249,6 +248,13 @@ METHOD_TYPE srcdiff_output::method() const {
   return wstate->method;
 
 }
+
+bool srcdiff_output::approximate(bool is_approximate) {
+
+  wstate->approximate = is_approximate;
+
+}
+
 
 bool srcdiff_output::is_delay_type(int operation) {
 

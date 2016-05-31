@@ -16,6 +16,8 @@ private:
   const static size_t SIZE_THRESHOLD;
 
   edit_t * edit_script;
+  bool approximate;
+
   const void * context;
   int (*compare)(const void * item_one, const void * item_two, const void * context);
   const void * (*accessor)(int index, const void * structure, const void * context);
@@ -33,6 +35,7 @@ public:
 
   edit_t * get_script();
   void set_script(edit_t * edit_script);
+  bool is_approximate() const;
 
   template<typename T>
   int compute(const T & structure_one, const T & structure_two, bool approximate);
@@ -65,6 +68,8 @@ int shortest_edit_script_t::compute(const T & structure_one, const T & structure
 
 template<typename T>
 int shortest_edit_script_t::approximate_compute(const T & structure_one, const T & structure_two) {
+
+  approximate = true;
 
   const size_t size_one = structure_one.size();
   const size_t size_two = structure_two.size();

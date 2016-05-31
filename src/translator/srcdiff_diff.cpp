@@ -38,6 +38,7 @@ void srcdiff_diff::output() {
   shortest_edit_script_t ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_array_index, &dnodes);
 
   int distance = ses.compute<node_sets>(node_sets_original, node_sets_modified, true);
+  if(ses.is_approximate()) out.approximate(true);
 
   srcdiff_edit_correction corrector(node_sets_original, node_sets_modified, ses);
   corrector.correct();
