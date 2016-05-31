@@ -33,8 +33,8 @@ public:
 
   static size_t get_size_threshold();
 
-  edit_t * get_script();
-  void set_script(edit_t * edit_script);
+  edit_t * script() const;
+  void script(edit_t * edit_script);
   bool is_approximate() const;
 
   template<typename T>

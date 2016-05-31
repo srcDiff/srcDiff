@@ -171,7 +171,7 @@ public:
   virtual int get_output_state() const;
   METHOD_TYPE method() const;
 
-  bool approximate(bool is_approximate);
+  void approximate(bool is_approximate);
 
   virtual bool is_delay_type(int operation);
 

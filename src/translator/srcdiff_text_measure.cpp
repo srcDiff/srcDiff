@@ -164,7 +164,7 @@ void srcdiff_text_measure::compute() {
 
     shortest_edit_script_t ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
     ses.compute<node_set>(set_original_text, set_modified_text, false);
-    process_edit_script(ses.get_script(), a_similarity, a_difference);
+    process_edit_script(ses.script(), a_similarity, a_difference);
 
   } else {
 

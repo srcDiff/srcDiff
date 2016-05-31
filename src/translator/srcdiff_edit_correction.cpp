@@ -176,8 +176,8 @@ void srcdiff_edit_correction::split_change(edit_t * delete_edit, edit_t * insert
     else
         start_edit = common_edit;
 
-    if(delete_edit == ses.get_script())
-       ses.set_script(start_edit);
+    if(delete_edit == ses.script())
+       ses.script(start_edit);
 
     start_edits = start_edit;
 
@@ -270,7 +270,7 @@ edit_t * srcdiff_edit_correction::correct_common(edit_t * start_edit) {
 void srcdiff_edit_correction::correct() {
 
     // wrongly matched common correction
-    for(edit_t * edit_script = ses.get_script(); edit_script != nullptr; edit_script = edit_script->next) {
+    for(edit_t * edit_script = ses.script(); edit_script != nullptr; edit_script = edit_script->next) {
 
         // save pointer to before edits
         edit_t * before = edit_script->previous;
@@ -464,8 +464,8 @@ void srcdiff_edit_correction::correct() {
                     for(edit_t * edit : free_edit_list)
                         free(edit);
 
-                    if(start_edit == ses.get_script())
-                        ses.set_script(delete_edit);
+                    if(start_edit == ses.script())
+                        ses.script(delete_edit);
 
                     edit_t * last_edits = nullptr;
                     split_change(delete_edit,

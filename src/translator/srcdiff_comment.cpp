@@ -24,7 +24,7 @@ void srcdiff_comment::output() {
 
   int distance = ses.compute((const void *)&node_sets_original, node_sets_original.size(), (const void *)&node_sets_modified, node_sets_modified.size());
 
-  edit_t * edit_script = ses.get_script();
+  edit_t * edit_script = ses.script();
 
   if(distance < 0) {
 

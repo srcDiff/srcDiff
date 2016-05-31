@@ -31,15 +31,15 @@ int shortest_edit_script_t::compute(const void * structure_one, int size_one, co
 
 }
 
-void shortest_edit_script_t::set_script(edit_t * edit_script) {
+edit_t * shortest_edit_script_t::script() const {
 
-  this->edit_script = edit_script;
+  return edit_script;
 
 }
 
-edit_t * shortest_edit_script_t::get_script() {
+void shortest_edit_script_t::script(edit_t * edit_script) {
 
-  return edit_script;
+  this->edit_script = edit_script;
 
 }
 

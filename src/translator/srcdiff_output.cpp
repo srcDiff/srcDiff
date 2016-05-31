@@ -249,7 +249,7 @@ METHOD_TYPE srcdiff_output::method() const {
 
 }
 
-bool srcdiff_output::approximate(bool is_approximate) {
+void srcdiff_output::approximate(bool is_approximate) {
 
   wstate->approximate = is_approximate;
 

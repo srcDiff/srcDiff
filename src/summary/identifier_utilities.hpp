@@ -116,7 +116,7 @@ public:
 
         list_ = std::vector<std::pair<std::string, srcdiff_type>>();
         int original_pos = 0, modified_pos = 0;
-        for(edit_t * edits = ses.get_script(); edits != nullptr; edits = edits->next) {
+        for(edit_t * edits = ses.script(); edits != nullptr; edits = edits->next) {
 
             if(edits->operation == SES_DELETE) {
 

@@ -43,7 +43,7 @@ void srcdiff_diff::output() {
   srcdiff_edit_correction corrector(node_sets_original, node_sets_modified, ses);
   corrector.correct();
 
-  edit_t * edit_script = ses.get_script();
+  edit_t * edit_script = ses.script();
 
   if(distance < 0) {
 

@@ -32,7 +32,7 @@ void character_diff::output(view_t & view, const std::string & type) {
 
     int difference = 0;
     int num_consecutive_edits = 0;
-    for(const edit_t * edits = ses.get_script(); edits; edits = edits->next) {
+    for(const edit_t * edits = ses.script(); edits; edits = edits->next) {
 
       num_consecutive_edits += 1;
       difference += edits->length;
@@ -43,18 +43,18 @@ void character_diff::output(view_t & view, const std::string & type) {
     bool is_diff_name = type == "name" && 5 * difference < min_size;
     bool is_diff_operator = type == "operator" && difference <= min_size;
     // bool is_delete_consecutive = num_consecutive_edits == 1 
-    //   && ses.get_script()->operation == SES_DELETE 
-    //   && (ses.get_script()->offset_sequence_one == 0
-    //     || (ses.get_script()->offset_sequence_one + ses.get_script()->length == str.original().size()));
+    //   && ses.script()->operation == SES_DELETE 
+    //   && (ses.script()->offset_sequence_one == 0
+    //     || (ses.script()->offset_sequence_one + ses.script()->length == str.original().size()));
     // bool is_insert_consecutive = num_consecutive_edits == 1 
-    //   && ses.get_script()->operation == SES_INSERT 
-    //   && (ses.get_script()->offset_sequence_two == 0
-    //     || (ses.get_script()->offset_sequence_two + ses.get_script()->length == str.modified().size()));
+    //   && ses.script()->operation == SES_INSERT 
+    //   && (ses.script()->offset_sequence_two == 0
+    //     || (ses.script()->offset_sequence_two + ses.script()->length == str.modified().size()));
 
     if(is_diff_name || is_diff_operator || num_consecutive_edits == 1) {
 
       int last_diff_original = 0;
-      for(const edit_t * edits = ses.get_script(); edits; edits = edits->next) {
+      for(const edit_t * edits = ses.script(); edits; edits = edits->next) {
 
         if(edits->operation == SES_DELETE 
            && last_diff_original < edits->offset_sequence_one)
