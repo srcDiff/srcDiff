@@ -88,20 +88,20 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
     if(start_original == end_original && start_original >= 0 && end_original < (signed)node_sets_original.size()
       && start_modified == end_modified && start_modified >= 0 && end_modified < (signed)node_sets_modified.size()) {
 
-      if(is_identifier(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name)
-         && is_identifier(out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name))
+      if(is_identifier(out.nodes_original().at(node_sets_original.at(start_original).at(0))->name)
+         && is_identifier(out.nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name))
          output_replace_inner_whitespace(node_sets_original.at(start_original).at(0), finish_original,
                                          node_sets_modified.at(start_modified).at(0), finish_modified,
                                          1);
 
-       if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "return"
-          && out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "return")
+       if(out.nodes_original().at(node_sets_original.at(start_original).at(0))->name == "return"
+          && out.nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "return")
           output_replace_inner_whitespace(node_sets_original.at(start_original).at(0), finish_original,
                                           node_sets_modified.at(start_modified).at(0), finish_modified,
                                           2);
 
-       if(out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name == "throw"
-          && out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "throw")
+       if(out.nodes_original().at(node_sets_original.at(start_original).at(0))->name == "throw"
+          && out.nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "throw")
           output_replace_inner_whitespace(node_sets_original.at(start_original).at(0), finish_original,
                                           node_sets_modified.at(start_modified).at(0), finish_modified,
                                           2);
@@ -123,13 +123,13 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
   int_pairs original_moved;
   std::vector<int> pos_original;
-  node_sets original_sets(out.get_nodes_original());
+  node_sets original_sets(out.nodes_original());
 
   for(unsigned int i = 0; (signed)i < edits->length; ++i) {
 
     unsigned int index = edits->offset_sequence_one + i;
 
-    if(out.get_nodes_original().at(node_sets_original.at(index).at(0))->move) {
+    if(out.nodes_original().at(node_sets_original.at(index).at(0))->move) {
 
       original_moved.push_back(int_pair(MOVE, 0));
 
@@ -145,13 +145,13 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
   int_pairs modified_moved;
   std::vector<int> pos_modified;
-  node_sets modified_sets(out.get_nodes_modified());
+  node_sets modified_sets(out.nodes_modified());
 
   for(unsigned int i = 0; (signed)i < edit_next->length; ++i) {
 
     unsigned int index = edit_next->offset_sequence_two + i;
 
-    if(out.get_nodes_modified().at(node_sets_modified.at(index).at(0))->move) {
+    if(out.nodes_modified().at(node_sets_modified.at(index).at(0))->move) {
 
       modified_moved.push_back(int_pair(MOVE, 0));
 
@@ -238,7 +238,7 @@ void srcdiff_many::output() {
 
     if(original_moved.at(i).first == SES_COMMON && modified_moved.at(j).first == SES_COMMON) {
  
-      if((xmlReaderTypes)out.get_nodes_original().at(node_sets_original.at(edits->offset_sequence_one + i).at(0))->type != XML_READER_TYPE_TEXT) {
+      if((xmlReaderTypes)out.nodes_original().at(node_sets_original.at(edits->offset_sequence_one + i).at(0))->type != XML_READER_TYPE_TEXT) {
 
         srcdiff_single diff(*this, edits->offset_sequence_one + i, edit_next->offset_sequence_two + j);
         diff.output();

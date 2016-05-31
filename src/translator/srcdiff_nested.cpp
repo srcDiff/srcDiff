@@ -873,40 +873,40 @@ void srcdiff_nested::output() {
     unsigned int start_pos = node_sets_original.at(start_original).at(1);
     size_t end_pos = node_sets_original.at(end_original - 1).back();
 
-    const std::string & structure_original = out.get_nodes_original().at(node_sets_original.at(start_original).at(0))->name;
+    const std::string & structure_original = out.nodes_original().at(node_sets_original.at(start_original).at(0))->name;
     if(structure_original == "if" || structure_original == "elseif") {
 
         if(structure_original == "elseif") {
 
-          advance_to_child(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "if");
+          advance_to_child(out.nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "if");
           ++start_pos;
         }
 
-        advance_to_child(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then");
+        advance_to_child(out.nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then");
 
     } else if(structure_original == "while") {
 
-        advance_to_child(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition");
+        advance_to_child(out.nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition");
         ++start_pos;
 
     } else if(structure_original == "for") {
 
-        advance_to_child(out.get_nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control");
+        advance_to_child(out.nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control");
         ++start_pos;
 
     }
 
     if(structure_original == "elseif") {
 
-      while(end_pos > start_pos && out.get_nodes_original().at(end_pos)->name != "if")
+      while(end_pos > start_pos && out.nodes_original().at(end_pos)->name != "if")
         --end_pos;
 
     }
 
-    node_sets set = node_sets(out.get_nodes_original(),
+    node_sets set = node_sets(out.nodes_original(),
                               start_pos, end_pos);
 
-    node_sets nest_set(out.get_nodes_modified());
+    node_sets nest_set(out.nodes_modified());
 
     for(int i = start_modified; i < end_modified; ++i)
         nest_set.push_back(node_sets_modified.at(i));
@@ -927,41 +927,41 @@ void srcdiff_nested::output() {
     unsigned int start_pos = node_sets_modified.at(start_modified).at(1);
     size_t end_pos = node_sets_modified.at(end_modified - 1).back();
 
-    const std::string & structure_modified = out.get_nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name;
+    const std::string & structure_modified = out.nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name;
 
     if(structure_modified == "if" || structure_modified == "elseif") {
 
         if(structure_modified == "elseif") {
 
-          advance_to_child(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "if");
+          advance_to_child(out.nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "if");
           ++start_pos;
         }
 
-        advance_to_child(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then");
+        advance_to_child(out.nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then");
 
     } else if(structure_modified == "while") {
 
-        advance_to_child(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition");
+        advance_to_child(out.nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition");
         ++start_pos;
 
     } else if(structure_modified == "for") {
 
-        advance_to_child(out.get_nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control");
+        advance_to_child(out.nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control");
         ++start_pos;
 
     }
 
     if(structure_modified == "elseif") {
 
-      while(end_pos > start_pos && out.get_nodes_modified().at(end_pos)->name != "if")
+      while(end_pos > start_pos && out.nodes_modified().at(end_pos)->name != "if")
         --end_pos;
 
     }
 
-    node_sets set = node_sets(out.get_nodes_modified(),
+    node_sets set = node_sets(out.nodes_modified(),
                               start_pos, end_pos);
 
-    node_sets nest_set(out.get_nodes_original());
+    node_sets nest_set(out.nodes_original());
 
     for(int i = start_original; i < end_original; ++i)
         nest_set.push_back(node_sets_original.at(i));

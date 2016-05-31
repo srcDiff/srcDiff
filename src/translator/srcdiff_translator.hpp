@@ -94,16 +94,16 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
 
   // if(!is_option(flags, OPTION_SAME) && line_diff_range.get_line_diff() == NULL)
   //   return;
-  const boost::optional<std::string> output_path = is_option(flags, OPTION_BURST) && is_option(flags, OPTION_SRCML) ? output.get_srcdiff_filename() : boost::optional<std::string>();
+  const boost::optional<std::string> output_path = is_option(flags, OPTION_BURST) && is_option(flags, OPTION_SRCML) ? output.srcdiff_filename() : boost::optional<std::string>();
 
   const srcml_converter::srcml_burst_config burst_config = { output_path, language, (this->unit_filename ? this->unit_filename : unit_filename), unit_version };
   int is_original = 0;
-  std::thread thread_original(std::ref(input_original), SES_DELETE, std::ref(output.get_nodes_original()), std::ref(is_original), burst_config);
+  std::thread thread_original(std::ref(input_original), SES_DELETE, std::ref(output.nodes_original()), std::ref(is_original), burst_config);
 
   thread_original.join();
 
   int is_modified = 0;
-  std::thread thread_modified(std::ref(input_modified), SES_INSERT, std::ref(output.get_nodes_modified()), std::ref(is_modified), burst_config);
+  std::thread thread_modified(std::ref(input_modified), SES_INSERT, std::ref(output.nodes_modified()), std::ref(is_modified), burst_config);
 
   thread_modified.join();
 
@@ -112,8 +112,8 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
     boost::timer::auto_cpu_timer t;
 #endif
 
-  node_sets set_original(output.get_nodes_original(), 0, output.get_nodes_original().size());
-  node_sets set_modified(output.get_nodes_modified(), 0, output.get_nodes_modified().size());
+  node_sets set_original(output.nodes_original(), 0, output.nodes_original().size());
+  node_sets set_modified(output.nodes_modified(), 0, output.nodes_modified().size());
 
   output.initialize(is_original, is_modified);
 

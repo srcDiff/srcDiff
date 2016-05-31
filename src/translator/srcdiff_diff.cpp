@@ -51,9 +51,9 @@ void srcdiff_diff::output() {
     exit(distance);
   }
 
-  srcdiff_move::mark_moves(out.get_nodes_original(),
+  srcdiff_move::mark_moves(out.nodes_original(),
                            node_sets_original,
-                           out.get_nodes_modified(),
+                           out.nodes_modified(),
                            node_sets_modified,
                            edit_script);
 
@@ -107,7 +107,7 @@ void srcdiff_diff::output() {
 
         case SES_COMMON:
 
-          if((xmlReaderTypes)out.get_nodes_original().at(node_sets_original.at(edits->offset_sequence_one).at(0))->type != XML_READER_TYPE_TEXT) {
+          if((xmlReaderTypes)out.nodes_original().at(node_sets_original.at(edits->offset_sequence_one).at(0))->type != XML_READER_TYPE_TEXT) {
 
             srcdiff_single diff(*this, edits->offset_sequence_one, edits->offset_sequence_two);
             diff.output();
@@ -211,7 +211,7 @@ void srcdiff_diff::output_replace_inner_whitespace(int start_original, int end_o
   out.output_node(out.diff_common_start, SES_COMMON);
   for(int i = 0; i < common_offset; ++i) {
 
-    out.output_node(out.get_nodes_original().at(start_original + i), SES_COMMON);
+    out.output_node(out.nodes_original().at(start_original + i), SES_COMMON);
     ++out.last_output_original();
     ++out.last_output_modified();
 

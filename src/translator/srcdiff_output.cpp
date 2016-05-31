@@ -182,32 +182,32 @@ void srcdiff_output::close() {
 
 }
 
-const std::string & srcdiff_output::get_srcdiff_filename() const {
+const std::string & srcdiff_output::srcdiff_filename() const {
 
   return wstate->filename;
 
 
 }
 
-const srcml_nodes & srcdiff_output::get_nodes_original() const {
+const srcml_nodes & srcdiff_output::nodes_original() const {
 
   return rbuf_original->nodes;
 
 }
 
-const srcml_nodes & srcdiff_output::get_nodes_modified() const {
+const srcml_nodes & srcdiff_output::nodes_modified() const {
 
   return rbuf_modified->nodes;
 
 }
 
-srcml_nodes & srcdiff_output::get_nodes_original() {
+srcml_nodes & srcdiff_output::nodes_original() {
 
   return rbuf_original->nodes;
 
 }
 
-srcml_nodes & srcdiff_output::get_nodes_modified() {
+srcml_nodes & srcdiff_output::nodes_modified() {
 
   return rbuf_modified->nodes;
 
@@ -237,7 +237,7 @@ return rbuf_modified->last_output;
 
 }
 
-int srcdiff_output::get_output_state() const {
+int srcdiff_output::output_state() const {
 
   return wstate->output_diff.back()->operation;
 

@@ -19,7 +19,7 @@ void srcdiff_comment::output() {
 
   //fprintf(stderr, "HERE_DOUBLE\n");
 
-  diff_nodes dnodes = { out.get_nodes_original(), out.get_nodes_modified() };
+  diff_nodes dnodes = { out.nodes_original(), out.nodes_modified() };
   shortest_edit_script_t ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
 
   int distance = ses.compute((const void *)&node_sets_original, node_sets_original.size(), (const void *)&node_sets_modified, node_sets_modified.size());

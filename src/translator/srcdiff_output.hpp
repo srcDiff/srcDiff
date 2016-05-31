@@ -159,16 +159,16 @@ public:
   virtual void close();
 
 
-  virtual const std::string & get_srcdiff_filename() const;
-  virtual const srcml_nodes & get_nodes_original() const;
-  virtual const srcml_nodes & get_nodes_modified() const;
-  virtual srcml_nodes & get_nodes_original();
-  virtual srcml_nodes & get_nodes_modified();
+  virtual const std::string & srcdiff_filename() const;
+  virtual const srcml_nodes & nodes_original() const;
+  virtual const srcml_nodes & nodes_modified() const;
+  virtual srcml_nodes & nodes_original();
+  virtual srcml_nodes & nodes_modified();
   unsigned int last_output_original() const;
   unsigned int last_output_modified() const;
   virtual unsigned int & last_output_original();
   virtual unsigned int & last_output_modified();
-  virtual int get_output_state() const;
+  virtual int output_state() const;
   METHOD_TYPE method() const;
 
   void approximate(bool is_approximate);
