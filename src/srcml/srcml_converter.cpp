@@ -235,12 +235,6 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
       const char * characters = (const char *)xmlTextReaderConstValue(reader);
 
-      bool is_string_literal 
-        = element_stack.back()->name == "literal"
-         && !element_stack.back()->properties.empty()
-         && element_stack.back()->properties.front().name == "type"
-         && (*element_stack.back()->properties.front().value) == "string";
-
       // cycle through characters
       while((*characters) != 0) {
 
@@ -284,13 +278,20 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         // separate non whitespace
         else if(is_separate_token(*characters)) {
 
+          bool is_string_literal 
+            = element_stack.back()->name == "literal"
+             && !element_stack.back()->properties.empty()
+             && element_stack.back()->properties.front().name == "type"
+             && (*element_stack.back()->properties.front().value) == "string";
+
           bool first = true;
           bool last_was_collect = (*characters == '"' || *characters == '\\');
-          // merge consecutive espace \ and "
-          while(first
+
+          // merge consecutive escape \ and "
+          while(*characters && (first
                  || (is_string_literal && last_was_collect
                   && (*characters == '"'
-                    || *characters == '\\'))) {
+                    || *characters == '\\')))) {
 
             first = false;
             last_was_collect = (*characters == '"' || *characters == '\\');
@@ -298,6 +299,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
             if(*characters == '\\') {
 
               ++characters;
+              if(!*characters) continue;
 
               if(*characters == 'x') {
 
@@ -319,11 +321,21 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
               } else if(*characters == 'u') {
 
-                characters += 4;
+                ++characters;
+                size_t pos = 0;
+                while(pos < 4 && isxdigit(*characters))
+                  ++pos, ++characters;
+
+                --characters;
 
               } else if(*characters =='U') {
 
-                characters += 8;
+                ++characters;
+                size_t pos = 0;
+                while(pos < 8 && isxdigit(*characters))
+                  ++pos, ++characters;
+
+                --characters;
 
               }
 
