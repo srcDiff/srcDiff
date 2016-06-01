@@ -7,6 +7,7 @@
 #include <srcdiff_compare.hpp>
 #include <srcdiff_match.hpp>
 #include <shortest_edit_script.h>
+#include <type_query.hpp>
 
 #include <algorithm>
 #include <cstring>
@@ -39,14 +40,23 @@ const char * const else_nest_types[]        = { "goto", "expr_stmt", "decl_stmt"
                                                 "try", "catch", "finally", "synchronized",
                                                 "expr", "call", "operator", "literal", 0 };
 
-const char * const class_nest_types[]       = { "decl_stmt",
-                                                "function_decl", "function",
-                                                "constructor_decl", "constructor", 
-                                                "destructor_decl", "destructor",
-                                                "class_decl", "class", 
-                                                "struct_decl", "struct", 
-                                                "union_decl", "union",
-                                                "typedef", 0 };
+const char * const class_nest_types[]       = { "function",
+                                                "constructor", 
+                                                "destructor",
+                                                "class", 
+                                                "struct", 
+                                                "union",
+                                                "enum",
+                                                "decl_stmt",                                                
+                                                "function_decl",
+                                                "constructor_decl", 
+                                                "destructor_decl",
+                                                "class_decl",
+                                                "struct_decl",
+                                                "union_decl",
+                                                "enum_decl",
+                                                "typedef",
+                                                0 };
 
 const char * const extern_nest_types[]      = { "decl_stmt", "function_decl", "function", "class", "class_decl",
                                                 "struct", "struct_decl", "union", "union_decl", "typedef", "using", 0 };
@@ -894,6 +904,11 @@ void srcdiff_nested::output() {
         advance_to_child(out.nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control");
         ++start_pos;
 
+    } else if(is_class_type(structure_original)) {
+
+        advance_to_child(out.nodes_original(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "block");
+        ++start_pos;
+
     }
 
     if(structure_original == "elseif") {
@@ -947,6 +962,11 @@ void srcdiff_nested::output() {
     } else if(structure_modified == "for") {
 
         advance_to_child(out.nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control");
+        ++start_pos;
+
+    } else if(is_class_type(structure_modified)) {
+
+        advance_to_child(out.nodes_modified(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "block");
         ++start_pos;
 
     }
