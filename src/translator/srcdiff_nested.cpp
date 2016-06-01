@@ -886,28 +886,28 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
   const std::string & structure_outer = node_sets_outer.nodes().at(node_sets_outer.at(start_outer).at(0))->name;
   if(structure_outer == "if" || structure_outer == "elseif") {
 
-      if(structure_outer == "elseif") {
+    if(structure_outer == "elseif") {
 
-        advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "if");
-        ++start_pos;
-      }
+      advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "if");
+      ++start_pos;
+    }
 
-      advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then");
+    advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then");
 
   } else if(structure_outer == "while") {
 
-      advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition");
-      ++start_pos;
+    advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition");
+    ++start_pos;
 
   } else if(structure_outer == "for") {
 
-      advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control");
-      ++start_pos;
+    advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control");
+    ++start_pos;
 
   } else if(is_class_type(structure_outer)) {
 
-      advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "block");
-      ++start_pos;
+    advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "block");
+    ++start_pos;
 
   }
 
@@ -926,31 +926,31 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
   for(int i = start_inner; i < end_inner; ++i)
       nest_set.push_back(node_sets_inner.at(i));
 
-    if(operation == SES_DELETE)
-      output_change(start_pos, out.last_output_modified());
-    else
-      output_change(out.last_output_original(), start_pos);
+  if(operation == SES_DELETE)
+    output_change(start_pos, out.last_output_modified());
+  else
+    output_change(out.last_output_original(), start_pos);
 
-    whitespace.output_nested(operation);
+  whitespace.output_nested(operation);
 
-    if(operation == SES_DELETE) {
+  if(operation == SES_DELETE) {
 
-      srcdiff_diff diff(out, set, nest_set);
-      diff.output();
+    srcdiff_diff diff(out, set, nest_set);
+    diff.output();
 
-    } else {
+  } else {
 
-      srcdiff_diff diff(out, nest_set, set);
-      diff.output();
+    srcdiff_diff diff(out, nest_set, set);
+    diff.output();
 
-    }
+  }
 
-    whitespace.output_nested(operation);
+  whitespace.output_nested(operation);
 
-    if(operation == SES_DELETE)
-      output_change(node_sets_outer.at(end_outer - 1).back() + 1, out.last_output_modified());
-    else
-      output_change(out.last_output_original(), node_sets_outer.at(end_outer - 1).back() + 1);
+  if(operation == SES_DELETE)
+    output_change(node_sets_outer.at(end_outer - 1).back() + 1, out.last_output_modified());
+  else
+    output_change(out.last_output_original(), node_sets_outer.at(end_outer - 1).back() + 1);
 
 }
 
