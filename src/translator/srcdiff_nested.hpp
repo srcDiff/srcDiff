@@ -4,6 +4,7 @@
 #include <srcml_nodes.hpp>
 #include <node_sets.hpp>
 #include <srcdiff_many.hpp>
+#include <srcdiff_whitespace.hpp>
 #include <srcdiff_measure.hpp>
 
 class srcdiff_nested : public srcdiff_many {
@@ -26,6 +27,15 @@ public:
   static int best_match(const node_sets & set, const node_set & match);
   
   srcdiff_nested(const srcdiff_many & diff, int start_original, int end_original, int start_modified, int end_modified, int operation);
+
+  void output_inner(srcdiff_whitespace & whitespace,
+                  const node_sets & node_sets_outer,
+                  int start_outer,
+                  int end_outer,
+                  const node_sets & node_sets_inner,
+                  int start_inner,
+                  int end_inner,
+                  int operation);
 
   virtual void output();
 
