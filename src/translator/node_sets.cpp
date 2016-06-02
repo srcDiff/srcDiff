@@ -65,3 +65,12 @@ node_sets & node_sets::operator=(node_sets sets) {
   return *this;
 
 }
+
+std::ostream & operator<<(std::ostream & out, const node_sets & that) {
+
+  for(std::size_t pos = 0, size = that.size(); pos < size; ++pos)
+    out << that.vec[pos] << '\n';
+
+  return out;
+
+}

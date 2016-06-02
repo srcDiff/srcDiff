@@ -91,7 +91,7 @@ public:
 	friend std::ostream & operator<<(std::ostream & out, const node_set & that) {
 
 		for(std::size_t pos = 0, size = that.size(); pos < size; ++pos)
-			out << that.vec[pos];
+			out << *that.nodes()[that.vec[pos]];
 
 		return out;
 

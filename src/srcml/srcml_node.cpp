@@ -170,7 +170,7 @@ std::ostream & operator<<(std::ostream & out, const srcml_node & that) {
       out << '<' << that.name << '>';
       break;
     case XML_READER_TYPE_END_ELEMENT:
-      out << '</' << that.name << '>';
+      out << "</" << that.name << '>';
       break;
     default:
       break;

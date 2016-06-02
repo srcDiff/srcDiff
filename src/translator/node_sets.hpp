@@ -8,6 +8,8 @@
 
 #include <srcdiff_macros.hpp>
 
+#include <iostream>
+
 class node_sets : public srcdiff_vector<node_set> {
 
 private:
@@ -28,7 +30,7 @@ public:
 	const srcml_nodes & nodes() const;
 
 	node_sets & operator=(node_sets sets);
-		
+	friend std::ostream & operator<<(std::ostream & out, const node_sets & that);
 
 };
 
