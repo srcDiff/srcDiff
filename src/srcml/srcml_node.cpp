@@ -159,6 +159,28 @@ bool srcml_node::operator==(const srcml_node & node) const {
       || (content == node.content && (!content || *content == *node.content)));
 }
 
+std::ostream & operator<<(std::ostream & out, const srcml_node & that) {
+
+  switch(that.type) {
+
+    case XML_READER_TYPE_TEXT:
+      out << *that.content;
+      break;
+    case XML_READER_TYPE_ELEMENT:
+      out << '<' << that.name << '>';
+      break;
+    case XML_READER_TYPE_END_ELEMENT:
+      out << '</' << that.name << '>';
+      break;
+    default:
+      break;
+
+  }
+
+  return out;
+
+}
+
 bool srcml_node::is_white_space() const {
 
   // node is all whitespace (NOTE: in collection process whitespace is always a separate node)

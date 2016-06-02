@@ -8,6 +8,7 @@
 
 #include <boost/optional.hpp>
 
+#include <iostream>
 #include <memory>
 
 class node_set : public srcdiff_vector<int> {
@@ -84,6 +85,15 @@ public:
 
 		diff_nodes diff = { nodes(), that.nodes() };
 		return srcdiff_compare::node_set_syntax_compare((const void *)this, (const void *)&that, &diff) == 0;
+
+	}
+
+	friend std::ostream & operator<<(std::ostream & out, const node_set & that) {
+
+		for(std::size_t pos = 0, size = that.size(); pos < size; ++pos)
+			out << that.vec[pos];
+
+		return out;
 
 	}
 

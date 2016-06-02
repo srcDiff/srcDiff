@@ -99,6 +99,8 @@ public:
 
   bool operator==(const srcml_node & node) const;
 
+  friend std::ostream & operator<<(std::ostream & out, const srcml_node & that);
+
   bool is_white_space() const;
 
   bool is_new_line() const;
