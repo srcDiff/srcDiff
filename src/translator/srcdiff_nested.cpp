@@ -880,7 +880,7 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
                   int end_inner,
                   int operation) {
 
-  unsigned int start_pos = node_sets_outer.at(start_outer).at(1);
+  size_t start_pos = node_sets_outer.at(start_outer).at(1);
   size_t end_pos = node_sets_outer.at(end_outer - 1).back();
 
   const std::string & structure_outer = node_sets_outer.nodes().at(node_sets_outer.at(start_outer).at(0))->name;
@@ -893,6 +893,13 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
     }
 
     advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then");
+
+    if(structure_outer == "elseif") {
+
+      while(end_pos > start_pos && node_sets_outer.nodes().at(end_pos)->name != "if")
+        --end_pos;
+
+    }
 
   } else if(structure_outer == "while") {
 
@@ -909,12 +916,8 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
     advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "block");
     ++start_pos;
 
-  }
-
-  if(structure_outer == "elseif") {
-
-    while(end_pos > start_pos && node_sets_outer.nodes().at(end_pos)->name != "if")
-      --end_pos;
+    end_pos = start_pos - 1;
+    advance_to_child(node_sets_outer.nodes(), end_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "block");
 
   }
 

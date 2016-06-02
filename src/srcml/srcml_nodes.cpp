@@ -5,7 +5,7 @@ static xmlElementType START_TAG_TYPE = (xmlElementType)XML_READER_TYPE_ELEMENT;
 static xmlElementType END_TAG_TYPE = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
 
 void advance_to_child(const srcml_nodes & nodes,
-                      unsigned int & pos,
+                      size_t & pos,
                       xmlElementType type,
                       const std::string & name) {
 
