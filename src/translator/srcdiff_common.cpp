@@ -243,8 +243,20 @@ void srcdiff_common::markup_common() {
       else
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_modified->nodes.at(j)->name.c_str());
 
+      std::cerr << "Original:\n";
+      for(int pos = begin_original; pos < oend; ++pos)
+        if(rbuf_original->nodes.at(pos)->is_text())
+          std::cerr << *rbuf_original->nodes.at(pos)->content;
+      std::cerr << '\n';
+
+      std::cerr << "Modified:\n";
+      for(int pos = begin_modified; pos < oend; ++pos)
+        if(rbuf_modified->nodes.at(pos)->is_text())
+          std::cerr << *rbuf_modified->nodes.at(pos)->content;
+      std::cerr << '\n';
+
       // should never reach this state  This usually occurs when the two lines are not actually the same i.e. more than just whitespace
-      fprintf(stderr, "ERROR\n");
+      fprintf(stderr, "Fatal Error Occurred\n");
       exit(1);
     }
 
