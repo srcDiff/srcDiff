@@ -117,21 +117,22 @@ public:
 
 };
 
+namespace std {
 
 template<>
-struct std::hash<node_set> {
+struct hash<node_set> {
 
-  std::size_t operator()(const node_set & set) const {
+  size_t operator()(const node_set & set) const {
 
   	if(set.hash())
   		return *set.hash();
 
-	std::size_t result = 2166136261;
+	size_t result = 2166136261;
 	for(std::size_t pos = 0, size = set.size(); pos < size; ++pos) {
 
-		const std::shared_ptr<srcml_node> & node = set.nodes().at(set.at(pos));
-		const std::string & hash_item = node->is_text() ? *node->content : node->name;
-		for(std::size_t hash_pos = 0, hash_size = hash_item.size(); hash_pos < hash_size; ++hash_pos)
+		const shared_ptr<srcml_node> & node = set.nodes().at(set.at(pos));
+		const string & hash_item = node->is_text() ? *node->content : node->name;
+		for(size_t hash_pos = 0, hash_size = hash_item.size(); hash_pos < hash_size; ++hash_pos)
 			result = (result * 16777619) ^ hash_item[hash_pos];
 
 	}
@@ -142,5 +143,7 @@ struct std::hash<node_set> {
   }
 
 };
+
+}
 
 #endif
