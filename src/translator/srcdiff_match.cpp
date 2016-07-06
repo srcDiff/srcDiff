@@ -165,7 +165,7 @@ offset_pair * srcdiff_match::match_differences() {
       if(!is_match(node_sets_original, j, node_sets_modified, i, measure)) {
 
         similarity = 0;
-        unmatched = 1;
+        unmatched = 2;
 
       }
 
@@ -184,7 +184,7 @@ offset_pair * srcdiff_match::match_differences() {
         matched = false;
 
         // may be wrong
-        int temp_num_unmatched = i + j + (unmatched ? 2 : 0);
+        int temp_num_unmatched = i + j + unmatched;
 
         //unsigned long long temp_similarity = MAX_INT * num_unmatched + similarity;
 
@@ -215,8 +215,7 @@ offset_pair * srcdiff_match::match_differences() {
         int temp_num_unmatched = differences[(i - 1) * olength + j].num_unmatched + 1;
 
         // may be wrong
-        int temp_num_unmatched_match = i + j + (unmatched ? 2 : 0);
-
+        int temp_num_unmatched_match = i + j + unmatched;
 
         int temp_matched = false;
 
@@ -251,7 +250,7 @@ offset_pair * srcdiff_match::match_differences() {
 
         //unsigned long long temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
         int temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
-        int temp_num_unmatched = differences[(i - 1) * olength + (j - 1)].num_unmatched + (unmatched ? 2 : 0);
+        int temp_num_unmatched = differences[(i - 1) * olength + (j - 1)].num_unmatched + unmatched;
 
         //if(temp_similarity < max_similarity) {
         if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && temp_similarity > max_similarity)) {
@@ -271,10 +270,8 @@ offset_pair * srcdiff_match::match_differences() {
 
         max_similarity = similarity;
         num_unmatched = unmatched;
-        if(unmatched)
-          ++num_unmatched;
-
         matched = !unmatched;
+
       }
 
       // update structure
