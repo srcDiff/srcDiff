@@ -277,26 +277,8 @@ offset_pair * srcdiff_match::match_differences() {
         matched = !unmatched;
       }
 
-      // set if marked
-      if(matched) {
-
-        differences[i * olength + j].marked = true;
-
-      } else {
-
-        differences[i * olength + j].marked = false;
-
-      }
-
-      /*
-      fprintf(stderr, "HERE\n");
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, matched);
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, num_unmatched);
-      fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, max_similarity);
-      fprintf(stderr, "HERE\n");
-      */
-
       // update structure
+      differences[i * olength + j].marked = matched;
       differences[i * olength + j].similarity = max_similarity;
       differences[i * olength + j].num_unmatched = num_unmatched;
       differences[i * olength + j].opos = j;
