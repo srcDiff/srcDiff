@@ -266,22 +266,6 @@ offset_pair * srcdiff_match::match_differences() {
 
       }
 
-      if(direction == 1) {
-        //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-        //differences[i * olength + (j - 1)].marked = marked_left;
-        //differences[i * olength + (j - 1)].last_similarity = last_similarity_left;
-
-      } else if(direction == 2) {
-        //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-        //differences[(i - 1) * olength + j].marked = marked_top;
-        //differences[(i - 1) * olength + j].last_similarity = last_similarity_top;
-
-      } else {
-
-        //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-
-      }
-
       // special case starting node
       if(i == 0 && j == 0) {
 
