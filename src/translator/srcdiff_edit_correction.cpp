@@ -1,6 +1,5 @@
 #include <srcdiff_edit_correction.hpp>
 
-#include <srcdiff_text_measure.hpp>
 #include <srcdiff_match.hpp>
 #include <srcdiff_compare.hpp>
 #include <list>
@@ -264,6 +263,34 @@ edit_t * srcdiff_edit_correction::correct_common(edit_t * start_edit) {
         current = current->next;
 
     return current;
+
+}
+
+boost::optional<srcdiff_text_measure> srcdiff_edit_correction::edit2measure(int original_offset, int modified_offset) {
+
+    std::size_t original_set_pos = original_offset;
+    std::size_t modified_set_pos = modified_offset;
+
+    const node_set & set_original = sets_original.at(original_set_pos);
+    const node_set & set_modified = sets_modified.at(modified_set_pos);
+
+    int original_pos = set_original.at(0);
+    int modified_pos = set_modified.at(0);
+
+    const std::string & original_tag = set_original.nodes().at(original_pos)->name;
+    const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
+
+    const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
+    const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
+
+    if(!(original_tag == modified_tag && original_uri == modified_uri)
+        && !srcdiff_match::is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri))
+        return boost::optional<srcdiff_text_measure>();
+
+    srcdiff_text_measure measure(set_original, set_modified);
+    measure.compute();
+
+    return measure;
 
 }
 
