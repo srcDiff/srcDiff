@@ -61,8 +61,8 @@ const char * const extern_nest_types[]      = { "decl_stmt", "function_decl", "f
                                                 "struct", "struct_decl", "union", "union_decl", "typedef", "using", 0 };
 const char * const for_control_nest_types[] = { "condition", "comment",                                             0 };
 const char * const call_nest_types[]        = { "expr", "call", "operator", "literal", "name",                      0 };
-const char * const ternary_nest_types[]     = { "ternary", "call", "operator", "literal", "expr",                   0 };
-const char * const condition_nest_types[]   = { "expr", "call", "operator", "literal",                              0 };
+const char * const ternary_nest_types[]     = { "ternary", "call", "operator", "literal", "expr", "name",           0 };
+const char * const condition_nest_types[]   = { "expr", "call", "operator", "literal", "name",                      0 };
 const char * const name_nest_types[]        = { "name",                                                             0 };
 const char * const decl_nest_types[]        = { "expr",                                                             0 };
 const char * const static_nest_types[]      = { "decl_stmt",                                                        0 };
@@ -517,6 +517,7 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, in
   boost::optional<int> pos_original;
   boost::optional<int> similarity_original;
   boost::optional<int> difference_original;
+  int is_name_nest_original = 0;
   for(int i = start_original; i < end_original; ++i) {
 
     if(node_sets_original.nodes().at(node_sets_original.at(i).at(0))->move) continue;
@@ -545,8 +546,9 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, in
         if(node_sets_modified.nodes().at(node_sets_modified.at(j).at(0))->name == "name"
           && node_sets_modified.nodes().at(node_sets_modified.at(j).at(0))->parent && (*node_sets_modified.nodes().at(node_sets_modified.at(j).at(0))->parent)->name == "expr"
           && node_sets_original.nodes().at(node_sets_original.at(i).at(0))->parent && (*node_sets_original.nodes().at(node_sets_original.at(i).at(0))->parent)->name == "expr"
-          && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1))
-          continue;
+          && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1)) {
+          ++is_name_nest_original;
+        }
 
         if(node_sets_modified.nodes().at(node_sets_modified.at(j).at(0))->name == "name") {
 
@@ -583,10 +585,18 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, in
 
   }
 
+  if(nest_count_original > 1 && is_name_nest_original > 1) {
+    nest_count_original = 0;
+    pos_original = boost::optional<int>();
+    similarity_original = boost::optional<int>();
+    difference_original = boost::optional<int>();
+  }
+
   int nest_count_modified = 0;
   boost::optional<int> pos_modified;
   boost::optional<int> similarity_modified;
   boost::optional<int> difference_modified;
+  int is_name_nest_modified = 0;
   for(int i = start_modified; i < end_modified; ++i) {
 
     if(node_sets_modified.nodes().at(node_sets_modified.at(i).at(0))->move) continue;
@@ -615,8 +625,9 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, in
         if(node_sets_original.nodes().at(node_sets_original.at(j).at(0))->name == "name"
           && node_sets_original.nodes().at(node_sets_original.at(j).at(0))->parent && (*node_sets_original.nodes().at(node_sets_original.at(j).at(0))->parent)->name == "expr"
           && node_sets_modified.nodes().at(node_sets_modified.at(i).at(0))->parent && (*node_sets_modified.nodes().at(node_sets_modified.at(i).at(0))->parent)->name == "expr"
-          && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1))
-          continue;
+          && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1)) {
+            ++is_name_nest_modified;
+          }
 
         if(node_sets_original.nodes().at(node_sets_original.at(j).at(0))->name == "name") {
 
@@ -651,6 +662,13 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, in
 
     }
 
+  }
+
+  if(nest_count_modified > 1 && is_name_nest_modified > 1) {
+    nest_count_modified = 0;
+    pos_modified = boost::optional<int>();
+    similarity_modified = boost::optional<int>();
+    difference_modified = boost::optional<int>();
   }
 
   if(nest_count_original == 0 && nest_count_modified == 0) return true;

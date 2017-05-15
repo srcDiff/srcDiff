@@ -11,6 +11,8 @@
 
 #include <shortest_edit_script.hpp>
 #include <node_sets.hpp>
+#include <srcdiff_text_measure.hpp>
+#include <memory>
 
 class srcdiff_edit_correction {
 
@@ -26,6 +28,7 @@ private:
 	                    edit_t *& last_edits);
 	edit_t * correct_common_inner(edit_t * change_edit);
 	edit_t * correct_common(edit_t * start_edit);
+	std::shared_ptr<srcdiff_text_measure> edit2measure(int original_offset, int modified_offset);
 
 public:
 	srcdiff_edit_correction(const node_sets & sets_original,
