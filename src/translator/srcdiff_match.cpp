@@ -1017,6 +1017,7 @@ bool reject_match_same(const srcdiff_measure & measure,
 
   // may need to refine to if child only single name
   if(original_tag == "expr" && set_original.nodes().at(original_pos)->parent && (*set_original.nodes().at(original_pos)->parent)->name == "argument") return false;
+  if(original_tag == "expr" && set_modified.nodes().at(modified_pos)->parent && (*set_modified.nodes().at(modified_pos)->parent)->name == "argument") return false;
   if(original_tag == "expr" && is_single_name_expr(set_original.nodes(), original_pos) && is_single_name_expr(set_modified.nodes(), modified_pos)) return false;
 
   if(original_tag == "block") {
