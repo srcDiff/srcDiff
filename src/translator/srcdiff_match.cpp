@@ -705,16 +705,14 @@ bool conditional_has_block(const node_set & set) {
 
     } else if(set.nodes().at(itr->at(0))->name == "then") {
 
-      int next_element_pos = itr->at(0) + 1;
-      while(set.nodes().at(next_element_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT && set.nodes().at(next_element_pos)->type != (xmlElementType)XML_READER_TYPE_END_ELEMENT)
-        ++next_element_pos;
+      node_sets then_sets = node_sets(sets.nodes(), itr->at(1), itr->back());
+      for(node_sets::iterator then_itr = then_sets.begin(); then_itr != then_sets.end(); ++then_itr) {
+        if(set.nodes().at(then_itr->at(0))->name == "block" && !bool(find_attribute(set.nodes().at(then_itr->at(0)), "type"))) {
+          return true;
+        }
 
-      if(set.nodes().at(next_element_pos)->type == (xmlElementType)XML_READER_TYPE_ELEMENT
-        && set.nodes().at(next_element_pos)->name == "block"
-        && !bool(find_attribute(set.nodes().at((next_element_pos)), "type")))
-        return true;
-      else
-        return false;
+      }
+      return false;
 
     }
 
