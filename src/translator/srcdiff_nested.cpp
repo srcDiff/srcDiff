@@ -26,16 +26,16 @@ struct nest_info {
 
 // may need to change collection algorithm to gather full and nested of same type           
 const char * const block_nest_types[]       = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
-                                                "if", "while", "for", "foreach", "else", "elseif",
+                                                "if", "while", "for", "foreach", "else", "elseif", "switch", "do",
                                                 "try", "catch", "finally", "synchronized", "continue", "break", "goto", 0 };
 
 const char * const then_nest_types[]        = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
-                                                "if", "while", "for", "foreach", "else", "elseif",
+                                                "if", "while", "for", "foreach", "else", "elseif", "switch", "do",
                                                 "try", "catch", "finally", "synchronized",
                                                 "expr", "call", "operator", "literal", "continue", "break", "goto", 0 };
 
 const char * const else_nest_types[]        = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
-                                                "if", "while", "for", "foreach",
+                                                "if", "while", "for", "foreach", "switch", "do",
                                                 "try", "catch", "finally", "synchronized",
                                                 "expr", "call", "operator", "literal", "continue", "break", "goto", 0 };
 
