@@ -281,5 +281,28 @@
   <expr_stmt><expr><operator>++</operator><name>characters</name></expr>;</expr_stmt></block></while>
 </unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="edit_correction|edit_correction">
+<function type="operator"><template>template <parameter_list>&lt;<parameter><type><name>int</name></type> <name>dim</name></parameter>, <parameter><type><name>typename</name></type> <name>Accessor</name></parameter>&gt;</parameter_list></template>
+<specifier>inline</specifier>
+<type><specifier>const</specifier> <name>Accessor</name> <modifier>&amp;</modifier></type>
+<name><name><name>TriaRawIterator</name><argument_list type="generic">&lt;<argument><expr><name>dim</name></expr></argument>,<argument><expr><name>Accessor</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>operator <name>*</name></name></name> <parameter_list>()</parameter_list> <specifier>const</specifier>
+<block>{
+  <expr_stmt><expr><call><name>Assert</name> <argument_list>(<argument><expr><call><name>state</name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>IteratorState</name><operator>::</operator><name>valid</name></name></expr></argument>,<diff:delete><diff:ws>
+         </diff:ws></diff:delete> <argument><expr><call><name>ExcDereferenceInvalidObject</name><argument_list>(<diff:delete><argument><expr><operator>*</operator><name>this</name></expr></argument></diff:delete>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  <return>return <expr><name>accessor</name></expr>;</return>
+}</block></function><empty_stmt>;</empty_stmt>
+
+
+
+<function type="operator"><template>template <parameter_list>&lt;<parameter><type><name>int</name></type> <name>dim</name></parameter>, <parameter><type><name>typename</name></type> <name>Accessor</name></parameter>&gt;</parameter_list></template>
+<specifier>inline</specifier>
+<type><name>Accessor</name> <modifier>&amp;</modifier></type>
+<name><name><name>TriaRawIterator</name><argument_list type="generic">&lt;<argument><expr><name>dim</name></expr></argument>,<argument><expr><name>Accessor</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>operator <name>*</name></name></name> <parameter_list>()</parameter_list>
+<block>{
+  <expr_stmt><expr><call><name>Assert</name> <argument_list>(<argument><expr><call><name>state</name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>IteratorState</name><operator>::</operator><name>valid</name></name></expr></argument>,<diff:delete><diff:ws>
+         </diff:ws></diff:delete> <argument><expr><call><name>ExcDereferenceInvalidObject</name><argument_list>(<diff:delete><argument><expr><operator>*</operator><name>this</name></expr></argument></diff:delete>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
+  <return>return <expr><name>accessor</name></expr>;</return>
+}</block></function><empty_stmt>;</empty_stmt>
+</unit>
 
 </unit>
