@@ -50,6 +50,7 @@ srcdiff_match::srcdiff_match(const node_sets & node_sets_original, const node_se
   : node_sets_original(node_sets_original), node_sets_modified(node_sets_modified),
     is_match(is_match) {}
 
+/** loop O(D) */
 static offset_pair * create_linked_list(int olength, int nlength, difference * differences) {
 
   // create match linked list
@@ -123,7 +124,7 @@ static offset_pair * create_linked_list(int olength, int nlength, difference * d
 
 }
 
-
+/** loop O(RD^2) */
 offset_pair * srcdiff_match::match_differences() {
 
   /*
@@ -153,6 +154,7 @@ offset_pair * srcdiff_match::match_differences() {
 
     for(int j = 0; j < olength; ++j) {
 
+      /** loop O(nd) */
       srcdiff_text_measure measure(node_sets_original.at(j), node_sets_modified.at(i));
       measure.compute();
       int similarity = measure.similarity();
@@ -162,6 +164,7 @@ offset_pair * srcdiff_match::match_differences() {
       int unmatched = 0;
 
       // check if unmatched
+      /** loop text O(nd) + syntax O(nd) + best match is O(nd) times number of matches */
       if(!is_match(node_sets_original, j, node_sets_modified, i, measure)) {
 
         similarity = 0;
@@ -360,6 +363,7 @@ bool is_single_call_expr(const srcml_nodes & nodes, int start_pos) {
  
 }
 
+/** loop O(n) */
 void skip_tag(const srcml_nodes & nodes, int & start_pos) {
 
   std::string & start_tag = nodes.at(start_pos)->name;
@@ -383,6 +387,7 @@ void skip_tag(const srcml_nodes & nodes, int & start_pos) {
 
 }
 
+/** loop O(n) */
 void top_level_name_seek(const srcml_nodes & nodes, int & start_pos) {
 
     if(nodes.at(start_pos)->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name == "name")
@@ -407,6 +412,7 @@ void top_level_name_seek(const srcml_nodes & nodes, int & start_pos) {
 
 }
 
+/** loop O(n) */
 std::string get_name(const srcml_nodes & nodes, int name_start_pos) {
 
   int open_name_count = nodes.at(name_start_pos)->extra & 0x1 ? 0 : 1;
@@ -438,6 +444,7 @@ std::string get_name(const srcml_nodes & nodes, int name_start_pos) {
 
 }
 
+/** loop O(n) */
 std::string extract_name(const srcml_nodes & nodes, int start_pos) {
 
   int name_start_pos = start_pos;
@@ -449,6 +456,7 @@ std::string extract_name(const srcml_nodes & nodes, int start_pos) {
 
 }
 
+/** loop O(n) */
 std::vector<std::string> get_call_name(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT || nodes.at(start_pos)->name != "call")
@@ -502,6 +510,7 @@ std::vector<std::string> get_call_name(const srcml_nodes & nodes, int start_pos)
 
 }
 
+/** loop O(name_size*edits) */
 int name_list_similarity(std::vector<std::string> name_list_original, std::vector<std::string> name_list_modified) {
 
   shortest_edit_script_t ses(srcdiff_compare::string_compare, srcdiff_compare::string_index, 0);
@@ -543,6 +552,7 @@ int name_list_similarity(std::vector<std::string> name_list_original, std::vecto
 
 }
 
+/** loop O(n) */
 std::string get_decl_name(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
@@ -560,6 +570,7 @@ std::string get_decl_name(const srcml_nodes & nodes, int start_pos) {
 
 }
 
+/** loop O(n) */
 std::string get_for_condition(const srcml_nodes & nodes, int start_pos) {
 
   int control_start_pos = start_pos;
@@ -611,6 +622,7 @@ std::string get_for_condition(const srcml_nodes & nodes, int start_pos) {
 
 }
 
+/** loop O(n) */
 std::string get_condition(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->name == "for" || nodes.at(start_pos)->name == "foreach")
@@ -655,6 +667,7 @@ std::string get_condition(const srcml_nodes & nodes, int start_pos) {
 
 }
 
+/** loop O(n) */
 std::string get_function_type_name(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
@@ -668,6 +681,7 @@ std::string get_function_type_name(const srcml_nodes & nodes, int start_pos) {
 
 }
 
+/** loop O(n) */
 std::string get_class_type_name(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
@@ -679,6 +693,7 @@ std::string get_class_type_name(const srcml_nodes & nodes, int start_pos) {
 
 }
 
+/** loop O(n) */
 bool conditional_has_block(const node_set & set) {
 
   node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
@@ -722,6 +737,7 @@ bool conditional_has_block(const node_set & set) {
 
 }
 
+/** loop O(n) */
 bool if_has_else(const node_set & set) {
 
   if(set.nodes().at(set.at(0))->name == "elseif") return false;
@@ -741,6 +757,7 @@ bool if_has_else(const node_set & set) {
 
 }
 
+/** loop O(n) */
 bool if_then_equal(const node_set & set_original, const node_set & set_modified) {
 
   diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
@@ -780,6 +797,7 @@ bool if_then_equal(const node_set & set_original, const node_set & set_modified)
 
 }
 
+/** loop O(n) */
 bool for_control_matches(const node_set & set_original, const node_set & set_modified) {
 
   diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
@@ -804,6 +822,7 @@ bool for_control_matches(const node_set & set_original, const node_set & set_mod
 
 }
 
+/** loop O(n) */
 std::string get_case_expr(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
@@ -851,6 +870,7 @@ std::string get_case_expr(const srcml_nodes & nodes, int start_pos) {
 
 }
 
+/** loop O(n) */
 bool is_single_name_expr(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != (xmlElementType)XML_READER_TYPE_ELEMENT
@@ -890,7 +910,7 @@ bool is_single_name_expr(const srcml_nodes & nodes, int start_pos) {
 
 }
 
-
+/** loop O(n) */
 node_set get_first_expr_child(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->extra & 0x1) return node_set(nodes);
@@ -981,6 +1001,7 @@ bool srcdiff_match::is_interchangeable_match(const std::string & original_tag, c
 
 }
 
+/** loop O(n) + O(nd) syntax child/grandparent, O(check_nestable)  */
 bool reject_match_same(const srcdiff_measure & measure,
                        const node_set & set_original,
                        const node_set & set_modified) {

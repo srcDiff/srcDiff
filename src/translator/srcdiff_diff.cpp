@@ -37,6 +37,7 @@ void srcdiff_diff::output() {
 
   shortest_edit_script_t ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_array_index, &dnodes);
 
+  /** O(CND) */
   int distance = ses.compute<node_sets>(node_sets_original, node_sets_modified, true);
   if(ses.is_approximate()) out.approximate(true);
 
@@ -51,6 +52,7 @@ void srcdiff_diff::output() {
     exit(distance);
   }
 
+  /** O(CD^2) */
   srcdiff_move::mark_moves(out.nodes_original(),
                            node_sets_original,
                            out.nodes_modified(),
@@ -92,6 +94,7 @@ void srcdiff_diff::output() {
       //      fprintf(stderr, "HERE\n");
 
       // many to many handling
+      /** loop O(RD^2) */
       srcdiff_many diff(*this, edits);
       diff.output();
 

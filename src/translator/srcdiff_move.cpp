@@ -25,6 +25,7 @@ bool srcdiff_move::is_move(const node_set & set) {
 
 }
 
+/** loop O(CD^2) */
 void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
                               const node_sets & node_sets_original,
                               srcml_nodes & nodes_modified,

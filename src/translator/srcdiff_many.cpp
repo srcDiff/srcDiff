@@ -114,6 +114,7 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
 
 }
 
+/** loop O(RD^2) */
 srcdiff_many::moves srcdiff_many::determine_operations() {
 
   edit_t * edits = edit_script;
