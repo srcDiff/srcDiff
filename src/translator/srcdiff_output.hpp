@@ -15,6 +15,7 @@
 #endif
 
 #include <methods.hpp>
+#include <srcdiff_constants.hpp>
 
 #include <boost/any.hpp>
 #include <boost/optional.hpp>
@@ -71,7 +72,7 @@ public:
 
   public:
 
-    writer_state(const METHOD_TYPE & method) : method(method) {}
+    writer_state(const METHOD_TYPE & method) : method(method), approximate(false) {}
 
     void clear() {
 
@@ -82,11 +83,11 @@ public:
 
       }
 
+      approximate = false;
+
     }
 
     std::string filename;
-    xmlBufferPtr buffer;
-    xmlTextWriterPtr writer;
     srcml_unit * unit;
     bool approximate;
 
@@ -186,6 +187,11 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
   static const std::shared_ptr<srcml_node> flush = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"));
   output_node(flush, SES_COMMON);
+
+  if(wstate->approximate) {
+    srcml_write_start_element(wstate->unit, DIFF_PREFIX.c_str(), "approximate", 0);
+    srcml_write_end_element(wstate->unit);
+  }
 
   srcml_write_end_unit(wstate->unit);
 
