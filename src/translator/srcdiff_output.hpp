@@ -189,7 +189,7 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
   output_node(flush, SES_COMMON);
 
   if(wstate->approximate) {
-    srcml_write_start_element(wstate->unit, DIFF_PREFIX.c_str(), "approximate", 0);
+    srcml_write_start_element(wstate->unit, SRCDIFF_DEFAULT_NAMESPACE_PREFIX.c_str(), "approximate", 0);
     srcml_write_end_element(wstate->unit);
   }
 
