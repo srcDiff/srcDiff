@@ -66,7 +66,7 @@ void srcdiff_syntax_measure::compute() {
   modified_len = next_node_sets_modified.size();
 
   shortest_edit_script_t ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_array_index, &dnodes);
-  ses.compute<node_sets>(next_node_sets_original, next_node_sets_modified, true);
+  ses.compute<node_sets>(next_node_sets_original, next_node_sets_modified, false);
   process_edit_script(ses.script(), a_similarity, a_difference);
 
 }
