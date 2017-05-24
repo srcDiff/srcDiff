@@ -1,6 +1,6 @@
 #include <shortest_edit_script.hpp>
 
-const size_t shortest_edit_script_t::SIZE_THRESHOLD = 2048;
+const size_t shortest_edit_script_t::SIZE_THRESHOLD = 20480;
 shortest_edit_script_t::shortest_edit_script_t(int (*compare)(const void * item_one, const void * item_two, const void * context),
 											   const void * (*accessor)(int index, const void * structure, const void * context),
 											   const void * context,
