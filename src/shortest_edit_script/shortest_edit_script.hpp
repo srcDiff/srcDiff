@@ -53,15 +53,15 @@ int shortest_edit_script_t::compute(const T & structure_one, const T & structure
     const size_t size_one = structure_one.size();
     const size_t size_two = structure_two.size();
 
-    if(approximate && (size_one > SIZE_THRESHOLD || size_two > SIZE_THRESHOLD)) {
+    // if(approximate && (size_one > SIZE_THRESHOLD || size_two > SIZE_THRESHOLD)) {
 
-      return approximate_compute(structure_one, structure_two);
+    //   return approximate_compute(structure_one, structure_two);
 
-    } else {
+    // } else {
 
       return shortest_edit_script_hybrid((const void *)structure_one.data(), size_one, (const void *)structure_two.data(), size_two, &edit_script, compare, accessor, context, threshold);
 
-    }
+    // }
 
 }
 
