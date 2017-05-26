@@ -124,7 +124,7 @@ void srcdiff_change::output() {
     if(!first)
       output_node(diff_original_end, SES_DELETE, is_replace);
 
-    if(wstate->output_diff.back()->operation)
+    if(wstate->output_diff.back()->operation == SES_DELETE)
       output_node(diff_original_end, SES_DELETE);
 
     rbuf_original->last_output = end_original;
