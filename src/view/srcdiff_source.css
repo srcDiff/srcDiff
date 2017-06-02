@@ -1,35 +1,38 @@
-@namespace cpp url(http://www.sdml.info/srcML/cpp);
-@namespace diff url(http://www.sdml.info/srcDiff);
+@namespace cpp url(http://www.srcML.org/srcML/cpp);
+@namespace diff url(http://www.srcML.org/srcDiff);
 
 * {
 
-	font-family: menlo, courier;
+    font-family: menlo, courier;
 
 }
 
 diff|insert {
 
-	font-weight: bold;
-	color: blue;
+    font-weight: bold;
+    background-color: #21FF59;
+    /*text-decoration: none;*/
 
 }
 
 diff|delete {
 
-	font-weight: bold;
-	color: red;
+    font-weight: bold;
+    background-color: #FEAAAD;
+    /*text-decoration: line-through;*/
 
 }
 
 diff|common {
 
-	font-weight: normal;
-	color: black;
+    font-weight: normal;
+    background-color: white;
+    /*text-decoration: none;*/
 
 }
 
 .content {
-	font-weight: normal;
+    font-weight: normal;
     margin: 0;
     margin-left: 34px;
     padding: 0;
