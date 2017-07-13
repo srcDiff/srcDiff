@@ -87,7 +87,8 @@ void side_by_side_view::output_characters(const std::string & ch, int operation)
     output_characters_to_buffer(*std::get<STREAM>(original_lines.back()),
                                 ch, real_operation, last_character_operation_original,
                                 std::get<CLOSE_SPANS>(original_lines.back()));
-    std::get<OPERATION>(original_lines.back()) += size;
+    if(!save_text)
+      std::get<OPERATION>(original_lines.back()) += size;
 
   }
 
@@ -103,7 +104,8 @@ void side_by_side_view::output_characters(const std::string & ch, int operation)
     output_characters_to_buffer(*std::get<STREAM>(modified_lines.back()),
                                 ch, real_operation, last_character_operation_modified,
                                 std::get<CLOSE_SPANS>(modified_lines.back()));
-    std::get<OPERATION>(modified_lines.back()) += size;
+    if(!save_text)
+      std::get<OPERATION>(modified_lines.back()) += size;
 
   }
 
