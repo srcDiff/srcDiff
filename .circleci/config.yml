@@ -5,7 +5,8 @@ jobs:
        - image: srcml/ubuntu_x86_64_base
      steps:
        - checkout
-       - run: echo "hello world"
+       - run: git submodule update --init --recursive
        - run: mkdir build
+       - run: cd build && git clone --recursive git@github.com:srcML/srcML.git
        - run: cd build && cmake -DCMAKE_BUILD_TYPE=Release ..
        - run: cd test/ && ./test_suite.py
