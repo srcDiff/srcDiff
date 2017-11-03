@@ -6,3 +6,6 @@ jobs:
      steps:
        - checkout
        - run: echo "hello world"
+       - run: mkdir build
+       - run: cd build && cmake -DCMAKE_BUILD_TYPE=Release .
+       - run: cd test/ && ./test_suite.py
