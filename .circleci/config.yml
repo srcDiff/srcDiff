@@ -2,7 +2,7 @@ version: 2
 jobs:
    build:
      docker:
-       - image: ubuntu
+       - image: srcml/ubuntu_x86_64_base
      steps:
        - checkout
        - run: echo "hello world"
