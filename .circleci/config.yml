@@ -11,4 +11,5 @@ jobs:
         - run: mkdir build
         - run: cd build && cmake -DCMAKE_BUILD_TYPE=Release ..
         - run: cd build && make
+        - run: ln -s build/bin bin
         - run: cd test && ./test_suite.py
