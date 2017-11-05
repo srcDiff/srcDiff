@@ -111,7 +111,7 @@ endif()
 set(CMAKE_MACOSX_RPATH OFF)
 
 if(NOT WIN32 AND NOT APPLE)
-list(APPEND SRCDIFF_LIBRARIES rt)
+list(APPEND SRCDIFF_LIBRARIES rt pthread m)
 endif()
 
 # The default configuration is to compile in DEBUG mode. These flags can be directly
