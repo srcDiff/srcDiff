@@ -2,10 +2,11 @@ version: 2
 jobs:
     build:
       docker:
-       - image: srcml/srcdiff_testing
+        - image: srcml/srcdiff_testing
       steps:
         - checkout
-        - run: sudo apt-get update && sudo apt-get install git ssh
+        - run: apt-get update
+        - run: apt-get install -y git ssh
         - run: git submodule update --init --recursive
         - run: mkdir build
         - run: cd build && cmake -DCMAKE_BUILD_TYPE=Release ..
