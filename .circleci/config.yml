@@ -1,15 +1,13 @@
 version: 2
-dependencies:
-  pre:
-    - sudo apt-get update; sudo apt-get install git ssh
 jobs:
     build:
       docker:
        - image: srcml/srcdiff_testing
       steps:
-       - checkout
-       - run: git submodule update --init --recursive
-       - run: mkdir build
-       - run: cd build && cmake -DCMAKE_BUILD_TYPE=Release ..
-       - run: cd build && make
-       - run: cd test && ./test_suite.py
+        - checkout
+        - run: sudo apt-get update && sudo apt-get install git ssh
+        - run: git submodule update --init --recursive
+        - run: mkdir build
+        - run: cd build && cmake -DCMAKE_BUILD_TYPE=Release ..
+        - run: cd build && make
+        - run: cd test && ./test_suite.py
