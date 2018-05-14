@@ -53,4 +53,78 @@
 
 </diff:ws></public></diff:delete>}</block>;</class></unit>
 
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="class|class">
+<class>class <name><diff:delete type="replace">svnPart</diff:delete><diff:insert type="replace">SvnPart</diff:insert></name> <super>: <specifier>public</specifier> <name>KDevPlugin</name></super>
+<block>{<private type="default">
+    <macro><name>Q_OBJECT</name></macro>
+
+    </private><public>public:
+        <constructor_decl><name><diff:delete type="replace">svnPart</diff:delete><diff:insert type="replace">SvnPart</diff:insert></name><parameter_list>(<parameter><decl><type><name>QObject</name> <modifier>*</modifier></type><name>parent</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>char</name> <modifier>*</modifier></type><name>name</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>QStringList</name> <modifier>&amp;</modifier></type></decl></parameter>)</parameter_list>;</constructor_decl>
+        <destructor_decl><name>~<name><diff:delete type="replace">svnPart</diff:delete><diff:insert type="replace">SvnPart</diff:insert></name></name><parameter_list>()</parameter_list>;</destructor_decl>
+
+        <decl_stmt><decl><type><name>bool</name></type> <name>recursive</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>bool</name></type> <name>force</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>bool</name></type> <name>verbose</name></decl>;</decl_stmt>
+
+        <function_decl><type><name>void</name></type> <name>readConf</name><parameter_list>()</parameter_list>;</function_decl>
+        
+    </public><protected>protected:
+        <function_decl><type><name>svn_client_auth_baton_t</name><modifier>*</modifier></type> <name>createAuthBaton</name><parameter_list>()</parameter_list>;</function_decl>
+<diff:insert><diff:ws>      </diff:ws><comment type="line">//debug<diff:ws> </diff:ws>and<diff:ws> </diff:ws>info<diff:ws> </diff:ws>messages</comment><diff:ws>
+        </diff:ws><function_decl><specifier>static</specifier><diff:ws> </diff:ws><type><name>void</name></type><diff:ws> </diff:ws><name>svnDebug</name><parameter_list>(<parameter><decl><type><specifier>const</specifier><diff:ws> </diff:ws><name>char</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>dbg</name></decl></parameter>)</parameter_list>;</function_decl><diff:ws>
+        </diff:ws><function_decl><specifier>static</specifier><diff:ws> </diff:ws><type><name>void</name></type><diff:ws> </diff:ws><name>svnMsg</name><parameter_list>(<parameter><decl><type><specifier>const</specifier><diff:ws> </diff:ws><name>char</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>msg</name></decl></parameter>)</parameter_list>;</function_decl><diff:ws>
+        </diff:ws><comment type="line">//to<diff:ws> </diff:ws>create<diff:ws> </diff:ws>logs<diff:ws> </diff:ws>for<diff:ws> </diff:ws>the<diff:ws> </diff:ws>lib</comment><diff:ws>
+        </diff:ws><function_decl><specifier>static</specifier><diff:ws> </diff:ws><type><name>svn_error_t</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>get_log_message</name><diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><specifier>const</specifier><diff:ws> </diff:ws><name>char</name><diff:ws> </diff:ws><modifier>*</modifier><modifier>*</modifier></type><name>log_msg</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>apr_array_header_t</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>commit_items</name></decl></parameter>,<diff:ws>
+                </diff:ws><parameter><decl><type><name>void</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>baton</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>apr_pool_t</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>pool</name></decl></parameter>)</parameter_list>;</function_decl><diff:ws>
+        </diff:ws><function_decl><type><name>void</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>make_log_msg_baton</name><diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><specifier>const</specifier><diff:ws> </diff:ws><name>char</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>base_dir</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>apr_pool_t</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>pool</name></decl></parameter>)</parameter_list>;</function_decl><diff:ws>
+        </diff:ws><comment type="line">//<diff:ws> </diff:ws>to<diff:ws> </diff:ws>receive<diff:ws> </diff:ws>notifications<diff:ws> </diff:ws>from<diff:ws> </diff:ws>the<diff:ws> </diff:ws>svn<diff:ws> </diff:ws>lib</comment><diff:ws>
+        </diff:ws><function_decl><specifier>static</specifier><diff:ws> </diff:ws><type><name>void</name></type><diff:ws> </diff:ws><name>notify</name><diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><name>void</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>baton</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><specifier>const</specifier><diff:ws> </diff:ws><name>char</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>path</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>svn_wc_notify_action_t</name></type><diff:ws> </diff:ws><name>action</name></decl></parameter>,<diff:ws>
+                </diff:ws><parameter><decl><type><name>svn_node_kind_t</name></type><diff:ws> </diff:ws><name>kind</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><specifier>const</specifier><diff:ws> </diff:ws><name>char</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>mime_type</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>svn_wc_notify_state_t</name></type><diff:ws> </diff:ws><name>content_state</name></decl></parameter>,<diff:ws>
+                </diff:ws><parameter><decl><type><name>svn_wc_notify_state_t</name></type><diff:ws> </diff:ws><name>prop_state</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>svn_revnum_t</name></type><diff:ws> </diff:ws><name>revision</name></decl></parameter>)</parameter_list>;</function_decl><diff:ws>
+        </diff:ws><function_decl><type><name>void</name></type><diff:ws> </diff:ws><name>get_notifier</name><parameter_list>(<parameter><decl><type><name>svn_wc_notify_func_t</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>notify_func_p</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>void</name><diff:ws> </diff:ws><modifier>*</modifier><modifier>*</modifier></type><name>notify_baton_p</name></decl></parameter>,<diff:ws>
+                </diff:ws><parameter><decl><type><name>svn_boolean_t</name></type><diff:ws> </diff:ws><name>is_checkout</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>svn_boolean_t</name></type><diff:ws> </diff:ws><name>suppress_final_line</name></decl></parameter>,<diff:ws> 
+                </diff:ws><parameter><decl><type><name>apr_pool_t</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>pool</name></decl></parameter>)</parameter_list>;</function_decl></diff:insert>
+<diff:insert><diff:ws>
+</diff:ws></diff:insert>    </protected><private>private <name>slots</name>:
+        <function_decl><type><name>void</name></type> <name>contextMenu</name><parameter_list>(<parameter><decl><type><name>QPopupMenu</name> <modifier>*</modifier></type><name>popup</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>Context</name> <modifier>*</modifier></type><name>context</name></decl></parameter>)</parameter_list>;</function_decl>
+<diff:insert><diff:ws>      </diff:ws><comment type="line">//actions</comment><diff:ws>
+</diff:ws></diff:insert>        <function_decl><type><name>void</name></type> <name>slotCommit</name><parameter_list>()</parameter_list>;</function_decl>
+        <function_decl><type><name>void</name></type> <name>slotUpdate</name><parameter_list>()</parameter_list>;</function_decl>
+        <function_decl><type><name>void</name></type> <name>slotAdd</name><parameter_list>()</parameter_list>;</function_decl>
+        <function_decl><type><name>void</name></type> <name>slotRemove</name><parameter_list>()</parameter_list>;</function_decl>
+        <function_decl><type><name>void</name></type> <name>slotLog</name><parameter_list>()</parameter_list>;</function_decl>
+        <function_decl><type><name>void</name></type> <name>slotDiff</name><parameter_list>()</parameter_list>;</function_decl>
+        <function_decl><type><name>void</name></type> <name>slotCleanup</name><parameter_list>()</parameter_list>;</function_decl>
+        <function_decl><type><name>void</name></type> <name>projectConfigWidget</name><parameter_list>(<parameter><decl><type><name>KDialogBase</name> <modifier>*</modifier></type><name>dlg</name></decl></parameter>)</parameter_list>;</function_decl>
+<diff:delete><diff:ws>      </diff:ws><function_decl><specifier>static</specifier><diff:ws> </diff:ws><type><name>svn_error_t</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>get_log_message</name><diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><specifier>const</specifier><diff:ws> </diff:ws><name>char</name><diff:ws> </diff:ws><modifier>*</modifier><modifier>*</modifier></type><name>log_msg</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>apr_array_header_t</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>commit_items</name></decl></parameter>,<diff:ws>
+                </diff:ws><parameter><decl><type><name>void</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>baton</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>apr_pool_t</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>pool</name></decl></parameter>)</parameter_list>;</function_decl><diff:ws>
+        </diff:ws><function_decl><type><name>void</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>make_log_msg_baton</name><diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><name>apr_pool_t</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>pool</name></decl></parameter>)</parameter_list>;</function_decl></diff:delete>
+<diff:delete><diff:ws>
+</diff:ws></diff:delete>    </private><private>private:
+        <decl_stmt><decl><type><name>QString</name></type> <name>popupfile</name></decl>;</decl_stmt>  
+        <decl_stmt><decl><type><name>QString</name></type> <name>auth_username</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>QString</name></type> <name>auth_password</name></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><name>apr_pool_t</name> <modifier>*</modifier></type><name>pool</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>apr_status_t</name></type> <name>apr_err</name></decl>;</decl_stmt>
+
+        <struct>struct <name>log_msg_baton</name>
+        <block>{<public type="default">
+            <decl_stmt><decl><type><specifier>const</specifier> <name>char</name> <modifier>*</modifier></type><name>message</name></decl>;</decl_stmt>
+            <decl_stmt><decl><type><specifier>const</specifier> <name>char</name> <modifier>*</modifier></type><name>message_encoding</name></decl>;</decl_stmt> <comment type="block">/* the locale/encoding of the message. */</comment>
+            <decl_stmt><decl><type><specifier>const</specifier> <name>char</name> <modifier>*</modifier></type><name>base_dir</name></decl>;</decl_stmt> <comment type="block">/* UTF-8! */</comment>
+        </public>}</block>;</struct>
+
+<diff:insert><diff:ws>      </diff:ws><struct>struct<diff:ws> </diff:ws><name>notify_baton</name><diff:ws>
+        </diff:ws><block>{<public type="default"><diff:ws>
+            </diff:ws><decl_stmt><decl><type><name>svn_boolean_t</name></type><diff:ws> </diff:ws><name>received_some_change</name></decl>;</decl_stmt><diff:ws>
+            </diff:ws><decl_stmt><decl><type><name>svn_boolean_t</name></type><diff:ws> </diff:ws><name>is_checkout</name></decl>;</decl_stmt><diff:ws>
+            </diff:ws><decl_stmt><decl><type><name>svn_boolean_t</name></type><diff:ws> </diff:ws><name>suppress_final_line</name></decl>;</decl_stmt><diff:ws>
+            </diff:ws><decl_stmt><decl><type><name>svn_boolean_t</name></type><diff:ws> </diff:ws><name>sent_first_txdelta</name></decl>;</decl_stmt><diff:ws>
+            </diff:ws><decl_stmt><decl><type><name>apr_pool_t</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>pool</name></decl>;</decl_stmt><diff:ws>
+        </diff:ws></public>}</block>;</struct><diff:ws>
+
+</diff:ws></diff:insert></private>}</block>;</class>
+</unit>
+
 </unit>
