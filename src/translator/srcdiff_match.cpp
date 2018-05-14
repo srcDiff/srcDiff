@@ -1360,12 +1360,12 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
   int min_size = measure.min_length();
   int max_size = measure.max_length();
 
-#if DEBUG
+if(set_original.nodes().at(set_original.front())->name == "function") {
   std::cerr << "Similarity: " << measure.similarity() << '\n';
   std::cerr << "Difference: " << measure.difference() << '\n';
   std::cerr << "Min Size: "   << min_size   << '\n';
   std::cerr << "Max Size: "   << max_size   << '\n';
-#endif
+}
 
   /** @todo consider making this configurable.  That is, allow user to specify file or have default file to read from */
   if(measure.difference() != 0 && measure.similarity() == 0) return true;

@@ -53,7 +53,8 @@ void srcdiff_syntax_measure::compute() {
         && (set_original.nodes().at(set_original.at(0))->name != "block" || set_modified.nodes().at(set_modified.at(0))->name != "block"))) {
 
     a_similarity = 0;
-    a_difference = MAX_INT;
+    a_original_difference = MAX_INT;
+    a_modified_difference = MAX_INT;
 
     return;
 
@@ -67,6 +68,6 @@ void srcdiff_syntax_measure::compute() {
 
   shortest_edit_script_t ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_array_index, &dnodes);
   ses.compute<node_sets>(next_node_sets_original, next_node_sets_modified, false);
-  process_edit_script(ses.script(), a_similarity, a_difference);
+  process_edit_script(ses.script());
 
 }

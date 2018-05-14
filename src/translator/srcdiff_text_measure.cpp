@@ -116,11 +116,14 @@ void srcdiff_text_measure::unigrams(node_set & collected_set_original,
 
    } else {
 
-     ++a_difference;
-     if(collected_set_original.at(i) < collected_set_modified.at(j))
+     if(collected_set_original.at(i) < collected_set_modified.at(j)) {
        ++i;
-     else
+       ++a_original_difference;      
+     }
+     else {
        ++j;
+       ++a_modified_difference;      
+     }
 
     }
 
@@ -144,7 +147,8 @@ void srcdiff_text_measure::compute() {
         && (set_original.nodes().at(set_original.at(0))->name != "block" || set_modified.nodes().at(set_modified.at(0))->name != "block"))) {
 
     a_similarity = MAX_INT;
-    a_difference = MAX_INT;
+    a_original_difference = MAX_INT;
+    a_modified_difference = MAX_INT;
 
     return;
 
@@ -164,7 +168,7 @@ void srcdiff_text_measure::compute() {
 
     shortest_edit_script_t ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
     ses.compute<node_set>(set_original_text, set_modified_text, false);
-    process_edit_script(ses.script(), a_similarity, a_difference);
+    process_edit_script(ses.script());
 
   // } else {
 

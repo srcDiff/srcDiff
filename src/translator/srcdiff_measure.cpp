@@ -1,4 +1,5 @@
 #include <srcdiff_measure.hpp>
+#include <srcdiff_constants.hpp>
 
 #include <algorithm>
 #include <cassert>
@@ -9,7 +10,8 @@ srcdiff_measure::srcdiff_measure(const node_set & set_original,
     set_modified(set_modified),
     computed(false),
     a_similarity(0),
-    a_difference(0),
+    a_original_difference(0),
+    a_modified_difference(0),
     original_len(0),
     modified_len(0) {}
 
@@ -24,8 +26,25 @@ int srcdiff_measure::similarity() const {
 int srcdiff_measure::difference() const {
 
   assert(computed);
+  if(a_original_difference == MAX_INT) return MAX_INT;
 
-  return a_difference;
+  return a_original_difference + a_modified_difference;
+
+}
+
+int srcdiff_measure::original_difference() const {
+
+  assert(computed);
+
+  return a_original_difference;
+
+}
+
+int srcdiff_measure::modified_difference() const {
+
+  assert(computed);
+
+  return a_modified_difference;
 
 }
 
@@ -61,40 +80,36 @@ int srcdiff_measure::min_length() const {
 
 }
 
-void srcdiff_measure::process_edit_script(const edit_t * edit_script,
-                                          int & similarity,
-                                          int & difference) {
+void srcdiff_measure::process_edit_script(const edit_t * edit_script) {
 
-    similarity = 0, difference = 0;
-
-    int delete_similarity = 0;
-    int insert_similarity = 0;
+    a_similarity = 0;
+    a_original_difference = 0;
+    a_modified_difference = 0;
+ 
     for(const edit_t * edits = edit_script; edits; edits = edits->next) {
-
-      difference += edits->length;
 
       switch(edits->operation) {
 
         case SES_DELETE :
 
-          delete_similarity += edits->length;
+          a_original_difference += edits->length;
           break;
 
         case SES_INSERT :
 
-          insert_similarity += edits->length;
+          a_modified_difference += edits->length;
           break;
 
         }
 
     }
 
-    delete_similarity = original_len - delete_similarity;
-    insert_similarity = modified_len - insert_similarity;
+    int delete_similarity = original_len - a_original_difference;
+    int insert_similarity = modified_len - a_modified_difference;
 
-    similarity = std::min(delete_similarity, insert_similarity);
+    a_similarity = std::min(delete_similarity, insert_similarity);
 
-    if(similarity <= 0)
-      similarity = 0;
+    if(a_similarity <= 0)
+      a_similarity = 0;
 
 }
