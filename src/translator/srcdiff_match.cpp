@@ -1360,19 +1360,22 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
   int min_size = measure.min_length();
   int max_size = measure.max_length();
 
-if(set_original.nodes().at(set_original.front())->name == "function") {
+#if DEBUG
   std::cerr << "Similarity: " << measure.similarity() << '\n';
   std::cerr << "Difference: " << measure.difference() << '\n';
+  std::cerr << "Original Difference: " << measure.original_difference() << '\n';
+  std::cerr << "Modified Difference: " << measure.modified_difference() << '\n';
   std::cerr << "Min Size: "   << min_size   << '\n';
   std::cerr << "Max Size: "   << max_size   << '\n';
-}
+#endif
 
   /** @todo consider making this configurable.  That is, allow user to specify file or have default file to read from */
   if(measure.difference() != 0 && measure.similarity() == 0) return true;
 
   if(min_size == measure.similarity() && measure.difference() < 2 * min_size) return false;
   if(min_size < 30 && measure.difference() > 1.25 * min_size)       return true;
-  else if(min_size >= 30 && measure.difference() > 1.05 * min_size) return true;
+  if(min_size >= 30 && measure.original_difference() > 0.25 * measure.original_length()
+    && measure.modified_difference() > 0.25 * measure.modified_length()) return true;
   if(measure.difference() > max_size)                               return true;
 
   if(min_size <= 2)                return 2  * measure.similarity() <     min_size;
