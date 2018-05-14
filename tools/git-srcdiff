@@ -1,21 +1,25 @@
 #!/bin/sh
 echo "---" $1
-echo "+++" $1
+if [[ $# -eq 7 ]]; then
+    echo "+++" $1
+else
+    echo "+++" $8
+fi
 
 if [[ $2 = "/dev/null" ]]; then
 
-	touch srcdiff_temp$(bash -c "echo $5 | grep -o '\.[^.]*$'")
-	[ $# -eq 7 ] && srcdiff --unified=3 srcdiff_temp$(bash -c "echo $5 | grep -o '\.[^.]*$'") "$5"
-	rm -f srcdiff_temp$(bash -c "echo $5 | grep -o '\.[^.]*$'")
+    touch srcdiff_temp$(bash -c "echo $5 | grep -o '\.[^.]*$'")
+    srcdiff --unified=3 srcdiff_temp$(bash -c "echo $5 | grep -o '\.[^.]*$'") "$5"
+    rm -f srcdiff_temp$(bash -c "echo $5 | grep -o '\.[^.]*$'")
 
 elif [[ $5 = "/dev/null" ]]; then
 
-	touch srcdiff_temp$(bash -c "echo $2 | grep -o '\.[^.]*$'")
-	[ $# -eq 7 ] && srcdiff --unified=3 "$2" srcdiff_temp$(bash -c "echo $2 | grep -o '\.[^.]*$'")
-	rm -f srcdiff_temp$(bash -c "echo $2 | grep -o '\.[^.]*$'")
+    touch srcdiff_temp$(bash -c "echo $2 | grep -o '\.[^.]*$'")
+    srcdiff --unified=3 "$2" srcdiff_temp$(bash -c "echo $2 | grep -o '\.[^.]*$'")
+    rm -f srcdiff_temp$(bash -c "echo $2 | grep -o '\.[^.]*$'")
 
 else
 
-	[ $# -eq 7 ] && srcdiff --unified=3 "$2" "$5"
+    srcdiff --unified=3 "$2" "$5"
 
 fi
