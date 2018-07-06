@@ -8,6 +8,7 @@
 #include <algorithm>
 
 #include <cstdio>
+#include <boost/process.hpp>
 
 #include <uri_stream.hpp>
   
@@ -47,8 +48,8 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
 
   }
 
-  std::string checkout_original_command("git -C " + original_clone_path.native() + " checkout " + quiet_flag + options.git_revision_one);
-  std::string checkout_modified_command("git -C " + modified_clone_path.native() + " checkout " + quiet_flag + options.git_revision_two);
+  std::string checkout_original_command(boost::process::search_path("git").native() + " -C " + original_clone_path.native() + " checkout " + quiet_flag + options.git_revision_one);
+  std::string checkout_modified_command(boost::process::search_path("git").native() + " -C " + modified_clone_path.native() + " checkout " + quiet_flag + options.git_revision_two);
   if(options.files_from_name) {
 
     std::string original_files, modified_files;
@@ -96,13 +97,11 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
 
   }
 
-  FILE * checkout_original_process = popen(checkout_original_command.c_str(), "r");
-  int checkout_original_error = pclose(checkout_original_process);
-  if(checkout_original_error) throw std::string("Unable to checkout " + options.git_revision_one);
+  boost::process::child checkout_original_process(checkout_original_command);
+  boost::process::child checkout_modified_process(checkout_modified_command);
 
-  FILE * checkout_modified_process = popen(checkout_modified_command.c_str(), "r");
-  int checkout_modified_error = pclose(checkout_modified_process);
-  if(checkout_modified_error) throw std::string("Unable to checkout " + options.git_revision_two);
+  checkout_original_process.wait();
+  checkout_modified_process.wait();
 
 }
 
