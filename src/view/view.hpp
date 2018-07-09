@@ -52,9 +52,9 @@ protected:
 
   unsigned int close_num_span;
 
-  bool save_text;
-  std::string saved_type;
-  versioned_string saved_text;
+  bool save_name;
+  std::string saved_name_type;
+  versioned_string saved_name;
 
 public:
 

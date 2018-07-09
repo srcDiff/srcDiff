@@ -53,9 +53,9 @@ view_t::view_t(const std::string & output_filename,
     ignore_comments(ignore_comments),
     is_html(is_html),
     close_num_span(0),
-    save_text(false),
-    saved_type(),
-    saved_text()  {
+    save_name(false),
+    saved_name_type(),
+    saved_name()  {
 
     const std::string theme_lower = to_lower(theme);
     const std::string syntax_level = to_lower(syntax_highlight);
@@ -110,9 +110,9 @@ void view_t::reset() {
 
   close_num_span = 0;
 
-  save_text = false,
-  saved_type.clear();
-  saved_text.clear();
+  save_name = false,
+  saved_name_type.clear();
+  saved_name.clear();
 
   reset_internal();
 
@@ -152,9 +152,9 @@ void view_t::output_characters_to_buffer(std::ostream & out,
                                             int & last_character_operation,
                                             unsigned int & close_num_span) {
 
-  if(save_text) {
+  if(save_name) {
 
-    saved_text.append(ch.c_str(), ch.size(),
+    saved_name.append(ch.c_str(), ch.size(),
       diff_stack.back() == view_t::DELETE ? SRCDIFF_DELETE : SRCDIFF_INSERT);
     return;
 
@@ -451,24 +451,24 @@ void view_t::endElement(const char * localname,
 
   const std::string local_name(localname);
 
-  if(save_text && (local_name == "name" || local_name == "operator"))  {
+  if(save_name && (local_name == "name" || local_name == "operator"))  {
 
-    save_text = false;
+    save_name = false;
 
-    if(theme->is_keyword(saved_text.original()) || theme->is_keyword(saved_text.modified())) {
+    if(theme->is_keyword(saved_name.original()) || theme->is_keyword(saved_name.modified())) {
 
-      output_characters(saved_text.original(), view_t::DELETE);
-      output_characters(saved_text.modified(), view_t::INSERT);
+      output_characters(saved_name.original(), view_t::DELETE);
+      output_characters(saved_name.modified(), view_t::INSERT);
 
     } else {
 
-      character_diff char_diff(saved_text);
+      character_diff char_diff(saved_name);
       char_diff.compute();
-      char_diff.output(*this, saved_type);
+      char_diff.output(*this, saved_name_type);
 
     }
 
-    saved_text.clear();
+    saved_name.clear();
 
   }
 
@@ -533,10 +533,10 @@ void view_t::charactersUnit(const char * ch, int len) {
     && (srcml_element_stack.at(srcml_element_stack.size() - 2) == "name"
       || srcml_element_stack.at(srcml_element_stack.size() - 2) == "operator")) {
     
-    assert(!save_text);
+    assert(!save_name);
 
-    save_text = true;
-    saved_type = srcml_element_stack.at(srcml_element_stack.size() - 2);
+    save_name = true;
+    saved_name_type = srcml_element_stack.at(srcml_element_stack.size() - 2);
 
   }
 
