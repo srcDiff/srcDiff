@@ -203,7 +203,7 @@ void diffdoc_view::characters(const char * ch, int len) {
       output_characters(str);
       if(collect_id && srcml_element_stack.back() != "comment") {
         if(is_space) {
-          id += ' ';
+          id += '-';
         } else {
           id += str;
         }
