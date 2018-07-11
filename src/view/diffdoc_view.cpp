@@ -9,30 +9,32 @@
 
 diffdoc_view::diffdoc_view(const std::string & output_filename,
                            const std::string & syntax_highlight,
-                           const std::string & theme,
-                           bool ignore_all_whitespace,
-                           bool ignore_whitespace,
-                           bool ignore_comments,
-                           bool is_html)
+                           const std::string & theme)
               : view_t(output_filename,
                        syntax_highlight, 
                        theme,
-                       ignore_all_whitespace,
-                       ignore_whitespace,
-                       ignore_comments,
-                       true) {
-
-}
+                       false,
+                       false,
+                       false,
+                       true),
+                       num_open_spans(0),
+                       last_character_operation(view_t::UNSET) {}
 
 diffdoc_view::~diffdoc_view() {}
 
 void diffdoc_view::reset_internal() {
+  num_open_spans = 0;
 }
 
+void diffdoc_view::output_characters(const std::string & str) {
 
-void diffdoc_view::output_characters(const std::string & ch, int operation) {
+  output_characters_to_buffer(*output, str, diff_stack.back() , last_character_operation, num_open_spans);
 
-  //output_characters_to_buffer(*output, ch, operation, last_character_operation, close_num_spans);
+}
+
+void diffdoc_view::output_characters(const std::string & str, int operation) {
+
+  output_characters_to_buffer(*output, str, operation, last_character_operation, num_open_spans);
 
 }
 
@@ -76,7 +78,7 @@ void diffdoc_view::end_unit(const std::string & local_name,
                             const char * prefix,
                             const char * URI) {
 
-
+  end_buffer(*output, num_open_spans);
   (*output) << "</pre>";
 
 }
@@ -97,5 +99,33 @@ void diffdoc_view::end_element(const std::string & local_name,
 }
 
 void diffdoc_view::characters(const char * ch, int len) {
+
+  for(int i = 0; i < len; ++i) {
+
+    bool is_space = isspace(ch[i]);
+    std::string str(1, ch[i]);
+
+    if(!is_space || ch[i] != '\n') {
+
+      ++i;
+      while(i < len && isspace(ch[i]) == is_space && ch[i] != '\n') {
+        str += ch[i];
+        ++i;
+      }
+      --i;
+
+    }
+
+    if(str == "\n") {
+      output_characters(CARRIAGE_RETURN_SYMBOL);
+      output_character('\n', view_t::COMMON);
+      end_buffer(*output, num_open_spans);
+      last_character_operation = view_t::UNSET;
+    } else {
+      output_characters(str);
+    }
+
+  }
+
 
 }

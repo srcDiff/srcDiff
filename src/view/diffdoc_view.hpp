@@ -15,16 +15,14 @@
 class diffdoc_view : public view_t {
 
 private:
+  unsigned int num_open_spans;
+  int last_character_operation;
 
 public:
 
   diffdoc_view(const std::string & output_filename,
                const std::string & syntax_highlight,
-               const std::string & theme,
-               bool ignore_all_whitespace,
-               bool ignore_whitespace,
-               bool ignore_comments,
-               bool is_html);
+               const std::string & theme);
   virtual ~diffdoc_view();
 
 private:
@@ -56,7 +54,7 @@ private:
 public:
   
   virtual void output_characters(const std::string & ch, int operation);
-
+  void output_characters(const std::string & str);
 };
 
 #endif

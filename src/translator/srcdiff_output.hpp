@@ -9,6 +9,7 @@
 #include <view.hpp>
 #include <unified_view.hpp>
 #include <side_by_side_view.hpp>
+#include <diffdoc_view.hpp>
 
 #ifndef _MSC_BUILD
 #include <srcdiff_summary.hpp>
@@ -203,7 +204,7 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
     colordiff->colorize(xml, line_diff_range);
     srcml_memory_free((char *)xml);
 
-  } else if(is_option(flags, OPTION_UNIFIED_VIEW | OPTION_SIDE_BY_SIDE_VIEW)) {
+  } else if(is_option(flags, OPTION_UNIFIED_VIEW | OPTION_SIDE_BY_SIDE_VIEW | OPTION_DIFFDOC_VIEW)) {
 
     char * xml = 0;
     size_t size = 0;
