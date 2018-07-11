@@ -4,6 +4,8 @@
 
 #include <type_query.hpp>
 
+#include <iomanip>
+
 #include <cstring>
 #include <cassert>
 
@@ -18,23 +20,41 @@ diffdoc_view::diffdoc_view(const std::string & output_filename,
                        false,
                        true),
                        num_open_spans(0),
-                       last_character_operation(view_t::UNSET) {}
+                       last_character_operation(view_t::UNSET),
+                       line_number_delete(1),
+                       line_number_insert(1) {}
 
 diffdoc_view::~diffdoc_view() {}
 
 void diffdoc_view::reset_internal() {
   num_open_spans = 0;
+  last_character_operation = view_t::UNSET;
+  line_number_delete = 1;
+  line_number_insert = 1;
 }
 
 void diffdoc_view::output_characters(const std::string & str) {
-
   output_characters_to_buffer(*output, str, diff_stack.back() , last_character_operation, num_open_spans);
-
 }
 
 void diffdoc_view::output_characters(const std::string & str, int operation) {
-
   output_characters_to_buffer(*output, str, operation, last_character_operation, num_open_spans);
+}
+
+void diffdoc_view::start_line() {
+  (*output) << "<span style=\"color: " + theme->line_number_color + ";\">" 
+    << std::right << std::setw(9) << std::setfill(' ') << line_number_delete << '-' << line_number_insert << "</span> ";
+}
+
+void diffdoc_view::end_line() {
+  if(diff_stack.back() != view_t::COMMON) {
+      output_characters(CARRIAGE_RETURN_SYMBOL);   
+  }
+  output_character('\n', view_t::COMMON);
+  end_buffer(*output, num_open_spans);
+  last_character_operation = view_t::UNSET;
+  if(diff_stack.back() != INSERT) ++line_number_delete;
+  if(diff_stack.back() != DELETE) ++line_number_insert;
 
 }
 
@@ -47,6 +67,7 @@ void diffdoc_view::start_unit(const std::string & local_name,
                               const struct srcsax_attribute * attributes) {
 
   (*output) << "<pre>";
+  start_line();
 
 }
 
@@ -117,10 +138,8 @@ void diffdoc_view::characters(const char * ch, int len) {
     }
 
     if(str == "\n") {
-      output_characters(CARRIAGE_RETURN_SYMBOL);
-      output_character('\n', view_t::COMMON);
-      end_buffer(*output, num_open_spans);
-      last_character_operation = view_t::UNSET;
+      end_line();
+      start_line();
     } else {
       output_characters(str);
     }

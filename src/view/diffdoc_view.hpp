@@ -18,6 +18,9 @@ private:
   unsigned int num_open_spans;
   int last_character_operation;
 
+  size_t line_number_delete;
+  size_t line_number_insert;
+
 public:
 
   diffdoc_view(const std::string & output_filename,
@@ -26,6 +29,9 @@ public:
   virtual ~diffdoc_view();
 
 private:
+
+  void start_line();
+  void end_line();
 
   virtual void reset_internal();
 
