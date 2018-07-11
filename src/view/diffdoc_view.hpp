@@ -24,6 +24,9 @@ private:
   bool save_output;
   std::ostringstream saved_output;
 
+  bool collect_id;
+  std::string id;
+
 public:
 
   diffdoc_view(const std::string & output_filename,

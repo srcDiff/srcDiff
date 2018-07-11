@@ -24,7 +24,9 @@ diffdoc_view::diffdoc_view(const std::string & output_filename,
                        line_number_delete(1),
                        line_number_insert(1),
                        save_output(false),
-                       saved_output() {}
+                       saved_output(),
+                       collect_id()
+                       id() {}
 
 diffdoc_view::~diffdoc_view() {}
 
@@ -35,6 +37,8 @@ void diffdoc_view::reset_internal() {
   line_number_insert = 1;
   save_output = false;
   saved_output = std::ostringstream();
+  collect_id = false;
+  id = std::string();
 }
 
 std::ostream * diffdoc_view::get_output_stream() {
@@ -131,6 +135,7 @@ void diffdoc_view::start_element(const std::string & local_name,
     if(is_function_type(local_name)) {
       end_spans();
       enable_saving();
+      collect_id = true;
     }
 
   }
@@ -164,6 +169,8 @@ void diffdoc_view::end_element(const std::string & local_name,
       output_saved();
       output_raw_str("</span>");
 
+    } else if(collect_id && local_name == "parameter_list") {
+      colelct_id = false;
     }
 
   }
@@ -193,6 +200,13 @@ void diffdoc_view::characters(const char * ch, int len) {
       start_line();
     } else {
       output_characters(str);
+      if(collect_id && srcml_element_stack.back() != "comment") {
+        if(isspace) {
+          id += ' ';
+        } else {
+          id += str;
+        }
+      }
     }
 
   }
