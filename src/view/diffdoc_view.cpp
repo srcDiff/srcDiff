@@ -61,8 +61,8 @@ void diffdoc_view::output_saved() {
 }
 
 void diffdoc_view::end_spans() {
-
   end_buffer(*get_output_stream(), num_open_spans);
+  last_character_operation = view_t::UNSET;
 }
 
 void diffdoc_view::output_raw_str(const std::string & str) {
@@ -90,7 +90,6 @@ void diffdoc_view::end_line() {
   }
   output_characters("\n", view_t::COMMON);
   end_spans();
-  last_character_operation = view_t::UNSET;
   if(diff_stack.back() != INSERT) ++line_number_delete;
   if(diff_stack.back() != DELETE) ++line_number_insert;
 
@@ -164,7 +163,6 @@ void diffdoc_view::end_element(const std::string & local_name,
       output_raw_str("<span id=\"function\">");
       output_saved();
       output_raw_str("</span>");
-
 
     }
 
