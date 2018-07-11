@@ -25,7 +25,7 @@ diffdoc_view::diffdoc_view(const std::string & output_filename,
                        line_number_insert(1),
                        save_output(false),
                        saved_output(),
-                       collect_id()
+                       collect_id(),
                        id() {}
 
 diffdoc_view::~diffdoc_view() {}
@@ -165,12 +165,13 @@ void diffdoc_view::end_element(const std::string & local_name,
     if(is_function_type(local_name)) {
       end_spans();
       disable_saving();
-      output_raw_str("<span id=\"function\">");
+      output_raw_str("<span id=\"" + id + "\">");
+      id = std::string();
       output_saved();
       output_raw_str("</span>");
 
     } else if(collect_id && local_name == "parameter_list") {
-      colelct_id = false;
+      collect_id = false;
     }
 
   }
@@ -201,7 +202,7 @@ void diffdoc_view::characters(const char * ch, int len) {
     } else {
       output_characters(str);
       if(collect_id && srcml_element_stack.back() != "comment") {
-        if(isspace) {
+        if(is_space) {
           id += ' ';
         } else {
           id += str;
