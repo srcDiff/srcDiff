@@ -22,7 +22,9 @@ diffdoc_view::diffdoc_view(const std::string & output_filename,
                        num_open_spans(0),
                        last_character_operation(view_t::UNSET),
                        line_number_delete(1),
-                       line_number_insert(1) {}
+                       line_number_insert(1),
+                       save_output(false),
+                       saved_output() {}
 
 diffdoc_view::~diffdoc_view() {}
 
@@ -31,6 +33,8 @@ void diffdoc_view::reset_internal() {
   last_character_operation = view_t::UNSET;
   line_number_delete = 1;
   line_number_insert = 1;
+  save_output = false;
+  saved_output = std::ostringstream();
 }
 
 std::ostream * diffdoc_view::get_output_stream() {
@@ -39,6 +43,21 @@ std::ostream * diffdoc_view::get_output_stream() {
     out = &saved_output;
   }
   return out;
+}
+
+
+void diffdoc_view::enable_saving() {
+  save_output = true;
+}
+
+void diffdoc_view::disable_saving() {
+  save_output = false;
+}
+
+void diffdoc_view::output_saved() {
+  disable_saving();
+  output_raw_str(saved_output.str());
+  saved_output = std::ostringstream();
 }
 
 void diffdoc_view::end_spans() {
@@ -112,6 +131,7 @@ void diffdoc_view::start_element(const std::string & local_name,
 
     if(is_function_type(local_name)) {
       end_spans();
+      enable_saving();
     }
 
   }
@@ -137,6 +157,16 @@ void diffdoc_view::end_element(const std::string & local_name,
         diff_stack.pop_back();
 
   } else {
+
+    if(is_function_type(local_name)) {
+      end_spans();
+      disable_saving();
+      output_raw_str("<span id=\"function\">");
+      output_saved();
+      output_raw_str("</span>");
+
+
+    }
 
   }
 

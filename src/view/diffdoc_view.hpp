@@ -60,7 +60,10 @@ private:
 public:
 
   std::ostream * get_output_stream();
-  
+  void enable_saving();
+  void disable_saving(); 
+  void output_saved();
+
   void start_line();
   void end_line();
   void end_spans();
