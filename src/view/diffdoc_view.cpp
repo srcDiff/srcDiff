@@ -5,7 +5,6 @@
 #include <type_query.hpp>
 
 #include <iomanip>
-#include <sstream>
 
 #include <cstring>
 #include <cassert>
@@ -34,12 +33,21 @@ void diffdoc_view::reset_internal() {
   line_number_insert = 1;
 }
 
+std::ostream * diffdoc_view::get_output_stream() {
+  std::ostream * out = output;
+  if(save_output) {
+    out = &saved_output;
+  }
+  return out;
+}
+
 void diffdoc_view::end_spans() {
-  end_buffer(*output, num_open_spans);
+
+  end_buffer(*get_output_stream(), num_open_spans);
 }
 
 void diffdoc_view::output_raw_str(const std::string & str) {
-  (*output) << str;
+  (*get_output_stream()) << str;
 }
 
 void diffdoc_view::output_characters(const std::string & str) {
@@ -47,7 +55,7 @@ void diffdoc_view::output_characters(const std::string & str) {
 }
 
 void diffdoc_view::output_characters(const std::string & str, int operation) {
-  output_characters_to_buffer(*output, str, operation, last_character_operation, num_open_spans);
+  output_characters_to_buffer(*get_output_stream(), str, operation, last_character_operation, num_open_spans);
 }
 
 void diffdoc_view::start_line() {

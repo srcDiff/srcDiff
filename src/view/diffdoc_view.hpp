@@ -21,6 +21,9 @@ private:
   size_t line_number_delete;
   size_t line_number_insert;
 
+  bool save_output;
+  std::ostringstream saved_output;
+
 public:
 
   diffdoc_view(const std::string & output_filename,
@@ -55,6 +58,8 @@ private:
 
 
 public:
+
+  std::ostream * get_output_stream();
   
   void start_line();
   void end_line();
