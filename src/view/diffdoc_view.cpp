@@ -165,7 +165,12 @@ void diffdoc_view::end_element(const std::string & local_name,
     if(is_function_type(local_name)) {
       end_spans();
       disable_saving();
-      output_raw_str("<span id=\"" + id + "\">");
+
+
+      /** @todo will need to add class name to namespace and handle inner class/functions.
+        Need to do variable.
+      */
+      output_raw_str("<span id=\"" + id + "\">"); 
       id = std::string();
       output_saved();
       output_raw_str("</span>");
