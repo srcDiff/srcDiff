@@ -30,9 +30,6 @@ public:
 
 private:
 
-  void start_line();
-  void end_line();
-
   virtual void reset_internal();
 
   virtual void start_unit(const std::string & local_name,
@@ -59,8 +56,15 @@ private:
 
 public:
   
-  virtual void output_characters(const std::string & ch, int operation);
+  void start_line();
+  void end_line();
+  void end_spans();
+  void output_raw_str(const std::string & str);
+
   void output_characters(const std::string & str);
+  virtual void output_characters(const std::string & str, int operation);
+
+
 };
 
 #endif

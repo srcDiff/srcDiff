@@ -5,6 +5,7 @@
 #include <type_query.hpp>
 
 #include <iomanip>
+#include <sstream>
 
 #include <cstring>
 #include <cassert>
@@ -33,8 +34,16 @@ void diffdoc_view::reset_internal() {
   line_number_insert = 1;
 }
 
+void diffdoc_view::end_spans() {
+  end_buffer(*output, num_open_spans);
+}
+
+void diffdoc_view::output_raw_str(const std::string & str) {
+  (*output) << str;
+}
+
 void diffdoc_view::output_characters(const std::string & str) {
-  output_characters_to_buffer(*output, str, diff_stack.back() , last_character_operation, num_open_spans);
+  output_characters(str, diff_stack.back());
 }
 
 void diffdoc_view::output_characters(const std::string & str, int operation) {
@@ -42,16 +51,18 @@ void diffdoc_view::output_characters(const std::string & str, int operation) {
 }
 
 void diffdoc_view::start_line() {
-  (*output) << "<span style=\"color: " + theme->line_number_color + ";\">" 
+  std::ostringstream out;
+  out << "<span style=\"color: " + theme->line_number_color + ";\">" 
     << std::right << std::setw(9) << std::setfill(' ') << line_number_delete << '-' << line_number_insert << "</span> ";
+  output_raw_str(out.str());
 }
 
 void diffdoc_view::end_line() {
   if(diff_stack.back() != view_t::COMMON) {
       output_characters(CARRIAGE_RETURN_SYMBOL);   
   }
-  output_character('\n', view_t::COMMON);
-  end_buffer(*output, num_open_spans);
+  output_characters("\n", view_t::COMMON);
+  end_spans();
   last_character_operation = view_t::UNSET;
   if(diff_stack.back() != INSERT) ++line_number_delete;
   if(diff_stack.back() != DELETE) ++line_number_insert;
@@ -66,7 +77,7 @@ void diffdoc_view::start_unit(const std::string & local_name,
                               int num_attributes,
                               const struct srcsax_attribute * attributes) {
 
-  (*output) << "<pre>";
+  output_raw_str("<pre>");
   start_line();
 
 }
@@ -91,6 +102,10 @@ void diffdoc_view::start_element(const std::string & local_name,
     
   } else {
 
+    if(is_function_type(local_name)) {
+      end_spans();
+    }
+
   }
 
 }
@@ -99,8 +114,8 @@ void diffdoc_view::end_unit(const std::string & local_name,
                             const char * prefix,
                             const char * URI) {
 
-  end_buffer(*output, num_open_spans);
-  (*output) << "</pre>";
+  end_spans();
+  output_raw_str("</pre>");
 
 }
 
