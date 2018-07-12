@@ -9,8 +9,10 @@
 #include <cstring>
 #include <cassert>
 
-entity_data::entity_data(size_t line_number_delete, size_t line_number_insert) 
-  : line_number_delete(line_number_delete),
+entity_data::entity_data(const std::string & type, size_t depth, size_t line_number_delete, size_t line_number_insert) 
+  : type(type),
+    depth(depth),
+    line_number_delete(line_number_delete),
     line_number_insert(line_number_insert),
     collect_id(true),
     id(),
@@ -136,10 +138,10 @@ void diffdoc_view::start_element(const std::string & local_name,
     
   } else {
 
-    if(is_function_type(local_name)) {
+    if(is_class_type(local_name) || is_function_type(local_name)) {
       end_spans();
       add_saved_output();
-      entity_stack.emplace(line_number_delete, line_number_insert);
+      entity_stack.emplace(local_name, srcml_element_stack.size(), line_number_delete, line_number_insert);
     }
 
   }
@@ -166,7 +168,7 @@ void diffdoc_view::end_element(const std::string & local_name,
 
   } else {
 
-    if(is_function_type(local_name)) {
+    if(is_class_type(local_name) || is_function_type(local_name)) {
 
       /** @todo will need to add class name to namespace and handle inner class/functions.
         Need to do variable.
@@ -190,11 +192,16 @@ void diffdoc_view::end_element(const std::string & local_name,
       output_raw_str("</span>");
       entity_stack.pop();
 
-    } else if(entity_stack.size() && entity_stack.top().collect_id && local_name == "parameter_list") {
-      entity_stack.top().collect_id = false;
-      end_spans();
-      entity_stack.top().signature = remove_saved_output();
-      add_saved_output();
+    } else if(entity_stack.size() && entity_stack.top().collect_id) {
+      const std::string & type = entity_stack.top().type;
+      bool end_id = (is_function_type(type) && local_name == "parameter_list") 
+                 || (is_class_type(type) && entity_stack.top().depth == srcml_element_stack.size() && local_name == "name");
+      if(end_id) {
+        entity_stack.top().collect_id = false;
+        end_spans();
+        entity_stack.top().signature = remove_saved_output();
+        add_saved_output();
+      }
 
     }
 
