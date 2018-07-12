@@ -76,8 +76,9 @@ void diffdoc_view::output_characters(const std::string & str, int operation) {
 
 void diffdoc_view::start_line() {
   std::ostringstream out;
+  std::string line_number_str = std::to_string(line_number_delete) + '-' + std::to_string(line_number_insert);
   out << "<span style=\"color: " + theme->line_number_color + ";\">" 
-    << std::right << std::setw(9) << std::setfill(' ') << line_number_delete << '-' << line_number_insert << "</span> ";
+    << std::right << std::setw(9) << std::setfill(' ') << line_number_str << "</span> ";
   output_raw_str(out.str());
 }
 
