@@ -5,28 +5,12 @@
 
 #include <boost/any.hpp>
 
-#include <vector>
 #include <string>
 #include <list>
 #include <sstream>
 #include <fstream>
 #include <iostream>
-
-/** may need to store entire function etc to mark if changed/has change */
-class diffdoc_output : public std::ostream {
-
-private:
-  std::ostream * output;
-  std::vector<std::ostringstream> saved_output;
-
-public:
-
-  diffdoc_output(std::ostream * output);
-  bool empty() const;
-  void add_saved_output();
-  std::string remove_saved_output();
-
-};
+#include <stack>
 
 class diffdoc_view : public view_t {
 
@@ -37,8 +21,7 @@ private:
   size_t line_number_delete;
   size_t line_number_insert;
 
-  bool save_output;
-  std::ostringstream saved_output;
+  std::stack<std::ostringstream> saved_output;
 
   bool collect_id;
   std::string id;
@@ -79,9 +62,8 @@ private:
 public:
 
   std::ostream * get_output_stream();
-  void enable_saving();
-  void disable_saving(); 
-  void output_saved();
+  void add_saved_output();
+  std::string remove_saved_output();
 
   void start_line();
   void end_line();

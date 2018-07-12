@@ -9,24 +9,6 @@
 #include <cstring>
 #include <cassert>
 
-diffdoc_output::diffdoc_output(std::ostream * output) 
-  : output(output), saved_output() {}
-
-bool diffdoc_output::empty() const {
-  return saved_output.empty();
-}
-
-void diffdoc_output::add_saved_output() {
-  saved_output.push_back(std::ostringstream());
-}
-
-std::string diffdoc_output::remove_saved_output() {
-  std::string out_str = saved_output.back().str();
-  saved_output.pop_back();
-  return out_str;
-}
-
-
 diffdoc_view::diffdoc_view(const std::string & output_filename,
                            const std::string & syntax_highlight,
                            const std::string & theme)
@@ -41,7 +23,6 @@ diffdoc_view::diffdoc_view(const std::string & output_filename,
                        last_character_operation(view_t::UNSET),
                        line_number_delete(1),
                        line_number_insert(1),
-                       save_output(false),
                        saved_output(),
                        collect_id(),
                        id() {}
@@ -53,32 +34,27 @@ void diffdoc_view::reset_internal() {
   last_character_operation = view_t::UNSET;
   line_number_delete = 1;
   line_number_insert = 1;
-  save_output = false;
-  saved_output = std::ostringstream();
+  saved_output = std::stack<std::ostringstream>();
   collect_id = false;
   id = std::string();
 }
 
 std::ostream * diffdoc_view::get_output_stream() {
   std::ostream * out = output;
-  if(save_output) {
-    out = &saved_output;
+  if(saved_output.size()) {
+    out = &saved_output.top();
   }
   return out;
 }
 
-void diffdoc_view::enable_saving() {
-  save_output = true;
+void diffdoc_view::add_saved_output() {
+  saved_output.push(std::ostringstream());
 }
 
-void diffdoc_view::disable_saving() {
-  save_output = false;
-}
-
-void diffdoc_view::output_saved() {
-  disable_saving();
-  output_raw_str(saved_output.str());
-  saved_output = std::ostringstream();
+std::string diffdoc_view::remove_saved_output() {
+  std::string str = saved_output.top().str();
+  saved_output.pop();
+  return str;
 }
 
 void diffdoc_view::end_spans() {
@@ -151,7 +127,7 @@ void diffdoc_view::start_element(const std::string & local_name,
 
     if(is_function_type(local_name)) {
       end_spans();
-      enable_saving();
+      add_saved_output();
       collect_id = true;
     }
 
@@ -190,12 +166,12 @@ void diffdoc_view::end_element(const std::string & local_name,
     } else if(collect_id && local_name == "parameter_list") {
       collect_id = false;
       end_spans();
-      disable_saving();
+      std::string str = remove_saved_output();
 
       /** gonna have to store old/new and have both so can walk through always use new to match next round or old for previous */
       output_raw_str("<div id=\"" + id + "\">"); 
       id = std::string();
-      output_saved();
+      output_raw_str(str);
       output_raw_str("<div content=\"body\">");
 
     }
