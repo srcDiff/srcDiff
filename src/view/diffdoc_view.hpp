@@ -12,6 +12,18 @@
 #include <iostream>
 #include <stack>
 
+struct entity_data {
+public:
+  size_t line_number_delete;
+  size_t line_number_insert;
+  bool collect_id;
+  std::string id;
+
+  bool is_changed;
+public:
+  entity_data(size_t line_number_delete, size_t line_number_insert);
+};
+
 class diffdoc_view : public view_t {
 
 private:
@@ -22,6 +34,7 @@ private:
   size_t line_number_insert;
 
   std::stack<std::ostringstream> saved_output;
+  std::stack<entity_data> entity_stack;
 
   bool collect_id;
   std::string id;
@@ -65,6 +78,7 @@ public:
   void add_saved_output();
   std::string remove_saved_output();
 
+  std::string form_line_str(size_t original_line, size_t modified_line);
   void start_line();
   void end_line();
   void end_spans();
@@ -72,7 +86,6 @@ public:
 
   void output_characters(const std::string & str);
   virtual void output_characters(const std::string & str, int operation);
-
 
 };
 

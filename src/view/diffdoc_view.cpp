@@ -9,6 +9,11 @@
 #include <cstring>
 #include <cassert>
 
+entity_data::entity_data(size_t line_number_delete, size_t line_number_insert) 
+  : line_number_delete(line_number_delete),
+    line_number_insert(line_number_insert),
+    is_changed(false) {}
+
 diffdoc_view::diffdoc_view(const std::string & output_filename,
                            const std::string & syntax_highlight,
                            const std::string & theme)
@@ -24,6 +29,7 @@ diffdoc_view::diffdoc_view(const std::string & output_filename,
                        line_number_delete(1),
                        line_number_insert(1),
                        saved_output(),
+                       entity_stack(),
                        collect_id(),
                        id() {}
 
@@ -74,12 +80,16 @@ void diffdoc_view::output_characters(const std::string & str, int operation) {
   output_characters_to_buffer(*get_output_stream(), str, operation, last_character_operation, num_open_spans);
 }
 
-void diffdoc_view::start_line() {
+std::string diffdoc_view::form_line_str(size_t original_line, size_t modified_line) {
   std::ostringstream out;
-  std::string line_number_str = std::to_string(line_number_delete) + '-' + std::to_string(line_number_insert);
+  std::string line_number_str = std::to_string(original_line) + '-' + std::to_string(modified_line);
   out << "<span style=\"color: " + theme->line_number_color + ";\">" 
-    << std::right << std::setw(9) << std::setfill(' ') << line_number_str << "</span> ";
-  output_raw_str(out.str());
+      << std::right << std::setw(9) << std::setfill(' ') << line_number_str << "</span> ";
+  return out.str();
+}
+
+void diffdoc_view::start_line() {
+  output_raw_str(form_line_str(line_number_delete, line_number_insert));
 }
 
 void diffdoc_view::end_line() {
