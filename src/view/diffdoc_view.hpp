@@ -12,6 +12,20 @@
 #include <fstream>
 #include <iostream>
 
+class diffdoc_output : public std::ostream {
+
+private:
+  std::ostream & output;
+  std::vector<std::ostringstream> saved_output;
+
+public:
+  diffdoc_output();
+  std::vector<std::ostringstream>::size_type size() const;
+  void add_saved_output();
+  std::string remove_saved_output();
+
+};
+
 class diffdoc_view : public view_t {
 
 private:
