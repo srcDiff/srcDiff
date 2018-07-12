@@ -15,6 +15,7 @@ entity_data::entity_data(const std::string & type, size_t depth, size_t line_num
     line_number_delete(line_number_delete),
     line_number_insert(line_number_insert),
     collect_id(true),
+    // not a good separtor for C++
     id(':'),
     signature(),
     is_changed(false) {}
