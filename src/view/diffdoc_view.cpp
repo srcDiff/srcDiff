@@ -161,7 +161,7 @@ void diffdoc_view::end_element(const std::string & local_name,
         Need to do variable.
       */
       end_spans();
-      output_raw_str("</div></div>");
+      output_raw_str("</span></span>");
 
     } else if(collect_id && local_name == "parameter_list") {
       collect_id = false;
@@ -169,10 +169,10 @@ void diffdoc_view::end_element(const std::string & local_name,
       std::string str = remove_saved_output();
 
       /** gonna have to store old/new and have both so can walk through always use new to match next round or old for previous */
-      output_raw_str("<div id=\"" + id + "\">"); 
+      output_raw_str("<span id=\"" + id + "\">"); 
       id = std::string();
       output_raw_str(str);
-      output_raw_str("<div content=\"body\">");
+      output_raw_str("<span content=\"body\">");
 
     }
 
