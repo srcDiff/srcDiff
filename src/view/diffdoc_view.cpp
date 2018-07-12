@@ -9,6 +9,24 @@
 #include <cstring>
 #include <cassert>
 
+diffdoc_output::diffdoc_output(std::ostream * output) 
+  : output(output), saved_output() {}
+
+bool diffdoc_output::empty() const {
+  return saved_output.empty();
+}
+
+void diffdoc_output::add_saved_output() {
+  saved_output.push_back(std::ostringstream());
+}
+
+std::string diffdoc_output::remove_saved_output() {
+  std::string out_str = saved_output.back().str();
+  saved_output.pop_back();
+  return out_str;
+}
+
+
 diffdoc_view::diffdoc_view(const std::string & output_filename,
                            const std::string & syntax_highlight,
                            const std::string & theme)
@@ -175,6 +193,7 @@ void diffdoc_view::end_element(const std::string & local_name,
       end_spans();
       disable_saving();
 
+      /** gonna have to store old/new and have both so can walk through always use new to match next round or old for previous */
       output_raw_str("<div id=\"" + id + "\">"); 
       id = std::string();
       output_saved();
