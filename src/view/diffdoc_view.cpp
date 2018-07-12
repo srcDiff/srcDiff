@@ -29,9 +29,7 @@ diffdoc_view::diffdoc_view(const std::string & output_filename,
                        line_number_delete(1),
                        line_number_insert(1),
                        saved_output(),
-                       entity_stack(),
-                       collect_id(),
-                       id() {}
+                       entity_stack() {}
 
 diffdoc_view::~diffdoc_view() {}
 
@@ -41,8 +39,7 @@ void diffdoc_view::reset_internal() {
   line_number_delete = 1;
   line_number_insert = 1;
   saved_output = std::stack<std::ostringstream>();
-  collect_id = false;
-  id = std::string();
+  entity_stack = std::stack<entity_data>();
 }
 
 std::ostream * diffdoc_view::get_output_stream() {
@@ -139,7 +136,7 @@ void diffdoc_view::start_element(const std::string & local_name,
     if(is_function_type(local_name)) {
       end_spans();
       add_saved_output();
-      collect_id = true;
+      entity_stack.emplace(line_number_delete, line_number_insert);
     }
 
   }
@@ -173,16 +170,16 @@ void diffdoc_view::end_element(const std::string & local_name,
       */
       end_spans();
       output_raw_str("</span></span>");
+      entity_stack.pop();
 
-    } else if(collect_id && local_name == "parameter_list") {
-      collect_id = false;
+    } else if(entity_stack.size() && entity_stack.top().collect_id && local_name == "parameter_list") {
+      entity_stack.top().collect_id = false;
       end_spans();
       std::string str = remove_saved_output();
 
       /** gonna have to store old/new and have both so can walk through always use new to match next round or old for previous */
       /** want line number as part of this. Will have to buffer start of line until  or just store duplicate hidden*/
-      output_raw_str("<span id=\"" + id + "\">"); 
-      id = std::string();
+      output_raw_str("<span id=\"" + entity_stack.top().id + "\">"); 
       output_raw_str("<span content=\"signature\">"); 
       output_raw_str(str);
       output_raw_str("</span>");
@@ -218,9 +215,9 @@ void diffdoc_view::characters(const char * ch, int len) {
       start_line();
     } else {
       output_characters(str);
-      if(collect_id && srcml_element_stack.back() != "comment") {
+      if(entity_stack.size() && entity_stack.top().collect_id && srcml_element_stack.back() != "comment") {
         if(!is_space) {
-          id += str;
+          entity_stack.top().id += str;
         }
       }
     }

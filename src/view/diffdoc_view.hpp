@@ -36,9 +36,6 @@ private:
   std::stack<std::ostringstream> saved_output;
   std::stack<entity_data> entity_stack;
 
-  bool collect_id;
-  std::string id;
-
 public:
 
   diffdoc_view(const std::string & output_filename,
