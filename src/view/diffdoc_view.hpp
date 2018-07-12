@@ -38,6 +38,7 @@ private:
   size_t line_number_insert;
 
   std::stack<std::ostringstream> saved_output;
+
   std::vector<entity_data> entity_stack;
 
 public:
