@@ -17,13 +17,15 @@ class versioned_string {
 		boost::optional<std::string> string_original;
 		boost::optional<std::string> string_modified;
 
+		char separator;
+
 	protected:
 
 	public:
 
-		versioned_string();
-		versioned_string(std::string string);
-		versioned_string(std::string string_original, std::string string_modified);
+		versioned_string(char separator = '|');
+		versioned_string(std::string string, char separator = '|');
+		versioned_string(std::string string_original, std::string string_modified, char separator = '|');
 
 		bool is_common() const;
 		bool has_original() const;

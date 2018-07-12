@@ -2,11 +2,14 @@
 #include <execinfo.h>
 const std::string versioned_string::empty_str;
 
-versioned_string::versioned_string() {}
+versioned_string::versioned_string(char separator)
+	: string_original(), string_modified(), separator(separator) {}
 
-versioned_string::versioned_string(std::string string) : string_original(string), string_modified(string) {}
+versioned_string::versioned_string(std::string string, char separator)
+	: string_original(string), string_modified(string), separator(separator) {}
 
-versioned_string::versioned_string(std::string string_original, std::string string_modified) : string_original(string_original), string_modified(string_modified) {}
+versioned_string::versioned_string(std::string string_original, std::string string_modified, char separator) 
+	: string_original(string_original), string_modified(string_modified), separator(separator) {}
 
 bool versioned_string::is_common() const {
 
@@ -122,7 +125,7 @@ versioned_string::operator std::string() const {
 
 	if(is_common()) return original();
 
-	return original() + '|' + modified();
+	return original() + separator + modified();
 
 }
 
@@ -173,7 +176,7 @@ std::string versioned_string::operator+(const char * c_str) const {
 std::ostream & operator<<(std::ostream & out, const versioned_string & string) {
 
 	if(string.is_common()) return out << string.original();
-	else return out << string.original() << '|' << string.modified();
+	else return out << string.original() << string.separator << string.modified();
 
 }
 
