@@ -12,6 +12,7 @@
 #include <fstream>
 #include <iostream>
 
+/** may need to store entire function etc to mark if changed/has change */
 class diffdoc_output : public std::ostream {
 
 private:

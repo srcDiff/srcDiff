@@ -163,20 +163,22 @@ void diffdoc_view::end_element(const std::string & local_name,
   } else {
 
     if(is_function_type(local_name)) {
-      end_spans();
-      disable_saving();
-
 
       /** @todo will need to add class name to namespace and handle inner class/functions.
         Need to do variable.
       */
-      output_raw_str("<span id=\"" + id + "\">"); 
-      id = std::string();
-      output_saved();
+      end_spans();
       output_raw_str("</span>");
 
     } else if(collect_id && local_name == "parameter_list") {
       collect_id = false;
+      end_spans();
+      disable_saving();
+
+      output_raw_str("<span id=\"" + id + "\">"); 
+      id = std::string();
+      output_saved();
+
     }
 
   }
