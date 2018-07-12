@@ -186,8 +186,6 @@ void diffdoc_view::end_element(const std::string & local_name,
       /** @todo will need to add class name to namespace and handle inner class/functions.
         Need to do variable.
       */
-      /** gonna have to store old/new and have both so can walk through always use new to match next round or old for previous */
-      /** want line number as part of this. Will have to buffer start of line until  or just store duplicate hidden*/
       /** setting display:none will make body disappear */
 
       end_spans();
@@ -200,6 +198,9 @@ void diffdoc_view::end_element(const std::string & local_name,
       output_raw_str(">");
 
       output_raw_str("<span signature=\"signature\">"); 
+      output_raw_str("<span signature_line=\"signature_line\" style=\"display:none\">" 
+        + form_line_str(entity_stack.back().line_number_delete, entity_stack.back().line_number_insert) 
+        + "</span>");
       output_raw_str(entity_stack.back().signature);
       output_raw_str("</span>");
 
