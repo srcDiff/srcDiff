@@ -168,14 +168,14 @@ void diffdoc_view::end_element(const std::string & local_name,
         Need to do variable.
       */
       end_spans();
-      output_raw_str("</span>");
+      output_raw_str("</div>");
 
     } else if(collect_id && local_name == "parameter_list") {
       collect_id = false;
       end_spans();
       disable_saving();
 
-      output_raw_str("<span id=\"" + id + "\">"); 
+      output_raw_str("<div id=\"" + id + "\">"); 
       id = std::string();
       output_saved();
 
