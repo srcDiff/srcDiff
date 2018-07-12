@@ -67,7 +67,6 @@ std::ostream * diffdoc_view::get_output_stream() {
   return out;
 }
 
-
 void diffdoc_view::enable_saving() {
   save_output = true;
 }
@@ -186,7 +185,7 @@ void diffdoc_view::end_element(const std::string & local_name,
         Need to do variable.
       */
       end_spans();
-      output_raw_str("</div>");
+      output_raw_str("</div></div>");
 
     } else if(collect_id && local_name == "parameter_list") {
       collect_id = false;
@@ -197,6 +196,7 @@ void diffdoc_view::end_element(const std::string & local_name,
       output_raw_str("<div id=\"" + id + "\">"); 
       id = std::string();
       output_saved();
+      output_raw_str("<div content=\"body\">");
 
     }
 
