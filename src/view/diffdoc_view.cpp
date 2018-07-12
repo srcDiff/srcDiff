@@ -12,6 +12,9 @@
 entity_data::entity_data(size_t line_number_delete, size_t line_number_insert) 
   : line_number_delete(line_number_delete),
     line_number_insert(line_number_insert),
+    collect_id(true),
+    id(),
+    signature(),
     is_changed(false) {}
 
 diffdoc_view::diffdoc_view(const std::string & output_filename,
@@ -168,23 +171,30 @@ void diffdoc_view::end_element(const std::string & local_name,
       /** @todo will need to add class name to namespace and handle inner class/functions.
         Need to do variable.
       */
+      /** gonna have to store old/new and have both so can walk through always use new to match next round or old for previous */
+      /** want line number as part of this. Will have to buffer start of line until  or just store duplicate hidden*/
+      /** setting display:none will make body disappear */
+
       end_spans();
-      output_raw_str("</span></span>");
+      std::string body = remove_saved_output();
+
+      output_raw_str("<span id=\"" + entity_stack.top().id + "\">"); 
+
+      output_raw_str("<span content=\"signature\">"); 
+      output_raw_str(entity_stack.top().signature);
+      output_raw_str("</span>");
+
+      output_raw_str("<span content=\"body\">");
+      output_raw_str(body);
+      output_raw_str("</span>");
+      output_raw_str("</span>");
       entity_stack.pop();
 
     } else if(entity_stack.size() && entity_stack.top().collect_id && local_name == "parameter_list") {
       entity_stack.top().collect_id = false;
       end_spans();
-      std::string str = remove_saved_output();
-
-      /** gonna have to store old/new and have both so can walk through always use new to match next round or old for previous */
-      /** want line number as part of this. Will have to buffer start of line until  or just store duplicate hidden*/
-      output_raw_str("<span id=\"" + entity_stack.top().id + "\">"); 
-      output_raw_str("<span content=\"signature\">"); 
-      output_raw_str(str);
-      output_raw_str("</span>");
-      /** setting display:none will make body disappear */
-      output_raw_str("<span content=\"body\">");
+      entity_stack.top().signature = remove_saved_output();
+      add_saved_output();
 
     }
 

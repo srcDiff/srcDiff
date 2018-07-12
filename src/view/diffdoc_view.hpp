@@ -18,6 +18,7 @@ public:
   size_t line_number_insert;
   bool collect_id;
   std::string id;
+  std::string signature;
 
   bool is_changed;
 public:
