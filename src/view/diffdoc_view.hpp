@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iostream>
 #include <stack>
+#include <vector>
 
 struct entity_data {
 public:
@@ -37,7 +38,7 @@ private:
   size_t line_number_insert;
 
   std::stack<std::ostringstream> saved_output;
-  std::stack<entity_data> entity_stack;
+  std::vector<entity_data> entity_stack;
 
 public:
 

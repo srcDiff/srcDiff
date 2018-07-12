@@ -44,7 +44,7 @@ void diffdoc_view::reset_internal() {
   line_number_delete = 1;
   line_number_insert = 1;
   saved_output = std::stack<std::ostringstream>();
-  entity_stack = std::stack<entity_data>();
+  entity_stack = std::vector<entity_data>();
 }
 
 std::ostream * diffdoc_view::get_output_stream() {
@@ -141,7 +141,7 @@ void diffdoc_view::start_element(const std::string & local_name,
     if(is_class_type(local_name) || is_function_type(local_name)) {
       end_spans();
       add_saved_output();
-      entity_stack.emplace(local_name, srcml_element_stack.size(), line_number_delete, line_number_insert);
+      entity_stack.emplace_back(local_name, srcml_element_stack.size(), line_number_delete, line_number_insert);
     }
 
   }
@@ -180,26 +180,26 @@ void diffdoc_view::end_element(const std::string & local_name,
       end_spans();
       std::string body = remove_saved_output();
 
-      output_raw_str("<span id=\"" + entity_stack.top().id + "\">"); 
+      output_raw_str("<span id=\"" + entity_stack.back().id + "\">"); 
 
       output_raw_str("<span content=\"signature\">"); 
-      output_raw_str(entity_stack.top().signature);
+      output_raw_str(entity_stack.back().signature);
       output_raw_str("</span>");
 
       output_raw_str("<span content=\"body\">");
       output_raw_str(body);
       output_raw_str("</span>");
       output_raw_str("</span>");
-      entity_stack.pop();
+      entity_stack.pop_back();
 
-    } else if(entity_stack.size() && entity_stack.top().collect_id) {
-      const std::string & type = entity_stack.top().type;
+    } else if(entity_stack.size() && entity_stack.back().collect_id) {
+      const std::string & type = entity_stack.back().type;
       bool end_id = (is_function_type(type) && local_name == "parameter_list") 
-                 || (is_class_type(type) && entity_stack.top().depth == srcml_element_stack.size() && local_name == "name");
+                 || (is_class_type(type) && entity_stack.back().depth == srcml_element_stack.size() && local_name == "name");
       if(end_id) {
-        entity_stack.top().collect_id = false;
+        entity_stack.back().collect_id = false;
         end_spans();
-        entity_stack.top().signature = remove_saved_output();
+        entity_stack.back().signature = remove_saved_output();
         add_saved_output();
       }
 
@@ -212,6 +212,14 @@ void diffdoc_view::end_element(const std::string & local_name,
 void diffdoc_view::characters(const char * ch, int len) {
 
   for(int i = 0; i < len; ++i) {
+
+    if(diff_stack.back() != view_t::COMMON
+      && entity_stack.size() && !entity_stack.back().is_changed) {
+      for(int pos = entity_stack.size() - 1; pos >= 0 && !entity_stack[pos].is_changed; ++pos) {
+        entity_stack[pos].is_changed = true;
+      }
+
+    }
 
     bool is_space = isspace(ch[i]);
     std::string str(1, ch[i]);
@@ -232,9 +240,9 @@ void diffdoc_view::characters(const char * ch, int len) {
       start_line();
     } else {
       output_characters(str);
-      if(entity_stack.size() && entity_stack.top().collect_id && srcml_element_stack.back() != "comment") {
+      if(entity_stack.size() && entity_stack.back().collect_id && srcml_element_stack.back() != "comment") {
         if(!is_space) {
-          entity_stack.top().id += str;
+          entity_stack.back().id += str;
         }
       }
     }
