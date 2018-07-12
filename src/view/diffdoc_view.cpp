@@ -170,11 +170,13 @@ void diffdoc_view::end_element(const std::string & local_name,
       std::string str = remove_saved_output();
 
       /** gonna have to store old/new and have both so can walk through always use new to match next round or old for previous */
+      /** want line number as part of this. Will have to buffer start of line until  or just store duplicate hidden*/
       output_raw_str("<span id=\"" + id + "\">"); 
       id = std::string();
       output_raw_str("<span content=\"signature\">"); 
       output_raw_str(str);
       output_raw_str("</span>");
+      /** setting display:none will make body disappear */
       output_raw_str("<span content=\"body\">");
 
     }
