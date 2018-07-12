@@ -172,7 +172,9 @@ void diffdoc_view::end_element(const std::string & local_name,
       /** gonna have to store old/new and have both so can walk through always use new to match next round or old for previous */
       output_raw_str("<span id=\"" + id + "\">"); 
       id = std::string();
+      output_raw_str("<span content=\"signature\">"); 
       output_raw_str(str);
+      output_raw_str("</span>");
       output_raw_str("<span content=\"body\">");
 
     }
@@ -205,9 +207,7 @@ void diffdoc_view::characters(const char * ch, int len) {
     } else {
       output_characters(str);
       if(collect_id && srcml_element_stack.back() != "comment") {
-        if(is_space) {
-          id += '-';
-        } else {
+        if(!is_space) {
           id += str;
         }
       }
