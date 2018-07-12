@@ -37,6 +37,7 @@ class versioned_string {
 
 		void set_original(const std::string & string_original);
 		void set_modified(const std::string & string_modified);
+		void append(const std::string & str, enum srcdiff_type version);
 		void append(const char * characters, size_t len, enum srcdiff_type version);
 		void clear();
 

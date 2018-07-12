@@ -3,6 +3,8 @@
 
 #include <view.hpp>
 
+#include  <versioned_string.hpp>
+
 #include <boost/any.hpp>
 
 #include <string>
@@ -20,7 +22,7 @@ public:
   size_t line_number_delete;
   size_t line_number_insert;
   bool collect_id;
-  std::string id;
+  versioned_string id;
   std::string signature;
 
   bool is_changed;
@@ -75,6 +77,8 @@ private:
 
 
 public:
+
+  srcdiff_type view_op2srcdiff_type(int operation);
 
   std::ostream * get_output_stream();
   void add_saved_output();

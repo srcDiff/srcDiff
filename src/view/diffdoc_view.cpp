@@ -47,6 +47,18 @@ void diffdoc_view::reset_internal() {
   entity_stack = std::vector<entity_data>();
 }
 
+srcdiff_type diffdoc_view::view_op2srcdiff_type(int operation) {
+  static std::unordered_map<int, srcdiff_type> op_converter = {
+    { view_t::UNSET,  SRCDIFF_NONE   },
+    { view_t::COMMON, SRCDIFF_COMMON },
+    { view_t::DELETE, SRCDIFF_DELETE },
+    { view_t::INSERT, SRCDIFF_INSERT },
+  };
+
+  return op_converter[operation];
+
+}
+
 std::ostream * diffdoc_view::get_output_stream() {
   std::ostream * out = output;
   if(saved_output.size()) {
@@ -248,7 +260,7 @@ void diffdoc_view::characters(const char * ch, int len) {
       output_characters(str);
       if(entity_stack.size() && entity_stack.back().collect_id && srcml_element_stack.back() != "comment") {
         if(!is_space) {
-          entity_stack.back().id += str;
+          entity_stack.back().id.append(str, view_op2srcdiff_type(diff_stack.back()));
         }
       }
     }

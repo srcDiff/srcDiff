@@ -80,6 +80,10 @@ void versioned_string::set_modified(const std::string & string_modified) {
 
 }
 
+void versioned_string::append(const std::string & str, enum srcdiff_type version) {
+	append(str.c_str(), str.size(), version);
+}
+
 void versioned_string::append(const char * characters, size_t len, enum srcdiff_type version) {
 
 	if(len == 0) return;
