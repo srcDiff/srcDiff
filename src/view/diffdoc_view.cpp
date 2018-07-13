@@ -190,21 +190,21 @@ void diffdoc_view::end_element(const std::string & local_name,
 
       end_spans();
       std::string body = remove_saved_output();
-
-      output_raw_str("<span id=\"" + entity_stack.back().id + "\"");
+      std::string id_attr = "id=\"" + entity_stack.back().id + "\"";
+      output_raw_str("<span " + id_attr + " content=\"full\"");
       if(entity_stack.back().is_changed) {
         output_raw_str(" changed=\"changed\"");
       }
       output_raw_str(">");
 
-      output_raw_str("<span content=\"signature\">"); 
-      output_raw_str("<span content=\"signature_line\" style=\"display:none\">" 
+      output_raw_str("<span " + id_attr + " content=\"signature\">"); 
+      output_raw_str("<span " + id_attr + " content=\"signature_line\" style=\"display:none\">" 
         + form_line_str(entity_stack.back().line_number_delete, entity_stack.back().line_number_insert) 
         + "</span>");
       output_raw_str(entity_stack.back().signature);
       output_raw_str("</span>");
 
-      output_raw_str("<span content=\"body\">");
+      output_raw_str("<span " + id_attr + " content=\"body\">");
       output_raw_str(body);
       output_raw_str("</span>");
       output_raw_str("</span>");
