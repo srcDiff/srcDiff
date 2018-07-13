@@ -70,6 +70,7 @@ function previous_version() {
 function roll_up() {
   /* maybe make a stack to support true drill down/roll up */
   current_element = "";
+  load_document();
 }
 
 function set_is_signature(value) {
@@ -86,7 +87,7 @@ $(document).ready(function() {
   load_signatures();
   $("#next").click(next_version);
   $("#prev").click(previous_version);
-  $("#rollup").click(roll_up;
+  $("#rollup").click(roll_up);
 });
 
 </script>
