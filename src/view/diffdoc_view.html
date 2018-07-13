@@ -22,7 +22,7 @@ function load_all() {
     $("#source").load(files[position], function() {
               $("[content=\"signature\"]").click(function() {
                 element_stack.push({ is_signature:false, id:$(this).attr("id") });
-                load_full();
+                load_document();
               });
     });
 }
@@ -31,14 +31,15 @@ function load_full() {
   var current_element = top().id
   $("#source").load(files[position] + " [id=\"" + current_element + "\"][content=\"full\"]", 
     function() {
-      $("#source").children("[content=\"full\"]").wrap("<pre></pre>")
-      $("[id=\"" + current_element + "\"][content=\"signature\"]").children("[content=\"pre\"]").show();
+      $("#source").children("[content=\"full\"]").children("[content=\"signature\"]").children("[content=\"pre\"]").show();
       $("#source").children("[content=\"full\"]")
                   .children("[content=\"body\"]")
                   .find("[content=\"signature\"]").click(function() {
         element_stack.push({ is_signature:false, id:$(this).attr("id") });
-        load_full();
+        load_document();
       });
+      $("#source").children("[content=\"full\"]").wrap("<pre></pre>");
+
     });
 }
 
@@ -48,7 +49,7 @@ function load_signatures() {
               $("[content=\"signature\"]").wrap("<pre></pre>");
               $("[content=\"signature\"]").click(function() {
                 element_stack.push({ is_signature:false, id:$(this).attr("id") });
-                load_full();
+                load_document();
              });
     });
 }
