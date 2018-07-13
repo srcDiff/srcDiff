@@ -19,6 +19,7 @@ struct entity_data {
 public:
   std::string type;
   size_t depth;
+  std::string indentation;
   size_t line_number_delete;
   size_t line_number_insert;
   bool collect_id;
@@ -27,7 +28,8 @@ public:
 
   bool is_changed;
 public:
-  entity_data(const std::string & type, size_t depth, size_t line_number_delete, size_t line_number_insert);
+  entity_data(const std::string & type, size_t depth, 
+              const std::string & indentation, size_t line_number_delete, size_t line_number_insert);
 };
 
 class diffdoc_view : public view_t {
@@ -38,6 +40,9 @@ private:
 
   size_t line_number_delete;
   size_t line_number_insert;
+
+  bool collect_indentation;
+  std::string indentation;
 
   std::stack<std::ostringstream> saved_output;
 
