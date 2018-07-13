@@ -69,6 +69,15 @@ function next_version() {
   if(position == files.length) {
     position = 0;
   }
+  if(element_stack.length != 1 && top().id.includes(":")) {
+    var new_id = "";
+    if(position == 0) {
+      new_id = top().id.split(":")[0];
+    } else {
+      new_id = top().id.split(":")[1];
+    }
+    top().id = new_id;
+  }
   load_document()
 }
 
@@ -77,6 +86,16 @@ function previous_version() {
     position = files.length;
   }
   position -= 1;
+  if(element_stack.length != 1 && top().id.includes(":")) {
+    var new_id = "";
+    if(position == (files.length - 1)) {
+      new_id = top().id.split(":")[1];
+    } else {
+      new_id = top().id.split(":")[0];
+    }
+    top().id = new_id;
+  }
+
   load_document()
 }
 
