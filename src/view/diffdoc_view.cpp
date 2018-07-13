@@ -13,6 +13,7 @@ entity_data::entity_data(const std::string & type, size_t depth,
                          const std::string & indentation, size_t line_number_delete, size_t line_number_insert) 
   : type(type),
     depth(depth),
+    indentation(indentation),
     line_number_delete(line_number_delete),
     line_number_insert(line_number_insert),
     collect_id(true),
@@ -35,7 +36,6 @@ diffdoc_view::diffdoc_view(const std::string & output_filename,
                        last_character_operation(view_t::UNSET),
                        line_number_delete(1),
                        line_number_insert(1),
-                       collect_indentation(true),
                        indentation(),
                        saved_output(),
                        entity_stack() {}
@@ -47,7 +47,6 @@ void diffdoc_view::reset_internal() {
   last_character_operation = view_t::UNSET;
   line_number_delete = 1;
   line_number_insert = 1;
-  collect_indentation = true;
   indentation.clear();
   saved_output = std::stack<std::ostringstream>();
   entity_stack.clear();
@@ -113,7 +112,6 @@ void diffdoc_view::start_line() {
 }
 
 void diffdoc_view::end_line() {
-  collect_indentation = true;
   indentation.clear();
   if(diff_stack.back() != view_t::COMMON) {
       output_characters(CARRIAGE_RETURN_SYMBOL);   
@@ -162,7 +160,6 @@ void diffdoc_view::start_element(const std::string & local_name,
       end_spans();
       add_saved_output();
       entity_stack.emplace_back(local_name, srcml_element_stack.size(), indentation, line_number_delete, line_number_insert);
-      collect_indentation = false;
       indentation.clear();
     }
 
@@ -267,15 +264,19 @@ void diffdoc_view::characters(const char * ch, int len) {
     if(str == "\n") {
       end_line();
       start_line();
-    } else if(is_space && collect_indentation) {
-      indentation.append(str, str.size());
     } else {
-      collect_indentation = false;
+
       output_characters(str);
+
       if(entity_stack.size() && entity_stack.back().collect_id && srcml_element_stack.back() != "comment") {
         if(!is_space) {
           entity_stack.back().id.append(str, view_op2srcdiff_type(diff_stack.back()));
         }
+      }
+
+      if(is_space) {
+        // do I also store how it is deleted/inserted and/or not whitespace?
+        indentation.append(str);
       }
     }
 
