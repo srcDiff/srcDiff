@@ -26,6 +26,7 @@ function load_full() {
  $("#source").load(files[position] + " [id=\"" + current_element + "\"][content=\"full\"]", 
     function() {
       $("[id=\"" + current_element + "\"][content=\"signature\"]").children("[content=\"signature_line\"]").show();
+    });
 }
 
 function load_signatures() {
