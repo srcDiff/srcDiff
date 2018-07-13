@@ -10,49 +10,68 @@ foreach (glob('*.srcdiff.html') as $filename) {
 }
 echo json_encode($out); ?>;
 var position = files.length - 1;
-var current_element = ""
-$(document).ready(function() {
+var is_signature = true
+
+function load_all() {
+    $("#source").load(files[position])/*, function(){
+             $("[content=\"body\"]").click(function() {
+               current_element = $(this).attr("id");
+               alert(current_element)
+               $("#source").load(files[position] + " [id=\"" + current_element + "\"]")
+             });
+        });*/
+}
+
+function load_full() {
+ $("#source").load(files[position] + " [id=\"" + current_element + "\"][content=\"full\"]", 
+    function() {
+      $("[id=\"" + current_element + "\"][content=\"signature\"]").children("[content=\"signature_line\"]").show();
+}
+
+function load_signatures() {
     $("#source").load(files[position] + " [content=\"signature\"]", function(){
              $("#source").find("[content=\"signature_line\"]").show();
              $("[content=\"signature\"]").after("<br /><br />");
              $("[content=\"signature\"]").click(function() {
                current_element = $(this).attr("id");
-               alert(current_element)
-               $("#source").load(files[position] + " [id=\"" + current_element + "\"]")
+               load_full();
              });
         });
+}
 
-    $("#next").click(function(){
-        position += 1;
-        if(position == files.length) {
-          position = 0;
-        }
-        if(current_element != "") {
-          $("#source").load(files[position] + " [id=\"" + current_element + "\"]",
-           function() {
-             $("#source").find("[signature_line=\"signature_line\"]").show();
-           });
-        } else {
-          $("#source").load(files[position]);
-        }
+function load_document() {
+  if(current_element != "") {
+    load_full()
+  } else if(is_signature) {
+    load_signatures();
+  } else {
+    load_all();
+  }
+}
 
-    });
+function next_version() {
+  position += 1;
+  if(position == files.length) {
+    position = 0;
+  }
+  load_document()
+}
 
-    $("#prev").click(function(){
-        if(position == 0) {
-          position = files.length;
-        }
-        position -= 1;
-        if(current_element != "") {
-          $("#source").load(files[position] + " [id=\"" + current_element + "\"]",
-           function() {
-             $("#source").find("[signature_line=\"signature_line\"]").show();
-           });
-        } else {
-          $("#source").load(files[position]);
-        }
-    });
+function previous_version() {
+  if(position == 0) {
+    position = files.length;
+  }
+  position -= 1;
+  load_document()
+}
+
+var current_element = ""
+$(document).ready(function() {
+    load_signatures();
+    $("#next").click(next_version);
+    $("#prev").click(previous_version);
 });
+
 </script>
 </head>
 <body>
