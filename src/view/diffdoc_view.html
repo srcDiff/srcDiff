@@ -66,11 +66,20 @@ function previous_version() {
   load_document()
 }
 
+function set_is_signature(value) {
+  old_is_signature = is_signature
+  is_signature = value;
+  if(old_is_signature != is_signature) {
+    load_document()
+  }
+}
+
 var current_element = ""
 $(document).ready(function() {
-    load_signatures();
-    $("#next").click(next_version);
-    $("#prev").click(previous_version);
+  $("#signature").attr('checked', true);
+  load_signatures();
+  $("#next").click(next_version);
+  $("#prev").click(previous_version);
 });
 
 </script>
@@ -79,7 +88,9 @@ $(document).ready(function() {
 
 <button id="prev">previous</button>
 <button id="next">next</button>
-<input type="text" id="query"/>
+<span><input id="signature"  type="radio" name="detail" value="signatures" onclick=set_is_signature(true)> Summary</span>
+<span><input id="full"     type="radio" name="detail" value="full" onclick=set_is_signature(false)> Full</span>
+
 <pre>
 <div id="source"></div>
 </pre>
