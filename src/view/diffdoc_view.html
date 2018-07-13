@@ -13,13 +13,12 @@ var position = files.length - 1;
 var is_signature = true
 
 function load_all() {
-    $("#source").load(files[position])/*, function(){
-             $("[content=\"body\"]").click(function() {
-               current_element = $(this).attr("id");
-               alert(current_element)
-               $("#source").load(files[position] + " [id=\"" + current_element + "\"]")
+    $("#source").load(files[position], function() {
+              $("[content=\"signature\"]").click(function() {
+                current_element = $(this).attr("id");
+                load_full();
              });
-        });*/
+        });
 }
 
 function load_full() {
