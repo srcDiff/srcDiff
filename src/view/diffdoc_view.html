@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+var files = <?php $out = array();
+foreach (glob('*.srcdiff.html') as $filename) {
+    $p = pathinfo($filename);
+    $out[] = $p['filename'];
+}
+echo json_encode($out); ?>;
+var position = files.length - 1;
+var current_element = ""
+$(document).ready(function() {
+    $("#source").load(files[position] + " [content=\"signature\"]", function(){
+             $("#source").find("[content=\"signature_line\"]").show();
+             $("[content=\"signature\"]").after("<br /><br />");
+             $("[content=\"signature\"]").click(function() {
+               current_element = $(this).attr("id");
+               alert(current_element)
+               $("#source").load(files[position] + " [id=\"" + current_element + "\"]")
+             });
+        });
+
+    $("#next").click(function(){
+        position += 1;
+        if(position == files.length) {
+          position = 0;
+        }
+        if(current_element != "") {
+          $("#source").load(files[position] + " [id=\"" + current_element + "\"]",
+           function() {
+             $("#source").find("[signature_line=\"signature_line\"]").show();
+           });
+        } else {
+          $("#source").load(files[position]);
+        }
+
+    });
+
+    $("#prev").click(function(){
+        if(position == 0) {
+          position = files.length;
+        }
+        position -= 1;
+        if(current_element != "") {
+          $("#source").load(files[position] + " [id=\"" + current_element + "\"]",
+           function() {
+             $("#source").find("[signature_line=\"signature_line\"]").show();
+           });
+        } else {
+          $("#source").load(files[position]);
+        }
+    });
+});
+</script>
+</head>
+<body>
+
+<button id="prev">previous</button>
+<button id="next">next</button>
+<input type="text" id="query"/>
+<pre>
+<div id="source"></div>
+</pre>
+
+</body>
+</html>
