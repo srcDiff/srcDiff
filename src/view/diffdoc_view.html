@@ -11,18 +11,25 @@ foreach (glob('*.srcdiff.html') as $filename) {
 echo json_encode($out); ?>;
 var position = files.length - 1;
 var is_signature = true
+var element_stack = [ { is_signature:true, id:"" } ]
+
+function top() {
+  return element_stack[element_stack.length = -1];
+
+}
 
 function load_all() {
     $("#source").load(files[position], function() {
               $("[content=\"signature\"]").click(function() {
-                current_element = $(this).attr("id");
+                element_stack.push({ is_signature:false, id:$(this).attr("id") });
                 load_full();
              });
         });
 }
 
 function load_full() {
- $("#source").load(files[position] + " [id=\"" + current_element + "\"][content=\"full\"]", 
+  var current_element = top().id
+  $("#source").load(files[position] + " [id=\"" + current_element + "\"][content=\"full\"]", 
     function() {
       $("#source").children("[content=\"full\"]").wrap("<pre></pre>")
       $("[id=\"" + current_element + "\"][content=\"signature\"]").children("[content=\"pre\"]").show();
@@ -30,20 +37,20 @@ function load_full() {
 }
 
 function load_signatures() {
-    $("#source").load(files[position] + " [content=\"signature\"]", function(){
-             $("#source").find("[content=\"pre\"]").show();
-             $("[content=\"signature\"]").wrap("<pre></pre>");
-             $("[content=\"signature\"]").click(function() {
-               current_element = $(this).attr("id");
-               load_full();
+    $("#source").load(files[position] + " [content=\"signature\"]", function() {
+              $("#source").find("[content=\"pre\"]").show();
+              $("[content=\"signature\"]").wrap("<pre></pre>");
+              $("[content=\"signature\"]").click(function() {
+                element_stack.push({ is_signature:false, id:$(this).attr("id") });
+                load_full();
              });
         });
 }
 
 function load_document() {
-  if(current_element != "") {
+  if(element_stack.length == 1 && !top().is_signature) {
     load_full()
-  } else if(is_signature) {
+  } else if(element_stack.length == 1 && top().is_signature) {
     load_signatures();
   } else {
     load_all();
@@ -68,8 +75,10 @@ function previous_version() {
 
 function roll_up() {
   /* maybe make a stack to support true drill down/roll up */
-  current_element = "";
-  load_document();
+  if(element_stack.length != 1) {
+    element_stack.pop()
+    load_document();
+  }
 }
 
 function set_is_signature(value) {
@@ -80,7 +89,6 @@ function set_is_signature(value) {
   }
 }
 
-var current_element = ""
 $(document).ready(function() {
   $("#signature").attr('checked', true);
   load_signatures();
