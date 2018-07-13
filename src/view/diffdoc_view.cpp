@@ -197,14 +197,14 @@ void diffdoc_view::end_element(const std::string & local_name,
       }
       output_raw_str(">");
 
-      output_raw_str("<span signature=\"signature\">"); 
-      output_raw_str("<span signature_line=\"signature_line\" style=\"display:none\">" 
+      output_raw_str("<span content=\"signature\">"); 
+      output_raw_str("<span content=\"signature_line\" style=\"display:none\">" 
         + form_line_str(entity_stack.back().line_number_delete, entity_stack.back().line_number_insert) 
         + "</span>");
       output_raw_str(entity_stack.back().signature);
       output_raw_str("</span>");
 
-      output_raw_str("<span body=\"body\">");
+      output_raw_str("<span content=\"body\">");
       output_raw_str(body);
       output_raw_str("</span>");
       output_raw_str("</span>");
