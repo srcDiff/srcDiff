@@ -14,7 +14,7 @@ var is_signature = true
 var element_stack = [ { is_signature:true, id:"" } ]
 
 function top() {
-  return element_stack[element_stack.length = -1];
+  return element_stack[element_stack.length - 1];
 
 }
 
@@ -48,7 +48,7 @@ function load_signatures() {
 }
 
 function load_document() {
-  if(element_stack.length == 1 && !top().is_signature) {
+  if(element_stack.length != 1) {
     load_full()
   } else if(element_stack.length == 1 && top().is_signature) {
     load_signatures();
@@ -82,11 +82,10 @@ function roll_up() {
 }
 
 function set_is_signature(value) {
-  old_is_signature = is_signature
-  is_signature = value;
-  if(old_is_signature != is_signature) {
-    load_document()
-  }
+  if(top().is_signature == value) return;
+
+  top().is_signature = value;
+  load_document()
 }
 
 $(document).ready(function() {
