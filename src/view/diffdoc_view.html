@@ -23,8 +23,8 @@ function load_all() {
               $("[content=\"signature\"]").click(function() {
                 element_stack.push({ is_signature:false, id:$(this).attr("id") });
                 load_full();
-             });
-        });
+              });
+    });
 }
 
 function load_full() {
@@ -33,6 +33,12 @@ function load_full() {
     function() {
       $("#source").children("[content=\"full\"]").wrap("<pre></pre>")
       $("[id=\"" + current_element + "\"][content=\"signature\"]").children("[content=\"pre\"]").show();
+      $("#source").children("[content=\"full\"]")
+                  .children("[content=\"body\"]")
+                  .find("[content=\"signature\"]").click(function() {
+        element_stack.push({ is_signature:false, id:$(this).attr("id") });
+        load_full();
+      });
     });
 }
 
@@ -44,7 +50,7 @@ function load_signatures() {
                 element_stack.push({ is_signature:false, id:$(this).attr("id") });
                 load_full();
              });
-        });
+    });
 }
 
 function load_document() {
