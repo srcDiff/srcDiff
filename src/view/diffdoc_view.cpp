@@ -277,6 +277,8 @@ void diffdoc_view::characters(const char * ch, int len) {
       if(is_space) {
         // do I also store how it is deleted/inserted and/or not whitespace?
         indentation.append(str);
+      } else {
+        indentation.clear();
       }
     }
 
