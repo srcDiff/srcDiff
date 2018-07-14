@@ -78,7 +78,7 @@ function next_version() {
     }
     top().id = new_id;
   }
-  load_document()
+  load_document();
 }
 
 function previous_version() {
@@ -96,7 +96,7 @@ function previous_version() {
     top().id = new_id;
   }
 
-  load_document()
+  load_document();
 }
 
 function roll_up() {
@@ -111,7 +111,7 @@ function set_is_signature(value) {
   if(top().is_signature == value) return;
 
   top().is_signature = value;
-  load_document()
+  load_document();
 }
 
 $(document).ready(function() {
