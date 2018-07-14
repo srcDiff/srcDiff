@@ -18,8 +18,20 @@ function top() {
 
 }
 
+function load(object, filename, selector, func) {
+  $.get(filename, function(data) {
+    if(selector != undefined) {
+      var parsed = $.parseHTML(data);
+      object.html($(selector, parsed));
+    } else {
+      object.html(data);
+    }
+    func();
+  });
+}
+
 function load_all() {
-    $("#source").load(files[position], function() {
+    load($("#source"), files[position], undefined, function() {
               $("[content=\"signature\"]").click(function() {
                 element_stack.push({ is_signature:false, id:$(this).attr("id") });
                 load_document();
@@ -29,16 +41,17 @@ function load_all() {
 
 function load_full() {
   var current_element = top().id
-  $("#source").load(files[position] + " [id*=\"" + current_element + "\"][content=\"full\"]", 
-    function() {
-      $("#source").children("[content=\"full\"]").children("[content=\"signature\"]").children("[content=\"pre\"]").show();
-      $("#source").children("[content=\"full\"]")
-                  .children("[content=\"body\"]")
-                  .find("[content=\"signature\"]").click(function() {
-        element_stack.push({ is_signature:false, id:$(this).attr("id") });
-        load_document();
-      });
-      $("#source").children("[content=\"full\"]").wrap("<pre></pre>");
+  load($("#source"), files[position], 
+       "[id*=\"" + current_element + "\"][content=\"full\"]", 
+       function() {
+        $("#source").children("[content=\"full\"]").children("[content=\"signature\"]").children("[content=\"pre\"]").show();
+        $("#source").children("[content=\"full\"]")
+                    .children("[content=\"body\"]")
+                    .find("[content=\"signature\"]").click(function() {
+          element_stack.push({ is_signature:false, id:$(this).attr("id") });
+          load_document();
+        });
+        $("#source").children("[content=\"full\"]").wrap("<pre></pre>");
 
     });
 }
