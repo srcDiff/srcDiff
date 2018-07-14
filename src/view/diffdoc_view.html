@@ -81,6 +81,10 @@ function next_version() {
   load_document();
 }
 
+/**
+ * Can stop when no new/old for next/prev
+ * still need a good way to bypass async for skipping !changed
+ */
 function previous_version() {
   if(position == 0) {
     position = files.length;
