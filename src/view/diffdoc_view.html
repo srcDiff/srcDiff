@@ -55,6 +55,13 @@ function load_signatures() {
 }
 
 function load_document() {
+
+  var metadata = files[position].split(":");
+  var summary_element = $("#summary");
+  summary_element.children("#date").html(metadata[0])
+  summary_element.children("#revision").html(metadata[1])
+  summary_element.children("#author").html(metadata.slice(2).join('_'));
+
   if(element_stack.length != 1) {
     load_full()
   } else if(element_stack.length == 1 && top().is_signature) {
@@ -136,8 +143,14 @@ $(document).ready(function() {
 <button id="prev">previous</button>
 <button id="next">next</button>
 <button id="rollup">roll-up</button>
-<span><input id="signature"  type="radio" name="detail" value="signatures" onclick=set_is_signature(true)> Summary</span>
+<span><input id="signature"  type="radio" name="detail" value="signatures" onclick=set_is_signature(true)> Signature</span>
 <span><input id="full"     type="radio" name="detail" value="full" onclick=set_is_signature(false)> Full</span>
+
+<div id="summary">
+  <span id="author"></span>
+  <span id="date"></span>
+  <span id="revision"></span>
+</div>
 
 <div id="source"></div>
 
