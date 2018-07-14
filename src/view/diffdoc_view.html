@@ -34,7 +34,7 @@ function load_all() {
     $("#source").load(files[position], function() {
       $("[content=\"signature\"]").click(function() {
         element_stack.push({ is_signature:false, id:$(this).attr("id") });
-        load_document();
+        load();
       });
     });
 }
@@ -49,7 +49,7 @@ function load_full() {
                     .children("[content=\"body\"]")
                     .find("[content=\"signature\"]").click(function() {
           element_stack.push({ is_signature:false, id:$(this).attr("id") });
-          load_document();
+          load();
         });
         $("#source").children("[content=\"full\"]").wrap("<pre></pre>");
 
@@ -62,14 +62,24 @@ function load_signatures() {
               $("[content=\"signature\"]").wrap("<pre></pre>");
               $("[content=\"signature\"]").click(function() {
                 element_stack.push({ is_signature:false, id:$(this).attr("id") });
-                load_document();
+                load();
              });
     });
 }
 
 var extension = ".srcdiff.html";
 var extension_length = extension.length;
-function load_document() {
+function load() {
+
+  if(element_stack.length == 1) {
+    $("#rollup").hide();
+    $("#signature").show();
+    $("#full").show();
+  } else {
+    $("#rollup").show();
+    $("#signature").hide();
+    $("#full").hide();
+  }
 
   var basename = files[position].substring(0, files[position].length - extension_length);
   var metadata = basename.split("&");
@@ -103,7 +113,7 @@ function next_version() {
     }
     top().id = new_id;
   }
-  load_document();
+  load();
 }
 
 /**
@@ -128,14 +138,14 @@ function previous_version() {
     top().id = new_id;
   }
 
-  load_document();
+  load();
 }
 
 function roll_up() {
   /* maybe make a stack to support true drill down/roll up */
   if(element_stack.length != 1) {
     element_stack.pop()
-    load_document();
+    load();
   }
 }
 
@@ -143,12 +153,12 @@ function set_is_signature(value) {
   if(top().is_signature == value) return;
 
   top().is_signature = value;
-  load_document();
+  load();
 }
 
 $(document).ready(function() {
   $("#signature").attr('checked', true);
-  load_document();
+  load();
   $("#next").click(next_version);
   $("#prev").click(previous_version);
   $("#rollup").click(roll_up);
@@ -196,8 +206,8 @@ $(document).ready(function() {
 <button id="prev">previous</button>
 <button id="next">next</button>
 <button id="rollup">roll-up</button>
-<span><input id="signature"  type="radio" name="detail" value="signatures" onclick=set_is_signature(true)> Signature</span>
-<span><input id="full"     type="radio" name="detail" value="full" onclick=set_is_signature(false)> Full</span>
+<span id="signature"><input type="radio" name="detail" value="signatures" onclick=set_is_signature(true)> Signature</span>
+<span id="full"><input type="radio" name="detail" value="full" onclick=set_is_signature(false)> Full</span>
 
 <div id="source"></div>
 
