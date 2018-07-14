@@ -72,12 +72,13 @@ var extension_length = extension.length;
 function load_document() {
 
   var basename = files[position].substring(0, files[position].length - extension_length);
-  var metadata = basename.split("_");
+  var metadata = basename.split("&");
+  var author = metadata.slice(2).join('&').split('_').join('');
 
   var summary_element = $("#summary");
-  summary_element.children("#date").children("#date_value").html(metadata[0])
-  summary_element.children("#revision").children("#revision_number").html(metadata[1])
-  summary_element.children("#author").children("#author_name").html(metadata.slice(2).join('_'));
+  summary_element.children("#date").children("#date_value").html(metadata[0]);
+  summary_element.children("#revision").children("#revision_number").html(metadata[1]);
+  summary_element.children("#author").children("#author_name").html(author);
 
   if(element_stack.length != 1) {
     load_full()
