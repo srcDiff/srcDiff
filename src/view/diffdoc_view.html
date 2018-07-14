@@ -73,7 +73,7 @@ function load_document() {
 
   var basename = files[position].substring(0, files[position].length - extension_length);
   var metadata = basename.split("&");
-  var author = metadata.slice(2).join('&').split('_').join('');
+  var author = metadata.slice(2).join('&').split('_').join(' ');
 
   var summary_element = $("#summary");
   summary_element.children("#date").children("#date_value").html(metadata[0]);
