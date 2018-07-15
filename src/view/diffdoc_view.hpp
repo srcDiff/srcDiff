@@ -6,6 +6,7 @@
 #include <versioned_string.hpp>
 #include <srcdiff_summary.hpp>
 #include <profile_t.hpp>
+#include <unit_profile_t.hpp>
 
 #include <boost/any.hpp>
 
@@ -48,6 +49,7 @@ class diffdoc_view : public view_t {
 private:
 
   std::shared_ptr<srcdiff_summary> & summarizer;
+  std::shared_ptr<unit_profile_t> unit_profile;
 
   unsigned int num_open_spans;
   int last_character_operation;

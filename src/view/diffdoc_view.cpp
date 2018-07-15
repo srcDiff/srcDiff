@@ -5,6 +5,7 @@
 #include <type_query.hpp>
 
 #include <iomanip>
+#include <memory>
 
 #include <cstring>
 #include <cassert>
@@ -38,6 +39,7 @@ diffdoc_view::diffdoc_view(const std::string & output_filename,
                        false,
                        true),
                 summarizer(summarizer),
+                unit_profile(),
                 num_open_spans(0),
                 last_character_operation(view_t::UNSET),
                 line_number_delete(1),
@@ -50,6 +52,7 @@ diffdoc_view::~diffdoc_view() {}
 
 void diffdoc_view::transform(const std::string & srcdiff, const std::string & xml_encoding) {
   summarizer->perform_summary(srcdiff, xml_encoding);
+  unit_profile = std::dynamic_pointer_cast<unit_profile_t>(profile_t::unit_profile);
   view_t::transform(srcdiff, xml_encoding);
 
 }
@@ -57,6 +60,7 @@ void diffdoc_view::transform(const std::string & srcdiff, const std::string & xm
 
 void diffdoc_view::reset_internal() {
   summarizer->reset();
+  unit_profile = std::shared_ptr<unit_profile_t>();
   num_open_spans = 0;
   last_character_operation = view_t::UNSET;
   line_number_delete = 1;
@@ -147,7 +151,8 @@ void diffdoc_view::start_unit(const std::string & local_name,
 
   output_raw_str("<pre>");
   output_raw_str("<span id=\"unit\" content=\"summary\">");
-  output_raw_str("</span>");
+  output_raw_str("File: " + unit_profile->file_name);
+  output_raw_str("</span>\n");
   start_line();
 
 }
