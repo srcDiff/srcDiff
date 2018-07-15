@@ -3,7 +3,8 @@
 
 #include <view.hpp>
 
-#include  <versioned_string.hpp>
+#include <versioned_string.hpp>
+#include <srcdiff_summary.hpp>
 
 #include <boost/any.hpp>
 
@@ -35,6 +36,9 @@ public:
 class diffdoc_view : public view_t {
 
 private:
+
+  std::shared_ptr<srcdiff_summary> & summarizer;
+
   unsigned int num_open_spans;
   int last_character_operation;
 
@@ -52,11 +56,13 @@ public:
 
   diffdoc_view(const std::string & output_filename,
                const std::string & syntax_highlight,
-               const std::string & theme);
+               const std::string & theme,
+               std::shared_ptr<srcdiff_summary> & summarizer);
   virtual ~diffdoc_view();
 
 private:
 
+  virtual void transform(const std::string & srcdiff, const std::string & xml_encoding);
   virtual void reset_internal();
 
   virtual void start_unit(const std::string & local_name,

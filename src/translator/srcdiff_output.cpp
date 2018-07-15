@@ -51,9 +51,11 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
 
   } else if(is_option(flags, OPTION_DIFFDOC_VIEW)) {
 
-     view = std::make_shared<diffdoc_view>(srcdiff_filename,
+    summary = std::make_shared<srcdiff_summary>();
+    view = std::make_shared<diffdoc_view>(srcdiff_filename,
                                            view_options.syntax_highlight,
-                                           view_options.theme);
+                                           view_options.theme,
+                                           summary);
 
   }  else if(is_option(flags, OPTION_SUMMARY)) {
 

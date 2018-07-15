@@ -266,12 +266,15 @@ no_expr:
 
 }
 
-srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str) 
-    : out(nullptr), summary_types(summary_type::NONE), id_count(0),
+srcdiff_summary::srcdiff_summary()
+    : out(nullptr), summary_types(summary_type::TEXT), id_count(0),
       srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(), function_pos(), current_move_id(0),
       insert_count(), delete_count(), change_count(), total(),
       text(), specifier_raw(), name_count(0), collected_full_name(), collected_simple_name(), simple_names(),
-      condition_count(0), collected_condition(), left_hand_side(), collect_lhs(), collect_rhs(), raw_statements() {
+      condition_count(0), collected_condition(), left_hand_side(), collect_lhs(), collect_rhs(), raw_statements() {}
+
+srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str) 
+    : srcdiff_summary() {
 
     if(output_filename != "-")
       out = new std::ofstream(output_filename.c_str());
@@ -279,6 +282,8 @@ srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boos
       out = &std::cout;
 
     if(!summary_type_str || (*summary_type_str)[0] == '\0') return;
+
+    summary_types = summary_type::NONE;
 
     std::string summary_type_str_copy = *summary_type_str;
     while(!summary_type_str_copy.empty()) {
@@ -306,18 +311,22 @@ srcdiff_summary::~srcdiff_summary() {
 
 }
 
+const std::shared_ptr<profile_t> & srcdiff_summary::get_summary() const {
+    return profile_t::unit_profile;;
+}
+void srcdiff_summary::perform_summary(const std::string & srcdiff, const std::string & xml_encoding) {
+   srcSAXController controller(srcdiff, xml_encoding.c_str());
+   controller.parse(this);
+}
+
 void srcdiff_summary::summarize(const std::string & srcdiff, const std::string & xml_encoding) {
-
-    srcSAXController controller(srcdiff, xml_encoding.c_str());
-
-    controller.parse(this);
 
     static bool first = true;
     if(!first) (*out) << '\n';
     else first = false;
     
-    summarize(profile_t::unit_profile);
-
+    perform_summary(srcdiff, xml_encoding);
+    summarize(get_summary());
     reset();
 
 }

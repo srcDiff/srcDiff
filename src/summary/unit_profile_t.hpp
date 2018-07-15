@@ -69,8 +69,9 @@ class unit_profile_t : public profile_t {
 
             size_t number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified = 0;
             conditionals.count_operations(number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
-            if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified)
+            if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified) {
                 table.output_all_conditional_counts(out, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
+            }
 
             return out;
 

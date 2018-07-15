@@ -67,7 +67,7 @@ public:
          bool is_html);
   virtual ~view_t();
 
-  void transform(const std::string & srcdiff, const std::string & xml_encoding);
+  virtual void transform(const std::string & srcdiff, const std::string & xml_encoding);
   void reset();
 
 protected:

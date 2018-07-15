@@ -24,7 +24,8 @@ entity_data::entity_data(const std::string & type, size_t depth,
 
 diffdoc_view::diffdoc_view(const std::string & output_filename,
                            const std::string & syntax_highlight,
-                           const std::string & theme)
+                           const std::string & theme,
+                           std::shared_ptr<srcdiff_summary> & summarizer)
               : view_t(output_filename,
                        syntax_highlight, 
                        theme,
@@ -32,17 +33,26 @@ diffdoc_view::diffdoc_view(const std::string & output_filename,
                        false,
                        false,
                        true),
-                       num_open_spans(0),
-                       last_character_operation(view_t::UNSET),
-                       line_number_delete(1),
-                       line_number_insert(1),
-                       indentation(),
-                       saved_output(),
-                       entity_stack() {}
+                summarizer(summarizer),
+                num_open_spans(0),
+                last_character_operation(view_t::UNSET),
+                line_number_delete(1),
+                line_number_insert(1),
+                indentation(),
+                saved_output(),
+                entity_stack() {}
 
 diffdoc_view::~diffdoc_view() {}
 
+void diffdoc_view::transform(const std::string & srcdiff, const std::string & xml_encoding) {
+  summarizer->perform_summary(srcdiff, xml_encoding);
+  view_t::transform(srcdiff, xml_encoding);
+
+}
+
+
 void diffdoc_view::reset_internal() {
+  summarizer->reset();
   num_open_spans = 0;
   last_character_operation = view_t::UNSET;
   line_number_delete = 1;
