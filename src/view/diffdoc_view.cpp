@@ -174,7 +174,7 @@ void diffdoc_view::start_element(const std::string & local_name,
       add_saved_output();
       entity_stack.emplace_back(local_name, srcml_element_stack.size(), indentation, line_number_delete, line_number_insert);
       indentation.clear();
-    } else if(entity_stack.size() && entity_stack.back().collect_id && local_name == "name") {
+    } else if(entity_stack.size() && entity_stack.back().collect_id && is_identifier(local_name)) {
 
       if(entity_stack.back().depth == srcml_element_stack.size()) {
         entity_stack.back().collect_name = true;
@@ -237,8 +237,13 @@ void diffdoc_view::end_element(const std::string & local_name,
 
     } else if(entity_stack.size() && entity_stack.back().collect_id) {
       const std::string & type = entity_stack.back().type;
+
+      if(is_identifier(local_name) && entity_stack.back().depth == srcml_element_stack.size()) {
+        entity_stack.back().collect_name = false;
+      }
+
       bool end_id = (is_function_type(type) && local_name == "parameter_list") 
-                 || (is_class_type(type) && entity_stack.back().depth == srcml_element_stack.size() && local_name == "name");
+                 || (is_class_type(type) && entity_stack.back().depth == srcml_element_stack.size() && is_identifier(local_name));
       if(end_id) {
         entity_stack.back().collect_id = false;
         end_spans();
@@ -246,9 +251,7 @@ void diffdoc_view::end_element(const std::string & local_name,
         add_saved_output();
       }
 
-      if(local_name == "name" && entity_stack.back().depth == srcml_element_stack.size()) {
-        entity_stack.back().collect_name = false;
-      }
+
 
     }
 
@@ -303,6 +306,10 @@ void diffdoc_view::characters(const char * ch, int len) {
       } else {
         indentation.clear();
       }
+    }
+
+    if(entity_stack.size() && entity_stack.back().collect_name) {
+      entity_stack.back().name.append(str, view_op2srcdiff_type(diff_stack.back()));
     }
 
   }
