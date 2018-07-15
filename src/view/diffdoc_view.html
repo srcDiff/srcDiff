@@ -164,11 +164,10 @@ function set_is_signature(value) {
 }
 
 $(document).ready(function() {
-  $("#signature").attr('checked', true);
-  load();
   $("#next").click(next_version);
   $("#prev").click(previous_version);
   $("#rollup").click(roll_up);
+  load();
 });
 
 </script>
@@ -213,8 +212,8 @@ $(document).ready(function() {
 <button id="prev">previous</button>
 <button id="next">next</button>
 <button id="rollup">roll-up</button>
-<span id="signature"><input type="radio" name="detail" value="signatures" onclick=set_is_signature(true)> Signature</span>
-<span id="full"><input type="radio" name="detail" value="full" onclick=set_is_signature(false)> Full</span>
+<span id="signature"><input type="radio" name="detail" value="signatures" onclick="set_is_signature(true)" checked="checked" > Signature</span>
+<span id="full"><input type="radio" name="detail" value="full" onclick="set_is_signature(false)"> Full</span>
 
 <div id="source"></div>
 
