@@ -23,7 +23,8 @@ entity_data::entity_data(const std::string & type, size_t depth,
     signature(),
     collect_name(false),
     name(),
-    is_changed(false) {}
+    is_changed(false),
+    change_profile() {}
 
 diffdoc_view::diffdoc_view(const std::string & output_filename,
                            const std::string & syntax_highlight,

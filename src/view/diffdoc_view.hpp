@@ -5,6 +5,7 @@
 
 #include <versioned_string.hpp>
 #include <srcdiff_summary.hpp>
+#include <profile_t.hpp>
 
 #include <boost/any.hpp>
 
@@ -19,17 +20,24 @@
 struct entity_data {
 public:
   std::string type;
+
   size_t depth;
+
   std::string indentation;
+
   size_t line_number_delete;
   size_t line_number_insert;
+
   bool collect_id;
   versioned_string id;
   std::string signature;
+
   bool collect_name;
   versioned_string name;
 
   bool is_changed;
+  std::shared_ptr<profile_t> change_profile;
+
 public:
   entity_data(const std::string & type, size_t depth, 
               const std::string & indentation, size_t line_number_delete, size_t line_number_insert);
