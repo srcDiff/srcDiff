@@ -146,6 +146,8 @@ void diffdoc_view::start_unit(const std::string & local_name,
                               const struct srcsax_attribute * attributes) {
 
   output_raw_str("<pre>");
+  output_raw_str("<span id=\"unit\" content=\"summary\">");
+  output_raw_str("</span>");
   start_line();
 
 }
