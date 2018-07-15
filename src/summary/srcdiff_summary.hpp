@@ -96,7 +96,6 @@ public:
     srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str);
     ~srcdiff_summary();
 
-    const std::shared_ptr<profile_t> & get_summary() const;
     void perform_summary(const std::string & srcdiff, const std::string & xml_encoding);
     void summarize(const std::string & srcdiff, const std::string & xml_encoding);
     void summarize(const std::shared_ptr<profile_t> & profile);

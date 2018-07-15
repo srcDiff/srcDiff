@@ -312,9 +312,6 @@ srcdiff_summary::~srcdiff_summary() {
 
 }
 
-const std::shared_ptr<profile_t> & srcdiff_summary::get_summary() const {
-    return profile_t::unit_profile;;
-}
 void srcdiff_summary::perform_summary(const std::string & srcdiff, const std::string & xml_encoding) {
    srcSAXController controller(srcdiff, xml_encoding.c_str());
    controller.parse(this);
@@ -327,7 +324,7 @@ void srcdiff_summary::summarize(const std::string & srcdiff, const std::string &
     else first = false;
     
     perform_summary(srcdiff, xml_encoding);
-    summarize(get_summary());
+    summarize(profile_t::unit_profile);
     reset();
 
 }
