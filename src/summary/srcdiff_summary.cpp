@@ -301,6 +301,7 @@ srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boos
 }
 
 srcdiff_summary::~srcdiff_summary() {
+    if(out == nullptr) return;
 
     if(out != &std::cout) {
 
