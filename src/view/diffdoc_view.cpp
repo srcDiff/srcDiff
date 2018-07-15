@@ -155,7 +155,7 @@ void diffdoc_view::start_element(const std::string & local_name,
      diff_stack.push_back(INSERT);
     
   } else {
-
+    /** @todo add static block and fields */
     if(is_class_type(local_name) || is_function_type(local_name)) {
       end_spans();
       add_saved_output();
