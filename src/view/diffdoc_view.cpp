@@ -10,7 +10,8 @@
 #include <cassert>
 
 entity_data::entity_data(const std::string & type, size_t depth, 
-                         const std::string & indentation, size_t line_number_delete, size_t line_number_insert) 
+                         const std::string & indentation,
+                         size_t line_number_delete, size_t line_number_insert) 
   : type(type),
     depth(depth),
     indentation(indentation),
@@ -20,6 +21,8 @@ entity_data::entity_data(const std::string & type, size_t depth,
     // not a good separtor for C++
     id(':'),
     signature(),
+    collect_name(false),
+    name(),
     is_changed(false) {}
 
 diffdoc_view::diffdoc_view(const std::string & output_filename,
@@ -171,6 +174,12 @@ void diffdoc_view::start_element(const std::string & local_name,
       add_saved_output();
       entity_stack.emplace_back(local_name, srcml_element_stack.size(), indentation, line_number_delete, line_number_insert);
       indentation.clear();
+    } else if(entity_stack.size() && entity_stack.back().collect_id && local_name == "name") {
+
+      if(entity_stack.back().depth == srcml_element_stack.size()) {
+        entity_stack.back().collect_name = true;
+      }
+
     }
 
   }
@@ -235,6 +244,10 @@ void diffdoc_view::end_element(const std::string & local_name,
         end_spans();
         entity_stack.back().signature = remove_saved_output();
         add_saved_output();
+      }
+
+      if(local_name == "name" && entity_stack.back().depth == srcml_element_stack.size()) {
+        entity_stack.back().collect_name = false;
       }
 
     }

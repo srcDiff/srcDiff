@@ -26,6 +26,8 @@ public:
   bool collect_id;
   versioned_string id;
   std::string signature;
+  bool collect_name;
+  versioned_string name;
 
   bool is_changed;
 public:
