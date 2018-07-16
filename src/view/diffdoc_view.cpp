@@ -3,6 +3,7 @@
 #include <srcdiff_constants.hpp>
 
 #include <type_query.hpp>
+#include <summary_output_stream_html.hpp>
 
 #include <iomanip>
 #include <memory>
@@ -238,7 +239,7 @@ void diffdoc_view::end_element(const std::string & local_name,
 
       if(entity_stack.back().change_profile) {
         std::ostringstream out;
-        summary_output_stream stream(out);
+        summary_output_stream_html stream(out);
         entity_stack.back().change_profile->summary(stream, summary_type::TEXT);
         std::cerr << out.str();
       }

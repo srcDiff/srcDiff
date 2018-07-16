@@ -128,7 +128,9 @@ class function_profile_t : public profile_t {
             m_handler.gather_candidates(descendant_change_profiles);
             m_handler.detect();
 
-            out.begin_line() << type_name << " '" << name << "':\n";
+            out.begin_line() << type_name << " '" << name << "':";
+            out.end_line();
+
             out.pad() << "  ";
             out << manip::bold() << "Impact" << manip::normal() << ": ";
             out << manip::bold() << "Statement"     << manip::normal() << " = " << manip::bold() << this->statement_churn              << manip::normal();
@@ -136,7 +138,7 @@ class function_profile_t : public profile_t {
             out << manip::bold() << "Non-Statement" << manip::normal() << " = " << manip::bold() << get_other_change_count()           << manip::normal();
             out << '\t';
             out << manip::bold() << "Cyclomatic"    << manip::normal() << " = " << manip::bold() << get_cyclomatic_complexity_change() << manip::normal();            
-            out << '\n';
+            out.end_line();
 
             out.increment_depth();
 
@@ -154,7 +156,9 @@ class function_profile_t : public profile_t {
 
                 out << (comment_count != 0 ? "comment " : "") << "change";
 
-                out << (non_syntax_changes == 1 ? "\n" : "s\n");
+                out << (non_syntax_changes == 1 ? "" : "s");
+
+                out.end_line();
 
                 out.decrement_depth();
 
@@ -172,23 +176,33 @@ class function_profile_t : public profile_t {
 
                 text_summary text;
 
-                if(!name.is_common()) out.begin_line() << manip::bold() << "function name change" << manip::normal()
-                                                       << " from '" <<name.original() << "' to '" << name.modified() << "'\n";
+                if(!name.is_common()) {
+                    out.begin_line() << manip::bold() << "function name change" << manip::normal()
+                                     << " from '" <<name.original() << "' to '" << name.modified();
+                    out.end_line();
+                }
 
                 if(is_return_type_change) {
 
-                    out.begin_line() << manip::bold() << "return type change" << manip::normal() << '\n';
+                    out.begin_line() << manip::bold() << "return type change" << manip::normal();
+                    out.end_line();
 
                 }
 
                 text.parameter(out, parameters);
 
-                for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_DELETE); citr != specifiers.upper_bound(SRCDIFF_DELETE); ++citr)
-                    out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was deleted\n";
-                for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_INSERT); citr != specifiers.upper_bound(SRCDIFF_INSERT); ++citr)
-                    out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was inserted\n";              
-                for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_COMMON); citr != specifiers.upper_bound(SRCDIFF_COMMON); ++citr)
-                    out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was modified\n";
+                for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_DELETE); citr != specifiers.upper_bound(SRCDIFF_DELETE); ++citr) {
+                    out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was deleted";
+                    out.end_line();
+                }
+                for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_INSERT); citr != specifiers.upper_bound(SRCDIFF_INSERT); ++citr) {
+                    out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was inserted";
+                    out.end_line();              
+                }
+                for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_COMMON); citr != specifiers.upper_bound(SRCDIFF_COMMON); ++citr) {
+                    out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was modified";
+                    out.end_line();
+                }
 
                 if(is_summary_type(summary_types, summary_type::TEXT) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
                     text.member_initialization(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
@@ -199,9 +213,9 @@ class function_profile_t : public profile_t {
 
             }
 
-            local_classes.summarize_pure(out, summary_types, SRCDIFF_DELETE);
-            local_classes.summarize_pure(out, summary_types, SRCDIFF_INSERT);
-            local_classes.summarize_modified(out, summary_types);
+            // local_classes.summarize_pure(out, summary_types, SRCDIFF_DELETE);
+            // local_classes.summarize_pure(out, summary_types, SRCDIFF_INSERT);
+            // local_classes.summarize_modified(out, summary_types);
 
             out.decrement_depth();
 

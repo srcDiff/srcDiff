@@ -13,7 +13,7 @@ public:
 	static constexpr const char * const BULLET = "\u2022";
 
 
-private:
+protected:
 
 	std::ostream & out;
 
@@ -27,9 +27,7 @@ private:
 
 protected:
 
-private:
-
-	std::ostream & output(const std::string & str) {
+	virtual std::ostream & output(const std::string & str) {
 
 		// in case too much correct wrapping avoid outputting one word on line
 		const size_t number_start_characters = depth_ * 8 + 2;
@@ -169,6 +167,12 @@ public:
 
         return *this;
 
+    }
+
+    summary_output_stream & end_line() {
+    	out << '\n';
+    	number_characters_output = 0;
+    	return *this;
     }
 
     void flush() {
