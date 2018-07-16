@@ -29,6 +29,10 @@ public:
 
 	summary_manip(manipulation manip, int setw_n = 0) : manip(manip), setw_n(setw_n) {}
 
+	static bool get_is_html() {
+		return is_html;
+	}
+
 	static void set_is_html(bool is_html) {
 		summary_manip::is_html = is_html;
 	}

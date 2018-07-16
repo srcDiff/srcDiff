@@ -73,7 +73,7 @@ public:
     }
 
     summary_output_stream & end_line() {
-    	out << "</li>\n";
+    	out << "</li>";
     	return *this;
     }
 

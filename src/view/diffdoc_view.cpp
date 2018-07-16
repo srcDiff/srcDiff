@@ -61,9 +61,9 @@ diffdoc_view::~diffdoc_view() {}
 
 void diffdoc_view::transform(const std::string & srcdiff, const std::string & xml_encoding) {
   summarizer->perform_summary(srcdiff, xml_encoding);
-  summary_manip::set_is_html(true);
+  manip::set_is_html(true);
   view_t::transform(srcdiff, xml_encoding);
-  summary_manip::set_is_html(false);
+  manip::set_is_html(false);
 
 }
 
@@ -159,7 +159,7 @@ void diffdoc_view::start_unit(const std::string & local_name,
 
   output_raw_str("<pre>");
   output_raw_str("<span id=\"unit\" content=\"summary\">");
-  output_raw_str("File: " + profile_t::unit_profile->get_name());
+  output_raw_str("<strong>File</strong>: " + profile_t::unit_profile->get_name());
   output_raw_str("</span>\n");
   start_line();
 
@@ -246,7 +246,7 @@ void diffdoc_view::end_element(const std::string & local_name,
         entity_stack.back().change_profile->summary(stream, summary_type::TEXT);
         stream.finish();
 
-        output_raw_str("<span " + id_attr + " content=\"summary\"");
+        output_raw_str("<span " + id_attr + " content=\"summary\" style=\"display:none\"");
         output_raw_str(out.str());
         output_raw_str("</span>");
       }
