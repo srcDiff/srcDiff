@@ -45,6 +45,10 @@ class function_profile_t : public profile_t {
         function_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent)
             : profile_t(type_name, uri, operation, parent), total_statements(0), cyclomatic_complexity_change(0) {}
 
+        const versioned_string & get_name() const {
+            return name;
+        }
+
         virtual void set_name(const std::shared_ptr<identifier_profile_t> & name, const boost::optional<versioned_string> & parent) {
 
             if(is_function_type(*parent)) this->name = name->name;

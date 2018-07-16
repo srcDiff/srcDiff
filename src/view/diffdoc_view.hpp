@@ -49,7 +49,6 @@ class diffdoc_view : public view_t {
 private:
 
   std::shared_ptr<srcdiff_summary> & summarizer;
-  std::shared_ptr<unit_profile_t> unit_profile;
 
   unsigned int num_open_spans;
   int last_character_operation;
@@ -72,7 +71,7 @@ public:
                std::shared_ptr<srcdiff_summary> & summarizer);
   virtual ~diffdoc_view();
 
-private:
+protected:
 
   virtual void transform(const std::string & srcdiff, const std::string & xml_encoding);
   virtual void reset_internal();
@@ -100,6 +99,8 @@ private:
 
 
 public:
+
+  void set_change_profile_by_name();
 
   srcdiff_type view_op2srcdiff_type(int operation);
 

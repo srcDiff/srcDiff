@@ -39,7 +39,6 @@ diffdoc_view::diffdoc_view(const std::string & output_filename,
                        false,
                        true),
                 summarizer(summarizer),
-                unit_profile(),
                 num_open_spans(0),
                 last_character_operation(view_t::UNSET),
                 line_number_delete(1),
@@ -52,15 +51,12 @@ diffdoc_view::~diffdoc_view() {}
 
 void diffdoc_view::transform(const std::string & srcdiff, const std::string & xml_encoding) {
   summarizer->perform_summary(srcdiff, xml_encoding);
-  unit_profile = std::dynamic_pointer_cast<unit_profile_t>(profile_t::unit_profile);
   view_t::transform(srcdiff, xml_encoding);
 
 }
 
-
 void diffdoc_view::reset_internal() {
   summarizer->reset();
-  unit_profile = std::shared_ptr<unit_profile_t>();
   num_open_spans = 0;
   last_character_operation = view_t::UNSET;
   line_number_delete = 1;
@@ -69,6 +65,17 @@ void diffdoc_view::reset_internal() {
   saved_output = std::stack<std::ostringstream>();
   entity_stack.clear();
 }
+
+void diffdoc_view::set_change_profile_by_name() {
+
+  /** should never be zero, but... */
+  if(entity_stack.size() <= 1) {
+
+  }
+
+
+}
+
 
 srcdiff_type diffdoc_view::view_op2srcdiff_type(int operation) {
   static std::unordered_map<int, srcdiff_type> op_converter = {
@@ -151,7 +158,7 @@ void diffdoc_view::start_unit(const std::string & local_name,
 
   output_raw_str("<pre>");
   output_raw_str("<span id=\"unit\" content=\"summary\">");
-  output_raw_str("File: " + unit_profile->file_name);
+  output_raw_str("File: " + profile_t::unit_profile->get_name());
   output_raw_str("</span>\n");
   start_line();
 

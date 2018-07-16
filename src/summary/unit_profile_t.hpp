@@ -46,6 +46,10 @@ class unit_profile_t : public profile_t {
             
         }
 
+        const versioned_string & get_name() const {
+            return file_name;
+        }
+
         virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
 
             out.begin_line() << "file '" << file_name << "': Impact = " << get_impact_factor() << '\n'; 

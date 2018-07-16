@@ -90,6 +90,8 @@ class profile_t {
         void add_child(const std::shared_ptr<profile_t> & profile);
         void add_declaration_identifier(const std::shared_ptr<profile_t> & profile);
 
+        virtual const versioned_string & get_name() const;
+
         virtual void set_name(const std::shared_ptr<identifier_profile_t> & name);
         virtual void set_name(const std::shared_ptr<identifier_profile_t> & name UNUSED, const boost::optional<versioned_string> & parent UNUSED);
         virtual void add_child_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED);
