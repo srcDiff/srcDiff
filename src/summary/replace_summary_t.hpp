@@ -51,7 +51,7 @@ class replace_summary_t : public summary_t {
 
                 }
 
-                out << '\n';
+                out.end_line();
 
                 return out;
             }
@@ -84,7 +84,7 @@ class replace_summary_t : public summary_t {
             else if(number_comments_modified > 1)
                 out << "and " << std::to_string(number_comments_modified) << manip::bold() << "comments" << manip::normal();
 
-            out << '\n';
+            out.end_line();
 
             return out;
 

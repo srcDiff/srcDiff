@@ -87,7 +87,7 @@ class decl_stmt_summary_t : public summary_t {
 
             }
 
-            out << '\n';
+            out.end_line();
 
             return out;
 

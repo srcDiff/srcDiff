@@ -35,7 +35,7 @@ class macro_summary_t : public summary_t {
 
             out << (operation == SRCDIFF_DELETE ?  "deleted" : (operation == SRCDIFF_INSERT ? "inserted" : "modified"));
 
-            out << '\n';
+            out.end_line();
 
             return out;
 

@@ -46,7 +46,7 @@ class identifier_summary_t : public summary_t {
 
             }
 
-            out << '\n';
+            out.end_line();
 
             return out;
 

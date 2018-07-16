@@ -39,7 +39,8 @@ class conditional_summary_t : public summary_t {
                  else
                      out << std::to_string(count) << ' ' << manip::bold() << statement_type << 's' << manip::normal() << " were ";
 
-                 out << "modified\n";
+                 out << "modified";
+                 out.end_line();
 
             }
 
@@ -54,7 +55,7 @@ class conditional_summary_t : public summary_t {
 
                 out << (operation == SRCDIFF_DELETE ? "deleted" : "inserted");
 
-                out << '\n';
+                out.end_line();
 
             }
 

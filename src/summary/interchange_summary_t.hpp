@@ -36,7 +36,7 @@ class interchange_summary_t : public summary_t {
                     << " were converted to "
                     << manip::bold() << statement_type.modified() << 's' << manip::normal();
 
-            out << '\n';
+            out.end_line();
 
             return out;
 
