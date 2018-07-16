@@ -241,6 +241,7 @@ void diffdoc_view::end_element(const std::string & local_name,
         std::ostringstream out;
         summary_output_stream_html stream(out);
         entity_stack.back().change_profile->summary(stream, summary_type::TEXT);
+        stream.finish();
         std::cerr << out.str();
       }
 

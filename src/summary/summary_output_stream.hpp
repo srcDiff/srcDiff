@@ -177,6 +177,8 @@ public:
     	return *this;
     }
 
+    virtual void finish() {}
+
     void flush() {
 
     	out.flush();
