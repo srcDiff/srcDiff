@@ -19,6 +19,7 @@ entity_data::entity_data(const std::string & type, size_t depth,
     indentation(indentation),
     line_number_delete(line_number_delete),
     line_number_insert(line_number_insert),
+    operation(operation),
     collect_id(true),
     // not a good separtor for C++
     id(':'),
@@ -234,6 +235,13 @@ void diffdoc_view::end_element(const std::string & local_name,
         output_raw_str(" changed=\"changed\"");
       }
       output_raw_str(">");
+
+      if(entity_stack.back().change_profile) {
+        std::ostringstream out;
+        summary_output_stream stream(out);
+        entity_stack.back().change_profile->summary(stream, summary_type::TEXT);
+        std::cerr << out.str();
+      }
 
       output_raw_str("<span " + id_attr + " content=\"signature\">"); 
       output_raw_str("<span " + id_attr + " content=\"pre\" style=\"display:none\">" 

@@ -128,7 +128,7 @@ public:
     }
 
     if(!previous) return;
-    std::cerr << entity_stack.back().name << '\n';
+
     entity_data & current = entity_stack.back();
     current.change_profile = reinterpret_cast<const change_entity_map<type> *>(previous->get_member(current.type))->find(current.operation, current.name);
 
