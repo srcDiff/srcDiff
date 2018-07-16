@@ -117,37 +117,39 @@ public:
 
 	summary_output_stream(std::ostream & out, size_t max_width = 100) : out(out), max_width(max_width), depth_(0), number_characters_output(0) {}
 
+	virtual ~summary_output_stream() {}
+
 	std::ostream & ostream() {
 
 		return out;
 
 	}
 
-	size_t depth() const {
+	virtual size_t depth() const {
 
 		return depth_;
 
 	}
 
-	void depth(size_t depth_) {
+	virtual void depth(size_t depth_) {
 
 		this->depth_ = depth_;
 
 	}
 
-	void increment_depth() {
+	virtual void increment_depth() {
 
 		++depth_;
 
 	}
 
-	void decrement_depth() {
+	virtual void decrement_depth() {
 
 		--depth_;
 
 	}
 
-    summary_output_stream & pad() {
+    virtual summary_output_stream & pad() {
 
         for(size_t i = 0; i < depth_; ++i)
             out << '\t';
@@ -158,7 +160,7 @@ public:
 
     }
 
-    summary_output_stream & begin_line() {
+    virtual summary_output_stream & begin_line() {
 
         pad();
         out << BULLET << ' ';
@@ -169,7 +171,7 @@ public:
 
     }
 
-    summary_output_stream & end_line() {
+    virtual summary_output_stream & end_line() {
     	out << '\n';
     	number_characters_output = 0;
     	return *this;

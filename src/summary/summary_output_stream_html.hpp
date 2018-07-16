@@ -28,9 +28,15 @@ public:
 	summary_output_stream_html(std::ostream & out) 
 		: summary_output_stream(out), start_ul(true), end_li(false) {}
 
-	std::ostream & ostream() {
+	virtual ~summary_output_stream_html() {
 
-		return out;
+		while(depth_) {
+			decrement_depth();
+		}
+
+		if(!start_ul) {
+			out << "</ul>";
+		}
 
 	}
 
@@ -77,7 +83,7 @@ public:
     }
 
     summary_output_stream & end_line() {
-    	out << "</li>";
+    	out << "</li>\n";
     	return *this;
     }
 

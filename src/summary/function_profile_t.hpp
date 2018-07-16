@@ -128,8 +128,7 @@ class function_profile_t : public profile_t {
             m_handler.gather_candidates(descendant_change_profiles);
             m_handler.detect();
 
-            out.begin_line() << type_name << " '" << name << "':";
-            out.end_line();
+            out.begin_line() << type_name << " '" << name << "':\n";
 
             out.pad() << "  ";
             out << manip::bold() << "Impact" << manip::normal() << ": ";
