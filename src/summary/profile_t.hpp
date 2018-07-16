@@ -92,6 +92,9 @@ class profile_t {
 
         virtual const versioned_string & get_name() const;
 
+        /** awful design decision */
+        virtual const void * get_member(const std::string & type);
+
         virtual void set_name(const std::shared_ptr<identifier_profile_t> & name);
         virtual void set_name(const std::shared_ptr<identifier_profile_t> & name UNUSED, const boost::optional<versioned_string> & parent UNUSED);
         virtual void add_child_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED);

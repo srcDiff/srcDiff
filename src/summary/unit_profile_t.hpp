@@ -50,6 +50,14 @@ class unit_profile_t : public profile_t {
             return file_name;
         }
 
+        virtual const void * get_member(const std::string & type) {
+            if(is_function_type(type))  return &functions;
+            if(is_class_type(type))     return &classes;
+            if(is_decl_stmt(type))      return &decl_stmts;
+            if(is_condition_type(type)) return &conditionals;
+            return nullptr;
+        }
+
         virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
 
             out.begin_line() << "file '" << file_name << "': Impact = " << get_impact_factor() << '\n'; 

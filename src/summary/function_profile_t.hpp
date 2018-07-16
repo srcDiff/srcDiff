@@ -55,6 +55,11 @@ class function_profile_t : public profile_t {
 
         }
 
+        virtual const void * get_member(const std::string & type) {
+            if(is_class_type(type))     return &local_classes;
+            return nullptr;
+        }
+
         virtual void add_descendant_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
 
             const std::string type_name = profile->type_name.is_common() ? std::string(profile->type_name) : profile->type_name.original();

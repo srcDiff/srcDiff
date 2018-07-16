@@ -28,6 +28,13 @@ class class_profile_t : public profile_t {
             return name;
         }
 
+        virtual const void * get_member(const std::string & type) {
+            if(is_function_type(type))  return &methods;
+            if(is_decl_stmt(type))      return &members;
+            if(is_class_type(type))     return &classes;
+            return nullptr;
+        }
+
         virtual void set_name(const std::shared_ptr<identifier_profile_t> & name, const boost::optional<versioned_string> & parent) {
 
             const std::string type_name = parent->is_common() ? std::string(*parent) : parent->original();
