@@ -16,6 +16,11 @@ private:
 	static constexpr const char * const BOLD_TEXT = "\x1b[1m";
 	static constexpr const char * const NORMAL_TEXT = "\x1b[0m";
 
+	static constexpr const char * const BOLD_TEXT_HTML = "<strong>";
+	static constexpr const char * const NORMAL_TEXT_HTML = "</strong>";
+
+	static bool is_html;
+
 protected:
 
 public:
@@ -23,6 +28,10 @@ public:
 	summary_manip() = delete;
 
 	summary_manip(manipulation manip, int setw_n = 0) : manip(manip), setw_n(setw_n) {}
+
+	static void set_is_html(bool is_html) {
+		summary_manip::is_html = is_html;
+	}
 
 	static summary_manip setw(int n) {
 
@@ -59,8 +68,8 @@ public:
 		if(type.manip == SETW)        out.ostream() << std::setw(type.setw_n);
 		else if(type.manip == LEFT)   out.ostream() << std::left;
 		else if(type.manip == RIGHT)  out.ostream() << std::right;
-		else if(type.manip == BOLD)   out.ostream() << BOLD_TEXT;
-		else if(type.manip == NORMAL) out.ostream() << NORMAL_TEXT;
+		else if(type.manip == BOLD)   out.ostream() << (is_html ? BOLD_TEXT_HTML : BOLD_TEXT);
+		else if(type.manip == NORMAL) out.ostream() << (is_html ? NORMAL_TEXT_HTML : NORMAL_TEXT);
 
 		return out;
 

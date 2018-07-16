@@ -4,6 +4,7 @@
 
 #include <type_query.hpp>
 #include <summary_output_stream_html.hpp>
+#include <summary_manip.hpp>
 
 #include <iomanip>
 #include <memory>
@@ -60,7 +61,9 @@ diffdoc_view::~diffdoc_view() {}
 
 void diffdoc_view::transform(const std::string & srcdiff, const std::string & xml_encoding) {
   summarizer->perform_summary(srcdiff, xml_encoding);
+  summary_manip::set_is_html(true);
   view_t::transform(srcdiff, xml_encoding);
+  summary_manip::set_is_html(false);
 
 }
 
@@ -242,7 +245,10 @@ void diffdoc_view::end_element(const std::string & local_name,
         summary_output_stream_html stream(out);
         entity_stack.back().change_profile->summary(stream, summary_type::TEXT);
         stream.finish();
-        std::cerr << out.str();
+
+        output_raw_str("<span " + id_attr + " content=\"summary\"");
+        output_raw_str(out.str());
+        output_raw_str("</span>");
       }
 
       output_raw_str("<span " + id_attr + " content=\"signature\">"); 
