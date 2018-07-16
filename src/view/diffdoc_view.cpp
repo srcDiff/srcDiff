@@ -188,8 +188,7 @@ void diffdoc_view::start_element(const std::string & local_name,
                                 view_op2srcdiff_type(diff_stack.back()));
       indentation.clear();
     } else if(entity_stack.size() && entity_stack.back().collect_id && is_identifier(local_name)) {
-
-      if(entity_stack.back().depth == srcml_element_stack.size()) {
+      if(entity_stack.back().depth == (srcml_element_stack.size() - 1)) {
         entity_stack.back().collect_name = true;
       }
 
