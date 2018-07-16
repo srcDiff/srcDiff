@@ -33,9 +33,9 @@ summary_output_stream & text_summary::specifier(summary_output_stream & out, con
     if(accessor_deleted || accessor_inserted) {
 
         if(accessor_deleted && accessor_inserted) {
-            out.begin_line() << manip::bold() << *accessor_deleted << " accessor" << manip::normal()
+            out.begin_line() << manip::bold() << *accessor_deleted  << " access" << manip::normal()
                              << " was changed to "
-                             << manip::bold() << *accessor_deleted << " accessor" << manip::normal();
+                             << manip::bold() << *accessor_inserted << " access" << manip::normal();
             out.end_line();
         } else if(accessor_deleted) {
             out.begin_line() << manip::bold() << *accessor_deleted << manip::normal() << " accessor was deleted";
