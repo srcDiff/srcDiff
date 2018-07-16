@@ -130,7 +130,7 @@ class function_profile_t : public profile_t {
 
             out.begin_line();
 
-            if(!manip::get_is_html()) {
+            if(out.depth() != 0) {
                 out << type_name << " '" << name << "':\n";
                 out.pad() << "  ";
             }

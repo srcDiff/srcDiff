@@ -152,9 +152,12 @@ class change_entity_map {
 
             out.begin_line() << "Modified " << type_category(citr->second->type_name) << "(s): " << num_modified;
             out.end_line();
+
+            out.increment_depth();
             for(; citr != entity.upper_bound(SRCDIFF_COMMON); ++citr)
                 if(citr->second->total_count != 0)
                         citr->second->summary(out, summary_types);
+            out.decrement_depth();
 
             return out;
 
