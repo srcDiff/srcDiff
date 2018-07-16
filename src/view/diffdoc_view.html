@@ -47,6 +47,7 @@ function load_full() {
   $("#source").load(
       files[position] + " [id*=\"" + current_element + "\"][content=\"full\"]", 
       function() {
+        $("#source").children("[content=\"full\"]").children("[content=\"summary\"]").show();
         $("#source").children("[content=\"full\"]").children("[content=\"signature\"]").children("[content=\"pre\"]").show();
         $("#source").children("[content=\"full\"]")
                     .children("[content=\"body\"]")
@@ -207,6 +208,7 @@ $(document).ready(function() {
     </tr>
   </tbody>
 </table>
+<span id="summary_text"></span>
 </div><br />
 
 <button id="prev">previous</button>
