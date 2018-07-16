@@ -4,6 +4,25 @@
 
 text_summary::text_summary() {}
 
+summary_output_stream & text_summary::specifier(summary_output_stream & out, const std::multimap<srcdiff_type, std::string> & specifiers) const {
+
+    for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_DELETE); citr != specifiers.upper_bound(SRCDIFF_DELETE); ++citr) {
+        out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was deleted";
+        out.end_line();
+    }
+    for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_INSERT); citr != specifiers.upper_bound(SRCDIFF_INSERT); ++citr) {
+        out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was inserted";
+        out.end_line();              
+    }
+    for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_COMMON); citr != specifiers.upper_bound(SRCDIFF_COMMON); ++citr) {
+        out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was modified";
+        out.end_line();
+    }
+
+    return out;
+}
+
+
 summary_output_stream & text_summary::parameter(summary_output_stream & out, const std::vector<std::shared_ptr<parameter_profile_t>> & parameters) const {
 
     size_t number_parameters_deleted = 0, number_parameters_inserted = 0, number_parameters_modified = 0, number_parameters_replaced = 0;
