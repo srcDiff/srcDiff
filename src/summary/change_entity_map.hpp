@@ -25,6 +25,10 @@ class change_entity_map {
 
 		change_entity_map() {}
 
+        size_type size() const {
+            return entity.size();
+        }
+
 		size_type count(srcdiff_type operation) const {
 
 			return entity.count(operation);

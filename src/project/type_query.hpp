@@ -30,6 +30,8 @@ bool is_init(const std::string & type_name);
 bool is_type(const std::string & type_name);
 bool is_block(const std::string & type_name);
 bool is_expr_block(const std::string & type_name);
+bool is_attribute(const std::string & type_name);
+
 bool is_interchange(const std::string & type_name);
 
 bool has_then_clause(const std::string & type_name);

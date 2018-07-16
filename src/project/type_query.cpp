@@ -164,6 +164,10 @@ bool is_expr_block(const std::string & type_name) {
 
 }
 
+bool is_attribute(const std::string & type_name) {
+    return type_name == "annotation" || type_name == "attribute";
+}
+
 bool is_interchange(const std::string & type_name) {
 
     return type_name == "interchange";

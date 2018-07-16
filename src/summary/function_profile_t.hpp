@@ -32,6 +32,7 @@ class function_profile_t : public profile_t {
         std::multimap<srcdiff_type, std::string> specifiers;
         std::vector<std::shared_ptr<parameter_profile_t>> parameters;
         change_entity_map<call_profile_t> member_initializations;
+        std::multimap<srcdiff_type, std::string> others;
 
         size_t total_statements;
         int cyclomatic_complexity_change;
@@ -68,6 +69,7 @@ class function_profile_t : public profile_t {
             else if(is_call(type_name) && parent == "member_init_list") member_initializations.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<call_profile_t> &>(profile));
             else if(is_specifier(type_name) && is_function_type(parent)) specifiers.emplace(profile->operation, profile->raw);
             else if(is_class_type(type_name)) local_classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
+            else if(is_function_type(parent)) others.emplace(profile->operation, type_name);
 
             descendant_change_profiles.insert(std::lower_bound(descendant_change_profiles.begin(), descendant_change_profiles.end(), profile), profile);
 
@@ -106,7 +108,8 @@ class function_profile_t : public profile_t {
             member_initializations.count_operations(number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
 
             size_t count = (is_name_change ? 1 : 0) + (is_return_type_change ? 1 : 0) + number_specifier_operations + number_parameters
-                + number_member_initializations_deleted + number_member_initializations_inserted + number_member_initializations_modified;
+                + number_member_initializations_deleted + number_member_initializations_inserted + number_member_initializations_modified
+                + others.size();
 
             return std::to_string(count);
 
