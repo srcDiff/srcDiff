@@ -160,7 +160,7 @@ void diffdoc_view::start_unit(const std::string & local_name,
   output_raw_str("<pre>");
   output_raw_str("<span id=\"unit\" content=\"summary\">");
   output_raw_str("<strong>File</strong>: " + profile_t::unit_profile->get_name());
-  output_raw_str("</span>\n");
+  output_raw_str("</span>\n\n");
   start_line();
 
 }
