@@ -236,7 +236,14 @@ void diffdoc_view::end_element(const std::string & local_name,
       output_raw_str("<span " + id_attr + " content=\"full\"");
       if(entity_stack.back().is_changed()) {
         // may want diff type here changed="modified" etc.
-        output_raw_str(" changed=\"changed\"");
+        output_raw_str(" changed=\"");
+        switch(entity_stack.back().operation) {
+          case SRCDIFF_COMMON: output_raw_str("modified"); break;
+          case SRCDIFF_DELETE: output_raw_str("deleted");  break;
+          case SRCDIFF_INSERT: output_raw_str("inserted"); break;
+          default: break;
+        }
+        output_raw_str("\"");
       }
       output_raw_str(">");
 
@@ -246,7 +253,7 @@ void diffdoc_view::end_element(const std::string & local_name,
         entity_stack.back().change_profile->summary(stream, summary_type::TEXT);
         stream.finish();
 
-        output_raw_str("<span " + id_attr + " content=\"summary\" style=\"display:none\"");
+        output_raw_str("<span " + id_attr + " content=\"summary\" style=\"display:none\">");
         output_raw_str(out.str());
         output_raw_str("</span>");
       }
