@@ -12,7 +12,7 @@ var position = files.length - 1;
 var is_signature = true
 var element_stack = [ { is_signature:true, id:"" } ]
 
-function top() {
+function top_element() {
   return element_stack[element_stack.length - 1];
 
 }
@@ -42,7 +42,7 @@ function load_all() {
 }
 
 function load_full() {
-  var current_element = top().id
+  var current_element = top_element().id
   $("#source").css({ 'opacity' : opacity });
   $("#source").load(
       files[position] + " [id*=\"" + current_element + "\"][content=\"full\"]", 
@@ -98,7 +98,7 @@ function load() {
 
   if(element_stack.length != 1) {
     load_full()
-  } else if(element_stack.length == 1 && top().is_signature) {
+  } else if(element_stack.length == 1 && top_element().is_signature) {
     load_signatures();
   } else {
     load_all();
@@ -111,14 +111,14 @@ function next_version() {
   if(position == files.length) {
     position = 0;
   }
-  if(element_stack.length != 1 && top().id.includes(":")) {
+  if(element_stack.length != 1 && top_element().id.includes(":")) {
     var new_id = "";
     if(position == 0) {
-      new_id = top().id.split(":")[0];
+      new_id = top_element().id.split(":")[0];
     } else {
-      new_id = top().id.split(":")[1];
+      new_id = top_element().id.split(":")[1];
     }
-    top().id = new_id;
+    top_element().id = new_id;
   }
   load();
 }
@@ -135,14 +135,14 @@ function previous_version() {
     position = files.length;
   }
   position -= 1;
-  if(element_stack.length != 1 && top().id.includes(":")) {
+  if(element_stack.length != 1 && top_element().id.includes(":")) {
     var new_id = "";
     if(position == (files.length - 1)) {
-      new_id = top().id.split(":")[1];
+      new_id = top_element().id.split(":")[1];
     } else {
-      new_id = top().id.split(":")[0];
+      new_id = top_element().id.split(":")[0];
     }
-    top().id = new_id;
+    top_element().id = new_id;
   }
 
   load();
@@ -157,9 +157,9 @@ function roll_up() {
 }
 
 function set_is_signature(value) {
-  if(top().is_signature == value) return;
+  if(top_element().is_signature == value) return;
 
-  top().is_signature = value;
+  top_element().is_signature = value;
   load();
 }
 
