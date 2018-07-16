@@ -12,7 +12,8 @@
 
 entity_data::entity_data(const std::string & type, size_t depth, 
                          const std::string & indentation,
-                         size_t line_number_delete, size_t line_number_insert) 
+                         size_t line_number_delete, size_t line_number_insert,
+                         srcdiff_type operation)
   : type(type),
     depth(depth),
     indentation(indentation),
@@ -24,8 +25,14 @@ entity_data::entity_data(const std::string & type, size_t depth,
     signature(),
     collect_name(false),
     name(),
-    is_changed(false),
+    is_modified(false),
     change_profile() {}
+
+
+
+bool entity_data::is_changed() const {
+  return is_modified || operation != SRCDIFF_COMMON;
+}
 
 diffdoc_view::diffdoc_view(const std::string & output_filename,
                            const std::string & syntax_highlight,
@@ -65,17 +72,6 @@ void diffdoc_view::reset_internal() {
   saved_output = std::stack<std::ostringstream>();
   entity_stack.clear();
 }
-
-void diffdoc_view::set_change_profile_by_name() {
-
-  /** should never be zero, but... */
-  if(entity_stack.size() <= 1) {
-
-  }
-
-
-}
-
 
 srcdiff_type diffdoc_view::view_op2srcdiff_type(int operation) {
   static std::unordered_map<int, srcdiff_type> op_converter = {
@@ -187,7 +183,9 @@ void diffdoc_view::start_element(const std::string & local_name,
     if(is_class_type(local_name) || is_function_type(local_name)) {
       end_spans();
       add_saved_output();
-      entity_stack.emplace_back(local_name, srcml_element_stack.size(), indentation, line_number_delete, line_number_insert);
+      entity_stack.emplace_back(local_name, srcml_element_stack.size(), 
+                                indentation, line_number_delete, line_number_insert,
+                                view_op2srcdiff_type(diff_stack.back()));
       indentation.clear();
     } else if(entity_stack.size() && entity_stack.back().collect_id && is_identifier(local_name)) {
 
@@ -232,7 +230,8 @@ void diffdoc_view::end_element(const std::string & local_name,
       std::string body = remove_saved_output();
       std::string id_attr = "id=\"" + entity_stack.back().id + "\"";
       output_raw_str("<span " + id_attr + " content=\"full\"");
-      if(entity_stack.back().is_changed) {
+      if(entity_stack.back().is_changed()) {
+        // may want diff type here changed="modified" etc.
         output_raw_str(" changed=\"changed\"");
       }
       output_raw_str(">");
@@ -255,6 +254,11 @@ void diffdoc_view::end_element(const std::string & local_name,
 
       if(is_identifier(local_name) && entity_stack.back().depth == srcml_element_stack.size()) {
         entity_stack.back().collect_name = false;
+        if(is_function_type(entity_stack.back().type)) {
+          set_change_profile_by_name<function_profile_t>();
+        } else if(is_class_type(entity_stack.back().type)) {
+          set_change_profile_by_name<class_profile_t>();
+        }
       }
 
       bool end_id = (is_function_type(type) && local_name == "parameter_list") 
@@ -279,11 +283,11 @@ void diffdoc_view::characters(const char * ch, int len) {
   for(int i = 0; i < len; ++i) {
 
     if(diff_stack.back() != view_t::COMMON
-      && entity_stack.size() && !entity_stack.back().is_changed) {
+      && entity_stack.size() && !entity_stack.back().is_modified) {
 
       typedef std::vector<entity_data>::reverse_iterator entity_ritr;
-      for(entity_ritr ritr = entity_stack.rbegin(); ritr != entity_stack.rend() && !ritr->is_changed; ++ritr) {
-        ritr->is_changed = true;
+      for(entity_ritr ritr = entity_stack.rbegin(); ritr != entity_stack.rend() && !ritr->is_modified; ++ritr) {
+        ritr->is_modified = true;
       }
 
     }

@@ -36,12 +36,16 @@ public:
   bool collect_name;
   versioned_string name;
 
-  bool is_changed;
+  bool is_modified;
+  srcdiff_type operation;
   std::shared_ptr<profile_t> change_profile;
 
 public:
+  bool is_changed() const;
   entity_data(const std::string & type, size_t depth, 
-              const std::string & indentation, size_t line_number_delete, size_t line_number_insert);
+              const std::string & indentation,
+              size_t line_number_delete, size_t line_number_insert,
+              srcdiff_type operation);
 };
 
 class diffdoc_view : public view_t {
@@ -100,8 +104,6 @@ protected:
 
 public:
 
-  void set_change_profile_by_name();
-
   srcdiff_type view_op2srcdiff_type(int operation);
 
   std::ostream * get_output_stream();
@@ -116,6 +118,20 @@ public:
 
   void output_characters(const std::string & str);
   virtual void output_characters(const std::string & str, int operation);
+
+  template<class type>
+  void set_change_profile_by_name() {
+
+    std::shared_ptr<profile_t> previous = profile_t::unit_profile;
+    if(entity_stack.size() > 1) {
+      previous = entity_stack[entity_stack.size() - 2].change_profile;
+    }
+
+    entity_data & current = entity_stack.back();
+
+    current.change_profile = reinterpret_cast<const change_entity_map<type> *>(previous->get_member(current.type))->find(current.operation, current.name);
+
+  }
 
 };
 

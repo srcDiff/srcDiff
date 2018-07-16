@@ -98,6 +98,9 @@ void profile_t::add_declaration_identifier(const std::shared_ptr<profile_t> & pr
 const versioned_string & profile_t::get_name() const {
     return type_name;
 }
+const void * profile_t::get_member(const std::string & type) {
+    return nullptr;
+}
 
 void profile_t::set_name(const std::shared_ptr<identifier_profile_t> & name) {
 

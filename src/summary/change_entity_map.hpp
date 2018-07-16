@@ -44,6 +44,19 @@ class change_entity_map {
 
         }
 
+        std::shared_ptr<T> find(srcdiff_type operation, const versioned_string & name) const {
+
+            const_iterator citr = entity.lower_bound(operation);
+            const_iterator upper = entity.upper_bound(operation);
+            while(citr != upper) {
+                if(citr->second->get_name() == name) return citr->second;
+                ++citr;
+            }
+
+            return std::shared_ptr<T>();
+
+        }
+
         const_iterator begin() const {
 
             return entity.begin();
