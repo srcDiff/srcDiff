@@ -22,6 +22,10 @@ class decl_stmt_profile_t : public profile_t {
 
         decl_stmt_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) : profile_t(type_name, uri, operation, parent) {}
 
+        virtual const versioned_string & get_name() const {
+            return name;
+        }
+
         virtual void set_name(const std::shared_ptr<identifier_profile_t> & name, const boost::optional<versioned_string> & parent) {
 
             if(*parent == "decl") this->name = name->name;

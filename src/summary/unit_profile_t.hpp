@@ -46,7 +46,7 @@ class unit_profile_t : public profile_t {
             
         }
 
-        const versioned_string & get_name() const {
+        virtual const versioned_string & get_name() const {
             return file_name;
         }
 

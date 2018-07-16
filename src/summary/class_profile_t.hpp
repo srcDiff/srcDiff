@@ -24,7 +24,7 @@ class class_profile_t : public profile_t {
 
         class_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) : profile_t(type_name, uri, operation, parent) {}
 
-        const versioned_string & get_name() const {
+        virtual const versioned_string & get_name() const {
             return name;
         }
 
