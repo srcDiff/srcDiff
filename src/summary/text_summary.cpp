@@ -6,14 +6,49 @@ text_summary::text_summary() {}
 
 summary_output_stream & text_summary::specifier(summary_output_stream & out, const std::multimap<srcdiff_type, std::string> & specifiers) const {
 
+    boost::optional<std::string> accessor_deleted;
+    boost::optional<std::string> accessor_inserted;
+
     for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_DELETE); citr != specifiers.upper_bound(SRCDIFF_DELETE); ++citr) {
+        if(is_access_specifier(citr->second)) {
+            accessor_deleted = citr->second;
+            continue;
+        }
+
         out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was deleted";
         out.end_line();
     }
+
     for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_INSERT); citr != specifiers.upper_bound(SRCDIFF_INSERT); ++citr) {
+
+        if(is_access_specifier(citr->second)) {
+            accessor_inserted = citr->second;
+            continue;
+        }
+
         out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was inserted";
         out.end_line();              
     }
+
+    if(accessor_deleted || accessor_inserted) {
+
+        if(accessor_deleted && accessor_inserted) {
+            out.begin_line() << manip::bold() << *accessor_deleted << " accessor" << manip::normal()
+                             << " was replaced with "
+                             << manip::bold() << *accessor_deleted << " accessor" << manip::normal();
+            out.end_line();
+        } else if(accessor_deleted) {
+            out.begin_line() << manip::bold() << *accessor_deleted << manip::normal() << " accessor was deleted";
+            out.end_line();      
+        } else {
+            out.begin_line() << manip::bold() << *accessor_inserted << manip::normal() << " accessor was inserted";
+            out.end_line();              
+        }
+
+    }
+
+
+
     for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_COMMON); citr != specifiers.upper_bound(SRCDIFF_COMMON); ++citr) {
         out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was modified";
         out.end_line();

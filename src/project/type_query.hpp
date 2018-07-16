@@ -4,6 +4,7 @@
 #include <string>
 
 bool is_simple_type(const std::string & type_name);
+bool is_access_specifier(const std::string & type_name);
 bool is_function_type(const std::string & type_name);
 bool is_class_type(const std::string & type_name);
 bool is_template(const std::string & type_name);

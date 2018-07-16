@@ -9,6 +9,10 @@ bool is_simple_type(const std::string & type_name) {
 
 }
 
+bool is_access_specifier(const std::string & type_name) {
+    return type_name == "public" || type_name == "protected" || type_name == "private";
+}
+
 bool is_function_type(const std::string & type_name) {
 
     return type_name == "function" || type_name == "function_decl" || type_name == "constructor" || type_name == "constructor_decl"
