@@ -112,11 +112,11 @@ function load_signatures() {
 }
 
 function set_file_name() {
-  $.get(filename, function(data) {
+  $.get(files[position], function(data) {
       var parsed = $.parseHTML(data);
       var file_name = $(parsed).find("[filename]").attr("filename");
       var java_extension = ".java"
-      var class_name = file_name.substring(0, file_name.length - java_extension.length)
+      var class_name = file_name.substring(file_name.lastIndexOf('/') + 1, file_name.length - java_extension.length)
       commit_info.children("#class").children("#class_value").html(class_name);
   });
 }
@@ -228,17 +228,20 @@ $(document).ready(function() {
 </script>
 
 <style>
+  #revision { font-family: courier, monospace; }
   #author   { font-family: courier, monospace; }
   #date     { font-family: courier, monospace; }
-  #revision { font-family: courier, monospace; }
+  #class { font-family: courier, monospace; }
 
+  #revision_label { font-weight: bold; }
   #author_label   { font-weight: bold; }
   #date_label     { font-weight: bold; }
-  #revision_label { font-weight: bold; }
+  #class_label     { font-weight: bold; }
 
+  #revision_number { }
   #author_name     { }
   #date_value      { }
-  #revision_number { }
+  #class_value      { }
 
 </style>
 
