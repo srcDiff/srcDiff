@@ -43,7 +43,7 @@ class decl_stmt_profile_t : public profile_t {
         }
 
         virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
-            return out;
+
             if(operation != SRCDIFF_COMMON) {
 
                 if(out.depth() == 0) return out;
