@@ -43,7 +43,7 @@ class decl_stmt_profile_t : public profile_t {
         }
 
         virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
-
+            return out;
             if(operation != SRCDIFF_COMMON) {
 
                 if(out.depth() == 0) return out;
@@ -59,8 +59,8 @@ class decl_stmt_profile_t : public profile_t {
                 out << "member '" << name << "':\n";
             }
 
-            bool type_change = type->operation != SRCDIFF_COMMON || type->is_modified;
-            bool init_change = init->operation != SRCDIFF_COMMON || init->is_modified;
+            bool type_change = type && (type->operation != SRCDIFF_COMMON || type->is_modified);
+            bool init_change = init && (init->operation != SRCDIFF_COMMON || init->is_modified);
 
             std::string type_impact = type_change ? "true" : "false";
             std::string name_impact = name.is_common() ? "false" : "true";
