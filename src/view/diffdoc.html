@@ -31,6 +31,9 @@ function load(object, filename, selector, func) {
 */
 var source = undefined;
 var operation = undefined;
+var next = undefined
+var previous = undefined
+
 var opacity = 0.25;
 function load_all() {
 
@@ -62,14 +65,14 @@ function load_full() {
         } else {
           if(changed_value == "modified") {
             entity.children("[content=\"summary\"]").show();
-            $("#next").show();
-            $("#prev").show();
+            next.removeAttr("disabled");
+            previous.removeAttr("disabled");
           } else if(changed_value == "inserted") {
-            $("#next").show();
-            $("#prev").hide();
+            next.removeAttr("disabled");
+            previous.attr("disabled", "disabled");
           } else if(changed_value == "deleted") {
-            $("#next").hide();
-            $("#prev").show();
+            next.attr("disabled", "disabled");
+            previous.removeAttr("disabled");
           }
           operation_type.html(changed_value);
         }
@@ -198,9 +201,11 @@ function set_is_signature(value) {
 $(document).ready(function() {
   source = $("#source");
   operation = $("#operation");
+  next = $("#next");
+  previous = $("#prev");
 
-  $("#next").click(next_version);
-  $("#prev").click(previous_version);
+  next.click(next_version);
+  previous.click(previous_version);
   $("#back").click(back_up);
   load();
 });
