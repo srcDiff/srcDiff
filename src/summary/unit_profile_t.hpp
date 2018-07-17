@@ -63,16 +63,16 @@ class unit_profile_t : public profile_t {
             out.begin_line() << "file '" << file_name << "': Impact = " << get_impact_factor() << '\n'; 
 
             /** might want to have table summaries.  Decl may need to be changed how output */
-            // decl_stmts.summarize_pure(out, summary_types, SRCDIFF_DELETE);
-            // decl_stmts.summarize_pure(out, summary_types, SRCDIFF_INSERT);
-            // decl_stmts.summarize_modified(out, summary_types);
+            decl_stmts.summarize_pure(out, summary_types, SRCDIFF_DELETE);
+            decl_stmts.summarize_pure(out, summary_types, SRCDIFF_INSERT);
+            decl_stmts.summarize_modified(out, summary_types);
 
             functions.summarize_pure(out, summary_types, SRCDIFF_DELETE);
             functions.summarize_pure(out, summary_types, SRCDIFF_INSERT);
             functions.summarize_modified(out, summary_types);
 
-            // classes.summarize_pure(out, summary_types, SRCDIFF_DELETE);
-            // classes.summarize_pure(out, summary_types, SRCDIFF_INSERT);
+            classes.summarize_pure(out, summary_types, SRCDIFF_DELETE);
+            classes.summarize_pure(out, summary_types, SRCDIFF_INSERT);
             classes.summarize_modified(out, summary_types);
 
             if(!is_summary_type(summary_types, summary_type::TABLE)) return out;
