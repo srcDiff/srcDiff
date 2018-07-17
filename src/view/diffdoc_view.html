@@ -29,9 +29,11 @@ function load(object, filename, selector, func) {
   });
 }
 */
+var source = undefined;
+var operation = undefined;
 var opacity = 0.25;
 function load_all() {
-    var source = $("#source");
+
     source.css({ 'opacity' : opacity });
     source.load(files[position], function() {
       $("[content=\"signature\"]").click(function() {
@@ -45,7 +47,6 @@ function load_all() {
 function load_full() {
   var current_element = top_element().id
 
-  var source = $("#source");
   source.css({ 'opacity' : opacity });
   source.load(
       files[position] + " [id*=\"" + current_element + "\"][content=\"full\"]", 
@@ -65,7 +66,7 @@ function load_full() {
 }
 
 function load_signatures() {
-    var source = $("#source");
+
     source.css({ 'opacity' : opacity });
     source.load(files[position] + " [content=\"signature\"]", function() {
               source.find("[content=\"pre\"]").show();
@@ -172,6 +173,9 @@ function set_is_signature(value) {
 }
 
 $(document).ready(function() {
+  source = $("#source");
+  operation = $("operation");
+
   $("#next").click(next_version);
   $("#prev").click(previous_version);
   $("#rollup").click(roll_up);
