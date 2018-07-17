@@ -136,13 +136,14 @@ function load() {
   }
 
   var basename = files[position].substring(0, files[position].length - extension_length);
-  var metadata = basename.split("&");
+  var metadata = basename.split('&');
   var author = metadata.slice(2).join('&').split('_').join(' ');
+  var revisions = metadata[1].split('-');
+  var revision_str = revisions[0].substring(0, 6) + '-' + revisions[1].substring(0, 6);
 
-
-  commit_info.children("#date").children("#date_value").html(metadata[0]);
-  commit_info.children("#revision").children("#revision_number").html(metadata[1]);
+  commit_info.children("#revision").children("#revision_number").html(revision_str);
   commit_info.children("#author").children("#author_name").html(author);
+  commit_info.children("#date").children("#date_value").html(metadata[0]);
 
   if(element_stack.length != 1) {
     load_full()
