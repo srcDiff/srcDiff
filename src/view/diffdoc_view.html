@@ -31,52 +31,59 @@ function load(object, filename, selector, func) {
 */
 var opacity = 0.25;
 function load_all() {
-    $("#source").css({ 'opacity' : opacity });
-    $("#source").load(files[position], function() {
+    var source = $("#source");
+    source.css({ 'opacity' : opacity });
+    source.load(files[position], function() {
       $("[content=\"signature\"]").click(function() {
         element_stack.push({ is_signature:false, id:$(this).attr("id") });
         load();
       });
-      $("#source").css({ 'opacity' : 1.0 });
+      source.css({ 'opacity' : 1.0 });
     });
 }
 
 function load_full() {
   var current_element = top_element().id
-  $("#source").css({ 'opacity' : opacity });
-  $("#source").load(
+
+  var source = $("#source");
+  source.css({ 'opacity' : opacity });
+  source.load(
       files[position] + " [id*=\"" + current_element + "\"][content=\"full\"]", 
       function() {
-        $("#source").children("[content=\"full\"]").children("[content=\"summary\"]").show();
-        $("#source").children("[content=\"full\"]").children("[content=\"signature\"]").children("[content=\"pre\"]").show();
-        $("#source").children("[content=\"full\"]")
-                    .children("[content=\"body\"]")
-                    .find("[content=\"signature\"]").click(function() {
+        var entity = source.children("[content=\"full\"]");
+        entity.children("[content=\"summary\"]").show();
+        entity.children("[content=\"signature\"]").children("[content=\"pre\"]").show();
+        entity.children("[content=\"body\"]")
+              .find("[content=\"signature\"]").click(function() {
           element_stack.push({ is_signature:false, id:$(this).attr("id") });
           load();
         });
-        $("#source").children("[content=\"full\"]").wrap("<pre></pre>");
-        $("#source").css({ 'opacity' : 1.0 });
+        entity.wrap("<pre></pre>");
+        source.css({ 'opacity' : 1.0 });
 
     });
 }
 
 function load_signatures() {
-    $("#source").css({ 'opacity' : opacity });
-    $("#source").load(files[position] + " [content=\"signature\"]", function() {
-              $("#source").find("[content=\"pre\"]").show();
-              $("[content=\"signature\"]").wrap("<pre></pre>");
-              $("[content=\"signature\"]").click(function() {
+    var source = $("#source");
+    source.css({ 'opacity' : opacity });
+    source.load(files[position] + " [content=\"signature\"]", function() {
+              source.find("[content=\"pre\"]").show();
+              var signatures = $("[content=\"signature\"]");
+              signatures.wrap("<pre></pre>");
+              signatures.click(function() {
                 element_stack.push({ is_signature:false, id:$(this).attr("id") });
                 load();
               });
-              $("#source").css({ 'opacity' : 1.0 });
+              source.css({ 'opacity' : 1.0 });
     });
 }
 
 var extension = ".srcdiff.html";
 var extension_length = extension.length;
 function load() {
+
+  $("#operation").hide();
 
   if(element_stack.length == 1) {
     $("#rollup").hide();
@@ -208,7 +215,6 @@ $(document).ready(function() {
     </tr>
   </tbody>
 </table>
-<span id="summary_text"></span>
 </div><br />
 
 <button id="prev">previous</button>
@@ -217,6 +223,7 @@ $(document).ready(function() {
 <span id="signature"><input type="radio" name="detail" value="signatures" onclick="set_is_signature(true)" checked="checked" > Signature</span>
 <span id="full"><input type="radio" name="detail" value="full" onclick="set_is_signature(false)"> Full</span>
 
+<span id="operation" style="display: none;"></span>
 <div id="source"></div>
 
 </body>
