@@ -8,6 +8,7 @@
 #include <type_query.hpp>
 #include <versioned_string.hpp>
 #include <summary_manip.hpp>
+#include <text_summary.hpp>
 
 class decl_stmt_profile_t : public profile_t {
 
@@ -15,7 +16,7 @@ class decl_stmt_profile_t : public profile_t {
 
     public:
 
-	    std::vector<std::shared_ptr<profile_t>> specifiers;
+        std::multimap<srcdiff_type, std::string> specifiers;
         std::shared_ptr<profile_t> type;
         versioned_string name;
 
@@ -35,7 +36,7 @@ class decl_stmt_profile_t : public profile_t {
 
         virtual void add_child_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
 
-        	if(is_specifier(profile->type_name) && parent == "decl") specifiers.push_back(profile);
+        	if(is_specifier(profile->type_name) && parent == "decl") specifiers.emplace(profile->operation, profile->raw);
 
             child_change_profiles.insert(std::lower_bound(child_change_profiles.begin(), child_change_profiles.end(), profile), profile);
 
@@ -61,9 +62,9 @@ class decl_stmt_profile_t : public profile_t {
             bool type_change = type->operation != SRCDIFF_COMMON || type->is_modified;
             bool init_change = init->operation != SRCDIFF_COMMON || init->is_modified;
 
-            std::string type_impact = type_changed ? "false" : "true";
+            std::string type_impact = type_change ? "false" : "true";
             std::string name_impact = name.is_common() ? "false" : "true";
-            std::string init_impact = init_changed ? "false" : "true";
+            std::string init_impact = init_change ? "false" : "true";
 
             out << manip::bold() << "Impact" << manip::normal() << ": ";
             out << manip::bold() << "Type"     << manip::normal() << " = " << manip::bold() <<  type_impact << manip::normal();
@@ -94,7 +95,7 @@ class decl_stmt_profile_t : public profile_t {
 
                 if(init_change) {
 
-                    std::string op_name = init.operation == SRCDIFF_COMMON ? "modified" : (init.operation == SRCDIFF_DELETED ? "deleted" : "inserted");
+                    std::string op_name = init->operation == SRCDIFF_COMMON ? "modified" : (init->operation == SRCDIFF_DELETE ? "deleted" : "inserted");
                     out.begin_line() << manip::bold() << "init" << manip::normal() << " was "
                                      << manip::bold() << op_name << manip::normal();
                     out.end_line();
