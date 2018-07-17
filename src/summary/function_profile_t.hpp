@@ -120,6 +120,8 @@ class function_profile_t : public profile_t {
 
             if(operation != SRCDIFF_COMMON) {
 
+                if(out.depth() == 0) return out;
+
                 out << '\'' << (name.has_original() ? name.original() : name.modified()) << '\'';
                 return out;
 
