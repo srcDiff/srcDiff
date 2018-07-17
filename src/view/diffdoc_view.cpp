@@ -157,7 +157,7 @@ void diffdoc_view::start_unit(const std::string & local_name,
                               int num_attributes,
                               const struct srcsax_attribute * attributes) {
 
-  output_raw_str("<pre id=\"" + profile_t::unit_profile->get_name() + "\">");
+  output_raw_str("<pre id=\"unit_filename\" filename=\"" + profile_t::unit_profile->get_name() + "\">");
   start_line();
 
 }
