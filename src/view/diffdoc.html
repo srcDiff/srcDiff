@@ -29,6 +29,7 @@ function load(object, filename, selector, func) {
   });
 }
 */
+var commit_info = undefined
 var source = undefined;
 var operation = undefined;
 var next = undefined
@@ -110,6 +111,16 @@ function load_signatures() {
     });
 }
 
+function set_file_name() {
+  $.get(filename, function(data) {
+      var parsed = $.parseHTML(data);
+      var file_name = $(parsed).find("[filename]").attr("filename");
+      var java_extension = ".java"
+      var class_name = file_name.substring(0, file_name.length - java_extension.length)
+      commit_info.children("#class").children("#class_value").html(class_name);
+  });
+}
+
 var extension = ".srcdiff.html";
 var extension_length = extension.length;
 function load() {
@@ -128,7 +139,7 @@ function load() {
   var metadata = basename.split("&");
   var author = metadata.slice(2).join('&').split('_').join(' ');
 
-  var commit_info = $("#commit_info").children("tbody");
+
   commit_info.children("#date").children("#date_value").html(metadata[0]);
   commit_info.children("#revision").children("#revision_number").html(metadata[1]);
   commit_info.children("#author").children("#author_name").html(author);
@@ -201,6 +212,7 @@ function set_is_signature(value) {
 }
 
 $(document).ready(function() {
+  commit_info = $("#commit_info").children("tbody");
   source = $("#source");
   operation = $("#operation");
   next = $("#next");
@@ -209,6 +221,7 @@ $(document).ready(function() {
   next.click(next_version);
   previous.click(previous_version);
   $("#back").click(back_up);
+  set_file_name();
   load();
 });
 
@@ -235,6 +248,10 @@ $(document).ready(function() {
 <div id="summary">
 <table id="commit_info">
   <tbody>
+    <tr id="revision">
+      <td id="revision_label">Revision:</td>
+      <td id="revision_number"></td>
+    </tr>
     <tr id="author">
       <td id="author_label">Author:</td>
       <td id="author_name"></td>
@@ -243,9 +260,13 @@ $(document).ready(function() {
       <td id="date_label">Date:</td>
       <td id="date_value"></td>
     </tr>
-    <tr id="revision">
-      <td id="revision_label">Revision:</td>
-      <td id="revision_number"></td>
+<!--     <tr id="filename">
+      <td id="filename_label">File:</td>
+      <td id="filename_value"></td>
+    </tr> -->
+    <tr id="class">
+      <td id="class_label">Class:</td>
+      <td id="class_value"></td>
     </tr>
   </tbody>
 </table>
