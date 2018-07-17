@@ -42,6 +42,7 @@ class decl_stmt_profile_t : public profile_t {
         }
 
         virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
+
             if(operation != SRCDIFF_COMMON) {
 
                 if(out.depth() == 0) return out;
@@ -57,9 +58,12 @@ class decl_stmt_profile_t : public profile_t {
                 out << "member '" << name << "':\n";
             }
 
-            std::string type_impact = (type->operation != SRCDIFF_COMMON || type->is_modified) ? "false" : "true";
+            bool type_change = type->operation != SRCDIFF_COMMON || type->is_modified;
+            bool init_change = init->operation != SRCDIFF_COMMON || init->is_modified;
+
+            std::string type_impact = type_changed ? "false" : "true";
             std::string name_impact = name.is_common() ? "false" : "true";
-            std::string init_impact = (init->operation != SRCDIFF_COMMON || init->is_modified) ? "false" : "true";
+            std::string init_impact = init_changed ? "false" : "true";
 
             out << manip::bold() << "Impact" << manip::normal() << ": ";
             out << manip::bold() << "Type"     << manip::normal() << " = " << manip::bold() <<  type_impact << manip::normal();
@@ -68,9 +72,42 @@ class decl_stmt_profile_t : public profile_t {
             out << '\t';
             out << manip::bold() << "Init"    << manip::normal() << " = " << manip::bold() << init_impact << manip::normal();            
             out.end_line();
+   
+            out.increment_depth();
 
+            if(is_summary_type(summary_types, summary_type::TEXT)) {
 
-            return out;
+                text_summary text;
+
+                if(!name.is_common()) {
+                    out.begin_line() << manip::bold() << "name change" << manip::normal()
+                                     << " from '" <<name.original() << "' to '" << name.modified();
+                    out.end_line();
+                }
+
+                if(type_change) {
+
+                    out.begin_line() << manip::bold() << "type change" << manip::normal();
+                    out.end_line();
+
+                }
+
+                if(init_change) {
+
+                    std::string op_name = init.operation == SRCDIFF_COMMON ? "modified" : (init.operation == SRCDIFF_DELETED ? "deleted" : "inserted");
+                    out.begin_line() << manip::bold() << "init" << manip::normal() << " was "
+                                     << manip::bold() << op_name << manip::normal();
+                    out.end_line();
+
+                }
+
+                text.specifier(out, specifiers);
+
+            }
+
+            out.decrement_depth();
+
+         return out;
         }
 
 

@@ -185,7 +185,7 @@ class function_profile_t : public profile_t {
                 text_summary text;
 
                 if(!name.is_common()) {
-                    out.begin_line() << manip::bold() << "function name change" << manip::normal()
+                    out.begin_line() << manip::bold() << "name change" << manip::normal()
                                      << " from '" <<name.original() << "' to '" << name.modified();
                     out.end_line();
                 }
