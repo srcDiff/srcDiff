@@ -116,8 +116,8 @@ function set_file_name() {
       var parsed = $.parseHTML(data);
       var file_name = $(parsed).find("[filename]").attr("filename");
       var java_extension = ".java"
-      var class_name = file_name.substring(file_name.lastIndexOf('/') + 1, file_name.length - java_extension.length)
-      commit_info.children("#class").children("#class_value").html(class_name);
+      // var class_name = file_name.substring(file_name.lastIndexOf('/') + 1, file_name.length - java_extension.length)
+      commit_info.children("#file").children("#file_value").html(class_name);
   });
 }
 
@@ -263,14 +263,14 @@ $(document).ready(function() {
       <td id="date_label">Date:</td>
       <td id="date_value"></td>
     </tr>
-<!--     <tr id="filename">
+    <tr id="filename">
       <td id="filename_label">File:</td>
       <td id="filename_value"></td>
-    </tr> -->
-    <tr id="class">
+    </tr>
+<!--     <tr id="class">
       <td id="class_label">Class:</td>
       <td id="class_value"></td>
-    </tr>
+    </tr> -->
   </tbody>
 </table>
 </div><br />
