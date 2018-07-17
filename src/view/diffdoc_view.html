@@ -35,12 +35,14 @@ var opacity = 0.25;
 function load_all() {
 
     source.css({ 'opacity' : opacity });
+    operation.css({ 'opacity' : opacity });
     source.load(files[position], function() {
       $("[content=\"signature\"]").click(function() {
         element_stack.push({ is_signature:false, id:$(this).attr("id") });
         load();
       });
       source.css({ 'opacity' : 1.0 });
+      operation.hide();
     });
 }
 
@@ -48,6 +50,7 @@ function load_full() {
   var current_element = top_element().id
 
   source.css({ 'opacity' : opacity });
+  operation.css({ 'opacity' : opacity });
   source.load(
       files[position] + " [id*=\"" + current_element + "\"][content=\"full\"]", 
       function() {
@@ -62,7 +65,6 @@ function load_full() {
           }
             operation_type.html(changed_value);
         }
-        operation.show();
 
         entity.children("[content=\"signature\"]").children("[content=\"pre\"]").show();
         entity.children("[content=\"body\"]")
@@ -72,6 +74,8 @@ function load_full() {
         });
         entity.wrap("<pre></pre>");
         source.css({ 'opacity' : 1.0 });
+        operation.css({ 'opacity' : 1.0 });
+        operation.show();
 
     });
 }
@@ -79,6 +83,7 @@ function load_full() {
 function load_signatures() {
 
     source.css({ 'opacity' : opacity });
+    operation.css({ 'opacity' : opacity });
     source.load(files[position] + " [content=\"signature\"]", function() {
               source.find("[content=\"pre\"]").show();
               var signatures = $("[content=\"signature\"]");
@@ -88,6 +93,7 @@ function load_signatures() {
                 load();
               });
               source.css({ 'opacity' : 1.0 });
+              operation.hide();
     });
 }
 
@@ -95,7 +101,6 @@ var extension = ".srcdiff.html";
 var extension_length = extension.length;
 function load() {
 
-  $("#operation").hide();
 
   if(element_stack.length == 1) {
     $("#rollup").hide();
@@ -185,7 +190,7 @@ function set_is_signature(value) {
 
 $(document).ready(function() {
   source = $("#source");
-  operation = $("operation");
+  operation = $("#operation");
 
   $("#next").click(next_version);
   $("#prev").click(previous_version);
@@ -238,7 +243,7 @@ $(document).ready(function() {
 <span id="signature"><input type="radio" name="detail" value="signatures" onclick="set_is_signature(true)" checked="checked" > Signature</span>
 <span id="full"><input type="radio" name="detail" value="full" onclick="set_is_signature(false)"> Full</span>
 
-<span id="operation" style="display: none;"><strong>Operation:</strong><span id="operation_type"></span></span>
+<pre id="operation" style="display: none;"><strong>Operation:</strong> <span id="operation_type" style="font-style: italic;"></span></pre>
 <div id="source"></div>
 
 </body>
