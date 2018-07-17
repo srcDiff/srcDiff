@@ -42,7 +42,7 @@ function load_all() {
     operation.css({ 'opacity' : opacity });
     source.load(files[position], function() {
       $("[content=\"signature\"]").click(function() {
-        element_stack.push({ is_signature:false, id:$(this).attr("id") });
+        element_stack.push({ is_signature:false, id:$(this).attr("id").split('"').join('\\"') });
         load();
       });
       source.css({ 'opacity' : 1.0 });
@@ -84,7 +84,7 @@ function load_full() {
         entity.children("[content=\"signature\"]").children("[content=\"pre\"]").show();
         entity.children("[content=\"body\"]")
               .find("[content=\"signature\"]").click(function() {
-          element_stack.push({ is_signature:false, id:$(this).attr("id") });
+          element_stack.push({ is_signature:false, id:$(this).attr("id").split('"').join('\\"') });
           load();
         });
         entity.wrap("<pre></pre>");
@@ -104,7 +104,7 @@ function load_signatures() {
               var signatures = $("[content=\"signature\"]");
               signatures.wrap("<pre></pre>");
               signatures.click(function() {
-                element_stack.push({ is_signature:false, id:$(this).attr("id") });
+                element_stack.push({ is_signature:false, id:$(this).attr("id").split('"').join('\\"') });
                 load();
               });
               source.css({ 'opacity' : 1.0 });
