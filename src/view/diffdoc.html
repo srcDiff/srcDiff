@@ -102,11 +102,11 @@ var extension_length = extension.length;
 function load() {
 
   if(element_stack.length == 1) {
-    $("#rollup").hide();
+    $("#back").hide();
     $("#signature").show();
     $("#full").show();
   } else {
-    $("#rollup").show();
+    $("#back").show();
     $("#signature").hide();
     $("#full").hide();
   }
@@ -172,7 +172,7 @@ function previous_version() {
   load();
 }
 
-function roll_up() {
+function back_up() {
   /* maybe make a stack to support true drill down/roll up */
   if(element_stack.length != 1) {
     element_stack.pop()
@@ -193,7 +193,7 @@ $(document).ready(function() {
 
   $("#next").click(next_version);
   $("#prev").click(previous_version);
-  $("#rollup").click(roll_up);
+  $("#back").click(back_up);
   load();
 });
 
@@ -238,7 +238,7 @@ $(document).ready(function() {
 
 <button id="prev">previous</button>
 <button id="next">next</button>
-<button id="rollup">back</button>
+<button id="back">back</button>
 <span id="signature"><input type="radio" name="detail" value="signatures" onclick="set_is_signature(true)" checked="checked" > Signature</span>
 <span id="full"><input type="radio" name="detail" value="full" onclick="set_is_signature(false)"> Full</span>
 
