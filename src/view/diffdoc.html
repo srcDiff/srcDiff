@@ -62,6 +62,8 @@ function load_full() {
         var operation_type = operation.children("#operation_type");
         if(changed_value == undefined) {
           operation_type.html("unmodified");
+          next.removeAttr("disabled");
+          previous.removeAttr("disabled");
         } else {
           if(changed_value == "modified") {
             entity.children("[content=\"summary\"]").show();
