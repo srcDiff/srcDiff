@@ -62,8 +62,16 @@ function load_full() {
         } else {
           if(changed_value == "modified") {
             entity.children("[content=\"summary\"]").show();
+            $("#next").show();
+            $("#prev").show();
+          } else if(changed_value == "added") {
+            $("#next").show();
+            $("#prev").hide();
+          } else if(changed_value == "deleted") {
+            $("#next").hide();
+            $("#prev").show();
           }
-            operation_type.html(changed_value);
+          operation_type.html(changed_value);
         }
 
         entity.children("[content=\"signature\"]").children("[content=\"pre\"]").show();
