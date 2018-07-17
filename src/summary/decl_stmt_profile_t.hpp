@@ -62,9 +62,9 @@ class decl_stmt_profile_t : public profile_t {
             bool type_change = type->operation != SRCDIFF_COMMON || type->is_modified;
             bool init_change = init->operation != SRCDIFF_COMMON || init->is_modified;
 
-            std::string type_impact = type_change ? "false" : "true";
+            std::string type_impact = type_change ? "true" : "false";
             std::string name_impact = name.is_common() ? "false" : "true";
-            std::string init_impact = init_change ? "false" : "true";
+            std::string init_impact = init_change ? "true" : "false";
 
             out << manip::bold() << "Impact" << manip::normal() << ": ";
             out << manip::bold() << "Type"     << manip::normal() << " = " << manip::bold() <<  type_impact << manip::normal();
