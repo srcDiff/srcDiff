@@ -459,8 +459,9 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
     size_t number_syntax_deletions = 0;
     std::for_each(entity_deleted.begin(), entity_deleted.end(), [&number_syntax_deletions] (const std::pair<std::string, std::vector<std::shared_ptr<profile_t>>> & entity) {
 
-        if(entity.first != "comment")
+        if(entity.first != "comment") {
             number_syntax_deletions += entity.second.size();
+        }
 
     });
 
@@ -469,8 +470,9 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
     size_t number_syntax_insertions = 0;
     std::for_each(entity_inserted.begin(), entity_inserted.end(), [&number_syntax_insertions] (const std::pair<std::string, std::vector<std::shared_ptr<profile_t>>> & entity) {
 
-        if(entity.first != "comment")
+        if(entity.first != "comment") {
             number_syntax_insertions += entity.second.size();
+        }
 
     });
 
@@ -511,7 +513,10 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
                 [](const std::pair<std::string, std::vector<std::shared_ptr<profile_t>>> & entity) { return entity.first == "comment"; });
 
             number_original = entity->second.size();
-            original_type = get_type_string(entity->second.back());
+
+            if(number_original) {
+                original_type = get_type_string(entity->second.back());
+            }
 
         } else {
 
@@ -539,7 +544,9 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
                 [](const std::pair<std::string, std::vector<std::shared_ptr<profile_t>>> & entity) { return entity.first == "comment"; });
 
             number_modified = entity->second.size();
-            modified_type = get_type_string(entity->second.back());
+            if(number_modified) {
+                modified_type = get_type_string(entity->second.back());
+            }
 
         } else {
 

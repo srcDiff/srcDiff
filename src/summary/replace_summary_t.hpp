@@ -64,7 +64,7 @@ class replace_summary_t : public summary_t {
             if(number_comments_original == 1)
                 out << " and a " << manip::bold() << "comment" << manip::normal();
             else if(number_comments_original > 1)
-                out << "and " << std::to_string(number_comments_original) << manip::bold() << "comments" << manip::normal();
+                out << " and " << std::to_string(number_comments_original) << manip::bold() << " comments" << manip::normal();
 
 
             if((number_original + number_comments_original) == 1)
@@ -82,7 +82,7 @@ class replace_summary_t : public summary_t {
             if(number_comments_modified == 1)
                 out << " and a " << manip::bold() << "comment" << manip::normal();
             else if(number_comments_modified > 1)
-                out << "and " << std::to_string(number_comments_modified) << manip::bold() << "comments" << manip::normal();
+                out << " and " << std::to_string(number_comments_modified) << manip::bold() << " comments" << manip::normal();
 
             out.end_line();
 
