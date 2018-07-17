@@ -42,7 +42,7 @@ function load_all() {
     operation.css({ 'opacity' : opacity });
     source.load(files[position], function() {
       $("[content=\"signature\"]").click(function() {
-        element_stack.push({ is_signature:false, id:$(this).attr("id").split('"').join('\\"') });
+        element_stack.push({ is_signature:false, id:$(this).attr("id") });
         load();
       });
       source.css({ 'opacity' : 1.0 });
@@ -51,7 +51,7 @@ function load_all() {
 }
 
 function load_full() {
-  var current_element = top_element().id
+  var current_element = top_element().id.split('"').join('\\"');
 
   source.css({ 'opacity' : opacity });
   operation.css({ 'opacity' : opacity });
@@ -59,6 +59,7 @@ function load_full() {
       files[position] + " [id*=\"" + current_element + "\"][content=\"full\"]", 
       function() {
         var entity = source.children("[content=\"full\"]");
+        top_element().id = entity.attr("id");
         var changed_value = entity.attr("changed");
         var operation_type = operation.children("#operation_type");
         if(changed_value == undefined) {
@@ -83,7 +84,7 @@ function load_full() {
         entity.children("[content=\"signature\"]").children("[content=\"pre\"]").show();
         entity.children("[content=\"body\"]")
               .find("[content=\"signature\"]").click(function() {
-          element_stack.push({ is_signature:false, id:$(this).attr("id").split('"').join('\\"') });
+          element_stack.push({ is_signature:false, id:$(this).attr("id") });
           load();
         });
         entity.wrap("<pre></pre>");
@@ -103,7 +104,7 @@ function load_signatures() {
               var signatures = $("[content=\"signature\"]");
               signatures.wrap("<pre></pre>");
               signatures.click(function() {
-                element_stack.push({ is_signature:false, id:$(this).attr("id").split('"').join('\\"') });
+                element_stack.push({ is_signature:false, id:$(this).attr("id") });
                 load();
               });
               source.css({ 'opacity' : 1.0 });
@@ -193,8 +194,8 @@ function previous_version() {
       new_id = top_element().id.split(":")[0];
     }
     top_element().id = new_id;
-  }
 
+  }
   load();
 }
 
