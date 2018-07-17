@@ -351,7 +351,12 @@ void diffdoc_view::characters(const char * ch, int len) {
 
       if(entity_stack.size() && entity_stack.back().collect_id && srcml_element_stack.back() != "comment") {
         if(!is_space) {
-          entity_stack.back().id.append(str, view_op2srcdiff_type(diff_stack.back()));
+          std::string id;
+          for(char ch : str) {
+            if(ch != '"') id.append(1, ch);
+            else          id.append("\\\"");
+          }
+          entity_stack.back().id.append(id, view_op2srcdiff_type(diff_stack.back()));
         }
       }
 
