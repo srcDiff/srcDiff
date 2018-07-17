@@ -52,7 +52,17 @@ function load_full() {
       files[position] + " [id*=\"" + current_element + "\"][content=\"full\"]", 
       function() {
         var entity = source.children("[content=\"full\"]");
-        entity.children("[content=\"summary\"]").show();
+        var changed_value = entity.attr("changed");
+        var operation_type = operation.children("#operation_type");
+        if(changed_value == undefined) {
+          operation_type.html("unmodified");
+        } else {
+          if(changed_value == "modified") {
+            entity.children("[content=\"summary\"]").show();
+          }
+            operation_type.html(changed_value);
+        }
+
         entity.children("[content=\"signature\"]").children("[content=\"pre\"]").show();
         entity.children("[content=\"body\"]")
               .find("[content=\"signature\"]").click(function() {
@@ -227,7 +237,7 @@ $(document).ready(function() {
 <span id="signature"><input type="radio" name="detail" value="signatures" onclick="set_is_signature(true)" checked="checked" > Signature</span>
 <span id="full"><input type="radio" name="detail" value="full" onclick="set_is_signature(false)"> Full</span>
 
-<span id="operation" style="display: none;"></span>
+<span id="operation" style="display: none;"><strong>Operation:</strong><span id="operation_type"></span></span>
 <div id="source"></div>
 
 </body>
