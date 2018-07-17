@@ -185,7 +185,10 @@ void diffdoc_view::start_element(const std::string & local_name,
     
   } else {
     /** @todo add static block and fields */
-    if(is_class_type(local_name) || is_function_type(local_name)) {
+    if(is_class_type(local_name) || is_function_type(local_name)
+      || (entity_stack.size() && is_class_type(entity_stack.back().type)
+          && entity_stack.back().depth == (srcml_element_stack.size() - 2)
+          && is_decl_stmt(local_name))) {
       end_spans();
       add_saved_output();
       entity_stack.emplace_back(local_name, srcml_element_stack.size(), 
@@ -223,7 +226,9 @@ void diffdoc_view::end_element(const std::string & local_name,
 
   } else {
 
-    if(is_class_type(local_name) || is_function_type(local_name)) {
+    if(is_class_type(local_name) || is_function_type(local_name)
+      || (entity_stack.size() && is_decl_stmt(entity_stack.back().type)
+          && is_decl_stmt(local_name))) {
 
       /** @todo will need to add class name to namespace and handle inner class/functions.
         Need to do variable.
@@ -274,17 +279,25 @@ void diffdoc_view::end_element(const std::string & local_name,
     } else if(entity_stack.size() && entity_stack.back().collect_id) {
       const std::string & type = entity_stack.back().type;
 
-      if(is_identifier(local_name) && entity_stack.back().depth == srcml_element_stack.size()) {
+      size_t end_depth = is_decl_stmt(type) ? srcml_element_stack.size() - 1 : srcml_element_stack.size();
+      if(is_identifier(local_name) && entity_stack.back().depth == end_depth) {
         entity_stack.back().collect_name = false;
         if(is_function_type(entity_stack.back().type)) {
           set_change_profile_by_name<function_profile_t>();
         } else if(is_class_type(entity_stack.back().type)) {
           set_change_profile_by_name<class_profile_t>();
+        } else if(is_decl_stmt(entity_stack.back().type)) {
+          set_change_profile_by_name<decl_stmt_profile_t>();
         }
       }
 
-      bool end_id = (is_function_type(type) && local_name == "parameter_list") 
-                 || (is_class_type(type) && entity_stack.back().depth == srcml_element_stack.size() && is_identifier(local_name));
+      bool end_func   = is_function_type(type) && local_name == "parameter_list";
+      bool end_class  = is_class_type(type) && entity_stack.back().depth == end_depth              
+                        && is_identifier(local_name);
+      bool end_member = is_decl_stmt(type) && entity_stack.back().depth == end_depth              
+                        && is_identifier(local_name);
+      bool end_id = end_func || end_class || end_member;
+
       if(end_id) {
         entity_stack.back().collect_id = false;
         end_spans();
