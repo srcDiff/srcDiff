@@ -145,7 +145,7 @@ class function_profile_t : public profile_t {
             out << '\t';
             out << manip::bold() << "Non-Statement" << manip::normal() << " = " << manip::bold() << get_other_change_count()           << manip::normal();
             out << '\t';
-            out << manip::bold() << "Cyclomatic"    << manip::normal() << " = " << manip::bold() << get_cyclomatic_complexity_change() << manip::normal();            
+            out << manip::bold() << "ΔCyclomatic"    << manip::normal() << " = " << manip::bold() << get_cyclomatic_complexity_change() << manip::normal();            
             out.end_line();
 
             out.increment_depth();
