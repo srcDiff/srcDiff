@@ -158,9 +158,9 @@ void diffdoc_view::start_unit(const std::string & local_name,
                               const struct srcsax_attribute * attributes) {
 
   output_raw_str("<pre>");
-  output_raw_str("<span id=\"unit\" content=\"summary\">");
-  output_raw_str("<strong>File</strong>: " + profile_t::unit_profile->get_name());
-  output_raw_str("\n\n</span>");
+  output_raw_str("<span id=\"unit_filename\" style=\"display: none;\">");
+  output_raw_str(profile_t::unit_profile->get_name());
+  output_raw_str("</span>");
   start_line();
 
 }
