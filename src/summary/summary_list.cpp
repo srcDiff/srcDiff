@@ -166,6 +166,8 @@ std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & pro
 
     if(is_comment(profile->type_name)) return profile->type_name;
 
+    if(profile->type_name == "function") return "method";
+
     return profile->type_name;
 
 }
