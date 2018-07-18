@@ -89,7 +89,7 @@ class change_entity_map {
 
             if(is_decl_stmt(type_name))      return "decl_stmt";
             if(is_parameter(type_name))      return "parameter";
-            if(is_function_type(type_name))  return "function";
+            if(is_function_type(type_name))  return "method";
             if(is_class_type(type_name))     return "class";
             if(is_condition_type(type_name)) return "conditional";
             return type_name;
@@ -128,20 +128,13 @@ class change_entity_map {
 
             typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = entity.lower_bound(operation);
 
-            out.begin_line() << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << type_category(citr->second->type_name) << "(s) (" << count << "):";
+            out.begin_line() << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << type_category(citr->second->type_name) << "(s): "  << count;
             out.end_line();
 
             out.increment_depth();
-
-            out.begin_line();
-            citr->second->summary(out, summary_types);
-            ++citr;
             for(; citr != entity.upper_bound(operation); ++citr) {
                 citr->second->summary(out, summary_types);
             }
-
-            out.end_line();
-
             out.decrement_depth();
 
             return out;
