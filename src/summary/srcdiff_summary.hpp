@@ -26,6 +26,7 @@
  *
  * Base class that provides hooks for SAX processing.
  */
+/** @todo add configuration for short/recursive summary and html */
 class srcdiff_summary : public srcSAXHandler {
 
 public:
