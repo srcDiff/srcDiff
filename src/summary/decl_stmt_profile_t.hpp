@@ -24,7 +24,7 @@ class decl_stmt_profile_t : public profile_t {
         std::vector<std::string> other;
 
         decl_stmt_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent)
-        : profile_t(type_name, uri, operation, parent)
+        : profile_t(type_name, uri, operation, parent),
           specifiers(), type(), name(), init(), other() {}
 
         virtual const versioned_string & get_name() const {
