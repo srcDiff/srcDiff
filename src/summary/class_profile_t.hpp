@@ -57,6 +57,13 @@ class class_profile_t : public profile_t {
 
         virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
 
+            if(out.depth() != 0) {
+                out.begin_line();
+                out << '\'' << (name.has_original() ? name.original() : name.modified()) << '\'';
+                out.end_line();
+                return out;
+            }
+
             // out.begin_line() << type_name << " '" << name << "': Impact = " << get_impact_factor() << '\n'; 
 
             // /** Change these to text and table summaries */

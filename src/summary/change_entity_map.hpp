@@ -128,18 +128,21 @@ class change_entity_map {
 
             typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = entity.lower_bound(operation);
 
-            out.begin_line() << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << type_category(citr->second->type_name) << "(s) (" << count << "): { ";
+            out.begin_line() << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << type_category(citr->second->type_name) << "(s) (" << count << "):";
+            out.end_line();
+
+            out.increment_depth();
+
+            out.begin_line();
             citr->second->summary(out, summary_types);
             ++citr;
             for(; citr != entity.upper_bound(operation); ++citr) {
-
-                out << ", ";
                 citr->second->summary(out, summary_types);
-
             }
 
-            out << " }";
             out.end_line();
+
+            out.decrement_depth();
 
             return out;
 
@@ -158,9 +161,11 @@ class change_entity_map {
             out.end_line();
 
             out.increment_depth();
-            for(; citr != entity.upper_bound(SRCDIFF_COMMON); ++citr)
-                if(citr->second->total_count != 0)
-                        citr->second->summary(out, summary_types);
+            for(; citr != entity.upper_bound(SRCDIFF_COMMON); ++citr) {
+                if(citr->second->total_count != 0) {
+                    citr->second->summary(out, summary_types);
+                }
+            }
             out.decrement_depth();
 
             return out;

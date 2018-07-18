@@ -47,13 +47,11 @@ class decl_stmt_profile_t : public profile_t {
 
         virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
 
-            if(operation != SRCDIFF_COMMON) {
-
-                if(out.depth() == 0) return out;
-
+            if(out.depth() != 0) {
+                out.begin_line();
                 out << '\'' << (name.has_original() ? name.original() : name.modified()) << '\'';
+                out.end_line();
                 return out;
-
             }
 
             out.begin_line();
