@@ -105,9 +105,9 @@ class replace_summary_t : public summary_t {
                     out << " was";
                 else
                     out << " were";
-
-                out << " replaced with ";
             }
+
+            out << " replaced with ";
 
             if(number_modified == 1)
                 out << (original_type == modified_type ? "another" : get_article(modified_type)) << ' ' << manip::bold() << modified_type << manip::normal();
