@@ -11,10 +11,11 @@
 class text_summary {
 
 protected:
+    bool output_verb;
 
 public:
 
-    text_summary();
+    text_summary(bool output_verb = false);
 
     summary_output_stream & specifier(summary_output_stream & out, const std::multimap<srcdiff_type, std::string> & specifiers) const;
     summary_output_stream & parameter(summary_output_stream & out, const std::vector<std::shared_ptr<parameter_profile_t>> & parameters) const;

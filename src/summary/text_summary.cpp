@@ -2,7 +2,7 @@
 
 #include <iterator>
 
-text_summary::text_summary() {}
+text_summary::text_summary(bool output_verb) : output_verb(output_verb) {}
 
 summary_output_stream & text_summary::specifier(summary_output_stream & out, const std::multimap<srcdiff_type, std::string> & specifiers) const {
 
@@ -15,7 +15,9 @@ summary_output_stream & text_summary::specifier(summary_output_stream & out, con
             continue;
         }
 
-        out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was deleted";
+        out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier";
+        if(output_verb) out << " was";
+        out << " deleted";
         out.end_line();
     }
 
@@ -26,7 +28,9 @@ summary_output_stream & text_summary::specifier(summary_output_stream & out, con
             continue;
         }
 
-        out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was inserted";
+        out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier";
+        if(output_verb) out << " was";
+        out << " inserted";
         out.end_line();              
     }
 
@@ -38,10 +42,14 @@ summary_output_stream & text_summary::specifier(summary_output_stream & out, con
                              << manip::bold() << *accessor_inserted << " access" << manip::normal();
             out.end_line();
         } else if(accessor_deleted) {
-            out.begin_line() << manip::bold() << *accessor_deleted << manip::normal() << " accessor was deleted";
+            out.begin_line() << manip::bold() << *accessor_deleted << manip::normal() << " accessor";
+            if(output_verb) out << " was";
+            out << " deleted";
             out.end_line();      
         } else {
-            out.begin_line() << manip::bold() << *accessor_inserted << manip::normal() << " accessor was inserted";
+            out.begin_line() << manip::bold() << *accessor_inserted << manip::normal() << " accessor";
+            if(output_verb) out << " was";
+            out << " inserted";
             out.end_line();              
         }
 
@@ -50,7 +58,9 @@ summary_output_stream & text_summary::specifier(summary_output_stream & out, con
 
 
     for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_COMMON); citr != specifiers.upper_bound(SRCDIFF_COMMON); ++citr) {
-        out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was modified";
+        out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier";
+        if(output_verb) out << " was";
+        out << " modified";
         out.end_line();
     }
 
@@ -90,10 +100,15 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, con
 
         out.begin_line();
 
-        if(number_parameters_replaced == 1)
-            out << "a " << manip::bold() << "parameter" << manip::normal() << " was replaced\n";
-        else
-            out << std::to_string(number_parameters_replaced) << ' ' << manip::bold() << "parameters" << manip::normal() << " were replaced\n";
+        if(number_parameters_replaced == 1) {
+            out << "a " << manip::bold() << "parameter" << manip::normal();
+            if(output_verb) out << " was";
+            out << " replaced\n";
+        } else {
+            out << std::to_string(number_parameters_replaced) << ' ' << manip::bold() << "parameters" << manip::normal();
+            if(output_verb) out << " were";
+            out << " replaced\n";
+        }
 
     }
 
@@ -101,11 +116,15 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, con
 
         out.begin_line();
 
-        if(number_parameters_deleted == 1)
-            out << "a " << manip::bold() << "parameter" << manip::normal() << " was deleted\n";
-
-        else
-            out << std::to_string(number_parameters_deleted) << ' ' << manip::bold() << "parameters" << manip::normal() << " were deleted\n";
+        if(number_parameters_deleted == 1) {
+            out << "a " << manip::bold() << "parameter" << manip::normal();
+            if(output_verb) out << " was";
+            out << " deleted\n";
+        } else {
+            out << std::to_string(number_parameters_deleted) << ' ' << manip::bold() << "parameters" << manip::normal();
+            if(output_verb) out << " were";
+            out << " deleted\n";
+        }
 
     }
 
@@ -113,10 +132,15 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, con
 
         out.begin_line();
 
-        if(number_parameters_inserted == 1)
-            out << "a " << manip::bold() << "parameter" << manip::normal() << " was inserted\n";
-        else
-            out << std::to_string(number_parameters_inserted) << ' ' << manip::bold() << "parameters" << manip::normal() << " were inserted\n";
+        if(number_parameters_inserted == 1) {
+            out << "a " << manip::bold() << "parameter" << manip::normal();
+            if(output_verb) out << " was";
+            out << " inserted\n";
+        } else {
+            out << std::to_string(number_parameters_inserted) << ' ' << manip::bold() << "parameters" << manip::normal();
+            if(output_verb) out << " were";
+            out << " inserted\n";
+        }
 
     }
 
@@ -124,10 +148,15 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, con
 
         out.begin_line();
 
-        if(number_parameters_modified == 1)
-            out << "a " << manip::bold() << "parameter" << manip::normal() << " was modified\n";
-        else
-            out << std::to_string(number_parameters_modified) << ' ' << manip::bold() << "parameters" << manip::normal() << " were modified\n";
+        if(number_parameters_modified == 1) {
+            out << "a " << manip::bold() << "parameter" << manip::normal();
+            if(output_verb) out << " was";
+            out << " modified\n";
+        } else {
+            out << std::to_string(number_parameters_modified) << ' ' << manip::bold() << "parameters" << manip::normal();
+            if(output_verb) out << " were";
+            out << " modified\n";
+        }
 
     }
 
@@ -142,10 +171,15 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
         out.begin_line();
 
-        if(number_member_initializations_deleted == 1)
-            out << "a " << manip::bold() << "member initilization" << manip::normal() << " was deleted\n";
-        else
-            out << std::to_string(number_member_initializations_deleted) << ' ' << manip::bold() << "member initilizations" << manip::normal() << " were deleted\n";
+        if(number_member_initializations_deleted == 1) {
+            out << "a " << manip::bold() << "member initilization" << manip::normal();
+            if(output_verb) out << " was";
+            out << " deleted\n";
+        } else {
+            out << std::to_string(number_member_initializations_deleted) << ' ' << manip::bold() << "member initilizations" << manip::normal();
+            if(output_verb) out << " were";
+            out << " deleted\n";
+        }
 
     }
 
@@ -153,10 +187,15 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
         out.begin_line();
 
-        if(number_member_initializations_inserted == 1)
-            out << "a " << manip::bold() << "member initilization" << manip::normal() << " was inserted\n";
-        else
-            out << std::to_string(number_member_initializations_inserted) << ' ' << manip::bold() << "member initilizations" << manip::normal() << " were inserted\n";
+        if(number_member_initializations_inserted == 1) {
+            out << "a " << manip::bold() << "member initilization" << manip::normal();
+            if(output_verb) out << " was";
+            out << " inserted\n";
+        } else {
+            out << std::to_string(number_member_initializations_inserted) << ' ' << manip::bold() << "member initilizations" << manip::normal();
+            if(output_verb) out << " were";
+            out << " inserted\n";
+        }
 
     }
 
@@ -164,10 +203,15 @@ summary_output_stream & text_summary::member_initialization(summary_output_strea
 
         out.begin_line();
 
-        if(number_member_initializations_modified == 1)
-            out << "a " << manip::bold() << "member initilization" << manip::normal() << " was modified\n";
-        else
-            out << std::to_string(number_member_initializations_modified) << ' ' << manip::bold() << "member initilizations" << manip::normal() << " were modified\n";
+        if(number_member_initializations_modified == 1) {
+            out << "a " << manip::bold() << "member initilization" << manip::normal();
+            if(output_verb) out << " was";
+            out << " modified\n";
+        } else {
+            out << std::to_string(number_member_initializations_modified) << ' ' << manip::bold() << "member initilizations" << manip::normal();
+            if(output_verb) out << " were";
+            out << " modified\n";
+        }
 
     }
 
