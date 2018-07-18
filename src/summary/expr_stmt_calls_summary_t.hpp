@@ -63,24 +63,39 @@ class expr_stmt_calls_summary_t : public expr_stmt_summary_t {
 
             if(number_deleted != 0) {
 
-                if(number_deleted == 1)
-                    out << "a " << manip::bold() << "call" << manip::normal() << " was deleted";
-                else
-                    out << std::to_string(number_deleted) << ' ' << manip::bold() << "calls" << manip::normal() << " were deleted";
+                if(number_deleted == 1) {
+                    out << "a " << manip::bold() << "call" << manip::normal() << ' ';
+                    if(output_verb) out << "was ";
+                    out << "deleted";
+                } else {
+                    out << std::to_string(number_deleted) << ' ' << manip::bold() << "calls" << manip::normal() << ' ';
+                    if(output_verb) out << "were ";
+                    out << "deleted";
+                }
 
             } else if(number_inserted != 0) {
 
-                if(number_inserted == 1)
-                    out << "a " << manip::bold() << "call" << manip::normal() << " was inserted";
-                else
-                    out << std::to_string(number_inserted) << ' ' << manip::bold() << "calls" << manip::normal() << " were inserted";
+                if(number_inserted == 1) {
+                    out << "a " << manip::bold() << "call" << manip::normal() << ' ';
+                    if(output_verb) out << "was ";
+                    out << "inserted";
+                } else {
+                    out << std::to_string(number_inserted) << ' ' << manip::bold() << "calls" << manip::normal() << ' ';
+                    if(output_verb) out << "were ";
+                    out << "inserted";
+                }
 
             } else if(number_renamed != 0) {
 
-                if(number_renamed == 1)
-                    out << "a " << manip::bold() << "call" << manip::normal() << " was renamed";
-                else
-                    out << std::to_string(number_renamed) << ' ' << manip::bold() << "calls" << manip::normal() << " were renamed";
+                if(number_renamed == 1) {
+                    out << "a " << manip::bold() << "call" << manip::normal() << ' ';
+                    if(output_verb) out << "was ";
+                    out << "renamed";
+                } else {
+                    out << std::to_string(number_renamed) << ' ' << manip::bold() << "calls" << manip::normal() << ' ';
+                    if(output_verb) out << "were ";
+                    out << "renamed";
+                }
 
             } else if(number_argument_list_modified != 0) {
 
@@ -95,28 +110,37 @@ class expr_stmt_calls_summary_t : public expr_stmt_summary_t {
 
                     if(number_argument_operations == 1) {
 
-                        if(number_arguments_total == 1)
-                            out << "an " << manip::bold() << "argument" << manip::normal() << " was ";
-                        else
-                            out << std::to_string(number_arguments_total) << ' ' << manip::bold() << "arguments" << manip::normal() << " were ";
+                        if(number_arguments_total == 1) {
+                            out << "an " << manip::bold() << "argument" << manip::normal() << ' ';
+                            if(output_verb) out << "was ";
+                        } else {
+                            out << std::to_string(number_arguments_total) << ' ' << manip::bold() << "arguments" << manip::normal() << ' ';
+                            if(output_verb) out << "were ";
+                        }
 
-                        if(number_arguments_deleted > 0)
+                        if(number_arguments_deleted > 0) {
                             out << "deleted";
-                        else if(number_arguments_inserted > 0)
+                        } else if(number_arguments_inserted > 0) {
                             out << "inserted";
-                        else
+                        } else {
                             out << "modified";
+                        }
 
                     } else {
 
-                        //out << std::to_string(number_arguments_total) << ' ' << manip::bold() << "arguments" << manip::normal() << " were modified";
-                        out << "an " << manip::bold() << "argument list" << manip::normal() << " was modified";
+                        //out << std::to_string(number_arguments_total) << ' ' << manip::bold() << "arguments" << manip::normal() << ' ';
+                        // if(output_verb) out << "were modified";
+                        out << "an " << manip::bold() << "argument list" << manip::normal() << ' ';
+                        if(output_verb) out << "was ";
+                        out << "modified";
 
                     }
 
                 } else {
 
-                    out << std::to_string(number_argument_list_modified) << ' ' << manip::bold() << "argument lists" << manip::normal() << " were modified";
+                    out << std::to_string(number_argument_list_modified) << ' ' << manip::bold() << "argument lists" << manip::normal() << ' ';
+                    if(output_verb) out << "were ";
+                    out << "modified";
 
                 }
 

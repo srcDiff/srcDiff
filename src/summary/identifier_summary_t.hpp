@@ -40,7 +40,9 @@ class identifier_summary_t : public summary_t {
 
                 out << '\'';
                 out << name.original();
-                out << "' was renamed to '";
+                out << "' ";
+                if(output_verb) out  << "was ";
+                out << "renamed to '";
                 out << name.modified();
                 out << '\'';
 

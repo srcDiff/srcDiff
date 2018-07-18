@@ -28,12 +28,15 @@ class macro_summary_t : public summary_t {
 
             out.begin_line();
 
-            if(count == 1)
-                out << get_article("macro") << ' ' << manip::bold() << "macro" << manip::normal() << " was ";
-            else
-                out << std::to_string(count) << ' ' << manip::bold() << "macro" << 's' << manip::normal() << " were ";
+            if(count == 1) {
+                out << get_article("macro") << ' ' << manip::bold() << "macro" << manip::normal();
+                if(output_verb) out << " was";
+            } else {
+                out << std::to_string(count) << ' ' << manip::bold() << "macro" << 's' << manip::normal();
+                if(output_verb) out << " were";
+            }
 
-            out << (operation == SRCDIFF_DELETE ?  "deleted" : (operation == SRCDIFF_INSERT ? "inserted" : "modified"));
+            out << (operation == SRCDIFF_DELETE ?  " deleted" : (operation == SRCDIFF_INSERT ? " inserted" : " modified"));
 
             out.end_line();
 
