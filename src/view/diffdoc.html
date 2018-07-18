@@ -10,6 +10,7 @@ foreach (glob('*.srcdiff.html') as $filename) {
 echo json_encode($out); ?>;
 var position = files.length - 1;
 var is_signature = true
+var is_changed = true;
 var element_stack = [ { is_signature:true, id:"" } ]
 
 function top_element() {
@@ -38,9 +39,19 @@ var previous = undefined
 var opacity = 0.25;
 function load_all() {
 
+    var changed_selector = " [content=\"full\"][changed]"
+    if(!is_changed) {
+      changed_selector = ""
+    }
+
     source.css({ 'opacity' : opacity });
     operation.css({ 'opacity' : opacity });
-    source.load(files[position], function() {
+    source.load(files[position] + changed_selector, function() {
+
+      if(is_changed) {
+        source.children("[content=\"full\"]").wrap("<pre></pre>");
+      }
+
       $("[content=\"signature\"]").click(function() {
         element_stack.push({ is_signature:false, id:$(this).attr("id") });
         load();
@@ -96,6 +107,11 @@ function load_full() {
 }
 
 function load_signatures() {
+
+    var changed_selector = "[changed]"
+    if(!is_changed) {
+      changed_selector = ""
+    }
 
     source.css({ 'opacity' : opacity });
     operation.css({ 'opacity' : opacity });
@@ -214,6 +230,12 @@ function set_is_signature(value) {
   load();
 }
 
+function set_is_changed(value) {
+
+  is_changed = !is_changed;
+  load();
+}
+
 $(document).ready(function() {
   commit_info = $("#commit_info").children("tbody");
   source = $("#source");
@@ -282,8 +304,9 @@ $(document).ready(function() {
 <button id="prev">previous</button>
 <button id="next">next</button>
 <button id="back">back</button>
-<span id="signature"><input type="radio" name="detail" value="signatures" onclick="set_is_signature(true)" checked="checked" > Signature</span>
+<span id="signature"><input type="radio" name="detail" value="signatures" onclick="set_is_signature(true)" checked="checked"> Signature</span>
 <span id="full"><input type="radio" name="detail" value="full" onclick="set_is_signature(false)"> Full</span>
+<span id="change"><input type="checkbox" name="changed" onclick="set_is_changed()" checked="checked"> Changed</span>
 
 <pre id="operation" style="display: none;"><strong>Operation:</strong> <span id="operation_type" style="font-style: italic;"></span></pre>
 <div id="source"></div>
