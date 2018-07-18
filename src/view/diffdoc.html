@@ -9,7 +9,6 @@ foreach (glob('*.srcdiff.html') as $filename) {
 }
 echo json_encode($out); ?>;
 var position = files.length - 1;
-var is_signature = true
 var is_changed = true;
 var element_stack = [ { is_signature:true, id:"" } ]
 
@@ -135,9 +134,9 @@ function load() {
 
   if(element_stack.length == 1) {
 
-    if(is_signature) {
+    if(top_element().is_signature) {
       $("#changed").show();
-    } else{
+    } else {
       $("#changed").hide();
     }
 
@@ -146,7 +145,6 @@ function load() {
     $("#full").show();
   } else {
     $("#changed").hide();
-    $("#back").show();
     $("#signature").hide();
     $("#full").hide();
   }
@@ -235,7 +233,7 @@ function set_is_changed(value) {
   load();
 }
 
-$(document).ready(function() {
+$(document).ready(function() {  $("#changed").hide();
   commit_info = $("#commit_info").children("tbody");
   source = $("#source");
   operation = $("#operation");
