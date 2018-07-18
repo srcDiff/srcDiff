@@ -46,10 +46,14 @@ class replace_summary_t : public summary_t {
                     else
                         out << std::to_string(number_original) << ' ' << manip::bold() << original_type << 's' << manip::normal();
 
-                    if(number_original == 1)
-                        out << " was replaced with ";
-                    else
-                        out << " were replaced with ";
+                    if(output_verb) {
+                        if(number_original == 1)
+                            out << " was";
+                        else
+                            out << " were";
+                    }
+
+                    out << " replaced with ";
 
                     if(number_comments_modified == 1)
                         out << "a " << manip::bold() << "comment" << manip::normal();
@@ -65,10 +69,14 @@ class replace_summary_t : public summary_t {
                     else
                         out << std::to_string(number_comments_original) << manip::bold() << " comments" << manip::normal();
 
-                    if(number_comments_original == 1)
-                        out << " was replaced with ";
-                    else
-                        out << " were replaced with ";
+                    if(output_verb) {
+                        if(number_comments_original == 1)
+                            out << " was";
+                        else
+                            out << " were";
+                    }
+
+                    out << " replaced with ";
 
                     if(number_modified == 1)
                         out << get_article(modified_type) << ' ' << manip::bold() << modified_type << manip::normal();
@@ -92,13 +100,14 @@ class replace_summary_t : public summary_t {
             else if(number_comments_original > 1)
                 out << " and " << std::to_string(number_comments_original) << manip::bold() << " comments" << manip::normal();
 
+            if(output_verb) {
+                if((number_original + number_comments_original) == 1)
+                    out << " was";
+                else
+                    out << " were";
 
-            if((number_original + number_comments_original) == 1)
-                out << " was";
-            else
-                out << " were";
-
-            out << " replaced with ";
+                out << " replaced with ";
+            }
 
             if(number_modified == 1)
                 out << (original_type == modified_type ? "another" : get_article(modified_type)) << ' ' << manip::bold() << modified_type << manip::normal();

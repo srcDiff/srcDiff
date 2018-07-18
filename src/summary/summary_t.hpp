@@ -13,6 +13,7 @@ class summary_t {
 
     protected:
 
+        bool output_verb;
         summary_name_t type;
         srcdiff_type operation;
         size_t count;
@@ -29,8 +30,8 @@ class summary_t {
 
     public:
 
-        summary_t(summary_name_t type, srcdiff_type operation)
-            : type(type), operation(operation), count(1) {}
+        summary_t(summary_name_t type, srcdiff_type operation, bool output_verb = false)
+            : type(type), operation(operation), count(1), output_verb(output_verb) {}
 
         virtual bool compare(const summary_t & summary) const {
 
