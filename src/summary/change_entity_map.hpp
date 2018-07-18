@@ -136,6 +136,7 @@ class change_entity_map {
                 citr->second->summary(out, summary_types);
             }
             out.decrement_depth();
+            out << '\n';
 
             return out;
 
