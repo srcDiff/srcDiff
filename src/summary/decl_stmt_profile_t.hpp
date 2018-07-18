@@ -21,8 +21,11 @@ class decl_stmt_profile_t : public profile_t {
         versioned_string name;
 
         std::shared_ptr<profile_t> init;
+        std::vector<std::string> other;
 
-        decl_stmt_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent) : profile_t(type_name, uri, operation, parent) {}
+        decl_stmt_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent)
+        : profile_t(type_name, uri, operation, parent)
+          specifiers(), type(), name(), init(), other() {}
 
         virtual const versioned_string & get_name() const {
             return name;
@@ -68,10 +71,12 @@ class decl_stmt_profile_t : public profile_t {
 
             out << manip::bold() << "Impact" << manip::normal() << ": ";
             out << manip::bold() << "Type"     << manip::normal() << " = " << manip::bold() <<  type_impact << manip::normal();
-            out << '\t';
+            out << "   ";
             out << manip::bold() << "Name" << manip::normal() << " = " << manip::bold() << name_impact << manip::normal();
-            out << '\t';
+            out << "   ";
             out << manip::bold() << "Init"    << manip::normal() << " = " << manip::bold() << init_impact << manip::normal();            
+            // out << "   ";
+            // out << manip::bold() << "Other"    << manip::normal() << " = " << manip::bold() << init_impact << manip::normal();            
             out.end_line();
    
             out.increment_depth();

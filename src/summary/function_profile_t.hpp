@@ -142,9 +142,9 @@ class function_profile_t : public profile_t {
 
             out << manip::bold() << "Changes" << manip::normal() << ": ";
             out << manip::bold() << "Body"     << manip::normal() << " = " << manip::bold() << this->statement_churn              << manip::normal();
-            out << '\t';
+            out << "   ";
             out << manip::bold() << "Signature" << manip::normal() << " = " << manip::bold() << get_other_change_count()           << manip::normal();
-            out << '\t';
+            out << "   ";
             out << manip::bold() << "ΔCyclomatic"    << manip::normal() << " = " << manip::bold() << get_cyclomatic_complexity_change() << manip::normal();            
             out.end_line();
 
