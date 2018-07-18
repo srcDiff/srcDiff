@@ -160,6 +160,7 @@ class change_entity_map {
                 }
             }
             out.decrement_depth();
+            out << '\n';
 
             return out;
 
