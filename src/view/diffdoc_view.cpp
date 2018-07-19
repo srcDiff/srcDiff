@@ -354,7 +354,7 @@ void diffdoc_view::characters(const char * ch, int len) {
       end_line();
       start_line();
 
-      if(entity_stack.size() && entity_stack.back().collect_id && srcml_element_stack.back() != "comment") {
+      if(entity_stack.size() && entity_stack.back().collect_id && !is_comment(srcml_element_stack.back())) {
         entity_stack.back().id.append(" ", view_op2srcdiff_type(diff_stack.back()));
       }
 
@@ -362,7 +362,7 @@ void diffdoc_view::characters(const char * ch, int len) {
 
       output_characters(str);
 
-      if(entity_stack.size() && entity_stack.back().collect_id && srcml_element_stack.back() != "comment") {
+      if(entity_stack.size() && entity_stack.back().collect_id && !is_comment(srcml_element_stack.back())) {
         std::string id;
         for(char ch : str) {
           if(ch != '"') id.append(1, ch);

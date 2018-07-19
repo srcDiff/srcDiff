@@ -641,12 +641,11 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
         // note what if class is interchanged?
         if(is_function_type(full_name) || is_class_type(full_name) 
-            || (is_decl_stmt(full_name) && srcml_element_stack.size() >= 2
-                && is_class_type(srcml_element_stack[srcml_element_stack.size() - 2]))) {
-            signature_depth = srcml_element_stack.size();
+            || (is_decl_stmt(full_name) && srcml_element_stack.size() >= 3
+                && is_class_type(srcml_element_stack[srcml_element_stack.size() - 3]))) {
+            signature_depth = srcml_element_stack.size() - 1;
             signature_profile = profile_stack.back();
         }
-
 
         if(is_identifier(profile_stack.back()->parent->type_name))
             reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back()->parent)->is_simple = false;
@@ -832,7 +831,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     if(signature_profile) {
 
-        size_t end_depth = is_decl_stmt(signature_profile->type_name) ? srcml_element_stack.size() - 1 : srcml_element_stack.size();
+        size_t end_depth = is_decl_stmt(signature_profile->type_name) ? srcml_element_stack.size() - 2 : srcml_element_stack.size() - 1;
 
         bool end_func_collect = is_function_type(signature_profile->type_name) && full_name == "parameter_list";
         bool end_class_collect = is_class_type(signature_profile->type_name)
@@ -1258,7 +1257,7 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
 
     if(len == 0) return;
 
-    if(signature_profile) {
+    if(signature_profile && !is_comment(srcml_element_stack.back())) {
       std::string str;
       for(int i = 0; i < len; ++i) {
         char character = ch[i];
