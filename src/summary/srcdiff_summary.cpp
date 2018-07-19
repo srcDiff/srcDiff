@@ -273,7 +273,7 @@ srcdiff_summary::srcdiff_summary()
       insert_count(), delete_count(), change_count(), total(),
       text(), specifier_raw(), name_count(0), collected_full_name(), collected_simple_name(), simple_names(),
       condition_count(0), collected_condition(), left_hand_side(), collect_lhs(), collect_rhs(), raw_statements(),
-      signature_profile() {}
+      signature_depth(0), signature_profile() {}
 
 srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str) 
     : srcdiff_summary() {
@@ -630,19 +630,20 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     if(uri_stack.back() != SRCDIFF) {
 
+        // if(signature_profile) {
+
+        //     bool end_func_collect = is_function_type(signature_profile->type_name) && is_block(full_name);
+        //     bool end_class_collect = is_class_type(signature_profile->type_name) && is_block(full_name);
+        //     if(end_func_collect || end_class_collect) {
+        //         signature_profile = std::shared_ptr<profile_t>();
+        //     }
+        // }
+
         // note what if class is interchanged?
-        if(signature_profile) {
-
-            bool end_func_collect = is_function_type(signature_profile->type_name) && is_block(full_name);
-            bool end_class_collect = is_class_type(signature_profile->type_name) && is_block(full_name);
-            if(end_func_collect || end_class_collect) {
-                signature_profile = std::shared_ptr<profile_t>();
-            }
-        }
-
         if(is_function_type(full_name) || is_class_type(full_name) 
-            || (is_decl_stmt(full_name) && profile_stack.size() >= 3
-                && is_class_type(profile_stack.at(profile_stack.size() - 3)->type_name))) {
+            || (is_decl_stmt(full_name) && srcml_element_stack.size() >= 2
+                && is_class_type(srcml_element_stack[srcml_element_stack.size() - 2]))) {
+            signature_depth = srcml_element_stack.size();
             signature_profile = profile_stack.back();
         }
 
@@ -831,9 +832,16 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     if(signature_profile) {
 
-        bool end_decl_collect = is_decl_stmt(signature_profile->type_name) && is_identifier(full_name)
-                                && profile_stack.size() >=3 && is_decl_stmt(profile_stack.at(profile_stack.size() - 3)->type_name);
-        if(end_decl_collect) {
+        size_t end_depth = is_decl_stmt(signature_profile->type_name) ? srcml_element_stack.size() - 1 : srcml_element_stack.size();
+
+        bool end_func_collect = is_function_type(signature_profile->type_name) && full_name == "parameter_list";
+        bool end_class_collect = is_class_type(signature_profile->type_name)
+                                && signature_depth == end_depth && is_identifier(full_name);
+
+        bool end_decl_collect = is_decl_stmt(signature_profile->type_name)
+                                && signature_depth == end_depth && is_identifier(full_name);
+
+        if(end_func_collect || end_class_collect || end_decl_collect) {
             signature_profile = std::shared_ptr<profile_t>();
         }
     }

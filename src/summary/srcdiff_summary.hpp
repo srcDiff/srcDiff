@@ -86,6 +86,7 @@ protected:
 
     std::map<size_t, std::string &> raw_statements;
 
+    size_t signature_depth;
     std::shared_ptr<profile_t> signature_profile;
 
 private:
