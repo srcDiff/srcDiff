@@ -24,7 +24,7 @@ entity_data::entity_data(const std::string & type, size_t depth,
     operation(operation),
     collect_id(true),
     // not a good separtor for C++
-    id(':'),
+    id('|'),
     signature(),
     collect_name(false),
     name(),
@@ -353,19 +353,22 @@ void diffdoc_view::characters(const char * ch, int len) {
     if(str == "\n") {
       end_line();
       start_line();
+
+      if(entity_stack.size() && entity_stack.back().collect_id && srcml_element_stack.back() != "comment") {
+        entity_stack.back().id.append(" ", view_op2srcdiff_type(diff_stack.back()));
+      }
+
     } else {
 
       output_characters(str);
 
       if(entity_stack.size() && entity_stack.back().collect_id && srcml_element_stack.back() != "comment") {
-        if(!is_space) {
-          std::string id;
-          for(char ch : str) {
-            if(ch != '"') id.append(1, ch);
-            else          id.append("&quot;");
-          }
-          entity_stack.back().id.append(id, view_op2srcdiff_type(diff_stack.back()));
+        std::string id;
+        for(char ch : str) {
+          if(ch != '"') id.append(1, ch);
+          else          id.append("&quot;");
         }
+        entity_stack.back().id.append(id, view_op2srcdiff_type(diff_stack.back()));
       }
 
       if(is_space) {

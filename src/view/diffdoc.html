@@ -84,7 +84,7 @@ function load_full() {
 
         entity.children("[content=\"signature\"]").children("[content=\"pre\"]").show();
 
-        entity.children("[content=\"summary]").find("[content=\"summary_link\"]").click(function() {
+        entity.children("[content=\"summary\"]").find("[content=\"summary_link\"]").click(function() {
           element_stack.push({ is_signature:false, id:$(this).attr("id") });
           load();
         });

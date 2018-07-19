@@ -1255,7 +1255,8 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
       for(int i = 0; i < len; ++i) {
         char character = ch[i];
         if(character == '"')       str.append("&quot;");
-        else if(character != '\n') str.append(1, character);
+        else if(character == '\n') str.append(1, ' ');
+        else                       str.append(1, character);
       }
       signature_profile->signature.append(str, srcdiff_stack.back().operation);
     }
