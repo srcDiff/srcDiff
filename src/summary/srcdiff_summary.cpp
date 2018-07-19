@@ -273,7 +273,7 @@ srcdiff_summary::srcdiff_summary()
       insert_count(), delete_count(), change_count(), total(),
       text(), specifier_raw(), name_count(0), collected_full_name(), collected_simple_name(), simple_names(),
       condition_count(0), collected_condition(), left_hand_side(), collect_lhs(), collect_rhs(), raw_statements(),
-      signature_profile(false) {}
+      signature_profile() {}
 
 srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str) 
     : srcdiff_summary() {
@@ -632,8 +632,8 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
         // note what if class is interchanged?
         if(is_function_type(full_name) || is_class_type(full_name) 
-            || (is_decl_stmt(full_name) && profile_stack.size() >= 3)
-                && is_class_type(profile_stack.at(profile_stack.size() - 3)->type_name)) {
+            || (is_decl_stmt(full_name) && profile_stack.size() >= 3
+                && is_class_type(profile_stack.at(profile_stack.size() - 3)->type_name))) {
             signature_profile = profile_stack.back();
         }
 

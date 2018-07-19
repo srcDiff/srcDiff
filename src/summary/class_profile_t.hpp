@@ -59,7 +59,7 @@ class class_profile_t : public profile_t {
 
             if(out.depth() != 0) {
                 out.begin_line();
-                out << (name.has_original() ? name.original() : name.modified());
+                out << manip::var() << name << manip::end_var();
                 out.end_line();
                 return out;
             }
