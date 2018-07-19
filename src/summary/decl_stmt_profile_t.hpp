@@ -56,6 +56,8 @@ class decl_stmt_profile_t : public profile_t {
                 return out;
             }
 
+            if(operation != SRCDIFF_COMMON) return out;
+
             out.begin_line();
 
             if(out.depth() != 0) {

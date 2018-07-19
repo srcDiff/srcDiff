@@ -128,6 +128,8 @@ class function_profile_t : public profile_t {
                 return out;
             }
 
+            if(operation != SRCDIFF_COMMON) return out;
+
             size_t statement_count = this->statement_count, statement_churn = this->statement_churn;
             move_handler m_handler(statement_count, statement_churn);
             m_handler.gather_candidates(descendant_change_profiles);
