@@ -83,11 +83,18 @@ function load_full() {
         }
 
         entity.children("[content=\"signature\"]").children("[content=\"pre\"]").show();
+
+        entity.children("[content=\"summary]").find("[content=\"summary_link\"]").click(function() {
+          element_stack.push({ is_signature:false, id:$(this).attr("id") });
+          load();
+        });
+
         entity.children("[content=\"body\"]")
               .find("[content=\"signature\"]").click(function() {
           element_stack.push({ is_signature:false, id:$(this).attr("id") });
           load();
         });
+
         entity.wrap("<pre></pre>");
         source.css({ 'opacity' : 1.0 });
         operation.css({ 'opacity' : 1.0 });
