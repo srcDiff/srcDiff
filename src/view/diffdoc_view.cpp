@@ -291,13 +291,6 @@ void diffdoc_view::end_element(const std::string & local_name,
       size_t end_depth = is_decl_stmt(type) ? srcml_element_stack.size() - 1 : srcml_element_stack.size();
       if(is_identifier(local_name) && entity_stack.back().depth == end_depth) {
         entity_stack.back().collect_name = false;
-        if(is_function_type(entity_stack.back().type)) {
-          set_change_profile_by_name<function_profile_t>();
-        } else if(is_class_type(entity_stack.back().type)) {
-          set_change_profile_by_name<class_profile_t>();
-        } else if(is_decl_stmt(entity_stack.back().type)) {
-          set_change_profile_by_name<decl_stmt_profile_t>();
-        }
       }
 
       bool end_func   = is_function_type(type) && local_name == "parameter_list";
@@ -311,6 +304,15 @@ void diffdoc_view::end_element(const std::string & local_name,
         entity_stack.back().collect_id = false;
         end_spans();
         entity_stack.back().signature = remove_saved_output();
+
+        if(is_function_type(entity_stack.back().type)) {
+          set_change_profile_by_name<function_profile_t>();
+        } else if(is_class_type(entity_stack.back().type)) {
+          set_change_profile_by_name<class_profile_t>();
+        } else if(is_decl_stmt(entity_stack.back().type)) {
+          set_change_profile_by_name<decl_stmt_profile_t>();
+        }
+
         add_saved_output();
       }
 
