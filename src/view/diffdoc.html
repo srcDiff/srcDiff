@@ -38,6 +38,9 @@ var previous = undefined
 var opacity = 0.25;
 function load_all() {
 
+    next.removeAttr("disabled");
+    previous.removeAttr("disabled");
+
     source.css({ 'opacity' : opacity });
     operation.css({ 'opacity' : opacity });
     source.load(files[position], function() {
@@ -109,6 +112,9 @@ function load_signatures() {
     if(!is_changed) {
       changed_selector = ""
     }
+
+    next.removeAttr("disabled");
+    previous.removeAttr("disabled");
 
     source.css({ 'opacity' : opacity });
     operation.css({ 'opacity' : opacity });
@@ -183,12 +189,12 @@ function next_version() {
   if(position == files.length) {
     position = 0;
   }
-  if(element_stack.length != 1 && top_element().id.includes(":")) {
+  if(element_stack.length != 1 && top_element().id.includes("|")) {
     var new_id = "";
     if(position == 0) {
-      new_id = top_element().id.split(":")[0];
+      new_id = top_element().id.split("|")[0];
     } else {
-      new_id = top_element().id.split(":")[1];
+      new_id = top_element().id.split("|")[1];
     }
     top_element().id = new_id;
   }
@@ -207,12 +213,12 @@ function previous_version() {
     position = files.length;
   }
   position -= 1;
-  if(element_stack.length != 1 && top_element().id.includes(":")) {
+  if(element_stack.length != 1 && top_element().id.includes("|")) {
     var new_id = "";
     if(position == (files.length - 1)) {
-      new_id = top_element().id.split(":")[1];
+      new_id = top_element().id.split("|")[1];
     } else {
-      new_id = top_element().id.split(":")[0];
+      new_id = top_element().id.split("|")[0];
     }
     top_element().id = new_id;
 
