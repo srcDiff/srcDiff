@@ -30,21 +30,17 @@ class identifier_summary_t : public summary_t {
 
             if(!is_rename) {
 
-                out << "name change from '";
-                out << name.original();
-                out << "' to '";
-                out << name.modified();
-                out << '\'';
+                out << "name change from ";
+                out << manip::var() << name.original() << manip::end_var();
+                out << " to ";
+                out << manip::var() << name.modified() << manip::end_var();
 
             } else {
 
-                out << '\'';
-                out << name.original();
-                out << "' ";
-                if(output_verb) out  << "was ";
-                out << "renamed to '";
-                out << name.modified();
-                out << '\'';
+                out << manip::var() << name.original() << manip::end_var();
+                if(output_verb) out  << " was";
+                out << " renamed to ";
+                out << manip::var() << name.modified() << manip::end_var();
 
             }
 

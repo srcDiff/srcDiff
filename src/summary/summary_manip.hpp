@@ -10,7 +10,7 @@ class summary_manip {
 
 private:
 
-	enum manipulation { SETW, LEFT, RIGHT, BOLD, NORMAL } manip;
+	enum manipulation { SETW, LEFT, RIGHT, BOLD, NORMAL, VAR, END_VAR } manip;
 	int setw_n;
 
 	static constexpr const char * const BOLD_TEXT = "\x1b[1m";
@@ -18,6 +18,12 @@ private:
 
 	static constexpr const char * const BOLD_TEXT_HTML = "<strong>";
 	static constexpr const char * const NORMAL_TEXT_HTML = "</strong>";
+
+	static constexpr const char * const VAR_TEXT = "";
+	static constexpr const char * const END_VAR_TEXT = "";
+
+	static constexpr const char * const VAR_TEXT_HTML = "<var>";
+	static constexpr const char * const END_VAR_TEXT_HTML = "</var>";
 
 	static bool is_html;
 
@@ -67,13 +73,27 @@ public:
 		
 	}
 
+	static summary_manip var() {
+
+		return summary_manip(VAR);
+
+	}
+
+	static summary_manip end_var() {
+
+		return summary_manip(END_VAR);
+		
+	}
+
 	friend summary_output_stream & operator<<(summary_output_stream & out, const summary_manip & type) {
 
-		if(type.manip == SETW)        out.ostream() << std::setw(type.setw_n);
-		else if(type.manip == LEFT)   out.ostream() << std::left;
-		else if(type.manip == RIGHT)  out.ostream() << std::right;
-		else if(type.manip == BOLD)   out.ostream() << (is_html ? BOLD_TEXT_HTML : BOLD_TEXT);
-		else if(type.manip == NORMAL) out.ostream() << (is_html ? NORMAL_TEXT_HTML : NORMAL_TEXT);
+		if(type.manip == SETW)         out.ostream() << std::setw(type.setw_n);
+		else if(type.manip == LEFT)    out.ostream() << std::left;
+		else if(type.manip == RIGHT)   out.ostream() << std::right;
+		else if(type.manip == BOLD)    out.ostream() << (is_html ? BOLD_TEXT_HTML : BOLD_TEXT);
+		else if(type.manip == NORMAL)  out.ostream() << (is_html ? NORMAL_TEXT_HTML : NORMAL_TEXT);
+		else if(type.manip == VAR)     out.ostream() << (is_html ? VAR_TEXT_HTML : VAR_TEXT);
+		else if(type.manip == END_VAR) out.ostream() << (is_html ? END_VAR_TEXT_HTML : END_VAR_TEXT);
 
 		return out;
 
