@@ -43,6 +43,9 @@ class versioned_string {
 		void append(const char * characters, size_t len, enum srcdiff_type version);
 		void clear();
 
+		versioned_string remove_spaces() const;
+		versioned_string normalize_space() const;
+
 		void swap(versioned_string & other);
 
        	operator std::string() const;

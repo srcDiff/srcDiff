@@ -1,5 +1,7 @@
 #include <versioned_string.hpp>
 #include <execinfo.h>
+#include <cctype>
+
 const std::string versioned_string::empty_str;
 
 versioned_string::versioned_string(char separator)
@@ -112,6 +114,40 @@ void versioned_string::clear() {
 	string_original = boost::optional<std::string>();
 	string_modified = boost::optional<std::string>();
 
+}
+
+bool is_space(char ch) {
+	return bool(std::isspace(ch));
+}
+
+std::string normalize(const std::istringstream & str, const std::string sep) {
+	std::ostringstream out;
+	std::copy(std::istream_iterator<std::string>(str), std::istream_iterator(), std::ostream_iteartor(out, sep));
+	return out.str();
+}
+
+versioned_string versioned_string::remove_spaces() const {
+	versioned_string str;
+	if(string_original) {
+		str.string_original = normalize(*str.string_original, "");
+	}
+
+	if(string_modified) {
+		str.string_original = normalize(*str.string_original, "");
+	}
+
+	return str;
+}
+
+versioned_string versioned_string::normalize_space() const {
+	versioned_string str;
+	if(string_original) {
+		str.string_original = normalize(*str.string_original, " ");
+	}
+
+	if(string_modified) {
+		str.string_original = normalize(*str.string_original, " ");
+	}
 }
 
 void versioned_string::swap(versioned_string & other) {
