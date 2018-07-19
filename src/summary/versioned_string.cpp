@@ -1,6 +1,7 @@
 #include <versioned_string.hpp>
 #include <execinfo.h>
-#include <cctype>
+#include <sstream>
+#include <iterator>
 
 const std::string versioned_string::empty_str;
 
@@ -120,9 +121,10 @@ bool is_space(char ch) {
 	return bool(std::isspace(ch));
 }
 
-std::string normalize(const std::istringstream & str, const std::string sep) {
+std::string normalize(const std::string & str, const std::string & sep) {
+	std::istringstream in(str);
 	std::ostringstream out;
-	std::copy(std::istream_iterator<std::string>(str), std::istream_iterator(), std::ostream_iteartor(out, sep));
+	std::copy(std::istream_iterator<std::string>(in), std::istream_iterator<std::string>(), std::ostream_iterator<std::string>(out, sep.c_str()));
 	return out.str();
 }
 
@@ -148,6 +150,8 @@ versioned_string versioned_string::normalize_space() const {
 	if(string_modified) {
 		str.string_original = normalize(*str.string_original, " ");
 	}
+
+	return str;
 }
 
 void versioned_string::swap(versioned_string & other) {
