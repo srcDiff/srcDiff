@@ -131,7 +131,7 @@ versioned_string versioned_string::remove_spaces() const {
 	}
 
 	if(string_modified) {
-		str.string_modified = normalize(*string_original, "");
+		str.string_modified = normalize(*string_modified, "");
 	}
 
 	return str;
