@@ -631,11 +631,21 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
     if(uri_stack.back() != SRCDIFF) {
 
         // note what if class is interchanged?
+        if(signature_profile) {
+
+            bool end_func_collect = is_function_type(signature_profile->type_name) && is_block(full_name);
+            bool end_class_collect = is_class_type(signature_profile->type_name) && is_block(full_name);
+            if(end_func_collect || end_class_collect) {
+                signature_profile = std::shared_ptr<profile_t>();
+            }
+        }
+
         if(is_function_type(full_name) || is_class_type(full_name) 
             || (is_decl_stmt(full_name) && profile_stack.size() >= 3
                 && is_class_type(profile_stack.at(profile_stack.size() - 3)->type_name))) {
             signature_profile = profile_stack.back();
         }
+
 
         if(is_identifier(profile_stack.back()->parent->type_name))
             reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back()->parent)->is_simple = false;
@@ -818,6 +828,15 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     }
     full_name += local_name;
+
+    if(signature_profile) {
+
+        bool end_decl_collect = is_decl_stmt(signature_profile->type_name) && is_identifier(full_name)
+                                && profile_stack.size() >=3 && is_decl_stmt(profile_stack.at(profile_stack.size() - 3)->type_name);
+        if(end_decl_collect) {
+            signature_profile = std::shared_ptr<profile_t>();
+        }
+    }
 
     if(is_block(full_name) && (is_block(profile_stack.at(profile_stack.size() - 2)->type_name) || (profile_stack.at(profile_stack.size() - 2)->uri == SRCDIFF && is_block(profile_stack.at(profile_stack.size() - 3)->type_name))))
         full_name = "expr_block";
@@ -1203,16 +1222,6 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     }
 
-    if(signature_profile) {
-        bool end_func_collect = is_function_type(signature_profile->type_name) && is_block(full_name);
-        bool end_class_collect = is_class_type(signature_profile->type_name) && is_block(full_name);
-        bool end_decl_collect = is_decl_stmt(signature_profile->type_name) && is_identifier(full_name)
-                                && profile_stack.size() >=3 && is_decl_stmt(profile_stack.at(profile_stack.size() - 3)->type_name);
-        if(end_func_collect || end_class_collect || end_decl_collect) {
-            signature_profile = std::shared_ptr<profile_t>();
-        }
-    }
-
     if(!is_interchange) profile_stack.pop_back();
 
     uri_stack.pop_back();
@@ -1245,8 +1254,8 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
       std::string str;
       for(int i = 0; i < len; ++i) {
         char character = ch[i];
-        if(character != '"')       str.append(1, character);
-        else if(character != '\n') str.append("&quot;");
+        if(character == '"')       str.append("&quot;");
+        else if(character != '\n') str.append(1, character);
       }
       signature_profile->signature.append(str, srcdiff_stack.back().operation);
     }
