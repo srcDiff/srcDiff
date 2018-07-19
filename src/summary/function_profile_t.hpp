@@ -121,7 +121,7 @@ class function_profile_t : public profile_t {
             if(out.depth() != 0) {
                 out.begin_line();
                 if(manip::get_is_html()) out << "<span id=\"" + signature + "\" content=\"summary_link\">";
-                out << manip::var() << signature << manip::end_var();
+                out << manip::var() << (signature.has_original() ? signature.original() : signature.modified()) << manip::end_var();
                 if(manip::get_is_html()) out << "</span>";
                 out.end_line();
                 return out;
