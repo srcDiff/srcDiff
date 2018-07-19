@@ -184,10 +184,6 @@ void diffdoc_view::start_element(const std::string & local_name,
     
   } else {
 
-    if(is_decl_stmt(local_name)) {
-      std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << entity_stack.back().depth << ":" << srcml_stack.size() << '\n';
-    }
-
     /** @todo add static block and fields */
     if(is_class_type(local_name) || is_function_type(local_name)
       || (entity_stack.size() && is_class_type(entity_stack.back().type)

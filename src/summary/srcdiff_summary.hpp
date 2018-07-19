@@ -53,6 +53,7 @@ protected:
     size_t id_count;
 
     std::vector<srcdiff> srcdiff_stack;
+    std::vector<std::string> srcml_stack;
     std::vector<std::shared_ptr<profile_t>> profile_stack;
     std::vector<namespace_uri> uri_stack;
 
@@ -94,6 +95,8 @@ private:
     void process_characters();
     void update_anscestor_profile(const std::shared_ptr<profile_t> & profile);
     void update_common_profiles(const std::shared_ptr<profile_t> & profile);
+    void srcml_stack_push(const char * localname, const char * prefix);
+
 public:
 
     srcdiff_summary();

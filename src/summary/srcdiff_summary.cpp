@@ -269,7 +269,8 @@ no_expr:
 
 srcdiff_summary::srcdiff_summary()
     : out(nullptr), summary_types(summary_type::TEXT), id_count(0),
-      srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(), function_pos(), current_move_id(0),
+      srcdiff_stack(), srcml_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(), function_pos(), 
+      current_move_id(0),
       insert_count(), delete_count(), change_count(), total(),
       text(), specifier_raw(), name_count(0), collected_full_name(), collected_simple_name(), simple_names(),
       condition_count(0), collected_condition(), left_hand_side(), collect_lhs(), collect_rhs(), raw_statements(),
@@ -359,6 +360,7 @@ void srcdiff_summary::reset() {
 
     id_count = 0;
     srcdiff_stack.clear();
+    srcml_stack.clear();
     profile_stack.clear();
     counting_profile_pos.clear();
     expr_stmt_pos.clear();
@@ -376,6 +378,16 @@ void srcdiff_summary::reset() {
     collect_lhs.clear();
     collect_rhs.clear();
 
+}
+
+void srcdiff_summary::srcml_stack_push(const char * localname, const char * prefix) {
+  std::string full_name;
+  if(prefix) {
+    full_name += prefix;
+    full_name += ":";
+  }
+  full_name += localname;
+  srcml_stack.push_back(full_name);
 }
 
 /**
@@ -412,6 +424,11 @@ void srcdiff_summary::startRoot(const char * localname, const char * prefix, con
                        const struct srcsax_attribute * attributes) {
 
     process_characters();
+    if(is_archive) {
+        uri_stack.push_back(SRC);
+        srcdiff_stack.push_back(srcdiff(SRCDIFF_COMMON, false, false));        
+        srcml_stack_push(localname, prefix);
+    }
 
 }
 
@@ -480,7 +497,7 @@ void srcdiff_summary::startUnit(const char * localname, const char * prefix, con
 
     counting_profile_pos.emplace_back(0);
     profile_stack.back()->set_id(++id_count);
-
+    srcml_stack_push(localname, prefix);
 }
 
 /**
@@ -641,9 +658,9 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
         // note what if class is interchanged?
         if(is_function_type(full_name) || is_class_type(full_name) 
-            || (is_decl_stmt(full_name) && srcml_element_stack.size() >= 3
-                && is_class_type(srcml_element_stack[srcml_element_stack.size() - 3]))) {
-            signature_depth = srcml_element_stack.size() - 1;
+            || (is_decl_stmt(full_name) && srcml_stack.size() >= 2
+                && is_class_type(srcml_stack[srcml_stack.size() - 2]))) {
+            signature_depth = srcml_stack.size();
             signature_profile = profile_stack.back();
         }
 
@@ -746,6 +763,8 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     }
 
+    if(uri_stack.back() != SRCDIFF) srcml_stack_push(localname, prefix);
+
 }
 
 /**
@@ -760,7 +779,11 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 void srcdiff_summary::endRoot(const char * localname, const char * prefix, const char * URI) {
 
     process_characters();        
-
+    if(is_archive) {
+        uri_stack.pop_back();
+        srcdiff_stack.pop_back();
+        srcml_stack.pop_back();
+    }
 }
 
 /**
@@ -780,6 +803,7 @@ void srcdiff_summary::endUnit(const char * localname, const char * prefix, const
 
     profile_stack.pop_back();
     uri_stack.pop_back();
+    srcml_stack.pop_back();
 
 }
 
@@ -817,10 +841,13 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
     bool is_interchange = srcml_depth > 3 && uri_stack.at(srcml_depth - 4) == SRCDIFF && srcml_element_stack.at(srcml_depth - 4) == "diff:delete"
                             && uri_stack.at(srcml_depth - 3) == SRC && uri_stack.at(srcml_depth - 2) == SRCDIFF && srcml_element_stack.at(srcml_depth - 2) == "diff:insert";
 
-    if(uri_stack.back() == SRCDIFF) srcdiff_stack.pop_back();
+    if(uri_stack.back() == SRCDIFF) {
+        srcdiff_stack.pop_back();
+    } else {
+        srcml_stack.pop_back();
+    }
 
     std::string full_name = "";
-
     if(prefix) {
 
         full_name += prefix;
@@ -831,7 +858,7 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     if(signature_profile) {
 
-        size_t end_depth = is_decl_stmt(signature_profile->type_name) ? srcml_element_stack.size() - 2 : srcml_element_stack.size() - 1;
+        size_t end_depth = is_decl_stmt(signature_profile->type_name) ? srcml_stack.size() - 2 : srcml_stack.size() - 1;
 
         bool end_func_collect = is_function_type(signature_profile->type_name) && full_name == "parameter_list";
         bool end_class_collect = is_class_type(signature_profile->type_name)
