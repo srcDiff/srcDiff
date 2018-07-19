@@ -22,6 +22,7 @@ class versioned_string {
 	protected:
 
 	public:
+		static std::string normalize(const std::string & str, const std::string & sep);
 
 		versioned_string(char separator = '|');
 		versioned_string(std::string string, char separator = '|');

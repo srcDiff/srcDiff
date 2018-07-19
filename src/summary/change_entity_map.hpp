@@ -50,10 +50,11 @@ class change_entity_map {
 
         std::shared_ptr<T> find(srcdiff_type operation, const versioned_string & signature) const {
 
+
             const_iterator citr = entity.lower_bound(operation);
             const_iterator upper = entity.upper_bound(operation);
             while(citr != upper) {
-                if(citr->second->signature == signature) return citr->second;
+                if(citr->second->signature.remove_spaces() == signature) return citr->second;
                 ++citr;
             }
 

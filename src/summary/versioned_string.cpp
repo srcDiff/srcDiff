@@ -117,10 +117,6 @@ void versioned_string::clear() {
 
 }
 
-bool is_space(char ch) {
-	return bool(std::isspace(ch));
-}
-
 std::string normalize(const std::string & str, const std::string & sep) {
 	std::istringstream in(str);
 	std::ostringstream out;

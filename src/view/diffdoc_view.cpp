@@ -362,15 +362,16 @@ void diffdoc_view::characters(const char * ch, int len) {
 
       output_characters(str);
 
-      if(entity_stack.size() && entity_stack.back().collect_id && !is_comment(srcml_element_stack.back())) {
-        std::string id;
-        for(char ch : str) {
-          if(ch != '"') id.append(1, ch);
-          else          id.append("&quot;");
+      if(!is_space) {
+        if(entity_stack.size() && entity_stack.back().collect_id && !is_comment(srcml_element_stack.back())) {
+          std::string id;
+          for(char ch : str) {
+            if(ch != '"') id.append(1, ch);
+            else          id.append("&quot;");
+          }
+          entity_stack.back().id.append(id, view_op2srcdiff_type(diff_stack.back()));
         }
-        entity_stack.back().id.append(id, view_op2srcdiff_type(diff_stack.back()));
       }
-
       if(is_space) {
         // do I also store how it is deleted/inserted and/or not whitespace?
         indentation.append(str);
