@@ -133,7 +133,7 @@ public:
 
     const void * member = previous->get_member(current.type);
     if(member) {
-      current.change_profile = reinterpret_cast<const change_entity_map<type> *>(member)->find(current.operation, current.name);
+      current.change_profile = reinterpret_cast<const change_entity_map<type> *>(member)->find(current.operation, current.id);
     }
 
   }
