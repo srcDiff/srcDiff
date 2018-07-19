@@ -305,8 +305,7 @@ void diffdoc_view::end_element(const std::string & local_name,
         entity_stack.back().collect_id = false;
         end_spans();
         entity_stack.back().signature = remove_saved_output();
-std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << entity_stack.back().id << '\n';
-std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << entity_stack.back().name << '\n';
+
         if(is_function_type(entity_stack.back().type)) {
           set_change_profile_by_name<function_profile_t>();
         } else if(is_class_type(entity_stack.back().type)) {
