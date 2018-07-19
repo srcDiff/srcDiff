@@ -29,6 +29,7 @@ protected:
   static const char * const CARRIAGE_RETURN_SYMBOL;
 
   std::vector<int> diff_stack;
+  std::vector<std::string> srcml_stack;
 
   std::ostream * output;
 
@@ -71,6 +72,8 @@ public:
   void reset();
 
 protected:
+
+  void srcml_stack_push(const char * localname, const char * prefix);
 
   virtual void reset_internal() = 0;
 

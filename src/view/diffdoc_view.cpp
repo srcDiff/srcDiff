@@ -183,20 +183,25 @@ void diffdoc_view::start_element(const std::string & local_name,
      diff_stack.push_back(INSERT);
     
   } else {
+
+    if(is_decl_stmt(local_name)) {
+      std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << entity_stack.back().depth << ":" << srcml_stack.size() << '\n';
+    }
+
     /** @todo add static block and fields */
     if(is_class_type(local_name) || is_function_type(local_name)
       || (entity_stack.size() && is_class_type(entity_stack.back().type)
-          && entity_stack.back().depth == (srcml_element_stack.size() - 2)
+          && entity_stack.back().depth == (srcml_stack.size() - 2)
           && is_decl_stmt(local_name))) {
       end_spans();
       add_saved_output();
-      entity_stack.emplace_back(local_name, srcml_element_stack.size(), 
+      entity_stack.emplace_back(local_name, srcml_stack.size(), 
                                 indentation, line_number_delete, line_number_insert,
                                 view_op2srcdiff_type(diff_stack.back()));
       indentation.clear();
     } else if(entity_stack.size() && entity_stack.back().collect_id && is_identifier(local_name)) {
 
-      size_t start_depth = is_decl_stmt(entity_stack.back().type) ? srcml_element_stack.size() - 2 : srcml_element_stack.size() - 1;
+      size_t start_depth = is_decl_stmt(entity_stack.back().type) ? srcml_stack.size() - 2 : srcml_stack.size() - 1;
       if(entity_stack.back().depth == start_depth) {
         entity_stack.back().collect_name = true;
       }
@@ -288,7 +293,7 @@ void diffdoc_view::end_element(const std::string & local_name,
     } else if(entity_stack.size() && entity_stack.back().collect_id) {
       const std::string & type = entity_stack.back().type;
 
-      size_t end_depth = is_decl_stmt(type) ? srcml_element_stack.size() - 1 : srcml_element_stack.size();
+      size_t end_depth = is_decl_stmt(type) ? srcml_stack.size() - 2 : srcml_stack.size() - 1;
       if(is_identifier(local_name) && entity_stack.back().depth == end_depth) {
         entity_stack.back().collect_name = false;
       }
@@ -304,7 +309,8 @@ void diffdoc_view::end_element(const std::string & local_name,
         entity_stack.back().collect_id = false;
         end_spans();
         entity_stack.back().signature = remove_saved_output();
-
+std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << entity_stack.back().id << '\n';
+std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << entity_stack.back().name << '\n';
         if(is_function_type(entity_stack.back().type)) {
           set_change_profile_by_name<function_profile_t>();
         } else if(is_class_type(entity_stack.back().type)) {
@@ -361,7 +367,7 @@ void diffdoc_view::characters(const char * ch, int len) {
       output_characters(str);
 
       if(!is_space) {
-        if(entity_stack.size() && entity_stack.back().collect_id && !is_comment(srcml_element_stack.back())) {
+        if(entity_stack.size() && entity_stack.back().collect_id && !is_comment(srcml_stack.back())) {
           std::string id;
           for(char ch : str) {
             if(ch != '"') id.append(1, ch);
