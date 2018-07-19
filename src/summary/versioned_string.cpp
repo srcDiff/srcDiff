@@ -127,11 +127,11 @@ std::string versioned_string::normalize(const std::string & str, const std::stri
 versioned_string versioned_string::remove_spaces() const {
 	versioned_string str;
 	if(string_original) {
-		str.string_original = normalize(*str.string_original, "");
+		str.string_original = normalize(*string_original, "");
 	}
 
 	if(string_modified) {
-		str.string_original = normalize(*str.string_original, "");
+		str.string_modified = normalize(*string_original, "");
 	}
 
 	return str;
@@ -140,11 +140,11 @@ versioned_string versioned_string::remove_spaces() const {
 versioned_string versioned_string::normalize_spaces() const {
 	versioned_string str;
 	if(string_original) {
-		str.string_original = normalize(*str.string_original, " ");
+		str.string_original = normalize(*string_original, " ");
 	}
 
 	if(string_modified) {
-		str.string_original = normalize(*str.string_original, " ");
+		str.string_modified = normalize(*string_modified, " ");
 	}
 
 	return str;
