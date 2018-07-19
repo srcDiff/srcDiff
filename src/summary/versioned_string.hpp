@@ -45,7 +45,7 @@ class versioned_string {
 		void clear();
 
 		versioned_string remove_spaces() const;
-		versioned_string normalize_space() const;
+		versioned_string normalize_spaces() const;
 
 		void swap(versioned_string & other);
 
