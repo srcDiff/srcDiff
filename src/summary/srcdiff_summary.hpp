@@ -86,6 +86,8 @@ protected:
 
     std::map<size_t, std::string &> raw_statements;
 
+    std::shared_ptr<profile_t> signature_profile;
+
 private:
 
     void process_characters();

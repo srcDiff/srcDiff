@@ -120,7 +120,7 @@ class function_profile_t : public profile_t {
 
             if(out.depth() != 0) {
                 out.begin_line();
-                out << manip::VAR() << (name.has_original() ? name.original() : name.modified()) << manip::end_var();
+                out << manip::var() << (name.has_original() ? name.original() : name.modified()) << manip::end_var();
                 out.end_line();
                 return out;
             }
@@ -178,7 +178,7 @@ class function_profile_t : public profile_t {
 
                 if(!name.is_common()) {
                     out.begin_line() << manip::bold() << "name change" << manip::normal()
-                                     << " from " << manip::var() << name.original() << manip::end_var() << " to " << manip::var() << name.modified() << end_var();
+                                     << " from " << manip::var() << name.original() << manip::end_var() << " to " << manip::var() << name.modified() << manip::end_var();
                     out.end_line();
                 }
 

@@ -272,7 +272,8 @@ srcdiff_summary::srcdiff_summary()
       srcdiff_stack(), profile_stack(), counting_profile_pos(), expr_stmt_pos(), function_pos(), current_move_id(0),
       insert_count(), delete_count(), change_count(), total(),
       text(), specifier_raw(), name_count(0), collected_full_name(), collected_simple_name(), simple_names(),
-      condition_count(0), collected_condition(), left_hand_side(), collect_lhs(), collect_rhs(), raw_statements() {}
+      condition_count(0), collected_condition(), left_hand_side(), collect_lhs(), collect_rhs(), raw_statements(),
+      signature_profile(false) {}
 
 srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str) 
     : srcdiff_summary() {
@@ -628,6 +629,13 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
     }
 
     if(uri_stack.back() != SRCDIFF) {
+
+        // note what if class is interchanged?
+        if(is_function_type(full_name) || is_class_type(full_name) 
+            || (is_decl_stmt(full_name) && profile_stack.size() >= 3)
+                && is_class_type(profile_stack.at(profile_stack.size() - 3)->type_name)) {
+            signature_profile = profile_stack.back();
+        }
 
         if(is_identifier(profile_stack.back()->parent->type_name))
             reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back()->parent)->is_simple = false;
@@ -1195,6 +1203,16 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     }
 
+    if(signature_profile) {
+        bool end_func_collect = is_function_type(signature_profile->type_name) && is_block(full_name);
+        bool end_class_collect = is_class_type(signature_profile->type_name) && is_block(full_name);
+        bool end_decl_collect = is_decl_stmt(signature_profile->type_name) && is_identifier(full_name)
+                                && profile_stack.size() >=3 && is_decl_stmt(profile_stack.at(profile_stack.size() - 3)->type_name);
+        if(end_func_collect || end_class_collect || end_decl_collect) {
+            signature_profile = std::shared_ptr<profile_t>();
+        }
+    }
+
     if(!is_interchange) profile_stack.pop_back();
 
     uri_stack.pop_back();
@@ -1222,6 +1240,16 @@ void srcdiff_summary::charactersRoot(const char * ch, int len) {}
 void srcdiff_summary::charactersUnit(const char * ch, int len) {
 
     if(len == 0) return;
+
+    if(signature_profile) {
+      std::string str;
+      for(int i = 0; i < len; ++i) {
+        char character = ch[i];
+        if(character != '"')       str.append(1, character);
+        else if(character != '\n') str.append("&quot;");
+      }
+      signature_profile->signature.append(str, srcdiff_stack.back().operation);
+    }
 
     text.append(ch, len);
     if(is_specifier(profile_stack.back()->type_name)) specifier_raw.append(ch,len);

@@ -361,7 +361,7 @@ void diffdoc_view::characters(const char * ch, int len) {
         if(!is_space) {
           std::string id;
           for(char ch : str) {
-            if(ch != '"') id.append(1,ch);
+            if(ch != '"') id.append(1, ch);
             else          id.append("&quot;");
           }
           entity_stack.back().id.append(id, view_op2srcdiff_type(diff_stack.back()));

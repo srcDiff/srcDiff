@@ -39,6 +39,7 @@ class profile_t {
 
         size_t id;
         versioned_string type_name;
+        versioned_string signature;
         namespace_uri uri;
         srcdiff_type operation;
         bool is_replace;
