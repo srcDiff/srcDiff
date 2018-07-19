@@ -3,6 +3,7 @@
 
 #include <type_query.hpp>
 #include <profile_t.hpp>
+#include <summary_manip.hpp>
 
 #include <map>
 #include <memory>
@@ -128,7 +129,8 @@ class change_entity_map {
 
             typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = entity.lower_bound(operation);
 
-            out.begin_line() << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << type_category(citr->second->type_name) << "(s): "  << count;
+            out.begin_line() << manip::bold() << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << type_category(citr->second->type_name) << "(s)" << manip::normal();
+            out << ": " << manip::bold() << count << manip::normal();
             out.end_line();
 
             out.increment_depth();
@@ -151,7 +153,8 @@ class change_entity_map {
 
             typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = entity.lower_bound(SRCDIFF_COMMON);
 
-            out.begin_line() << "Modified " << type_category(citr->second->type_name) << "(s): " << num_modified;
+            out.begin_line() << manip::bold() << "Modified " << type_category(citr->second->type_name) << "(s)" << manip::normal();
+            out << ": " << manip::bold() << num_modified << manip::normal();
             out.end_line();
 
             out.increment_depth();
