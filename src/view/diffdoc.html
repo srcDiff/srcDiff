@@ -45,6 +45,7 @@ function load_all() {
     operation.css({ 'opacity' : opacity });
     source.load(files[position], function() {
 
+      source.find("[filename]").first().before("<span style=\"color: grey;\">   prev-curr</span>\n");
       $("[content=\"signature\"]").click(function() {
         element_stack.push({ is_signature:false, id:$(this).attr("id") });
         load();
@@ -85,7 +86,10 @@ function load_full() {
           operation_type.html(changed_value);
         }
 
-        entity.children("[content=\"signature\"]").children("[content=\"pre\"]").show();
+        var pre = entity.children("[content=\"signature\"]").children("[content=\"pre\"]");
+        pre.show();
+        var offset = pre.text().indexOf('-');
+        pre.before("<span style=\"color: grey;\">" +  "prev-curr".padStart(offset - 4) + "</span>\n");
 
         entity.children("[content=\"summary\"]").find("[content=\"summary_link\"]").click(function() {
           element_stack.push({ is_signature:false, id:$(this).attr("id") });
