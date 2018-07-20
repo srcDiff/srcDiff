@@ -46,21 +46,33 @@ class unit_profile_t : public profile_t {
             
         }
 
+        virtual const versioned_string & get_name() const {
+            return file_name;
+        }
+
+        virtual const void * get_member(const std::string & type) {
+            if(is_function_type(type))  return &functions;
+            if(is_class_type(type))     return &classes;
+            if(is_decl_stmt(type))      return &decl_stmts;
+            if(is_condition_type(type)) return &conditionals;
+            return nullptr;
+        }
+
         virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
 
             out.begin_line() << "file '" << file_name << "': Impact = " << get_impact_factor() << '\n'; 
 
             /** might want to have table summaries.  Decl may need to be changed how output */
-            // decl_stmts.summarize_pure(out, summary_types, SRCDIFF_DELETE);
-            // decl_stmts.summarize_pure(out, summary_types, SRCDIFF_INSERT);
-            // decl_stmts.summarize_modified(out, summary_types);
+            decl_stmts.summarize_pure(out, summary_types, SRCDIFF_DELETE);
+            decl_stmts.summarize_pure(out, summary_types, SRCDIFF_INSERT);
+            decl_stmts.summarize_modified(out, summary_types);
 
             functions.summarize_pure(out, summary_types, SRCDIFF_DELETE);
             functions.summarize_pure(out, summary_types, SRCDIFF_INSERT);
             functions.summarize_modified(out, summary_types);
 
-            // classes.summarize_pure(out, summary_types, SRCDIFF_DELETE);
-            // classes.summarize_pure(out, summary_types, SRCDIFF_INSERT);
+            classes.summarize_pure(out, summary_types, SRCDIFF_DELETE);
+            classes.summarize_pure(out, summary_types, SRCDIFF_INSERT);
             classes.summarize_modified(out, summary_types);
 
             if(!is_summary_type(summary_types, summary_type::TABLE)) return out;
@@ -69,8 +81,9 @@ class unit_profile_t : public profile_t {
 
             size_t number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified = 0;
             conditionals.count_operations(number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
-            if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified)
+            if(number_conditionals_deleted || number_conditionals_inserted || number_conditionals_modified) {
                 table.output_all_conditional_counts(out, number_conditionals_deleted, number_conditionals_inserted, number_conditionals_modified);
+            }
 
             return out;
 

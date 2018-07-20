@@ -40,7 +40,9 @@ view_t::view_t(const std::string & output_filename,
                bool ignore_whitespace,
                bool ignore_comments,
                bool is_html) 
-  : diff_stack(), syntax_highlight(to_lower(syntax_highlight) != "none"),
+  : diff_stack(),
+    srcml_stack(),
+    syntax_highlight(to_lower(syntax_highlight) != "none"),
     in_comment(false),
     in_literal(false),
     in_string(false),
@@ -99,6 +101,7 @@ void view_t::transform(const std::string & srcdiff, const std::string & xml_enco
 void view_t::reset() {
 
   diff_stack.clear();
+  srcml_stack.clear();
 
   in_comment = false;
   in_literal = false;
@@ -221,6 +224,16 @@ void view_t::output_character(const char c, int operation) {
 
 }
 
+void view_t::srcml_stack_push(const char * localname, const char * prefix) {
+  std::string full_name;
+  if(prefix) {
+    full_name += prefix;
+    full_name += ":";
+  }
+  full_name += localname;
+  srcml_stack.push_back(full_name);
+}
+
 /**
  * startDocument
  *
@@ -287,7 +300,14 @@ void view_t::startRoot(const char * localname,
                           int num_namespaces,
                           const struct srcsax_namespace * namespaces,
                           int num_attributes,
-                          const struct srcsax_attribute * attributes) {}
+                          const struct srcsax_attribute * attributes) {
+
+  if(is_archive) {
+    diff_stack.push_back(view_t::COMMON);
+    srcml_stack_push(localname, prefix);
+  }
+
+}
 
 /**
  * startUnit
@@ -327,6 +347,7 @@ void view_t::startUnit(const char * localname,
 
   const std::string local_name(localname);
   start_unit(local_name, prefix, URI, num_namespaces, namespaces, num_attributes, attributes);
+  srcml_stack_push(localname, prefix);
 
 }
 
@@ -377,9 +398,9 @@ void view_t::startElement(const char * localname,
       in_literal = true;
 
   } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "name"
-            && srcml_element_stack.size() > 1) {
+            && srcml_stack.size() > 1) {
 
-    const std::string & parent = srcml_element_stack.at(srcml_element_stack.size() - 2);
+    const std::string & parent = srcml_stack.at(srcml_stack.size() - 1);
     if(is_function_type(parent))
       in_function_name = true;
     else if(is_class_type(parent))
@@ -404,7 +425,7 @@ void view_t::startElement(const char * localname,
 
   start_element(local_name, prefix, URI, num_namespaces, namespaces,
                 num_attributes, attributes);
-
+  if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF) srcml_stack_push(localname, prefix);
 }
 
 /**
@@ -416,7 +437,15 @@ void view_t::startElement(const char * localname,
  * SAX handler function for end of the root profile.
  * Overide for desired behavior.
  */
-void view_t::endRoot(const char * localname, const char * prefix, const char * URI) {}
+void view_t::endRoot(const char * localname, const char * prefix, const char * URI) {
+
+  if(is_archive) {
+    diff_stack.pop_back();
+    srcml_stack.pop_back();
+  }
+
+
+}
 
 /**
  * endUnit
@@ -433,7 +462,7 @@ void view_t::endUnit(const char * localname, const char * prefix, const char * U
   end_unit(local_name, prefix, URI);
 
   diff_stack.pop_back();
-
+  srcml_stack.pop_back();
 }
 
 /**
@@ -448,6 +477,8 @@ void view_t::endUnit(const char * localname, const char * prefix, const char * U
 void view_t::endElement(const char * localname,
                            const char * prefix,
                            const char * URI) {
+
+  if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF) srcml_stack.pop_back();
 
   const std::string local_name(localname);
 
@@ -483,7 +514,7 @@ void view_t::endElement(const char * localname,
 
   } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "name") {
 
-    const std::string & parent = srcml_element_stack.back();
+    const std::string & parent = srcml_stack.back();
     if(is_function_type(parent))
       in_function_name = false;
     else if(is_class_type(parent))
@@ -529,6 +560,7 @@ void view_t::charactersRoot(const char * ch, int len) {}
  */
 void view_t::charactersUnit(const char * ch, int len) {
 
+  // Need diff on stack for this but not others so use srcml_element_stack here only
   if(srcml_element_stack.size() > 1 && srcml_element_stack.back() == "diff:delete" 
     && (srcml_element_stack.at(srcml_element_stack.size() - 2) == "name"
       || srcml_element_stack.at(srcml_element_stack.size() - 2) == "operator")) {

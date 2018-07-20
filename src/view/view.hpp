@@ -29,6 +29,7 @@ protected:
   static const char * const CARRIAGE_RETURN_SYMBOL;
 
   std::vector<int> diff_stack;
+  std::vector<std::string> srcml_stack;
 
   std::ostream * output;
 
@@ -67,10 +68,12 @@ public:
          bool is_html);
   virtual ~view_t();
 
-  void transform(const std::string & srcdiff, const std::string & xml_encoding);
+  virtual void transform(const std::string & srcdiff, const std::string & xml_encoding);
   void reset();
 
 protected:
+
+  void srcml_stack_push(const char * localname, const char * prefix);
 
   virtual void reset_internal() = 0;
 

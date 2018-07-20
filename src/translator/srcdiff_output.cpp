@@ -49,7 +49,15 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
                                                 is_option(flags, OPTION_HTML_VIEW),
                                                 view_options.side_by_side_tab_size);
 
-  } else if(is_option(flags, OPTION_SUMMARY)) {
+  } else if(is_option(flags, OPTION_DIFFDOC_VIEW)) {
+
+    summary = std::make_shared<srcdiff_summary>();
+    view = std::make_shared<diffdoc_view>(srcdiff_filename,
+                                           view_options.syntax_highlight,
+                                           view_options.theme,
+                                           summary);
+
+  }  else if(is_option(flags, OPTION_SUMMARY)) {
 
 #ifndef _MSC_BUILD
     summary = std::make_shared<srcdiff_summary>(srcdiff_filename, summary_type_str);

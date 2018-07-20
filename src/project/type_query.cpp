@@ -9,6 +9,10 @@ bool is_simple_type(const std::string & type_name) {
 
 }
 
+bool is_access_specifier(const std::string & type_name) {
+    return type_name == "public" || type_name == "protected" || type_name == "private";
+}
+
 bool is_function_type(const std::string & type_name) {
 
     return type_name == "function" || type_name == "function_decl" || type_name == "constructor" || type_name == "constructor_decl"
@@ -158,6 +162,10 @@ bool is_expr_block(const std::string & type_name) {
 
     return type_name == "expr_block";
 
+}
+
+bool is_attribute(const std::string & type_name) {
+    return type_name == "annotation" || type_name == "attribute";
 }
 
 bool is_interchange(const std::string & type_name) {

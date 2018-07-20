@@ -26,6 +26,7 @@
  *
  * Base class that provides hooks for SAX processing.
  */
+/** @todo add configuration for short/recursive summary and html */
 class srcdiff_summary : public srcSAXHandler {
 
 public:
@@ -52,6 +53,7 @@ protected:
     size_t id_count;
 
     std::vector<srcdiff> srcdiff_stack;
+    std::vector<std::string> srcml_stack;
     std::vector<std::shared_ptr<profile_t>> profile_stack;
     std::vector<namespace_uri> uri_stack;
 
@@ -85,16 +87,23 @@ protected:
 
     std::map<size_t, std::string &> raw_statements;
 
+    size_t signature_depth;
+    std::shared_ptr<profile_t> signature_profile;
+
 private:
 
     void process_characters();
     void update_anscestor_profile(const std::shared_ptr<profile_t> & profile);
     void update_common_profiles(const std::shared_ptr<profile_t> & profile);
+    void srcml_stack_push(const char * localname, const char * prefix);
+
 public:
 
+    srcdiff_summary();
     srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str);
     ~srcdiff_summary();
 
+    void perform_summary(const std::string & srcdiff, const std::string & xml_encoding);
     void summarize(const std::string & srcdiff, const std::string & xml_encoding);
     void summarize(const std::shared_ptr<profile_t> & profile);
     void reset();

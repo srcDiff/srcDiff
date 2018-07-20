@@ -29,14 +29,17 @@ class exception_summary_t : public summary_t {
 
             out.begin_line();
 
-            if(count == 1)
-                out << get_article(statement_type) << ' ' << manip::bold() << statement_type << manip::normal() << " was ";
-            else
-                out << std::to_string(count) << ' ' << manip::bold() << statement_type << 's' << manip::normal() << " were ";
+            if(count == 1) {
+                out << get_article(statement_type) << ' ' << manip::bold() << statement_type << manip::normal();
+                if(output_verb) out << " was";
+            } else {
+                out << std::to_string(count) << ' ' << manip::bold() << statement_type << 's' << manip::normal();
+                if(output_verb) out << " were";
+            }
 
-            out << (operation == SRCDIFF_DELETE ?  "deleted" : (operation == SRCDIFF_INSERT ? "inserted" : "modified"));
+            out << (operation == SRCDIFF_DELETE ?  " deleted" : (operation == SRCDIFF_INSERT ? " inserted" : " modified"));
 
-            out << '\n';
+            out.end_line();
 
             return out;
 

@@ -166,6 +166,8 @@ std::string summary_list::get_type_string(const std::shared_ptr<profile_t> & pro
 
     if(is_comment(profile->type_name)) return profile->type_name;
 
+    if(profile->type_name == "function") return "method";
+
     return profile->type_name;
 
 }
@@ -454,13 +456,15 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
 
     --pos;
 
+
     size_t number_deleted_types  = entity_deleted.size();
     bool is_comment_deleted = entity_deleted.find("comment") != entity_deleted.end();
     size_t number_syntax_deletions = 0;
     std::for_each(entity_deleted.begin(), entity_deleted.end(), [&number_syntax_deletions] (const std::pair<std::string, std::vector<std::shared_ptr<profile_t>>> & entity) {
 
-        if(entity.first != "comment")
+        if(entity.first != "comment") {
             number_syntax_deletions += entity.second.size();
+        }
 
     });
 
@@ -469,8 +473,9 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
     size_t number_syntax_insertions = 0;
     std::for_each(entity_inserted.begin(), entity_inserted.end(), [&number_syntax_insertions] (const std::pair<std::string, std::vector<std::shared_ptr<profile_t>>> & entity) {
 
-        if(entity.first != "comment")
+        if(entity.first != "comment") {
             number_syntax_insertions += entity.second.size();
+        }
 
     });
 
@@ -504,7 +509,7 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
 
     } else {
 
-        if(number_deleted_types == 1 || (entity_deleted["comment"].size() != 0 && number_deleted_types == 2)) {
+        if((number_deleted_types == 1 && entity_deleted["comment"].size() == 0) || (number_deleted_types == 2 && entity_deleted["comment"].size() != 0)) {
 
             std::map<std::string, std::vector<std::shared_ptr<profile_t>>>::const_iterator entity
             = std::find_if_not(entity_deleted.begin(), entity_deleted.end(),
@@ -532,7 +537,7 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
 
     } else {
 
-        if(number_inserted_types == 1 || (entity_inserted["comment"].size() != 0 && number_inserted_types == 2)) {
+        if((number_inserted_types == 1 && entity_inserted["comment"].size() == 0) || (number_inserted_types == 2 && entity_inserted["comment"].size() != 0)) {
 
             std::map<std::string, std::vector<std::shared_ptr<profile_t>>>::const_iterator entity
             = std::find_if_not(entity_inserted.begin(), entity_inserted.end(),

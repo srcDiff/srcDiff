@@ -27,16 +27,19 @@ class interchange_summary_t : public summary_t {
 
             out.begin_line();
 
-            if(count == 1)
-                out << get_article(statement_type.original()) << ' ' << manip::bold() << statement_type.original() << manip::normal()
-                    << " was converted to "
+            if(count == 1) {
+                out << get_article(statement_type.original()) << ' ' << manip::bold() << statement_type.original() << manip::normal();
+                if(output_verb) out << " was";
+                out << " converted to "
                     << get_article(statement_type.modified()) << ' ' << manip::bold() << statement_type.modified() << manip::normal();
-            else
-                out << std::to_string(count) << ' ' << manip::bold() << statement_type.original() << 's' << manip::normal()
-                    << " were converted to "
+            } else {
+                out << std::to_string(count) << ' ' << manip::bold() << statement_type.original() << 's' << manip::normal();
+                if(output_verb) out << " were";
+                out << " converted to "
                     << manip::bold() << statement_type.modified() << 's' << manip::normal();
+            }
 
-            out << '\n';
+            out.end_line();
 
             return out;
 

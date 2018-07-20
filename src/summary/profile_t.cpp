@@ -11,14 +11,14 @@
 std::shared_ptr<profile_t> profile_t::unit_profile;
 
 profile_t::profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation) :
-    id(0), type_name(type_name), uri(uri), operation(operation), is_replace(false), move_id(0),
+    id(0), type_name(type_name), signature(), uri(uri), operation(operation), is_replace(false), move_id(0),
     parent(), summary_parent(), body(), summary_profile(), statement_count_original(0), statement_count_modified(0), statement_count(0), statement_churn(0), common_statements(0),
     is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
     modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0),
     left_hand_side(false), right_hand_side(false), raw() {}
 
 profile_t::profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & summary_parent) :
-    id(0), type_name(type_name), uri(uri), operation(operation), is_replace(false), move_id(0),
+    id(0), type_name(type_name), signature(), uri(uri), operation(operation), is_replace(false), move_id(0),
     parent(), summary_parent(summary_parent), body(), summary_profile(), statement_count_original(0), statement_count_modified(0), statement_count(0), statement_churn(0), common_statements(0),
     is_modified(false), is_whitespace(false), is_comment(false), is_syntax(false),
     modified_count(0), whitespace_count(0), comment_count(0), syntax_count(0), total_count(0),
@@ -93,6 +93,13 @@ void profile_t::add_declaration_identifier(const std::shared_ptr<profile_t> & pr
 
     }
 
+}
+
+const versioned_string & profile_t::get_name() const {
+    return type_name;
+}
+const void * profile_t::get_member(const std::string & type) {
+    return nullptr;
 }
 
 void profile_t::set_name(const std::shared_ptr<identifier_profile_t> & name) {

@@ -1,12 +1,18 @@
 #include <versioned_string.hpp>
 #include <execinfo.h>
+#include <sstream>
+#include <iterator>
+
 const std::string versioned_string::empty_str;
 
-versioned_string::versioned_string() {}
+versioned_string::versioned_string(char separator)
+	: string_original(), string_modified(), separator(separator) {}
 
-versioned_string::versioned_string(std::string string) : string_original(string), string_modified(string) {}
+versioned_string::versioned_string(std::string string, char separator)
+	: string_original(string), string_modified(string), separator(separator) {}
 
-versioned_string::versioned_string(std::string string_original, std::string string_modified) : string_original(string_original), string_modified(string_modified) {}
+versioned_string::versioned_string(std::string string_original, std::string string_modified, char separator) 
+	: string_original(string_original), string_modified(string_modified), separator(separator) {}
 
 bool versioned_string::is_common() const {
 
@@ -80,6 +86,10 @@ void versioned_string::set_modified(const std::string & string_modified) {
 
 }
 
+void versioned_string::append(const std::string & str, enum srcdiff_type version) {
+	append(str.c_str(), str.size(), version);
+}
+
 void versioned_string::append(const char * characters, size_t len, enum srcdiff_type version) {
 
 	if(len == 0) return;
@@ -107,6 +117,39 @@ void versioned_string::clear() {
 
 }
 
+std::string versioned_string::normalize(const std::string & str, const std::string & sep) {
+	std::istringstream in(str);
+	std::ostringstream out;
+	std::copy(std::istream_iterator<std::string>(in), std::istream_iterator<std::string>(), std::ostream_iterator<std::string>(out, sep.c_str()));
+	return out.str();
+}
+
+versioned_string versioned_string::remove_spaces() const {
+	versioned_string str;
+	if(string_original) {
+		str.string_original = normalize(*string_original, "");
+	}
+
+	if(string_modified) {
+		str.string_modified = normalize(*string_modified, "");
+	}
+
+	return str;
+}
+
+versioned_string versioned_string::normalize_spaces() const {
+	versioned_string str;
+	if(string_original) {
+		str.string_original = normalize(*string_original, " ");
+	}
+
+	if(string_modified) {
+		str.string_modified = normalize(*string_modified, " ");
+	}
+
+	return str;
+}
+
 void versioned_string::swap(versioned_string & other) {
 
 	string_original.swap(other.string_original);
@@ -118,7 +161,7 @@ versioned_string::operator std::string() const {
 
 	if(is_common()) return original();
 
-	return original() + '|' + modified();
+	return original() + separator + modified();
 
 }
 
@@ -169,7 +212,7 @@ std::string versioned_string::operator+(const char * c_str) const {
 std::ostream & operator<<(std::ostream & out, const versioned_string & string) {
 
 	if(string.is_common()) return out << string.original();
-	else return out << string.original() << '|' << string.modified();
+	else return out << string.original() << string.separator << string.modified();
 
 }
 

@@ -17,13 +17,16 @@ class versioned_string {
 		boost::optional<std::string> string_original;
 		boost::optional<std::string> string_modified;
 
+		char separator;
+
 	protected:
 
 	public:
+		static std::string normalize(const std::string & str, const std::string & sep);
 
-		versioned_string();
-		versioned_string(std::string string);
-		versioned_string(std::string string_original, std::string string_modified);
+		versioned_string(char separator = '|');
+		versioned_string(std::string string, char separator = '|');
+		versioned_string(std::string string_original, std::string string_modified, char separator = '|');
 
 		bool is_common() const;
 		bool has_original() const;
@@ -37,8 +40,12 @@ class versioned_string {
 
 		void set_original(const std::string & string_original);
 		void set_modified(const std::string & string_modified);
+		void append(const std::string & str, enum srcdiff_type version);
 		void append(const char * characters, size_t len, enum srcdiff_type version);
 		void clear();
+
+		versioned_string remove_spaces() const;
+		versioned_string normalize_spaces() const;
 
 		void swap(versioned_string & other);
 

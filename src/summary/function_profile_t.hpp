@@ -32,6 +32,7 @@ class function_profile_t : public profile_t {
         std::multimap<srcdiff_type, std::string> specifiers;
         std::vector<std::shared_ptr<parameter_profile_t>> parameters;
         change_entity_map<call_profile_t> member_initializations;
+        std::multimap<srcdiff_type, std::string> others;
 
         size_t total_statements;
         int cyclomatic_complexity_change;
@@ -45,10 +46,19 @@ class function_profile_t : public profile_t {
         function_profile_t(std::string type_name, namespace_uri uri, srcdiff_type operation, const std::shared_ptr<profile_t> & parent)
             : profile_t(type_name, uri, operation, parent), total_statements(0), cyclomatic_complexity_change(0) {}
 
+        virtual const versioned_string & get_name() const {
+            return name;
+        }
+
         virtual void set_name(const std::shared_ptr<identifier_profile_t> & name, const boost::optional<versioned_string> & parent) {
 
             if(is_function_type(*parent)) this->name = name->name;
 
+        }
+
+        virtual const void * get_member(const std::string & type) {
+            if(is_class_type(type))     return &local_classes;
+            return nullptr;
         }
 
         virtual void add_descendant_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent) {
@@ -59,6 +69,7 @@ class function_profile_t : public profile_t {
             else if(is_call(type_name) && parent == "member_init_list") member_initializations.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<call_profile_t> &>(profile));
             else if(is_specifier(type_name) && is_function_type(parent)) specifiers.emplace(profile->operation, profile->raw);
             else if(is_class_type(type_name)) local_classes.emplace(profile->operation, reinterpret_cast<const std::shared_ptr<class_profile_t> &>(profile));
+            else if(is_function_type(parent)) others.emplace(profile->operation, type_name);
 
             descendant_change_profiles.insert(std::lower_bound(descendant_change_profiles.begin(), descendant_change_profiles.end(), profile), profile);
 
@@ -97,7 +108,8 @@ class function_profile_t : public profile_t {
             member_initializations.count_operations(number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
 
             size_t count = (is_name_change ? 1 : 0) + (is_return_type_change ? 1 : 0) + number_specifier_operations + number_parameters
-                + number_member_initializations_deleted + number_member_initializations_inserted + number_member_initializations_modified;
+                + number_member_initializations_deleted + number_member_initializations_inserted + number_member_initializations_modified
+                + others.size();
 
             return std::to_string(count);
 
@@ -106,28 +118,32 @@ class function_profile_t : public profile_t {
         /** @todo may need to add rest of things that can occur here between parameter list and block */
         virtual summary_output_stream & summary(summary_output_stream & out, size_t summary_types) const {
 
-            if(operation != SRCDIFF_COMMON) {
-
-                out << '\'' << (name.has_original() ? name.original() : name.modified()) << '\'';
+            if(out.depth() != 0) {
+                out.begin_line();
+                if(manip::get_is_html()) out << "<span id=\"" + signature.remove_spaces() + "\" content=\"summary_link\">";
+                versioned_string normalized_signature = signature.normalize_spaces();
+                out << manip::var() << (normalized_signature.has_original() ? normalized_signature.original() : normalized_signature.modified()) << manip::end_var();
+                if(manip::get_is_html()) out << "</span>";
+                out.end_line();
                 return out;
-
             }
 
+            if(operation != SRCDIFF_COMMON) return out;
 
             size_t statement_count = this->statement_count, statement_churn = this->statement_churn;
             move_handler m_handler(statement_count, statement_churn);
             m_handler.gather_candidates(descendant_change_profiles);
             m_handler.detect();
 
-            out.begin_line() << type_name << " '" << name << "':\n";
-            out.pad() << "  ";
-            out << manip::bold() << "Impact" << manip::normal() << ": ";
-            out << manip::bold() << "Statement"     << manip::normal() << " = " << manip::bold() << this->statement_churn              << manip::normal();
-            out << '\t';
-            out << manip::bold() << "Non-Statement" << manip::normal() << " = " << manip::bold() << get_other_change_count()           << manip::normal();
-            out << '\t';
-            out << manip::bold() << "Cyclomatic"    << manip::normal() << " = " << manip::bold() << get_cyclomatic_complexity_change() << manip::normal();            
-            out << '\n';
+            out.begin_line();
+
+            out << manip::bold() << "Changes" << manip::normal() << ": ";
+            out << manip::bold() << "Body"     << manip::normal() << " = " << manip::bold() << this->statement_churn              << manip::normal();
+            out << "   ";
+            out << manip::bold() << "Signature" << manip::normal() << " = " << manip::bold() << get_other_change_count()           << manip::normal();
+            out << "   ";
+            out << manip::bold() << "ΔCyclomatic"    << manip::normal() << " = " << manip::bold() << get_cyclomatic_complexity_change() << manip::normal();            
+            out.end_line();
 
             out.increment_depth();
 
@@ -145,7 +161,9 @@ class function_profile_t : public profile_t {
 
                 out << (comment_count != 0 ? "comment " : "") << "change";
 
-                out << (non_syntax_changes == 1 ? "\n" : "s\n");
+                out << (non_syntax_changes == 1 ? "" : "s");
+
+                out.end_line();
 
                 out.decrement_depth();
 
@@ -163,26 +181,25 @@ class function_profile_t : public profile_t {
 
                 text_summary text;
 
-                if(!name.is_common()) out.begin_line() << manip::bold() << "function name change" << manip::normal()
-                                                       << " from '" <<name.original() << "' to '" << name.modified() << "'\n";
+                if(!name.is_common()) {
+                    out.begin_line() << manip::bold() << "name change" << manip::normal()
+                                     << " from " << manip::var() << name.original() << manip::end_var() << " to " << manip::var() << name.modified() << manip::end_var();
+                    out.end_line();
+                }
 
                 if(is_return_type_change) {
 
-                    out.begin_line() << manip::bold() << "return type change" << manip::normal() << '\n';
+                    out.begin_line() << manip::bold() << "return type change" << manip::normal();
+                    out.end_line();
 
                 }
 
                 text.parameter(out, parameters);
+                text.specifier(out, specifiers);
 
-                for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_DELETE); citr != specifiers.upper_bound(SRCDIFF_DELETE); ++citr)
-                    out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was deleted\n";
-                for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_INSERT); citr != specifiers.upper_bound(SRCDIFF_INSERT); ++citr)
-                    out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was inserted\n";              
-                for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_COMMON); citr != specifiers.upper_bound(SRCDIFF_COMMON); ++citr)
-                    out.begin_line() << manip::bold() << citr->second << manip::normal() << " specifier was modified\n";
-
-                if(is_summary_type(summary_types, summary_type::TEXT) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified))
-                    text.member_initialization(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified);
+                if(is_summary_type(summary_types, summary_type::TEXT) && (number_member_initializations_deleted || number_member_initializations_inserted || number_member_initializations_modified)) {
+                    text.member_initialization(out, number_member_initializations_deleted, number_member_initializations_inserted, number_member_initializations_modified); 
+                }
 
                 summary_list list;
                 list.function_body(*this);

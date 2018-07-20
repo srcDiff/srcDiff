@@ -3,6 +3,7 @@
 
 enum srcdiff_type {
 
+    SRCDIFF_NONE,
     SRCDIFF_COMMON,
     SRCDIFF_INSERT,
     SRCDIFF_DELETE,

@@ -45,32 +45,43 @@ class decl_stmt_summary_t : public summary_t {
 
                 if(specifiers_operation) {
 
-                    out << "specifiers were modified";
+                    out << "specifiers ";
+                    if(output_verb) out << "were ";
+                    out << "modified";
 
                 } else if(type_modified) {
 
-                    if(count == 1)
-                        out << "type was ";
-                    else
-                        out << "types were ";
+                    if(count == 1) {
+                        out << "type ";
+                        if(output_verb) out << "was ";
+                    } else {
+                        out << "types ";
+                        if(output_verb) out << "were ";
+                    }
 
                     out << "modified";
 
                 } else if(name_modified) {
 
-                    if(count == 1)
-                        out << "name was ";
-                    else
-                        out << "names were ";
+                    if(count == 1) {
+                        out << "name ";
+                        if(output_verb) out << "was ";
+                    } else {
+                        out << "names ";
+                        if(output_verb) out << "were ";
+                    }
 
                     out << "changed";
 
                 } else {
 
-                    if(count == 1)
-                        out << "initialization was ";
-                    else
-                        out << "initialiations were ";
+                    if(count == 1) {
+                        out << "initialization ";
+                        if(output_verb) out << "was ";
+                    } else {
+                        out << "initialiations ";
+                        if(output_verb) out << "were ";
+                    }
 
                     out  << "modified";
 
@@ -78,16 +89,18 @@ class decl_stmt_summary_t : public summary_t {
 
             } else {
 
-                if(count == 1)
-                    out << " was ";
-                else
-                    out << " were ";
-
-                out << (operation == SRCDIFF_DELETE ?  "deleted" : (operation == SRCDIFF_INSERT ? "inserted" : "modified"));
+                if(output_verb) {
+                    if(count == 1) {
+                        out << " was";
+                    } else {
+                        out << " were";
+                    }
+                }
+                out << (operation == SRCDIFF_DELETE ?  " deleted" : (operation == SRCDIFF_INSERT ? " inserted" : " modified"));
 
             }
 
-            out << '\n';
+            out.end_line();
 
             return out;
 

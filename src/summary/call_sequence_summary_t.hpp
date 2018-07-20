@@ -41,7 +41,7 @@ class call_sequence_summary_t : public expr_stmt_summary_t {
 
             }
 
-            out << '\n';
+            out.end_line();
 
             return out;
         }
