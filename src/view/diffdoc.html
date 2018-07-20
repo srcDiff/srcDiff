@@ -89,7 +89,7 @@ function load_full() {
         var pre = entity.children("[content=\"signature\"]").children("[content=\"pre\"]");
         pre.show();
         var offset = pre.text().indexOf('-');
-        pre.before("<span style=\"color: grey;\">" +  "prev-curr".padStart(offset - 4) + "</span>\n");
+        pre.before("<span style=\"color: grey;\">" +  "prev-curr".padStart(offset + 5) + "</span>\n");
 
         entity.children("[content=\"summary\"]").find("[content=\"summary_link\"]").click(function() {
           element_stack.push({ is_signature:false, id:$(this).attr("id") });
@@ -123,7 +123,12 @@ function load_signatures() {
     source.css({ 'opacity' : opacity });
     operation.css({ 'opacity' : opacity });
     source.load(files[position] + " [content=\"signature\"]" + changed_selector, function() {
-              source.find("[content=\"pre\"]").show();
+              var pre = source.find("[content=\"pre\"]")
+              pre.show();
+
+              var offset = pre.first().text().indexOf('-');
+              pre.first().before("<span style=\"color: grey;\">" +  "prev-curr".padStart(offset + 5) + "</span>\n");          
+
               var signatures = $("[content=\"signature\"]");
               signatures.wrap("<pre></pre>");
               signatures.click(function() {
