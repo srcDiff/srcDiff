@@ -17,7 +17,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
                                const METHOD_TYPE & method,
                                const srcdiff_options::view_options_t & view_options,
                                const boost::optional<std::string> & summary_type_str)
- : archive(archive), flags(flags),
+ : output_srcdiff(false), archive(archive), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcml_node::srcml_ns>()) {
 
@@ -57,6 +57,12 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
                                            view_options.theme,
                                            summary);
 
+    if(view_options.srcdiff_filename) {
+      output_srcdiff = true;
+      int ret_status = srcml_archive_write_open_filename(archive, view_options.srcdiff_filename->c_str(), 0);
+      if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
+    }
+
   }  else if(is_option(flags, OPTION_SUMMARY)) {
 
 #ifndef _MSC_BUILD
@@ -64,7 +70,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
 #endif
     
   } else if(!is_option(flags, OPTION_BURST)) {
-
+      output_srcdiff = true;
       int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str(), 0);
       if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
 
@@ -182,7 +188,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
 
 void srcdiff_output::close() {
 
-  if(!is_option(flags, OPTION_VISUALIZE | OPTION_UNIFIED_VIEW | OPTION_SUMMARY)) {
+  if(output_srcdiff) {
 
     srcml_archive_close(archive);
 

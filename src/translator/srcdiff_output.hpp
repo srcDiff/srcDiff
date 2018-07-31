@@ -100,6 +100,7 @@ public:
 
 protected:
 
+  bool output_srcdiff;
   srcml_archive * archive;
   const OPTION_TYPE & flags;
 
@@ -250,10 +251,10 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
     srcml_archive_close(srcdiff_archive);
     srcml_archive_free(srcdiff_archive);
 
-  } else {
+  } 
 
+  if(output_srcdiff) {
     srcml_write_unit(archive, wstate->unit);
-
   }
 
   srcml_unit_free(wstate->unit);

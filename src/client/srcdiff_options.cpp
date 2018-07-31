@@ -493,6 +493,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("ignore-comments,c", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_COMMENTS>), "Ignore comments when outputting unified/side-by-side view")
     ("highlight", boost::program_options::value<std::string>()->implicit_value("partial")->notifier(option_field<&srcdiff_options::view_options_t::syntax_highlight>)->default_value("partial"), "Syntax-hightlighting for unified/side-by-side view.  none, partial (default), or full")
     ("theme", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::view_options_t::theme>)->default_value("default"), "Select theme for syntax-hightlighting.  default or monokai")
+    ("srcdiff", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::view_options_t::srcdiff_filename>), "Output srcdiff in addition to view")
 
     ("summary", boost::program_options::value<std::string>()->implicit_value("text")->notifier(option_field<&srcdiff_options::summary_type_str>), "Output a summary of the differences.  Options 'text' and/or 'table' summary.   Default 'text'  ")
 

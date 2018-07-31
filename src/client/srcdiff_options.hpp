@@ -114,6 +114,7 @@ struct srcdiff_options
     std::string theme;
     boost::any unified_view_context;
     int side_by_side_tab_size;
+    boost::optional<std::string> srcdiff_filename;
   } view_options;
 
   boost::optional<std::string> summary_type_str;
