@@ -134,6 +134,8 @@ void srcdiff_input_source_git::consume() {
       file(input_pair.first, input_pair.second);
     }
   } else {
+
+    srcml_archive_enable_full_archive(options.archive);
     directory(std::string(), std::string());
   }
 
