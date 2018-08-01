@@ -127,10 +127,15 @@ srcdiff_input_source_git::~srcdiff_input_source_git() {
 
 void srcdiff_input_source_git::consume() {
 
-  if(options.files_from_name)
+  if(options.files_from_name) {
     files_from();
-  else
+  } else if(options.input_pairs.size()) {
+    for(std::pair<std::string, std::string> input_pair : options.input_pairs) {
+      file(input_pair.first, input_pair.second);
+    }
+  } else {
     directory(std::string(), std::string());
+  }
 
 }
 

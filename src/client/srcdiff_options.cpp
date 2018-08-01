@@ -68,17 +68,26 @@ void option_version(const bool & on) {
 
 void option_input_file(const std::vector<std::string> & arg) {
 
-  if(arg.size() % 2 != 0) {
+  options.input_pairs.reserve(arg.size());
 
-    std::cout << "Odd number of input files.\n";
-    exit(1);
+  for(std::vector<std::string>::size_type pos = 0; pos < arg.size(); pos += 1) {
+
+    std::string::size_type sep_pos = arg[pos].find('|');
+    if(sep_pos != std::string::npos) {
+      std::string path_original = arg[pos].substr(0, sep_pos);
+      std::string path_modified = arg[pos].substr(sep_pos + 1);
+      options.input_pairs.push_back(std::make_pair(path_original, path_modified));
+    } else {
+
+      if((pos + 1) >= arg.size()) {
+        std::cout << "Odd number of input files.\n";
+        exit(1);
+      }
+      options.input_pairs.push_back(std::make_pair(arg[pos], arg[pos + 1]));
+      ++pos;
+    }
 
   }
-
-  options.input_pairs.reserve(arg.size() / 2);
-
-  for(std::vector<std::string>::size_type pos = 0; pos + 1 < arg.size(); pos += 2)
-    options.input_pairs.push_back(std::make_pair(arg[pos], arg[pos + 1]));
 
   if(options.input_pairs.size() > 1) srcml_archive_enable_full_archive(options.archive);
 
@@ -428,7 +437,8 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 #ifndef _MSC_BUILD
   input_ops.add_options()
     ("files-from", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::files_from_name>), "Set the input to be a list of file pairs from the provided file.  Pairs are of the format: original|modified")
-    #endif
+    ("file", boost::program_options::value<std::vector<std::string>>()->notifier(option_input_file), "Specify a file pair as option. Pairs are of the format: original|modified.  Currently only for Git")
+#endif
 
 #if SVN
     ("svn", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::svn_url>), "Input from a Subversion repository. Example: --svn http://example.org@1-2")
