@@ -6,6 +6,7 @@
 #include <libxml/parser.h>
 
 #include <iostream>
+#include <fstream>
 #include <stdexcept>
 
 srcdiff_options options;
@@ -150,7 +151,27 @@ template<>
 void option_field<&srcdiff_options::files_from_name>(const std::string & arg) {
 
     options.files_from_name = arg;
-    srcml_archive_enable_full_archive(options.archive);
+
+    std::ifstream input_file(arg.c_str());
+    if(!input_file) throw std::string("Filename '" + arg + "' can't be opened.");
+
+    size_t line_count = 0;
+    std::string line;
+    while(std::getline(input_file, line)) {
+
+      int white_length = strspn(line.c_str(), " \t\f");
+      line.erase(0, white_length);
+      // skip blank lines or comment lines
+      if (line[0] == '\0' || line[0] == '#')
+        continue;
+
+      ++line_count;
+      if(line_count > 1) break;
+    }
+
+    if(line_count > 1) {
+      srcml_archive_enable_full_archive(options.archive);
+    }
 
 }
 
@@ -436,7 +457,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 #ifndef _MSC_BUILD
   input_ops.add_options()
     ("files-from", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::files_from_name>), "Set the input to be a list of file pairs from the provided file.  Pairs are of the format: original|modified")
-    ("file", boost::program_options::value<std::vector<std::string>>()->notifier(option_input_file), "Specify a file pair as option. Pairs are of the format: original|modified.  Currently only for Git")
+    ("file", boost::program_options::value<std::vector<std::string>>()->notifier(option_input_file), "Specify a file pair as option. One pair of the format: original|modified.  Currently only for Git")
 #endif
 
 #if SVN
