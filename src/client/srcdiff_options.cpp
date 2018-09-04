@@ -501,7 +501,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
   srcdiff_ops.add_options()
     ("method,m",  boost::program_options::value<std::string>()->notifier(option_method)->default_value("collect,group-diff"), "Set srcdiff parsing method")
-    ("disable-string-splitting", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_STRING_SPLITTING>), "Disable splitting strings into multiple nodes")
+    ("disable-string-split", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_STRING_SPLITTING>), "Disable splitting strings into multiple nodes")
 
 
     ("burst", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_BURST>), "Output each input file to a single srcDiff document.  -o gives output directory")

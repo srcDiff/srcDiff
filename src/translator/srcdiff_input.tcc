@@ -31,7 +31,7 @@ srcml_nodes srcdiff_input<T>::input_nodes(int stream_source, const srcml_convert
 
   if(!input_path || input_path->empty()) throw no_file_exception();
 
-  srcml_converter converter(archive, !is_option(options, OPTION_STRING_SPLITTING), stream_source);
+  srcml_converter converter(archive, is_option(options, OPTION_STRING_SPLITTING), stream_source);
 
   typename T::input_context * context = input.open(input_path->c_str());
 
