@@ -96,8 +96,13 @@ const OPTION_TYPE OPTION_BURST                 = ull(1) << __COUNTER__;
 // @srcdiff
 const OPTION_TYPE OPTION_SRCML                 = ull(1) << __COUNTER__;
 
+// @srcdiff
+const OPTION_TYPE OPTION_STRING_SPLITTING      = ull(1) << __COUNTER__;
+
 struct srcdiff_options
 {
+
+  srcdiff_options() : flags(OPTION_STRING_SPLITTING) {}
 
   srcml_archive * archive;
 

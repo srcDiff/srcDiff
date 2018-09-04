@@ -433,6 +433,7 @@ void option_field<&srcdiff_options::view_options_t::side_by_side_tab_size>(const
 
 }
 
+
 const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
   options.archive = srcml_archive_create();
@@ -500,14 +501,8 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
   srcdiff_ops.add_options()
     ("method,m",  boost::program_options::value<std::string>()->notifier(option_method)->default_value("collect,group-diff"), "Set srcdiff parsing method")
-    // ("visualization", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_VISUALIZE>), "Output a visualization instead of xml")
-    // ("same", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SAME>), "Output files that are the same")
-    // ("pure", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_PURE>)->default_value(true), "Output files that are added/deleted (default)")
-    // ("change", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_CHANGE>)->default_value(true), "Output files that where changed (default). Used only with visualization option")
-    // ("no-same", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_SAME>)->default_value(true), "Do not output files that are the same (default)")
-    // ("no-pure", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_PURE>), "Do not ouptut files that are added/deleted")
-    // ("srcdiff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCDIFFONLY>), "Output files that only srcdiff, but not diff says are changed")
-    // ("diff-only", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_DIFFONLY>), "Output files that only diff, but not srcdiff says are changed")
+    ("string-splitting", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_STRING_SPLITTING>), "Disable splitting strings into multiple nodes")
+
 
     ("burst", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_BURST>), "Output each input file to a single srcDiff document.  -o gives output directory")
     ("srcml", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCML>), "Also, output the original and modified srcML of each file when burst enabled")
