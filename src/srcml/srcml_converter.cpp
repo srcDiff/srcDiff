@@ -101,8 +101,8 @@ void eat_element(xmlTextReaderPtr& reader) {
   xmlTextReaderRead(reader);
 }
 
-srcml_converter::srcml_converter(srcml_archive * archive, int stream_source) 
-  : archive(archive), stream_source(stream_source), output_buffer(0) {}
+srcml_converter::srcml_converter(srcml_archive * archive, bool split_strings, int stream_source) 
+  : archive(archive), split_strings(split_strings), stream_source(stream_source), output_buffer(0) {}
 
 srcml_converter::~srcml_converter() {
 
@@ -235,6 +235,12 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
       const char * characters = (const char *)xmlTextReaderConstValue(reader);
 
+      bool is_string_literal 
+        = element_stack.back()->name == "literal"
+         && !element_stack.back()->properties.empty()
+         && element_stack.back()->properties.front().name == "type"
+         && (*element_stack.back()->properties.front().value) == "string";
+
       // cycle through characters
       while((*characters) != 0) {
 
@@ -243,7 +249,9 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         std::shared_ptr<srcml_node> text;
 
         // separate new line
-        if(*characters == '\n') {
+        if(is_string_literal && !split_strings) {
+
+        } else if(*characters == '\n') {
 
           ++characters;
           text = split_text(characters_start, characters, element_stack.back());
@@ -278,11 +286,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         // separate non whitespace
         else if(is_separate_token(*characters)) {
 
-          bool is_string_literal 
-            = element_stack.back()->name == "literal"
-             && !element_stack.back()->properties.empty()
-             && element_stack.back()->properties.front().name == "type"
-             && (*element_stack.back()->properties.front().value) == "string";
+
 
           bool first = true;
           bool last_was_collect = (*characters == '"' || *characters == '\\');

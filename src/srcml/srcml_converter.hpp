@@ -18,6 +18,8 @@ protected:
 
   srcml_archive * archive;
 
+  bool split_strings;
+
   int stream_source;
 
   char * output_buffer;
@@ -45,7 +47,7 @@ public:
 
   };
 
- 	srcml_converter(srcml_archive * archive, int stream_source);
+ 	srcml_converter(srcml_archive * archive, bool split_strings, int stream_source);
  	~srcml_converter();
 
 	void convert(const std::string & language, void * context, const std::function<int(void *, char *, size_t)> & read, const std::function<int(void *)> & close, const srcml_burst_config & burst_config); 
