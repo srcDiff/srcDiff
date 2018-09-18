@@ -976,7 +976,15 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
                     if(profile_stack.at(counting_profile_pos.back())->type_name != "interchange") {
                         reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(counting_profile_pos.back()))->set_condition(collected_condition);
+                    } else {
+
+                        if(profile_stack.back()->operation == SRCDIFF_DELETE || profile_stack.back()->operation == SRCDIFF_COMMON) {
+                            reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(reinterpret_cast<std::shared_ptr<interchange_profile_t> &>(profile_stack.at(counting_profile_pos.back()))->original())->set_condition(collected_condition);                       
+                        } else if(profile_stack.back()->operation == SRCDIFF_INSERT || profile_stack.back()->operation == SRCDIFF_COMMON) {
+                            reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(reinterpret_cast<std::shared_ptr<interchange_profile_t> &>(profile_stack.at(counting_profile_pos.back()))->modified())->set_condition(collected_condition);                       
+                        }
                     }
+
                     collected_condition.clear();
 
                 }
