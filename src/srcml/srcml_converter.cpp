@@ -249,7 +249,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         std::shared_ptr<srcml_node> text;
 
         // separate new line
-        if(is_string_literal && !split_strings) {fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+        if(is_string_literal && !split_strings) {
           while((*characters) != 0) ++characters;
 
           text = split_text(characters_start, characters, element_stack.back());
