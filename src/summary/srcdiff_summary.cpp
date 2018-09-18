@@ -584,6 +584,8 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     if(is_interchange) {
 
+        /** @todo This is flawed as need data for other interchange information as (other class.  Probably just add interchange to profile base
+            and then make normal profile */
         std::shared_ptr<profile_t> interchange_profile = std::make_shared<interchange_profile_t>("interchange", SRC, SRCDIFF_COMMON, profile_stack.at(profile_stack.size() - 2)->summary_parent);
         interchange_profile->parent = profile_stack.at(profile_stack.size() - 2)->parent;
         interchange_profile->body = profile_stack.at(profile_stack.size() - 2)->body;
@@ -972,7 +974,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                     if(collected_condition.has_modified() && !collected_condition.modified().empty() && collected_condition.modified().back() == ')')
                         collected_condition.modified().pop_back();
 
-                    reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(counting_profile_pos.back()))->set_condition(collected_condition);
+                    if(profile_stack.at(counting_profile_pos.back())->type_name != "interchange") {
+                        reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(counting_profile_pos.back()))->set_condition(collected_condition);
+                    }
                     collected_condition.clear();
 
                 }
