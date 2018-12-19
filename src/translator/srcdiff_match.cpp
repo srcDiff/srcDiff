@@ -1116,8 +1116,12 @@ bool reject_match_same(const srcdiff_measure & measure,
     bool original_has_else = if_has_else(set_original);
     bool modified_has_else = if_has_else(set_modified);
 
-    if(if_then_equal(set_original, set_modified) || (original_condition == modified_condition
-      && (original_has_block == modified_has_block || original_has_else == modified_has_else || ((original_has_block || !original_has_else) && (modified_has_block || !modified_has_else)))))
+    if(if_then_equal(set_original, set_modified) 
+      || (original_condition == modified_condition
+        && ( original_has_block == modified_has_block 
+          || original_has_else == modified_has_else 
+          || (original_has_block && !modified_has_else) 
+          || (modified_has_block && !original_has_else)))
      return false;
 
   } else if(original_tag == "while" || original_tag == "switch" || original_tag == "do") {
