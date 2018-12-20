@@ -269,8 +269,8 @@ bool is_better_nest_no_recursion(const node_set & node_set_outer,
 
     if(srcdiff_nested::is_nestable(node_set_inner, node_set_outer)) {
 
-      node_sets set = node_sets(node_set_outer.nodes(), node_set_outer.at(1), node_set_outer.back(), srcdiff_nested::is_match
-                                                             , &node_set_inner.nodes().at(node_set_inner.at(0)));
+      node_sets set = node_sets(node_set_outer.nodes(), node_set_outer.at(1), node_set_outer.back(), srcdiff_nested::is_match,
+                                &node_set_inner.nodes().at(node_set_inner.at(0)));
 
       int match = srcdiff_nested::best_match(set, node_set_inner);
 
