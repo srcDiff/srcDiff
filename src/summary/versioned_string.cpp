@@ -209,6 +209,19 @@ std::string versioned_string::operator+(const char * c_str) const {
 
 }
 
+versioned_string versioned_string::operator+(const versioned_string & v_str) const {
+	versioned_string new_str(*this);
+	new_str += v_str;
+	return new_str;
+}
+
+versioned_string & versioned_string::operator+=(const versioned_string & v_str) {
+
+	string_original += v_str.string_original;
+	string_modified += v_str.string_modified;
+	return *this;
+}
+
 std::ostream & operator<<(std::ostream & out, const versioned_string & string) {
 
 	if(string.is_common()) return out << string.original();
@@ -228,12 +241,4 @@ std::string operator+(const char * c_str, const versioned_string & v_str) {
 
 	return c_str + std::string(v_str);
 
-}
-
-
-std::string & operator+=(const versioned_string & v_str) {
-
-	string_original += v_str.string_original;
-	string_modified += v_str.string_modified;
-	return *this;
 }
