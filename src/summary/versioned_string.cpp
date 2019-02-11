@@ -217,8 +217,14 @@ versioned_string versioned_string::operator+(const versioned_string & v_str) con
 
 versioned_string & versioned_string::operator+=(const versioned_string & v_str) {
 
-	string_original += v_str.string_original;
-	string_modified += v_str.string_modified;
+	if(v_str.string_original) {
+		append(*v_str.string_original, SRCDIFF_DELETE);
+	}
+
+	if(v_str.string_modified) {
+		append(*v_str.string_modified, SRCDIFF_INSERT);
+	}
+
 	return *this;
 }
 
