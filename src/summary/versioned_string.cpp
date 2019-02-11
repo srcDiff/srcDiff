@@ -229,3 +229,11 @@ std::string operator+(const char * c_str, const versioned_string & v_str) {
 	return c_str + std::string(v_str);
 
 }
+
+
+std::string & operator+=(const versioned_string & v_str) {
+
+	string_original += v_str.string_original;
+	string_modified += v_str.string_modified;
+	return *this;
+}
