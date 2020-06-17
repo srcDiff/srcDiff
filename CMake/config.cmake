@@ -88,7 +88,7 @@ include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLU
 endif()
 
 # find needed libraries
-find_library(LIBSRCML_LIBRARY NAMES libsrcml.a libsrcml.lib PATHS /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
+find_library(LIBSRCML_LIBRARY NAMES libsrcml.so libsrcml.a libsrcml.lib PATHS /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
 
 # Locating the antlr library.
 find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
