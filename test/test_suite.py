@@ -73,7 +73,7 @@ def safe_communicate_two_files(command, filename_one, filename_two, url) :
 # extracts a particular unit from a srcML file
 def extract_unit(src, count) :
 
-	command = [srcml_client, "--unit=" + str(count), "--output-xml"]
+	command = [srcml_client, "--unit=" + str(count), "--output-srcml"]
 
 	return safe_communicate(command, src)
 
@@ -307,7 +307,7 @@ try :
 				xml_filename = os.path.join(root, name)
 			
 				# get all the info
-				info = get_srcml_attribute_file(xml_filename, "--longinfo")
+				info = get_srcml_attribute_file(xml_filename, "--full-info")
 				if info == None :
 					print "Problem with", xml_filename
 					continue
