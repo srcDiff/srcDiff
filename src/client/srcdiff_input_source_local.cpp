@@ -108,7 +108,7 @@ void srcdiff_input_source_local::consume() {
 #ifndef _MSC_BUILD
       if (!stat_status_original && S_ISDIR(in_stat_original.st_mode)) {
 
-        srcml_archive_enable_full_archive(options.archive);
+        srcml_archive_enable_solitary_unit(options.archive);
 
         if(!srcml_archive_get_url(options.archive)) {
 
@@ -451,11 +451,11 @@ srcdiff_input_source_local::input_context * srcdiff_input_source_local::open(con
 
 }
 
-int srcdiff_input_source_local::read(void * context, char * buffer, size_t len) {
+ssize_t srcdiff_input_source_local::read(void * context, void * buffer, size_t len) {
 
   input_context * ctx = (input_context *)context;
 
-  ctx->in.read(buffer, len);
+  ctx->in.read((char *)buffer, len);
 
   return ctx->in.gcount();
 }

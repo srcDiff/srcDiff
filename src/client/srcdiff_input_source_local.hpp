@@ -54,7 +54,7 @@ public:
   };
 
   input_context * open(const char * uri) const;
-  static int read(void * context, char * buffer, size_t len);
+  static ssize_t read(void * context, void * buffer, size_t len);
   static int close(void * context);
 
 };

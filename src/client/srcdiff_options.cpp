@@ -90,7 +90,7 @@ void option_input_file(const std::vector<std::string> & arg) {
 
   }
 
-  if(options.input_pairs.size() > 1) srcml_archive_enable_full_archive(options.archive);
+  if(options.input_pairs.size() > 1) srcml_archive_disable_solitary_unit(options.archive);
 
 }
 
@@ -170,7 +170,7 @@ void option_field<&srcdiff_options::files_from_name>(const std::string & arg) {
     }
 
     if(line_count > 1) {
-      srcml_archive_enable_full_archive(options.archive);
+      srcml_archive_disable_solitary_unit(options.archive);
     }
 
 }
@@ -229,9 +229,9 @@ template<>
 void option_srcml_field<ARCHIVE>(bool on) {
 
   if(on)
-    srcml_archive_enable_full_archive(options.archive);
+    srcml_archive_disable_solitary_unit(options.archive);
   else
-    srcml_archive_disable_full_archive(options.archive);
+    srcml_archive_enable_solitary_unit(options.archive);
 
 }
 
@@ -437,9 +437,8 @@ void option_field<&srcdiff_options::view_options_t::side_by_side_tab_size>(const
 const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
   options.archive = srcml_archive_create();
-  srcml_archive_disable_full_archive(options.archive);
+  srcml_archive_enable_solitary_unit(options.archive);
   srcml_archive_disable_hash(options.archive);
-  srcml_archive_enable_option(options.archive, SRCML_OPTION_XML_DECL);
   srcml_archive_register_namespace(options.archive, "diff", SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
 
   general.add_options()
@@ -492,7 +491,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     ("tabs", boost::program_options::value<int>()->notifier(option_srcml_field<TABSTOP>)->default_value(8), "Set the tabstop size")
 #endif
 
-    ("no-xml-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_XML_DECL>), "Do not output the xml declaration")
+    ("no-xml-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_NO_XML_DECL>), "Do not output the xml declaration")
     ("cpp-markup-else", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_CPP_TEXT_ELSE>), "Markup up #else contents (default)")
     ("cpp-text-else", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_CPP_TEXT_ELSE>), "Do not markup #else contents")
     ("cpp-markup-if0", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_CPP_MARKUP_IF0>), "Markup up #if 0 contents")
