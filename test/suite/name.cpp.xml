@@ -22,10 +22,10 @@
 </unit>
 
 <unit language="C++" filename="name|name">
-<function><type><name>void</name></type> <name><diff:delete type="replace">f</diff:delete><diff:insert type="replace"><name>c</name><operator>::</operator><name>g</name></diff:insert></name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><name>a</name></expr>;</expr_stmt> <expr_stmt><expr><name>b</name></expr>;</expr_stmt> <expr_stmt><expr><name>c</name></expr>;</expr_stmt> <expr_stmt><expr><name>d</name></expr>;</expr_stmt> <expr_stmt><expr><name>e</name></expr>;</expr_stmt> <expr_stmt><expr><name>f</name></expr>;</expr_stmt> }</block></function>
+<function><type><name>void</name></type> <name><diff:delete type="replace">f</diff:delete><diff:insert type="replace"><name>c</name><operator>::</operator><name>g</name></diff:insert></name><parameter_list>()</parameter_list> <block>{<block_content> <expr_stmt><expr><name>a</name></expr>;</expr_stmt> <expr_stmt><expr><name>b</name></expr>;</expr_stmt> <expr_stmt><expr><name>c</name></expr>;</expr_stmt> <expr_stmt><expr><name>d</name></expr>;</expr_stmt> <expr_stmt><expr><name>e</name></expr>;</expr_stmt> <expr_stmt><expr><name>f</name></expr>;</expr_stmt> </block_content>}</block></function>
 </unit>
 
 <unit language="C++" filename="name|name">
-<decl_stmt><decl><type><diff:delete><name><name>boost</name><operator>::</operator><name><name>optional</name><argument_list type="generic">&lt;<argument><expr><diff:common><name><name>std</name><operator>::</operator><name>string</name></name></diff:common></expr></argument>&gt;</argument_list></name></name></diff:delete></type> <name>srcdiff_filename</name></decl>;</decl_stmt></unit>
+<decl_stmt><decl><type><diff:delete><name><name>boost</name><operator>::</operator><name>optional</name><argument_list type="generic">&lt;<argument><expr><diff:common><name><name>std</name><operator>::</operator><name>string</name></name></diff:common></expr></argument>&gt;</argument_list></name></diff:delete></type> <name>srcdiff_filename</name></decl>;</decl_stmt></unit>
 
 </unit>
