@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="name">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="name">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="name|name">
+<unit language="C++" filename="name|name">
 <expr_stmt><expr><name><diff:delete><name>a</name></diff:delete><operator>::</operator><name>b</name></name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="name|name">
+<unit language="C++" filename="name|name">
 <diff:delete type="replace"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:insert>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="name|name">
+<unit language="C++" filename="name|name">
 <expr_stmt><expr><name><diff:delete type="replace">a</diff:delete><diff:insert type="replace">b</diff:insert></name> <operator>+</operator> <name>c</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="name|name">
+<unit language="C++" filename="name|name">
 <expr_stmt><expr><name><diff:delete type="replace">a</diff:delete><diff:insert type="replace">b</diff:insert></name> <operator>+</operator> <name>c</name> <operator>+</operator> <name>d</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="name|name">
+<unit language="C++" filename="name|name">
 <expr_stmt><expr><name><diff:delete type="replace"><name>bar</name><operator>-&gt;</operator><name>f</name></diff:delete><diff:insert type="replace"><name>b</name><operator>-&gt;</operator><name>bar</name><operator>-&gt;</operator><name>g</name></diff:insert></name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="name|name">
+<unit language="C++" filename="name|name">
 <function><type><name>void</name></type> <name><diff:delete type="replace">f</diff:delete><diff:insert type="replace"><name>c</name><operator>::</operator><name>g</name></diff:insert></name><parameter_list>()</parameter_list> <block>{ <expr_stmt><expr><name>a</name></expr>;</expr_stmt> <expr_stmt><expr><name>b</name></expr>;</expr_stmt> <expr_stmt><expr><name>c</name></expr>;</expr_stmt> <expr_stmt><expr><name>d</name></expr>;</expr_stmt> <expr_stmt><expr><name>e</name></expr>;</expr_stmt> <expr_stmt><expr><name>f</name></expr>;</expr_stmt> }</block></function>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="name|name">
+<unit language="C++" filename="name|name">
 <decl_stmt><decl><type><diff:delete><name><name>boost</name><operator>::</operator><name><name>optional</name><argument_list type="generic">&lt;<argument><expr><diff:common><name><name>std</name><operator>::</operator><name>string</name></name></diff:common></expr></argument>&gt;</argument_list></name></name></diff:delete></type> <name>srcdiff_filename</name></decl>;</decl_stmt></unit>
 
 </unit>
