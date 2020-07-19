@@ -86,7 +86,7 @@ def name2filestr(src_filename) :
 def extract_source(srcDiff, operation) :
 
 	# run the srcML extractor
-	command = [srcml_client, "--revision", operation]
+	command = [srcml_client, "--revision=" + str(operation)]
 
 	return safe_communicate(command, srcDiff)
 
