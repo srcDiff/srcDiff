@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="enum">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="enum">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
+<unit language="C++" filename="enum|enum">
 <enum>enum <name>A</name> <block>{
 
 <diff:delete><decl><name>a</name></decl>,<diff:ws>
@@ -12,7 +12,7 @@
 
 }</block>;</enum></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
+<unit language="C++" filename="enum|enum">
 <diff:delete type="replace"><enum>enum<diff:ws> </diff:ws><name>B</name><diff:ws> </diff:ws><block>{<diff:ws>
 
 </diff:ws><decl><name>a</name></decl>,<diff:ws>
@@ -27,7 +27,7 @@
 
 </diff:ws>}</block>;</enum></diff:insert></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
+<unit language="C++" filename="enum|enum">
 <enum>enum <name><diff:delete type="replace">A</diff:delete><diff:insert type="replace">B</diff:insert></name> <block>{
 
 <decl><name>a</name></decl>,
@@ -38,7 +38,7 @@
 
 }</block>;</enum></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
+<unit language="C++" filename="enum|enum">
 <enum>enum <name>A</name> <block>{
 
 <decl><name>a</name></decl>,
@@ -49,7 +49,7 @@
 
 }</block>;</enum></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
+<unit language="C++" filename="enum|enum">
 <enum>enum <block>{
 
 <diff:delete><decl><name>a</name></decl>,<diff:ws>
@@ -61,7 +61,7 @@
 }</block>;</enum>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="enum|enum">
+<unit language="C++" filename="enum|enum">
 <enum>enum <name>A</name> <block>{
 
 <decl><name>a</name><diff:delete><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><literal type="number">0</literal></expr></init></diff:delete></decl>,

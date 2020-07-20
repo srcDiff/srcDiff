@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="return">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="return">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="return|return">
+<unit language="C++" filename="return|return">
 <return>return<diff:delete><diff:ws> </diff:ws><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name></expr></diff:delete>;</return>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="return|return">
+<unit language="C++" filename="return|return">
 <return>return <diff:delete><expr><ternary><condition><diff:common><expr><diff:delete><call><name><diff:common><name>a</name></diff:common><operator>.</operator><name>foo</name></name><argument_list>()</argument_list></call></diff:delete></expr></diff:common><diff:ws> </diff:ws>?</condition><then><diff:ws> </diff:ws><expr><name>b</name></expr><diff:ws> </diff:ws></then><else>:<diff:ws> </diff:ws><expr><name>a</name></expr></else></ternary></expr></diff:delete>;</return></unit>
 
 </unit>

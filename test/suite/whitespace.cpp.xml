@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="whitespace">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="whitespace">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="whitespace|whitespace">
+<unit language="C++" filename="whitespace|whitespace">
 <diff:delete><diff:ws>  </diff:ws></diff:delete><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="whitespace|whitespace">
+<unit language="C++" filename="whitespace|whitespace">
   <diff:delete><diff:ws>  </diff:ws></diff:delete><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="whitespace|whitespace">
+<unit language="C++" filename="whitespace|whitespace">
 <diff:insert><diff:ws>    </diff:ws><decl_stmt><decl><type><name>KisShapeSelection</name><diff:ws> </diff:ws><modifier>*</modifier></type><diff:ws> </diff:ws><name>shapeSelection</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>KisShapeSelection</name><operator>*</operator></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><call><name><name>shape</name><operator>-&gt;</operator><name>parent</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></cast></expr></init></decl>;</decl_stmt><diff:ws>
 </diff:ws></diff:insert>    <if>if <condition>(<diff:delete type="replace"><expr><operator>(</operator><call><name><name>shape</name><operator>-&gt;</operator><name>shapeId</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>==</operator><diff:ws> </diff:ws><name>KIS_NODE_SHAPE_ID</name><diff:ws>
             </diff:ws><operator>||</operator><diff:ws> </diff:ws><call><name><name>shape</name><operator>-&gt;</operator><name>shapeId</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>==</operator><diff:ws> </diff:ws><name>KIS_SHAPE_LAYER_ID</name><diff:ws>
@@ -33,7 +33,7 @@
     }</block></else></if>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="whitespace|whitespace">
+<unit language="C++" filename="whitespace|whitespace">
   <diff:delete><diff:ws> </diff:ws></diff:delete><for>for <control>( <init><decl><type><name><name>Region</name><operator>::</operator><name>ConstIterator</name></name></type> <name>it</name><argument_list>( <argument><expr><call><name><name>selection</name><operator>-&gt;</operator><name>constBegin</name></name><argument_list>()</argument_list></call></expr></argument> )</argument_list></decl>;</init> <condition><expr><name>it</name> <operator>!=</operator> <name>end</name></expr>;</condition> <incr><expr><operator>++</operator><name>it</name></expr></incr> )</control>
   <diff:delete><diff:ws> </diff:ws></diff:delete><block>{
     <diff:delete><diff:ws> </diff:ws></diff:delete><decl_stmt><decl><type><specifier>const</specifier> <name>QRect</name></type> <name>range</name> <init>= <expr><call><name><operator>(</operator><operator>*</operator><name>it</name><operator>)</operator><operator>-&gt;</operator><name>rect</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>

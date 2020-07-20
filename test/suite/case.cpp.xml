@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="case">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="case">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
+<unit language="C++" filename="case|case">
 <diff:delete><case>case</case></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
+<unit language="C++" filename="case|case">
 <diff:delete><case>case:</case></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
+<unit language="C++" filename="case|case">
 <diff:delete><case>case<diff:ws> </diff:ws>:</case></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
+<unit language="C++" filename="case|case">
 <diff:delete><case>case<diff:ws> </diff:ws><expr><name>bar</name></expr>:</case></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
+<unit language="C++" filename="case|case">
 <diff:delete type="replace"><case>case:</case></diff:delete><diff:insert type="replace"><case>case<diff:ws> </diff:ws><expr><name>bar</name></expr>:</case><diff:ws> </diff:ws><break>break;</break></diff:insert></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
+<unit language="C++" filename="case|case">
 <case>case <expr><name><diff:delete type="replace">foo</diff:delete><diff:insert type="replace">bar</diff:insert></name></expr>:</case> <diff:insert><diff:ws>
 
         </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
@@ -24,7 +24,7 @@
         </diff:ws><expr_stmt><expr><name>c</name></expr>;</expr_stmt><diff:ws>
         </diff:ws><break>break;</break></diff:insert></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
+<unit language="C++" filename="case|case">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
     <case>case <expr><name>bar</name></expr>:</case>
@@ -38,7 +38,7 @@
 
 }</block></switch></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
+<unit language="C++" filename="case|case">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
 <diff:delete><diff:ws>    </diff:ws><case>case<diff:ws> </diff:ws><expr><name>bar</name></expr>:</case><diff:ws>
@@ -52,7 +52,7 @@
 
 </diff:ws></diff:delete>}</block></switch></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
+<unit language="C++" filename="case|case">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
 <diff:delete><diff:ws>    </diff:ws><case>case<diff:ws> </diff:ws><expr><name>bar</name></expr>:</case><diff:ws>
@@ -71,7 +71,7 @@
 
 </diff:ws></diff:delete>}</block></switch></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
+<unit language="C++" filename="case|case">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
     <case>case <expr><name>bar</name></expr>:</case>
@@ -90,7 +90,7 @@
 
 }</block></switch></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="case|case">
+<unit language="C++" filename="case|case">
 <switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
 
     <case>case <expr><name>bar</name></expr>:</case>

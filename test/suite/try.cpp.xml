@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="try">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="try">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="try|try"><diff:delete><try>try<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws>}</block></try></diff:delete>
+<unit language="C++" filename="try|try"><diff:delete><try>try<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws>}</block></try></diff:delete>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="try|try"><diff:delete><try>try<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common><diff:ws> </diff:ws>}</block></try></diff:delete>
+<unit language="C++" filename="try|try"><diff:delete><try>try<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common><diff:ws> </diff:ws>}</block></try></diff:delete>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="try|try"><diff:delete><try>try<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo"> <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if></diff:common><diff:ws> </diff:ws>}</block></try></diff:delete>
+<unit language="C++" filename="try|try"><diff:delete><try>try<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo"> <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if></diff:common><diff:ws> </diff:ws>}</block></try></diff:delete>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="try|try"><diff:delete><try>try<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws> </diff:ws>}</block><diff:ws> </diff:ws><diff:common><catch>catch<parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>exception</name></name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{ <expr_stmt><expr><name>e</name></expr>;</expr_stmt> }</block></catch></diff:common></try></diff:delete>
+<unit language="C++" filename="try|try"><diff:delete><try>try<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws> </diff:ws>}</block><diff:ws> </diff:ws><diff:common><catch>catch<parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>exception</name></name></type> <name>e</name></decl></parameter>)</parameter_list> <block>{ <expr_stmt><expr><name>e</name></expr>;</expr_stmt> }</block></catch></diff:common></try></diff:delete>
 </unit>
 
 </unit>

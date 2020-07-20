@@ -1,57 +1,57 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="while">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="while">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><diff:ws>
+<unit language="C++" filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><diff:ws>
 </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></while></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="while.single|while.single">
+<unit language="C++" filename="while.single|while.single">
 <diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><diff:ws>
 </diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></block></while></diff:delete>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="while.single|while.single">
+<unit language="C++" filename="while.single|while.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><diff:ws>
 </diff:ws><diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:common></block></while></diff:delete>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="while.single|while.single">
+<unit language="C++" filename="while.single|while.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><diff:ws>
 </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt></block></while></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<unit language="C++" filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
 </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
 </diff:ws>}</block></while></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<unit language="C++" filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
 </diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common><diff:ws>
 </diff:ws>}</block></while></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="while.single|while.single">
+<unit language="C++" filename="while.single|while.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
 </diff:ws><diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:common><diff:ws>
 </diff:ws>}</block></while></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="while.single|while.single">
+<unit language="C++" filename="while.single|while.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
 </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
 </diff:ws>}</block></while></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="while.single|while.single">
+<unit language="C++" filename="while.single|while.single">
 <while>while<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><block type="pseudo">
 <diff:delete type="replace"><diff:ws>    </diff:ws><expr_stmt><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>c</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>d</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>e</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>f</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:ws>    </diff:ws><empty_stmt>;</empty_stmt></diff:insert></block></while>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="while.multiple|while.multiple"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<unit language="C++" filename="while.multiple|while.multiple"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
 </diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:common><diff:ws>
 </diff:ws>}</block></while></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="while.multiple|while.multiple">
+<unit language="C++" filename="while.multiple|while.multiple">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
 </diff:ws><diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
@@ -59,7 +59,7 @@
 <expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:common><diff:ws>
 </diff:ws>}</block></while></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="while.multiple|while.multiple">
+<unit language="C++" filename="while.multiple|while.multiple">
 <while>while<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition> <block>{
 
 <diff:delete><diff:ws>    </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
@@ -78,7 +78,7 @@
 </diff:ws></diff:delete>}</block></while><diff:delete><diff:ws>
 </diff:ws></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="while.multiple|while.multiple">
+<unit language="C++" filename="while.multiple|while.multiple">
 <while>while<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><diff:delete type="replace"><diff:ws> </diff:ws><block>{<diff:ws>
 
     </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>

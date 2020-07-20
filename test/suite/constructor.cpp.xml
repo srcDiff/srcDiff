@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="constructor">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="constructor">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="constructor|constructor"><diff:delete><constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list><diff:ws> </diff:ws><block>{}</block></constructor></diff:delete></unit>
+<unit language="C++" filename="constructor|constructor"><diff:delete><constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list><diff:ws> </diff:ws><block>{}</block></constructor></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="constructor|constructor"><diff:delete><diff:ws>
+<unit language="C++" filename="constructor|constructor"><diff:delete><diff:ws>
 </diff:ws><constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list><diff:ws> </diff:ws><block>{}</block></constructor><diff:ws>
 </diff:ws></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="constructor|constructor">
+<unit language="C++" filename="constructor|constructor">
 <constructor><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>(<diff:delete type="replace"><parameter><decl><type><name>int</name></type><diff:ws> </diff:ws><name>a</name></decl></parameter></diff:delete><diff:insert type="replace"><parameter><decl><type><name>double</name></type><diff:ws> </diff:ws><name>d</name></decl></parameter></diff:insert>, <diff:delete type="replace"><parameter><decl><type><name>int</name></type><diff:ws> </diff:ws><name>b</name></decl></parameter></diff:delete><diff:insert type="replace"><parameter><decl><type><name>double</name></type><diff:ws> </diff:ws><name>e</name></decl></parameter></diff:insert>, <diff:delete type="replace"><parameter><decl><type><name>int</name></type><diff:ws> </diff:ws><name>c</name></decl></parameter></diff:delete><diff:insert type="replace"><parameter><decl><type><name>double</name></type><diff:ws> </diff:ws><name>f</name></decl></parameter></diff:insert>)</parameter_list> <block>{}</block></constructor>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="constructor|constructor">
+<unit language="C++" filename="constructor|constructor">
 <constructor><specifier>static</specifier> <specifier>const</specifier> <name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>(<diff:delete type="replace"><parameter><decl><type><name>int</name></type><diff:ws> </diff:ws><name>a</name></decl></parameter></diff:delete><diff:insert type="replace"><parameter><decl><type><name>double</name></type><diff:ws> </diff:ws><name>d</name></decl></parameter></diff:insert>, <diff:delete type="replace"><parameter><decl><type><name>int</name></type><diff:ws> </diff:ws><name>b</name></decl></parameter></diff:delete><diff:insert type="replace"><parameter><decl><type><name>double</name></type><diff:ws> </diff:ws><name>e</name></decl></parameter></diff:insert>, <diff:delete type="replace"><parameter><decl><type><name>int</name></type><diff:ws> </diff:ws><name>c</name></decl></parameter></diff:delete><diff:insert type="replace"><parameter><decl><type><name>double</name></type><diff:ws> </diff:ws><name>f</name></decl></parameter></diff:insert>)</parameter_list> <block>{}</block></constructor>
 </unit>
 

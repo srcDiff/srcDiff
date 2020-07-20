@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="class">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="class">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="class|class">
+<unit language="C++" filename="class|class">
 <class>class <name>A</name> <block>{<private type="default">
 
 </private><diff:delete><public>public:<diff:ws>
@@ -11,7 +11,7 @@
 
 </diff:ws></public></diff:delete>}</block>;</class></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="class|class">
+<unit language="C++" filename="class|class">
 <diff:delete type="replace"><class>class<diff:ws> </diff:ws><name>A</name><diff:ws> </diff:ws><block>{<private type="default"><diff:ws>
 
 </diff:ws></private><public>public:<diff:ws>
@@ -23,7 +23,7 @@
 
 </diff:ws></private>}</block>;</class></diff:insert></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="class|class">
+<unit language="C++" filename="class|class">
 <class>class <name><diff:delete type="replace">A</diff:delete><diff:insert type="replace">B</diff:insert></name> <block>{<private type="default">
 
 </private><public>public:
@@ -33,7 +33,7 @@
 
 </public>}</block>;</class></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="class|class">
+<unit language="C++" filename="class|class">
 <class>class <block>{<private type="default">
 
 </private><public>public:
@@ -43,7 +43,7 @@
 
 </public>}</block>;</class></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="class|class">
+<unit language="C++" filename="class|class">
 <class>class <block>{<private type="default">
 
 </private><diff:delete><public>public:<diff:ws>
@@ -53,7 +53,7 @@
 
 </diff:ws></public></diff:delete>}</block>;</class></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="class|class">
+<unit language="C++" filename="class|class">
 <class>class <name><diff:delete type="replace">svnPart</diff:delete><diff:insert type="replace">SvnPart</diff:insert></name> <super>: <specifier>public</specifier> <name>KDevPlugin</name></super>
 <block>{<private type="default">
     <macro><name>Q_OBJECT</name></macro>

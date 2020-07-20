@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="complex">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="complex">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
+<unit language="C++" filename="complex|complex">
 <diff:delete><if>if<diff:ws> </diff:ws><condition>(<expr><call><name><name>shape</name><operator>-&gt;</operator><name>hasAdditionalAttribute</name></name><argument_list>(<argument><expr><literal type="string">"text:anchor-type"</literal></expr></argument>)</argument_list></call></expr>)</condition><then><diff:ws> </diff:ws><block>{<diff:ws>
     </diff:ws><diff:common><decl_stmt><decl><type><name>QString</name></type> <name>anchorType</name><diff:delete><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><call><name><name>shape</name><operator>-&gt;</operator><name>additionalAttribute</name></name><argument_list>(<argument><expr><literal type="string">"text:anchor-type"</literal></expr></argument>)</argument_list></call></expr></init></diff:delete></decl>;</decl_stmt>
 </diff:common><diff:insert><if>if<diff:ws> </diff:ws><condition>(<expr><call><name><name>shape</name><operator>-&gt;</operator><name>hasAdditionalAttribute</name></name><argument_list>(<argument><expr><literal type="string">"text:anchor-type"</literal></expr></argument>)</argument_list></call></expr>)</condition><then><block type="pseudo"><diff:ws>
@@ -31,7 +31,7 @@
 </diff:common>}</block></then></if><diff:ws>
 </diff:ws></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
+<unit language="C++" filename="complex|complex">
 <function><type><name>bool</name></type> <name><name>AbstractRegionCommand</name><operator>::</operator><name>isApproved</name></name><parameter_list>()</parameter_list> <specifier>const</specifier>
 <block>{
     <decl_stmt><decl><type><specifier>const</specifier> <name><name>QList</name><argument_list type="generic">&lt;<argument><expr><name>Element</name> <modifier>*</modifier></expr></argument>&gt;</argument_list></name></type> <name>elements</name> <init>= <expr><call><name>cells</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
@@ -72,7 +72,7 @@
 }</block></function>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
+<unit language="C++" filename="complex|complex">
 <diff:delete><if>if<diff:ws> </diff:ws><condition>(<expr><call><name><name>shape</name><operator>.</operator><name>has</name></name><argument_list>(<argument><expr><literal type="string">"anchor"</literal></expr></argument>)</argument_list></call></expr>)</condition><then><diff:ws> </diff:ws><block>{<diff:ws>
     </diff:ws><diff:common><decl_stmt><decl><type><name>string</name></type> <name>type</name><diff:delete><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><call><name><name>shape</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"anchor"</literal></expr></argument>)</argument_list></call></expr></init></diff:delete></decl>;</decl_stmt>
 </diff:common><diff:ws>    </diff:ws><diff:common><if>if<condition>(<expr><name>type</name> <operator>!=</operator> <literal type="string">"page"</literal></expr>)</condition><then> <block>{
@@ -83,7 +83,7 @@
 </diff:common>}</block></then></if><diff:ws>
 </diff:ws></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
+<unit language="C++" filename="complex|complex">
 <function><type><name>void</name></type> <name><name>KisToolSelectPolygonal</name><operator>::</operator><name>finish</name></name><parameter_list>()</parameter_list>
 <block>{
     <if>if <condition>(<expr><call><name>currentImage</name><argument_list>()</argument_list></call><diff:insert><diff:ws> </diff:ws><operator>&amp;&amp;</operator><diff:ws> </diff:ws><call><name><name>m_points</name><operator>.</operator><name>count</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>&gt;</operator><diff:ws> </diff:ws><literal type="number">2</literal></diff:insert></expr>)</condition><then> <block>{
@@ -139,7 +139,7 @@
 }</block></function>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
+<unit language="C++" filename="complex|complex">
 <function><type><name>bool</name></type> <name><name>Sheet</name><operator>::</operator><name>testListChoose</name></name><parameter_list>(<parameter><decl><type><name>Selection</name><modifier>*</modifier></type> <name>selection</name></decl></parameter>)</parameter_list>
 <block>{
   <diff:delete><diff:ws> </diff:ws></diff:delete><decl_stmt><decl><type><specifier>const</specifier> <name>QPoint</name></type> <name>marker</name><argument_list>( <argument><expr><call><name><name>selection</name><operator>-&gt;</operator><name>marker</name></name><argument_list>()</argument_list></call></expr></argument> )</argument_list></decl>;</decl_stmt>
@@ -177,7 +177,7 @@
 }</block></function>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
+<unit language="C++" filename="complex|complex">
    <diff:delete><diff:ws> </diff:ws></diff:delete><if>if <condition>(<expr><call><name>read_icc_profile</name><argument_list>(<argument><expr><operator>&amp;</operator><name>cinfo</name></expr></argument>, <argument><expr><operator>&amp;</operator><name>profile_data</name></expr></argument>, <argument><expr><operator>&amp;</operator><name>profile_len</name></expr></argument>)</argument_list></call></expr>)</condition><then> <block>{
         <expr_stmt><expr><call><name><name>profile_rawdata</name><operator>.</operator><name>resize</name></name><argument_list>(<argument><expr><name>profile_len</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
         <expr_stmt><expr><call><name>memcpy</name><argument_list>(<argument><expr><call><name><name>profile_rawdata</name><operator>.</operator><name>data</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>profile_data</name></expr></argument>, <argument><expr><name>profile_len</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
@@ -194,7 +194,7 @@
     }</block></then></if>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
+<unit language="C++" filename="complex|complex">
 <if>if<condition>( <expr><name>path</name> <operator>&amp;&amp;</operator> <call><name><name>shape</name><operator>-&gt;</operator><name>background</name></name><argument_list>()</argument_list></call></expr> )</condition><then> <block>{
 <diff:insert><diff:ws>    </diff:ws><comment type="line">//<diff:ws> </diff:ws>non-zero<diff:ws> </diff:ws>is<diff:ws> </diff:ws>default,<diff:ws> </diff:ws>so<diff:ws> </diff:ws>only<diff:ws> </diff:ws>write<diff:ws> </diff:ws>fillrule<diff:ws> </diff:ws>if<diff:ws> </diff:ws>evenodd<diff:ws> </diff:ws>is<diff:ws> </diff:ws>set</comment></diff:insert>
     <if>if<condition>( <expr><call><name><name>path</name><operator>-&gt;</operator><name>fillRule</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>Qt</name><operator>::</operator><name>OddEvenFill</name></name></expr> )</condition><then><block type="pseudo">
@@ -204,7 +204,7 @@
 }</block></then></if>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
+<unit language="C++" filename="complex|complex">
 <if>if<condition>(<expr><operator>!</operator><call><name><name>paraStyles</name><operator>.</operator><name>contains</name></name><argument_list>(<argument><expr><call><name><name>root</name><operator>.</operator><name>ID</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>)</condition><then><diff:delete type="replace"><diff:ws> </diff:ws><block>{<diff:ws>
     </diff:ws><decl_stmt><decl><type><name>int</name></type><diff:ws> </diff:ws><name>id</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><call><name><name>root</name><operator>.</operator><name>ID</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt><diff:ws>
     </diff:ws><if>if<condition>(<expr><name>id</name><diff:ws> </diff:ws><operator>!=</operator><diff:ws> </diff:ws><name>tree_rootID</name></expr>)</condition><then><block type="pseudo"><diff:ws>
@@ -213,7 +213,7 @@
     </diff:ws><expr_stmt><expr><name>tree_root</name><diff:ws> </diff:ws><operator>&lt;&lt;</operator><diff:ws> </diff:ws><call><name><name>root</name><operator>.</operator><name>ID</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block></diff:insert></then></if>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
+<unit language="C++" filename="complex|complex">
 <function><type><name>bool</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{
 <diff:delete><diff:ws>  </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><literal type="number">1</literal></expr>)</condition><then><diff:ws> </diff:ws><block>{<diff:ws>
   </diff:ws><diff:common>  <decl_stmt><decl><type><diff:delete><specifier>const</specifier><diff:ws> </diff:ws></diff:delete><name>MultiTermQueryDocValuesWrapper</name></type> <name>that</name> <init>= <expr><operator>(</operator><name>MultiTermQueryDocValuesWrapper</name><operator>)</operator> <name>o</name></expr></init></decl>;</decl_stmt>
@@ -223,7 +223,7 @@
 </diff:ws></diff:delete>}</block></function>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="complex|complex">
+<unit language="C++" filename="complex|complex">
 <if>if<condition>(<expr><diff:delete type="replace"><call><name>reject_match_nested</name><argument_list>(<argument><expr><name>similarity</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>difference</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>text_original_length</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>text_modified_length</name></expr></argument>,<diff:ws>
   </diff:ws><argument><expr><name>nodes_original</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><call><name><name>set</name><operator>.</operator><name>at</name></name><argument_list>(<argument><expr><name>match</name></expr></argument>)</argument_list></call></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>nodes_modified</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><call><name><name>node_sets_modified</name><operator>.</operator><name>at</name></name><argument_list>(<argument><expr><name>k</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><diff:ws>
 </diff:ws><operator>||</operator><diff:ws> </diff:ws><call><name>is_better_nest</name><argument_list>(<argument><expr><name>nodes_modified</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><call><name><name>node_sets_modified</name><operator>.</operator><name>at</name></name><argument_list>(<argument><expr><name>k</name></expr></argument>)</argument_list></call></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>nodes_original</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><call><name><name>node_sets_original</name><operator>.</operator><name>at</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>similarity</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>difference</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>text_modified_length</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>text_original_length</name></expr></argument>)</argument_list></call><diff:ws>

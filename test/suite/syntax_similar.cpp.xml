@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="syntax_similar">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="syntax_similar">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="syntax_similar|syntax_similar">
+<unit language="C++" filename="syntax_similar|syntax_similar">
 <else>else <block>{
     <expr_stmt><expr><name>m_frameOrderDirty</name> <operator>=</operator> <literal type="boolean">true</literal></expr>;</expr_stmt>
     <expr_stmt><expr><call><name><name>data</name><operator>-&gt;</operator><name>setDocument</name></name><argument_list>(<argument><expr><name>m_document</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>

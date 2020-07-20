@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="expr_stmt">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="expr_stmt">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="expr_stmt|expr_stmt"><diff:delete><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete></unit>
+<unit language="C++" filename="expr_stmt|expr_stmt"><diff:delete><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="expr_stmt|expr_stmt"><diff:delete><diff:ws>
+<unit language="C++" filename="expr_stmt|expr_stmt"><diff:delete><diff:ws>
 </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="expr_stmt|expr_stmt">
+<unit language="C++" filename="expr_stmt|expr_stmt">
 <expr_stmt><expr><call><name>c</name><argument_list>(<diff:insert><argument><expr><name>foo</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>bar</name></expr></argument></diff:insert>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="expr_stmt|expr_stmt">
+<unit language="C++" filename="expr_stmt|expr_stmt">
 <expr_stmt><expr><call><name>actionCollection</name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name>addAction</name><argument_list>(<argument><expr><literal type="string">"rotatelayer"</literal></expr></argument>, <argument><expr><name><diff:delete type="replace">action</diff:delete><diff:insert type="replace">m_rotateLayerAction</diff:insert></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="expr_stmt|expr_stmt">
+<unit language="C++" filename="expr_stmt|expr_stmt">
 <if>if<condition>(<expr><name><name>state</name><operator>-&gt;</operator><name>context</name><operator>-&gt;</operator><name>handler</name><operator>-&gt;</operator><name>meta_tag</name></name> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>state</name><operator>-&gt;</operator><name>meta_tags</name><operator>.</operator><name>empty</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
 
     <for>for<control>(<init><decl><type><name><name>std</name><operator>::</operator><name><name>vector</name><argument_list type="generic">&lt;<argument><expr><name>srcml_element</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>const_iterator</name></name></type> <name>citr</name> <init>= <expr><call><name><name>state</name><operator>-&gt;</operator><name>meta_tags</name><operator>.</operator><name>begin</name></name><argument_list>()</argument_list></call></expr></init></decl>;</init> <condition><expr><name>citr</name> <operator>&lt;</operator> <call><name><name>state</name><operator>-&gt;</operator><name>meta_tags</name><operator>.</operator><name>end</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><operator>++</operator><name>citr</name></expr></incr>)</control> <block>{

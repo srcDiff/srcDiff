@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="catch">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="catch">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="catch|catch"><diff:delete><catch>catch<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws>}</block></catch></diff:delete>
+<unit language="C++" filename="catch|catch"><diff:delete><catch>catch<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws>}</block></catch></diff:delete>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="catch|catch"><diff:delete><catch>catch<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common><diff:ws> </diff:ws>}</block></catch></diff:delete>
+<unit language="C++" filename="catch|catch"><diff:delete><catch>catch<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common><diff:ws> </diff:ws>}</block></catch></diff:delete>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="catch|catch"><diff:delete><catch>catch<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo"> <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if></diff:common><diff:ws> </diff:ws>}</block></catch></diff:delete>
+<unit language="C++" filename="catch|catch"><diff:delete><catch>catch<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo"> <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if></diff:common><diff:ws> </diff:ws>}</block></catch></diff:delete>
 </unit>
 
 </unit>
