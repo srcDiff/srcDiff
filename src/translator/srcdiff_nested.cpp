@@ -71,6 +71,7 @@ const char * const static_nest_types[]      = { "decl_stmt",                    
 const nest_info nesting[] = {   
 
   { "block",         block_nest_types       },
+  { "block_content", block_nest_types       },
   { "if",            block_nest_types       },
   { "then",          then_nest_types        },
   { "elseif",        block_nest_types       },
@@ -490,7 +491,8 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
                        set_modified, set_modified.nodes().at(modified_pos)->parent))
     return true;
 
-  if(original_tag == "then" || original_tag == "block" || original_tag == "comment"
+  if(original_tag == "then" || original_tag == "block" || original_tag == "block_content"
+    || original_tag == "comment"
     || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier"
     || original_tag == "expr" || original_tag == "expr_stmt" || original_tag == "name"
     || original_tag == "number" || original_tag == "file") {
