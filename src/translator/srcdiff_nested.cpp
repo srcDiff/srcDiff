@@ -72,6 +72,7 @@ const nest_info nesting[] = {
 
   { "block",         block_nest_types        },
   { "block_content", block_nest_types        },
+  { "if_stmt",       block_nest_types        },
   { "if",            block_nest_types        },
   { "then",          ternary_then_nest_types },
   { "else",          else_nest_types         },
