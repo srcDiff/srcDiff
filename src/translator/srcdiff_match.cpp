@@ -738,9 +738,23 @@ bool conditional_has_block(const node_set & set) {
 }
 
 /** loop O(n) */
-bool if_has_else(const node_set & set) {
+bool if_stmt_has_condition(const node_set & set) {
 
-  if(set.nodes().at(set.at(0))->name == "elseif") return false;
+  node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
+  for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
+
+    if(set.nodes().at(itr->at(0))->name == "if") {
+      return true;
+    }
+
+  }
+
+  return false;
+
+}
+
+/** loop O(n) */
+bool if_has_else(const node_set & set) {
 
   node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
   for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
@@ -758,7 +772,7 @@ bool if_has_else(const node_set & set) {
 }
 
 /** loop O(n) */
-bool if_then_equal(const node_set & set_original, const node_set & set_modified) {
+bool if_block_content_equal(const node_set & set_original, const node_set & set_modified) {
 
   diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
 
@@ -768,7 +782,7 @@ bool if_then_equal(const node_set & set_original, const node_set & set_modified)
   node_sets::iterator then_original;
   for(then_original = node_sets_original.begin(); then_original != node_sets_original.end(); ++then_original) {
 
-    if(set_original.nodes().at(then_original->at(0))->name == "then") {
+    if(set_original.nodes().at(then_original->at(0))->name == "block_content") {
 
       break;
 
@@ -1109,23 +1123,36 @@ bool reject_match_same(const srcdiff_measure & measure,
 
     if(original_name == modified_name) return false;
 
-  } else if((original_tag == "if" || original_tag == "elseif") && original_uri == SRCML_SRC_NAMESPACE_HREF) {
+  } else if(original_tag == "if_stmt"
+         && if_stmt_has_condition(set_original)
+         && if_stmt_has_condition(set_modified)) {
 
     std::string original_condition = get_condition(set_original.nodes(), original_pos);
     std::string modified_condition = get_condition(set_modified.nodes(), modified_pos);
 
-    bool original_has_block = conditional_has_block(set_original);
-    bool modified_has_block = conditional_has_block(set_modified);
+    if(original_condition == modified_condition) {
+      return false;
+    }
 
-    bool original_has_else = if_has_else(set_original);
-    bool modified_has_else = if_has_else(set_modified);
+  } else if(original_tag == "if" && original_uri == SRCML_SRC_NAMESPACE_HREF) {
 
-    if(if_then_equal(set_original, set_modified) 
-      || (original_condition == modified_condition
+    if(get_condition(set_original.nodes(), original_pos)
+      == 
+       get_condition(set_modified.nodes(), modified_pos))
+      return false;
+
+    // bool original_has_block = conditional_has_block(set_original);
+    // bool modified_has_block = conditional_has_block(set_modified);
+
+    // bool original_has_else = if_has_else(set_original);
+    // bool modified_has_else = if_has_else(set_modified);
+
+    if(if_block_content_equal(set_original, set_modified))
+/*      || (original_condition == modified_condition
         && ( original_has_block == modified_has_block 
           || original_has_else == modified_has_else 
           || (original_has_block && !modified_has_else) 
-          || (modified_has_block && !original_has_else))))
+          || (modified_has_block && !original_has_else))))*/
      return false;
 
   } else if(original_tag == "while" || original_tag == "switch" || original_tag == "do") {
