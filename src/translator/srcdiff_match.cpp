@@ -1358,6 +1358,7 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
   node_sets child_node_sets_original = node_sets(set_original.nodes(), set_original.at(1), set_original.back());
   node_sets child_node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back());    
 
+  // check block of first child of if_stmt (old if behavior)
   if(original_tag == "if_stmt" && !child_node_sets_original.empty()) {
 
     std::string tag = set_original.nodes().at(child_node_sets_original.back().at(0))->name;
@@ -1368,6 +1369,7 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
 
   }
 
+  // check block of first child of if_stmt (old if behavior)
   if(modified_tag == "if_stmt" && !child_node_sets_modified.empty()) {
 
     std::string tag =  set_modified.nodes().at(child_node_sets_modified.back().at(0))->name;
@@ -1380,7 +1382,23 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
 
   if(!child_node_sets_original.empty() && !child_node_sets_modified.empty()
     && set_original.nodes().at(child_node_sets_original.back().at(0))->name == "block" && set_modified.nodes().at(child_node_sets_modified.back().at(0))->name == "block") {
-    srcdiff_syntax_measure syntax_measure(child_node_sets_original.back(), child_node_sets_modified.back());
+
+    node_set original_set = child_node_sets_original.back();
+    node_set modified_set = child_node_sets_modified.back();
+
+    // block children actually in block_content
+    node_sets original_temp = node_sets(set_original.nodes(), child_node_sets_original.back().at(1), child_node_sets_original.back().back());
+    if(set_original.nodes().at(original_temp.at(1).at(0))->name == "block_content") {
+      original_set = original_temp.at(1);
+    }
+
+    // block children actually in block_content
+    node_sets modified_temp = node_sets(set_modified.nodes(), child_node_sets_modified.back().at(1), child_node_sets_modified.back().back());
+    if(set_modified.nodes().at(modified_temp.at(1).at(0))->name == "block_content") {
+      modified_set = modified_temp.at(1);
+    }
+
+    srcdiff_syntax_measure syntax_measure(original_set, modified_set);
     syntax_measure.compute();
 
     int min_child_length = syntax_measure.min_length();
