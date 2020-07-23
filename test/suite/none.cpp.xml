@@ -6,10 +6,10 @@
 </unit>
 
 <unit language="C++" filename="none|none">
-<function><type><specifier>const</specifier> <name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>n</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></parameter>, <parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{
+<function><type><specifier>const</specifier> <name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>n</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></parameter>, <parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{<block_content>
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 </unit>
