@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="constructor_decl">
 
-<unit language="C++" filename="constructor_decl|constructor_decl"><diff:delete><constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list><diff:ws> </diff:ws><block>{}</block></constructor></diff:delete></unit>
+<unit language="C++" filename="constructor_decl|constructor_decl"><diff:delete><constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list><diff:ws> </diff:ws><block>{<block_content/>}</block></constructor></diff:delete></unit>
 
 <unit language="C++" filename="constructor_decl|constructor_decl"><diff:delete><diff:ws>
-</diff:ws><constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list><diff:ws> </diff:ws><block>{}</block></constructor></diff:delete></unit>
+</diff:ws><constructor><name><name>Object</name><operator>::</operator><name>Object</name></name><parameter_list>()</parameter_list><diff:ws> </diff:ws><block>{<block_content/>}</block></constructor></diff:delete></unit>
 
 <unit language="C++" filename="constructor_decl|constructor_decl">
 <constructor_decl><name><name>A</name><operator>::</operator><name>A</name></name><parameter_list>(<diff:delete type="replace"><parameter><decl><type><name>int</name></type><diff:ws> </diff:ws><name>a</name></decl></parameter></diff:delete><diff:insert type="replace"><parameter><decl><type><name>double</name></type><diff:ws> </diff:ws><name>d</name></decl></parameter></diff:insert>, <diff:delete type="replace"><parameter><decl><type><name>int</name></type><diff:ws> </diff:ws><name>b</name></decl></parameter></diff:delete><diff:insert type="replace"><parameter><decl><type><name>double</name></type><diff:ws> </diff:ws><name>e</name></decl></parameter></diff:insert>, <diff:delete type="replace"><parameter><decl><type><name>int</name></type><diff:ws> </diff:ws><name>c</name></decl></parameter></diff:delete><diff:insert type="replace"><parameter><decl><type><name>double</name></type><diff:ws> </diff:ws><name>f</name></decl></parameter></diff:insert>)</parameter_list>;</constructor_decl>
