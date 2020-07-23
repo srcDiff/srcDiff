@@ -3,13 +3,13 @@
 
 <unit language="Java" filename="function|function">
 <diff:delete type="replace"><function><annotation>@<name>Override</name></annotation><diff:ws>
-</diff:ws><specifier>public</specifier><diff:ws> </diff:ws><specifier>synchronized</specifier><diff:ws> </diff:ws><type><name>void</name></type><diff:ws> </diff:ws><name>newIndexWriter</name><parameter_list>(<parameter><decl><type><name>SolrCore</name></type><diff:ws> </diff:ws><name>core</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>boolean</name></type><diff:ws> </diff:ws><name>rollback</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><throws>throws<diff:ws> </diff:ws><argument><expr><name>IOException</name></expr></argument></throws><diff:ws> </diff:ws><block>{<diff:ws>
+</diff:ws><type><specifier>public</specifier><diff:ws> </diff:ws><specifier>synchronized</specifier><diff:ws> </diff:ws><name>void</name></type><diff:ws> </diff:ws><name>newIndexWriter</name><parameter_list>(<parameter><decl><type><name>SolrCore</name></type><diff:ws> </diff:ws><name>core</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>boolean</name></type><diff:ws> </diff:ws><name>rollback</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><throws>throws<diff:ws> </diff:ws><argument><expr><name>IOException</name></expr></argument></throws><diff:ws> </diff:ws><block>{<block_content><diff:ws>
   </diff:ws><expr_stmt><expr><call><name><name>log</name><operator>.</operator><name>info</name></name><argument_list>(<argument><expr><literal type="string">"Creating<diff:ws> </diff:ws>new<diff:ws> </diff:ws>IndexWriter..."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
   </diff:ws><decl_stmt><decl><type><name>String</name></type><diff:ws> </diff:ws><name>coreName</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><call><name><name>core</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt><diff:ws>
-  </diff:ws><synchronized>synchronized<diff:ws> </diff:ws><init>(<expr><name>writerPauseLock</name></expr>)</init><diff:ws> </diff:ws><block>{<diff:ws>
-    </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><name>closed</name></expr>)</condition><then><diff:ws> </diff:ws><block>{<diff:ws>
+  </diff:ws><synchronized>synchronized<diff:ws> </diff:ws><init>(<expr><name>writerPauseLock</name></expr>)</init><diff:ws> </diff:ws><block>{<block_content><diff:ws>
+    </diff:ws><if_stmt><if>if<diff:ws> </diff:ws><condition>(<expr><name>closed</name></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
       </diff:ws><throw>throw<diff:ws> </diff:ws><expr><operator>new</operator><diff:ws> </diff:ws><call><name>SolrException</name><argument_list>(<argument><expr><name><name>ErrorCode</name><operator>.</operator><name>SERVICE_UNAVAILABLE</name></name></expr></argument>,<diff:ws> </diff:ws><argument><expr><literal type="string">"Already<diff:ws> </diff:ws>closed"</literal></expr></argument>)</argument_list></call></expr>;</throw><diff:ws>
-    </diff:ws>}</block></then></if><diff:ws>
+    </diff:ws></block_content>}</block></if></if_stmt><diff:ws>
     
     </diff:ws><comment type="line">//<diff:ws> </diff:ws>we<diff:ws> </diff:ws>need<diff:ws> </diff:ws>to<diff:ws> </diff:ws>wait<diff:ws> </diff:ws>for<diff:ws> </diff:ws>the<diff:ws> </diff:ws>Writer<diff:ws> </diff:ws>to<diff:ws> </diff:ws>fall<diff:ws> </diff:ws>out<diff:ws> </diff:ws>of<diff:ws> </diff:ws>use</comment><diff:ws>
     </diff:ws><comment type="line">//<diff:ws> </diff:ws>first<diff:ws> </diff:ws>lets<diff:ws> </diff:ws>stop<diff:ws> </diff:ws>it<diff:ws> </diff:ws>from<diff:ws> </diff:ws>being<diff:ws> </diff:ws>lent<diff:ws> </diff:ws>out</comment><diff:ws>
@@ -17,47 +17,47 @@
     </diff:ws><comment type="line">//<diff:ws> </diff:ws>then<diff:ws> </diff:ws>lets<diff:ws> </diff:ws>wait<diff:ws> </diff:ws>until<diff:ws> </diff:ws>it's<diff:ws> </diff:ws>out<diff:ws> </diff:ws>of<diff:ws> </diff:ws>use</comment><diff:ws>
     </diff:ws><expr_stmt><expr><call><name><name>log</name><operator>.</operator><name>info</name></name><argument_list>(<argument><expr><literal type="string">"Waiting<diff:ws> </diff:ws>until<diff:ws> </diff:ws>IndexWriter<diff:ws> </diff:ws>is<diff:ws> </diff:ws>unused...<diff:ws> </diff:ws>core="</literal><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>coreName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
 
-    </diff:ws><try>try<diff:ws> </diff:ws><block>{<diff:ws>
-      </diff:ws><while>while<diff:ws> </diff:ws><condition>(<expr><operator>!</operator><name>writerFree</name></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
-        </diff:ws><try>try<diff:ws> </diff:ws><block>{<diff:ws>
+    </diff:ws><try>try<diff:ws> </diff:ws><block>{<block_content><diff:ws>
+      </diff:ws><while>while<diff:ws> </diff:ws><condition>(<expr><operator>!</operator><name>writerFree</name></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
+        </diff:ws><try>try<diff:ws> </diff:ws><block>{<block_content><diff:ws>
           </diff:ws><expr_stmt><expr><call><name><name>writerPauseLock</name><operator>.</operator><name>wait</name></name><argument_list>(<argument><expr><literal type="number">100</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
-        </diff:ws>}</block><diff:ws> </diff:ws><catch>catch<diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><name>InterruptedException</name></type><diff:ws> </diff:ws><name>e</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><block>{<diff:ws>
-        </diff:ws>}</block></catch></try><diff:ws>
-        </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><name>closed</name></expr>)</condition><then><diff:ws> </diff:ws><block>{<diff:ws>
+        </diff:ws></block_content>}</block><diff:ws> </diff:ws><catch>catch<diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><name>InterruptedException</name></type><diff:ws> </diff:ws><name>e</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><block>{<block_content><diff:ws>
+        </diff:ws></block_content>}</block></catch></try><diff:ws>
+        </diff:ws><if_stmt><if>if<diff:ws> </diff:ws><condition>(<expr><name>closed</name></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
           </diff:ws><throw>throw<diff:ws> </diff:ws><expr><operator>new</operator><diff:ws> </diff:ws><call><name>SolrException</name><argument_list>(<argument><expr><name><name>ErrorCode</name><operator>.</operator><name>SERVICE_UNAVAILABLE</name></name></expr></argument>,<diff:ws> </diff:ws><argument><expr><literal type="string">"SolrCoreState<diff:ws> </diff:ws>already<diff:ws> </diff:ws>closed"</literal></expr></argument>)</argument_list></call></expr>;</throw><diff:ws>
-        </diff:ws>}</block></then></if><diff:ws>
-      </diff:ws>}</block></while><diff:ws>
+        </diff:ws></block_content>}</block></if></if_stmt><diff:ws>
+      </diff:ws></block_content>}</block></while><diff:ws>
 
-      </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><name>indexWriter</name><diff:ws> </diff:ws><operator>!=</operator><diff:ws> </diff:ws><literal type="null">null</literal></expr>)</condition><then><diff:ws> </diff:ws><block>{<diff:ws>
-        </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><operator>!</operator><name>rollback</name></expr>)</condition><then><diff:ws> </diff:ws><block>{<diff:ws>
-          </diff:ws><try>try<diff:ws> </diff:ws><block>{<diff:ws>
+      </diff:ws><if_stmt><if>if<diff:ws> </diff:ws><condition>(<expr><name>indexWriter</name><diff:ws> </diff:ws><operator>!=</operator><diff:ws> </diff:ws><literal type="null">null</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
+        </diff:ws><if_stmt><if>if<diff:ws> </diff:ws><condition>(<expr><operator>!</operator><name>rollback</name></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
+          </diff:ws><try>try<diff:ws> </diff:ws><block>{<block_content><diff:ws>
             </diff:ws><expr_stmt><expr><call><name><name>log</name><operator>.</operator><name>info</name></name><argument_list>(<argument><expr><literal type="string">"Closing<diff:ws> </diff:ws>old<diff:ws> </diff:ws>IndexWriter...<diff:ws> </diff:ws>core="</literal><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>coreName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
             </diff:ws><expr_stmt><expr><call><name><name>indexWriter</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt><diff:ws>
-          </diff:ws>}</block><diff:ws> </diff:ws><catch>catch<diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><name>Exception</name></type><diff:ws> </diff:ws><name>e</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><block>{<diff:ws>
+          </diff:ws></block_content>}</block><diff:ws> </diff:ws><catch>catch<diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><name>Exception</name></type><diff:ws> </diff:ws><name>e</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><block>{<block_content><diff:ws>
             </diff:ws><expr_stmt><expr><call><name><name>SolrException</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>log</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><literal type="string">"Error<diff:ws> </diff:ws>closing<diff:ws> </diff:ws>old<diff:ws> </diff:ws>IndexWriter.<diff:ws> </diff:ws>core="</literal><diff:ws>
                 </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>coreName</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
-          </diff:ws>}</block></catch></try><diff:ws>
-        </diff:ws>}</block></then><diff:ws> </diff:ws><else>else<diff:ws> </diff:ws><block>{<diff:ws>
-          </diff:ws><try>try<diff:ws> </diff:ws><block>{<diff:ws>
+          </diff:ws></block_content>}</block></catch></try><diff:ws>
+        </diff:ws></block_content>}</block></if><diff:ws> </diff:ws><else>else<diff:ws> </diff:ws><block>{<block_content><diff:ws>
+          </diff:ws><try>try<diff:ws> </diff:ws><block>{<block_content><diff:ws>
             </diff:ws><expr_stmt><expr><call><name><name>log</name><operator>.</operator><name>info</name></name><argument_list>(<argument><expr><literal type="string">"Rollback<diff:ws> </diff:ws>old<diff:ws> </diff:ws>IndexWriter...<diff:ws> </diff:ws>core="</literal><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>coreName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
             </diff:ws><expr_stmt><expr><call><name><name>indexWriter</name><operator>.</operator><name>rollback</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt><diff:ws>
-          </diff:ws>}</block><diff:ws> </diff:ws><catch>catch<diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><name>Exception</name></type><diff:ws> </diff:ws><name>e</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><block>{<diff:ws>
+          </diff:ws></block_content>}</block><diff:ws> </diff:ws><catch>catch<diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><name>Exception</name></type><diff:ws> </diff:ws><name>e</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><block>{<block_content><diff:ws>
             </diff:ws><expr_stmt><expr><call><name><name>SolrException</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>log</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><literal type="string">"Error<diff:ws> </diff:ws>rolling<diff:ws> </diff:ws>back<diff:ws> </diff:ws>old<diff:ws> </diff:ws>IndexWriter.<diff:ws> </diff:ws>core="</literal><diff:ws>
                 </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>coreName</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
-          </diff:ws>}</block></catch></try><diff:ws>
-        </diff:ws>}</block></else></if><diff:ws>
-      </diff:ws>}</block></then></if><diff:ws>
+          </diff:ws></block_content>}</block></catch></try><diff:ws>
+        </diff:ws></block_content>}</block></else></if_stmt><diff:ws>
+      </diff:ws></block_content>}</block></if></if_stmt><diff:ws>
       </diff:ws><expr_stmt><expr><name>indexWriter</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><call><name>createMainIndexWriter</name><argument_list>(<argument><expr><name>core</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><literal type="string">"DirectUpdateHandler2"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
       </diff:ws><expr_stmt><expr><call><name><name>log</name><operator>.</operator><name>info</name></name><argument_list>(<argument><expr><literal type="string">"New<diff:ws> </diff:ws>IndexWriter<diff:ws> </diff:ws>is<diff:ws> </diff:ws>ready<diff:ws> </diff:ws>to<diff:ws> </diff:ws>be<diff:ws> </diff:ws>used."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
       </diff:ws><comment type="line">//<diff:ws> </diff:ws>we<diff:ws> </diff:ws>need<diff:ws> </diff:ws>to<diff:ws> </diff:ws>null<diff:ws> </diff:ws>this<diff:ws> </diff:ws>so<diff:ws> </diff:ws>it<diff:ws> </diff:ws>picks<diff:ws> </diff:ws>up<diff:ws> </diff:ws>the<diff:ws> </diff:ws>new<diff:ws> </diff:ws>writer<diff:ws> </diff:ws>next<diff:ws> </diff:ws>get<diff:ws> </diff:ws>call</comment><diff:ws>
       </diff:ws><expr_stmt><expr><name>refCntWriter</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><literal type="null">null</literal></expr>;</expr_stmt><diff:ws>
-    </diff:ws>}</block><diff:ws> </diff:ws><finally>finally<diff:ws> </diff:ws><block>{<diff:ws>
+    </diff:ws></block_content>}</block><diff:ws> </diff:ws><finally>finally<diff:ws> </diff:ws><block>{<block_content><diff:ws>
       </diff:ws><expr_stmt><expr><name>pauseWriter</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><literal type="boolean">false</literal></expr>;</expr_stmt><diff:ws>
       </diff:ws><expr_stmt><expr><call><name><name>writerPauseLock</name><operator>.</operator><name>notifyAll</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt><diff:ws>
-    </diff:ws>}</block></finally></try><diff:ws>
-  </diff:ws>}</block></synchronized><diff:ws>
-</diff:ws>}</block></function></diff:delete><diff:insert type="replace"><comment type="line">//<diff:ws> </diff:ws>closes<diff:ws> </diff:ws>and<diff:ws> </diff:ws>opens<diff:ws> </diff:ws>index<diff:ws> </diff:ws>writers<diff:ws> </diff:ws>without<diff:ws> </diff:ws>any<diff:ws> </diff:ws>locking</comment><diff:ws>
-</diff:ws><function><specifier>private</specifier><diff:ws> </diff:ws><type><name>void</name></type><diff:ws> </diff:ws><name>changeWriter</name><parameter_list>(<parameter><decl><type><name>SolrCore</name></type><diff:ws> </diff:ws><name>core</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>boolean</name></type><diff:ws> </diff:ws><name>rollback</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>boolean</name></type><diff:ws> </diff:ws><name>openNewWriter</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><throws>throws<diff:ws> </diff:ws><argument><expr><name>IOException</name></expr></argument></throws><diff:ws> </diff:ws><block>{<diff:ws>
+    </diff:ws></block_content>}</block></finally></try><diff:ws>
+  </diff:ws></block_content>}</block></synchronized><diff:ws>
+</diff:ws></block_content>}</block></function></diff:delete><diff:insert type="replace"><comment type="line">//<diff:ws> </diff:ws>closes<diff:ws> </diff:ws>and<diff:ws> </diff:ws>opens<diff:ws> </diff:ws>index<diff:ws> </diff:ws>writers<diff:ws> </diff:ws>without<diff:ws> </diff:ws>any<diff:ws> </diff:ws>locking</comment><diff:ws>
+</diff:ws><function><type><specifier>private</specifier><diff:ws> </diff:ws><name>void</name></type><diff:ws> </diff:ws><name>changeWriter</name><parameter_list>(<parameter><decl><type><name>SolrCore</name></type><diff:ws> </diff:ws><name>core</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>boolean</name></type><diff:ws> </diff:ws><name>rollback</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>boolean</name></type><diff:ws> </diff:ws><name>openNewWriter</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><throws>throws<diff:ws> </diff:ws><argument><expr><name>IOException</name></expr></argument></throws><diff:ws> </diff:ws><block>{<block_content><diff:ws>
   </diff:ws><decl_stmt><decl><type><name>String</name></type><diff:ws> </diff:ws><name>coreName</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><call><name><name>core</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt><diff:ws>
 
   </diff:ws><comment type="line">//<diff:ws> </diff:ws>We<diff:ws> </diff:ws>need<diff:ws> </diff:ws>to<diff:ws> </diff:ws>null<diff:ws> </diff:ws>this<diff:ws> </diff:ws>so<diff:ws> </diff:ws>it<diff:ws> </diff:ws>picks<diff:ws> </diff:ws>up<diff:ws> </diff:ws>the<diff:ws> </diff:ws>new<diff:ws> </diff:ws>writer<diff:ws> </diff:ws>next<diff:ws> </diff:ws>get<diff:ws> </diff:ws>call.</comment><diff:ws>
@@ -66,29 +66,29 @@
   </diff:ws><decl_stmt><decl><type><name>IndexWriter</name></type><diff:ws> </diff:ws><name>iw</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><name>indexWriter</name></expr></init></decl>;</decl_stmt><diff:ws> </diff:ws><comment type="line">//<diff:ws> </diff:ws>temp<diff:ws> </diff:ws>reference<diff:ws> </diff:ws>just<diff:ws> </diff:ws>for<diff:ws> </diff:ws>closing</comment><diff:ws>
   </diff:ws><expr_stmt><expr><name>indexWriter</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><literal type="null">null</literal></expr>;</expr_stmt><diff:ws> </diff:ws><comment type="line">//<diff:ws> </diff:ws>null<diff:ws> </diff:ws>this<diff:ws> </diff:ws>out<diff:ws> </diff:ws>now<diff:ws> </diff:ws>in<diff:ws> </diff:ws>case<diff:ws> </diff:ws>we<diff:ws> </diff:ws>fail,<diff:ws> </diff:ws>so<diff:ws> </diff:ws>we<diff:ws> </diff:ws>won't<diff:ws> </diff:ws>use<diff:ws> </diff:ws>the<diff:ws> </diff:ws>writer<diff:ws> </diff:ws>again</comment><diff:ws>
 
-  </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><name>iw</name><diff:ws> </diff:ws><operator>!=</operator><diff:ws> </diff:ws><literal type="null">null</literal></expr>)</condition><then><diff:ws> </diff:ws><block>{<diff:ws>
-    </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><operator>!</operator><name>rollback</name></expr>)</condition><then><diff:ws> </diff:ws><block>{<diff:ws>
-      </diff:ws><try>try<diff:ws> </diff:ws><block>{<diff:ws>
+  </diff:ws><if_stmt><if>if<diff:ws> </diff:ws><condition>(<expr><name>iw</name><diff:ws> </diff:ws><operator>!=</operator><diff:ws> </diff:ws><literal type="null">null</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
+    </diff:ws><if_stmt><if>if<diff:ws> </diff:ws><condition>(<expr><operator>!</operator><name>rollback</name></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
+      </diff:ws><try>try<diff:ws> </diff:ws><block>{<block_content><diff:ws>
         </diff:ws><expr_stmt><expr><call><name><name>log</name><operator>.</operator><name>info</name></name><argument_list>(<argument><expr><literal type="string">"Closing<diff:ws> </diff:ws>old<diff:ws> </diff:ws>IndexWriter...<diff:ws> </diff:ws>core="</literal><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>coreName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
         </diff:ws><expr_stmt><expr><call><name><name>iw</name><operator>.</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt><diff:ws>
-      </diff:ws>}</block><diff:ws> </diff:ws><catch>catch<diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><name>Exception</name></type><diff:ws> </diff:ws><name>e</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><block>{<diff:ws>
+      </diff:ws></block_content>}</block><diff:ws> </diff:ws><catch>catch<diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><name>Exception</name></type><diff:ws> </diff:ws><name>e</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><block>{<block_content><diff:ws>
         </diff:ws><expr_stmt><expr><call><name><name>SolrException</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>log</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><literal type="string">"Error<diff:ws> </diff:ws>closing<diff:ws> </diff:ws>old<diff:ws> </diff:ws>IndexWriter.<diff:ws> </diff:ws>core="</literal><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>coreName</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
-      </diff:ws>}</block></catch></try><diff:ws>
-    </diff:ws>}</block></then><diff:ws> </diff:ws><else>else<diff:ws> </diff:ws><block>{<diff:ws>
-      </diff:ws><try>try<diff:ws> </diff:ws><block>{<diff:ws>
+      </diff:ws></block_content>}</block></catch></try><diff:ws>
+    </diff:ws></block_content>}</block></if><diff:ws> </diff:ws><else>else<diff:ws> </diff:ws><block>{<block_content><diff:ws>
+      </diff:ws><try>try<diff:ws> </diff:ws><block>{<block_content><diff:ws>
         </diff:ws><expr_stmt><expr><call><name><name>log</name><operator>.</operator><name>info</name></name><argument_list>(<argument><expr><literal type="string">"Rollback<diff:ws> </diff:ws>old<diff:ws> </diff:ws>IndexWriter...<diff:ws> </diff:ws>core="</literal><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>coreName</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
         </diff:ws><expr_stmt><expr><call><name><name>iw</name><operator>.</operator><name>rollback</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt><diff:ws>
-      </diff:ws>}</block><diff:ws> </diff:ws><catch>catch<diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><name>Exception</name></type><diff:ws> </diff:ws><name>e</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><block>{<diff:ws>
+      </diff:ws></block_content>}</block><diff:ws> </diff:ws><catch>catch<diff:ws> </diff:ws><parameter_list>(<parameter><decl><type><name>Exception</name></type><diff:ws> </diff:ws><name>e</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><block>{<block_content><diff:ws>
         </diff:ws><expr_stmt><expr><call><name><name>SolrException</name><operator>.</operator><name>log</name></name><argument_list>(<argument><expr><name>log</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><literal type="string">"Error<diff:ws> </diff:ws>rolling<diff:ws> </diff:ws>back<diff:ws> </diff:ws>old<diff:ws> </diff:ws>IndexWriter.<diff:ws> </diff:ws>core="</literal><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>coreName</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>e</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
-      </diff:ws>}</block></catch></try><diff:ws>
-    </diff:ws>}</block></else></if><diff:ws>
-  </diff:ws>}</block></then></if><diff:ws>
+      </diff:ws></block_content>}</block></catch></try><diff:ws>
+    </diff:ws></block_content>}</block></else></if_stmt><diff:ws>
+  </diff:ws></block_content>}</block></if></if_stmt><diff:ws>
 
-  </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><name>openNewWriter</name></expr>)</condition><then><diff:ws> </diff:ws><block>{<diff:ws>
+  </diff:ws><if_stmt><if>if<diff:ws> </diff:ws><condition>(<expr><name>openNewWriter</name></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
     </diff:ws><expr_stmt><expr><name>indexWriter</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><call><name>createMainIndexWriter</name><argument_list>(<argument><expr><name>core</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><literal type="string">"DirectUpdateHandler2"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
     </diff:ws><expr_stmt><expr><call><name><name>log</name><operator>.</operator><name>info</name></name><argument_list>(<argument><expr><literal type="string">"New<diff:ws> </diff:ws>IndexWriter<diff:ws> </diff:ws>is<diff:ws> </diff:ws>ready<diff:ws> </diff:ws>to<diff:ws> </diff:ws>be<diff:ws> </diff:ws>used."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
-  </diff:ws>}</block></then></if><diff:ws>
-</diff:ws>}</block></function></diff:insert>
+  </diff:ws></block_content>}</block></if></if_stmt><diff:ws>
+</diff:ws></block_content>}</block></function></diff:insert>
 </unit>
 
 </unit>
