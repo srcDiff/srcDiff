@@ -1,66 +1,66 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="while">
 
-<unit language="C++" filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><diff:ws>
-</diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></while></diff:delete></unit>
+<unit language="C++" filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content><diff:ws>
+</diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block_content></block></while></diff:delete></unit>
 
 <unit language="C++" filename="while.single|while.single">
-<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><diff:ws>
-</diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></block></while></diff:delete>
+<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content><diff:ws>
+</diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common></block_content></block></while></diff:delete>
 </unit>
 
 <unit language="C++" filename="while.single|while.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><diff:ws>
-</diff:ws><diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:common></block></while></diff:delete>
+<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content><diff:ws>
+</diff:ws><diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:common></block_content></block></while></diff:delete>
 </unit>
 
 <unit language="C++" filename="while.single|while.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><diff:ws>
-</diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt></block></while></diff:delete></unit>
+<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content><diff:ws>
+</diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt></block_content></block></while></diff:delete></unit>
 
-<unit language="C++" filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<unit language="C++" filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
-</diff:ws>}</block></while></diff:delete></unit>
+</diff:ws></block_content>}</block></while></diff:delete></unit>
 
-<unit language="C++" filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<unit language="C++" filename="while.single|while.single"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 </diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common><diff:ws>
-</diff:ws>}</block></while></diff:delete></unit>
+</diff:ws></block_content>}</block></while></diff:delete></unit>
 
 <unit language="C++" filename="while.single|while.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 </diff:ws><diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:common><diff:ws>
-</diff:ws>}</block></while></diff:delete></unit>
+</diff:ws></block_content>}</block></while></diff:delete></unit>
 
 <unit language="C++" filename="while.single|while.single">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
-</diff:ws>}</block></while></diff:delete></unit>
+</diff:ws></block_content>}</block></while></diff:delete></unit>
 
 <unit language="C++" filename="while.single|while.single">
-<while>while<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><block type="pseudo">
-<diff:delete type="replace"><diff:ws>    </diff:ws><expr_stmt><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>c</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>d</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>e</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>f</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:ws>    </diff:ws><empty_stmt>;</empty_stmt></diff:insert></block></while>
+<while>while<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><block type="pseudo"><block_content>
+<diff:delete type="replace"><diff:ws>    </diff:ws><expr_stmt><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>c</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>d</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>e</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>f</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:ws>    </diff:ws><empty_stmt>;</empty_stmt></diff:insert></block_content></block></while>
 </unit>
 
-<unit language="C++" filename="while.multiple|while.multiple"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<unit language="C++" filename="while.multiple|while.multiple"><diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 </diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:common><diff:ws>
-</diff:ws>}</block></while></diff:delete></unit>
+</diff:ws></block_content>}</block></while></diff:delete></unit>
 
 <unit language="C++" filename="while.multiple|while.multiple">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<diff:delete><while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 </diff:ws><diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:common><diff:ws>
-</diff:ws>}</block></while></diff:delete></unit>
+</diff:ws></block_content>}</block></while></diff:delete></unit>
 
 <unit language="C++" filename="while.multiple|while.multiple">
-<while>while<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition> <block>{
+<while>while<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition> <block>{<block_content>
 
 <diff:delete><diff:ws>    </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
     </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
@@ -75,11 +75,11 @@
     </diff:ws><expr_stmt><expr><name>k</name></expr>;</expr_stmt><diff:ws>
 
 
-</diff:ws></diff:delete>}</block></while><diff:delete><diff:ws>
+</diff:ws></diff:delete></block_content>}</block></while><diff:delete><diff:ws>
 </diff:ws></diff:delete></unit>
 
 <unit language="C++" filename="while.multiple|while.multiple">
-<while>while<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><diff:delete type="replace"><diff:ws> </diff:ws><block>{<diff:ws>
+<while>while<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><diff:delete type="replace"><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 
     </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
     </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
@@ -94,7 +94,7 @@
     </diff:ws><expr_stmt><expr><name>k</name></expr>;</expr_stmt><diff:ws>
 
 
-</diff:ws>}</block></diff:delete><diff:insert type="replace"><block type="pseudo"><diff:ws>
-    </diff:ws><empty_stmt>;</empty_stmt></block></diff:insert></while></unit>
+</diff:ws></block_content>}</block></diff:delete><diff:insert type="replace"><block type="pseudo"><block_content><diff:ws>
+    </diff:ws><empty_stmt>;</empty_stmt></block_content></block></diff:insert></while></unit>
     
 </unit>
