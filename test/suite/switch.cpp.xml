@@ -2,10 +2,10 @@
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="switch">
 
 <unit language="C++" filename="switch|switch">
-<diff:delete><switch>switch<condition>(<expr><name>foo</name></expr>)</condition><diff:ws> </diff:ws><block>{}</block></switch></diff:delete></unit>
+<diff:delete><switch>switch<condition>(<expr><name>foo</name></expr>)</condition><diff:ws> </diff:ws><block>{<block_content/>}</block></switch></diff:delete></unit>
 
 <unit language="C++" filename="switch|switch">
-<switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
+<switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{<block_content>
 
     <case>case <expr><name>bar</name></expr>:</case>
 
@@ -16,10 +16,10 @@
     <break>break;</break>
 
 
-}</block></switch></unit>
+</block_content>}</block></switch></unit>
 
 <unit language="C++" filename="switch|switch">
-<switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{
+<switch>switch<condition>(<expr><name>foo</name></expr>)</condition> <block>{<block_content>
 
 <diff:delete><diff:ws>    </diff:ws><case>case<diff:ws> </diff:ws><expr><name>bar</name></expr>:</case><diff:ws>
 
@@ -30,6 +30,6 @@
     </diff:ws><break>break;</break><diff:ws>
 
 
-</diff:ws></diff:delete>}</block></switch></unit>
+</diff:ws></diff:delete></block_content>}</block></switch></unit>
 
 </unit>
