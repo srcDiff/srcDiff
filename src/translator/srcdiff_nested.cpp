@@ -906,20 +906,7 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
   const std::string & structure_outer = node_sets_outer.nodes().at(node_sets_outer.at(start_outer).at(0))->name;
   if(structure_outer == "if" || structure_outer == "elseif") {
 
-    if(structure_outer == "elseif") {
-
-      advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "if");
-      ++start_pos;
-    }
-
-    advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then");
-
-    if(structure_outer == "elseif") {
-
-      while(end_pos > start_pos && node_sets_outer.nodes().at(end_pos)->name != "if")
-        --end_pos;
-
-    }
+    advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "block");
 
   } else if(structure_outer == "while") {
 
