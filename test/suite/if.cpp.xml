@@ -20,30 +20,30 @@
 <diff:delete><if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content><diff:ws>
 </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt></block_content></block></if></if_stmt></diff:delete></unit>
 
-<unit language="C++" filename="if|if"><diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<unit language="C++" filename="if|if"><diff:delete><if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
-</diff:ws>}</block></if></diff:delete></unit>
+</diff:ws></block_content>}</block></if></if_stmt></diff:delete></unit>
 
 <unit language="C++" filename="if|if"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<diff:delete><if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
-</diff:ws>}</block></if></diff:delete></unit>
+</diff:ws></block_content>}</block></if></if_stmt></diff:delete></unit>
 
-<unit language="C++" filename="if|if"><diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<unit language="C++" filename="if|if"><diff:delete><if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 </diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common><diff:ws>
-</diff:ws>}</block></if></diff:delete></unit>
+</diff:ws></block_content>}</block></if></if_stmt></diff:delete></unit>
 
 <unit language="C++" filename="if|if">
 <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<diff:delete><if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
-</diff:ws>}</block></if></diff:delete></unit>
+</diff:ws></block_content>}</block></if></if_stmt></diff:delete></unit>
 
 <unit language="C++" filename="if|if">
-<diff:delete><if>if<diff:ws> </diff:ws><condition>(<expr><operator>!</operator><name><name>cmd</name><operator>-&gt;</operator><name>t_data_nents</name></name></expr>)</condition><block type="pseudo"><block_content><diff:ws>
-    </diff:ws><return>return;</return></block_content></block><diff:ws>
-</diff:ws><elseif>else<diff:ws> </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><name><name>cmd</name><operator>-&gt;</operator><name>t_data_nents</name></name><diff:ws> </diff:ws><operator>==</operator><diff:ws> </diff:ws><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content><diff:ws>
-    </diff:ws><diff:common><expr_stmt><expr><call><name>kunmap</name><argument_list>(<argument><expr><call><name>sg_page</name><argument_list>(<argument><expr><name><name>cmd</name><operator>-&gt;</operator><name>t_data_sg</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></diff:common></block_content></block></if></elseif></if></diff:delete>
+<diff:delete><if_stmt><if>if<diff:ws> </diff:ws><condition>(<expr><operator>!</operator><name><name>cmd</name><operator>-&gt;</operator><name>t_data_nents</name></name></expr>)</condition><block type="pseudo"><block_content><diff:ws>
+    </diff:ws><return>return;</return></block_content></block></if><diff:ws>
+</diff:ws><if type="elseif">else<diff:ws> </diff:ws>if<diff:ws> </diff:ws><condition>(<expr><name><name>cmd</name><operator>-&gt;</operator><name>t_data_nents</name></name><diff:ws> </diff:ws><operator>==</operator><diff:ws> </diff:ws><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content><diff:ws>
+    </diff:ws><diff:common><expr_stmt><expr><call><name>kunmap</name><argument_list>(<argument><expr><call><name>sg_page</name><argument_list>(<argument><expr><name><name>cmd</name><operator>-&gt;</operator><name>t_data_sg</name></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></diff:common></block_content></block></if></if_stmt></diff:delete>
 </unit>
 
 <unit language="C++" filename="if|if">
