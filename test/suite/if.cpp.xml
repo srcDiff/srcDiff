@@ -55,39 +55,39 @@
 <if_stmt><if>if <condition>(<diff:delete type="replace"><expr><name>p</name><diff:ws> </diff:ws><operator>&gt;=</operator><diff:ws> </diff:ws><call><name>count</name><argument_list>()</argument_list></call></expr></diff:delete><diff:insert type="replace"><expr><call><name>already_exist</name><argument_list>(<argument><expr><name>chain</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>p</name></expr></argument>)</argument_list></call></expr></diff:insert>)</condition><block type="pseudo"><block_content> <break>break;</break></block_content></block></if></if_stmt></unit>
 
 <unit language="C++" filename="if|if">
-<diff:insert><if>if<condition>(<diff:ws> </diff:ws><expr><operator>*</operator><call><name><name>m_d</name><operator>-&gt;</operator><name>cachedPaintDevice</name><operator>-&gt;</operator><name>colorSpace</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>==</operator><diff:ws> </diff:ws><operator>*</operator><call><name>image</name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name>colorSpace</name><argument_list>()</argument_list></call></expr>)</condition><block type="pseudo"><block_content><diff:ws>
-        </diff:ws><expr_stmt><expr><call><name><name>m_d</name><operator>-&gt;</operator><name>cachedPaintDevice</name><operator>-&gt;</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block_content></block><diff:ws>
+<diff:insert><if_stmt><if>if<condition>(<diff:ws> </diff:ws><expr><operator>*</operator><call><name><name>m_d</name><operator>-&gt;</operator><name>cachedPaintDevice</name><operator>-&gt;</operator><name>colorSpace</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>==</operator><diff:ws> </diff:ws><operator>*</operator><call><name>image</name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name>colorSpace</name><argument_list>()</argument_list></call></expr>)</condition><block type="pseudo"><block_content><diff:ws>
+        </diff:ws><expr_stmt><expr><call><name><name>m_d</name><operator>-&gt;</operator><name>cachedPaintDevice</name><operator>-&gt;</operator><name>clear</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></block_content></block></if><diff:ws>
 
 </diff:ws><else>else<block type="pseudo"><block_content><diff:ws>
-    </diff:ws><diff:common><expr_stmt><expr><name><name>m_d</name><operator>-&gt;</operator><name>cachedPaintDevice</name></name> <operator>=</operator> <operator>new</operator> <call><name>KisPaintDevice</name><argument_list>(<argument><expr><call><name>image</name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name>colorSpace</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></diff:common></block_content></block></else></if><diff:ws>
+    </diff:ws><diff:common><expr_stmt><expr><name><name>m_d</name><operator>-&gt;</operator><name>cachedPaintDevice</name></name> <operator>=</operator> <operator>new</operator> <call><name>KisPaintDevice</name><argument_list>(<argument><expr><call><name>image</name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name>colorSpace</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></diff:common></block_content></block></else></if_stmt><diff:ws>
 </diff:ws></diff:insert></unit>
 
-<unit language="C++" filename="if|if"><diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<unit language="C++" filename="if|if"><diff:delete><if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 </diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:common><diff:ws>
-</diff:ws>}</block></if></diff:delete></unit>
+</diff:ws></block_content>}</block></if></if_stmt></diff:delete></unit>
 
 <unit language="C++" filename="if|if"><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<diff:delete><if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 </diff:ws><diff:common><expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:common><diff:ws>
-</diff:ws>}</block></if></diff:delete></unit>
+</diff:ws></block_content>}</block></if></if_stmt></diff:delete></unit>
 
 <unit language="C++" filename="if|if">
-<diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<diff:delete><if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 
 </diff:ws><diff:common>    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 </diff:common><diff:ws>
-</diff:ws>}</block></if><diff:ws>
+</diff:ws></block_content>}</block></if></if_stmt><diff:ws>
 
-</diff:ws><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+</diff:ws><if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
     
 </diff:ws><diff:common>    <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
 
-</diff:common>}</block></if></diff:delete></unit>
+</diff:common></block_content>}</block></if></if_stmt></diff:delete></unit>
 
 <unit language="C++" filename="if|if">
 <diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
