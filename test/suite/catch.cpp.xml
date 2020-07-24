@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="catch">
 
-<unit language="C++" filename="catch|catch"><diff:delete><catch>catch<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws>}</block></catch></diff:delete>
+<unit language="C++" filename="catch|catch"><diff:delete><catch>catch<diff:ws> </diff:ws><block>{<block_content><diff:ws> </diff:ws></block_content>}</block></catch></diff:delete>
 </unit>
 
-<unit language="C++" filename="catch|catch"><diff:delete><catch>catch<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common><diff:ws> </diff:ws>}</block></catch></diff:delete>
+<unit language="C++" filename="catch|catch"><diff:delete><catch>catch<diff:ws> </diff:ws><block>{<block_content><diff:ws> </diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:common><diff:ws> </diff:ws></block_content>}</block></catch></diff:delete>
 </unit>
 
-<unit language="C++" filename="catch|catch"><diff:delete><catch>catch<diff:ws> </diff:ws><block>{<diff:ws> </diff:ws><diff:common><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo"> <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if></diff:common><diff:ws> </diff:ws>}</block></catch></diff:delete>
+<unit language="C++" filename="catch|catch"><diff:delete><catch>catch<diff:ws> </diff:ws><block>{<block_content><diff:ws> </diff:ws><diff:common><if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content> <expr_stmt><expr><name>a</name></expr>;</expr_stmt></block_content></block></if></if_stmt></diff:common><diff:ws> </diff:ws></block_content>}</block></catch></diff:delete>
 </unit>
 
 </unit>
