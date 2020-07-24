@@ -15,12 +15,12 @@
 </unit>
 
 <unit language="C++" filename="expr_stmt|expr_stmt">
-<if>if<condition>(<expr><name><name>state</name><operator>-&gt;</operator><name>context</name><operator>-&gt;</operator><name>handler</name><operator>-&gt;</operator><name>meta_tag</name></name> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>state</name><operator>-&gt;</operator><name>meta_tags</name><operator>.</operator><name>empty</name></name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+<if_stmt><if>if<condition>(<expr><name><name>state</name><operator>-&gt;</operator><name>context</name><operator>-&gt;</operator><name>handler</name><operator>-&gt;</operator><name>meta_tag</name></name> <operator>&amp;&amp;</operator> <operator>!</operator><call><name><name>state</name><operator>-&gt;</operator><name>meta_tags</name><operator>.</operator><name>empty</name></name><argument_list>()</argument_list></call></expr>)</condition> <block>{<block_content>
 
-    <for>for<control>(<init><decl><type><name><name>std</name><operator>::</operator><name><name>vector</name><argument_list type="generic">&lt;<argument><expr><name>srcml_element</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>const_iterator</name></name></type> <name>citr</name> <init>= <expr><call><name><name>state</name><operator>-&gt;</operator><name>meta_tags</name><operator>.</operator><name>begin</name></name><argument_list>()</argument_list></call></expr></init></decl>;</init> <condition><expr><name>citr</name> <operator>&lt;</operator> <call><name><name>state</name><operator>-&gt;</operator><name>meta_tags</name><operator>.</operator><name>end</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><operator>++</operator><name>citr</name></expr></incr>)</control> <block>{
+    <for>for<control>(<init><decl><type><name><name>std</name><operator>::</operator><name>vector</name><argument_list type="generic">&lt;<argument><expr><name>srcml_element</name></expr></argument>&gt;</argument_list><operator>::</operator><name>const_iterator</name></name></type> <name>citr</name> <init>= <expr><call><name><name>state</name><operator>-&gt;</operator><name>meta_tags</name><operator>.</operator><name>begin</name></name><argument_list>()</argument_list></call></expr></init></decl>;</init> <condition><expr><name>citr</name> <operator>&lt;</operator> <call><name><name>state</name><operator>-&gt;</operator><name>meta_tags</name><operator>.</operator><name>end</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><operator>++</operator><name>citr</name></expr></incr>)</control> <block>{<block_content>
 
-        <if>if<condition>(<expr><name><name>state</name><operator>-&gt;</operator><name>context</name><operator>-&gt;</operator><name>terminate</name></name></expr>)</condition><then><block type="pseudo"><diff:delete><diff:ws>
-           </diff:ws></diff:delete> <return>return;</return></block></then></if>
+        <if_stmt><if>if<condition>(<expr><name><name>state</name><operator>-&gt;</operator><name>context</name><operator>-&gt;</operator><name>terminate</name></name></expr>)</condition><block type="pseudo"><block_content><diff:delete><diff:ws>
+           </diff:ws></diff:delete> <return>return;</return></block_content></block></if></if_stmt>
 
 <diff:insert><diff:ws>        </diff:ws><decl_stmt><decl><type><name>srcsax_namespace</name><diff:ws> </diff:ws><modifier>*</modifier></type><diff:ws> </diff:ws><name>srcsax_namespaces_meta_tag</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><operator>(</operator><name>srcsax_namespace</name><diff:ws> </diff:ws><operator>*</operator><operator>)</operator><call><name>libxml2_namespaces2srcsax_namespaces</name><argument_list>(<argument><expr><name><name>citr</name><operator>-&gt;</operator><name>nb_namespaces</name></name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name><name>citr</name><operator>-&gt;</operator><name>namespaces</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt><diff:ws>
         </diff:ws><decl_stmt><decl><type><name>srcsax_attribute</name><diff:ws> </diff:ws><modifier>*</modifier></type><diff:ws> </diff:ws><name>srcsax_attributes_meta_tag</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><operator>(</operator><name>srcsax_attribute</name><diff:ws> </diff:ws><operator>*</operator><operator>)</operator><call><name>libxml2_attributes2srcsax_attributes</name><argument_list>(<argument><expr><name><name>citr</name><operator>-&gt;</operator><name>nb_attributes</name></name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name><name>citr</name><operator>-&gt;</operator><name>attributes</name></name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt><diff:ws>
@@ -36,10 +36,10 @@
 
         </diff:ws><expr_stmt><expr><call><name>free_srcsax_namespaces</name><argument_list>(<argument><expr><name><name>citr</name><operator>-&gt;</operator><name>nb_namespaces</name></name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>srcsax_namespaces_meta_tag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
         </diff:ws><expr_stmt><expr><call><name>free_srcsax_attributes</name><argument_list>(<argument><expr><name><name>citr</name><operator>-&gt;</operator><name>nb_attributes</name></name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>srcsax_attributes_meta_tag</name></expr></argument>)</argument_list></call></expr>;</expr_stmt></diff:insert><diff:delete><diff:ws>    </diff:ws></diff:delete>
-    }</block></for>
+    </block_content>}</block></for>
 
 <diff:delete><diff:ws>
-</diff:ws></diff:delete>}</block></then></if>
+</diff:ws></diff:delete></block_content>}</block></if></if_stmt>
 </unit>
 
 </unit>
