@@ -1361,9 +1361,9 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
   // check block of first child of if_stmt (old if behavior)
   if(original_tag == "if_stmt" && !child_node_sets_original.empty()) {
 
-    std::string tag = set_original.nodes().at(child_node_sets_original.back().at(0))->name;
+    std::string tag = set_original.nodes().at(child_node_sets_original.at(0).at(0))->name;
     if(tag == "else" || tag == "if") {
-      node_sets temp = node_sets(set_original.nodes(), child_node_sets_original.back().at(1), child_node_sets_original.back().back());
+      node_sets temp = node_sets(set_original.nodes(), child_node_sets_original.at(0).at(1), child_node_sets_original.back().back());
       child_node_sets_original = temp;
     }
 
@@ -1372,9 +1372,9 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
   // check block of first child of if_stmt (old if behavior)
   if(modified_tag == "if_stmt" && !child_node_sets_modified.empty()) {
 
-    std::string tag =  set_modified.nodes().at(child_node_sets_modified.back().at(0))->name;
+    std::string tag =  set_modified.nodes().at(child_node_sets_modified.at(0).at(0))->name;
     if(tag == "else" || tag == "if") {
-      node_sets temp = node_sets(set_modified.nodes(), child_node_sets_modified.back().at(1), child_node_sets_modified.back().back());
+      node_sets temp = node_sets(set_modified.nodes(), child_node_sets_modified.at(0).at(1), child_node_sets_modified.back().back());
       child_node_sets_modified = temp;
     }
 
