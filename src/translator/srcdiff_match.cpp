@@ -738,20 +738,22 @@ bool conditional_has_block(const node_set & set) {
 }
 
 /** loop O(n) */
-bool if_stmt_has_condition(const node_set & set) {
+node_set get_if_stmt_first_child(const node_set & set) {
 
   node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
-  for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
+  return sets.at(0);
+}
 
-    if(set.nodes().at(itr->at(0))->name == "if") {
+bool is_child_if(const node_set & child) {
+
+  if(child.nodes().at(child.at(0))->name == "if") {
       return true;
-    }
-
   }
 
   return false;
 
 }
+
 
 /** loop O(n) */
 bool if_has_else(const node_set & set) {
@@ -772,30 +774,17 @@ bool if_has_else(const node_set & set) {
 }
 
 /** loop O(n) */
-bool if_block_content_equal(const node_set & set_original, const node_set & set_modified) {
+bool if_block_equal(const node_set & set_original, const node_set & set_modified) {
 
   diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
 
   node_sets node_sets_original = node_sets(set_original.nodes(), set_original.at(1), set_original.back());
   node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back());
 
-  node_sets::iterator then_original;
-  for(then_original = node_sets_original.begin(); then_original != node_sets_original.end(); ++then_original) {
+  node_sets::iterator block_original;
+  for(block_original = node_sets_original.begin(); block_original != node_sets_original.end(); ++block_original) {
 
-    if(set_original.nodes().at(then_original->at(0))->name == "block_content") {
-
-      break;
-
-    }
-
-  }
-
-  if(then_original == node_sets_original.end()) return false;
-
-  node_sets::iterator then_modified;
-  for(then_modified = node_sets_modified.begin(); then_modified != node_sets_modified.end(); ++then_modified) {
-
-    if(set_modified.nodes().at(then_modified->at(0))->name == "then") {
+    if(set_original.nodes().at(block_original->at(0))->name == "block") {
 
       break;
 
@@ -803,11 +792,24 @@ bool if_block_content_equal(const node_set & set_original, const node_set & set_
 
   }
 
-  if(then_modified == node_sets_modified.end()) return false;
+  if(block_original == node_sets_original.end()) return false;
 
-  bool then_is_equal = srcdiff_compare::node_set_syntax_compare((void *)&*then_original, (void *)&*then_modified, (void *)&dnodes) == 0;
+  node_sets::iterator block_modified;
+  for(block_modified = node_sets_modified.begin(); block_modified != node_sets_modified.end(); ++block_modified) {
 
-  return then_is_equal;
+    if(set_modified.nodes().at(block_modified->at(0))->name == "block") {
+
+      break;
+
+    }
+
+  }
+
+  if(block_modified == node_sets_modified.end()) return false;
+
+  bool block_is_equal = srcdiff_compare::node_set_syntax_compare((void *)&*block_original, (void *)&*block_modified, (void *)&dnodes) == 0;
+
+  return block_is_equal;
 
 }
 
@@ -1123,15 +1125,20 @@ bool reject_match_same(const srcdiff_measure & measure,
 
     if(original_name == modified_name) return false;
 
-  } else if(original_tag == "if_stmt"
-         && if_stmt_has_condition(set_original)
-         && if_stmt_has_condition(set_modified)) {
+  } else if(original_tag == "if_stmt") {
 
-    std::string original_condition = get_condition(set_original.nodes(), original_pos);
-    std::string modified_condition = get_condition(set_modified.nodes(), modified_pos);
+    node_set first_original = get_if_stmt_first_child(set_original);
+    node_set first_modified = get_if_stmt_first_child(set_modified);
 
-    if(original_condition == modified_condition) {
-      return false;
+    if(is_child_if(first_original) && is_child_if(first_modified)) {
+
+      std::string original_condition = get_condition(set_original.nodes(), original_pos);
+      std::string modified_condition = get_condition(set_modified.nodes(), modified_pos);
+
+      if(original_condition == modified_condition
+        || if_block_equal(first_original, first_modified)) {
+        return false;
+      }
     }
 
   } else if(original_tag == "if" && original_uri == SRCML_SRC_NAMESPACE_HREF) {
@@ -1147,7 +1154,7 @@ bool reject_match_same(const srcdiff_measure & measure,
     // bool original_has_else = if_has_else(set_original);
     // bool modified_has_else = if_has_else(set_modified);
 
-    if(if_block_content_equal(set_original, set_modified))
+    if(if_block_equal(set_original, set_modified))
 /*      || (original_condition == modified_condition
         && ( original_has_block == modified_has_block 
           || original_has_else == modified_has_else 
