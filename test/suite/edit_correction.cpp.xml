@@ -269,7 +269,7 @@
 </unit>
 
 <unit language="C++" filename="edit_correction|edit_correction">
-<constructor><name><name>srcdiff_output</name><operator>::</operator><name>srcdiff_output</name></name><parameter_list>(<diff:delete><parameter><decl><type><specifier>const</specifier><diff:ws> </diff:ws><name>char</name><diff:ws> </diff:ws><modifier>*</modifier></type><diff:ws> </diff:ws><name>prefix</name></decl></parameter>,<diff:ws> </diff:ws></diff:delete><parameter><decl><type><diff:insert><specifier>const</specifier><diff:ws> </diff:ws></diff:insert><name><name>std</name><operator>::</operator><name>string</name></name><diff:insert><diff:ws> </diff:ws><modifier>&amp;</modifier></diff:insert></type> <name>css</name></decl></parameter>, <parameter><decl><type><name>unsigned</name> <name>long</name></type> <name>number_context_lines</name></decl></parameter>)</parameter_list> <block>{}</block></constructor>
+<constructor><name><name>srcdiff_output</name><operator>::</operator><name>srcdiff_output</name></name><parameter_list>(<diff:delete><parameter><decl><type><specifier>const</specifier><diff:ws> </diff:ws><name>char</name><diff:ws> </diff:ws><modifier>*</modifier></type><diff:ws> </diff:ws><name>prefix</name></decl></parameter>,<diff:ws> </diff:ws></diff:delete><parameter><decl><type><diff:insert><specifier>const</specifier><diff:ws> </diff:ws></diff:insert><name><name>std</name><operator>::</operator><name>string</name></name><diff:insert><diff:ws> </diff:ws><modifier>&amp;</modifier></diff:insert></type> <name>css</name></decl></parameter>, <parameter><decl><type><name>unsigned</name> <name>long</name></type> <name>number_context_lines</name></decl></parameter>)</parameter_list> <block>{<block_content/>}</block></constructor>
 </unit>
 
 <unit language="C++" filename="edit_correction|edit_correction">
@@ -277,32 +277,32 @@
     <operator>&amp;&amp;</operator> <operator>!</operator><call><name>isspace</name><argument_list>(<argument><expr><operator>*</operator><name>characters</name></expr></argument>)</argument_list></call>
     <operator>&amp;&amp;</operator> <operator>!</operator><diff:insert><operator>(</operator><name>in_comment</name><diff:ws> </diff:ws><operator>&amp;&amp;</operator><diff:ws> </diff:ws></diff:insert><call><name>is_comment_separate</name><argument_list>(<diff:delete><argument><expr><call><name><name>element_stack</name><operator>.</operator><name>back</name></name><argument_list>()</argument_list></call><operator>-&gt;</operator><name>name</name></expr></argument>,<diff:ws> </diff:ws></diff:delete><argument><expr><operator>*</operator><name>characters</name></expr></argument>)</argument_list></call><diff:insert><operator>)</operator></diff:insert>
     <operator>&amp;&amp;</operator> <operator>!</operator><diff:insert><operator>(</operator><name>in_cpp_file</name><diff:ws> </diff:ws><operator>&amp;&amp;</operator><diff:ws> </diff:ws></diff:insert><call><name>is_cpp_file_separate</name><argument_list>(<diff:delete><argument><expr><call><name><name>element_stack</name><operator>.</operator><name>back</name></name><argument_list>()</argument_list></call><operator>-&gt;</operator><name>name</name></expr></argument>,<diff:ws> </diff:ws></diff:delete><argument><expr><operator>*</operator><name>characters</name></expr></argument>)</argument_list></call><diff:insert><operator>)</operator></diff:insert>
-    <operator>&amp;&amp;</operator> <operator>!</operator><call><name>is_separate_token</name><argument_list>(<argument><expr><operator>*</operator><name>characters</name></expr></argument>)</argument_list></call></expr>)</condition><block type="pseudo">
-  <expr_stmt><expr><operator>++</operator><name>characters</name></expr>;</expr_stmt></block></while>
+    <operator>&amp;&amp;</operator> <operator>!</operator><call><name>is_separate_token</name><argument_list>(<argument><expr><operator>*</operator><name>characters</name></expr></argument>)</argument_list></call></expr>)</condition><block type="pseudo"><block_content>
+  <expr_stmt><expr><operator>++</operator><name>characters</name></expr>;</expr_stmt></block_content></block></while>
 </unit>
 
 <unit language="C++" filename="edit_correction|edit_correction">
 <function type="operator"><template>template <parameter_list>&lt;<parameter><type><name>int</name></type> <name>dim</name></parameter>, <parameter><type><name>typename</name></type> <name>Accessor</name></parameter>&gt;</parameter_list></template>
-<specifier>inline</specifier>
-<type><specifier>const</specifier> <name>Accessor</name> <modifier>&amp;</modifier></type>
+<type><specifier>inline</specifier>
+<specifier>const</specifier> <name>Accessor</name> <modifier>&amp;</modifier></type>
 <name><name><name>TriaRawIterator</name><argument_list type="generic">&lt;<argument><expr><name>dim</name></expr></argument>,<argument><expr><name>Accessor</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>operator <name>*</name></name></name> <parameter_list>()</parameter_list> <specifier>const</specifier>
-<block>{
+<block>{<block_content>
   <expr_stmt><expr><call><name>Assert</name> <argument_list>(<argument><expr><call><name>state</name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>IteratorState</name><operator>::</operator><name>valid</name></name></expr></argument>,<diff:delete><diff:ws>
          </diff:ws></diff:delete> <argument><expr><call><name>ExcDereferenceInvalidObject</name><argument_list>(<diff:delete><argument><expr><operator>*</operator><name>this</name></expr></argument></diff:delete>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
   <return>return <expr><name>accessor</name></expr>;</return>
-}</block></function><empty_stmt>;</empty_stmt>
+</block_content>}</block></function><empty_stmt>;</empty_stmt>
 
 
 
 <function type="operator"><template>template <parameter_list>&lt;<parameter><type><name>int</name></type> <name>dim</name></parameter>, <parameter><type><name>typename</name></type> <name>Accessor</name></parameter>&gt;</parameter_list></template>
-<specifier>inline</specifier>
-<type><name>Accessor</name> <modifier>&amp;</modifier></type>
+<type><specifier>inline</specifier>
+<name>Accessor</name> <modifier>&amp;</modifier></type>
 <name><name><name>TriaRawIterator</name><argument_list type="generic">&lt;<argument><expr><name>dim</name></expr></argument>,<argument><expr><name>Accessor</name></expr></argument>&gt;</argument_list></name><operator>::</operator><name>operator <name>*</name></name></name> <parameter_list>()</parameter_list>
-<block>{
+<block>{<block_content>
   <expr_stmt><expr><call><name>Assert</name> <argument_list>(<argument><expr><call><name>state</name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>IteratorState</name><operator>::</operator><name>valid</name></name></expr></argument>,<diff:delete><diff:ws>
          </diff:ws></diff:delete> <argument><expr><call><name>ExcDereferenceInvalidObject</name><argument_list>(<diff:delete><argument><expr><operator>*</operator><name>this</name></expr></argument></diff:delete>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
   <return>return <expr><name>accessor</name></expr>;</return>
-}</block></function><empty_stmt>;</empty_stmt>
+</block_content>}</block></function><empty_stmt>;</empty_stmt>
 </unit>
 
 </unit>
