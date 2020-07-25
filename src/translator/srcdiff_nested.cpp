@@ -904,7 +904,11 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
   size_t end_pos = node_sets_outer.at(end_outer - 1).back();
 
   const std::string & structure_outer = node_sets_outer.nodes().at(node_sets_outer.at(start_outer).at(0))->name;
-  if(structure_outer == "if" || structure_outer == "elseif") {
+  if(structure_outer == "block_content") {
+    // do not skip whitespace
+    start_pos = node_sets_outer.at(start_outer).at(0) + 1;
+
+  } else if(structure_outer == "if" || structure_outer == "elseif") {
 
     advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "block");
 
@@ -941,7 +945,11 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
   else
     output_change(out.last_output_original(), start_pos);
 
-  whitespace.output_nested(operation);
+  if(structure_outer == "block_content") {
+    whitespace.output_prefix();
+  } else {
+    whitespace.output_nested(operation);
+  }
 
   if(operation == SES_DELETE) {
 
@@ -955,7 +963,11 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
 
   }
 
-  whitespace.output_nested(operation);
+  if(structure_outer == "block_content") {
+    whitespace.output_prefix();
+  } else {
+    whitespace.output_nested(operation);
+  }
 
   if(operation == SES_DELETE)
     output_change(node_sets_outer.at(end_outer - 1).back() + 1, out.last_output_modified());
