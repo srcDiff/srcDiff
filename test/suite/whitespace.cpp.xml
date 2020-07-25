@@ -38,17 +38,17 @@
 
 <unit language="C++" filename="whitespace|whitespace">
   <diff:delete><diff:ws> </diff:ws></diff:delete><for>for <control>( <init><decl><type><name><name>Region</name><operator>::</operator><name>ConstIterator</name></name></type> <name>it</name><argument_list>( <argument><expr><call><name><name>selection</name><operator>-&gt;</operator><name>constBegin</name></name><argument_list>()</argument_list></call></expr></argument> )</argument_list></decl>;</init> <condition><expr><name>it</name> <operator>!=</operator> <name>end</name></expr>;</condition> <incr><expr><operator>++</operator><name>it</name></expr></incr> )</control>
-  <diff:delete><diff:ws> </diff:ws></diff:delete><block>{
+  <diff:delete><diff:ws> </diff:ws></diff:delete><block>{<block_content>
     <diff:delete><diff:ws> </diff:ws></diff:delete><decl_stmt><decl><type><specifier>const</specifier> <name>QRect</name></type> <name>range</name> <init>= <expr><call><name><operator>(</operator><operator>*</operator><name>it</name><operator>)</operator><operator>-&gt;</operator><name>rect</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
 <diff:delete><diff:ws>     </diff:ws><for>for<diff:ws> </diff:ws><control>(<diff:ws> </diff:ws><init><decl><type><name>int</name></type><diff:ws> </diff:ws><name>col</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><call><name><name>range</name><operator>.</operator><name>left</name></name><argument_list>()</argument_list></call></expr></init></decl>;</init><diff:ws> </diff:ws><condition><expr><name>col</name><diff:ws> </diff:ws><operator>&lt;=</operator><diff:ws> </diff:ws><call><name><name>range</name><operator>.</operator><name>right</name></name><argument_list>()</argument_list></call></expr>;</condition><diff:ws> </diff:ws><incr><expr><operator>++</operator><name>col</name></expr></incr><diff:ws> </diff:ws>)</control><diff:ws>
-     </diff:ws><block>{<diff:ws>
+     </diff:ws><block>{<block_content><diff:ws>
    </diff:ws><diff:insert><diff:ws> 
 </diff:ws></diff:insert><diff:common>    <for>for <control>(<diff:delete><diff:ws> </diff:ws></diff:delete><init><decl><type><name>int</name></type> <name>row</name> <init>= <expr><call><name><name>range</name><operator>.</operator><name>top</name></name><argument_list>()</argument_list></call></expr></init></decl>;</init> <condition><expr><name>row</name> <operator>&lt;=</operator> <diff:delete type="replace"><call><name><name>range</name><operator>.</operator><name>bottom</name></name><argument_list>()</argument_list></call></diff:delete><diff:insert type="replace"><name>bottom</name></diff:insert></expr>;</condition> <incr><expr><operator>++</operator><name>row</name></expr></incr><diff:delete><diff:ws> </diff:ws></diff:delete>)</control>
-    <diff:delete><diff:ws>   </diff:ws></diff:delete><block>{
+    <diff:delete><diff:ws>   </diff:ws></diff:delete><block>{<block_content>
 <diff:delete><diff:ws>
-   </diff:ws></diff:delete>    }</block></for>
-</diff:common><diff:ws>     </diff:ws>}</block></for><diff:ws>
- </diff:ws></diff:delete>  }</block></for>
+   </diff:ws></diff:delete>    </block_content>}</block></for>
+</diff:common><diff:ws>     </diff:ws></block_content>}</block></for><diff:ws>
+ </diff:ws></diff:delete>  </block_content>}</block></for>
 </unit>
 
 </unit>
