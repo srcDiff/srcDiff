@@ -90,36 +90,36 @@
 </diff:common></block_content>}</block></if></if_stmt></diff:delete></unit>
 
 <unit language="C++" filename="if|if">
-<diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<diff:delete><if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 </diff:ws><diff:common>    <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
 </diff:common><diff:insert><diff:ws>    </diff:ws><expr_stmt><expr><name>g</name></expr>;</expr_stmt><diff:ws>
-</diff:ws></diff:insert><diff:common>    <while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition> <block>{
+</diff:ws></diff:insert><diff:common>    <while>while<condition>(<expr><literal type="number">1</literal></expr>)</condition> <block>{<block_content>
     <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
 <diff:delete><diff:ws>    </diff:ws><expr_stmt><expr><name>g</name></expr>;</expr_stmt></diff:delete>
 <diff:delete><diff:ws>
-</diff:ws></diff:delete>    }</block></while>
+</diff:ws></diff:delete>    </block_content>}</block></while>
 
 </diff:common><comment type="line">//<diff:ws> </diff:ws>foobar</comment><diff:ws>
-</diff:ws>}</block><diff:ws> </diff:ws><else>else<block type="pseudo"><block_content><diff:ws> 
-    </diff:ws><expr_stmt><expr><name>h</name></expr>;</expr_stmt></block_content></block></else></if><diff:ws>
+</diff:ws></block_content>}</block></if><diff:ws> </diff:ws><else>else<block type="pseudo"><block_content><diff:ws> 
+    </diff:ws><expr_stmt><expr><name>h</name></expr>;</expr_stmt></block_content></block></else></if_stmt><diff:ws>
 </diff:ws></diff:delete></unit>
 
 <unit language="C++" filename="if|if">
-<diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<diff:ws>
+<diff:delete><if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 </diff:ws><diff:common><expr_stmt><expr><name>a</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 <expr_stmt><expr><call><name>c</name><argument_list>(<diff:delete><argument><expr><name>foo</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>bar</name></expr></argument></diff:delete>)</argument_list></call></expr>;</expr_stmt>
 <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>e</name></expr>;</expr_stmt>
-</diff:common>}</block></if><diff:ws>
+</diff:common></block_content>}</block></if></if_stmt><diff:ws>
 </diff:ws></diff:delete></unit>
 
 <unit language="C++" filename="if|if">
-<if>if<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition> <block>{
+<if_stmt><if>if<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition> <block>{<block_content>
 
 <diff:delete><diff:ws>    </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
     </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
@@ -134,11 +134,11 @@
     </diff:ws><expr_stmt><expr><name>k</name></expr>;</expr_stmt><diff:ws>
 
 
-</diff:ws></diff:delete>}</block></if><diff:delete><diff:ws>
+</diff:ws></diff:delete></block_content>}</block></if></if_stmt><diff:delete><diff:ws>
 </diff:ws></diff:delete></unit>
 
 <unit language="C++" filename="if|if">
-<if>if<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><diff:delete type="replace"><diff:ws> </diff:ws><block>{<diff:ws>
+<if_stmt><if>if<condition>(<expr><name>a</name> <operator>&amp;&amp;</operator> <name>b</name></expr>)</condition><diff:delete type="replace"><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 
     </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
     </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
@@ -153,8 +153,8 @@
     </diff:ws><expr_stmt><expr><name>k</name></expr>;</expr_stmt><diff:ws>
 
 
-</diff:ws>}</block></diff:delete><diff:insert type="replace"><block type="pseudo"><block_content><diff:ws>
-    </diff:ws><empty_stmt>;</empty_stmt></block_content></block></diff:insert></if>
+</diff:ws></block_content>}</block></diff:delete><diff:insert type="replace"><block type="pseudo"><block_content><diff:ws>
+    </diff:ws><empty_stmt>;</empty_stmt></block_content></block></diff:insert></if></if_stmt>
 </unit>
 
 </unit>
