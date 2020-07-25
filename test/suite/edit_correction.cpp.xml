@@ -3,7 +3,7 @@
 
 <unit language="C++" filename="edit_correction|edit_correction">
 <diff:delete move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:delete><diff:ws>
-</diff:ws></diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then> <block>{
+</diff:ws></diff:delete><if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition> <block>{<block_content>
 
 	<expr_stmt><expr><name>b</name></expr>;</expr_stmt>
 	<expr_stmt><expr><name>c</name></expr>;</expr_stmt>
@@ -14,7 +14,7 @@
     <expr_stmt><expr><name>h</name></expr>;</expr_stmt>
 <diff:delete type="replace"><diff:ws>	</diff:ws><expr_stmt><expr><name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:ws>	</diff:ws><expr_stmt><expr><name>h</name></expr>;</expr_stmt></diff:insert>
 
-}</block></then></if>
+</block_content>}</block></if></if_stmt>
 <diff:insert move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:insert><diff:insert><diff:ws>
 </diff:ws></diff:insert><expr_stmt><expr><name>bar</name></expr>;</expr_stmt><diff:delete><diff:ws>
 </diff:ws></diff:delete></unit>
@@ -24,37 +24,37 @@
 <diff:insert move="1"><decl_stmt><decl><type><name>size_t</name></type><diff:ws> </diff:ws><name>end_pos</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><call><name><name>node_sets_original</name><operator>.</operator><name>at</name></name><argument_list>(<argument><expr><name>end_original</name><diff:ws> </diff:ws><operator>-</operator><diff:ws> </diff:ws><literal type="number">1</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>back</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt></diff:insert>
 <diff:insert><diff:ws>
 </diff:ws></diff:insert><decl_stmt><decl><type><specifier>const</specifier> <name><name>std</name><operator>::</operator><name>string</name></name> <modifier>&amp;</modifier></type> <name>structure_original</name> <init>= <expr><call><name><name>out</name><operator>.</operator><name>get_nodes_original</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>at</name><argument_list>(<argument><expr><call><name><name>node_sets_original</name><operator>.</operator><name>at</name></name><argument_list>(<argument><expr><name>start_original</name></expr></argument>)</argument_list></call><operator>.</operator><call><name>at</name><argument_list>(<argument><expr><literal type="number">0</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call><operator>-&gt;</operator><name>name</name></expr></init></decl>;</decl_stmt>
-<if>if<condition>(<expr><name>structure_original</name> <operator>==</operator> <literal type="string">"if"</literal> <operator>||</operator> <name>structure_original</name> <operator>==</operator> <literal type="string">"elseif"</literal></expr>)</condition><then> <block>{
+<if_stmt><if>if<condition>(<expr><name>structure_original</name> <operator>==</operator> <literal type="string">"if"</literal> <operator>||</operator> <name>structure_original</name> <operator>==</operator> <literal type="string">"elseif"</literal></expr>)</condition> <block>{<block_content>
 
     <expr_stmt><expr><call><name>advance_to_tag</name><argument_list>(<argument><expr><call><name><name>out</name><operator>.</operator><name>get_nodes_original</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>start_pos</name></expr></argument>, <argument><expr><operator>(</operator><name>xmlElementType</name><operator>)</operator><name>XML_READER_TYPE_ELEMENT</name></expr></argument>, <argument><expr><literal type="string">"then"</literal></expr></argument>, <argument><expr><name><diff:delete type="replace">structure_original</diff:delete><diff:insert type="replace">end_pos</diff:insert></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 
-}</block></then> <elseif>else <if>if<condition>(<expr><name>structure_original</name> <operator>==</operator> <literal type="string">"while"</literal></expr>)</condition><then> <block>{
+</block_content>}</block></if> <if type="elseif">else if<condition>(<expr><name>structure_original</name> <operator>==</operator> <literal type="string">"while"</literal></expr>)</condition> <block>{<block_content>
 
     <expr_stmt><expr><call><name>advance_to_tag</name><argument_list>(<argument><expr><call><name><name>out</name><operator>.</operator><name>get_nodes_original</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>start_pos</name></expr></argument>, <argument><expr><operator>(</operator><name>xmlElementType</name><operator>)</operator><name>XML_READER_TYPE_END_ELEMENT</name></expr></argument>, <argument><expr><literal type="string">"condition"</literal></expr></argument>, <argument><expr><name><diff:delete type="replace">structure_original</diff:delete><diff:insert type="replace">end_pos</diff:insert></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
     <expr_stmt><expr><operator>++</operator><name>start_pos</name></expr>;</expr_stmt>
 
-}</block></then></if></elseif> <elseif>else <if>if<condition>(<expr><name>structure_original</name> <operator>==</operator> <literal type="string">"for"</literal></expr>)</condition><then> <block>{
+</block_content>}</block></if> <if type="elseif">else if<condition>(<expr><name>structure_original</name> <operator>==</operator> <literal type="string">"for"</literal></expr>)</condition> <block>{<block_content>
 
     <expr_stmt><expr><call><name>advance_to_tag</name><argument_list>(<argument><expr><call><name><name>out</name><operator>.</operator><name>get_nodes_original</name></name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><name>start_pos</name></expr></argument>, <argument><expr><operator>(</operator><name>xmlElementType</name><operator>)</operator><name>XML_READER_TYPE_END_ELEMENT</name></expr></argument>, <argument><expr><literal type="string">"control"</literal></expr></argument>, <argument><expr><name><diff:delete type="replace">structure_original</diff:delete><diff:insert type="replace">end_pos</diff:insert></name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
     <expr_stmt><expr><operator>++</operator><name>start_pos</name></expr>;</expr_stmt>
 
-}</block></then></if></elseif></if>
+</block_content>}</block></if></if_stmt>
 
 <diff:delete move="1"><decl_stmt><decl><type><name>size_t</name></type><diff:ws> </diff:ws><name>end_pos</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><call><name><name>node_sets_original</name><operator>.</operator><name>at</name></name><argument_list>(<argument><expr><name>end_original</name><diff:ws> </diff:ws><operator>-</operator><diff:ws> </diff:ws><literal type="number">1</literal></expr></argument>)</argument_list></call><operator>.</operator><call><name>back</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt></diff:delete><diff:delete><diff:ws>
-</diff:ws></diff:delete><if>if<condition>(<expr><name>structure_original</name> <operator>==</operator> <literal type="string">"elseif"</literal></expr>)</condition><then> <block>{
+</diff:ws></diff:delete><if_stmt><if>if<condition>(<expr><name>structure_original</name> <operator>==</operator> <literal type="string">"elseif"</literal></expr>)</condition> <block>{<block_content>
 
-  <while>while<condition>(<expr><name>end_pos</name> <operator>&gt;</operator> <name>start_pos</name> <operator>&amp;&amp;</operator> <call><name><name>out</name><operator>.</operator><name>get_nodes_original</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>at</name><argument_list>(<argument><expr><name>end_pos</name></expr></argument>)</argument_list></call><operator>-&gt;</operator><name>name</name> <operator>!=</operator> <literal type="string">"if"</literal></expr>)</condition><block type="pseudo">
-    <expr_stmt><expr><operator>--</operator><name>end_pos</name></expr>;</expr_stmt></block></while>
+  <while>while<condition>(<expr><name>end_pos</name> <operator>&gt;</operator> <name>start_pos</name> <operator>&amp;&amp;</operator> <call><name><name>out</name><operator>.</operator><name>get_nodes_original</name></name><argument_list>()</argument_list></call><operator>.</operator><call><name>at</name><argument_list>(<argument><expr><name>end_pos</name></expr></argument>)</argument_list></call><operator>-&gt;</operator><name>name</name> <operator>!=</operator> <literal type="string">"if"</literal></expr>)</condition><block type="pseudo"><block_content>
+    <expr_stmt><expr><operator>--</operator><name>end_pos</name></expr>;</expr_stmt></block_content></block></while>
 
-}</block></then></if>
+</block_content>}</block></if></if_stmt>
 
 <decl_stmt><decl><type><name>node_sets</name></type> <name>set</name> <init>= <expr><call><name>node_sets</name><argument_list>(<argument><expr><call><name><name>out</name><operator>.</operator><name>get_nodes_original</name></name><argument_list>()</argument_list></call></expr></argument>,
                           <argument><expr><name>start_pos</name></expr></argument>, <argument><expr><name>end_pos</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 
 <decl_stmt><decl><type><name>node_sets</name></type> <name>nest_set</name><argument_list>(<argument><expr><call><name><name>out</name><operator>.</operator><name>get_nodes_modified</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></decl>;</decl_stmt>
 
-<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><name>start_modified</name></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <name>end_modified</name></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control><block type="pseudo">
-    <expr_stmt><expr><call><name><name>nest_set</name><operator>.</operator><name>push_back</name></name><argument_list>(<argument><expr><call><name><name>node_sets_modified</name><operator>.</operator><name>at</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></for>
+<for>for<control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><name>start_modified</name></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <name>end_modified</name></expr>;</condition> <incr><expr><operator>++</operator><name>i</name></expr></incr>)</control><block type="pseudo"><block_content>
+    <expr_stmt><expr><call><name><name>nest_set</name><operator>.</operator><name>push_back</name></name><argument_list>(<argument><expr><call><name><name>node_sets_modified</name><operator>.</operator><name>at</name></name><argument_list>(<argument><expr><name>i</name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block_content></block></for>
 
   <expr_stmt><expr><call><name>output_change</name><argument_list>(<argument><expr><name>start_pos</name></expr></argument>, <argument><expr><call><name><name>out</name><operator>.</operator><name>last_output_modified</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 
