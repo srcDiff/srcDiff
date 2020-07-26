@@ -697,39 +697,12 @@ std::string get_class_type_name(const srcml_nodes & nodes, int start_pos) {
 bool conditional_has_block(const node_set & set) {
 
   node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
-  if(set.nodes().at(set.at(0))->name == "elseif") {
-
-    for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
-
-      if(set.nodes().at(itr->at(0))->name == "if") {
-
-        sets = node_sets(sets.nodes(), itr->at(1), itr->back());
-        break;
-
-      }
-
-    }
-
-  }
 
   for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
     if(set.nodes().at(itr->at(0))->name == "block" && !bool(find_attribute(set.nodes().at(itr->at(0)), "type"))) {
-
       return true;
-
-    } else if(set.nodes().at(itr->at(0))->name == "then") {
-
-      node_sets then_sets = node_sets(sets.nodes(), itr->at(1), itr->back());
-      for(node_sets::iterator then_itr = then_sets.begin(); then_itr != then_sets.end(); ++then_itr) {
-        if(set.nodes().at(then_itr->at(0))->name == "block" && !bool(find_attribute(set.nodes().at(then_itr->at(0)), "type"))) {
-          return true;
-        }
-
-      }
-      return false;
-
-    }
+    } 
 
   }
 
@@ -755,13 +728,13 @@ bool is_child_if(const node_set & child) {
 
 
 /** loop O(n) */
-bool if_has_else(const node_set & set) {
+bool if_stmt_has_else(const node_set & set) {
 
   node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
   for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
-
-    if(set.nodes().at(itr->at(0))->name == "else" || set.nodes().at(itr->at(0))->name == "elseif") {
-
+    if(set.nodes().at(itr->at(0))->name == "else" 
+      || ( set.nodes().at(itr->at(0))->name == "if" 
+        && bool(find_attribute(set.nodes().at(itr->at(0)), "type")))) {
       return true;
 
     }
@@ -1134,8 +1107,18 @@ bool reject_match_same(const srcdiff_measure & measure,
       std::string original_condition = get_condition(set_original.nodes(), original_pos);
       std::string modified_condition = get_condition(set_modified.nodes(), modified_pos);
 
-      if(original_condition == modified_condition
-        || if_block_equal(first_original, first_modified)) {
+      bool original_has_block = conditional_has_block(first_original);
+      bool modified_has_block = conditional_has_block(first_modified);
+
+      bool original_has_else = if_stmt_has_else(set_original);
+      bool modified_has_else = if_stmt_has_else(set_modified);
+
+      if(if_block_equal(first_original, first_modified)
+        || (original_condition == modified_condition
+          && ( original_has_block == modified_has_block 
+            || original_has_else == modified_has_else 
+            || (original_has_block && !modified_has_else) 
+            || (modified_has_block && !original_has_else)))) {
         return false;
       }
     }
