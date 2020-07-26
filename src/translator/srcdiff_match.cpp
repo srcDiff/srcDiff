@@ -737,8 +737,7 @@ bool conditional_has_block(const node_set & set) {
 
 }
 
-/** loop O(n) */
-node_set get_if_stmt_first_child(const node_set & set) {
+node_set get_first_child(const node_set & set) {
 
   node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
   return sets.at(0);
@@ -1127,8 +1126,8 @@ bool reject_match_same(const srcdiff_measure & measure,
 
   } else if(original_tag == "if_stmt") {
 
-    node_set first_original = get_if_stmt_first_child(set_original);
-    node_set first_modified = get_if_stmt_first_child(set_modified);
+    node_set first_original = get_first_child(set_original);
+    node_set first_modified = get_first_child(set_modified);
 
     if(is_child_if(first_original) && is_child_if(first_modified)) {
 
