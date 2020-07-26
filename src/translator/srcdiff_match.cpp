@@ -1394,14 +1394,18 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
 
     // block children actually in block_content
     node_sets original_temp = node_sets(set_original.nodes(), child_node_sets_original.back().at(1), child_node_sets_original.back().back());
-    if(set_original.nodes().at(original_temp.at(1).at(0))->name == "block_content") {
-      original_set = original_temp.at(1);
+    for(const node_set & set : original_temp) {
+      if(set_original.nodes().at(set.at(0))->name == "block_content") {
+        original_set = set;
+      }
     }
 
     // block children actually in block_content
     node_sets modified_temp = node_sets(set_modified.nodes(), child_node_sets_modified.back().at(1), child_node_sets_modified.back().back());
-    if(set_modified.nodes().at(modified_temp.at(1).at(0))->name == "block_content") {
-      modified_set = modified_temp.at(1);
+    for(const node_set & set : modified_temp) {
+      if(set_modified.nodes().at(set.at(0))->name == "block_content") {
+        modified_set = set;
+      }
     }
 
     srcdiff_syntax_measure syntax_measure(original_set, modified_set);
