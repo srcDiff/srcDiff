@@ -339,7 +339,7 @@ bool is_better_nest(const node_set & node_set_outer,
       */
       if((match_measure.similarity() >= measure.similarity() && match_measure.difference() <= measure.difference())
        || ((nest_min_size / match_measure.similarity()) < (min_size / measure.similarity())
-          && !srcdiff_nested::reject_match_nested(match_measure, node_set_inner, node_set_outer))
+          && !srcdiff_nested::reject_match_nested(match_measure, node_set_inner, set.at(match)))
        )
         // check if other way is better
         return !is_better_nest_no_recursion(node_set_inner, node_set_outer, match_measure);
