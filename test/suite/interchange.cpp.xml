@@ -206,12 +206,13 @@
 </diff:ws>}</block></else></diff:insert></if></diff:delete></if>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
+<unit language="C++" filename="interchange|interchange">
 <diff:delete type="convert"><class>class<diff:insert type="convert"><struct>struct<diff:common> <name>foo</name> <block>{<diff:delete type="replace"><private type="default"/></diff:delete><diff:insert type="replace"><public type="default"/></diff:insert>}</block>;</diff:common></struct></diff:insert></class></diff:delete>
 </unit>
 
+<!-- This could be better with decl_stmt matching -->
 <unit language="C++" filename="interchange|interchange">
-<diff:delete type="convert"><struct>struct<diff:insert type="convert"><class>class<diff:common> <name>function_profile_t</name> <super>: <specifier>public</specifier> <name>profile_t</name></super> <block>{<diff:delete type="convert"><public type="default"><diff:insert type="convert"><private type="default"><diff:common>
+<diff:delete type="convert"><struct>struct<diff:insert type="convert"><class>class<diff:common> <name>function_profile_t</name> <super_list>: <super><specifier>public</specifier> <name>profile_t</name></super></super_list> <block>{<diff:delete type="convert"><public type="default"><diff:insert type="convert"><private type="default"><diff:common>
 
     </diff:common></private></diff:insert></public></diff:delete><private>private:
 
@@ -220,10 +221,10 @@
         <decl_stmt><decl><type><name>versioned_string</name></type> <name>return_type</name></decl>;</decl_stmt>
         <decl_stmt><decl><type><name>versioned_string</name></type> <name>name</name></decl>;</decl_stmt>
 
-        <decl_stmt><decl><type><name><diff:delete type="replace"><name>std</name><operator>::</operator><name><name>multimap</name><argument_list type="generic">&lt;<argument><expr><name>srcdiff_type</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name><name>std</name><operator>::</operator><name><name>shared_ptr</name><argument_list type="generic">&lt;<argument><expr><name>parameter_profile_t</name></expr></argument>&gt;</argument_list></name></name></expr></argument>&gt;</argument_list></name></diff:delete><diff:insert type="replace"><name>change_entity_map</name><argument_list type="generic">&lt;<argument><expr><name>parameter_profile_t</name></expr></argument>&gt;</argument_list></diff:insert></name></type> <name>parameters</name></decl>;</decl_stmt>
-        <decl_stmt><decl><type><name><diff:delete type="replace"><name>std</name><operator>::</operator><name><name>multimap</name><argument_list type="generic">&lt;<argument><expr><name>srcdiff_type</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><name><name>std</name><operator>::</operator><name><name>shared_ptr</name><argument_list type="generic">&lt;<argument><expr><name>profile_t</name></expr></argument>&gt;</argument_list></name></name></expr></argument>&gt;</argument_list></name></diff:delete><diff:insert type="replace"><name>change_entity_map</name><argument_list type="generic">&lt;<argument><expr><name>profile_t</name></expr></argument>&gt;</argument_list></diff:insert></name></type> <diff:insert><diff:ws>          </diff:ws></diff:insert><name>conditionals</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><diff:delete><name><name>std</name><operator>::</operator><name>multimap</name><argument_list type="generic">&lt;<argument><expr><name>srcdiff_type</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><diff:common><name><name><diff:delete type="replace">std</diff:delete><diff:insert type="replace">change_entity_map</diff:insert></name><diff:delete><operator>::</operator><name>shared_ptr</name></diff:delete><argument_list type="generic">&lt;<argument><expr><name>parameter_profile_t</name></expr></argument>&gt;</argument_list></name></diff:common></expr></argument>&gt;</argument_list></name></diff:delete></type> <name>parameters</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><diff:delete><name><name>std</name><operator>::</operator><name>multimap</name><argument_list type="generic">&lt;<argument><expr><name>srcdiff_type</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><diff:common><name><name><diff:delete type="replace">std</diff:delete><diff:insert type="replace">change_entity_map</diff:insert></name><diff:delete><operator>::</operator><name>shared_ptr</name></diff:delete><argument_list type="generic">&lt;<argument><expr><name>profile_t</name></expr></argument>&gt;</argument_list></name></diff:common></expr></argument>&gt;</argument_list></name></diff:delete></type> <diff:insert><diff:ws>          </diff:ws></diff:insert><name>conditionals</name></decl>;</decl_stmt>
 
-        <constructor><name>function_profile_t</name><parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name>type_name</name></decl></parameter>, <parameter><decl><type><name>srcdiff_type</name></type> <name>operation</name></decl></parameter>)</parameter_list> <member_init_list>: <call><name>profile_t</name><argument_list>(<argument><expr><name>type_name</name></expr></argument>, <argument><expr><name>operation</name></expr></argument>)</argument_list></call> </member_init_list><block>{}</block></constructor>
+        <constructor><name>function_profile_t</name><parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name>type_name</name></decl></parameter>, <parameter><decl><type><name>srcdiff_type</name></type> <name>operation</name></decl></parameter>)</parameter_list> <member_init_list>: <call><name>profile_t</name><argument_list>(<argument><expr><name>type_name</name></expr></argument>, <argument><expr><name>operation</name></expr></argument>)</argument_list></call> </member_init_list><block>{<block_content/>}</block></constructor>
 
 </public>}</block>;</diff:common></class></diff:insert></struct></diff:delete>
 
@@ -234,14 +235,14 @@
 
 </diff:ws></private></diff:insert><public type="default|"><diff:insert>public:</diff:insert>
 
-<function><type><name><diff:delete type="replace">void</diff:delete><diff:insert type="replace">int</diff:insert></name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name><diff:delete type="replace">b</diff:delete><diff:insert type="replace">c</diff:insert></name></decl></parameter><diff:insert>,<diff:ws> </diff:ws><parameter><decl><type><name>int</name></type><diff:ws> </diff:ws><name>d</name></decl></parameter></diff:insert>)</parameter_list> <block>{
+<function><type><name><diff:delete type="replace">void</diff:delete><diff:insert type="replace">int</diff:insert></name></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>a</name></decl></parameter>, <parameter><decl><type><name>int</name></type> <name><diff:delete type="replace">b</diff:delete><diff:insert type="replace">c</diff:insert></name></decl></parameter><diff:insert>,<diff:ws> </diff:ws><parameter><decl><type><name>int</name></type><diff:ws> </diff:ws><name>d</name></decl></parameter></diff:insert>)</parameter_list> <block>{<block_content>
 
-<diff:insert><diff:ws>	</diff:ws><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo"><diff:ws>
-		</diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block></then></if></diff:insert>
+<diff:insert><diff:ws>	</diff:ws><if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content><diff:ws>
+		</diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block_content></block></if></if_stmt></diff:insert>
 
-}</block></function>
+</block_content>}</block></function>
 
-<diff:insert><function><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list><diff:ws> </diff:ws><block>{}</block></function><diff:ws>
+<diff:insert><function><type><name>void</name></type><diff:ws> </diff:ws><name>g</name><parameter_list>()</parameter_list><diff:ws> </diff:ws><block>{<block_content/>}</block></function><diff:ws>
 
 </diff:ws></diff:insert></public>}</block>;</diff:common></class></diff:insert></struct></diff:delete></unit>
 
@@ -286,41 +287,41 @@
 </unit>
 
 <unit language="C++" filename="interchange|interchange">
-<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{
+<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content>
 <diff:delete type="convert"><expr_stmt><diff:insert type="convert"><decl_stmt><decl><type><name>int</name></type><diff:ws> </diff:ws><name>c</name><argument_list>(<argument><diff:common><expr><diff:delete><name>c</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws></diff:delete><name>d</name></expr></diff:common></argument>)</argument_list></decl><diff:common>;</diff:common></decl_stmt></diff:insert></expr_stmt></diff:delete>
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 <unit language="C++" filename="interchange|interchange">
-<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{
+<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list> <block>{<block_content>
 <diff:delete type="convert"><decl_stmt><diff:insert type="convert"><expr_stmt><diff:delete><decl><type><name>int</name></type><diff:ws> </diff:ws><name>c</name><argument_list>(<argument><diff:common><expr><diff:insert><name>c</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws></diff:insert><name>d</name></expr></diff:common></argument>)</argument_list></decl></diff:delete><diff:common>;</diff:common></expr_stmt></diff:insert></decl_stmt></diff:delete>
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 <unit language="C++" filename="interchange|interchange">
-<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list><block>{
+<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list><block>{<block_content>
 
 	<diff:delete type="convert"><expr_stmt><diff:insert type="convert"><decl_stmt><decl><type><name>int</name></type><diff:ws> </diff:ws><name>a</name><argument_list>(<argument><expr><name>c</name></expr></argument>,<diff:ws> </diff:ws><argument><diff:common><expr><name>b</name></expr></diff:common></argument>)</argument_list></decl><diff:common>;</diff:common></decl_stmt></diff:insert></expr_stmt></diff:delete>
 
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 <unit language="C++" filename="interchange|interchange">
-<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list><block>{
+<function><type><name>void</name></type> <name>f</name><parameter_list>()</parameter_list><block>{<block_content>
 
 	<diff:delete type="convert"><decl_stmt><diff:insert type="convert"><expr_stmt><diff:delete><decl><type><name>int</name></type><diff:ws> </diff:ws><name>a</name><argument_list>(<argument><expr><name>c</name></expr></argument>,<diff:ws> </diff:ws><argument><diff:common><expr><name>b</name></expr></diff:common></argument>)</argument_list></decl></diff:delete><diff:common>;</diff:common></expr_stmt></diff:insert></decl_stmt></diff:delete>
 
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 <unit language="C++" filename="interchange|interchange"><function><type><name>QRectF</name></type> <name><name>ParagraphEditor</name><operator>::</operator><name>dirtyRectangle</name></name><parameter_list>(<diff:insert><parameter><decl><type><name>bool</name></type><diff:ws> </diff:ws><name>updateWholeRegion</name></decl></parameter></diff:insert>)</parameter_list>
-<block>{
-    <if>if <condition>(<diff:insert><diff:ws> </diff:ws></diff:insert><expr><operator>!</operator><diff:insert><name>updateWholeRegion</name><diff:ws> </diff:ws><operator>&amp;&amp;</operator><diff:ws> </diff:ws><operator>!</operator></diff:insert><call><name>needsRepaint</name><argument_list>()</argument_list></call></expr>)</condition><then> <block>{
+<block>{<block_content>
+    <if_stmt><if>if <condition>(<diff:insert><diff:ws> </diff:ws></diff:insert><expr><operator>!</operator><diff:insert><name>updateWholeRegion</name><diff:ws> </diff:ws><operator>&amp;&amp;</operator><diff:ws> </diff:ws><operator>!</operator></diff:insert><call><name>needsRepaint</name><argument_list>()</argument_list></call></expr>)</condition> <block>{<block_content>
        <diff:delete><diff:ws> </diff:ws><diff:delete type="convert"><expr_stmt><diff:insert type="convert"><return>return<diff:ws> </diff:ws><diff:common><expr><call><name>QRectF</name><argument_list>()</argument_list></call></expr>;</diff:common></return></diff:insert></expr_stmt></diff:delete></diff:delete>
-    }</block></then></if>
+    </block_content>}</block></if></if_stmt>
 
     <return>return <expr><name>repaintRectangle</name></expr>;</return>
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 <unit language="C++" filename="interchange|interchange">
