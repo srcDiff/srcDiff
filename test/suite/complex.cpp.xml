@@ -195,13 +195,13 @@
 </unit>
 
 <unit language="C++" filename="complex|complex">
-<if>if<condition>( <expr><name>path</name> <operator>&amp;&amp;</operator> <call><name><name>shape</name><operator>-&gt;</operator><name>background</name></name><argument_list>()</argument_list></call></expr> )</condition><then> <block>{
+<if_stmt><if>if<condition>( <expr><name>path</name> <operator>&amp;&amp;</operator> <call><name><name>shape</name><operator>-&gt;</operator><name>background</name></name><argument_list>()</argument_list></call></expr> )</condition> <block>{<block_content>
 <diff:insert><diff:ws>    </diff:ws><comment type="line">//<diff:ws> </diff:ws>non-zero<diff:ws> </diff:ws>is<diff:ws> </diff:ws>default,<diff:ws> </diff:ws>so<diff:ws> </diff:ws>only<diff:ws> </diff:ws>write<diff:ws> </diff:ws>fillrule<diff:ws> </diff:ws>if<diff:ws> </diff:ws>evenodd<diff:ws> </diff:ws>is<diff:ws> </diff:ws>set</comment></diff:insert>
-    <if>if<condition>( <expr><call><name><name>path</name><operator>-&gt;</operator><name>fillRule</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>Qt</name><operator>::</operator><name>OddEvenFill</name></name></expr> )</condition><then><block type="pseudo">
-        <expr_stmt><expr><operator>*</operator><name>stream</name> <operator>&lt;&lt;</operator> <literal type="string">" fill-rule=\"evenodd\""</literal></expr>;</expr_stmt></block></then><diff:delete><diff:ws>
-    </diff:ws><else>else<block type="pseudo"><diff:ws>
-        </diff:ws><expr_stmt><expr><operator>*</operator><name>stream</name><diff:ws> </diff:ws><operator>&lt;&lt;</operator><diff:ws> </diff:ws><literal type="string">"<diff:ws> </diff:ws>fill-rule=\"nonzero\""</literal></expr>;</expr_stmt></block></else></diff:delete></if>
-}</block></then></if>
+    <if_stmt><if>if<condition>( <expr><call><name><name>path</name><operator>-&gt;</operator><name>fillRule</name></name><argument_list>()</argument_list></call> <operator>==</operator> <name><name>Qt</name><operator>::</operator><name>OddEvenFill</name></name></expr> )</condition><block type="pseudo"><block_content>
+        <expr_stmt><expr><operator>*</operator><name>stream</name> <operator>&lt;&lt;</operator> <literal type="string">" fill-rule=\"evenodd\""</literal></expr>;</expr_stmt></block_content></block></if><diff:delete><diff:ws>
+    </diff:ws><else>else<block type="pseudo"><block_content><diff:ws>
+        </diff:ws><expr_stmt><expr><operator>*</operator><name>stream</name><diff:ws> </diff:ws><operator>&lt;&lt;</operator><diff:ws> </diff:ws><literal type="string">"<diff:ws> </diff:ws>fill-rule=\"nonzero\""</literal></expr>;</expr_stmt></block_content></block></else></diff:delete></if_stmt>
+</block_content>}</block></if></if_stmt>
 </unit>
 
 <unit language="C++" filename="complex|complex">
