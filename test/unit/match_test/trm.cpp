@@ -20,7 +20,7 @@ BOOST_AUTO_TEST_SUITE(reject_match)
 BOOST_AUTO_TEST_CASE(example){
 p2test atest = ret_node_set(testfile1, testfile2,"C++");	
 	
-BOOST_TEST(srcdiff_match::reject_match(atest.one, atest.two,atest.ameasure));
+BOOST_TEST(srcdiff_match::reject_match(atest.ameasure, atest.one,atest.two));
 }
 
 
