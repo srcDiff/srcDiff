@@ -1,4 +1,4 @@
-#define BOOST_TEST_MODULE reject 
+#define BOOST_TEST_MODULE test_reject_match 
 #include <boost/test/included/unit_test.hpp>
 #include <boost/bind.hpp>
 #include <srcml_converter.hpp>

@@ -20,13 +20,13 @@
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # add tests
-add_test(test_is_interchangeable_match.cpp)
-add_test(test_reject_match.cpp)
-add_test(test_reject_similarity.cpp)
-add_test(test_find_attribute.cpp)
-add_test(test_is_single_call_expr.cpp)
-add_test(test_reject_match_interchangeable.cpp)
-add_test(test_reject_similarity_match_only.cpp)
+add_unit_test(test_is_interchangeable_match.cpp)
+add_unit_test(trm.cpp)
+add_unit_test(trs.cpp)
+add_unit_test(test_find_attribute.cpp)
+add_unit_test(tisce.cpp)
+add_unit_test(trmi.cpp)
+add_unit_test(trsmo.cpp)
 #file(GLOB TESTING_HEADERS *.hpp)
 #file(GLOB TESTING_SOURCE *.cpp)
 #add_library(test OBJECT ${TESTING_HEADERS} ${TESTING_SOURCE})
