@@ -340,7 +340,8 @@ bool is_better_nest(const node_set & node_set_outer,
       if((match_measure.similarity() >= measure.similarity() && match_measure.difference() <= measure.difference())
        || ((nest_min_size / match_measure.similarity()) < (min_size / measure.similarity())
         // old code used node_set_outer (i.e., is it interchangeable) this seemed wrong
-        // fixes test case, but it failed because interchange not implemented
+        // fixes test case, but it failed because interchange not implemented (passes now)
+        // that interchange implemented
           && !srcdiff_nested::reject_match_nested(match_measure, node_set_inner, set.at(match)))
        )
         // check if other way is better

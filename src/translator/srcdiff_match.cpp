@@ -929,7 +929,7 @@ struct interchange_list {
 
 static const char * const class_interchange[]     = { "class", "struct", "union", "enum", 0 };
 static const char * const access_interchange[]    = { "public", "protected", "private",   0 };
-static const char * const if_interchange[]        = { "if", "while", "for", "foreach",    0 };
+static const char * const if_stmt_interchange[]   = { "if_stmt", "while", "for", "foreach",    0 };
 static const char * const else_interchange[]      = { "else", "elseif",                   0 };
 static const char * const expr_stmt_interchange[] = { "expr_stmt", "decl_stmt", "return", 0 };
 static const char * const cast_interchange[]      = { "cast", 0 };
@@ -944,11 +944,12 @@ static const interchange_list interchange_lists[] = {
   { "protected", access_interchange },
   { "private",   access_interchange },
 
-  { "if",        if_interchange },
-  { "while",     if_interchange },
-  { "for",       if_interchange },
-  { "foreach",   if_interchange },
+  { "if_stmt",   if_stmt_interchange },
+  { "while",     if_stmt_interchange },
+  { "for",       if_stmt_interchange },
+  { "foreach",   if_stmt_interchange },
   
+  // need to fix
   { "else",      else_interchange },
   { "elseif",    else_interchange },
 
@@ -1207,14 +1208,31 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
   if(original_name != "" && original_name == modified_name) return false;
 
   std::string original_condition;
-  if(original_tag == "if" || original_tag == "while" || original_tag == "for" || original_tag == "foreach") {
+
+  if(original_tag == "if_stmt") {
+
+    node_set first_original = get_first_child(set_original);
+    if(is_child_if(first_original)) {
+      original_condition = get_condition(set_original.nodes(), original_pos);
+    }
+  }
+
+  if(original_tag == "while" || original_tag == "for" || original_tag == "foreach") {
 
     original_condition = get_condition(set_original.nodes(), original_pos);
 
   }
 
   std::string modified_condition;
-  if(modified_tag == "if" || modified_tag == "while" || modified_tag == "for" || modified_tag == "foreach") {
+ 
+  if(modified_tag == "if_stmt") {
+    node_set first_modified = get_first_child(set_modified);
+    if(is_child_if(first_modified)) {
+      modified_condition = get_condition(set_modified.nodes(), modified_pos);
+    }
+  }
+
+  if(modified_tag == "while" || modified_tag == "for" || modified_tag == "foreach") {
 
     modified_condition = get_condition(set_modified.nodes(), modified_pos);
 
