@@ -7,20 +7,29 @@
 #include <node_set.hpp>
 #include <srcdiff_match.hpp>
 #include <srcdiff_text_measure.hpp>
+#include <src_to_nodes.cpp>
 
+node_set return_Node(std::string, std::string);
 std::string testfile1 = "testfile.cpp";
 std::string testfile2 = "testfile2.cpp";
+
+
+
 BOOST_AUTO_TEST_SUITE(reject_match)
 
 BOOST_AUTO_TEST_CASE(example){
-	//srcml_nodes test_nodes1 = test_nodes(testfile1);
-	//srcml_nodes test_nodes2 = test_nodes(testfile2);	
-	//node_set anode(test_nodes1);
-	//node_set anode2(test_nodes2);
-	//srcdiff_text_measure ameasure(anode, anode2);
-	BOOST_TEST(true);
+p2test atest = ret_node_set(testfile1, testfile2,"C++");	
+	
+BOOST_TEST(srcdiff_match::reject_match(atest.one, atest.two,atest.ameasure));
 }
-BOOST_AUTO_TEST_CASE(ex2){ BOOST_TEST(true);}
+
+
+
+
+
+BOOST_AUTO_TEST_CASE(ex2){ BOOST_TEST(false);}
 
 BOOST_AUTO_TEST_SUITE_END()
 
+
+	

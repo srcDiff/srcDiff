@@ -1,7 +1,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-
+#include <node_set.hpp>
 #include <srcml.h>
 #include <srcml_nodes.hpp>
 #include <srcdiff_constants.hpp>
@@ -9,6 +9,15 @@
 
 #include <iostream>
 #include <cstdio>
+
+struct p2test{
+node_set one;
+node_set two;
+srcdiff_test_measure ameasure;
+};
+
+
+
 
 int str_read(void * context, char * buffer, unsigned long len) {
     std::string * ctx = static_cast<std::string *>(context);
@@ -49,6 +58,29 @@ srcml_nodes create_nodes(const std::string & filename, const std::string & langu
     srcml_nodes testNode = contNodes.create_nodes();
     return testNode;
 }
+
+
+
+p2test ret_node_set(const std::string & filename1,const std::string & filename2, const std::string & language){
+srcml_nodes test_nodes1 = test_nodes(filename, language);
+srcml_nodes test_nodes2 = test_nodes(filename2,language);
+node_set anode(test_nodes1);
+node_set anode2(test_nodes2);
+srcdiff_text_measure ameasure(anode, anode2);
+
+p2test anobject = {
+anode,
+anode2,
+ameasure,
+};
+
+return anobject;
+}
+
+
+
+
+
 /*
 #include <iostream>
 

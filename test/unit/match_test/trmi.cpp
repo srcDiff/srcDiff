@@ -10,7 +10,7 @@ BOOST_AUTO_TEST_SUITE(is_expr)
 
 
 BOOST_AUTO_TEST_CASE(example){
-BOOST_TEST(false);
+BOOST_TEST(true);
 
 
 
