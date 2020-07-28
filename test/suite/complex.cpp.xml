@@ -73,32 +73,32 @@
 </unit>
 
 <unit language="C++" filename="complex|complex">
-<diff:delete><if>if<diff:ws> </diff:ws><condition>(<expr><call><name><name>shape</name><operator>.</operator><name>has</name></name><argument_list>(<argument><expr><literal type="string">"anchor"</literal></expr></argument>)</argument_list></call></expr>)</condition><then><diff:ws> </diff:ws><block>{<diff:ws>
+<diff:delete><if_stmt><if>if<diff:ws> </diff:ws><condition>(<expr><call><name><name>shape</name><operator>.</operator><name>has</name></name><argument_list>(<argument><expr><literal type="string">"anchor"</literal></expr></argument>)</argument_list></call></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
     </diff:ws><diff:common><decl_stmt><decl><type><name>string</name></type> <name>type</name><diff:delete><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><call><name><name>shape</name><operator>.</operator><name>get</name></name><argument_list>(<argument><expr><literal type="string">"anchor"</literal></expr></argument>)</argument_list></call></expr></init></diff:delete></decl>;</decl_stmt>
-</diff:common><diff:ws>    </diff:ws><diff:common><if>if<condition>(<expr><name>type</name> <operator>!=</operator> <literal type="string">"page"</literal></expr>)</condition><then> <block>{
+</diff:common><diff:ws>    </diff:ws><diff:common><if_stmt><if>if<condition>(<expr><name>type</name> <operator>!=</operator> <literal type="string">"page"</literal></expr>)</condition> <block>{<block_content>
     <diff:delete><diff:ws>    </diff:ws></diff:delete><decl_stmt><decl><type><name>Anchor</name> <modifier>*</modifier></type><name>anchor</name> <init>= <expr><operator>new</operator>
         <diff:delete><diff:ws>    </diff:ws></diff:delete><call><name>Anchor</name><argument_list>(<argument><expr><name>shape</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
     <diff:delete><diff:ws>    </diff:ws></diff:delete><expr_stmt><expr><call><name><name>anchor</name><operator>.</operator><name>loadFromShape</name></name><argument_list>(<argument><expr><name>element</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-<diff:delete><diff:ws>    </diff:ws></diff:delete>}</block></then></if>
-</diff:common>}</block></then></if><diff:ws>
+<diff:delete><diff:ws>    </diff:ws></diff:delete></block_content>}</block></if></if_stmt>
+</diff:common></block_content>}</block></if></if_stmt><diff:ws>
 </diff:ws></diff:delete></unit>
 
 <unit language="C++" filename="complex|complex">
 <function><type><name>void</name></type> <name><name>KisToolSelectPolygonal</name><operator>::</operator><name>finish</name></name><parameter_list>()</parameter_list>
-<block>{
-    <if>if <condition>(<expr><call><name>currentImage</name><argument_list>()</argument_list></call><diff:insert><diff:ws> </diff:ws><operator>&amp;&amp;</operator><diff:ws> </diff:ws><call><name><name>m_points</name><operator>.</operator><name>count</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>&gt;</operator><diff:ws> </diff:ws><literal type="number">2</literal></diff:insert></expr>)</condition><then> <block>{
+<block>{<block_content>
+    <if_stmt><if>if <condition>(<expr><call><name>currentImage</name><argument_list>()</argument_list></call><diff:insert><diff:ws> </diff:ws><operator>&amp;&amp;</operator><diff:ws> </diff:ws><call><name><name>m_points</name><operator>.</operator><name>count</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>&gt;</operator><diff:ws> </diff:ws><literal type="number">2</literal></diff:insert></expr>)</condition> <block>{<block_content>
         <expr_stmt><expr><call><name><name>QApplication</name><operator>::</operator><name>setOverrideCursor</name></name><argument_list>(<argument><expr><call><name><name>KisCursor</name><operator>::</operator><name>waitCursor</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 
         <decl_stmt><decl><type><name>KisCanvas2</name> <modifier>*</modifier></type> <name>kisCanvas</name> <init>= <expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>KisCanvas2</name><operator>*</operator></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><name>m_canvas</name></expr></argument>)</argument_list></cast></expr></init></decl>;</decl_stmt>
-        <if>if <condition>(<expr><operator>!</operator><name>kisCanvas</name></expr>)</condition><then><block type="pseudo">
-            <return>return;</return></block></then></if>
+        <if_stmt><if>if <condition>(<expr><operator>!</operator><name>kisCanvas</name></expr>)</condition><block type="pseudo"><block_content>
+            <return>return;</return></block_content></block></if></if_stmt>
 
-        <if>if <condition>(<expr><operator>!</operator><call><name>currentNode</name><argument_list>()</argument_list></call></expr>)</condition><then><block type="pseudo">
-            <return>return;</return></block></then></if>
+        <if_stmt><if>if <condition>(<expr><operator>!</operator><call><name>currentNode</name><argument_list>()</argument_list></call></expr>)</condition><block type="pseudo"><block_content>
+            <return>return;</return></block_content></block></if></if_stmt>
 
         <decl_stmt><decl><type><name>KisSelectionToolHelper</name></type> <name>helper</name><argument_list>(<argument><expr><name>kisCanvas</name></expr></argument>, <argument><expr><call><name>currentNode</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><call><name>i18n</name><argument_list>(<argument><expr><literal type="string">"Polygonal Selection"</literal></expr></argument>)</argument_list></call></expr></argument>)</argument_list></decl>;</decl_stmt>
 
-        <if>if <condition>(<expr><name>m_selectionMode</name> <operator>==</operator> <name>PIXEL_SELECTION</name></expr>)</condition><then> <block>{
+        <if_stmt><if>if <condition>(<expr><name>m_selectionMode</name> <operator>==</operator> <name>PIXEL_SELECTION</name></expr>)</condition> <block>{<block_content>
 
             <decl_stmt><decl><type><name>KisPixelSelectionSP</name></type> <name>tmpSel</name> <init>= <expr><call><name>KisPixelSelectionSP</name><argument_list>(<argument><expr><operator>new</operator> <call><name>KisPixelSelection</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
 
@@ -115,28 +115,28 @@
 
             <decl_stmt><decl><type><name>QUndoCommand</name><modifier>*</modifier></type> <name>cmd</name> <init>= <expr><call><name><name>helper</name><operator>.</operator><name>selectPixelSelection</name></name><argument_list>(<argument><expr><name>tmpSel</name></expr></argument>, <argument><expr><name>m_selectAction</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt>
             <expr_stmt><expr><call><name><name>m_canvas</name><operator>-&gt;</operator><name>addCommand</name></name><argument_list>(<argument><expr><name>cmd</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-        }</block></then> <else>else <block>{
+        </block_content>}</block></if> <else>else <block>{<block_content>
 
-<diff:delete><diff:ws>            </diff:ws><if>if<diff:ws> </diff:ws><condition>(<expr><call><name><name>m_points</name><operator>.</operator><name>count</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>&gt;</operator><diff:ws> </diff:ws><literal type="number">1</literal></expr>)</condition><then><diff:ws> </diff:ws><block>{<diff:ws>
+<diff:delete><diff:ws>            </diff:ws><if_stmt><if>if<diff:ws> </diff:ws><condition>(<expr><call><name><name>m_points</name><operator>.</operator><name>count</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>&gt;</operator><diff:ws> </diff:ws><literal type="number">1</literal></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
 </diff:ws><diff:common>                <decl_stmt><decl><type><name>KoPathShape</name><modifier>*</modifier></type> <name>path</name> <init>= <expr><operator>new</operator> <call><name>KoPathShape</name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt>
                 <expr_stmt><expr><call><name><name>path</name><operator>-&gt;</operator><name>setShapeId</name></name><argument_list>(<argument><expr><name>KoPathShapeId</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 
                 <decl_stmt><decl><type><name>QMatrix</name></type> <name>resolutionMatrix</name></decl>;</decl_stmt>
                 <expr_stmt><expr><call><name><name>resolutionMatrix</name><operator>.</operator><name>scale</name></name><argument_list>(<argument><expr><literal type="number">1</literal> <operator>/</operator> <call><name>currentImage</name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name>xRes</name><argument_list>()</argument_list></call></expr></argument>, <argument><expr><literal type="number">1</literal> <operator>/</operator> <call><name>currentImage</name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name>yRes</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
                 <expr_stmt><expr><call><name><name>path</name><operator>-&gt;</operator><name>moveTo</name></name><argument_list>(<argument><expr><call><name><name>resolutionMatrix</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name><name>m_points</name><index>[<expr><literal type="number">0</literal></expr>]</index></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-                <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <call><name><name>m_points</name><operator>.</operator><name>count</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control><block type="pseudo">
-                    <expr_stmt><expr><call><name><name>path</name><operator>-&gt;</operator><name>lineTo</name></name><argument_list>(<argument><expr><call><name><name>resolutionMatrix</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name><name>m_points</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block></for>
+                <for>for <control>(<init><decl><type><name>int</name></type> <name>i</name> <init>= <expr><literal type="number">1</literal></expr></init></decl>;</init> <condition><expr><name>i</name> <operator>&lt;</operator> <call><name><name>m_points</name><operator>.</operator><name>count</name></name><argument_list>()</argument_list></call></expr>;</condition> <incr><expr><name>i</name><operator>++</operator></expr></incr>)</control><block type="pseudo"><block_content>
+                    <expr_stmt><expr><call><name><name>path</name><operator>-&gt;</operator><name>lineTo</name></name><argument_list>(<argument><expr><call><name><name>resolutionMatrix</name><operator>.</operator><name>map</name></name><argument_list>(<argument><expr><name><name>m_points</name><index>[<expr><name>i</name></expr>]</index></name></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></block_content></block></for>
                 <expr_stmt><expr><call><name><name>path</name><operator>-&gt;</operator><name>close</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
                 <expr_stmt><expr><call><name><name>path</name><operator>-&gt;</operator><name>normalize</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
 
                 <expr_stmt><expr><call><name><name>helper</name><operator>.</operator><name>addSelectionShape</name></name><argument_list>(<argument><expr><name>path</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
-</diff:common><diff:ws>            </diff:ws>}</block></then></if><diff:ws>
-</diff:ws></diff:delete>        }</block></else></if>
+</diff:common><diff:ws>            </diff:ws></block_content>}</block></if></if_stmt><diff:ws>
+</diff:ws></diff:delete>        </block_content>}</block></else></if_stmt>
         <expr_stmt><expr><call><name><name>QApplication</name><operator>::</operator><name>restoreOverrideCursor</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-    }</block></then></if>
+    </block_content>}</block></if></if_stmt>
 
     <expr_stmt><expr><call><name>deactivate</name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 <unit language="C++" filename="complex|complex">
