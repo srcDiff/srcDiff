@@ -13,7 +13,7 @@
 #include <list>
 
 const std::string convert("convert");
-const srcml_node::srcml_attr diff_type(DIFF_TYPE, convert);
+const srcml_node::srcml_attr diff_convert_type(DIFF_TYPE, convert);
 
 srcdiff_single::srcdiff_single(const srcdiff_diff & diff, unsigned int start_original, unsigned int start_modified) : srcdiff_diff(diff), start_original(start_original), start_modified(start_modified) {}
 
@@ -157,8 +157,8 @@ void srcdiff_single::output_recursive_interchangeable() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_all();
 
-  out.diff_original_start->properties.push_back(diff_type);
-  out.diff_modified_start->properties.push_back(diff_type);
+  out.diff_original_start->properties.push_back(diff_convert_type);
+  out.diff_modified_start->properties.push_back(diff_convert_type);
 
   out.output_node(out.diff_original_start, SES_DELETE, true);
   out.diff_original_start->properties.clear();
@@ -166,20 +166,6 @@ void srcdiff_single::output_recursive_interchangeable() {
   out.output_node(out.nodes_original().at(node_sets_original.at(start_original).at(0)), SES_DELETE);
 
   int original_collect_start_pos = 1;
-
-  // if do this then ; no longer matches
-  // if(out.nodes_original().at(node_sets_original.at(start_original).at(0))->name == "decl_stmt") {
-
-  //   while(out.nodes_original().at(node_sets_original.at(start_original).at(original_collect_start_pos))->name != "init") {
-
-  //     ++original_collect_start_pos;
-
-  //   }
-
-  //   output_change(original_collect_start_pos + 1, out.last_output_modified());
-  //   output_whitespace();
-
-  // }
 
   const std::shared_ptr<srcml_node> & keyword_node_original = out.nodes_original().at(node_sets_original.at(start_original).at(original_collect_start_pos));
   const std::shared_ptr<srcml_node> & keyword_node_modified = out.nodes_modified().at(node_sets_modified.at(start_modified).at(1));
