@@ -64,13 +64,11 @@ public:
   static bool reject_similarity_match_only(const node_set & set_original,
                                            const node_set & set_modified);
 
-  static const char * find_attribute(const std::shared_ptr<srcml_node> & node, const char * attr_name);
 
-  static bool is_interchangeable_match(const std::string & original_tag, const std::string & original_uri,
-                                       const std::string & modified_tag, const std::string & modified_uri);
+  static bool is_interchangeable_match(const node_set & original_set, const node_set & modified_set);
 
 };
 
-
+boost::optional<std::string> find_attribute(const std::shared_ptr<srcml_node> & node, const char * attr_name);
 
 #endif

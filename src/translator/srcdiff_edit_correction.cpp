@@ -285,7 +285,7 @@ std::shared_ptr<srcdiff_text_measure> srcdiff_edit_correction::edit2measure(int 
     const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
 
     if(!(original_tag == modified_tag && original_uri == modified_uri)
-        && !srcdiff_match::is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri))
+        && !srcdiff_match::is_interchangeable_match(set_original, set_modified))
         return std::shared_ptr<srcdiff_text_measure>();
 
     std::shared_ptr<srcdiff_text_measure> measure = std::make_shared<srcdiff_text_measure>(set_original, set_modified);

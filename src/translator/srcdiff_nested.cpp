@@ -483,7 +483,7 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
   const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
   const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
 
-  if(original_tag != modified_tag && !srcdiff_match::is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri)) return true;
+  if(original_tag != modified_tag && !srcdiff_match::is_interchangeable_match(set_original, set_modified)) return true;
 
   // if interchanging decl_stmt always nest expr into init or argument
   if(original_tag == "expr" && (is_decl_stmt_from_expr(set_original.nodes(), original_pos) || is_decl_stmt_from_expr(set_modified.nodes(), modified_pos))) return false;

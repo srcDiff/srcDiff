@@ -930,7 +930,7 @@ struct interchange_list {
 static const char * const class_interchange[]     = { "class", "struct", "union", "enum", 0 };
 static const char * const access_interchange[]    = { "public", "protected", "private",   0 };
 static const char * const if_stmt_interchange[]   = { "if_stmt", "while", "for", "foreach",    0 };
-static const char * const else_interchange[]      = { "else", "elseif",                   0 };
+static const char * const else_interchange[]      = { "else", "if",                   0 };
 static const char * const expr_stmt_interchange[] = { "expr_stmt", "decl_stmt", "return", 0 };
 static const char * const cast_interchange[]      = { "cast", 0 };
 static const interchange_list interchange_lists[] = {
@@ -951,7 +951,7 @@ static const interchange_list interchange_lists[] = {
   
   // need to fix
   { "else",      else_interchange },
-  { "elseif",    else_interchange },
+  { "if",    else_interchange },
 
   {"expr_stmt", expr_stmt_interchange },
   {"decl_stmt", expr_stmt_interchange },
@@ -963,13 +963,24 @@ static const interchange_list interchange_lists[] = {
 
 };
 
-bool srcdiff_match::is_interchangeable_match(const std::string & original_tag, const std::string & original_uri,
-                                             const std::string & modified_tag, const std::string & modified_uri) {
+bool srcdiff_match::is_interchangeable_match(const node_set & original_set, const node_set & modified_set) {
+
+  const std::string & original_tag = original_set.get_root_name();
+  const std::string & modified_tag = modified_set.get_root_name();
+
+  const std::string & original_uri = original_set.get_root()->ns.href;
+  const std::string & modified_uri = modified_set.get_root()->ns.href;
+
+  bool original_has_type_attribute = bool(find_attribute(original_set.get_root(), "type"));
+  bool modified_has_type_attribute = bool(find_attribute(original_set.get_root(), "type"));
 
   if(original_uri != modified_uri) return false;
 
   if(original_tag == "if" && original_uri != SRCML_SRC_NAMESPACE_HREF) return false;
   if(modified_tag == "if" && modified_uri != SRCML_SRC_NAMESPACE_HREF) return false;
+
+  if(original_tag == "if" && !original_has_type_attribute) return false;
+  if(original_tag == "if" && !modified_has_type_attribute) return false;
 
   for(size_t list_pos = 0; interchange_lists[list_pos].name; ++list_pos) {
 
@@ -1315,7 +1326,7 @@ bool srcdiff_match::reject_match(const srcdiff_measure & measure,
 
   if(original_tag == modified_tag && original_uri == modified_uri)
     return reject_match_same(measure, set_original, set_modified);
-  else if(is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri)) 
+  else if(is_interchangeable_match(set_original, set_modified))
     return reject_match_interchangeable(measure, set_original, set_modified);
   else
     return true;
