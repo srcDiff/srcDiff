@@ -157,18 +157,30 @@ void srcdiff_single::output_recursive_interchangeable() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_all();
 
-  out.diff_original_start->properties.push_back(diff_convert_type);
-  out.diff_modified_start->properties.push_back(diff_convert_type);
-
-  out.output_node(out.diff_original_start, SES_DELETE, true);
-  out.diff_original_start->properties.clear();
-
-  out.output_node(out.nodes_original().at(node_sets_original.at(start_original).at(0)), SES_DELETE);
+  const std::shared_ptr<srcml_node> & original_start_node = out.nodes_original().at(node_sets_original.at(start_original).at(0));
+  const std::shared_ptr<srcml_node> & modified_start_node = out.nodes_modified().at(node_sets_modified.at(start_modified).at(0));
 
   int original_collect_start_pos = 1;
+  if(original_start_node->name == "if_stmt") {
+    // must have if, if interchange passed
+    while(out.nodes_original().at(node_sets_original.at(start_original).at(original_collect_start_pos))->name != "if") {
+      ++original_collect_start_pos;
+    }
+    ++original_collect_start_pos;
+  }
 
+  int modified_collect_start_pos = 1;
+  if(modified_start_node->name == "if_stmt") {
+    // must have if, if interchange passed
+    while(out.nodes_modified().at(node_sets_modified.at(start_modified).at(modified_collect_start_pos))->name != "if") {
+      ++modified_collect_start_pos;
+    }
+    ++modified_collect_start_pos;
+  }
+
+  // get keyword if present
   const std::shared_ptr<srcml_node> & keyword_node_original = out.nodes_original().at(node_sets_original.at(start_original).at(original_collect_start_pos));
-  const std::shared_ptr<srcml_node> & keyword_node_modified = out.nodes_modified().at(node_sets_modified.at(start_modified).at(1));
+  const std::shared_ptr<srcml_node> & keyword_node_modified = out.nodes_modified().at(node_sets_modified.at(start_modified).at(modified_collect_start_pos));
   bool is_keyword  = keyword_node_original->is_text() && !keyword_node_original->is_white_space();
   bool is_keywords = is_keyword
                      && keyword_node_modified->is_text() && !keyword_node_modified->is_white_space();
@@ -176,30 +188,32 @@ void srcdiff_single::output_recursive_interchangeable() {
 
 
   if((is_keyword && !is_keywords) || (is_keywords && !is_same_keyword)) {
-
-    out.output_node(out.nodes_original().at(node_sets_original.at(start_original).at(1)), SES_DELETE);
-    ++out.last_output_original();
     ++original_collect_start_pos;
-
   }
 
-  ++out.last_output_original();
+  // output deleted nodes
+  out.diff_original_start->properties.push_back(diff_convert_type);
+  out.output_node(out.diff_original_start, SES_DELETE, true);
+  out.diff_original_start->properties.clear();
 
+  for(int output_pos = 0; output_pos < original_collect_start_pos; ++output_pos) {
+    out.output_node(out.nodes_original().at(node_sets_original.at(start_original).at(output_pos)), SES_DELETE);
+    ++out.last_output_original();
+  }
+
+  // output inserted nodes
+  out.diff_modified_start->properties.push_back(diff_convert_type);
   out.output_node(out.diff_modified_start, SES_INSERT, true);
   out.diff_modified_start->properties.clear();
 
-  out.output_node(out.nodes_modified().at(node_sets_modified.at(start_modified).at(0)), SES_INSERT);
-
-  int modified_collect_start_pos = 1;
   if(is_keywords && !is_same_keyword){
-
-    out.output_node(out.nodes_modified().at(node_sets_modified.at(start_modified).at(1)), SES_INSERT);
-    ++out.last_output_modified();
     ++modified_collect_start_pos;
-
   }
 
-  ++out.last_output_modified();
+  for(int output_pos = 0; output_pos < modified_collect_start_pos; ++output_pos) {
+    out.output_node(out.nodes_modified().at(node_sets_modified.at(start_modified).at(output_pos)), SES_INSERT);
+    ++out.last_output_modified();
+  }
 
   // collect subset of nodes
   node_sets next_set_original

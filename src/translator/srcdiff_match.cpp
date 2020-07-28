@@ -1105,6 +1105,7 @@ bool reject_match_same(const srcdiff_measure & measure,
 
     if(is_child_if(first_original) && is_child_if(first_modified)) {
 
+      /** todo play with getting and checking a match with all conditions */
       std::string original_condition = get_condition(set_original.nodes(), original_pos);
       std::string modified_condition = get_condition(set_modified.nodes(), modified_pos);
 
@@ -1126,24 +1127,13 @@ bool reject_match_same(const srcdiff_measure & measure,
 
   } else if(original_tag == "if" && original_uri == SRCML_SRC_NAMESPACE_HREF) {
 
-    if(get_condition(set_original.nodes(), original_pos)
-      == 
-       get_condition(set_modified.nodes(), modified_pos))
+    if(get_condition(set_original.nodes(), original_pos) == get_condition(set_modified.nodes(), modified_pos)) {
       return false;
+    }
 
-    // bool original_has_block = conditional_has_block(set_original);
-    // bool modified_has_block = conditional_has_block(set_modified);
-
-    // bool original_has_else = if_has_else(set_original);
-    // bool modified_has_else = if_has_else(set_modified);
-
-    if(if_block_equal(set_original, set_modified))
-/*      || (original_condition == modified_condition
-        && ( original_has_block == modified_has_block 
-          || original_has_else == modified_has_else 
-          || (original_has_block && !modified_has_else) 
-          || (modified_has_block && !original_has_else))))*/
+    if(if_block_equal(set_original, set_modified)) {
      return false;
+    }
 
   } else if(original_tag == "while" || original_tag == "switch" || original_tag == "do") {
 
@@ -1154,8 +1144,9 @@ bool reject_match_same(const srcdiff_measure & measure,
 
   } else if(original_tag == "for" || original_tag == "foreach") {
 
-    if(for_control_matches(set_original, set_modified))
+    if(for_control_matches(set_original, set_modified)) {
       return false;
+    }
 
   } else if(original_tag == "case") { 
 
@@ -1210,7 +1201,7 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
   std::string original_condition;
 
   if(original_tag == "if_stmt") {
-
+    /** todo play with getting and checking a match with all conditions */
     node_set first_original = get_first_child(set_original);
     if(is_child_if(first_original)) {
       original_condition = get_condition(set_original.nodes(), original_pos);
