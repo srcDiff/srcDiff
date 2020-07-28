@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="extern">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="extern">
 
 <unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="extern|extern">
-<diff:insert><extern>extern<diff:ws> </diff:ws><literal type="string">"C"</literal><diff:ws> </diff:ws><block>{<diff:ws>
+<diff:insert><extern>extern<diff:ws> </diff:ws><literal type="string">"C"</literal><diff:ws> </diff:ws><block>{<block_content><diff:ws>
   </diff:ws><diff:common><cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;jpeglib.h&gt;</cpp:file></cpp:include>
-</diff:common>}</block></extern></diff:insert>
+</diff:common></block_content>}</block></extern></diff:insert>
 </unit>
 
 </unit>

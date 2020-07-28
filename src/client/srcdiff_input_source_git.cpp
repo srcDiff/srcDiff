@@ -135,7 +135,7 @@ void srcdiff_input_source_git::consume() {
     }
   } else {
 
-    srcml_archive_enable_full_archive(options.archive);
+    srcml_archive_enable_solitary_unit(options.archive);
     directory(std::string(), std::string());
   }
 

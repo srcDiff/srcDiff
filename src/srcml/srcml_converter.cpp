@@ -112,11 +112,11 @@ srcml_converter::~srcml_converter() {
 
 // converts source code to srcML
 void srcml_converter::convert(const std::string & language, void * context,
-                              const std::function<int(void *, char *, size_t)> & read, const std::function<int(void *)> & close,
+                              const std::function<ssize_t(void *, void *, size_t)> & read, const std::function<int(void *)> & close,
                               const srcml_burst_config & burst_config) {
 
   srcml_archive * unit_archive = srcml_archive_clone(archive);
-  srcml_archive_disable_full_archive(unit_archive);
+  srcml_archive_enable_solitary_unit(unit_archive);
   srcml_archive_disable_hash(unit_archive);
 
   srcml_archive_write_open_memory(unit_archive, &output_buffer, &output_size);
@@ -125,15 +125,15 @@ void srcml_converter::convert(const std::string & language, void * context,
 
   srcml_unit_set_language(unit, language.c_str());
 
-  srcml_unit_parse_io(unit, context, *read.target<int (*) (void *, char *, size_t)>(), *close.target<int (*) (void *)>());
+  srcml_unit_parse_io(unit, context, *read.target<ssize_t (*) (void *, void *, size_t)>(), *close.target<int (*) (void *)>());
 
-  srcml_write_unit(unit_archive, unit);
+  srcml_archive_write_unit(unit_archive, unit);
 
   if(bool(burst_config.output_path)) {
 
     srcml_archive * srcml_archive = srcml_archive_create();
     srcml_archive_set_options(srcml_archive, srcml_archive_get_options(unit_archive));
-    srcml_archive_disable_full_archive(srcml_archive);
+    srcml_archive_enable_solitary_unit(srcml_archive);
     srcml_archive_disable_hash(srcml_archive);
     srcml_archive_set_tabstop(srcml_archive, srcml_archive_get_tabstop(unit_archive));
     srcml_archive_set_src_encoding(srcml_archive, srcml_archive_get_src_encoding(unit_archive));
@@ -164,8 +164,8 @@ void srcml_converter::convert(const std::string & language, void * context,
     if(burst_config.output_path)
       filename = *burst_config.output_path + "/" + filename;
 
-    srcml_archive_write_open_filename(srcml_archive, filename.c_str(), 0);
-    srcml_write_unit(srcml_archive, unit);
+    srcml_archive_write_open_filename(srcml_archive, filename.c_str());
+    srcml_archive_write_unit(srcml_archive, unit);
     srcml_archive_close(srcml_archive);
     srcml_archive_free(srcml_archive);
 
@@ -392,7 +392,15 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
       if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (*node->parent)->is_simple)
         (*node->parent)->is_simple = false;
       
-      nodes.push_back(node);
+      if(node->is_empty && node->name == "block_content") {
+        node->is_empty = false;
+        std::shared_ptr<srcml_node> end_node = std::make_shared<srcml_node>(*node);
+        end_node->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+        nodes.push_back(node);
+        nodes.push_back(end_node);
+      } else {
+        nodes.push_back(node);
+      }
 
     }
 

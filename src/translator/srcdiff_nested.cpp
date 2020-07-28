@@ -25,86 +25,87 @@ struct nest_info {
 };
 
 // may need to change collection algorithm to gather full and nested of same type           
-const char * const block_nest_types[]       = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
-                                                "if", "while", "for", "foreach", "else", "elseif", "switch", "do",
-                                                "try", "catch", "finally", "synchronized", "continue", "break", "goto", 0 };
+const char * const block_nest_types[]        = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
+                                                 "if_stmt", "if", "while", "for", "foreach", "else", "switch", "do",
+                                                 "try", "catch", "finally", "synchronized", "continue", "break", "goto", 0 };
 
-const char * const then_nest_types[]        = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
-                                                "if", "while", "for", "foreach", "else", "elseif", "switch", "do",
+const char * const ternary_then_nest_types[] = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
+                                                 "if", "while", "for", "foreach", "else", "elseif", "switch", "do",
+                                                 "try", "catch", "finally", "synchronized",
+                                                 "expr", "call", "operator", "literal", "continue", "break", "goto", 0 };
+
+const char * const else_nest_types[]         = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
+                                                "if_stmt", "if", "while", "for", "foreach", "switch", "do",
                                                 "try", "catch", "finally", "synchronized",
                                                 "expr", "call", "operator", "literal", "continue", "break", "goto", 0 };
 
-const char * const else_nest_types[]        = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
-                                                "if", "while", "for", "foreach", "switch", "do",
-                                                "try", "catch", "finally", "synchronized",
-                                                "expr", "call", "operator", "literal", "continue", "break", "goto", 0 };
+const char * const class_nest_types[]        = { "function",
+                                                 "constructor", 
+                                                 "destructor",
+                                                 "class", 
+                                                 "struct", 
+                                                 "union",
+                                                 "enum",
+                                                 "decl_stmt",                                                
+                                                 "function_decl",
+                                                 "constructor_decl", 
+                                                 "destructor_decl",
+                                                 "class_decl",
+                                                 "struct_decl",
+                                                 "union_decl",
+                                                 "enum_decl",
+                                                 "typedef",
+                                                 0 };
 
-const char * const class_nest_types[]       = { "function",
-                                                "constructor", 
-                                                "destructor",
-                                                "class", 
-                                                "struct", 
-                                                "union",
-                                                "enum",
-                                                "decl_stmt",                                                
-                                                "function_decl",
-                                                "constructor_decl", 
-                                                "destructor_decl",
-                                                "class_decl",
-                                                "struct_decl",
-                                                "union_decl",
-                                                "enum_decl",
-                                                "typedef",
-                                                0 };
-
-const char * const extern_nest_types[]      = { "decl_stmt", "function_decl", "function", "class", "class_decl",
-                                                "struct", "struct_decl", "union", "union_decl", "typedef", "using", 0 };
-const char * const for_control_nest_types[] = { "condition", "comment",                                             0 };
-const char * const call_nest_types[]        = { "expr", "call", "operator", "literal", "name",                      0 };
-const char * const ternary_nest_types[]     = { "ternary", "call", "operator", "literal", "expr", "name",           0 };
-const char * const condition_nest_types[]   = { "expr", "call", "operator", "literal", "name",                      0 };
-const char * const name_nest_types[]        = { "name",                                                             0 };
-const char * const decl_nest_types[]        = { "expr",                                                             0 };
-const char * const static_nest_types[]      = { "decl_stmt",                                                        0 };
+const char * const extern_nest_types[]       = { "decl_stmt", "function_decl", "function", "class", "class_decl",
+                                                 "struct", "struct_decl", "union", "union_decl", "typedef", "using", 0 };
+const char * const for_control_nest_types[]  = { "condition", "comment",                                             0 };
+const char * const call_nest_types[]         = { "expr", "call", "operator", "literal", "name",                      0 };
+const char * const ternary_nest_types[]      = { "ternary", "call", "operator", "literal", "expr", "name",           0 };
+const char * const condition_nest_types[]    = { "expr", "call", "operator", "literal", "name",                      0 };
+const char * const name_nest_types[]         = { "name",                                                             0 };
+const char * const decl_nest_types[]         = { "expr",                                                             0 };
+const char * const static_nest_types[]       = { "decl_stmt",                                                        0 };
 
 // tags that can have something nested in them (incomplete)    
 const nest_info nesting[] = {   
 
-  { "block",         block_nest_types       },
-  { "if",            block_nest_types       },
-  { "then",          then_nest_types        },
-  { "elseif",        block_nest_types       },
-  { "else",          else_nest_types        },
-  { "while",         block_nest_types       },
-  { "for",           block_nest_types       },
-  { "foreach",       block_nest_types       },
-  { "control",       for_control_nest_types },
-  { "function",      block_nest_types       },
+  { "block",         block_nest_types        },
+  { "block_content", block_nest_types        },
+  { "if_stmt",       block_nest_types        },
+  { "if",            block_nest_types        },
+  { "then",          ternary_then_nest_types },
+  { "else",          else_nest_types         },
+  { "while",         block_nest_types        },
+  { "for",           block_nest_types        },
+  { "foreach",       block_nest_types        },
+  { "control",       for_control_nest_types  },
+  { "function",      block_nest_types        },
 
-  { "class",         class_nest_types       },
-  { "struct",        class_nest_types       },
-  { "enum",          class_nest_types       },
-  { "public",        class_nest_types       },
-  { "private",       class_nest_types       },
-  { "protected",     class_nest_types       },
+  { "class",         class_nest_types        },
+  { "struct",        class_nest_types        },
+  { "enum",          class_nest_types        },
+  { "public",        class_nest_types        },
+  { "private",       class_nest_types        },
+  { "protected",     class_nest_types        },
 
-  { "call",          call_nest_types        },
-  { "argument_list", call_nest_types        },
-  { "argument",      call_nest_types        },
-  { "expr",          call_nest_types        },
-  { "ternary",       ternary_nest_types     },
-  { "condition",     condition_nest_types   },
-  { "name",          name_nest_types        },
-  { "try",           block_nest_types       },
-  { "catch",         block_nest_types       },
-  { "extern",        extern_nest_types      },
-  { "decl",          decl_nest_types        },
-  { "init",          decl_nest_types        },
+  { "call",          call_nest_types         },
+  { "argument_list", call_nest_types         },
+  { "argument",      call_nest_types         },
+  { "expr",          call_nest_types         },
+  { "ternary",       ternary_nest_types      },
+  { "condition",     condition_nest_types    },
+  { "name",          name_nest_types         },
+  { "try",           block_nest_types        },
+  { "catch",         block_nest_types        },
+  { "extern",        extern_nest_types       },
+  { "decl",          decl_nest_types         },
+  { "init",          decl_nest_types         },
 
   // Java
-  { "static",        static_nest_types      },
-  { "synchronized",  block_nest_types       },
-  { "finally",       block_nest_types       },
+  { "static",        static_nest_types       },
+  { "synchronized",  block_nest_types        },
+  { "finally",       block_nest_types        },
   { 0, 0 }
 
 };
@@ -338,7 +339,10 @@ bool is_better_nest(const node_set & node_set_outer,
       */
       if((match_measure.similarity() >= measure.similarity() && match_measure.difference() <= measure.difference())
        || ((nest_min_size / match_measure.similarity()) < (min_size / measure.similarity())
-          && !srcdiff_nested::reject_match_nested(match_measure, node_set_inner, node_set_outer))
+        // old code used node_set_outer (i.e., is it interchangeable) this seemed wrong
+        // fixes test case, but it failed because interchange not implemented (passes now)
+        // that interchange implemented
+          && !srcdiff_nested::reject_match_nested(match_measure, node_set_inner, set.at(match)))
        )
         // check if other way is better
         return !is_better_nest_no_recursion(node_set_inner, node_set_outer, match_measure);
@@ -479,7 +483,7 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
   const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
   const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
 
-  if(original_tag != modified_tag && !srcdiff_match::is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri)) return true;
+  if(original_tag != modified_tag && !srcdiff_match::is_interchangeable_match(set_original, set_modified)) return true;
 
   // if interchanging decl_stmt always nest expr into init or argument
   if(original_tag == "expr" && (is_decl_stmt_from_expr(set_original.nodes(), original_pos) || is_decl_stmt_from_expr(set_modified.nodes(), modified_pos))) return false;
@@ -490,7 +494,8 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
                        set_modified, set_modified.nodes().at(modified_pos)->parent))
     return true;
 
-  if(original_tag == "then" || original_tag == "block" || original_tag == "comment"
+  if(original_tag == "then" || original_tag == "block" || original_tag == "block_content"
+    || original_tag == "comment"
     || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier"
     || original_tag == "expr" || original_tag == "expr_stmt" || original_tag == "name"
     || original_tag == "number" || original_tag == "file") {
@@ -902,22 +907,13 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
   size_t end_pos = node_sets_outer.at(end_outer - 1).back();
 
   const std::string & structure_outer = node_sets_outer.nodes().at(node_sets_outer.at(start_outer).at(0))->name;
-  if(structure_outer == "if" || structure_outer == "elseif") {
+  if(structure_outer == "block_content") {
+    // do not skip whitespace
+    start_pos = node_sets_outer.at(start_outer).at(0) + 1;
 
-    if(structure_outer == "elseif") {
+  } else if(structure_outer == "if" || structure_outer == "elseif") {
 
-      advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "if");
-      ++start_pos;
-    }
-
-    advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "then");
-
-    if(structure_outer == "elseif") {
-
-      while(end_pos > start_pos && node_sets_outer.nodes().at(end_pos)->name != "if")
-        --end_pos;
-
-    }
+    advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "block");
 
   } else if(structure_outer == "while") {
 
@@ -952,7 +948,11 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
   else
     output_change(out.last_output_original(), start_pos);
 
-  whitespace.output_nested(operation);
+  if(structure_outer == "block_content") {
+    whitespace.output_prefix();
+  } else {
+    whitespace.output_nested(operation);
+  }
 
   if(operation == SES_DELETE) {
 
@@ -966,7 +966,11 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
 
   }
 
-  whitespace.output_nested(operation);
+  if(structure_outer == "block_content") {
+    whitespace.output_prefix();
+  } else {
+    whitespace.output_nested(operation);
+  }
 
   if(operation == SES_DELETE)
     output_change(node_sets_outer.at(end_outer - 1).back() + 1, out.last_output_modified());

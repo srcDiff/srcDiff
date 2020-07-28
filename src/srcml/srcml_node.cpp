@@ -164,7 +164,7 @@ std::ostream & operator<<(std::ostream & out, const srcml_node & that) {
   switch(that.type) {
 
     case XML_READER_TYPE_TEXT:
-      out << *that.content;
+      out << "'" << *that.content << "'";
       break;
     case XML_READER_TYPE_ELEMENT:
       out << '<' << that.name << '>';

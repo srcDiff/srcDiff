@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="goto">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="goto">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="goto|goto">
-<diff:delete><block>{<diff:ws> </diff:ws><diff:common><goto>goto <name>LABEL</name>;</goto></diff:common><diff:ws> </diff:ws>}</block></diff:delete>
+<unit language="C++" filename="goto|goto">
+<diff:delete><block>{<block_content><diff:ws> </diff:ws><diff:common><goto>goto <name>LABEL</name>;</goto></diff:common><diff:ws> </diff:ws></block_content>}</block></diff:delete>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="goto|goto">
-<diff:delete><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><then><block type="pseudo"><diff:ws> </diff:ws><diff:common><goto>goto <name>LABEL</name>;</goto></diff:common></block></then></if></diff:delete>
+<unit language="C++" filename="goto|goto">
+<diff:delete><if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><block type="pseudo"><block_content><diff:ws> </diff:ws><diff:common><goto>goto <name>LABEL</name>;</goto></diff:common></block_content></block></if></if_stmt></diff:delete>
 </unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="goto|goto">
-<diff:delete><else>else<block type="pseudo"><diff:ws> </diff:ws><diff:common><goto>goto <name>LABEL</name>;</goto></diff:common></block></else></diff:delete>
+<unit language="C++" filename="goto|goto">
+<diff:delete><if_stmt><else>else<block type="pseudo"><block_content><diff:ws> </diff:ws><diff:common><goto>goto <name>LABEL</name>;</goto></diff:common></block_content></block></else></if_stmt></diff:delete>
 </unit>
 
 </unit>

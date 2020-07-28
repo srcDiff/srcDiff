@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="destructor">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="destructor">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="destructor|destructor">
-<destructor><name><name>A</name><operator>::</operator>~<name>A</name></name><parameter_list>()</parameter_list> <block>{<diff:insert><diff:ws>
+<unit language="C++" filename="destructor|destructor">
+<destructor><name><name>A</name><operator>::</operator><name>~A</name></name><parameter_list>()</parameter_list> <block>{<block_content><diff:insert><diff:ws>
 
     </diff:ws><decl_stmt><decl><type><name>int</name></type><diff:ws> </diff:ws><name>a</name></decl>;</decl_stmt><diff:ws>
     </diff:ws><decl_stmt><decl><type><name>int</name></type><diff:ws> </diff:ws><name>b</name></decl>;</decl_stmt><diff:ws>
     </diff:ws><decl_stmt><decl><type><name>int</name></type><diff:ws> </diff:ws><name>c</name></decl>;</decl_stmt><diff:ws>
 
-</diff:ws></diff:insert>}</block></destructor>
+</diff:ws></diff:insert></block_content>}</block></destructor>
 </unit>
 
 </unit>

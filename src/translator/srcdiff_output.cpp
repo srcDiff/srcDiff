@@ -59,7 +59,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
 
     if(view_options.srcdiff_filename) {
       output_srcdiff = true;
-      int ret_status = srcml_archive_write_open_filename(archive, view_options.srcdiff_filename->c_str(), 0);
+      int ret_status = srcml_archive_write_open_filename(archive, view_options.srcdiff_filename->c_str());
       if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
     }
 
@@ -71,7 +71,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
     
   } else if(!is_option(flags, OPTION_BURST)) {
       output_srcdiff = true;
-      int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str(), 0);
+      int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str());
       if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
 
   }

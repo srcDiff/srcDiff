@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="default">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="default">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="default|default">
+<unit language="C++" filename="default|default">
 <default>default:</default>
 <diff:delete><diff:ws>  </diff:ws><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
   </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>

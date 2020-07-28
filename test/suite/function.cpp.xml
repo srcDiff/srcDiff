@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:cpp="http://www.srcML.org/srcML/cpp" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="function">
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="function">
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="function|function"><diff:delete><function><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list><diff:ws> </diff:ws><block>{}</block></function></diff:delete></unit>
+<unit language="C++" filename="function|function"><diff:delete><function><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list><diff:ws> </diff:ws><block>{<block_content/>}</block></function></diff:delete></unit>
 
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="function|function"><diff:delete><diff:ws>
-</diff:ws><function><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list><diff:ws> </diff:ws><block>{}</block></function></diff:delete></unit>
+<unit language="C++" filename="function|function"><diff:delete><diff:ws>
+</diff:ws><function><type><name>void</name></type><diff:ws> </diff:ws><name>f</name><parameter_list>()</parameter_list><diff:ws> </diff:ws><block>{<block_content/>}</block></function></diff:delete></unit>
 
 <!-- type one part delete -->
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="function|function">
-<function><type><diff:delete><specifier>const</specifier><diff:ws> </diff:ws></diff:delete><name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>n</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></parameter>, <parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{
+<unit language="C++" filename="function|function">
+<function><type><diff:delete><specifier>const</specifier><diff:ws> </diff:ws></diff:delete><name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>n</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></parameter>, <parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{<block_content>
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 <!-- delete first parameter -->
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="function|function">
-<function><type><diff:delete><specifier>const</specifier><diff:ws> </diff:ws></diff:delete><name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<diff:delete><parameter><decl><type><name>int</name></type><diff:ws> </diff:ws><name>n</name></decl></parameter>,<diff:ws> </diff:ws></diff:delete><parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></parameter>, <parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{
+<unit language="C++" filename="function|function">
+<function><type><diff:delete><specifier>const</specifier><diff:ws> </diff:ws></diff:delete><name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<diff:delete><parameter><decl><type><name>int</name></type><diff:ws> </diff:ws><name>n</name></decl></parameter>,<diff:ws> </diff:ws></diff:delete><parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></parameter>, <parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{<block_content>
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 <!-- delete second parameter -->
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="function|function">
-<function><type><specifier>const</specifier> <name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>n</name></decl></parameter>, <diff:delete><parameter><decl><type><specifier>const</specifier><diff:ws> </diff:ws><name>int</name><modifier>&amp;</modifier></type><diff:ws> </diff:ws><name>m</name></decl></parameter>,<diff:ws> </diff:ws></diff:delete><parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{
+<unit language="C++" filename="function|function">
+<function><type><specifier>const</specifier> <name>int</name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>n</name></decl></parameter>, <diff:delete><parameter><decl><type><specifier>const</specifier><diff:ws> </diff:ws><name>int</name><modifier>&amp;</modifier></type><diff:ws> </diff:ws><name>m</name></decl></parameter>,<diff:ws> </diff:ws></diff:delete><parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{<block_content>
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 <!-- type one part replace -->
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="function|function">
-<function><type><specifier>const</specifier> <name><diff:delete type="replace">int</diff:delete><diff:insert type="replace">double</diff:insert></name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>n</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></parameter>, <parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{
+<unit language="C++" filename="function|function">
+<function><type><specifier>const</specifier> <name><diff:delete type="replace">int</diff:delete><diff:insert type="replace">double</diff:insert></name> <modifier>*</modifier></type> <name>f</name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>n</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></parameter>, <parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{<block_content>
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 <!-- name change -->
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="function|function">
-<function><type><specifier>const</specifier> <name>int</name> <modifier>*</modifier></type> <name><diff:delete type="replace">f</diff:delete><diff:insert type="replace">g</diff:insert></name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>n</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></parameter>, <parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{
+<unit language="C++" filename="function|function">
+<function><type><specifier>const</specifier> <name>int</name> <modifier>*</modifier></type> <name><diff:delete type="replace">f</diff:delete><diff:insert type="replace">g</diff:insert></name><parameter_list>(<parameter><decl><type><name>int</name></type> <name>n</name></decl></parameter>, <parameter><decl><type><specifier>const</specifier> <name>int</name><modifier>&amp;</modifier></type> <name>m</name></decl></parameter>, <parameter><decl><type><name>int</name><modifier>*</modifier></type> <name>pn</name></decl></parameter>, <parameter><decl><type><name>double</name></type> <name>c</name></decl></parameter>)</parameter_list> <block>{<block_content>
   <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
   <expr_stmt><expr><name>b</name></expr>;</expr_stmt>
-}</block></function>
+</block_content>}</block></function>
 </unit>
 
 </unit>
