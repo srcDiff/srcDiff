@@ -1058,7 +1058,13 @@ bool reject_match_same(const srcdiff_measure & measure,
 
       if(is_pseudo_original) {
 
-        node_sets node_sets_original = node_sets(set_original.nodes(), set_original.at(1), set_original.back());
+        size_t block_contents_pos = 1;
+        while(set_original.get_node_name(block_contents_pos) != "block_content") {
+          ++block_contents_pos;
+        }
+        ++block_contents_pos;
+
+        node_sets node_sets_original = node_sets(set_original.nodes(), set_original.at(block_contents_pos), set_original.back());
         node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(0), set_modified.back() + 1);
 
         int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
@@ -1069,8 +1075,14 @@ bool reject_match_same(const srcdiff_measure & measure,
 
       } else {
 
+        size_t block_contents_pos = 1;
+        while(set_modified.get_node_name(block_contents_pos) != "block_content") {
+          ++block_contents_pos;
+        }
+        ++block_contents_pos;
+
         node_sets node_sets_original = node_sets(set_original.nodes(), set_original.at(0), set_original.back() + 1);
-        node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back());
+        node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(block_contents_pos), set_modified.back());
 
         int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
         srcdiff_nested::check_nestable(node_sets_original, 0, 1, node_sets_modified, 0, node_sets_modified.size(),
