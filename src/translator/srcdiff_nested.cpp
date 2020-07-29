@@ -339,7 +339,10 @@ bool is_better_nest(const node_set & node_set_outer,
       */
       if((match_measure.similarity() >= measure.similarity() && match_measure.difference() <= measure.difference())
        || ((nest_min_size / match_measure.similarity()) < (min_size / measure.similarity())
-          && !srcdiff_nested::reject_match_nested(match_measure, node_set_inner, node_set_outer))
+        // old code used node_set_outer (i.e., is it interchangeable) this seemed wrong
+        // fixes test case, but it failed because interchange not implemented (passes now)
+        // that interchange implemented
+          && !srcdiff_nested::reject_match_nested(match_measure, node_set_inner, set.at(match)))
        )
         // check if other way is better
         return !is_better_nest_no_recursion(node_set_inner, node_set_outer, match_measure);
@@ -480,7 +483,7 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
   const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
   const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
 
-  if(original_tag != modified_tag && !srcdiff_match::is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri)) return true;
+  if(original_tag != modified_tag && !srcdiff_match::is_interchangeable_match(set_original, set_modified)) return true;
 
   // if interchanging decl_stmt always nest expr into init or argument
   if(original_tag == "expr" && (is_decl_stmt_from_expr(set_original.nodes(), original_pos) || is_decl_stmt_from_expr(set_modified.nodes(), modified_pos))) return false;

@@ -929,8 +929,8 @@ struct interchange_list {
 
 static const char * const class_interchange[]     = { "class", "struct", "union", "enum", 0 };
 static const char * const access_interchange[]    = { "public", "protected", "private",   0 };
-static const char * const if_interchange[]        = { "if", "while", "for", "foreach",    0 };
-static const char * const else_interchange[]      = { "else", "elseif",                   0 };
+static const char * const if_stmt_interchange[]   = { "if_stmt", "while", "for", "foreach",    0 };
+static const char * const else_interchange[]      = { "else", "if",                   0 };
 static const char * const expr_stmt_interchange[] = { "expr_stmt", "decl_stmt", "return", 0 };
 static const char * const cast_interchange[]      = { "cast", 0 };
 static const interchange_list interchange_lists[] = {
@@ -944,13 +944,14 @@ static const interchange_list interchange_lists[] = {
   { "protected", access_interchange },
   { "private",   access_interchange },
 
-  { "if",        if_interchange },
-  { "while",     if_interchange },
-  { "for",       if_interchange },
-  { "foreach",   if_interchange },
+  { "if_stmt",   if_stmt_interchange },
+  { "while",     if_stmt_interchange },
+  { "for",       if_stmt_interchange },
+  { "foreach",   if_stmt_interchange },
   
+  // need to fix
   { "else",      else_interchange },
-  { "elseif",    else_interchange },
+  { "if",    else_interchange },
 
   {"expr_stmt", expr_stmt_interchange },
   {"decl_stmt", expr_stmt_interchange },
@@ -962,13 +963,24 @@ static const interchange_list interchange_lists[] = {
 
 };
 
-bool srcdiff_match::is_interchangeable_match(const std::string & original_tag, const std::string & original_uri,
-                                             const std::string & modified_tag, const std::string & modified_uri) {
+bool srcdiff_match::is_interchangeable_match(const node_set & original_set, const node_set & modified_set) {
+
+  const std::string & original_tag = original_set.get_root_name();
+  const std::string & modified_tag = modified_set.get_root_name();
+
+  const std::string & original_uri = original_set.get_root()->ns.href;
+  const std::string & modified_uri = modified_set.get_root()->ns.href;
+
+  bool original_has_type_attribute = bool(find_attribute(original_set.get_root(), "type"));
+  bool modified_has_type_attribute = bool(find_attribute(original_set.get_root(), "type"));
 
   if(original_uri != modified_uri) return false;
 
   if(original_tag == "if" && original_uri != SRCML_SRC_NAMESPACE_HREF) return false;
   if(modified_tag == "if" && modified_uri != SRCML_SRC_NAMESPACE_HREF) return false;
+
+  if(original_tag == "if" && !original_has_type_attribute) return false;
+  if(original_tag == "if" && !modified_has_type_attribute) return false;
 
   for(size_t list_pos = 0; interchange_lists[list_pos].name; ++list_pos) {
 
@@ -1046,7 +1058,13 @@ bool reject_match_same(const srcdiff_measure & measure,
 
       if(is_pseudo_original) {
 
-        node_sets node_sets_original = node_sets(set_original.nodes(), set_original.at(1), set_original.back());
+        size_t block_contents_pos = 1;
+        while(set_original.get_node_name(block_contents_pos) != "block_content") {
+          ++block_contents_pos;
+        }
+        ++block_contents_pos;
+
+        node_sets node_sets_original = node_sets(set_original.nodes(), set_original.at(block_contents_pos), set_original.back());
         node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(0), set_modified.back() + 1);
 
         int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
@@ -1057,8 +1075,14 @@ bool reject_match_same(const srcdiff_measure & measure,
 
       } else {
 
+        size_t block_contents_pos = 1;
+        while(set_modified.get_node_name(block_contents_pos) != "block_content") {
+          ++block_contents_pos;
+        }
+        ++block_contents_pos;
+
         node_sets node_sets_original = node_sets(set_original.nodes(), set_original.at(0), set_original.back() + 1);
-        node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back());
+        node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(block_contents_pos), set_modified.back());
 
         int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
         srcdiff_nested::check_nestable(node_sets_original, 0, 1, node_sets_modified, 0, node_sets_modified.size(),
@@ -1104,6 +1128,7 @@ bool reject_match_same(const srcdiff_measure & measure,
 
     if(is_child_if(first_original) && is_child_if(first_modified)) {
 
+      /** todo play with getting and checking a match with all conditions */
       std::string original_condition = get_condition(set_original.nodes(), original_pos);
       std::string modified_condition = get_condition(set_modified.nodes(), modified_pos);
 
@@ -1125,24 +1150,13 @@ bool reject_match_same(const srcdiff_measure & measure,
 
   } else if(original_tag == "if" && original_uri == SRCML_SRC_NAMESPACE_HREF) {
 
-    if(get_condition(set_original.nodes(), original_pos)
-      == 
-       get_condition(set_modified.nodes(), modified_pos))
+    if(get_condition(set_original.nodes(), original_pos) == get_condition(set_modified.nodes(), modified_pos)) {
       return false;
+    }
 
-    // bool original_has_block = conditional_has_block(set_original);
-    // bool modified_has_block = conditional_has_block(set_modified);
-
-    // bool original_has_else = if_has_else(set_original);
-    // bool modified_has_else = if_has_else(set_modified);
-
-    if(if_block_equal(set_original, set_modified))
-/*      || (original_condition == modified_condition
-        && ( original_has_block == modified_has_block 
-          || original_has_else == modified_has_else 
-          || (original_has_block && !modified_has_else) 
-          || (modified_has_block && !original_has_else))))*/
+    if(if_block_equal(set_original, set_modified)) {
      return false;
+    }
 
   } else if(original_tag == "while" || original_tag == "switch" || original_tag == "do") {
 
@@ -1153,8 +1167,9 @@ bool reject_match_same(const srcdiff_measure & measure,
 
   } else if(original_tag == "for" || original_tag == "foreach") {
 
-    if(for_control_matches(set_original, set_modified))
+    if(for_control_matches(set_original, set_modified)) {
       return false;
+    }
 
   } else if(original_tag == "case") { 
 
@@ -1207,14 +1222,31 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
   if(original_name != "" && original_name == modified_name) return false;
 
   std::string original_condition;
-  if(original_tag == "if" || original_tag == "while" || original_tag == "for" || original_tag == "foreach") {
+
+  if(original_tag == "if_stmt") {
+    /** todo play with getting and checking a match with all conditions */
+    node_set first_original = get_first_child(set_original);
+    if(is_child_if(first_original)) {
+      original_condition = get_condition(set_original.nodes(), original_pos);
+    }
+  }
+
+  if(original_tag == "while" || original_tag == "for" || original_tag == "foreach") {
 
     original_condition = get_condition(set_original.nodes(), original_pos);
 
   }
 
   std::string modified_condition;
-  if(modified_tag == "if" || modified_tag == "while" || modified_tag == "for" || modified_tag == "foreach") {
+ 
+  if(modified_tag == "if_stmt") {
+    node_set first_modified = get_first_child(set_modified);
+    if(is_child_if(first_modified)) {
+      modified_condition = get_condition(set_modified.nodes(), modified_pos);
+    }
+  }
+
+  if(modified_tag == "while" || modified_tag == "for" || modified_tag == "foreach") {
 
     modified_condition = get_condition(set_modified.nodes(), modified_pos);
 
@@ -1306,7 +1338,7 @@ bool srcdiff_match::reject_match(const srcdiff_measure & measure,
 
   if(original_tag == modified_tag && original_uri == modified_uri)
     return reject_match_same(measure, set_original, set_modified);
-  else if(is_interchangeable_match(original_tag, original_uri, modified_tag, modified_uri)) 
+  else if(is_interchangeable_match(set_original, set_modified))
     return reject_match_interchangeable(measure, set_original, set_modified);
   else
     return true;
