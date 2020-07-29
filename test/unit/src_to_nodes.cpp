@@ -13,7 +13,7 @@
 struct p2test{
 node_set one;
 node_set two;
-srcdiff_test_measure ameasure;
+//srcdiff_text_measure ameasure;
 };
 
 
@@ -62,16 +62,16 @@ srcml_nodes create_nodes(const std::string & filename, const std::string & langu
 
 
 p2test ret_node_set(const std::string & filename1,const std::string & filename2, const std::string & language){
-srcml_nodes test_nodes1 = test_nodes(filename, language);
-srcml_nodes test_nodes2 = test_nodes(filename2,language);
+srcml_nodes test_nodes1 = create_nodes(filename, language);
+srcml_nodes test_nodes2 = create_nodes(filename2,language);
 node_set anode(test_nodes1);
 node_set anode2(test_nodes2);
-srcdiff_text_measure ameasure(anode, anode2);
+//srcdiff_text_measure ameasure(anode, anode2);
 
 p2test anobject = {
 anode,
 anode2,
-ameasure,
+//ameasure,
 };
 
 return anobject;
