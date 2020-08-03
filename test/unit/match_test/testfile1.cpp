@@ -1,7 +1,15 @@
-#include <iostream>
+class CLASSNAME {
+protected:
+int first;
+int second;
+bool anode;
 
-int main(int argc, char *argv[]){
-	std::cout <<"hello world";
+private:
 
-return 0;
-}
+
+public:
+CLASSNAME();
+~CLASSNAME();
+
+};
+
