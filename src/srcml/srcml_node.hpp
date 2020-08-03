@@ -84,6 +84,7 @@ public:
   int move;
 
   bool is_simple;
+  bool is_temporary;
 
 public:
 

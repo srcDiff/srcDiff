@@ -486,6 +486,8 @@ void srcdiff_output::output_node(const srcml_node & node) {
 // output current XML node in reader
 void srcdiff_output::output_node_inner(const srcml_node & node) {
 
+  if(node.is_temporary) return;
+
   bool isemptyelement = false;
 
   switch (node.type) {
