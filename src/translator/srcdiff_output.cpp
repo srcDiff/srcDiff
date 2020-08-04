@@ -355,6 +355,46 @@ void srcdiff_output::update_diff_stacks(const std::shared_ptr<srcml_node> & node
 
 }
 
+void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & original_node, 
+                                 const std::shared_ptr<srcml_node> & modified_node,
+                                 int operation, bool force_output) {
+  if(operation == SES_COMMON && original_node->is_temporary != modified_node->is_temporary) {
+
+    if((xmlReaderTypes)original_node->type == XML_READER_TYPE_END_ELEMENT) {
+      output_node(diff_common_end, SES_COMMON);
+    }
+
+    if(original_node->is_temporary) {
+
+      if((xmlReaderTypes)modified_node->type == XML_READER_TYPE_ELEMENT) {
+        output_node(diff_modified_start, SES_INSERT);
+      }
+      output_node(modified_node, SES_INSERT, force_output);
+      if((xmlReaderTypes)modified_node->type == XML_READER_TYPE_END_ELEMENT) {
+        output_node(diff_modified_end, SES_INSERT);
+      }
+
+    } else {
+
+      if((xmlReaderTypes)original_node->type == XML_READER_TYPE_ELEMENT) {
+        output_node(diff_original_start, SES_DELETE);
+      }
+      output_node(original_node, SES_DELETE, force_output);
+      if((xmlReaderTypes)original_node->type == XML_READER_TYPE_END_ELEMENT) {
+        output_node(diff_original_end, SES_DELETE);
+      }
+
+    }
+    if((xmlReaderTypes)original_node->type == XML_READER_TYPE_ELEMENT) {
+      output_node(diff_common_start, SES_COMMON);
+    }
+  } else {
+    output_node(original_node, operation, force_output);
+  }
+
+}
+
+
 void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int operation, bool force_output) {
 
   // check if delaying SES_DELETE/SES_INSERT/SES_COMMON tag. should only stop if operation is different or not whitespace

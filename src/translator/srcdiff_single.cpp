@@ -91,17 +91,16 @@ void srcdiff_single::output_recursive_same() {
 
   out.output_node(out.diff_common_start, SES_COMMON);
 
-  if(srcdiff_compare::node_compare(out.nodes_original().at(node_sets_original.at(start_original).at(0)), out.nodes_modified().at(node_sets_modified.at(start_modified).at(0))) == 0) {
+  if(srcdiff_compare::node_compare(node_sets_original.at(start_original).get_root(), node_sets_modified.at(start_modified).get_root()) == 0) {
 
-    out.output_node(out.nodes_original().at(node_sets_original.at(start_original).at(0)), SES_COMMON);
+    out.output_node(node_sets_original.at(start_original).get_root(), node_sets_modified.at(start_modified).get_root(), SES_COMMON);
 
   } else {
 
-    std::shared_ptr<srcml_node> merged_node = std::make_shared<srcml_node>(*out.nodes_original().at(node_sets_original.at(start_original).at(0)));
-    merged_node->is_empty = out.nodes_original().at(node_sets_original.at(start_original).at(0))->is_empty && out.nodes_modified().at(node_sets_modified.at(start_modified).at(0))->is_empty;
-    merged_node->properties = merge_properties(out.nodes_original().at(node_sets_original.at(start_original).at(0))->properties,
-                                              out.nodes_modified().at(node_sets_modified.at(start_modified).at(0))->properties);
-
+    std::shared_ptr<srcml_node> merged_node = std::make_shared<srcml_node>(*node_sets_original.at(start_original).get_root());
+    merged_node->is_empty = node_sets_original.at(start_original).get_root()->is_empty && node_sets_modified.at(start_modified).get_root()->is_empty;
+    merged_node->properties = merge_properties(node_sets_original.at(start_original).get_root()->properties,
+                                              node_sets_modified.at(start_modified).get_root()->properties);
     out.output_node(merged_node, SES_COMMON);
 
   }
@@ -110,7 +109,7 @@ void srcdiff_single::output_recursive_same() {
   ++out.last_output_modified();
 
   // diff comments differently then source-code
-  if(out.nodes_original().at(node_sets_original.at(start_original).at(0))->name == "comment") {
+  if(node_sets_original.at(start_original).get_root()->name == "comment") {
 
     // collect subset of nodes
     node_sets next_set_original
@@ -128,13 +127,13 @@ void srcdiff_single::output_recursive_same() {
 
       // collect subset of nodes
       node_sets next_set_original(out.nodes_original());
-      if(!out.nodes_original().at(node_sets_original.at(start_original).at(0))->is_empty)
+      if(!node_sets_original.at(start_original).get_root()->is_empty)
         next_set_original = node_sets(out.nodes_original(),
                                       node_sets_original.at(start_original).at(1),
                                       node_sets_original.at(start_original).back());
 
       node_sets next_set_modified(out.nodes_modified());
-      if(!out.nodes_modified().at(node_sets_modified.at(start_modified).at(0))->is_empty)
+      if(!node_sets_modified.at(start_modified).get_root()->is_empty)
         next_set_modified = node_sets(out.nodes_modified(),
                                       node_sets_modified.at(start_modified).at(1),
                                       node_sets_modified.at(start_modified).back());
@@ -157,8 +156,8 @@ void srcdiff_single::output_recursive_interchangeable() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_all();
 
-  const std::shared_ptr<srcml_node> & original_start_node = out.nodes_original().at(node_sets_original.at(start_original).at(0));
-  const std::shared_ptr<srcml_node> & modified_start_node = out.nodes_modified().at(node_sets_modified.at(start_modified).at(0));
+  const std::shared_ptr<srcml_node> & original_start_node = node_sets_original.at(start_original).get_root();
+  const std::shared_ptr<srcml_node> & modified_start_node = node_sets_modified.at(start_modified).get_root();
 
   int original_collect_start_pos = 1;
   if(original_start_node->name == "if_stmt") {

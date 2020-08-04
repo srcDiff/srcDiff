@@ -27,7 +27,7 @@ void srcdiff_common::markup_common() {
 
     if(srcdiff_compare::node_compare(rbuf_original->nodes.at(i), rbuf_modified->nodes.at(j)) == 0) {
 
-      output_node(rbuf_original->nodes.at(i), SES_COMMON);
+      output_node(rbuf_original->nodes.at(i), rbuf_modified->nodes.at(j), SES_COMMON);
         
     } else if(rbuf_original->nodes.at(i)->is_white_space() && rbuf_modified->nodes.at(j)->is_white_space()) {
       
