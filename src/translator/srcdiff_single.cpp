@@ -89,7 +89,9 @@ void srcdiff_single::output_recursive_same() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_all();
 
-  out.output_node(out.diff_common_start, SES_COMMON);
+  if(node_sets_original.at(start_original).get_root()->is_temporary == node_sets_modified.at(start_modified).get_root()->is_temporary) {
+    out.output_node(out.diff_common_start, SES_COMMON);
+  }
 
   if(srcdiff_compare::node_compare(node_sets_original.at(start_original).get_root(), node_sets_modified.at(start_modified).get_root()) == 0) {
 
@@ -145,7 +147,9 @@ void srcdiff_single::output_recursive_same() {
 
   output_common(node_sets_original.at(start_original).back() + 1, node_sets_modified.at(start_modified).back() + 1);
 
-  out.output_node(out.diff_common_end, SES_COMMON);
+  if(node_sets_original.at(start_original).get_root()->is_temporary == node_sets_modified.at(start_modified).get_root()->is_temporary) {
+    out.output_node(out.diff_common_end, SES_COMMON);
+  }
 
   //whitespace.output_statement();
 

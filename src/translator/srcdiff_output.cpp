@@ -358,6 +358,7 @@ void srcdiff_output::update_diff_stacks(const std::shared_ptr<srcml_node> & node
 void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & original_node, 
                                  const std::shared_ptr<srcml_node> & modified_node,
                                  int operation, bool force_output) {
+
   if(operation == SES_COMMON && original_node->is_temporary != modified_node->is_temporary) {
 
     if((xmlReaderTypes)original_node->type == XML_READER_TYPE_END_ELEMENT) {
