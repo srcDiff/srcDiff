@@ -404,7 +404,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
           is_elseif = true;
       }
 
-      if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (node->extra & 0x1) == 0)
+      if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && !node->is_empty_tag())
         element_stack.push_back(node);
       else if(node->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
         element_stack.pop_back();
