@@ -414,7 +414,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
       if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (*node->parent)->is_simple)
         (*node->parent)->is_simple = false;
       
-      if(node->is_empty && node->name == "block_content") {
+      if(node->is_empty) {
         node->is_empty = false;
         std::shared_ptr<srcml_node> end_node = std::make_shared<srcml_node>(*node);
         end_node->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
