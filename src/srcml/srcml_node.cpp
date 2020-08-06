@@ -183,20 +183,29 @@ std::ostream & operator<<(std::ostream & out, const srcml_node & that) {
 
 }
 
-bool srcml_node::is_white_space() const {
-
-  // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
-  return (xmlReaderTypes)type == XML_READER_TYPE_TEXT && content && isspace((*content)[0]);
-
+bool srcml_node::is_open_tag() const {
+  return type == XML_READER_TYPE_ELEMENT;
 }
 
-bool srcml_node::is_new_line() const {
+bool srcml_node::is_close_tag() const {
+  return type == XML_READER_TYPE_END_ELEMENT;
+}
 
-  return (xmlReaderTypes)type == XML_READER_TYPE_TEXT && content && (*content)[0] == '\n';
+bool srcml_node::is_empty_tag() const {
+  return is_empty;
 
 }
 
 bool srcml_node::is_text() const {
+  return type == XML_READER_TYPE_TEXT;
+}
 
-  return (xmlReaderTypes)type == XML_READER_TYPE_TEXT;
+bool srcml_node::is_white_space() const {
+
+  // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
+  return type == XML_READER_TYPE_TEXT && content && isspace((*content)[0]);
+}
+
+bool srcml_node::is_new_line() const {
+  return type == XML_READER_TYPE_TEXT && content && (*content)[0] == '\n';
 }

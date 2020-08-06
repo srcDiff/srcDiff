@@ -102,11 +102,14 @@ public:
 
   friend std::ostream & operator<<(std::ostream & out, const srcml_node & that);
 
-  bool is_white_space() const;
+  bool is_open_tag() const;
+  bool is_close_tag() const;
 
-  bool is_new_line() const;
+  bool is_empty_tag() const;
 
   bool is_text() const;
+  bool is_white_space() const;
+  bool is_new_line() const;
 
 };
 

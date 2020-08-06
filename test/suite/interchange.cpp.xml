@@ -207,7 +207,7 @@
 </unit>
 
 <unit language="C++" filename="interchange|interchange">
-<diff:delete type="convert"><class>class<diff:insert type="convert"><struct>struct<diff:common> <name>foo</name> <block>{<diff:delete type="replace"><private type="default"/></diff:delete><diff:insert type="replace"><public type="default"/></diff:insert>}</block>;</diff:common></struct></diff:insert></class></diff:delete>
+<diff:delete type="convert"><class>class<diff:insert type="convert"><struct>struct<diff:common> <name>foo</name> <block>{<diff:delete type="convert"><private type="default"><diff:insert type="convert"><public type="default"/></diff:insert></private></diff:delete>}</block>;</diff:common></struct></diff:insert></class></diff:delete>
 </unit>
 
 <!-- This could be better with decl_stmt matching -->
