@@ -204,20 +204,17 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
     const char * xml = srcml_unit_get_srcml(wstate->unit);
     colordiff->colorize(xml, line_diff_range);
-    srcml_memory_free((char *)xml);
 
   } else if(is_option(flags, OPTION_UNIFIED_VIEW | OPTION_SIDE_BY_SIDE_VIEW | OPTION_DIFFDOC_VIEW)) {
 
     const char * xml = srcml_unit_get_srcml(wstate->unit);
     view->transform(xml, "UTF-8");
-    srcml_memory_free((char *)xml);
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
 
 #ifndef _MSC_BUILD
     const char * xml = srcml_unit_get_srcml(wstate->unit);
     summary->summarize(xml, "UTF-8");
-    srcml_memory_free((char *)xml);
 #endif
 
   } else if(is_option(flags, OPTION_BURST)) {
