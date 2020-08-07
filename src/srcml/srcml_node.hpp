@@ -75,7 +75,6 @@ public:
   srcml_ns ns;
   boost::optional<std::string> content;
   std::list<srcml_attr> properties;
-  unsigned short extra;
   boost::optional<std::shared_ptr<srcml_node>> parent;
 
   bool is_empty;
@@ -92,7 +91,7 @@ public:
 
   srcml_node(xmlElementType type = XML_ELEMENT_NODE, const std::string & name = std::string(), const srcml_ns & ns = srcml_ns(),
     const boost::optional<std::string> & content = boost::optional<std::string>(), const std::list<srcml_attr> & properties = std::list<srcml_attr>(),
-    unsigned short extra = 0, const boost::optional<std::shared_ptr<srcml_node>> & parent = boost::optional<std::shared_ptr<srcml_node>>(), bool is_empty = false);
+    const boost::optional<std::shared_ptr<srcml_node>> & parent = boost::optional<std::shared_ptr<srcml_node>>(), bool is_empty = false);
 
   srcml_node(const srcml_node & node);
 
@@ -106,6 +105,7 @@ public:
   bool is_close_tag() const;
 
   bool is_empty_tag() const;
+  bool & is_empty_tag();
 
   bool is_text() const;
   bool is_white_space() const;
