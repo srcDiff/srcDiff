@@ -85,6 +85,10 @@ public:
   bool is_simple;
   bool is_temporary;
 
+private:
+  bool & is_empty_tag();
+  friend class srcml_converter;
+
 public:
 
   srcml_node(const xmlNode & node, bool is_archive);
@@ -103,9 +107,6 @@ public:
 
   bool is_open_tag() const;
   bool is_close_tag() const;
-
-  bool is_empty_tag() const;
-  bool & is_empty_tag();
 
   bool is_text() const;
   bool is_white_space() const;

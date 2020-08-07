@@ -191,10 +191,6 @@ bool srcml_node::is_close_tag() const {
   return type == XML_READER_TYPE_END_ELEMENT;
 }
 
-bool srcml_node::is_empty_tag() const {
-  return is_empty;
-}
-
 bool & srcml_node::is_empty_tag() {
   return is_empty;
 }
