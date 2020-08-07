@@ -157,7 +157,7 @@ bool srcml_node::operator==(const srcml_node & node) const {
 
   return type == node.type
     && name == node.name
-    && (((xmlReaderTypes)type != XML_READER_TYPE_TEXT && (xmlReaderTypes)type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
+    && ((type != XML_READER_TYPE_TEXT && type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
       || (content == node.content && (!content || *content == *node.content)));
 }
 
