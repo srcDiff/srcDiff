@@ -93,7 +93,7 @@ public:
 
   srcml_node(const xmlNode & node, bool is_archive);
 
-  srcml_node(xmlElementType type = XML_ELEMENT_NODE, const std::string & name = std::string(), const srcml_ns & ns = srcml_ns(),
+  srcml_node(xmlReaderTypes type = XML_READER_TYPE_ELEMENT, const std::string & name = std::string(), const srcml_ns & ns = srcml_ns(),
     const boost::optional<std::string> & content = boost::optional<std::string>(), const std::list<srcml_attr> & properties = std::list<srcml_attr>(),
     const boost::optional<std::shared_ptr<srcml_node>> & parent = boost::optional<std::shared_ptr<srcml_node>>(), bool is_empty = false);
 

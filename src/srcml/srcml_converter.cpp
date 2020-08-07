@@ -225,7 +225,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
   srcml_nodes nodes;
 
   srcml_nodes element_stack;
-  element_stack.push_back(std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, "unit"));
+  element_stack.push_back(std::make_shared<srcml_node>(XML_READER_TYPE_ELEMENT, "unit"));
 
 
   bool is_elseif = false;
