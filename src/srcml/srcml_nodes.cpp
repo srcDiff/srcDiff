@@ -1,12 +1,12 @@
 #include <srcml_nodes.hpp>
 #include <iostream>
 
-static xmlElementType START_TAG_TYPE = (xmlElementType)XML_READER_TYPE_ELEMENT;
-static xmlElementType END_TAG_TYPE = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+static xmlReaderTypes START_TAG_TYPE = XML_READER_TYPE_ELEMENT;
+static xmlReaderTypes END_TAG_TYPE = XML_READER_TYPE_END_ELEMENT;
 
 void advance_to_child(const srcml_nodes & nodes,
                       size_t & pos,
-                      xmlElementType type,
+                      xmlReaderTypes type,
                       const std::string & name) {
 
   srcml_nodes::size_type size = nodes.size();
