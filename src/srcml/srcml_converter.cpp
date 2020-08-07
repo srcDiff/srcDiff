@@ -38,7 +38,7 @@ std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr r
     } else {
 
       node = std::make_shared<srcml_node>(*curnode, is_archive);
-      node->extra = 0;
+      node->is_empty_tag() = false;
       start_tags.insert(lb, std::map<std::string, std::shared_ptr<srcml_node>>::value_type(full_name, node));
     }
 
@@ -51,14 +51,14 @@ std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr r
     } else {
 
       node = std::make_shared<srcml_node>(*curnode, is_archive);
-      node->extra = 0;
+      node->is_empty_tag() = false;
       end_tags.insert(lb, std::map<std::string, std::shared_ptr<srcml_node>>::value_type(full_name, node));
     }
 
   } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_ELEMENT) {
     node = std::make_shared<srcml_node>(*curnode, is_archive);
     node->free = true;
-    node->extra = xmlTextReaderIsEmptyElement(reader);
+    node->is_empty_tag() = xmlTextReaderIsEmptyElement(reader);
   } else {
     node = std::make_shared<srcml_node>(*curnode, is_archive);
     node->free = true;

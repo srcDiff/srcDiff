@@ -45,8 +45,6 @@ void srcdiff_text_measure::collect_text_node_set(const node_set & set, node_set 
     if(set.nodes().at(set.at(i))->name == "operator"
       || set.nodes().at(set.at(i))->name == "modifier") {
 
-      if(set.nodes().at(set.at(i))->extra & 0x1) continue;
-
       if(set.nodes().at(set.at(i))->parent && (*set.nodes().at(set.at(i))->parent)->name != "name") continue;
 
       if((set.at(i) + 1) < set.nodes().size() && set.nodes().at(set.at(i) + 1)->is_text()
