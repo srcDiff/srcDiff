@@ -64,7 +64,7 @@ std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr r
     node->free = true;
   }
 
-  node->type = (xmlElementType) xmlTextReaderNodeType(reader);
+  node->type = (xmlReaderTypes)xmlTextReaderNodeType(reader);
 
   return node;
 }
@@ -74,7 +74,7 @@ std::shared_ptr<srcml_node> split_text(const char * characters_start,
                                        const std::shared_ptr<srcml_node> & parent) {
 
   std::shared_ptr<srcml_node> text = std::make_shared<srcml_node>();
-  text->type = (xmlElementType)XML_READER_TYPE_TEXT;
+  text->type = XML_READER_TYPE_TEXT;
   text->name = std::string("text");
   text->content = boost::optional<std::string>();
 
@@ -417,7 +417,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
       if(node->is_empty) {
         node->is_empty = false;
         std::shared_ptr<srcml_node> end_node = std::make_shared<srcml_node>(*node);
-        end_node->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+        end_node->type = XML_READER_TYPE_END_ELEMENT;
         nodes.push_back(node);
         nodes.push_back(end_node);
       } else {

@@ -70,7 +70,7 @@ public:
 
   };
 
-  xmlElementType type;
+  xmlReaderTypes type;
   std::string name;
   srcml_ns ns;
   boost::optional<std::string> content;
