@@ -64,7 +64,7 @@ std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr r
     node->free = true;
   }
 
-  node->type = (xmlElementType) xmlTextReaderNodeType(reader);
+  node->type = (xmlReaderTypes)xmlTextReaderNodeType(reader);
 
   return node;
 }
@@ -74,7 +74,7 @@ std::shared_ptr<srcml_node> split_text(const char * characters_start,
                                        const std::shared_ptr<srcml_node> & parent) {
 
   std::shared_ptr<srcml_node> text = std::make_shared<srcml_node>();
-  text->type = (xmlElementType)XML_READER_TYPE_TEXT;
+  text->type = XML_READER_TYPE_TEXT;
   text->name = std::string("text");
   text->content = boost::optional<std::string>();
 
@@ -225,7 +225,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
   srcml_nodes nodes;
 
   srcml_nodes element_stack;
-  element_stack.push_back(std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, "unit"));
+  element_stack.push_back(std::make_shared<srcml_node>(XML_READER_TYPE_ELEMENT, "unit"));
 
 
   bool is_elseif = false;
@@ -390,12 +390,12 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
       std::shared_ptr<srcml_node> node = get_current_node(reader, srcml_archive_get_options(archive));
       mutex.unlock();
 
-      if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT)
+      if(node->type == XML_READER_TYPE_ELEMENT)
         node->parent = element_stack.back();
 
 
       // insert end if temp element for elseif and detect elseif
-      if(node->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT
+      if(node->type == XML_READER_TYPE_END_ELEMENT
         && element_stack.back()->name == "if" && !element_stack.back()->properties.empty()) {
         std::shared_ptr<srcml_node> end_node = std::make_shared<srcml_node>(*node);
         end_node->is_temporary = true;
@@ -404,20 +404,20 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
           is_elseif = true;
       }
 
-      if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && !node->is_empty_tag())
+      if(node->type == XML_READER_TYPE_ELEMENT && !node->is_empty_tag())
         element_stack.push_back(node);
-      else if(node->type == (xmlElementType)XML_READER_TYPE_END_ELEMENT)
+      else if(node->type == XML_READER_TYPE_END_ELEMENT)
         element_stack.pop_back();
 
       if(node->name == "unit") return nodes;
 
-      if(node->type == (xmlElementType)XML_READER_TYPE_ELEMENT && (*node->parent)->is_simple)
+      if(node->type == XML_READER_TYPE_ELEMENT && (*node->parent)->is_simple)
         (*node->parent)->is_simple = false;
       
       if(node->is_empty) {
         node->is_empty = false;
         std::shared_ptr<srcml_node> end_node = std::make_shared<srcml_node>(*node);
-        end_node->type = (xmlElementType)XML_READER_TYPE_END_ELEMENT;
+        end_node->type = XML_READER_TYPE_END_ELEMENT;
         nodes.push_back(node);
         nodes.push_back(end_node);
       } else {
