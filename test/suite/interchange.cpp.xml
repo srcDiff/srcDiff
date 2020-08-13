@@ -184,7 +184,7 @@
 </unit>
 
 <unit language="C++" filename="interchange|interchange">
-<if>if <condition>(<expr><name>paragraphStyle</name></expr>)</condition><then> <block>{
+<if_stmt><if>if <condition>(<expr><name>paragraphStyle</name></expr>)</condition> <block>{<block_content>
     <expr_stmt><expr><name>paragStyleClone</name> <operator>=</operator> <call><name><name>paragraphStyle</name><operator>-&gt;</operator><name>clone</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
     <decl_stmt><decl><type><name>ParagraphGeneral</name> <modifier>*</modifier></type><name>p</name> <init>= <expr><operator>new</operator> <name>ParagraphGeneral</name></expr></init></decl>;</decl_stmt>
     <expr_stmt><expr><call><name><name>p</name><operator>-&gt;</operator><name>setParagraphStyles</name></name><argument_list>(<argument><expr><call><name><name>m_styleManager</name><operator>-&gt;</operator><name>paragraphStyles</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
@@ -193,17 +193,17 @@
             <argument><expr><name>m_styleManager</name></expr></argument>, <argument><expr><call><name>SLOT</name><argument_list>(<argument><expr><call><name>alteredStyle</name><argument_list>(<argument><expr><specifier>const</specifier> <name>KoParagraphStyle</name><operator>*</operator></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt>
     <comment type="line">// TODO get KoUnit from somewhere and set that on p</comment>
     <expr_stmt><expr><name>widget</name> <operator>=</operator> <name>p</name></expr>;</expr_stmt>
-}</block></then> <diff:delete type="convert"><if type="elseif"><diff:insert type="convert"><else><diff:common>else </diff:common><block>{<diff:ws>
+</block_content>}</block></if> <diff:delete type="convert"><if type="elseif"><diff:insert type="convert"><else><diff:common>else </diff:common><block>{<block_content><diff:ws>
     </diff:ws><decl_stmt><decl><type><name>KoCharacterStyle</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>characterStyle</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><call><name><name>m_stylesModel</name><operator>-&gt;</operator><name>characterStyleForIndex</name></name><argument_list>(<argument><expr><name>index</name></expr></argument>)</argument_list></call></expr></init></decl>;</decl_stmt><diff:ws>
-    </diff:ws><diff:common><if>if <condition>(<expr><name>characterStyle</name></expr>)</condition><then> <block>{
+    </diff:ws><if_stmt><if><diff:common>if <condition>(<expr><name>characterStyle</name></expr>)</condition> <block>{<block_content>
 <diff:delete><diff:ws>    </diff:ws><expr_stmt><expr><name>characStyleClone</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><call><name><name>characterStyle</name><operator>-&gt;</operator><name>clone</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt><diff:ws>
 </diff:ws></diff:delete><diff:insert><diff:ws>    </diff:ws></diff:insert>    <decl_stmt><decl><type><name>CharacterGeneral</name> <modifier>*</modifier></type><name>c</name> <init>= <expr><operator>new</operator> <name>CharacterGeneral</name></expr></init></decl>;</decl_stmt>
     <diff:insert><diff:ws>    </diff:ws></diff:insert><expr_stmt><expr><call><name><name>c</name><operator>-&gt;</operator><name>setStyle</name></name><argument_list>(<argument><expr><name>characterStyle</name></expr></argument>)</argument_list></call></expr>;</expr_stmt>
 <diff:insert><diff:ws>        </diff:ws><expr_stmt><expr><call><name>connect</name><argument_list>(<argument><expr><name>c</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><call><name>SIGNAL</name><argument_list>(<argument><expr><call><name>styleAltered</name><argument_list>(<argument><expr><specifier>const</specifier><diff:ws> </diff:ws><name>KoCharacterStyle</name><operator>*</operator></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>,<diff:ws>
                 </diff:ws><argument><expr><name>m_styleManager</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><call><name>SLOT</name><argument_list>(<argument><expr><call><name>alteredStyle</name><argument_list>(<argument><expr><specifier>const</specifier><diff:ws> </diff:ws><name>KoCharacterStyle</name><operator>*</operator></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
     </diff:ws></diff:insert>    <expr_stmt><expr><name>widget</name> <operator>=</operator> <name>c</name></expr>;</expr_stmt>
-<diff:insert><diff:ws>    </diff:ws></diff:insert>}</block></then></if></diff:common><diff:ws>
-</diff:ws>}</block></else></diff:insert></if></diff:delete></if>
+<diff:insert><diff:ws>    </diff:ws></diff:insert></block_content>}</block></diff:common></if></if_stmt><diff:ws>
+</diff:ws></block_content>}</block></else></diff:insert></if></diff:delete></if_stmt>
 </unit>
 
 <unit language="C++" filename="interchange|interchange">
@@ -211,7 +211,7 @@
 </unit>
 
 <!-- This could be better with decl_stmt matching -->
-<unit language="C++" filename="interchange|interchange">
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
 <diff:delete type="convert"><struct>struct<diff:insert type="convert"><class>class<diff:common> <name>function_profile_t</name> <super_list>: <super><specifier>public</specifier> <name>profile_t</name></super></super_list> <block>{<diff:delete type="convert"><public type="default"><diff:insert type="convert"><private type="default"><diff:common>
 
     </diff:common></private></diff:insert></public></diff:delete><private>private:

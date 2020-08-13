@@ -115,7 +115,7 @@ def linediff(xml_filename1, xml_filename2) :
 		return ""
 
 # find differences of two files
-def srcdiff(source_file_version_one, source_file_version_two, encoding, language, url, filename, prefixlist) :
+def srcdiff(source_file_version_one, source_file_version_two, language, filename) :
 
 	command = [globals()["srcdiff_utility"], "-f", filename]
 
@@ -159,25 +159,6 @@ def get_full_xmlns(xml_file) :
 			l.append("--" + a.replace('"', ""))
 	
 	return l
-
-# xmlns attribute
-def default_xmlns(l) :
-
-	newl = []
-	for a in l :
-		url = a.split('=')[1]
-		if url == 'http ://www.sdml.info/srcML/src' or url == 'http ://www.sdml.info/srcML/cpp' or url == 'http ://www.sdml.info/srcML/srcerr' :
-			newl.append(a)
-	return newl
-
-def nondefault_xmlns(l) :
-
-	newl = []
-	for a in l :
-		url = a.split('=')[1]
-		if not(url == 'http ://www.sdml.info/srcML/src' or url == 'http ://www.sdml.info/srcML/cpp' or url == 'http ://www.sdml.info/srcML/srcerr') :
-			newl.append(a)
-	return newl
 
 # version of srcml2src
 def srcml2src_version() :
@@ -387,10 +368,10 @@ try :
 								unittext = unix2dos(unittext)
 
 						# convert the text to srcML
-						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, encoding, language, url, get_filename(unitxml), default_xmlns(get_full_xmlns(unitxml)))
+						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, language, get_filename(unitxml))
 
 						# additional, later stage processing
-						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefault_xmlns(get_full_xmlns(unitxml)))
+						unitsrcml = unitsrcmlraw
 
 						test_number = count * 2 - 1
 						if url == "interchange" :
@@ -433,10 +414,10 @@ try :
 								unittext = unix2dos(unittext)
 
 						# convert the text to srcML
-						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, encoding, language, url, get_filename(unitxml), default_xmlns(get_full_xmlns(unitxml)))
+						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, language, get_filename(unitxml))
 
 						# additional, later stage processing
-						unitsrcml = unitsrcmlraw # srcML2srcMLStages(unitsrcmlraw, nondefault_xmlns(get_full_xmlns(unitxml)))
+						unitsrcml = unitsrcmlraw
 						
 						test_number += 1
 
