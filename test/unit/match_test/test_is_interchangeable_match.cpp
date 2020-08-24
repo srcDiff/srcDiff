@@ -4,7 +4,7 @@
 #include <boost/test/included/unit_test.hpp>
 #include <boost/bind.hpp>
 #include <string>
-#include <src_to_nodes.cpp>
+#include <src_to_nodes.hpp>
 
 namespace bu = boost::unit_test;
 

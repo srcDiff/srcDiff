@@ -36,6 +36,8 @@ include_directories(src/shortest_edit_script src/translator src/windows src/clie
 add_subdirectory(src)
 
 if(BUILD_TRANSLATOR_TESTS)
-    add_subdirectory(test)
+    	include_directories(/test/unit)
+	add_subdirectory(test)
+    
 endif()
 
