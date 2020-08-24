@@ -27,7 +27,7 @@ void srcdiff_common::markup_common() {
 
     if(srcdiff_compare::node_compare(rbuf_original->nodes.at(i), rbuf_modified->nodes.at(j)) == 0) {
 
-      output_node(rbuf_original->nodes.at(i), SES_COMMON);
+      output_node(rbuf_original->nodes.at(i), rbuf_modified->nodes.at(j), SES_COMMON);
         
     } else if(rbuf_original->nodes.at(i)->is_white_space() && rbuf_modified->nodes.at(j)->is_white_space()) {
       
@@ -328,7 +328,10 @@ void srcdiff_common::output() {
     return;
 
   // output common tag if needed
-  output_node(diff_common_start, SES_COMMON);
+  if(rbuf_original->last_output >= oend || rbuf_modified->last_output >= nend
+     || rbuf_original->nodes.at(rbuf_original->last_output)->is_temporary == rbuf_modified->nodes.at(rbuf_modified->last_output)->is_temporary) {
+    output_node(diff_common_start, SES_COMMON);
+  }
 
   // output common nodes
   markup_common();
@@ -337,6 +340,9 @@ void srcdiff_common::output() {
   //output_statement(rbuf_original, rbuf_modified, wstate);
 
   // output common tag if needed
-  output_node(diff_common_end, SES_COMMON);
+  if(rbuf_original->last_output >= oend || rbuf_modified->last_output >= nend
+     || rbuf_original->nodes.at(rbuf_original->last_output)->is_temporary == rbuf_modified->nodes.at(rbuf_modified->last_output)->is_temporary) {
+    output_node(diff_common_end, SES_COMMON);
+  }
 
 }

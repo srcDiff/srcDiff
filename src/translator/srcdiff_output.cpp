@@ -84,17 +84,17 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
   diff->prefix = srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
   diff->href   = SRCDIFF_DEFAULT_NAMESPACE_HREF;
 
-  unit_tag            = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, std::string("unit"), srcml_node::srcml_ns());
+  unit_tag            = std::make_shared<srcml_node>(XML_READER_TYPE_ELEMENT, std::string("unit"), srcml_node::srcml_ns());
 
-  diff_common_start   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_SES_COMMON, *diff.get());
-  diff_common_end     = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_SES_COMMON, *diff.get());
-  diff_original_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_ORIGINAL, *diff.get());
-  diff_original_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_ORIGINAL, *diff.get());
-  diff_modified_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_MODIFIED, *diff.get());
-  diff_modified_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_MODIFIED, *diff.get());
+  diff_common_start   = std::make_shared<srcml_node>(XML_READER_TYPE_ELEMENT, DIFF_SES_COMMON, *diff.get());
+  diff_common_end     = std::make_shared<srcml_node>(XML_READER_TYPE_END_ELEMENT, DIFF_SES_COMMON, *diff.get());
+  diff_original_start = std::make_shared<srcml_node>(XML_READER_TYPE_ELEMENT, DIFF_ORIGINAL, *diff.get());
+  diff_original_end   = std::make_shared<srcml_node>(XML_READER_TYPE_END_ELEMENT, DIFF_ORIGINAL, *diff.get());
+  diff_modified_start = std::make_shared<srcml_node>(XML_READER_TYPE_ELEMENT, DIFF_MODIFIED, *diff.get());
+  diff_modified_end   = std::make_shared<srcml_node>(XML_READER_TYPE_END_ELEMENT, DIFF_MODIFIED, *diff.get());
 
-  diff_ws_start = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_ELEMENT, DIFF_WHITESPACE, *diff.get());
-  diff_ws_end   = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_END_ELEMENT, DIFF_WHITESPACE, *diff.get());
+  diff_ws_start = std::make_shared<srcml_node>(XML_READER_TYPE_ELEMENT, DIFF_WHITESPACE, *diff.get());
+  diff_ws_end   = std::make_shared<srcml_node>(XML_READER_TYPE_END_ELEMENT, DIFF_WHITESPACE, *diff.get());
 
  }
 
@@ -355,6 +355,47 @@ void srcdiff_output::update_diff_stacks(const std::shared_ptr<srcml_node> & node
 
 }
 
+void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & original_node, 
+                                 const std::shared_ptr<srcml_node> & modified_node,
+                                 int operation, bool force_output) {
+
+  if(operation == SES_COMMON && original_node->is_temporary != modified_node->is_temporary) {
+
+    if((xmlReaderTypes)original_node->type == XML_READER_TYPE_END_ELEMENT) {
+      output_node(diff_common_end, SES_COMMON);
+    }
+
+    if(original_node->is_temporary) {
+
+      if((xmlReaderTypes)modified_node->type == XML_READER_TYPE_ELEMENT) {
+        output_node(diff_modified_start, SES_INSERT);
+      }
+      output_node(modified_node, SES_INSERT, force_output);
+      if((xmlReaderTypes)modified_node->type == XML_READER_TYPE_END_ELEMENT) {
+        output_node(diff_modified_end, SES_INSERT);
+      }
+
+    } else {
+
+      if((xmlReaderTypes)original_node->type == XML_READER_TYPE_ELEMENT) {
+        output_node(diff_original_start, SES_DELETE);
+      }
+      output_node(original_node, SES_DELETE, force_output);
+      if((xmlReaderTypes)original_node->type == XML_READER_TYPE_END_ELEMENT) {
+        output_node(diff_original_end, SES_DELETE);
+      }
+
+    }
+    if((xmlReaderTypes)original_node->type == XML_READER_TYPE_ELEMENT) {
+      output_node(diff_common_start, SES_COMMON);
+    }
+  } else {
+    output_node(original_node, operation, force_output);
+  }
+
+}
+
+
 void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int operation, bool force_output) {
 
   // check if delaying SES_DELETE/SES_INSERT/SES_COMMON tag. should only stop if operation is different or not whitespace
@@ -446,7 +487,7 @@ void srcdiff_output::output_text_as_node(const std::string & text, int operation
 
   if(text.size() == 0) return;
 
-  output_node(std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_TEXT, "text", srcml_node::srcml_ns(), text), operation);
+  output_node(std::make_shared<srcml_node>(XML_READER_TYPE_TEXT, "text", srcml_node::srcml_ns(), text), operation);
 
 }
 
@@ -485,6 +526,8 @@ void srcdiff_output::output_node(const srcml_node & node) {
 
 // output current XML node in reader
 void srcdiff_output::output_node_inner(const srcml_node & node) {
+
+  if(node.is_temporary) return;
 
   bool isemptyelement = false;
 

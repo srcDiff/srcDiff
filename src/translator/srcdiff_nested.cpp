@@ -913,25 +913,25 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
 
   } else if(structure_outer == "if" || structure_outer == "elseif") {
 
-    advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "block");
+    advance_to_child(node_sets_outer.nodes(), start_pos, XML_READER_TYPE_ELEMENT, "block");
 
   } else if(structure_outer == "while") {
 
-    advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "condition");
+    advance_to_child(node_sets_outer.nodes(), start_pos, XML_READER_TYPE_END_ELEMENT, "condition");
     ++start_pos;
 
   } else if(structure_outer == "for") {
 
-    advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "control");
+    advance_to_child(node_sets_outer.nodes(), start_pos, XML_READER_TYPE_END_ELEMENT, "control");
     ++start_pos;
 
   } else if(is_class_type(structure_outer)) {
 
-    advance_to_child(node_sets_outer.nodes(), start_pos, (xmlElementType)XML_READER_TYPE_ELEMENT, "block");
+    advance_to_child(node_sets_outer.nodes(), start_pos, XML_READER_TYPE_ELEMENT, "block");
     ++start_pos;
 
     end_pos = start_pos - 1;
-    advance_to_child(node_sets_outer.nodes(), end_pos, (xmlElementType)XML_READER_TYPE_END_ELEMENT, "block");
+    advance_to_child(node_sets_outer.nodes(), end_pos, XML_READER_TYPE_END_ELEMENT, "block");
 
   }
 

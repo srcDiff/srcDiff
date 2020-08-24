@@ -178,6 +178,9 @@ public:
 
   virtual bool is_delay_type(int operation);
 
+  virtual void output_node(const std::shared_ptr<srcml_node> & original_node, 
+                           const std::shared_ptr<srcml_node> & modified_node,
+                           int operation, bool force_output = false);
   virtual void output_node(const std::shared_ptr<srcml_node> & node, int operation, bool force_output = false);
   virtual void output_text_as_node(const std::string & text, int operation);
   virtual void output_char(char character, int operation);
@@ -187,7 +190,7 @@ public:
 template<class T>
 void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
-  static const std::shared_ptr<srcml_node> flush = std::make_shared<srcml_node>((xmlElementType)XML_READER_TYPE_TEXT, std::string("text"));
+  static const std::shared_ptr<srcml_node> flush = std::make_shared<srcml_node>(XML_READER_TYPE_TEXT, std::string("text"));
   output_node(flush, SES_COMMON);
 
   if(wstate->approximate) {
@@ -201,20 +204,17 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
     const char * xml = srcml_unit_get_srcml(wstate->unit);
     colordiff->colorize(xml, line_diff_range);
-    srcml_memory_free((char *)xml);
 
   } else if(is_option(flags, OPTION_UNIFIED_VIEW | OPTION_SIDE_BY_SIDE_VIEW | OPTION_DIFFDOC_VIEW)) {
 
     const char * xml = srcml_unit_get_srcml(wstate->unit);
     view->transform(xml, "UTF-8");
-    srcml_memory_free((char *)xml);
 
   } else if(is_option(flags, OPTION_SUMMARY)) {
 
 #ifndef _MSC_BUILD
     const char * xml = srcml_unit_get_srcml(wstate->unit);
     summary->summarize(xml, "UTF-8");
-    srcml_memory_free((char *)xml);
 #endif
 
   } else if(is_option(flags, OPTION_BURST)) {

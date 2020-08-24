@@ -62,7 +62,8 @@ bool srcml_node::srcml_attr::operator!=(const srcml_attr & attr) const {
 
 }
 
-srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type(node.type), ns(), extra(node.extra), is_empty(node.extra), free(false), move(0), is_simple(true) {
+srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type((xmlReaderTypes)node.type), ns(), is_empty(node.extra & 0x1),
+                       free(false), move(0), is_simple(true), is_temporary(false) {
 
   name = std::string((const char *)node.name);
 
@@ -135,12 +136,13 @@ end_ns_def:
 
 }
 
-srcml_node::srcml_node(xmlElementType type, const std::string & name,  const srcml_ns & ns, const boost::optional<std::string> & content,
-const std::list<srcml_attr> & properties, unsigned short extra, const boost::optional<std::shared_ptr<srcml_node>> & parent, bool is_empty)
-  : type(type), name(name), ns(ns), content(content), properties(properties), extra(extra), parent(parent), is_empty(is_empty), free(false), move(0), is_simple(true) {}
+srcml_node::srcml_node(xmlReaderTypes type, const std::string & name,  const srcml_ns & ns, const boost::optional<std::string> & content,
+const std::list<srcml_attr> & properties, const boost::optional<std::shared_ptr<srcml_node>> & parent, bool is_empty)
+  : type(type), name(name), ns(ns), content(content), properties(properties), parent(parent),
+    is_empty(is_empty), free(false), move(0), is_simple(true), is_temporary(false) {}
 
-srcml_node::srcml_node(const srcml_node & node) : type(node.type), name(node.name), content(node.content), extra(node.extra),
-  parent(node.parent), is_empty(node.is_empty), free(true), move(0), is_simple(true) {
+srcml_node::srcml_node(const srcml_node & node) : type(node.type), name(node.name), content(node.content),
+  parent(node.parent), is_empty(node.is_empty), free(true), move(0), is_simple(true), is_temporary(false) {
 
   ns = node.ns;
 
@@ -155,7 +157,7 @@ bool srcml_node::operator==(const srcml_node & node) const {
 
   return type == node.type
     && name == node.name
-    && (((xmlReaderTypes)type != XML_READER_TYPE_TEXT && (xmlReaderTypes)type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
+    && ((type != XML_READER_TYPE_TEXT && type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
       || (content == node.content && (!content || *content == *node.content)));
 }
 
@@ -181,20 +183,28 @@ std::ostream & operator<<(std::ostream & out, const srcml_node & that) {
 
 }
 
-bool srcml_node::is_white_space() const {
-
-  // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
-  return (xmlReaderTypes)type == XML_READER_TYPE_TEXT && content && isspace((*content)[0]);
-
+bool srcml_node::is_open_tag() const {
+  return type == XML_READER_TYPE_ELEMENT;
 }
 
-bool srcml_node::is_new_line() const {
+bool srcml_node::is_close_tag() const {
+  return type == XML_READER_TYPE_END_ELEMENT;
+}
 
-  return (xmlReaderTypes)type == XML_READER_TYPE_TEXT && content && (*content)[0] == '\n';
-
+bool & srcml_node::is_empty_tag() {
+  return is_empty;
 }
 
 bool srcml_node::is_text() const {
+  return type == XML_READER_TYPE_TEXT;
+}
 
-  return (xmlReaderTypes)type == XML_READER_TYPE_TEXT;
+bool srcml_node::is_white_space() const {
+
+  // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
+  return type == XML_READER_TYPE_TEXT && content && isspace((*content)[0]);
+}
+
+bool srcml_node::is_new_line() const {
+  return type == XML_READER_TYPE_TEXT && content && (*content)[0] == '\n';
 }

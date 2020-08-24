@@ -70,12 +70,11 @@ public:
 
   };
 
-  xmlElementType type;
+  xmlReaderTypes type;
   std::string name;
   srcml_ns ns;
   boost::optional<std::string> content;
   std::list<srcml_attr> properties;
-  unsigned short extra;
   boost::optional<std::shared_ptr<srcml_node>> parent;
 
   bool is_empty;
@@ -84,14 +83,19 @@ public:
   int move;
 
   bool is_simple;
+  bool is_temporary;
+
+private:
+  bool & is_empty_tag();
+  friend class srcml_converter;
 
 public:
 
   srcml_node(const xmlNode & node, bool is_archive);
 
-  srcml_node(xmlElementType type = XML_ELEMENT_NODE, const std::string & name = std::string(), const srcml_ns & ns = srcml_ns(),
+  srcml_node(xmlReaderTypes type = XML_READER_TYPE_ELEMENT, const std::string & name = std::string(), const srcml_ns & ns = srcml_ns(),
     const boost::optional<std::string> & content = boost::optional<std::string>(), const std::list<srcml_attr> & properties = std::list<srcml_attr>(),
-    unsigned short extra = 0, const boost::optional<std::shared_ptr<srcml_node>> & parent = boost::optional<std::shared_ptr<srcml_node>>(), bool is_empty = false);
+    const boost::optional<std::shared_ptr<srcml_node>> & parent = boost::optional<std::shared_ptr<srcml_node>>(), bool is_empty = false);
 
   srcml_node(const srcml_node & node);
 
@@ -101,11 +105,12 @@ public:
 
   friend std::ostream & operator<<(std::ostream & out, const srcml_node & that);
 
-  bool is_white_space() const;
-
-  bool is_new_line() const;
+  bool is_open_tag() const;
+  bool is_close_tag() const;
 
   bool is_text() const;
+  bool is_white_space() const;
+  bool is_new_line() const;
 
 };
 

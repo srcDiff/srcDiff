@@ -61,7 +61,7 @@ void outputNode(const xmlNode & node, xmlTextWriterPtr writer, bool output_ns) {
 
   bool isemptyelement = false;
 
-  switch (node.type) {
+  switch ((xmlReaderTypes)node.type) {
   case XML_READER_TYPE_ELEMENT:
 
     // record if this is an empty element since it will be erased by the attribute copying
