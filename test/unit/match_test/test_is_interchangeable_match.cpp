@@ -19,5 +19,5 @@ ret_node_set_code("","","C++"),
 
 BOOST_DATA_TEST_CASE(passes, bu::data::make(dinput1.nsone)^bu::data::make(dinput1.nstwo),d1,d2){
 BOOST_TEST(srcdiff_match::is_interchangeable_match(d1,d2);
-}
+};
 
