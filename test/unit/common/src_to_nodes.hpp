@@ -15,7 +15,7 @@ struct p2test {
 
 };
 
-int str_read(void *, void *, unsigned long);
+ssize_t str_read(void *, void *, size_t);
 int str_close(void *);
 std::string read_from_file(std::string);
 srcml_nodes create_nodes(const std::string &, const std::string &);
