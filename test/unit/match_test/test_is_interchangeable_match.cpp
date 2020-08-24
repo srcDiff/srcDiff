@@ -9,8 +9,8 @@
 namespace bu = boost::unit_test;
 
 const p2nodes dinput1[] = {
-ret_node_set_code("","","C++"),
-ret_node_set_code("","","C++"),
+ret_node_set_code("if(i <10){}","else if(i>5){}","C++"),
+ret_node_set_code("if(i <10){}","int i = 20;","C++"),
 ret_node_set_code("","","C++"),
 ret_node_set_code("","","C++"),
 }

@@ -6,7 +6,7 @@
 #include <srcml_nodes.hpp>
 #include <srcdiff_constants.hpp>
 #include <srcml_converter.hpp>
-
+#include <src_to_nodes.hpp>
 #include <iostream>
 #include <cstdio>
 
@@ -36,13 +36,6 @@
  *
  *
  * */
-
-struct p2test{
-	node_set nsone;
-	node_set nstwo;
-	srcdiff_text_measure txtmeasure;
-};
-
 
 
 
