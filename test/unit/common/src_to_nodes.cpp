@@ -59,7 +59,7 @@ srcml_nodes create_nodes(const std::string & code, const std::string & language)
 
     //create srcml archive pointer and get code string      
 	srcml_archive * archive = srcml_archive_create();
-	srcml_archive_enable_solitary_unit(option.archive);
+	srcml_archive_enable_solitary_unit(archive);
 	srcml_archive_disable_hash(archive);
 	srcml_archive_register_namespace(archive, "diff", 
 			SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
@@ -84,7 +84,7 @@ srcml_nodes create_nodes_file(const std::string & filename, const std::string & 
 
     //create srcml archive pointer and get code string      
 	srcml_archive * archive = srcml_archive_create();
-	srcml_archive_enable_solitary_unit(option.archive);
+	srcml_archive_enable_solitary_unit(archive);
 	srcml_archive_disable_hash(archive);
 	srcml_archive_register_namespace(archive, "diff", 
 			SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
