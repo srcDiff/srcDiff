@@ -35,16 +35,9 @@
  *
  *
  * */
-
-friend std::ostream & operator<<(std::ostream &out,const p2test & test_data){
-return out<<"original:"<<test_data.nsone<<"modified:"<<test_data.nstwo;
-}
-
-
-
 int str_read(void * context, void * buffer, unsigned long len) {
 	char * ctx = static_cast<std::char *>(context);
-	size_t num_read = ctx->copy(buffer, len, 0);
+	size_t num_read = ctx->copy((char*)buffer, len, 0);
 	ctx->erase(0, num_read);
 	return num_read;
 }
