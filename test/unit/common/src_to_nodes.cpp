@@ -36,7 +36,7 @@
  *
  * */
 int str_read(void * context, void * buffer, unsigned long len) {
-	char * ctx = static_cast<std::char *>(context);
+	std::string * ctx = static_cast<std::char *>(context);
 	size_t num_read = ctx->copy((char*)buffer, len, 0);
 	ctx->erase(0, num_read);
 	return num_read;
