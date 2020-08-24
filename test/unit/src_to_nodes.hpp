@@ -1,6 +1,16 @@
 #ifndef SRC_TO_NODES_HPP
 #define SRC_TO_NODES_HPP
-
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <node_set.hpp>
+#include <srcml.h>
+#include <srcml_nodes.hpp>
+#include <srcdiff_constants.hpp>
+#include <srcml_converter.hpp>
+#include <iostream>
+#include <cstdio>
+#include <srcdiff_text_measure.hpp>
 
 struct p2test{
         node_set nsone;

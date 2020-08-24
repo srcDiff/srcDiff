@@ -1,14 +1,6 @@
-#include <fstream>
-#include <string>
-#include <sstream>
-#include <node_set.hpp>
-#include <srcml.h>
-#include <srcml_nodes.hpp>
-#include <srcdiff_constants.hpp>
-#include <srcml_converter.hpp>
 #include <src_to_nodes.hpp>
-#include <iostream>
-#include <cstdio>
+
+
 
 /*
  *FILE DESCRIPTION: Functions in this file are used for testing srcdiff_match class. 
