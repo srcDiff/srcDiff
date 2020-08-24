@@ -20,5 +20,5 @@
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # add tests
-add_unit_test(test_is_interchangeable_match.cpp)
+add_unit_test(test_is_interchangeable_match.cpp $<TARGET_OBJECTS:common>)
 include_directories(.)

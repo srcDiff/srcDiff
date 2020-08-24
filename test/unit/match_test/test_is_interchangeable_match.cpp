@@ -2,7 +2,8 @@
 #include <iostream>
 #include <srcdiff_match.hpp>
 #include <boost/test/included/unit_test.hpp>
-#include <boost/bind.hpp>
+#include <boost/test/data/monomorphic.hpp>
+#include <boost/test/data/test_case.hpp>
 #include <string>
 #include <src_to_nodes.hpp>
 
@@ -17,7 +18,7 @@ ret_node_set_code("","","C++"),
 
 
 
-BOOST_DATA_TEST_CASE(passes, bu::data::make(dinput1.nsone)^bu::data::make(dinput1.nstwo),d1,d2){
-BOOST_TEST(srcdiff_match::is_interchangeable_match(d1,d2);
+BOOST_DATA_TEST_CASE(passes, bu::data::make(dinput1),d1){
+BOOST_TEST(srcdiff_match::is_interchangeable_match(d1.nsone,d2.nstwo));
 };
 

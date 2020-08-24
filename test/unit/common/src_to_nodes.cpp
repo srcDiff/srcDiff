@@ -1,5 +1,12 @@
 #include <src_to_nodes.hpp>
-
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <node_set.hpp>
+#include <srcdiff_constants.hpp>
+#include <srcml_converter.hpp>
+#include <iostream>
+#include <cstdio>
 
 
 /*
@@ -29,10 +36,14 @@
  *
  * */
 
+friend std::ostream & operator<<(std::ostream &out,const p2test & test_data){
+return out<<"original:"<<test_data.nsone<<"modified:"<<test_data.nstwo;
+}
 
 
-int str_read(void * context, char * buffer, unsigned long len) {
-	std::string * ctx = static_cast<std::string *>(context);
+
+int str_read(void * context, void * buffer, unsigned long len) {
+	char * ctx = static_cast<std::char *>(context);
 	size_t num_read = ctx->copy(buffer, len, 0);
 	ctx->erase(0, num_read);
 	return num_read;
@@ -55,9 +66,8 @@ srcml_nodes create_nodes(const std::string & code, const std::string & language)
 
     //create srcml archive pointer and get code string      
 	srcml_archive * archive = srcml_archive_create();
-	srcml_archive_disable_full_archive(archive);
+	srcml_archive_enable_solitary_unit(option.archive);
 	srcml_archive_disable_hash(archive);
-	srcml_archive_enable_option(archive, SRCML_OPTION_XML_DECL);
 	srcml_archive_register_namespace(archive, "diff", 
 			SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
 
@@ -81,11 +91,10 @@ srcml_nodes create_nodes_file(const std::string & filename, const std::string & 
 
     //create srcml archive pointer and get code string      
 	srcml_archive * archive = srcml_archive_create();
-	srcml_archive_disable_full_archive(archive);
+	srcml_archive_enable_solitary_unit(option.archive);
 	srcml_archive_disable_hash(archive);
-	srcml_archive_enable_option(archive, SRCML_OPTION_XML_DECL);
-	srcml_archive_register_namespace(archive, "diff",
-		       	SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
+	srcml_archive_register_namespace(archive, "diff", 
+			SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
 
 	std::string source = read_from_file(filename);
 
