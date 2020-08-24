@@ -75,7 +75,8 @@ srcml_nodes create_nodes(const std::string & code, const std::string & language)
 
     //create srcml_nodes
 	srcml_converter contNodes(archive, true, 0);
-	contNodes.convert(language, (void*)&code, &str_read, &str_close, burst_config);
+	std::string source = code;
+	contNodes.convert(language, (void*)&source, &str_read, &str_close, burst_config);
 	srcml_nodes testNode = contNodes.create_nodes();
 	return testNode;
 }
