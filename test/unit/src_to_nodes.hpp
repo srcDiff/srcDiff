@@ -1,5 +1,5 @@
-#ifndef src_to_nodes
-#define src_to_nodes
+#ifndef SRC_TO_NODES_HPP
+#define SRC_TO_NODES_HPP
 
 
 struct p2test{
