@@ -4,23 +4,25 @@
 #include <srcml_nodes.hpp>
 #include <srcdiff_text_measure.hpp>
 
-struct p2test {
-    node_set nsone;
-    node_set nstwo;
-    srcdiff_text_measure txtmeasure;
+struct test_data_t {
+    node_set node_set_one;
+    node_set node_set_two;
+    srcdiff_text_measure measure;
     
-    friend std::ostream & operator<<(std::ostream & out, const p2test & test_data){
-        return out << "original:" << test_data.nsone << "modified:" << test_data.nstwo;
+    friend std::ostream & operator<<(std::ostream & out, const test_data_t & test_data){
+        return out << "original:" << test_data.node_set_one << "modified:" << test_data.node_set_two;
     }
 
 };
 
 ssize_t str_read(void *, void *, size_t);
 int str_close(void *);
+
 std::string read_from_file(std::string);
 srcml_nodes create_nodes(const std::string &, const std::string &);
 srcml_nodes create_nodes_file(const std::string &, const std::string &);
-p2test ret_node_set(const std::string &,const std::string &, const std::string &);
-p2test ret_node_set_code(const std::string &,const std::string &, const std::string &);
+
+test_data_t create_node_set(const std::string &,const std::string &, const std::string &);
+test_data_t create_node_set_code(const std::string &,const std::string &, const std::string &);
 
 #endif
