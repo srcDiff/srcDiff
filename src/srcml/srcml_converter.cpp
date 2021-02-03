@@ -42,7 +42,7 @@ std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr r
       start_tags.insert(lb, std::map<std::string, std::shared_ptr<srcml_node>>::value_type(full_name, node));
     }
 
-  } else if (xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) {
+  } else if (false && xmlTextReaderNodeType(reader) == XML_READER_TYPE_END_ELEMENT) {
 
     std::map<std::string, std::shared_ptr<srcml_node>>::iterator lb = end_tags.lower_bound(full_name);
     if (lb != end_tags.end() && !(end_tags.key_comp()(full_name, lb->first))) {

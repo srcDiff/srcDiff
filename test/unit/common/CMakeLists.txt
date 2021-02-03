@@ -20,7 +20,6 @@
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # include sub directories
-file(GLOB COMMON_HEADERS *.hpp)
+file(GLOB COMMON_HEADERS *.hpp ${CMAKE_SOURCE_DIR}/src/translator/srcdiff_constants.hpp)
 file(GLOB COMMON_SOURCE *.cpp)
-add_library(common OBJECT ${COMMON_HEADERS}
-			${COMMON_SOURCE})
+add_library(common OBJECT ${COMMON_HEADERS}	${COMMON_SOURCE})
