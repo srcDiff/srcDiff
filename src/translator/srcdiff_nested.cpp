@@ -911,7 +911,7 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
     // do not skip whitespace
     start_pos = node_sets_outer.at(start_outer).at(0) + 1;
 
-  } else if(structure_outer == "if" || structure_outer == "elseif") {
+  } else if(structure_outer == "if" && !bool(find_attribute(node_sets_outer.at(start_outer).get_root(), "type"))) {
 
     advance_to_child(node_sets_outer.nodes(), start_pos, XML_READER_TYPE_ELEMENT, "block");
 
