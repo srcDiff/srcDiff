@@ -10,15 +10,18 @@
 
 namespace bu = boost::unit_test;
 
-const test_data_t data[] = {
-    create_node_set_code("if(i <10){}","else if(i>5){}","C++"),
-    create_node_set_code("if(i <10){}","int i = 20;","C++"),
-    create_node_set_code("","","C++"),
-    create_node_set_code("","","C++"),
+const node_set original_sets[] = {
+    create_node_set("if(i < 10) {}", "C++"),
+    create_node_set("if(i < 10) {}", "C++")
 };
 
 
-BOOST_DATA_TEST_CASE(passes, bu::data::make(data), input){
-    BOOST_TEST(srcdiff_match::is_interchangeable_match(input.node_set_one, input.node_set_two));
+const node_set modified_sets[] = {
+    create_node_set("else if(i>5){}","C++"),
+    create_node_set("int i = 20;","C++")
+};
+
+BOOST_DATA_TEST_CASE(passes, bu::data::make(original_sets) ^ bu::data::make(modified_sets), original, modified){
+    BOOST_TEST(srcdiff_match::is_interchangeable_match(original, modified));
 }
 
