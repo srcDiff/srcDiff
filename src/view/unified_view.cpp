@@ -194,7 +194,10 @@ void unified_view::end_unit(const std::string & local_name,
     change_ending_operation = view_t::COMMON;
 
   }
-  output_additional_context();
+
+  if(!(number_context_lines != -1 && wait_change)) {
+    output_additional_context();
+  }
 
   if(is_html)
     (*output) << "</pre>";
