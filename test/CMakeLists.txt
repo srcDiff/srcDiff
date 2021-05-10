@@ -20,5 +20,10 @@
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # include sub directories
-add_subdirectory(unit)
-add_subdirectory(src)
+if(BUILD_UNIT_TESTS)
+    add_subdirectory(unit)
+endif()
+
+if(BUILD_TRANSLATOR_TESTS)
+    add_subdirectory(src)
+endif()

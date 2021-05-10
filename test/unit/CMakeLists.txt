@@ -20,8 +20,8 @@
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 # include sub directories
+include_directories(common)
+
 add_subdirectory(common)
 add_subdirectory(match_test)
 add_subdirectory(shortest_edit_script)
-
-include_directories(.)
