@@ -143,7 +143,7 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 
     # Configuring the Clang compiler
     #set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32 -Wno-unknown-pragmas -Wno-int-to-void-pointer-cast")
-    set(CMAKE_CXX_FLAGS "-fPIC -std=c++1y ${CLANG_WARNINGS}")
+    set(CMAKE_CXX_FLAGS "-fPIC -std=c++1y -fvisibility=default ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -DSTATIC_GLOBALS")
     set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG")
 
