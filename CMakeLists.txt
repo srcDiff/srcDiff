@@ -1,7 +1,7 @@
 ##
 #  CMakeLists.txt
 #
-#  Copyright (C) 2011-2011  SDML (www.sdml.info)
+#  Copyright (C) 2011-2021  SDML (www.sdml.info)
 #
 #  This file is part of the srcDiff translator.
 #
@@ -19,7 +19,7 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.14)
 project(srcDiff)
 
 enable_testing()
