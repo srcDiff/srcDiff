@@ -128,11 +128,6 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type((xmlReaderT
 
 end_ns_def: 
 
-  if(name == "endif" || name == "cpp:endif") {
-    std::cerr << *this << '\n';
-     
-  }
-
   xmlAttrPtr attribute = node.properties;
   if(attribute) {
 
