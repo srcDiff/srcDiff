@@ -1425,7 +1425,7 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
   int min_size = measure.min_length();
   int max_size = measure.max_length();
 
-#if DEBUG
+#if DEBUG_SIMILARITY
   std::cerr << "Similarity: " << measure.similarity() << '\n';
   std::cerr << "Difference: " << measure.difference() << '\n';
   std::cerr << "Original Difference: " << measure.original_difference() << '\n';
