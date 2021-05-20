@@ -1321,12 +1321,13 @@ bool srcdiff_match::reject_match(const srcdiff_measure & measure,
   const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
   const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
 
-  if(original_tag == modified_tag && original_uri == modified_uri)
+  if(original_tag == modified_tag && original_uri == modified_uri) {
     return reject_match_same(measure, set_original, set_modified);
-  else if(is_interchangeable_match(set_original, set_modified))
+  } else if(is_interchangeable_match(set_original, set_modified)) {
     return reject_match_interchangeable(measure, set_original, set_modified);
-  else
+  } else {
     return true;
+  }
 
 }
 
