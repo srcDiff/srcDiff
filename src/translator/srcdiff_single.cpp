@@ -254,9 +254,10 @@ void srcdiff_single::output() {
   const std::shared_ptr<srcml_node> & start_node_modified = out.nodes_modified().at(node_sets_modified.at(start_modified).front());
 
   if(start_node_original->name == start_node_modified->name
-    && start_node_original->ns.href == start_node_modified->ns.href)
+    && start_node_original->ns.href == start_node_modified->ns.href) {
     output_recursive_same();
-  else
+  } else {
     output_recursive_interchangeable();
+  }
 
 }
