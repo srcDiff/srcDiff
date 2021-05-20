@@ -74,7 +74,6 @@ std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & tha
 srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type((xmlReaderTypes)node.type), ns(), is_empty(node.extra & 0x1),
                        free(false), move(0), is_simple(true), is_temporary(false) {
 
-
   name = std::string((const char *)node.name);
 
   if(content)
@@ -126,7 +125,9 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type((xmlReaderT
 
   }
 
-end_ns_def: 
+end_ns_def:
+
+  if(type != XML_READER_TYPE_ELEMENT) return;
 
   xmlAttrPtr attribute = node.properties;
   if(attribute) {

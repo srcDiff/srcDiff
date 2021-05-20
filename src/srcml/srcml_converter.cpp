@@ -17,6 +17,7 @@ std::map<std::string, std::shared_ptr<srcml_node>> srcml_converter::end_tags;
 std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr reader, bool is_archive) {
 
   xmlNode * curnode = xmlTextReaderCurrentNode(reader);
+  curnode->type = (xmlElementType)xmlTextReaderNodeType(reader);
 
   std::string full_name;
   if(curnode->ns && (const char*)curnode->ns->prefix) {
@@ -63,8 +64,6 @@ std::shared_ptr<srcml_node> srcml_converter::get_current_node(xmlTextReaderPtr r
     node = std::make_shared<srcml_node>(*curnode, is_archive);
     node->free = true;
   }
-
-  node->type = (xmlReaderTypes)xmlTextReaderNodeType(reader);
 
   return node;
 }
