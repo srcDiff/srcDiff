@@ -535,7 +535,7 @@ void srcdiff_output::output_node_inner(const srcml_node & node) {
   case XML_READER_TYPE_ELEMENT:
 
     // start the element
-    srcml_write_start_element(wstate->unit, node.ns.prefix ? node.ns.prefix->c_str() : 0, node.name.c_str(), 0);
+    srcml_write_start_element(wstate->unit, node.ns.prefix ? node.ns.prefix->c_str() : 0, node.name.c_str(), node.ns.href.c_str());
 
     // copy all the attributes
     {
