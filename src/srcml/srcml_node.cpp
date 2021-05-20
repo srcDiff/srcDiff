@@ -189,15 +189,8 @@ std::ostream & operator<<(std::ostream & out, const srcml_node & that) {
 
       out << that.name;
 
-      bool first = true;
       for(const srcml_node::srcml_attr & property : that.properties) {
-        if(!first) {
-          out << ' ';
-        } else {
-          first = false;
-        }
-
-        out << property;
+        out << " " << property;
       }
 
       out << '>';
