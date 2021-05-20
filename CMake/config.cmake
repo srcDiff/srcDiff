@@ -139,7 +139,7 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
     set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG -DSTATIC_GLOBALS")
     set(CMAKE_C_FLAGS_DEBUG   "-O0 -g -DDEBUG")
 
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
 
     # Configuring the Clang compiler
     #set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32 -Wno-unknown-pragmas -Wno-int-to-void-pointer-cast")
