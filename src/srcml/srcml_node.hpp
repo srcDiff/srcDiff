@@ -67,6 +67,7 @@ public:
 
     bool operator==(const srcml_attr & attr) const;
     bool operator!=(const srcml_attr & attr) const;
+    friend std::ostream & operator<<(std::ostream & out, const srcml_attr & that);
 
   };
 

@@ -62,6 +62,15 @@ bool srcml_node::srcml_attr::operator!=(const srcml_attr & attr) const {
 
 }
 
+std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) {
+  out << that.name;
+  if(that.value) {
+    out << "=\"" << *that.value << '"';
+  }
+
+  return out;
+}
+
 srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type((xmlReaderTypes)node.type), ns(), is_empty(node.extra & 0x1),
                        free(false), move(0), is_simple(true), is_temporary(false) {
 
@@ -165,17 +174,39 @@ std::ostream & operator<<(std::ostream & out, const srcml_node & that) {
 
   switch(that.type) {
 
-    case XML_READER_TYPE_TEXT:
+    case XML_READER_TYPE_TEXT: {
       out << "'" << *that.content << "'";
       break;
+    }
+
     case XML_READER_TYPE_ELEMENT:
-      out << '<' << that.name << '>';
+    case XML_READER_TYPE_END_ELEMENT: {
+
+      out << '<';
+      if(that.type == XML_READER_TYPE_END_ELEMENT) {
+        out << '/';
+      }
+
+      out << that.name;
+
+      bool first = true;
+      for(const srcml_node::srcml_attr & property : that.properties) {
+        if(!first) {
+          out << ' ';
+        } else {
+          first = false;
+        }
+
+        out << property;
+      }
+
+      out << '>';
       break;
-    case XML_READER_TYPE_END_ELEMENT:
-      out << "</" << that.name << '>';
+    }
+
+    default: {
       break;
-    default:
-      break;
+    }
 
   }
 
