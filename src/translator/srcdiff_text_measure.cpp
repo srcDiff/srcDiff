@@ -178,6 +178,7 @@ void srcdiff_text_measure::compute() {
 int srcdiff_text_measure::number_match_beginning() {
 
       collect_important_text();
+      computed = true;
 
       int count = 0;
       while(count < set_original_text.size() & count < set_modified_text.size()
