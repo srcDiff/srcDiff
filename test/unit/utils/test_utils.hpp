@@ -1,5 +1,5 @@
-#ifndef INCLUDED_SRC_TO_NODES_HPP
-#define INCLUDED_SRC_TO_NODES_HPP
+#ifndef INCLUDED_TEST_UTILS_HPP
+#define INCLUDED_TEST_UTILS_HPP
 
 #include <srcml_nodes.hpp>
 #include <node_set.hpp>

@@ -30,7 +30,7 @@ node_sets::node_sets(const srcml_nodes & node_list, int start, int end, const no
 
   // runs on a subset of base array
   for(int i = start; i < end; ++i) {
-
+ 
     // skip whitespace
     if(filter(i, node_list, context)) {
 

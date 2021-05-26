@@ -21,4 +21,5 @@
 
 # add tests
 add_unit_test(test_is_interchangeable_match.cpp $<TARGET_OBJECTS:common>)
+add_unit_test(test_extract_name.cpp $<TARGET_OBJECTS:common>)
 include_directories(.)

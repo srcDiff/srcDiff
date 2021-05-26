@@ -5,6 +5,8 @@
 #include <srcdiff_syntax_measure.hpp>
 #include <srcdiff_compare.hpp>
 #include <srcdiff_constants.hpp>
+#include <srcdiff_match_internal.hpp>
+
 
 #include <list>
 
