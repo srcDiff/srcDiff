@@ -1,4 +1,4 @@
-#include <src_to_nodes.hpp>
+#include <test_utils.hpp>
 
 #include <fstream>
 #include <string>
@@ -31,7 +31,7 @@ std::string read_from_file(std::string filename){
 	return str;
 }
 
-std::shared_ptr<srcml_nodes> create_nodes(const std::string & code, const std::string & language){
+std::shared_ptr<srcml_nodes> create_nodes(const std::string & code, const std::string & language) {
 
     //create srcml archive pointer and get code string      
 	srcml_archive * archive = srcml_archive_create();
@@ -56,7 +56,7 @@ std::shared_ptr<srcml_nodes> create_nodes(const std::string & code, const std::s
 	return std::make_shared<srcml_nodes>(testNode);
 }
 
-node_set_data create_node_set(const std::string & code, const std::string & language){
+node_set_data create_node_set(const std::string & code, const std::string & language) {
 
 	std::shared_ptr<srcml_nodes> nodes = create_nodes(code, language);
 	int pos = 0;
