@@ -67,7 +67,7 @@ endif()
 set(LIBSRCML_INCLUDE_DIR /usr/local/include)
 
 set(Boost_NO_BOOST_CMAKE ON)
-set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_STATIC_LIBS OFF)
 
 if(NOT TIMING)
 
