@@ -305,27 +305,18 @@ void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, con
 
   }
 
-  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
-  //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.back()->open_tags.size());
   if(open_diffs.back()->open_tags.size() == 0) {
 
     delete open_diffs.back();
     open_diffs.pop_back();
 
-    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.size());
-    //fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, open_diffs.back()->open_tags.size());
   }
-
-  //fprintf(stderr, "HERE\n");
 
 }
 
 void srcdiff_output::update_diff_stacks(const std::shared_ptr<srcml_node> & node, int operation) {
 
   if(operation == SES_COMMON) {
-
-    //fprintf(stderr, "HERE OUTPUT SES_COMMON\n");
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     update_diff_stack(rbuf_original->open_diff, node, operation);
     update_diff_stack(rbuf_modified->open_diff, node, operation);
@@ -335,17 +326,11 @@ void srcdiff_output::update_diff_stacks(const std::shared_ptr<srcml_node> & node
   }
   else if(operation == SES_DELETE) {
 
-    //fprintf(stderr, "HERE OUTPUT SES_DELETE\n");
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
-
     update_diff_stack(rbuf_original->open_diff, node, operation);
 
     update_diff_stack(wstate->output_diff, node, operation);
 
   } else if(operation == SES_INSERT) {
-
-    //fprintf(stderr, "HERE OUTPUT SES_INSERT\n");
-    //fprintf(stderr, "HERE: %s %s %d %s\n", __FILE__, __FUNCTION__, __LINE__, (const char *)node->name);
 
     update_diff_stack(rbuf_modified->open_diff, node, operation);
 
@@ -559,7 +544,6 @@ void srcdiff_output::output_node_inner(const srcml_node & node) {
     break;
 
   case XML_READER_TYPE_COMMENT:
-    //xmlTextWriterWriteComment(wstate->unit, (const xmlChar *)node.content);
     break;
 
   case XML_READER_TYPE_TEXT:
@@ -568,16 +552,7 @@ void srcdiff_output::output_node_inner(const srcml_node & node) {
     // output the UTF-8 buffer escaping the characters.  Note that the output encoding
     // is handled by libxml
     srcml_write_string(wstate->unit, node.content ? node.content->c_str() : 0);
-    /*for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
-      if (*p == '&')
-        xmlTextWriterWriteRawLen(wstate->unit, BAD_CAST (unsigned char*) "&amp;", 5);
-      else if (*p == '<')
-        xmlTextWriterWriteRawLen(wstate->unit, BAD_CAST (unsigned char*) "&lt;", 4);
-      else if (*p == '>')
-        xmlTextWriterWriteRawLen(wstate->unit, BAD_CAST (unsigned char*) "&gt;", 4);
-      else
-        xmlTextWriterWriteRawLen(wstate->unit, BAD_CAST (unsigned char*) p, 1);
-    }*/
+
     break;
 
   default:

@@ -228,8 +228,6 @@ bool srcdiff_nested::is_same_nestable(const node_set & structure_one,
   if(!is_nestable_internal(structure_one, structure_two))
     return false;
 
-  //unsigned int similarity = compute_similarity(structure_one.nodes(), structure_one, structure_two.nodes(), structure_two);
-
   node_sets set = node_sets(structure_two.nodes(), structure_two.at(1), structure_two.back(), srcdiff_nested::is_match
                                                              , &structure_one.nodes().at(structure_one.at(0)));
 
@@ -249,7 +247,6 @@ bool srcdiff_nested::is_same_nestable(const node_set & structure_one,
 
   return (match_measure.similarity() >= measure.similarity() && match_measure.difference() <= measure.difference()) 
   || (match_min_size > 50 && min_size > 50 && (match_min_size / match_measure.similarity()) < (0.9 * (min_size / measure.similarity()))
-//   && match_measure.difference() < 1.5 * difference
     && !srcdiff_nested::reject_match_nested(match_measure, set.at(match), structure_one));
 
 }

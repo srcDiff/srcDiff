@@ -142,8 +142,6 @@ offset_pair * srcdiff_match::match_differences() {
 
   */
 
-  //fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
-
   int olength = node_sets_original.size();
   int nlength = node_sets_modified.size();
 
@@ -182,7 +180,6 @@ offset_pair * srcdiff_match::match_differences() {
       // check along x axis to find max difference  (Two possible either unmatch or unmatch all and add similarity
       if(j > 0) {
 
-        //max_similarity = differences[i * olength + (j - 1)].similarity + MAX_INT;
         max_similarity = differences[i * olength + (j - 1)].similarity;
         num_unmatched = differences[i * olength + (j - 1)].num_unmatched + 1;
 
@@ -191,14 +188,10 @@ offset_pair * srcdiff_match::match_differences() {
         // may be wrong
         int temp_num_unmatched = i + j + unmatched;
 
-        //unsigned long long temp_similarity = MAX_INT * num_unmatched + similarity;
-
-        //if(temp_similarity < max_similarity) {
         if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity > max_similarity)) {
 
           matched = !unmatched;
 
-          //max_similarity = temp_similarity;
           max_similarity = similarity;
           num_unmatched = temp_num_unmatched;
 
@@ -215,7 +208,6 @@ offset_pair * srcdiff_match::match_differences() {
         if(direction == 0)
           direction = 2;
 
-        //unsigned long long temp_similarity = differences[(i - 1) * olength + j].similarity + MAX_INT;
         int temp_similarity = differences[(i - 1) * olength + j].similarity;
         int temp_num_unmatched = differences[(i - 1) * olength + j].num_unmatched + 1;
 
@@ -224,9 +216,6 @@ offset_pair * srcdiff_match::match_differences() {
 
         int temp_matched = false;
 
-        //unsigned long long temp_similarity_match = MAX_INT * num_unmatched + similarity;
-
-        //if(temp_similarity_match < temp_similarity) {
         if(temp_num_unmatched_match < temp_num_unmatched || (temp_num_unmatched_match == temp_num_unmatched && similarity > temp_similarity)) {
 
           temp_matched = !unmatched;
@@ -236,7 +225,6 @@ offset_pair * srcdiff_match::match_differences() {
 
         }
 
-        //if(temp_similarity < max_similarity) {
         if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && temp_similarity > max_similarity)) {
 
           matched = temp_matched;
@@ -253,11 +241,9 @@ offset_pair * srcdiff_match::match_differences() {
       // go along diagonal just add similarity and unmatched
       if(i > 0 && j > 0) {
 
-        //unsigned long long temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
         int temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
         int temp_num_unmatched = differences[(i - 1) * olength + (j - 1)].num_unmatched + unmatched;
 
-        //if(temp_similarity < max_similarity) {
         if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && temp_similarity > max_similarity)) {
 
           matched = !unmatched;

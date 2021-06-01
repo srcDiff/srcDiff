@@ -40,7 +40,6 @@ void srcdiff_common::markup_common() {
       for(; nlength < nend && rbuf_modified->nodes.at(nlength)->is_white_space(); ++nlength)
         ;
 
-      //markup_whitespace(rbuf_original, olength, rbuf_modified, nlength, wstate);
 
       int opivot = olength - 1;
       int npivot = nlength - 1;
@@ -87,13 +86,8 @@ void srcdiff_common::markup_common() {
 
         if(opivot < olength) {
 
-          //output_node(diff_common_start, SES_COMMON);
-
         for(int k = opivot; k < olength; ++k)
           output_node(rbuf_original->nodes.at(k), SES_COMMON);
-
-        // output diff tag
-        //output_node(diff_common_end, SES_COMMON);
 
         }
 
@@ -146,16 +140,12 @@ void srcdiff_common::markup_common() {
       --i;
       --j;
 
-      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, text_original.c_str());
-      //fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, text_modified.c_str());
-
       int opos = 0;
       int npos = 0;
       for(; opos < (signed)text_original.size() && npos < (signed)text_modified.size();) {
 
         if(text_original[opos] == text_modified[npos]) {
 
-          //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_original[opos]);
           output_char((xmlChar)text_original[opos], SES_COMMON);
 
           ++opos;
@@ -171,7 +161,6 @@ void srcdiff_common::markup_common() {
 
               for(; opos < (signed)text_original.size() && isspace(text_original[opos]); ++opos) {
 
-                //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_original[opos]);
                 output_char((xmlChar)text_original[opos], SES_DELETE);
               }
 
@@ -186,7 +175,6 @@ void srcdiff_common::markup_common() {
 
               for(; npos < (signed)text_modified.size() && isspace(text_modified[npos]); ++npos) {
 
-                //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_modified[npos]);
                 output_char((xmlChar)text_modified[npos], SES_INSERT);
               }
 
@@ -207,7 +195,6 @@ void srcdiff_common::markup_common() {
 
         for(; opos < (signed)text_original.size() && isspace(text_original[opos]); ++opos) {
 
-          //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_original[opos]);
           output_char((xmlChar)text_original[opos], SES_DELETE);
         }
 
@@ -222,7 +209,6 @@ void srcdiff_common::markup_common() {
 
         for(; npos < (signed)text_modified.size() && isspace(text_modified[npos]); ++npos) {
 
-          //fprintf(stderr, "HERE: %s %s %d '%c'\n", __FILE__, __FUNCTION__, __LINE__, text_modified[npos]);
           output_char((xmlChar)text_modified[npos], SES_INSERT);
         }
 
