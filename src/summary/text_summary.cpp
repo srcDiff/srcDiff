@@ -244,14 +244,6 @@ summary_output_stream & text_summary::function_body(summary_output_stream & out,
 
     for(std::list<summary_t *>::iterator itr = summaries.begin(); itr != summaries.end(); ++itr) {
 
-        // std::list<summary_t *>::iterator next_itr = std::next(itr, 1);
-        // if(next_itr != summaries.end() && (**itr) == (**next_itr)) {
-
-        //     (**next_itr) += (**itr);
-        //     continue;
-
-        // }
-
         (*itr)->output(out);    
 
     }

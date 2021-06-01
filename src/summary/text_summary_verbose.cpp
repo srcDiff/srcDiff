@@ -500,17 +500,6 @@ summary_output_stream & text_summary_verbose::statement_dispatch(summary_output_
     } else if(child_profile->move_id) {
 
         out.begin_line() << get_profile_string(child_profile) << " was moved";
-        // if(child_profile->move_parent) {
-
-        //     out << " from " << get_article(child_profile->parent) << ' ' << get_type_string(child_profile->parent);
-        //     out << " to ";
-
-        //     if(child_profile->parent->type_name == child_profile->move_parent->type_name)
-        //         out << " another " << get_type_string(child_profile->move_parent);
-        //     else
-        //         out<< get_article(child_profile->move_parent) << ' ' << get_type_string(child_profile->move_parent);
-
-        // }
 
         out << '\n';
 
@@ -1258,16 +1247,6 @@ summary_output_stream & text_summary_verbose::expr_stmt(summary_output_stream & 
         out << summarize_calls(deleted_calls, inserted_calls, modified_calls, renamed_calls, modified_argument_lists, argument_list_modifications);
 
     }
-
-    // if(profile->parent == id) {
-
-    //     if(profile->operation == SRCDIFF_DELETE)      out << " from ";
-    //     else if(profile->operation == SRCDIFF_INSERT) out << " to ";
-    //     else                                          out << " within ";
-
-    //     out << "the function body";
-
-    // }
 
     out << '\n';
 

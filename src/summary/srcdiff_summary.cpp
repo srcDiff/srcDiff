@@ -649,15 +649,6 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
     if(uri_stack.back() != SRCDIFF) {
 
-        // if(signature_profile) {
-
-        //     bool end_func_collect = is_function_type(signature_profile->type_name) && is_block(full_name);
-        //     bool end_class_collect = is_class_type(signature_profile->type_name) && is_block(full_name);
-        //     if(end_func_collect || end_class_collect) {
-        //         signature_profile = std::shared_ptr<profile_t>();
-        //     }
-        // }
-
         // note what if class is interchanged?
         if(is_function_type(full_name) || is_class_type(full_name) 
             || (is_decl_stmt(full_name) && srcml_stack.size() >= 2
@@ -1226,7 +1217,6 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
     }
 
-    //bool is_prototype = full_name == "parameter" || (full_name == "call" && profile_stack.at(profile_stack.size() - 2)->type_name == "member_init_list");
     if(is_statement(full_name)/* || is_prototype*/) {
 
         size_t parent_pos = counting_profile_pos.back();

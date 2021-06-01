@@ -128,8 +128,6 @@ class expr_stmt_calls_summary_t : public expr_stmt_summary_t {
 
                     } else {
 
-                        //out << std::to_string(number_arguments_total) << ' ' << manip::bold() << "arguments" << manip::normal() << ' ';
-                        // if(output_verb) out << "were modified";
                         out << "an " << manip::bold() << "argument list" << manip::normal() << ' ';
                         if(output_verb) out << "was ";
                         out << "modified";

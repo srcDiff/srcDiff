@@ -125,8 +125,6 @@ class change_entity_map {
             size_t count = entity.count(operation);
             if(count == 0) return out;
 
-            // out << '\n';
-
             typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = entity.lower_bound(operation);
 
             out.begin_line() << manip::bold() << (operation == SRCDIFF_DELETE ? "Deleted " : "Inserted ") << type_category(citr->second->type_name) << "(s)" << manip::normal();
@@ -148,8 +146,6 @@ class change_entity_map {
 
             size_t num_modified = entity.count(SRCDIFF_COMMON);
             if(num_modified == 0) return out;
-
-            // out << '\n';
 
             typename std::multimap<srcdiff_type, std::shared_ptr<T>>::const_iterator citr = entity.lower_bound(SRCDIFF_COMMON);
 
