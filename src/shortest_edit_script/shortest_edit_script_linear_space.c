@@ -9,8 +9,6 @@
   mdecker6@kent.edu
 */
 
-//#include <shortest_edit_script.h>
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -53,8 +51,6 @@ struct point compute_next_forward_path_snake(const void * sequence_one, int sequ
 
   forward_paths[diagonal_pos].x = column;
   forward_paths[diagonal_pos].y = row;
-
-  // fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", save_column, save_row, column, row);
 
   return start_snake;
 
@@ -140,8 +136,6 @@ struct point compute_next_reverse_path_snake(const void * sequence_one, int sequ
 
   struct point end_snake = { reverse_paths[diagonal_pos].x, reverse_paths[diagonal_pos].y };
 
-  // fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", save_column, save_row, column, row);
-
   return end_snake;
 
 }
@@ -182,8 +176,6 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
     int diagonal;
     for(diagonal = distance; diagonal >= -distance; diagonal -= 2) {
 
-      // fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
-
       int diagonal_pos = diagonal + center;
 
       struct point start_snake = compute_next_forward_path_snake(sequence_one, sequence_one_end, sequence_two, sequence_two_end,
@@ -208,8 +200,6 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
     }
 
     for(diagonal = distance; diagonal >= -distance; diagonal -= 2) {
-
-      // fprintf(stderr, "Distance: %d Diagonal: %d\n", distance, diagonal);
 
       int diagonal_pos = diagonal + delta + center;
 
@@ -266,8 +256,6 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
   struct edit_t ** edit_script, struct edit_t ** last_edit,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context) {  
 
-  //fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", sequence_one_start, sequence_two_start, sequence_one_end, sequence_two_end);
-
   if(edit_script) (*edit_script) = 0;
   if(last_edit) (*last_edit) = 0;
 
@@ -276,9 +264,6 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
 
     struct point points[2];
     edit_distance = compute_middle_snake(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, points, compare, accessor, context);
-
-    // fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1].x, points[1].y);
-    // fprintf(stderr, "Distance: %d\n", edit_distance);
 
     if(edit_distance == -2) { fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, "Possible Error"); exit(-2); } 
 
@@ -289,10 +274,6 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
       shortest_edit_script_linear_space_inner(sequence_one, sequence_one_start, points[0].x, sequence_two, sequence_two_start, points[0].y, &previous_edits, &previous_last_edit, compare, accessor, context);
 
       if(edit_script) (*edit_script) = previous_edits;
-
-      // int pos;
-      // for(pos = points[0].x; pos < points[1].x; ++pos)
-      //   fprintf(stderr, "%s\n", (const char *)accessor(pos, sequence_one, context));
 
       struct edit_t * new_edits = 0;
       struct edit_t * next_last_edit = 0;
@@ -305,9 +286,6 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
 
     } else if((sequence_two_end - sequence_two_start) < (sequence_one_end - sequence_one_start)) {
 
-      // fprintf(stderr, "Range Old: %d->%d\n", sequence_one_start, sequence_one_end);
-      // fprintf(stderr, "Range New: %d->%d\n", sequence_two_start, sequence_two_end);
-      // fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1].x, points[1].y);
       struct edit_t * new_edit = (struct edit_t *)malloc(sizeof(struct edit_t));
       new_edit->operation = SES_DELETE;
       new_edit->previous = 0;
@@ -340,9 +318,6 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
 
     } else {
 
-      // fprintf(stderr, "Range Old: %d->%d\n", sequence_one_start, sequence_one_end);
-      // fprintf(stderr, "Range New: %d->%d\n", sequence_two_start, sequence_two_end);
-      // fprintf(stderr, "Point: (%d,%d)->(%d,%d)\n", points[0].x, points[0].y, points[1].x, points[1].y);
       struct edit_t * new_edit = (struct edit_t *)malloc(sizeof(struct edit_t));
       new_edit->operation = SES_INSERT;
       new_edit->previous = 0;
@@ -510,22 +485,10 @@ int main(int argc, char * argv[]) {
 
   const char * sequence_one[] = { "a", "b", "c", "e" };
   const char * sequence_two[] = { "a", "c", "e", "f" };
-  //const char * sequence_one[] = { "a", "b", "c", "e" };
-  //const char * sequence_two[] = { "b", "c", "d", "e" };
-  //const char * sequence_one[] = { "a", "b", "c", "d" };
-  //const char * sequence_two[] = { "a", "b", "e", "f" };
-  //const char * sequence_one[] = { "a", "b", "c", "a", "b", "b", "a" };
-  //const char * sequence_two[] = { "c", "b", "a", "b", "a", "c" };
-  //const char * sequence_one[] = { "a", "b", "b", "a", "c", "b", "a" };
-  //const char * sequence_two[] = { "c", "a", "b", "a", "b", "c" };
-  //const char * sequence_one[] = { "a", "b", "c", "d", "f", "g", "h", "j", "q", "z" };
-  //const char * sequence_two[] = { "a", "b", "c", "d", "e", "f", "g", "i", "j", "k", "r", "x", "y", "z" };
 
   struct edit_t * edit_script;
 
   shortest_edit_script_linear_space(sequence_one, 4, sequence_two, 4, &edit_script, str_compare, str_accessor, 0);
-  //shortest_edit_script_linear_space(sequence_one, 7, sequence_two, 6, &edit_script, str_compare, str_accessor, 0);
-  //shortest_edit_script_linear_space(sequence_one, 10, sequence_two, 14, &edit_script, str_compare, str_accessor, 0);
 
   for(struct edit_t * current_edit = edit_script; current_edit; current_edit = current_edit->next) {
 

@@ -44,7 +44,6 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
   int num_edits = -1;
 
   // internal script of edits
-  //struct edit_t * script[max_diagonals];
   struct edit_t ** script = (struct edit_t **)calloc(max_diagonals, sizeof(struct edit_t *));
   if(script == NULL) {
 
@@ -84,8 +83,6 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
     // for each possible diagonal
     int diagonal;
     for(diagonal = -distance; diagonal <= distance; diagonal += 2) {
-      // fprintf(stderr, "Distance %d Diagonal: %d\n", distance, diagonal);
-
       // locate next edit
       ++num_edits;
       int edit_array = num_edits / (max_distance + 1);
@@ -127,8 +124,6 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
         edit_pointers[edit_array][edit].previous = script[diagonal_pos - 1];
 
       }
-
-      // fprintf(stderr, "Point: (%d,%d)\n", column, row);
 
       edit_pointers[edit_array][edit].offset_sequence_one = column;
       edit_pointers[edit_array][edit].offset_sequence_two = row;
