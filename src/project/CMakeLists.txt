@@ -1,7 +1,7 @@
 ##
 #  CMakeLists.txt
 #
-#  Copyright (C) 2015  SDML (www.sdml.info)
+#  Copyright (C) 2011-2021  SDML (www.srcML.org)
 #
 #  This file is part of the srcDiff translator.
 #
