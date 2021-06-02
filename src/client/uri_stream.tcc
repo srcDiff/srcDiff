@@ -1,7 +1,7 @@
 /*
   uri_stream.cpp
 
-  Copyright (C) 2011-2021  SDML (www.srcML.org)
+  Copyright (C) 2010-2021  SDML (www.srcML.org)
 
   This file is part of the srcML Toolkit.
 
