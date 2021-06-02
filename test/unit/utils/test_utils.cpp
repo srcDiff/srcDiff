@@ -4,7 +4,6 @@
 #include <string>
 #include <sstream>
 #include <node_set.hpp>
-//#include <srcdiff_constants.hpp>
 #include <srcml_converter.hpp>
 #include <iostream>
 #include <cstdio>
