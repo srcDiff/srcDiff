@@ -17,7 +17,6 @@
 class user_defined_theme : public theme_t {
 
 private:
-	// void parse_user_definition_file(const std::string & theme_file);
 
 public:
 

@@ -139,9 +139,6 @@ void diffdoc_view::start_line() {
 
 void diffdoc_view::end_line() {
   indentation.clear();
-  // if(diff_stack.back() != view_t::COMMON) {
-  //     output_characters(CARRIAGE_RETURN_SYMBOL);   
-  // }
   output_characters("\n", view_t::COMMON);
   end_spans();
   if(diff_stack.back() != INSERT) ++line_number_delete;

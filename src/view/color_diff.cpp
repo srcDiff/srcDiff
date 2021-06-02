@@ -46,7 +46,6 @@ color_diff::~color_diff() {
 xmlParserCtxtPtr create_url_parser_ctxt(const char * srcdiff) {
 
   xmlParserCtxtPtr ctxt = xmlCreateMemoryParserCtxt(srcdiff, strlen(srcdiff));
-  //xmlCtxtUseOptionsInternal(ctxt, XML_PARSE_COMPACT, NULL);
 
   if (ctxt == NULL) {
 

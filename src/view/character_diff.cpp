@@ -42,14 +42,6 @@ void character_diff::output(view_t & view, const std::string & type) {
     int min_size = std::min(str.original().size(), str.modified().size());
     bool is_diff_name = type == "name" && 4 * difference < min_size;
     bool is_diff_operator = type == "operator" && difference <= min_size;
-    // bool is_delete_consecutive = num_consecutive_edits == 1 
-    //   && ses.script()->operation == SES_DELETE 
-    //   && (ses.script()->offset_sequence_one == 0
-    //     || (ses.script()->offset_sequence_one + ses.script()->length == str.original().size()));
-    // bool is_insert_consecutive = num_consecutive_edits == 1 
-    //   && ses.script()->operation == SES_INSERT 
-    //   && (ses.script()->offset_sequence_two == 0
-    //     || (ses.script()->offset_sequence_two + ses.script()->length == str.modified().size()));
 
     if(is_diff_name || is_diff_operator || num_consecutive_edits == 1) {
 
