@@ -1,7 +1,7 @@
 /*
   Options.hpp
 
-  Copyright (C) 2005-2010  SDML (www.sdml.info)
+  Copyright (C) 2005-2021  SDML (www.srcML.org)
 
   This file is part of the srcML translator.
 
