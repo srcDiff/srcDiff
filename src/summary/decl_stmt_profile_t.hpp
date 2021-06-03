@@ -77,8 +77,7 @@ class decl_stmt_profile_t : public profile_t {
             out << manip::bold() << "Name" << manip::normal() << " = " << manip::bold() << name_impact << manip::normal();
             out << "   ";
             out << manip::bold() << "Init"    << manip::normal() << " = " << manip::bold() << init_impact << manip::normal();            
-            // out << "   ";
-            // out << manip::bold() << "Other"    << manip::normal() << " = " << manip::bold() << init_impact << manip::normal();            
+
             out.end_line();
    
             out.increment_depth();

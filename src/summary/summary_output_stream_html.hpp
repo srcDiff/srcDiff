@@ -15,8 +15,6 @@ public:
 	bool start_ul;
 	bool end_li;
 
-//	class iomanip_type {};
-
 protected:
 	std::ostream & output(const std::string & str) {
 		out << str;

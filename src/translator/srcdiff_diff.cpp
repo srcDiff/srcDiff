@@ -31,8 +31,6 @@ srcdiff_diff::srcdiff_diff(srcdiff_output & out, const node_sets & node_sets_ori
 */
 void srcdiff_diff::output() {
 
-  //fprintf(stderr, "HERE_DOUBLE\n");
-
   diff_nodes dnodes = { node_sets_original.nodes(), node_sets_modified.nodes() };
 
   shortest_edit_script_t ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_array_index, &dnodes);
@@ -90,8 +88,6 @@ void srcdiff_diff::output() {
     edit_t * edit_next = edits->next;
     if(is_change(edits)) {
 
-      //      fprintf(stderr, "HERE\n");
-
       // many to many handling
       /** loop O(RD^2) */
       srcdiff_many diff(*this, edits);
@@ -124,7 +120,6 @@ void srcdiff_diff::output() {
 
         case SES_INSERT:
 
-          //fprintf(stderr, "HERE\n");
           output_pure(0, node_sets_modified.at(edits->offset_sequence_two + edits->length - 1).back() + 1);
 
 
@@ -136,7 +131,6 @@ void srcdiff_diff::output() {
 
         case SES_DELETE:
 
-          //fprintf(stderr, "HERE\n");
           output_pure(node_sets_original.at(edits->offset_sequence_one + edits->length - 1).back() + 1, 0);
 
           // update for common

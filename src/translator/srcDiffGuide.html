@@ -210,15 +210,6 @@
         </td>
       </tr>
 
-      <!--
-          <tr>
-            <td style="vertical-align :
-                       top"><code>diff:changed()</code></td><td>srcML contains
-              content that was deleted and directly replaced by inserted source<br/>
-              Equivalency: <code>descendant::diff:*[@type='changed'][1]</code>
-            </td>
-          </tr>
-          -->
       <tr>
         <td> <br/></td>
         <td> </td>
@@ -245,26 +236,6 @@
           Equivalency: <code>descendant::diff:*[self::diff:insert or self::diff:delete]</code>
         </td>
       </tr>
-
-      <!--
-          <tr>
-            <td style="vertical-align :
-                       top"><code>diff:hascommon()</code></td><td>srcML contains
-              content that are common to both versions (assumes surrounding context is common)<br/>
-              Equivalency: <code>self::*[not(descendant::diff:*) or descendant::diff:common]</code>
-            </td>
-          </tr>
-          -->
-
-      <!--
-          <tr>
-            <td style="vertical-align :
-                       top"><code>diff:haschange()</code></td><td>srcML contains
-              content that was deleted and directly replaced by inserted source<br/>
-              Equivalency: <code>descendant::diff:*[@type='changed'][1]</code>
-            </td>
-          </tr>
-          -->
 
     </table>
 
@@ -315,17 +286,6 @@
         </td>
       </tr>
 
-      <!--
-          <tr>
-            <td>Functions which were part of a insert or delete:</td>
-            <td>
-              <code>
-                //src:function[diff:changed()]
-              </code>
-            </td>
-          </tr>
-          -->
-
       <tr>
         <td>Function which contains a delete:</td>
         <td>
@@ -343,17 +303,6 @@
           </code>
         </td>
       </tr>
-
-      <!--
-          <tr>
-            <td>Function which has content in common (assumes deleted and inserted functions are filtered out):</td>
-            <td>
-              <code>
-                //src:function[diff:hascommon()]
-              </code>
-            </td>
-          </tr>
-          -->
 
       <tr>
         <td>Function contains inserts or deletes:</td>
@@ -477,41 +426,6 @@
       is being performed.
     </p>
 
-<!--
-<table align="center" style="border : 1px solid black">
-<caption>Effect of Methods on Differences where Version 1 is <code>int n = a + b;</code></caption>
-<tr>
-<th>Version 2</th><th>raw</th><th>collect</th>
-</tr>
-
-<tr>
-<td><code>int m = c + d;</code></td>
-<td><code>'n'->'m'</code>, <code>'a'->'c'</code>, and <code>'b'->'d'</code></td>
-<td><code>'int n = a + b;'->'int m = c + d;'</code></td>
-</td>
-
-<tr>
-<td><code>int m = a + d;</code></td>
-<td><code>'n'->'m'</code> and <code>'b'->'d'</code></td>
-<td><code>'int n = a + b;'->'int m = a + d;'</code></td>
-</td>
-
-<tr>
-<td><code>int n = c + d;</code></td>
-<td><code>'a'->'c'</code>, and <code>'b'->'d'</code></td>
-<td><code>'a + b'->'c + d'</code></td>
-</td>
-
-<tr>
-<td><code>int n = a + d;</code></td>
-<td><code>'b'->'d'</code></td>
-<td><code>'b'->'d'</code></td>
-</td>
-
-</tr>
-
-</table>
--->
     <p>
       The method <strong><code>collect</code></strong> is the default.  To use
       the method <strong><code>raw</code></strong> the command is:

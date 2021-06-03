@@ -90,10 +90,6 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
                                    const boost::optional<std::string> & unit_filename,
                                    const boost::optional<std::string> & unit_version) {
 
-  // line_diff_range.create_line_diff();
-
-  // if(!is_option(flags, OPTION_SAME) && line_diff_range.get_line_diff() == NULL)
-  //   return;
   const boost::optional<std::string> output_path = is_option(flags, OPTION_BURST) && is_option(flags, OPTION_SRCML) ? output.srcdiff_filename() : boost::optional<std::string>();
 
   const srcml_converter::srcml_burst_config burst_config = { output_path, language, (this->unit_filename ? this->unit_filename : unit_filename), unit_version };

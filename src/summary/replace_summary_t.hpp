@@ -28,7 +28,6 @@ class replace_summary_t : public summary_t {
 
         virtual bool compare(const summary_t & summary) const {
 
-            //const replace_summary_t & replace_summary = dynamic_cast<const replace_summary_t &>(summary);
             return false;
 
         }

@@ -17,8 +17,6 @@ srcdiff_comment::srcdiff_comment(srcdiff_output & out, const node_sets & node_se
 */
 void srcdiff_comment::output() {
 
-  //fprintf(stderr, "HERE_DOUBLE\n");
-
   diff_nodes dnodes = { out.nodes_original(), out.nodes_modified() };
   shortest_edit_script_t ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
 
@@ -62,8 +60,6 @@ void srcdiff_comment::output() {
     edit_t * edit_next = edits->next;
     if(is_change(edits)) {
 
-      //      fprintf(stderr, "HERE\n");
-
       // TODO: simplify unless plan to handle many to many different // 1-1
       if(edits->length == edit_next->length && edits->length == 1
          && (node_sets_original.at(edits->offset_sequence_one).size() > 1
@@ -91,7 +87,6 @@ void srcdiff_comment::output() {
 
       case SES_INSERT:
 
-        //fprintf(stderr, "HERE\n");
         output_pure(0, node_sets_modified.at(edits->offset_sequence_two + edits->length - 1).back() + 1);
 
         // update for common
@@ -102,7 +97,6 @@ void srcdiff_comment::output() {
 
       case SES_DELETE:
 
-        //fprintf(stderr, "HERE\n");
         output_pure(node_sets_original.at(edits->offset_sequence_one + edits->length - 1).back() + 1, 0);
 
         // update for common

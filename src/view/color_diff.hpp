@@ -79,10 +79,10 @@ int color_diff::colorize(const char * srcdiff, line_diff_range<T> & line_diff_ra
 
   }
 
-  if(/*is_option(options, OPTION_ARCHIVE) &&*/ !is_option(options, OPTION_SAME) && lines_original.size() == 0 && lines_modified.size() == 0)
+  if(!is_option(options, OPTION_SAME) && lines_original.size() == 0 && lines_modified.size() == 0)
     return 0;
 
-  if(/*is_option(options, OPTION_ARCHIVE) &&*/ !is_option(options, OPTION_PURE) && (size_original == 0 || size_modified == 0))
+  if(!is_option(options, OPTION_PURE) && (size_original == 0 || size_modified == 0))
     return 0;
 
   while(lines_original.size() <= size_original)

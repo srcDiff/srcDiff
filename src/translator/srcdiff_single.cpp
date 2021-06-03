@@ -151,8 +151,6 @@ void srcdiff_single::output_recursive_same() {
     out.output_node(out.diff_common_end, SES_COMMON);
   }
 
-  //whitespace.output_statement();
-
 }
 
 void srcdiff_single::output_recursive_interchangeable() {
@@ -243,8 +241,6 @@ void srcdiff_single::output_recursive_interchangeable() {
   out.output_node(out.diff_original_end, SES_DELETE, true);
   if(out.output_state() == SES_DELETE)
       out.output_node(out.diff_original_end, SES_DELETE);
-
-  //whitespace.output_statement();
 
 }
 

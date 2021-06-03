@@ -37,12 +37,6 @@ class call_profile_t : public profile_t {
             
         }
 
-        // virtual void add_common(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
-
-        //     common_profiles.push_back(profile);
-
-        // } 
-
 };
 
 #endif

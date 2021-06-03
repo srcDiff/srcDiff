@@ -19,7 +19,6 @@ class identifier_summary_t : public summary_t {
 
         virtual bool compare(const summary_t & summary) const {
 
-            //const identifier_summary_t & identifier_summary = dynamic_cast<const identifier_summary_t &>(summary);
             return false;
 
         }

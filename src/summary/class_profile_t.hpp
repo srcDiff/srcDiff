@@ -68,8 +68,6 @@ class class_profile_t : public profile_t {
 
             if(operation != SRCDIFF_COMMON) return out;
 
-            // out.begin_line() << type_name << " '" << name << "': Impact = " << get_impact_factor() << '\n'; 
-
             // /** Change these to text and table summaries */
             members.summarize_pure(out, summary_types, SRCDIFF_DELETE);
             members.summarize_pure(out, summary_types, SRCDIFF_INSERT);
