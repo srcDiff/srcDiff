@@ -1,7 +1,7 @@
 /*
   diffe2diff.cpp
 
-  Copyright (C) 2006  SDML (www.sdml.info)
+  Copyright (C) 2006-2021  SDML (www.srcML.org)
 
   This file is part of a translator from source code to srcDiff
 
