@@ -49,8 +49,9 @@ uri_stream<T>::uri_stream(typename T::input_context * context)
   int size = xmlParserInputBufferGrow(input, 4096);
 
   // found problem or eof
-  if (size == -1 || size == 0)
+  if (size == -1 || size == 0) {
     done = true;
+    }
 }
 
 template<class T>
@@ -105,8 +106,9 @@ char * uri_stream<T>::readline() {
     int size = xmlParserInputBufferGrow(input, 4096);
 
     // found problem or eof
-    if (size == -1 || size == 0)
+    if (size == -1 || size == 0) {
       eof = true;
+      }
   }
 
   // find a line in the buffer
@@ -145,8 +147,9 @@ char * uri_stream<T>::readline() {
       int size = xmlParserInputBufferGrow(input, 4096);
 
       // found problem or eof
-      if (size == -1 || size == 0)
+      if (size == -1 || size == 0) {
 	eof = true;
+	}
     }
   }
 
@@ -166,8 +169,9 @@ char * uri_stream<T>::readline() {
   // current line starts at the startpos
   char* line = (char*) xmlBufContent(input->buffer) + startpos;
 #else
-  if ((endpos >= 1) && (input->buffer->content[endpos - 1] == '\r'))
+  if ((endpos >= 1) && (input->buffer->content[endpos - 1] == '\r')) {
     input->buffer->content[endpos - 1] = '\0';
+  }
   input->buffer->content[endpos] = '\0';
   // current line starts at the startpos
   char* line = (char*) input->buffer->content + startpos;

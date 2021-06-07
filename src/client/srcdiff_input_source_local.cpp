@@ -278,8 +278,9 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
     path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
 
     // skip directories
-    if(is_dir(namelist_original[i], path_original.c_str()) != 0)
+    if(is_dir(namelist_original[i], path_original.c_str()) != 0) {
       continue;
+    }
 
     // skip over output file
     if (is_output_file(path_original.c_str(), outstat) != 0) {
@@ -298,8 +299,9 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
     path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
 
     // skip directories
-    if(is_dir(namelist_modified[j], path_modified.c_str()) != 0)
+    if(is_dir(namelist_modified[j], path_modified.c_str()) != 0) {
       continue;
+    }
 
     // skip over output file
     if (is_output_file(path_modified.c_str(), outstat) != 0) {
@@ -350,8 +352,9 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
     path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
 
     // skip non-directories
-    if(is_dir(namelist_original[i], path_original.c_str()) != 1)
+    if(is_dir(namelist_original[i], path_original.c_str()) != 1) {
       continue;
+    }
 
     // skip over output file
     if (is_output_file(path_original.c_str(), outstat) == 1) {
@@ -370,8 +373,9 @@ void srcdiff_input_source_local::process_directory(const boost::optional<std::st
     path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
 
     // skip non-directories
-    if(is_dir(namelist_modified[j], path_modified.c_str()) != 1)
+    if(is_dir(namelist_modified[j], path_modified.c_str()) != 1) {
       continue;
+    }
 
     // skip over output file
     if (is_output_file(path_modified.c_str(), outstat) == 1) {

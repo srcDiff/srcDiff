@@ -58,10 +58,12 @@ void option_version(const bool & on) {
   printf("Using:\n");
   printf("libsrcml %s\n", srcml_version_string());
 
-  if(atoi(xmlParserVersion) == LIBXML_VERSION)
+  if(atoi(xmlParserVersion) == LIBXML_VERSION) {
     printf("libxml %d\n", LIBXML_VERSION);
-  else
+  }
+  else {
     printf("libxml %s (Compiled %d)\n", xmlParserVersion, LIBXML_VERSION);
+  }
 
   exit(0);
 
@@ -100,8 +102,9 @@ void option_dependency(const boost::program_options::variables_map & var_map,
 
   if(var_map[dependent].defaulted()) return;
 
-  for(const std::string & independent : independent_list)
+  for(const std::string & independent : independent_list) {
     if(!(var_map[independent].empty())) return;
+  }
 
   std::string what = "Option '--" + dependent + "' requires option";
   if(independent_list.size() == 1) {
@@ -116,10 +119,12 @@ void option_dependency(const boost::program_options::variables_map & var_map,
 
     for(int pos = 0; pos < independent_list.size(); ++pos) {
 
-      if(pos != (independent_list.size() - 1))
+      if(pos != (independent_list.size() - 1)) {
         what += " '--" + independent_list[pos] + "',";
-      else
+      }
+      else {
         what += " or '--" + independent_list[pos] + '\'';
+      }
 
     }
 
@@ -162,8 +167,9 @@ void option_field<&srcdiff_options::files_from_name>(const std::string & arg) {
       int white_length = strspn(line.c_str(), " \t\f");
       line.erase(0, white_length);
       // skip blank lines or comment lines
-      if (line[0] == '\0' || line[0] == '#')
+      if (line[0] == '\0' || line[0] == '#') {
         continue;
+      }
 
       ++line_count;
       if(line_count > 1) break;
@@ -228,10 +234,12 @@ void option_srcml_field(bool on) {}
 template<>
 void option_srcml_field<ARCHIVE>(bool on) {
 
-  if(on)
+  if(on) {
     srcml_archive_disable_solitary_unit(options.archive);
-  else
+  }
+  else {
     srcml_archive_enable_solitary_unit(options.archive);
+  }
 
 }
 
@@ -300,10 +308,12 @@ template<>
 void option_srcml_field<XMLNS>(const std::string & arg) {
 
   std::string::size_type pos = arg.find('=');
-  if(pos == std::string::npos)
+  if(pos == std::string::npos) {
     srcml_archive_register_namespace(options.archive, "", arg.c_str());
-  else
+  }
+  else {
     srcml_archive_register_namespace(options.archive, arg.substr(0, pos).c_str(), arg.substr(pos + 1, std::string::npos).c_str());
+  }
 
 }
 
@@ -371,8 +381,9 @@ std::pair<std::string, std::string> parse_xmlns(const std::string & arg) {
 
     std::string::size_type pos = arg.find(':');
     std::string name, value;
-    if(pos == std::string::npos)
+    if(pos == std::string::npos) {
       name = arg.substr(2);
+    }
     else {
 
       name = arg.substr(2, pos - 2);
