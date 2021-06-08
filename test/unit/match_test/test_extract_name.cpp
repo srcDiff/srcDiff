@@ -71,7 +71,7 @@ const std::string names[] = {
 
 BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(start_pos) ^ bu::make(names), node, start_pos, rhs) {
 
-	std::cerr << node << ":" << start_pos << ":" << rhs << '\n';
+	std::cerr << node->at(start_pos)->name << ":" << start_pos << ":" << rhs << '\n';
 
     BOOST_TEST(extract_name(*node, start_pos) == rhs);
 }
