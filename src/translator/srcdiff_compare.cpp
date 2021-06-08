@@ -81,11 +81,13 @@ namespace srcdiff_compare {
     node_set * node_set1 = (node_set *)e1;
     node_set * node_set2 = (node_set *)e2;
 
-    if(!node_set1->hash())
+    if(!node_set1->hash()) {
       node_set1->hash(std::hash<node_set>()(*node_set1));
+    }
 
-    if(!node_set2->hash())
+    if(!node_set2->hash()) {
       node_set2->hash(std::hash<node_set>()(*node_set2));
+    }
 
     if(!(node_set1->hash() == node_set2->hash()))
       return 1;
@@ -97,12 +99,14 @@ namespace srcdiff_compare {
       if(dnodes.nodes_original.at(node_set1->at(i))->is_text() && dnodes.nodes_modified.at(node_set2->at(j))->is_text()) {
 
         std::string text1 = "";
-        for(; i < node_set1->size() && dnodes.nodes_original.at(node_set1->at(i))->is_text(); ++i)
+        for(; i < node_set1->size() && dnodes.nodes_original.at(node_set1->at(i))->is_text(); ++i) {
           text1 += dnodes.nodes_original.at(node_set1->at(i))->content ? *dnodes.nodes_original.at(node_set1->at(i))->content : "";
+        }
 
         std::string text2 = "";
-        for(; j < node_set2->size() && dnodes.nodes_modified.at(node_set2->at(j))->is_text(); ++j)
+        for(; j < node_set2->size() && dnodes.nodes_modified.at(node_set2->at(j))->is_text(); ++j) {
           text2 += dnodes.nodes_modified.at(node_set2->at(j))->content ? *dnodes.nodes_modified.at(node_set2->at(j))->content : "";
+        }
 
         if(text1 != text2)
           return 1;

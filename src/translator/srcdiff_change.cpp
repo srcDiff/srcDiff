@@ -65,8 +65,9 @@ void srcdiff_change::output() {
     diff_modified_start->properties.push_back(diff_type);
     is_replace = true;
 
-    if(is_delay_type(SES_DELETE))
+    if(is_delay_type(SES_DELETE)) {
       output_node(diff_original_end, SES_DELETE, true);
+    }
 
   }
 
@@ -85,14 +86,16 @@ void srcdiff_change::output() {
 
       if(rbuf_original->nodes.at(i)->move) {
 
-        if(is_replace)
+        if(is_replace) {
           diff_original_start->properties.clear();
+        }
 
         srcdiff_move move(*this, i, SES_DELETE);
         move.output();
 
-        if(is_replace)
+        if(is_replace) {
           diff_original_start->properties.push_back(diff_type);
+        }
 
         continue;
 
@@ -121,11 +124,13 @@ void srcdiff_change::output() {
     }
 
     // output diff tag end
-    if(!first)
+    if(!first) {
       output_node(diff_original_end, SES_DELETE, is_replace);
+    }
 
-    if(wstate->output_diff.back()->operation == SES_DELETE)
+    if(wstate->output_diff.back()->operation == SES_DELETE) {
       output_node(diff_original_end, SES_DELETE);
+    }
 
     rbuf_original->last_output = end_original;
 
@@ -146,14 +151,16 @@ void srcdiff_change::output() {
 
       if(rbuf_modified->nodes.at(i)->move) {
 
-        if(is_replace)
+        if(is_replace) {
           diff_modified_start->properties.clear();
+        }
 
         srcdiff_move move(*this, i, SES_INSERT);
         move.output();
 
-        if(is_replace)
+        if(is_replace) {
           diff_modified_start->properties.push_back(diff_type);
+        }
 
         continue;
 
@@ -182,11 +189,13 @@ void srcdiff_change::output() {
     }
 
     // output diff tag end
-    if(!first)
+    if(!first) {
       output_node(diff_modified_end, SES_INSERT, is_replace);
+    }
     
-    if(wstate->output_diff.back()->operation == SES_INSERT)
+    if(wstate->output_diff.back()->operation == SES_INSERT) {
       output_node(diff_modified_end, SES_INSERT);
+    }
 
     rbuf_modified->last_output = end_modified;
 

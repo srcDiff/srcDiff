@@ -89,22 +89,25 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
       && start_modified == end_modified && start_modified >= 0 && end_modified < (signed)node_sets_modified.size()) {
 
       if(is_identifier(out.nodes_original().at(node_sets_original.at(start_original).at(0))->name)
-         && is_identifier(out.nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name))
+         && is_identifier(out.nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name)) {
          output_replace_inner_whitespace(node_sets_original.at(start_original).at(0), finish_original,
                                          node_sets_modified.at(start_modified).at(0), finish_modified,
                                          1);
+          }
 
        if(out.nodes_original().at(node_sets_original.at(start_original).at(0))->name == "return"
-          && out.nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "return")
+          && out.nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "return") {
           output_replace_inner_whitespace(node_sets_original.at(start_original).at(0), finish_original,
                                           node_sets_modified.at(start_modified).at(0), finish_modified,
                                           2);
+          }
 
        if(out.nodes_original().at(node_sets_original.at(start_original).at(0))->name == "throw"
-          && out.nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "throw")
+          && out.nodes_modified().at(node_sets_modified.at(start_modified).at(0))->name == "throw") {
           output_replace_inner_whitespace(node_sets_original.at(start_original).at(0), finish_original,
                                           node_sets_modified.at(start_modified).at(0), finish_modified,
                                           2);
+          }
 
     }
 
@@ -234,8 +237,9 @@ void srcdiff_many::output() {
     i = end_original;
     j = end_modified;
 
-    if(i >= original_moved.size() || j >= modified_moved.size())
+    if(i >= original_moved.size() || j >= modified_moved.size()) {
       break;
+    }
 
     if(original_moved.at(i).first == SES_COMMON && modified_moved.at(j).first == SES_COMMON) {
  

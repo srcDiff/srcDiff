@@ -28,10 +28,12 @@ static std::list<srcml_node::srcml_attr> merge_properties(const std::list<srcml_
 
     if(citr_original->name == citr_modified->name) {
 
-      if(*citr_original->value == citr_modified->value) 
+      if(*citr_original->value == citr_modified->value) {
         attributes.emplace_back(citr_original->name, *citr_original->value);
-      else
+      }
+      else {
         attributes.emplace_back(citr_original->name, *citr_original->value + std::string("|") +*citr_modified->value);
+      }
 
       ++citr_original;
       ++citr_modified;
@@ -233,14 +235,16 @@ void srcdiff_single::output_recursive_interchangeable() {
   output_change(out.last_output_original(), node_sets_modified.at(start_modified).back() + 1);
 
   out.output_node(out.diff_modified_end, SES_INSERT, true);
-  if(out.output_state() == SES_INSERT)
+  if(out.output_state() == SES_INSERT) {
     out.output_node(out.diff_modified_end, SES_INSERT);
+  }
 
   output_change(node_sets_original.at(start_original).back() + 1, out.last_output_modified());
 
   out.output_node(out.diff_original_end, SES_DELETE, true);
-  if(out.output_state() == SES_DELETE)
+  if(out.output_state() == SES_DELETE) {
       out.output_node(out.diff_original_end, SES_DELETE);
+  }
 
 }
 

@@ -129,10 +129,11 @@ bool has_internal_structure(const node_set & structure, const boost::optional<st
 
   if(!type) return false;
 
-  for(unsigned int i = 1; i < structure.size(); ++i)
+  for(unsigned int i = 1; i < structure.size(); ++i) {
     if((xmlReaderTypes)structure.nodes().at(structure.at(i))->type == XML_READER_TYPE_ELEMENT
               && structure.nodes().at(structure.at(i))->name == type)
       return true;
+  }
 
   return false;
 }
@@ -147,10 +148,11 @@ bool is_nest_type(const node_set & structure,
     if(structure.nodes().at(structure.at(0))->ns.href != SRCML_SRC_NAMESPACE_HREF)
     return true;
 
-  for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i)
+  for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i) {
     if(structure.nodes().at(structure.at(0))->name == nesting[type_index].possible_nest_items[i]
        && has_internal_structure(structure_other, structure.nodes().at(structure.at(0))->name))
       return true;
+  }
 
   return false;
 }
@@ -179,11 +181,13 @@ int srcdiff_nested::best_match(const node_sets & sets, const node_set & match) {
 
   for(unsigned int i = 0; i < sets.size(); ++i) {
 
-    if(sets.at(i).size() > match.size() && (sets.at(i).size()) > (4 * match.size()))
+    if(sets.at(i).size() > match.size() && (sets.at(i).size()) > (4 * match.size())) {
       continue;
+    }
 
-    if(match.size() > sets.at(i).size() && (match.size()) > (4 * sets.at(i).size()))
+    if(match.size() > sets.at(i).size() && (match.size()) > (4 * sets.at(i).size())) {
       continue;
+    }
 
     srcdiff_text_measure measure(sets.at(i), match);
     measure.compute();
@@ -297,10 +301,11 @@ bool has_compound_inner(const node_set & node_set_outer) {
 
   if(node_set_outer.nodes().at(node_set_outer.at(0))->is_simple) return false;
 
-  for(unsigned int i = 1; i < node_set_outer.size(); ++i)
+  for(unsigned int i = 1; i < node_set_outer.size(); ++i) {
     if((xmlReaderTypes)node_set_outer.nodes().at(node_set_outer.at(i))->type == XML_READER_TYPE_ELEMENT
       && node_set_outer.nodes().at(node_set_outer.at(i))->name == "name" && !node_set_outer.nodes().at(node_set_outer.at(i))->is_simple)
       return true;
+  }
 
   return false;
 
@@ -542,8 +547,9 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, in
 
         if(srcdiff_nested::reject_match_nested(measure,
                                                set.at(match),
-                                               node_sets_modified.at(j)))
+                                               node_sets_modified.at(j))) {
           continue;
+        }
 
         if(node_sets_modified.nodes().at(node_sets_modified.at(j).at(0))->name == "name"
           && node_sets_modified.nodes().at(node_sets_modified.at(j).at(0))->parent && (*node_sets_modified.nodes().at(node_sets_modified.at(j).at(0))->parent)->name == "expr"
@@ -554,21 +560,25 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, in
 
         if(node_sets_modified.nodes().at(node_sets_modified.at(j).at(0))->name == "name") {
 
-            if(!node_sets_modified.nodes().at(node_sets_modified.at(j).at(0))->parent || !node_sets_original.nodes().at(set.at(match).at(0))->parent)
+            if(!node_sets_modified.nodes().at(node_sets_modified.at(j).at(0))->parent || !node_sets_original.nodes().at(set.at(match).at(0))->parent) {
               continue;
+            }
 
             boost::optional<std::shared_ptr<srcml_node>> parent_original = node_sets_original.nodes().at(set.at(match).at(0))->parent;
-            while((*parent_original)->name == "name")
+            while((*parent_original)->name == "name") {
               parent_original = (*parent_original)->parent;
+            }
 
             boost::optional<std::shared_ptr<srcml_node>> parent_modified = node_sets_modified.nodes().at(node_sets_modified.at(j).at(0))->parent;
-            while((*parent_modified)->name == "name")
+            while((*parent_modified)->name == "name") {
               parent_modified = (*parent_modified)->parent;
+            }
 
             if((*parent_original)->name != (*parent_modified)->name
               && !check_nest_name(set.at(match), parent_original,
-                                  node_sets_modified.at(j), parent_modified))
+                                  node_sets_modified.at(j), parent_modified)) {
               continue;
+            }
 
         }
 
@@ -621,8 +631,9 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, in
 
         if(srcdiff_nested::reject_match_nested(measure,
                                                node_sets_original.at(j),
-                                               set.at(match)))
+                                               set.at(match))) {
           continue;
+        }
 
         if(node_sets_original.nodes().at(node_sets_original.at(j).at(0))->name == "name"
           && node_sets_original.nodes().at(node_sets_original.at(j).at(0))->parent && (*node_sets_original.nodes().at(node_sets_original.at(j).at(0))->parent)->name == "expr"
@@ -633,21 +644,25 @@ static bool check_nested_single_to_many(const node_sets & node_sets_original, in
 
         if(node_sets_original.nodes().at(node_sets_original.at(j).at(0))->name == "name") {
 
-            if(!node_sets_original.nodes().at(node_sets_original.at(j).at(0))->parent || !node_sets_modified.nodes().at(set.at(match).at(0))->parent)
+            if(!node_sets_original.nodes().at(node_sets_original.at(j).at(0))->parent || !node_sets_modified.nodes().at(set.at(match).at(0))->parent) {
               continue;
+            }
 
             boost::optional<std::shared_ptr<srcml_node>> parent_original = node_sets_original.nodes().at(node_sets_original.at(j).at(0))->parent;
-            while(parent_original && (*parent_original)->name == "name")
+            while(parent_original && (*parent_original)->name == "name") {
               parent_original = (*parent_original)->parent;
+            }
 
             boost::optional<std::shared_ptr<srcml_node>> parent_modified = node_sets_modified.nodes().at(set.at(match).at(0))->parent;
-            while(parent_modified && (*parent_modified)->name == "name")
+            while(parent_modified && (*parent_modified)->name == "name") {
               parent_modified = (*parent_modified)->parent;
+            }
 
             if((*parent_original)->name != (*parent_modified)->name
               && !check_nest_name(node_sets_original.at(j), parent_original,
-                                  set.at(match), parent_modified))
+                                  set.at(match), parent_modified)) {
               continue;
+            }
 
         }
 
@@ -749,12 +764,14 @@ bool srcdiff_nested::check_nestable_predicate(const node_sets & node_sets_outer,
         return true;
 
       boost::optional<std::shared_ptr<srcml_node>> parent_outer = set.nodes().at(match.at(0))->parent;
-      while((*parent_outer)->name == "name")
+      while((*parent_outer)->name == "name") {
         parent_outer = (*parent_outer)->parent;
+      }
 
       boost::optional<std::shared_ptr<srcml_node>> parent_inner = node_sets_inner.nodes().at(node_sets_inner.at(pos_inner).at(0))->parent;
-      while((*parent_inner)->name == "name")
+      while((*parent_inner)->name == "name") {
         parent_inner = (*parent_inner)->parent;
+      }
 
       if((*parent_outer)->name != (*parent_inner)->name
         && !check_nest_name(match, parent_outer,
@@ -819,8 +836,9 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, int st
       for(int k = j + 1; k < end_modified; ++k) {
 
         if(check_nestable_predicate(node_sets_original, i, start_original, end_original,
-                                    node_sets_modified, k, start_modified, end_modified))
+                                    node_sets_modified, k, start_modified, end_modified)) {
           continue;
+        }
 
         valid_nests_original.push_back(k);
 
@@ -841,8 +859,9 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, int st
     for(int j = start_original; j < end_original; ++j) {
 
       if(check_nestable_predicate(node_sets_modified, i, start_modified, end_modified,
-                                  node_sets_original, j, start_original, end_original))
+                                  node_sets_original, j, start_original, end_original)) {
         continue;
+      }
 
       valid_nests_modified.push_back(j);
 
@@ -852,8 +871,9 @@ void srcdiff_nested::check_nestable(const node_sets & node_sets_original, int st
       for(int k = j + 1; k < end_original; ++k) {
       
         if(check_nestable_predicate(node_sets_modified, i, start_modified, end_modified,
-                                    node_sets_original, k, start_original, end_original))
+                                    node_sets_original, k, start_original, end_original)) {
           continue;
+        }
 
         valid_nests_modified.push_back(k);
 
@@ -937,13 +957,16 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
 
   node_sets nest_set(node_sets_inner.nodes());
 
-  for(int i = start_inner; i < end_inner; ++i)
+  for(int i = start_inner; i < end_inner; ++i) {
       nest_set.push_back(node_sets_inner.at(i));
+  }
 
-  if(operation == SES_DELETE)
+  if(operation == SES_DELETE) {
     output_change(start_pos, out.last_output_modified());
-  else
+  }
+  else {
     output_change(out.last_output_original(), start_pos);
+  }
 
   if(structure_outer == "block_content") {
     whitespace.output_prefix();
@@ -969,10 +992,12 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
     whitespace.output_nested(operation);
   }
 
-  if(operation == SES_DELETE)
+  if(operation == SES_DELETE) {
     output_change(node_sets_outer.at(end_outer - 1).back() + 1, out.last_output_modified());
-  else
+  }
+  else {
     output_change(out.last_output_original(), node_sets_outer.at(end_outer - 1).back() + 1);
+  }
 
 }
 
