@@ -101,12 +101,10 @@ void sax2_color_diff::output_start_document(std::ostream & colordiff_file) {
   colordiff_file << "{\n";
   colordiff_file << "color:red;\n";
   colordiff_file << "font-weight:bold;\n";
-  //colordiff_file << "text-decoration:line-through;\n";
   colordiff_file << "}\n";
   colordiff_file << ".insert\n";
   colordiff_file << "{\n";
   colordiff_file << "color:blue;\n";
-  //colordiff_file << "text-decoration:underline;\n";
   colordiff_file << "font-weight:bold;\n";
   colordiff_file << "}\n";
   colordiff_file << ".move\n";
@@ -164,10 +162,8 @@ void sax2_color_diff::output_start_document(std::ostream & colordiff_file) {
   colordiff_file << "<div class=\"key\">\n";
   colordiff_file << "<span title=\"Line delete background color\" class=\"" << diff_color_delete << "\"><cite>diff</cite> Delete</span>\n";
   colordiff_file << "<span title=\"srcDiff delete font color\" class=\"" << delete_color << "\"><cite>srcDiff</cite> Delete</span>\n";
-  //colordiff_file << "<span title=\"Line delete background color with srcDiff delete font color\" class=\"" << delete_color << " " << diff_color_delete << "\"><cite>diff</cite> &amp; <cite>srcDiff</cite> Delete</span>\n";
   colordiff_file << "<span title=\"Line delete background color\" class=\"" << diff_color_insert << "\"><cite>diff</cite> Insert</span>\n";
   colordiff_file << "<span title=\"srcDiff delete font color\" class=\"" << insert_color << "\"><cite>srcDiff</cite> Insert</span>\n";
-  //colordiff_file << "<span title=\"Line insert background color with srcDiff insert font color\" class=\"" << insert_color << " " << diff_color_insert << "\"><cite>diff</cite> &amp; <cite>srcDiff</cite> Insert</span>\n";
   colordiff_file << "<span title=\"Line change background color\" class=\"" << diff_color_change << "\"><cite>diff</cite> Change</span>\n";
   colordiff_file << "<span title=\"Move Font\" class=\"" << move << "\"><cite>srcDiff</cite>  Move</span>\n";
   colordiff_file << "</div>\n\n";
@@ -191,16 +187,18 @@ void sax2_color_diff::startDocument(void* ctx) {
 
   std::vector<std::string> path_one;
   int start = 0, end = 0;
-  for(; (end = data->file_one.find("/", start)) != (signed)std::string::npos; start = end + 1)
+  for(; (end = data->file_one.find("/", start)) != (signed)std::string::npos; start = end + 1) {
     path_one.push_back(data->file_one.substr(start, end - start));
+  }
 
   std::string file_name_one = data->file_one.substr(start);
 
   std::vector<std::string> path_two;
   start = 0;
   end = 0;
-  for(; (end = data->file_two.find("/", start)) != (signed)std::string::npos; start = end + 1)
+  for(; (end = data->file_two.find("/", start)) != (signed)std::string::npos; start = end + 1) {
     path_two.push_back(data->file_two.substr(start, end - start));
+  }
 
   std::string file_name_two = data->file_two.substr(start);
 
@@ -226,12 +224,16 @@ void sax2_color_diff::startDocument(void* ctx) {
 
     for(; edits; edits = edits->next) {
 
-      if(edits->operation == SES_DELETE)
-        for(int i = last_line; i < edits->offset_sequence_one; ++i)
+      if(edits->operation == SES_DELETE) {
+        for(int i = last_line; i < edits->offset_sequence_one; ++i) {
           file_name += path_one.at(i) + "/";
-      else if(edits->operation == SES_INSERT)
-        for(int i = last_line; i < edits->offset_sequence_one + 1; ++i)
+        }
+      }
+      else if(edits->operation == SES_INSERT) {
+        for(int i = last_line; i < edits->offset_sequence_one + 1; ++i) {
           file_name += path_one.at(i) + "/";
+        }
+      }
 
       if(is_change(edits)) {
 
@@ -239,32 +241,22 @@ void sax2_color_diff::startDocument(void* ctx) {
         file_name += "{";
         file_name += "</span>";
 
-        //file_name += "<span class=\"";
-        //file_name += delete_color;
-        //file_name += "\">";
-
         int i;
-        for(i = edits->offset_sequence_one; i < edits->length - 1; ++i)
+        for(i = edits->offset_sequence_one; i < edits->length - 1; ++i) {
           file_name += path_one.at(i) + "/";
+        }
 
         file_name += path_one.at(i);
-
-        //file_name += "</span>";
 
         file_name += "<span class=\"or\">";
         file_name += ",";
         file_name += "</span>";
 
-        //file_name += "<span class=\"";
-        //file_name += insert_color;
-        //file_name += "\">";
-
-        for(i = edits->next->offset_sequence_two; i < edits->next->length - 1; ++i)
+        for(i = edits->next->offset_sequence_two; i < edits->next->length - 1; ++i) {
           file_name += path_two.at(i) + "/";
+        }
 
         file_name += path_two.at(i);
-
-        //file_name += "</span>";
 
         file_name += "<span class=\"or\">";
         file_name += "}";
@@ -291,17 +283,12 @@ void sax2_color_diff::startDocument(void* ctx) {
           file_name += ",";
           file_name += "</span>";
 
-          //file_name += "<span class=\"";
-          //file_name += insert_color;
-          //file_name += "\">";
-
           int i;
-          for(i = edits->offset_sequence_two; i < edits->length - 1; ++i)
+          for(i = edits->offset_sequence_two; i < edits->length - 1; ++i) {
             file_name += path_two.at(i) + "/";
+          }
 
           file_name += path_two.at(i);
-
-          //file_name += "</span>";
 
           file_name += "<span class=\"or\">";
           file_name += "}";
@@ -322,17 +309,12 @@ void sax2_color_diff::startDocument(void* ctx) {
           file_name += "{";
           file_name += "</span>";
 
-          //file_name +=  "<span class=\"";
-          //file_name += delete_color;
-          //file_name += "\">";
-
           int i;
-          for(i = edits->offset_sequence_one; i < edits->length - 1; ++i)
+          for(i = edits->offset_sequence_one; i < edits->length - 1; ++i) {
             file_name += path_one.at(i) + "/";
+          }
 
           file_name += path_one.at(i);
-
-          //file_name += "</span>";
 
           file_name += "<span class=\"or\">";
           file_name += ",";
@@ -354,32 +336,26 @@ void sax2_color_diff::startDocument(void* ctx) {
 
     }
 
-    for(int i = last_line; i < (signed)path_one.size(); ++i)
+    for(int i = last_line; i < (signed)path_one.size(); ++i) {
       file_name += path_one.at(i) + "/";
+    }
 
-    if(file_name_one == file_name_two)
+    if(file_name_one == file_name_two) {
       file_name += file_name_one;
+    }
     else {
 
       file_name += "<span class=\"or\">";
       file_name += "{";
       file_name += "</span>";
 
-      //file_name += "<span class=\"";
-      //file_name += delete_color;
-      //file_name += "\">";
       file_name += file_name_one;
-      //file_name += "</span>";
 
       file_name += "<span class=\"or\">";
       file_name += ",";
       file_name += "</span>";
 
-      //file_name += "<span class=\"";
-      //file_name += insert_color;
-      //file_name += "\">";
       file_name += file_name_two;
-      //file_name += "</span>";
 
       file_name += "<span class=\"or\">";
       file_name += "}";
@@ -390,18 +366,12 @@ void sax2_color_diff::startDocument(void* ctx) {
   } else {
 
 
-    //file_name +=  "<span class=\"";
-    //file_name += delete_color;
-    //file_name += "\">";
-
     for(unsigned int i = 0; i < path_one.size(); ++i) {
 
       file_name += path_one.at(i);
       file_name += "/";
 
     }
-
-    //file_name += "</span>";
 
     for(unsigned int i = 0; i < path_two.size(); ++i) {
 
@@ -414,23 +384,18 @@ void sax2_color_diff::startDocument(void* ctx) {
     file_name += "{";
     file_name += "</span>";
 
-    if(data->file_one != "")
+    if(data->file_one != "") {
       file_name += file_name_one;
+    }
 
 
     file_name += "<span class=\"or\">";
     file_name += ",";
     file_name += "</span>";
 
-    //file_name += "<span class=\"";
-    //file_name += insert_color;
-    //file_name += "\">";
-
-    if(data->file_two != "")
+    if(data->file_two != "") {
       file_name += file_name_two;
-
-    //file_name += "</span>";
-
+    }
 
     file_name += "<span class=\"or\">";
     file_name += "}";
@@ -443,14 +408,17 @@ void sax2_color_diff::startDocument(void* ctx) {
 
   std::string span_class = "class=\"";
   bool is_srcdiff = false;
-  if(data->in_diff->back() == SES_COMMON)
+  if(data->in_diff->back() == SES_COMMON) {
     span_class += common_color;
+  }
   else {
 
-    if(data->in_diff->back() == SES_DELETE)
+    if(data->in_diff->back() == SES_DELETE) {
       span_class += delete_color;
-    else
+    }
+    else {
       span_class += insert_color;
+    }
 
     is_srcdiff = true;
 
@@ -518,8 +486,6 @@ void sax2_color_diff::endDocument(void* ctx) {
   xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr)ctx;
   struct sax2_color_diff::source_diff * data = (sax2_color_diff::source_diff *)ctxt->_private;
 
-  //fprintf(stderr, "%s\n\n", __FUNCTION__);
-
   if(data->spanning) {
 
     data->colordiff_file << "</span>";
@@ -538,12 +504,15 @@ void sax2_color_diff::startElementNs(void* ctx, const xmlChar* localname, const 
 
   if((const char *)URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
-    if(strcmp((const char *)localname, "common") == 0)
+    if(strcmp((const char *)localname, "common") == 0) {
       data->in_diff->push_back(SES_COMMON);
-    else if(strcmp((const char *)localname, "delete") == 0)
+    }
+    else if(strcmp((const char *)localname, "delete") == 0) {
       data->in_diff->push_back(SES_DELETE);
-    else if(strcmp((const char *)localname, "insert") == 0)
+    }
+    else if(strcmp((const char *)localname, "insert") == 0) {
       data->in_diff->push_back(SES_INSERT);
+    }
 
     if(nb_attributes && strcmp((const char *)attributes[0], "move") == 0) {
 
@@ -585,14 +554,17 @@ void sax2_color_diff::characters(void* ctx, const xmlChar* ch, int len) {
   std::string span_class = "class=\"";
 
   bool is_srcdiff = false;
-  if(data->in_diff->back() == SES_COMMON)
+  if(data->in_diff->back() == SES_COMMON) {
     span_class += common_color;
+  }
   else {
 
-    if(data->in_diff->back() == SES_DELETE)
+    if(data->in_diff->back() == SES_DELETE) {
       span_class += delete_color;
-    else
+    }
+    else {
       span_class += insert_color;
+    }
 
     is_srcdiff = true;
 
@@ -667,14 +639,18 @@ void sax2_color_diff::characters(void* ctx, const xmlChar* ch, int len) {
 
       }
 
-      if ((char)ch[i] == '&')
+      if ((char)ch[i] == '&') {
         data->colordiff_file << "&amp;";
-      else if ((char)ch[i] == '<')
+      }
+      else if ((char)ch[i] == '<') {
         data->colordiff_file << "&lt;";
-      else if ((char)ch[i] == '>')
+      }
+      else if ((char)ch[i] == '>') {
         data->colordiff_file << "&gt;";
-      else if((char)ch[i] != '\n')
+      }
+      else if((char)ch[i] != '\n') {
         data->colordiff_file << (char)ch[i];
+      }
 
     }
 
@@ -738,11 +714,6 @@ void sax2_color_diff::characters(void* ctx, const xmlChar* ch, int len) {
 
         if(data->spanning) {
 
-          //data->colordiff_file << "</span>";
-
-          //data->spanning = false;
-
-
         }
 
         data->colordiff_file << "<span class=\"" << normal_color << "\">";
@@ -773,16 +744,10 @@ void sax2_color_diff::characters(void* ctx, const xmlChar* ch, int len) {
 
             if(data->spanning) {
 
-              //data->colordiff_file << "</span>";
-
-              //data->spanning = false;
             }
 
             data->colordiff_file << "<span class=\"line\">" << data->line_original << "-" << data->line_modified << "</span>";
             data->is_line_output = true;
-            //data->colordiff_file << "<span " << span_out.c_str() << ">";
-            //data->spanning = true;
-
           }
 
         }
@@ -793,14 +758,17 @@ void sax2_color_diff::characters(void* ctx, const xmlChar* ch, int len) {
 
     span_class = "class=\"";
 
-    if(data->in_diff->back() == SES_COMMON)
+    if(data->in_diff->back() == SES_COMMON) {
       span_class += common_color;
+    }
     else {
 
-      if(data->in_diff->back() == SES_DELETE)
+      if(data->in_diff->back() == SES_DELETE) {
         span_class += delete_color;
-      else
+      }
+      else {
         span_class += insert_color;
+      }
 
       is_srcdiff = true;
 
@@ -814,6 +782,5 @@ void sax2_color_diff::characters(void* ctx, const xmlChar* ch, int len) {
 
 void sax2_color_diff::comment(void* ctx, const xmlChar* ch) {
 
-  // fprintf(stderr, "%s\n\n", __FUNCTION__);
 }
 

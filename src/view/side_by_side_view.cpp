@@ -58,11 +58,13 @@ void side_by_side_view::output_characters(const std::string & ch, int operation)
   bool is_ignore = false;
   if(!ch.empty() && isspace(ch[0])) {
 
-    if(ignore_all_whitespace)
+    if(ignore_all_whitespace) {
       real_operation = view_t::COMMON;
+    }
 
-    if(ignore_all_whitespace || ignore_whitespace)
+    if(ignore_all_whitespace || ignore_whitespace) {
       is_ignore = true;
+    }
 
   }
 
@@ -77,40 +79,47 @@ void side_by_side_view::output_characters(const std::string & ch, int operation)
 
   if(operation != view_t::INSERT) {
 
-    if(change_starting_line_original && !ch.empty() && !isspace(ch[0]))
+    if(change_starting_line_original && !ch.empty() && !isspace(ch[0])) {
       change_starting_line_original = false;
+    }
 
     if(ignore_whitespace && change_starting_line_original
-       && operation != view_t::COMMON)
+       && operation != view_t::COMMON) {
       real_operation = view_t::COMMON;
+    }
 
     output_characters_to_buffer(*std::get<STREAM>(original_lines.back()),
                                 ch, real_operation, last_character_operation_original,
                                 std::get<CLOSE_SPANS>(original_lines.back()));
-    if(!save_name)
+    if(!save_name) {
       std::get<OPERATION>(original_lines.back()) += size;
+    }
 
   }
 
   if(operation != view_t::DELETE) {
 
-    if(change_starting_line_modified && !ch.empty() && !isspace(ch[0]))
+    if(change_starting_line_modified && !ch.empty() && !isspace(ch[0])) {
       change_starting_line_modified = false;
+    }
 
     if(ignore_whitespace && change_starting_line_modified
-       && operation != view_t::COMMON)
+       && operation != view_t::COMMON) {
       real_operation = view_t::COMMON;
+    }
 
     output_characters_to_buffer(*std::get<STREAM>(modified_lines.back()),
                                 ch, real_operation, last_character_operation_modified,
                                 std::get<CLOSE_SPANS>(modified_lines.back()));
-    if(!save_name)
+    if(!save_name) {
       std::get<OPERATION>(modified_lines.back()) += size;
+    }
 
   }
 
-  if(!is_ignore)
+  if(!is_ignore) {
     line_operations.back() |= operation;
+  }
 
 }
 
@@ -206,8 +215,9 @@ void side_by_side_view::output_html() {
 void side_by_side_view::output_bash() {
 
     int max_width = 0;
-    for(const std::tuple<std::shared_ptr<std::ostringstream>, int, unsigned int, size_t> & line : original_lines)
+    for(const std::tuple<std::shared_ptr<std::ostringstream>, int, unsigned int, size_t> & line : original_lines) {
       max_width = std::max(max_width, std::get<OPERATION>(line));
+    }
 
     for(int i = 0; i < original_lines.size(); ++i) {
 
@@ -216,16 +226,21 @@ void side_by_side_view::output_bash() {
       std::string fill(max_width - std::get<OPERATION>(original_lines[i]), ' ');
       (*output) << theme->common_color << fill;
 
-      if(line_operations[i] == view_t::DELETE)
+      if(line_operations[i] == view_t::DELETE) {
         (*output) << " < ";
-      else if(line_operations[i] == view_t::INSERT)
+      }
+      else if(line_operations[i] == view_t::INSERT) {
         (*output) << " > ";
-      else if(line_operations[i] == view_t::COMMON)
+      }
+      else if(line_operations[i] == view_t::COMMON) {
         (*output) << "   ";
-      else if(line_operations[i] == 0)
+      }
+      else if(line_operations[i] == 0) {
         (*output) << "   ";
-      else
+      }
+      else {
         (*output) << " | ";
+      }
 
       (*output) << std::get<STREAM>(modified_lines[i])->str();
 
@@ -244,20 +259,25 @@ void side_by_side_view::start_element(const std::string & local_name,
 
   if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
-    if(local_name == "common")
+    if(local_name == "common") {
      diff_stack.push_back(view_t::COMMON);
-    else if(local_name == "delete")
+    }
+    else if(local_name == "delete") {
      diff_stack.push_back(view_t::DELETE);
-    else if(local_name == "insert")
+    }
+    else if(local_name == "insert") {
      diff_stack.push_back(view_t::INSERT);
+    }
 
     if(local_name != "ws") {
 
-      if(diff_stack.back() != view_t::INSERT)
+      if(diff_stack.back() != view_t::INSERT) {
         change_starting_line_original = true;
+      }
    
-      if(diff_stack.back() != view_t::DELETE)
+      if(diff_stack.back() != view_t::DELETE) {
         change_starting_line_modified = true;
+      }
 
     }
       
@@ -270,8 +290,9 @@ void side_by_side_view::end_element(const std::string & local_name, const char *
 
   if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
-    if(local_name == "common" || local_name == "delete" || local_name == "insert")
+    if(local_name == "common" || local_name == "delete" || local_name == "insert") {
       diff_stack.pop_back();
+    }
 
   }
 
@@ -304,10 +325,12 @@ void side_by_side_view::characters(const char * ch, int len) {
 
       if(!ignore_all_whitespace && !ignore_whitespace) {
 
-        if(diff_stack.back() != view_t::COMMON)
+        if(diff_stack.back() != view_t::COMMON) {
           output_characters(CARRIAGE_RETURN_SYMBOL, diff_stack.back());
-        else
+        }
+        else {
           line_operations.back() |= view_t::COMMON;
+        }
 
       } else {
 
@@ -315,11 +338,13 @@ void side_by_side_view::characters(const char * ch, int len) {
 
       }
 
-      if(diff_stack.back() != view_t::INSERT)
+      if(diff_stack.back() != view_t::INSERT) {
         ++std::get<LINE_INCR>(original_lines.back());
+      }
 
-      if(diff_stack.back() != view_t::DELETE)
+      if(diff_stack.back() != view_t::DELETE) {
         ++std::get<LINE_INCR>(modified_lines.back());
+      }
 
       add_new_line();
       continue;
@@ -331,10 +356,12 @@ void side_by_side_view::characters(const char * ch, int len) {
       std::string str;
       do {
 
-        if(ch[i] == '\t')
+        if(ch[i] == '\t') {
           str.append(side_by_side_tab_size, ' ');
-        else
+        }
+        else {
           str.append(1, ch[i]);
+        }
 
         ++i;
 
@@ -356,8 +383,9 @@ void side_by_side_view::characters(const char * ch, int len) {
         output = false;
       }
 
-      if(output)
+      if(output) {
         output_characters(str, diff_stack.back());
+      }
 
     } else {
 
@@ -431,9 +459,11 @@ void side_by_side_view::end_unit(const std::string & local_name, const char * pr
 
   }
 
-  if(is_html)
+  if(is_html) {
     output_html();
-  else
+  }
+  else {
     output_bash();
+  }
 
 }
