@@ -97,10 +97,13 @@ bool compare_identifier_map(const std::pair<versioned_string, std::multiset<vers
     std::map<versioned_string, std::multiset<versioned_string>> identifier_set;                                          \
     std::map<versioned_string, std::multiset<versioned_string>> identifier_list;                                         \
     for(const std::pair<std::string, std::map<versioned_string,                                                          \
-        std::multiset<versioned_string>>> & identifier_map : PROFILE->identifiers)                                       \
-            for(const std::pair<versioned_string, std::multiset<versioned_string>> & identifier : identifier_map.second) \
-                if(is_candidate_name_change(identifier.first, identifier.second, 0))                                     \
+        std::multiset<versioned_string>>> & identifier_map : PROFILE->identifiers) {                                     \
+            for(const std::pair<versioned_string, std::multiset<versioned_string>> & identifier : identifier_map.second) { \
+                if(is_candidate_name_change(identifier.first, identifier.second, 0)) {                                   \
                     identifier_list[identifier.first] = identifier.second;                                               \
+                }                                                                                                        \
+            }                                                                                                            \
+        }                                                                                                                \
     std::set_difference(identifier_list.begin(), identifier_list.end(),                                                  \
                         output_identifiers.begin(), output_identifiers.end(),                                            \
                         std::inserter(identifier_set, identifier_set.begin()), compare_identifier_map);
@@ -198,24 +201,33 @@ void summary_list::statement_dispatch(const std::shared_ptr<profile_t> & profile
 
     } else {
 
-        if(is_jump(child_change_profile->type_name))
+        if(is_jump(child_change_profile->type_name)) {
             jump(child_change_profile);
-        else if(is_condition_type(child_change_profile->type_name))
+        }
+        else if(is_condition_type(child_change_profile->type_name)) {
             conditional(child_change_profile);
-        else if(child_change_profile->type_name == "else")
+        }
+        else if(child_change_profile->type_name == "else") {
             else_clause(child_change_profile);
-        else if(is_expr_stmt(child_change_profile->type_name))
+        }
+        else if(is_expr_stmt(child_change_profile->type_name)) {
             expr_stmt(child_change_profile);
-        else if(is_decl_stmt(child_change_profile->type_name))
+        }
+        else if(is_decl_stmt(child_change_profile->type_name)) {
             decl_stmt(child_change_profile);
-        else if(is_exception_handling(child_change_profile->type_name))
+        }
+        else if(is_exception_handling(child_change_profile->type_name)) {
             exception(child_change_profile);
-        else if(is_label(child_change_profile->type_name))
+        }
+        else if(is_label(child_change_profile->type_name)) {
             label(child_change_profile);
-        else if(is_expr_block(child_change_profile->type_name))
+        }
+        else if(is_expr_block(child_change_profile->type_name)) {
             block(child_change_profile);
-        else if(child_change_profile->type_name == "macro")
+        }
+        else if(child_change_profile->type_name == "macro") {
             macro(child_change_profile);
+        }
 
 
     }
@@ -304,24 +316,29 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
                     for(; start_pos > 0 && list[end_pos].second == SRCDIFF_COMMON; --end_pos)
                         ;
 
-                    if(start_pos > 0 && list[start_pos - 1].second == SRCDIFF_COMMON && identifier_utilities::is_identifier_char(list[start_pos - 1].first[0]))
+                    if(start_pos > 0 && list[start_pos - 1].second == SRCDIFF_COMMON && identifier_utilities::is_identifier_char(list[start_pos - 1].first[0])) {
                         --start_pos;
+                    }
 
-                    if((end_pos + 1) < list.size() && list[end_pos + 1].second == SRCDIFF_COMMON && identifier_utilities::is_identifier_char(list[end_pos + 1].first[0]))
+                    if((end_pos + 1) < list.size() && list[end_pos + 1].second == SRCDIFF_COMMON && identifier_utilities::is_identifier_char(list[end_pos + 1].first[0])) {
                         ++end_pos;
+                    }
 
                     versioned_string extended_name_change;
-                    for(std::vector<std::pair<std::string, srcdiff_type>>::size_type i = start_pos; i <= end_pos; ++i)
+                    for(std::vector<std::pair<std::string, srcdiff_type>>::size_type i = start_pos; i <= end_pos; ++i) {
                         extended_name_change.append(list[i].first.c_str(), list[i].first.size(), list[i].second);
+                    }
 
                     name_change_identifiers.emplace_back(use_itr->first, extended_name_change);
                     ++use_itr;
 
-                    if(name_change_identifiers.back().first.has_original())
+                    if(name_change_identifiers.back().first.has_original()) {
                         profile_identifiers[name_change_identifiers.back().first.original()].erase(name_change_identifiers.back().first);
+                    }
 
-                    if(name_change_identifiers.back().first.has_modified())
+                    if(name_change_identifiers.back().first.has_modified()) {
                         profile_identifiers[name_change_identifiers.back().first.modified()].erase(name_change_identifiers.back().first);
+                    }
 
                 } else if(use_itr->first.has_original() && use_itr->first.has_modified()) {
 
@@ -333,9 +350,11 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
                 } else {
 
                     std::multiset<versioned_string>::const_iterator citr = use_itr->second.begin();
-                    for(; citr != use_itr->second.end(); ++citr)
-                        if(!citr->is_common() && citr->has_original() && citr->has_modified())
+                    for(; citr != use_itr->second.end(); ++citr) {
+                        if(!citr->is_common() && citr->has_original() && citr->has_modified()) {
                             break;
+                        }
+                    }
 
                     versioned_string extended_name_change = use_itr->first;
                     if(citr != use_itr->second.end()) {
@@ -369,31 +388,38 @@ void summary_list::identifiers(std::map<std::string, std::set<versioned_string>>
                         }
 
                         std::vector<std::pair<std::string, srcdiff_type>>::size_type start_pos = pos;
-                        if(start_pos > 0 && list[start_pos - 1].second == operation && !identifier_utilities::is_identifier_char(list[start_pos - 1].first[0]))
+                        if(start_pos > 0 && list[start_pos - 1].second == operation && !identifier_utilities::is_identifier_char(list[start_pos - 1].first[0])) {
                             --start_pos;
-                        if(start_pos > 0 && list[start_pos - 1].second == SRCDIFF_COMMON)
+                        }
+                        if(start_pos > 0 && list[start_pos - 1].second == SRCDIFF_COMMON) {
                             --start_pos;
+                        }
 
                         std::vector<std::pair<std::string, srcdiff_type>>::size_type end_pos = pos;
-                        if((end_pos + 1) < list.size() && list[end_pos + 1].second == operation && !identifier_utilities::is_identifier_char(list[end_pos + 1].first[0]))
+                        if((end_pos + 1) < list.size() && list[end_pos + 1].second == operation && !identifier_utilities::is_identifier_char(list[end_pos + 1].first[0])) {
                             ++end_pos;
-                        if((end_pos + 1) < list.size() && list[end_pos + 1].second == SRCDIFF_COMMON)
+                        }
+                        if((end_pos + 1) < list.size() && list[end_pos + 1].second == SRCDIFF_COMMON) {
                             ++end_pos;
+                        }
 
                         extended_name_change = versioned_string();
-                        for(std::vector<std::pair<std::string, srcdiff_type>>::size_type i = start_pos; i <= end_pos; ++i)
+                        for(std::vector<std::pair<std::string, srcdiff_type>>::size_type i = start_pos; i <= end_pos; ++i) {
                             extended_name_change.append(list[i].first.c_str(), list[i].first.size(), list[i].second);
+                        }
 
                     }
 
                     name_change_identifiers.emplace_back(use_itr->first, extended_name_change);
                     ++use_itr;
 
-                    if(name_change_identifiers.back().first.has_original())
+                    if(name_change_identifiers.back().first.has_original()) {
                         profile_identifiers[name_change_identifiers.back().first.original()].erase(name_change_identifiers.back().first);
+                    }
 
-                    if(name_change_identifiers.back().first.has_modified())
+                    if(name_change_identifiers.back().first.has_modified()) {
                         profile_identifiers[name_change_identifiers.back().first.modified()].erase(name_change_identifiers.back().first);
+                    }
 
                 }
 
@@ -438,17 +464,21 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
 
         if(is_condition_type(replace_profile->type_name)) {
 
-            if(replace_profile->operation == SRCDIFF_DELETE)
+            if(replace_profile->operation == SRCDIFF_DELETE) {
                 entity_deleted["conditional"].push_back(replace_profile);
-            else
+            }
+            else {
                 entity_inserted["conditional"].push_back(replace_profile);
+            }
 
         } else {
 
-            if(replace_profile->operation == SRCDIFF_DELETE)
+            if(replace_profile->operation == SRCDIFF_DELETE) {
                 entity_deleted[replace_profile->type_name].push_back(replace_profile);
-            else
+            }
+            else {
                 entity_inserted[replace_profile->type_name].push_back(replace_profile);
+            }
 
         }
 
@@ -487,13 +517,16 @@ void summary_list::replace(const std::shared_ptr<profile_t> & profile, size_t & 
         if(number_syntax_deletions) {
             single_profile = entity_deleted.begin()->second.back();
         }
-        else
+        else {
             single_profile = entity_inserted.begin()->second.back();
+        }
 
-        if(number_syntax_deletions == 1)
+        if(number_syntax_deletions == 1) {
             summaries_.emplace_back(new replace_summary_t(1, get_type_string(single_profile), entity_deleted["comment"].size(), 0, std::string(), entity_inserted["comment"].size()));
-        else
+        }
+        else {
             summaries_.emplace_back(new replace_summary_t(0, std::string(), entity_deleted["comment"].size(), 1, get_type_string(single_profile), entity_inserted["comment"].size()));
+        }
 
         return;
 
@@ -571,8 +604,9 @@ void summary_list::interchange(const std::shared_ptr<profile_t> & profile) {
     if(!has_body(profile->type_name.original())) return;
 
     std::shared_ptr<profile_t> summary_profile = profile;
-    if(profile->type_name.original() == "elseif" || profile->type_name.modified() == "elseif")
+    if(profile->type_name.original() == "elseif" || profile->type_name.modified() == "elseif") {
         summary_profile = profile->child_change_profiles[0];
+    }
 
     block(summary_profile);
 
@@ -603,8 +637,9 @@ void summary_list::else_clause(const std::shared_ptr<profile_t> & profile) {
 
     assert(profile->type_name == "else");
 
-    if(profile->operation != SRCDIFF_COMMON)
+    if(profile->operation != SRCDIFF_COMMON) {
         summaries_.emplace_back(new conditional_summary_t(profile->operation, get_type_string(profile), false));
+    }
 
     identifiers(profile->declarations, profile->identifiers);
 
@@ -627,11 +662,13 @@ void summary_list::conditional(const std::shared_ptr<profile_t> & profile) {
     const std::shared_ptr<profile_t> & summary_profile = profile->type_name == "elseif" && profile->child_change_profiles.size() == 1
         && profile->child_change_profiles[0]->type_name == "if" ? profile->child_change_profiles[0] : profile;
 
-    if(condition_modified || (summary_profile->operation != SRCDIFF_COMMON && !is_internal))
+    if(condition_modified || (summary_profile->operation != SRCDIFF_COMMON && !is_internal)) {
         summaries_.emplace_back(new conditional_summary_t(summary_profile->operation, get_type_string(summary_profile), condition_modified));
+    }
 
-    if(summary_profile->identifiers.size() > 0)
+    if(summary_profile->identifiers.size() > 0) {
         identifiers(summary_profile->declarations, summary_profile->identifiers);
+    }
 
     block(summary_profile);
 
@@ -650,8 +687,9 @@ bool summary_list::identifier_check(const std::shared_ptr<profile_t> & profile, 
 
             bool is_found = is_name_change(identifier_profile, identifier_set);
 
-            if(is_found)
+            if(is_found) {
                 identifier_renames.insert(identifier_profile->name);
+            }
 
 
         } else if(child_change_profile->operation != SRCDIFF_COMMON) {
@@ -773,8 +811,9 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
                     bool is_found = is_name_change(call_profile->name, identifier_set);
 
-                    if(!is_found)
+                    if(!is_found) {
                         report_name = false;
+                    }
 
                     identifier_rename_only = false;
 
@@ -789,8 +828,9 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
                     number_arguments_deleted  += number_deleted;
                     number_arguments_inserted += number_inserted;
 
-                    if(number_deleted != 0 || number_inserted != 0)
+                    if(number_deleted != 0 || number_inserted != 0) {
                         identifier_rename_only = false;
+                    }
 
                     bool report_change = false;
                     std::for_each(call_profile->arguments.lower_bound(SRCDIFF_COMMON), call_profile->arguments.upper_bound(SRCDIFF_COMMON),
@@ -855,13 +895,15 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
                             }
 
-                            if(report_change)
+                            if(report_change) {
                                ++number_arguments_modified;
+                            }
 
                         });
 
-                    if(number_deleted == 0 && number_inserted == 0 && !report_change)
+                    if(number_deleted == 0 && number_inserted == 0 && !report_change) {
                         report_argument_list = false;
+                    }
 
                 }
 
@@ -877,10 +919,12 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
             if(child_change_profile->operation != SRCDIFF_COMMON) {
 
-                if(child_change_profile->operation == SRCDIFF_DELETE)
+                if(child_change_profile->operation == SRCDIFF_DELETE) {
                     deleted_other.push_back(child_change_profile);
-                else
+                }
+                else {
                     inserted_other.push_back(child_change_profile);
+                }
 
                 identifier_rename_only = false;
 
@@ -918,8 +962,9 @@ void summary_list::expr_statistics(const std::shared_ptr<profile_t> & profile, c
 
                     bool is_found = is_name_change(identifier_profile, identifier_set);
 
-                    if(is_found)
+                    if(is_found) {
                         identifier_renames.insert(identifier_profile->name);
+                    }
 
 
                 }
@@ -946,9 +991,10 @@ void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) 
 
     if(no_expr_syntax_change()) return;
 
-    if(expr_stmt_profile->call())
+    if(expr_stmt_profile->call()) {
         return call_sequence(profile, renamed_calls.size(), number_arguments_deleted, number_arguments_inserted, number_arguments_modified,
                              modified_argument_lists.size(), identifier_rename_only, identifier_renames);
+    }
 
     size_t number_change_types = 0, number_call_types = 0, number_other_types = 0;
     if(deleted_calls.size() != 0)           ++number_change_types, ++number_call_types;
@@ -965,12 +1011,14 @@ void summary_list::common_expr_stmt(const std::shared_ptr<profile_t> & profile) 
 
     } else if(number_change_types == 1 && number_call_types == 1) {
 
-        if(modified_argument_lists.size() <= 1)
+        if(modified_argument_lists.size() <= 1) {
             summaries_.emplace_back(new 
                 expr_stmt_calls_summary_t(get_type_string(profile), deleted_calls.size(), inserted_calls.size(), renamed_calls.size(),
                                           modified_argument_lists.size(), number_arguments_deleted, number_arguments_inserted, number_arguments_modified));
-        else
+        }
+        else {
             summaries_.emplace_back(new expr_stmt_summary_t(profile->operation, get_type_string(profile)));
+        }
 
     } else {
 
@@ -1084,18 +1132,21 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
             std::set<std::reference_wrapper<const versioned_string>, ref_version_string_compare> identifier_renames;
             bool is_identifier_only = identifier_check(decl_stmt_profile->type, identifier_set, identifier_renames);
 
-            if(!is_identifier_only || identifier_renames.size() != 0)
+            if(!is_identifier_only || identifier_renames.size() != 0) {
                 ++number_parts_report;
+            }
 
-            if(is_identifier_only && identifier_renames.size() == 1)
+            if(is_identifier_only && identifier_renames.size() == 1) {
                 identifier_rename = identifier_renames.begin()->get();
+            }
 
         }
 
         if(!decl_stmt_profile->name.is_common()) {
 
-            if(identifier_set.find(decl_stmt_profile->name) != identifier_set.end())
+            if(identifier_set.find(decl_stmt_profile->name) != identifier_set.end()) {
                 ++number_parts_report;
+            }
 
         }
 
@@ -1110,11 +1161,13 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
                 run_expr_statistics(decl_stmt_profile->init->child_change_profiles[0]);
 
                 /** @todo need to probably output if single identifier change */
-                if(is_expr_syntax_change())
+                if(is_expr_syntax_change()) {
                     ++number_parts_report;
+                }
 
-                if(identifier_rename_only && identifier_renames.size() == 1)
+                if(identifier_rename_only && identifier_renames.size() == 1) {
                     identifier_rename = identifier_renames.begin()->get();
+                }
 
             }
 
@@ -1124,13 +1177,15 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
 
     }
 
-    if(number_parts_report == 1 && bool(identifier_rename))
+    if(number_parts_report == 1 && bool(identifier_rename)) {
         summaries_.emplace_back(new identifier_summary_t(*identifier_rename, false));
-    else
+    }
+    else {
         summaries_.emplace_back(new decl_stmt_summary_t(profile->operation, decl_stmt_profile->specifiers.size() != 0,
                                                                             decl_stmt_profile->type->syntax_count > 0,
                                                                             !decl_stmt_profile->name.is_common(),
                                                                             bool(decl_stmt_profile->init) && decl_stmt_profile->init->syntax_count > 0));
+    }
 
 }
 
@@ -1138,8 +1193,9 @@ void summary_list::exception(const std::shared_ptr<profile_t> & profile) {
 
     assert(is_exception_handling(profile->type_name));
 
-    if(profile->operation != SRCDIFF_COMMON)
+    if(profile->operation != SRCDIFF_COMMON) {
         summaries_.emplace_back(new exception_summary_t(profile->operation, get_type_string(profile)));
+    }
 
     identifiers(profile->declarations, profile->identifiers);
 
@@ -1169,8 +1225,9 @@ summary_list::summary_list() {}
 
 summary_list::~summary_list() {
 
-    for(summary_t * summary : summaries_)
+    for(summary_t * summary : summaries_) {
         delete summary;
+    }
 
 }
 

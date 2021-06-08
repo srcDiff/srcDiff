@@ -88,12 +88,15 @@ summary_output_stream & text_summary::parameter(summary_output_stream & out, con
 
         }
 
-        if(parameters[pos]->operation == SRCDIFF_DELETE)
+        if(parameters[pos]->operation == SRCDIFF_DELETE) {
             ++number_parameters_deleted;
-        else if(parameters[pos]->operation == SRCDIFF_INSERT)
+        }
+        else if(parameters[pos]->operation == SRCDIFF_INSERT) {
             ++number_parameters_inserted;
-        else if(parameters[pos]->operation == SRCDIFF_COMMON)
+        }
+        else if(parameters[pos]->operation == SRCDIFF_COMMON) {
             ++number_parameters_modified;
+        }
 
     }
 
