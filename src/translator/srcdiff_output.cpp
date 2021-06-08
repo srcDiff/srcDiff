@@ -76,10 +76,12 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
 
   }
 
-  if(!is_option(flags, OPTION_BURST) || srcdiff_filename != "-")
+  if(!is_option(flags, OPTION_BURST) || srcdiff_filename != "-") {
     wstate->filename = srcdiff_filename;
-  else
+  }
+  else {
     wstate->filename = ".";
+  }
 
   diff->prefix = srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
   diff->href   = SRCDIFF_DEFAULT_NAMESPACE_HREF;
@@ -534,8 +536,9 @@ void srcdiff_output::output_node_inner(const srcml_node & node) {
     }
 
     // end now if this is an empty element
-    if (node.is_empty)
+    if (node.is_empty) {
       srcml_write_end_element(wstate->unit);
+    }
 
     break;
 

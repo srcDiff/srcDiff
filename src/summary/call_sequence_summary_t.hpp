@@ -34,10 +34,12 @@ class call_sequence_summary_t : public expr_stmt_summary_t {
 
                 out << "a " << manip::bold() << "name" << manip::normal() << " change occurred to ";
 
-                if(count == 1)
+                if(count == 1) {
                     out << "a " << manip::bold() << "call" << manip::normal();
-                else
+		}
+                else {
                     out << std::to_string(count) << ' ' << manip::bold() << "calls" << manip::normal();
+		}
 
             }
 

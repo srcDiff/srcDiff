@@ -94,10 +94,12 @@ void unified_view::output_additional_context() {
 
   if(number_context_lines != -1 && wait_change && last_context_line != (line_number_delete - 1)) {
 
-    if(!is_html)
+    if(!is_html) {
       (*output) << theme->common_color << theme->line_number_color << "@@ -" << line_delete << " +" << line_insert << " @@" << theme->common_color << '\n';
-    else
+    }
+    else {
       (*output) << "<span style=\"color:" << theme->line_number_color << ";\">@@ -" << line_delete << " +" << line_insert << " @@" << "</span>\n";
+    }
 
   }
 
@@ -130,8 +132,9 @@ void unified_view::start_unit(const std::string & local_name,
                               int num_attributes,
                               const struct srcsax_attribute * attributes) {
 
-  if(is_html)
+  if(is_html) {
     (*output) << "<pre>";
+  }
 
 }
 
@@ -148,21 +151,26 @@ void unified_view::start_element(const std::string & local_name,
 
     if(ignore_comments && in_comment) return;
 
-    if(local_name == "common")
+    if(local_name == "common") {
      diff_stack.push_back(view_t::COMMON);
-    else if(local_name == "delete")
+    }
+    else if(local_name == "delete") {
      diff_stack.push_back(DELETE);
-    else if(local_name == "insert")
+    }
+    else if(local_name == "insert") {
      diff_stack.push_back(INSERT);
-    else if(local_name == "ws" && ignore_all_whitespace)
+    }
+    else if(local_name == "ws" && ignore_all_whitespace) {
       diff_stack.push_back(view_t::COMMON);
+    }
     
   } else {
 
     if(local_name == "comment") {
 
-      if(ignore_comments)
+      if(ignore_comments) {
         diff_stack.push_back(view_t::COMMON);
+      }
 
     }
 
@@ -199,8 +207,9 @@ void unified_view::end_unit(const std::string & local_name,
     output_additional_context();
   }
 
-  if(is_html)
+  if(is_html) {
     (*output) << "</pre>";
+  }
 
 }
 
@@ -213,15 +222,17 @@ void unified_view::end_element(const std::string & local_name,
       if(ignore_comments && in_comment) return;
 
       if(local_name == "common" || local_name == "delete" || local_name == "insert"
-        || (local_name == "ws" && ignore_all_whitespace))
+        || (local_name == "ws" && ignore_all_whitespace)) {
         diff_stack.pop_back();
+      }
 
   } else {
 
     if(local_name == "comment") {
 
-      if(ignore_comments)
+      if(ignore_comments) {
         diff_stack.pop_back();
+      }
       
     }
 
@@ -265,8 +276,9 @@ void unified_view::characters(const char * ch, int len) {
   }
 
   if((last_character_operation == view_t::UNSET || last_character_operation == view_t::COMMON)
-     && diff_stack.back() != view_t::COMMON && ignore_whitespace)
+     && diff_stack.back() != view_t::COMMON && ignore_whitespace) {
     change_starting_line = true;
+  }
 
   for(int i = 0; i < len; ++i) {
 
@@ -350,8 +362,9 @@ void unified_view::characters(const char * ch, int len) {
 
       }
 
-      if(diff_stack.back() != view_t::COMMON)
+      if(diff_stack.back() != view_t::COMMON) {
         change_starting_line = true;
+      }
 
       if(is_after_change) {
 
@@ -376,8 +389,9 @@ void unified_view::characters(const char * ch, int len) {
 
       } else if(wait_change && ((in_mode(LINE) && (!in_mode(FUNCTION) || !in_function.size()) && number_context_lines != 0) || (in_mode(FUNCTION) && in_function.size()))) {
 
-        if(in_mode(LINE) && (!in_mode(FUNCTION) || !in_function.size()) && length >= number_context_lines)
+        if(in_mode(LINE) && (!in_mode(FUNCTION) || !in_function.size()) && length >= number_context_lines) {
           additional_context.pop_front(), --length;
+        }
 
         end_buffer(context, close_num_spans);
         last_character_operation = view_t::UNSET;

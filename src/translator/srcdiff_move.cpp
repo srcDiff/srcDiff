@@ -50,8 +50,9 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
         for(int i = 0; i < edits->length; ++i) {
 
-          if(node_sets_modified.nodes().at(node_sets_modified.at(edits->offset_sequence_two + i).at(0))->is_text())
+          if(node_sets_modified.nodes().at(node_sets_modified.at(edits->offset_sequence_two + i).at(0))->is_text()) {
             continue;
+          }
           node_set_lookup_table.insert(node_sets_modified.at(edits->offset_sequence_two + i));
 
         }
@@ -62,8 +63,9 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
         for(int i = 0; i < edits->length; ++i) {
 
-          if(node_sets_original.nodes().at(node_sets_original.at(edits->offset_sequence_one + i).at(0))->is_text())
+          if(node_sets_original.nodes().at(node_sets_original.at(edits->offset_sequence_one + i).at(0))->is_text()) {
             continue;
+          }
           delete_sets.push_back(&node_sets_original.at(edits->offset_sequence_one + i));
 
         }
@@ -80,11 +82,13 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
     for(lookup_iterator pos = std::get<0>(range); pos != std::get<1>(range); ++pos) {
 
-      if(is_move(*pos))
+      if(is_move(*pos)) {
         continue;
+      }
 
-      if(!(*set == *pos))
+      if(!(*set == *pos)) {
         continue;
+      }
 
       ++move_id;
       std::shared_ptr<srcml_node> start_node_one = std::make_shared<srcml_node>(*set->nodes().at(set->at(0)));

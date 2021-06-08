@@ -140,14 +140,18 @@ void outputNode(const xmlNode & node, xmlTextWriterPtr writer, bool output_ns) {
     // output the UTF-8 buffer escaping the characters.  Note that the output encoding                                                                                                                                                                                                                                                      
     // is handled by libxml                                                                                                                                                                                                                                                                                                                 
     for (unsigned char* p = (unsigned char*) node.content; *p != 0; ++p) {
-      if (*p == '&')
+      if (*p == '&') {
         xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&amp;", 5);
-      else if (*p == '<')
+      }
+      else if (*p == '<') {
         xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&lt;", 4);
-      else if (*p == '>')
+      }
+      else if (*p == '>') {
         xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) "&gt;", 4);
-      else
+      }
+      else {
         xmlTextWriterWriteRawLen(writer, BAD_CAST (unsigned char*) p, 1);
+      }
     }
     break;
 
@@ -169,9 +173,10 @@ const char * const REPLACE_ATTR_VALUE = "replace";
 
 const char * get_attr(xmlNodePtr node, const char * attribute) {
 
-  for(xmlAttrPtr attr = node->properties; attr; attr = attr->next)
+  for(xmlAttrPtr attr = node->properties; attr; attr = attr->next) {
     if(strcmp((const char *)attr->name, attribute) == 0)
       return (const char *)attr->children->content;
+  }
 
   return 0;
 
@@ -224,8 +229,9 @@ int main(int argc, char * argv[]) {
 
         node->name = (const xmlChar *)strdup(INSERT_TAG);
 
-        if(!isendelement(reader) && get_attr(node, TYPE_ATTR) && strcmp(get_attr(node, TYPE_ATTR), REPLACE_ATTR_VALUE) == 0)
+        if(!isendelement(reader) && get_attr(node, TYPE_ATTR) && strcmp(get_attr(node, TYPE_ATTR), REPLACE_ATTR_VALUE) == 0) {
           is_change = true;
+        }
 
       } else if(strcmp((const char *)node->name, INSERT_TAG) == 0) {
 
@@ -238,10 +244,12 @@ int main(int argc, char * argv[]) {
 
         }
 
-        if(wait_end && isendelement(reader))
+        if(wait_end && isendelement(reader)) {
           --change_depth;
-        else if(wait_end)
+        }
+        else if(wait_end) {
           ++change_depth;
+        }
 
         if(wait_end && isendelement(reader) && change_depth == 0) {
 
@@ -254,8 +262,9 @@ int main(int argc, char * argv[]) {
 
     }
 
-    if(is_change)
+    if(is_change) {
       nodes.push_back(node);
+    }
     else {
 
       outputNode(*node, writer, output_ns);

@@ -85,8 +85,9 @@ void character_diff::output(view_t & view, const std::string & type) {
 
       }
 
-      if(last_diff_original < (signed)str.original().size())
+      if(last_diff_original < (signed)str.original().size()) {
         view.output_characters(str.original().substr(last_diff_original), view_t::COMMON);
+      }
 
 
     } else {

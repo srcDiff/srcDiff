@@ -78,14 +78,16 @@ void srcdiff_summary::process_characters() {
     if(profile_stack.back()->type_name.first_active_string() == "operator") {
 
         size_t expr_pos = profile_stack.size() - 2;
-        while(expr_pos > 0 && !is_expr(profile_stack.at(expr_pos)->type_name))
+        while(expr_pos > 0 && !is_expr(profile_stack.at(expr_pos)->type_name)) {
             --expr_pos;
+	}
 
         if(expr_pos == 0) goto no_expr;
 
         size_t expr_pos_forward = expr_stmt_pos.size() > 0 ? expr_stmt_pos.back() : profile_stack.size();
-        while(expr_pos_forward < profile_stack.size() && !is_expr(profile_stack.at(expr_pos_forward)->type_name))
+        while(expr_pos_forward < profile_stack.size() && !is_expr(profile_stack.at(expr_pos_forward)->type_name)) {
             ++expr_pos_forward;
+	}
 
         /** @todo need to make sure this actually works with complex deletes of different portions. */
         if(text[0] == '=' && (text.size() == 1 || text.back() != '=')
@@ -103,18 +105,22 @@ void srcdiff_summary::process_characters() {
 
                 for(size_t pos = text.size(); pos > 0; --pos) {
 
-                    if(collect_lhs.back().has_original() && !collect_lhs.back().original().empty() && collect_lhs.back().original().back() == text[pos - 1])
+		  if(collect_lhs.back().has_original() && !collect_lhs.back().original().empty() && collect_lhs.back().original().back() == text[pos - 1]) {
                         collect_lhs.back().original().pop_back();
+		  }
 
-                    if(collect_lhs.back().has_modified() && !collect_lhs.back().modified().empty() && collect_lhs.back().modified().back() == text[pos - 1])
+		  if(collect_lhs.back().has_modified() && !collect_lhs.back().modified().empty() && collect_lhs.back().modified().back() == text[pos - 1]) {
                         collect_lhs.back().modified().pop_back();
+		  }
                 }
 
-                while(collect_lhs.back().has_original() && !collect_lhs.back().original().empty() && isspace(collect_lhs.back().original().back()))
+                while(collect_lhs.back().has_original() && !collect_lhs.back().original().empty() && isspace(collect_lhs.back().original().back())) {
                     collect_lhs.back().original().pop_back();
+		}
 
-                while(collect_lhs.back().has_modified() && !collect_lhs.back().modified().empty() && isspace(collect_lhs.back().modified().back()))
+                while(collect_lhs.back().has_modified() && !collect_lhs.back().modified().empty() && isspace(collect_lhs.back().modified().back())) {
                     collect_lhs.back().modified().pop_back();
+		}
 
                 expr_stmt_profile->lhs(collect_lhs.back());
                 left_hand_side.back() = false;
@@ -139,11 +145,13 @@ void srcdiff_summary::process_characters() {
 
             std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(get_stmt_from_interchange(profile_stack.at(expr_stmt_pos.back()), "expr_stmt"));
 
-            if(text == "<<" && !expr_stmt_profile->assignment())
+            if(text == "<<" && !expr_stmt_profile->assignment()) {
                 expr_stmt_profile->print(true);
+	    }
 
-            if(text != "." && text != "->" && text != ".*" && text != "->*" && text != "::")
+            if(text != "." && text != "->" && text != ".*" && text != "->*" && text != "::") {
                 expr_stmt_profile->call(false);
+	    }
 
         }
 
@@ -165,8 +173,9 @@ no_expr:
             const char * save_ch = current_ch;
             for(; current_ch < (ch + len); ++current_ch) {
 
-                if(!isspace((char)*current_ch))
+	      if(!isspace((char)*current_ch)) {
                     break;
+	      }
 
             }
 
@@ -176,8 +185,9 @@ no_expr:
 
                 for(; current_ch < (ch + len); ++current_ch) {
 
-                    if(isspace((char)*current_ch))
+		  if(isspace((char)*current_ch)) {
                         break;
+		  }
 
                 }
 
@@ -279,10 +289,12 @@ srcdiff_summary::srcdiff_summary()
 srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str) 
     : srcdiff_summary() {
 
-    if(output_filename != "-")
+  if(output_filename != "-") {
       out = new std::ofstream(output_filename.c_str());
-    else
+  }
+  else {
       out = &std::cout;
+  }
 
     if(!summary_type_str || (*summary_type_str)[0] == '\0') return;
 
@@ -470,7 +482,7 @@ void srcdiff_summary::startUnit(const char * localname, const char * prefix, con
     profile_stack.back()->body = profile_stack.back();
     profile_stack.back()->summary_profile = profile_stack.back();
 
-    for(int i = 0; i < num_attributes; ++i)
+    for(int i = 0; i < num_attributes; ++i) {
         if(attributes[i].localname == std::string("filename")) {
 
             std::string file_name = attributes[i].value;
@@ -494,6 +506,7 @@ void srcdiff_summary::startUnit(const char * localname, const char * prefix, con
             break;
 
         }
+    }
 
     counting_profile_pos.emplace_back(0);
     profile_stack.back()->set_id(++id_count);
@@ -532,8 +545,9 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
     }
     full_name += local_name;
 
-    if(is_block(full_name) && (is_block(profile_stack.back()->type_name) || (profile_stack.back()->uri == SRCDIFF && is_block(profile_stack.at(profile_stack.size() - 2)->type_name))))
+    if(is_block(full_name) && (is_block(profile_stack.back()->type_name) || (profile_stack.back()->uri == SRCDIFF && is_block(profile_stack.at(profile_stack.size() - 2)->type_name)))) {
         full_name = "expr_block";
+    }
 
     uri_stack.push_back(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF ? SRCDIFF : (URI == SRCML_SRC_NAMESPACE_HREF ? SRC : CPP));
 
@@ -545,8 +559,9 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
     bool then_clause_child = profile_stack.size() > 1
         && (profile_stack.back()->type_name == "then" || profile_stack.at(profile_stack.size() - 2)->type_name == "then")
         && is_if(profile_stack.at(counting_profile_pos.back())->type_name);
-    if(then_clause_child && full_name != "block" && full_name != "comment" && full_name != "break" && full_name != "continue" && full_name != "return")
+    if(then_clause_child && full_name != "block" && full_name != "comment" && full_name != "break" && full_name != "continue" && full_name != "return") {
         reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(counting_profile_pos.back()))->is_guard(false);
+    }
 
     if(uri_stack.back() == SRCDIFF) {
 
@@ -567,18 +582,22 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
 
         }
 
-        if(local_name == "common")
+        if(local_name == "common") {
             srcdiff_stack.push_back(srcdiff(SRCDIFF_COMMON, is_replace, move_id));
-        else if(local_name == "delete")
+	}
+        else if(local_name == "delete") {
             srcdiff_stack.push_back(srcdiff(SRCDIFF_DELETE, is_replace, move_id));
-        else if(local_name == "insert")
+	}
+        else if(local_name == "insert") {
             srcdiff_stack.push_back(srcdiff(SRCDIFF_INSERT, is_replace, move_id));
+	}
 
         bool is_interchange_diff = (srcml_depth > 3 && uri_stack.at(srcml_depth - 3) == SRCDIFF && srcml_element_stack.at(srcml_depth - 3) == "diff:delete"
                             && uri_stack.at(srcml_depth - 2) == SRC && uri_stack.back() == SRCDIFF && local_name == "insert");
 
-        if(srcdiff_stack.back().operation == SRCDIFF_DELETE || srcdiff_stack.back().operation == SRCDIFF_INSERT)
+        if(srcdiff_stack.back().operation == SRCDIFF_DELETE || srcdiff_stack.back().operation == SRCDIFF_INSERT) {
             profile_stack.back()->is_modified = true;
+	}
 
     }
 
@@ -617,19 +636,24 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
         profile_stack.emplace_back(make_profile(full_name, uri_stack.back(), srcdiff_stack.back().operation, profile_stack.at(counting_profile_pos.back())));
 
         size_t parent_pos = profile_stack.size() - 2;
-        while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)
+        while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF) {
             --parent_pos;
+	}
 
         profile_stack.back()->parent = profile_stack.at(parent_pos);
-        if(has_body(full_name))
+        if(has_body(full_name)) {
             profile_stack.back()->body = profile_stack.back();
-        else
+	}
+        else {
             profile_stack.back()->body = profile_stack.back()->parent->body;
+	}
 
-        if(is_summary(full_name))
+        if(is_summary(full_name)) {
             profile_stack.back()->summary_profile = profile_stack.back();
-        else
+	}
+        else {
             profile_stack.back()->summary_profile = profile_stack.back()->parent->summary_profile;
+	}
 
         if(srcdiff_stack.back().is_replace) profile_stack.back()->is_replace = true;
         if(srcdiff_stack.back().move_id && srcdiff_stack.back().level == 0 && uri_stack.back() != SRCDIFF && current_move_id < srcdiff_stack.back().move_id) {
@@ -657,8 +681,9 @@ void srcdiff_summary::startElement(const char * localname, const char * prefix, 
             signature_profile = profile_stack.back();
         }
 
-        if(is_identifier(profile_stack.back()->parent->type_name))
+        if(is_identifier(profile_stack.back()->parent->type_name)) {
             reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back()->parent)->is_simple = false;
+	}
 
         if(is_identifier(full_name)) {
 
@@ -803,8 +828,9 @@ void srcdiff_summary::endUnit(const char * localname, const char * prefix, const
 void srcdiff_summary::update_anscestor_profile(const std::shared_ptr<profile_t> & profile) {
 
     size_t parent_pos = profile_stack.size() - 2;
-    while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)
+    while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF) {
         --parent_pos;
+    }
 
     // should always have at least unit
     profile_stack.at(counting_profile_pos.back())->add_child_change(profile, profile_stack.at(parent_pos)->type_name);
@@ -865,8 +891,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         }
     }
 
-    if(is_block(full_name) && (is_block(profile_stack.at(profile_stack.size() - 2)->type_name) || (profile_stack.at(profile_stack.size() - 2)->uri == SRCDIFF && is_block(profile_stack.at(profile_stack.size() - 3)->type_name))))
+    if(is_block(full_name) && (is_block(profile_stack.at(profile_stack.size() - 2)->type_name) || (profile_stack.at(profile_stack.size() - 2)->uri == SRCDIFF && is_block(profile_stack.at(profile_stack.size() - 3)->type_name)))) {
         full_name = "expr_block";
+    }
 
     if(uri_stack.back() != SRCDIFF) {
 
@@ -877,15 +904,17 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         if(is_identifier(full_name)) {
 
             --name_count;
-            if(reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back())->is_simple)
+            if(reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back())->is_simple) {
                 simple_names.emplace(collected_simple_name);
+	    }
             collected_simple_name.clear();
 
             if(name_count == 0) {
 
                 size_t parent_pos = profile_stack.size() - 2;
-                while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF)
+                while(parent_pos > 0 && profile_stack.at(parent_pos)->uri == SRCDIFF) {
                     --parent_pos;
+		}
 
                 // set identifier_profile_t name
                 std::shared_ptr<identifier_profile_t> & identifier_profile = reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.at(counting_profile_pos.back()));
@@ -905,8 +934,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                     if(name.is_common()) {
     
                         std::map<std::string, std::vector<std::shared_ptr<profile_t>>>::iterator itr = unit_profile->identifier_to_declaration_profile.find(name);
-                        if(itr != unit_profile->identifier_to_declaration_profile.end())
+                        if(itr != unit_profile->identifier_to_declaration_profile.end()) {
                             unit_profile->identifier_to_declaration_profile[name].back()->declarations[name].insert(name);
+			}
 
                         profile_stack.back()->body->identifiers[name][name].insert(identifier_profile->name);
 
@@ -917,8 +947,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                     if(name.has_original()) {
 
                         std::map<std::string, std::vector<std::shared_ptr<profile_t>>>::iterator itr = unit_profile->identifier_to_declaration_profile.find(name.original());
-                        if(itr != unit_profile->identifier_to_declaration_profile.end())
+                        if(itr != unit_profile->identifier_to_declaration_profile.end()) {
                             unit_profile->identifier_to_declaration_profile[name.original()].back()->declarations[name.original()].insert(name);
+			}
 
                         profile_stack.back()->body->identifiers[name.original()][name].insert(identifier_profile->name);
 
@@ -927,8 +958,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
                     if(name.has_modified()) {
 
                         std::map<std::string, std::vector<std::shared_ptr<profile_t>>>::iterator itr = unit_profile->identifier_to_declaration_profile.find(name.modified());
-                        if(itr != unit_profile->identifier_to_declaration_profile.end())
+                        if(itr != unit_profile->identifier_to_declaration_profile.end()) {
                             unit_profile->identifier_to_declaration_profile[name.modified()].back()->declarations[name.modified()].insert(name);
+			}
 
                         profile_stack.back()->body->identifiers[name.modified()][name].insert(identifier_profile->name);
 
@@ -955,15 +987,19 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
                  if(condition_count == 0) {
 
-                    if(collected_condition.has_original() && !collected_condition.original().empty() && collected_condition.original()[0] == '(')
+		   if(collected_condition.has_original() && !collected_condition.original().empty() && collected_condition.original()[0] == '(') {
                         collected_condition.original().erase(collected_condition.original().begin());
-                    if(collected_condition.has_original() && !collected_condition.original().empty() && collected_condition.original().back() == ')')
+		   }
+		   if(collected_condition.has_original() && !collected_condition.original().empty() && collected_condition.original().back() == ')') {
                         collected_condition.original().pop_back();
+		   }
 
-                    if(collected_condition.has_modified() && !collected_condition.modified().empty() && collected_condition.modified()[0] == '(')
+		   if(collected_condition.has_modified() && !collected_condition.modified().empty() && collected_condition.modified()[0] == '(') {
                         collected_condition.modified().erase(collected_condition.modified().begin());
-                    if(collected_condition.has_modified() && !collected_condition.modified().empty() && collected_condition.modified().back() == ')')
+		   }
+		   if(collected_condition.has_modified() && !collected_condition.modified().empty() && collected_condition.modified().back() == ')') {
                         collected_condition.modified().pop_back();
+		   }
 
                     if(profile_stack.at(counting_profile_pos.back())->type_name != "interchange") {
                         reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(counting_profile_pos.back()))->set_condition(collected_condition);
@@ -980,8 +1016,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
                 }
 
-                if(profile_stack.back()->syntax_count > 0)
+		 if(profile_stack.back()->syntax_count > 0) {
                     reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(counting_profile_pos.back()))->set_condition_modified(true);
+		 }
 
             }
 
@@ -1010,8 +1047,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
             reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(counting_profile_pos.back()))->set_body_modified(true);
 
-            if((counting_profile_pos.back() - 1) > 0 && profile_stack.at(counting_profile_pos.back() - 1)->type_name.first_active_string() == "elseif")
+            if((counting_profile_pos.back() - 1) > 0 && profile_stack.at(counting_profile_pos.back() - 1)->type_name.first_active_string() == "elseif") {
                 reinterpret_cast<std::shared_ptr<conditional_profile_t> &>(profile_stack.at(counting_profile_pos.back() - 1))->set_body_modified(true);
+	    }
 
         } else if((full_name == "else" || full_name == "elseif") && counting_profile_pos.size() > 1
             && is_if(profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2))->type_name)) {
@@ -1019,14 +1057,16 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
             if(full_name == "else") {
 
                 reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2)))->else_clause(true);
-                if(profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count)
+                if(profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count) {
                     reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2)))->else_operation(profile_stack.back()->operation);
+		}
 
             } else {
 
                 reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2)))->elseif_clause(true);
-                if(profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count)
+                if(profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count) {
                     reinterpret_cast<std::shared_ptr<if_profile_t> &>(profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2)))->elseif_operation(profile_stack.back()->operation);
+		}
 
             }
 
@@ -1039,11 +1079,13 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         } else if(is_call(full_name)) {
 
              size_t expr_pos = profile_stack.size() - 2;
-             while(expr_pos > 0 && !is_expr(profile_stack.at(expr_pos)->type_name) && profile_stack.at(expr_pos)->type_name != "member_init_list")
+             while(expr_pos > 0 && !is_expr(profile_stack.at(expr_pos)->type_name) && profile_stack.at(expr_pos)->type_name != "member_init_list") {
                 --expr_pos;
+	     }
 
-            if(is_expr(profile_stack.at(expr_pos)->type_name))
+	     if(is_expr(profile_stack.at(expr_pos)->type_name)) {
                 reinterpret_cast<std::shared_ptr<expr_profile_t> &>(profile_stack.at(expr_pos))->increment_calls();
+	     }
 
         } else if(full_name == "catch" && counting_profile_pos.size() > 1
             && profile_stack.at(counting_profile_pos.at(counting_profile_pos.size() - 2))->type_name == "try") {
@@ -1058,18 +1100,22 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         } else if(profile_stack.size() > 2 && profile_stack.at(profile_stack.size() - 2)->type_name == "decl"
             && is_decl_stmt(profile_stack.at(profile_stack.size() - 3)->type_name)) {
 
-            if(profile_stack.back()->type_name == "type")
+	  if(profile_stack.back()->type_name == "type") {
                 reinterpret_cast<std::shared_ptr<decl_stmt_profile_t> &>(get_stmt_from_interchange(profile_stack.at(profile_stack.size() - 3), "decl_stmt"))->type = profile_stack.back();
-            else if(profile_stack.back()->type_name == "init")
-                reinterpret_cast<std::shared_ptr<decl_stmt_profile_t> &>(get_stmt_from_interchange(profile_stack.at(profile_stack.size() - 3), "decl_stmt"))->init = profile_stack.back();
+	  }
+	  else if(profile_stack.back()->type_name == "init") {
+	    reinterpret_cast<std::shared_ptr<decl_stmt_profile_t> &>(get_stmt_from_interchange(profile_stack.at(profile_stack.size() - 3), "decl_stmt"))->init = profile_stack.back();
+	  }
 
         } else if(profile_stack.size() > 2 && profile_stack.at(profile_stack.size() - 2)->type_name == "decl"
             && is_parameter(profile_stack.at(profile_stack.size() - 3)->type_name)) {
 
-            if(profile_stack.back()->type_name == "type")
+	  if(profile_stack.back()->type_name == "type") {
                 reinterpret_cast<std::shared_ptr<parameter_profile_t> &>(profile_stack.at(profile_stack.size() - 3))->type = profile_stack.back();
-            else if(profile_stack.back()->type_name == "init")
+	  }
+	  else if(profile_stack.back()->type_name == "init") {
                 reinterpret_cast<std::shared_ptr<parameter_profile_t> &>(profile_stack.at(profile_stack.size() - 3))->init = profile_stack.back();
+	  }
 
 
         } else if(full_name == "type" && profile_stack.size() > 1 && is_function_type(profile_stack.at(profile_stack.size() - 2)->type_name)) {
@@ -1084,22 +1130,26 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
     if(expr_stmt_pos.size() > 0) {
 
         size_t expr_pos = profile_stack.size() - 1;
-        while(expr_pos > 0 && !is_expr(profile_stack.at(expr_pos)->type_name))
+        while(expr_pos > 0 && !is_expr(profile_stack.at(expr_pos)->type_name)) {
             --expr_pos;
+	}
 
         size_t expr_pos_forward = expr_stmt_pos.back();
-        while(expr_pos_forward < profile_stack.size() && !is_expr(profile_stack.at(expr_pos_forward)->type_name))
+        while(expr_pos_forward < profile_stack.size() && !is_expr(profile_stack.at(expr_pos_forward)->type_name)) {
             ++expr_pos_forward;
+	}
 
         if(expr_pos == expr_pos_forward && (expr_pos + 1) == profile_stack.size() - 1) {
 
             std::shared_ptr<expr_stmt_profile_t> & expr_stmt_profile = reinterpret_cast<std::shared_ptr<expr_stmt_profile_t> &>(get_stmt_from_interchange(profile_stack.at(expr_stmt_pos.back()), "expr_stmt"));
 
-            if(!is_call(full_name) && uri_stack.back() != SRCDIFF && full_name != "operator")
+            if(!is_call(full_name) && uri_stack.back() != SRCDIFF && full_name != "operator") {
                 expr_stmt_profile->call(false);
+	    }
 
-            if(is_call(full_name))
+            if(is_call(full_name)) {
                 expr_stmt_profile->add_call_profile(reinterpret_cast<std::shared_ptr<call_profile_t> &>(profile_stack.back()));
+	    }
 
         }
 
@@ -1138,8 +1188,9 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         std::shared_ptr<identifier_profile_t> & identifier_profile = reinterpret_cast<std::shared_ptr<identifier_profile_t> &>(profile_stack.back());
 
-        if(identifier_profile->operation != SRCDIFF_COMMON && identifier_profile->name.has_original() && identifier_profile->name.has_modified())
+        if(identifier_profile->operation != SRCDIFF_COMMON && identifier_profile->name.has_original() && identifier_profile->name.has_modified()) {
             identifier_profile->operation = SRCDIFF_COMMON;
+	}
 
     }
 
@@ -1208,10 +1259,12 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         for(size_t pos : function_pos) {
 
-            if(profile_stack.back()->operation == SRCDIFF_DELETE)
+	  if(profile_stack.back()->operation == SRCDIFF_DELETE) {
                 reinterpret_cast<std::shared_ptr<function_profile_t> &>(profile_stack.at(pos))->decrement_cyclomatic_complexity_change();
-            else
+	  }
+	  else {
                 reinterpret_cast<std::shared_ptr<function_profile_t> &>(profile_stack.at(pos))->increment_cyclomatic_complexity_change();
+	  }
 
         }
 
@@ -1221,19 +1274,23 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
 
         size_t parent_pos = counting_profile_pos.back();
 
-        if(profile_stack.back()->operation == SRCDIFF_COMMON || profile_stack.back()->operation == SRCDIFF_DELETE)
+        if(profile_stack.back()->operation == SRCDIFF_COMMON || profile_stack.back()->operation == SRCDIFF_DELETE) {
             ++profile_stack.at(parent_pos)->statement_count_original;
+	}
 
-        if(profile_stack.back()->operation == SRCDIFF_COMMON || profile_stack.back()->operation == SRCDIFF_INSERT)
+        if(profile_stack.back()->operation == SRCDIFF_COMMON || profile_stack.back()->operation == SRCDIFF_INSERT) {
             ++profile_stack.at(parent_pos)->statement_count_modified;
+	}
 
         ++profile_stack.at(parent_pos)->statement_count;
 
-        if(profile_stack.back()->operation == SRCDIFF_COMMON)
+        if(profile_stack.back()->operation == SRCDIFF_COMMON) {
             ++profile_stack.at(parent_pos)->common_statements;
+	}
 
-        if(profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count)
+        if(profile_stack.back()->operation != SRCDIFF_COMMON || profile_stack.back()->syntax_count) {
             ++profile_stack.at(parent_pos)->statement_churn;
+	}
 
     }
 
@@ -1242,11 +1299,13 @@ void srcdiff_summary::endElement(const char * localname, const char * prefix, co
         std::shared_ptr<unit_profile_t> & unit_profile = reinterpret_cast<std::shared_ptr<unit_profile_t> &>(profile_t::unit_profile);
         for(const std::pair<std::string, std::set<versioned_string>> & declaration : profile_stack.back()->declarations) {
 
-            if(profile_stack.back()->id == unit_profile->identifier_to_declaration_profile[declaration.first].back()->id)
+	  if(profile_stack.back()->id == unit_profile->identifier_to_declaration_profile[declaration.first].back()->id) {
                 unit_profile->identifier_to_declaration_profile[declaration.first].pop_back();
+	  }
 
-            if(unit_profile->identifier_to_declaration_profile[declaration.first].size() == 0)
+	  if(unit_profile->identifier_to_declaration_profile[declaration.first].size() == 0) {
                 unit_profile->identifier_to_declaration_profile.erase(declaration.first);
+	  }
 
         }
 
@@ -1301,8 +1360,9 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
     if(is_specifier(profile_stack.back()->type_name)) specifier_raw.append(ch,len);
 
     if(is_identifier(profile_stack.back()->type_name)
-        || (profile_stack.back()->uri == SRCDIFF && is_identifier(profile_stack.back()->parent->type_name)))
+       || (profile_stack.back()->uri == SRCDIFF && is_identifier(profile_stack.back()->parent->type_name))) {
         collected_simple_name.append(ch, len, srcdiff_stack.back().operation);
+    }
     if(name_count) collected_full_name.append(ch, len, srcdiff_stack.back().operation);
     if(condition_count) collected_condition.append(ch, len, srcdiff_stack.back().operation);
 
@@ -1313,7 +1373,8 @@ void srcdiff_summary::charactersUnit(const char * ch, int len) {
 
     }
 
-    for(std::pair<const size_t, std::string &> & raw_statement : raw_statements)
+    for(std::pair<const size_t, std::string &> & raw_statement : raw_statements) {
         raw_statement.second.append(ch, len);
+    }
 
 }

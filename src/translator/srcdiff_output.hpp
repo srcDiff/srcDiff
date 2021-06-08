@@ -227,15 +227,18 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
     std::string::size_type pos;
     if((pos = filename.find('|')) != std::string::npos) {
 
-      if(pos == 0)
+      if(pos == 0) {
         filename = filename.substr(1, std::string::npos);
-      else
+      }
+      else {
         filename = filename.substr(0, pos);
+      }
 
     }
 
-    for(std::string::size_type pos = filename.find('/'); pos != std::string::npos; pos = filename.find('/', pos + 1))
+    for(std::string::size_type pos = filename.find('/'); pos != std::string::npos; pos = filename.find('/', pos + 1)) {
       filename.replace(pos, 1, "_");
+    }
     filename += ".srcdiff";
 
     filename = wstate->filename + "/" + filename;

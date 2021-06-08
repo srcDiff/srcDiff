@@ -61,19 +61,23 @@ int color_diff::colorize(const char * srcdiff, line_diff_range<T> & line_diff_ra
 
     if(operation == 'd') {
 
-      while(lines_original.size() < start)
+      while(lines_original.size() < start) {
         lines_original.push_back(false);
+      }
 
-      while(lines_original.size() <= end)
+      while(lines_original.size() <= end) {
         lines_original.push_back(true);
+      }
 
     } else {
 
-      while(lines_modified.size() < start)
+      while(lines_modified.size() < start) {
         lines_modified.push_back(false);
+      }
 
-      while(lines_modified.size() <= end)
+      while(lines_modified.size() <= end) {
         lines_modified.push_back(true);
+      }
 
     }
 
@@ -85,11 +89,13 @@ int color_diff::colorize(const char * srcdiff, line_diff_range<T> & line_diff_ra
   if(!is_option(options, OPTION_PURE) && (size_original == 0 || size_modified == 0))
     return 0;
 
-  while(lines_original.size() <= size_original)
+  while(lines_original.size() <= size_original) {
         lines_original.push_back(false);
+  }
 
-  while(lines_modified.size() <= size_modified)
+  while(lines_modified.size() <= size_modified) {
         lines_modified.push_back(false);
+  }
 
   if(first) {
 

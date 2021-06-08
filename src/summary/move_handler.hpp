@@ -25,11 +25,13 @@ private:
 
             if(isspace(one[pos_one]) || isspace(two[pos_two])) {
 
-                if(isspace(one[pos_one]))
+	      if(isspace(one[pos_one])) {
                     ++pos_one;
+	      }
 
-                if(isspace(two[pos_two]))
-                    ++pos_two;            
+	      if(isspace(two[pos_two])) {
+                    ++pos_two;
+	      }
 
                 continue;
 
@@ -42,11 +44,13 @@ private:
 
         }
 
-        while(pos_one < one.size() && isspace(one[pos_one]))
+        while(pos_one < one.size() && isspace(one[pos_one])) {
             ++pos_one;
+	}
 
-        while(pos_two < two.size() && isspace(two[pos_two]))
+        while(pos_two < two.size() && isspace(two[pos_two])) {
             ++pos_two;
+	}
 
         return pos_one == one.size() && pos_two == two.size();
 
@@ -90,8 +94,9 @@ public:
 
         for(const std::shared_ptr<profile_t> & descendant_change_profile : descendant_change_profiles) {
 
-            if(is_statement(descendant_change_profile->type_name) && descendant_change_profile->operation != SRCDIFF_COMMON)
+	  if(is_statement(descendant_change_profile->type_name) && descendant_change_profile->operation != SRCDIFF_COMMON) {
                 move_candidates.push_back(descendant_change_profile);
+	  }
 
         }
 

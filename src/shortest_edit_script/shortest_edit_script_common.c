@@ -85,7 +85,7 @@ int make_edit_script(struct edit_t * start_edit, struct edit_t ** edit_script, s
     current_edit->length = 1;
 
     // condense insert edit
-    if(current_edit->operation == SES_INSERT)
+    if(current_edit->operation == SES_INSERT) {
       while(current_edit->next != NULL
             && (current_edit->operation == current_edit->next->operation)
             && (current_edit->offset_sequence_one == current_edit->next->offset_sequence_one)) {
@@ -97,6 +97,7 @@ int make_edit_script(struct edit_t * start_edit, struct edit_t ** edit_script, s
         ++current_edit->length;
 
       }
+    }
 
     // condense delete
     else
@@ -142,10 +143,12 @@ int make_edit_script(struct edit_t * start_edit, struct edit_t ** edit_script, s
     }
 
     // correct offset
-    if(current_edit->operation == SES_DELETE)
+    if(current_edit->operation == SES_DELETE) {
       --current_edit->offset_sequence_one;
-    else
+    }
+    else {
       --current_edit->offset_sequence_two;
+    }
 
     current_edit = current_edit->next;
 

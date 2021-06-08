@@ -32,10 +32,12 @@ class decl_stmt_summary_t : public summary_t {
 
             out.begin_line();
 
-            if(count == 1)
+            if(count == 1) {
                 out << "a " << manip::bold() << "declaration" << manip::normal();
-            else
+	    }
+            else {
                 out << std::to_string(count) << ' ' << manip::bold() << "declarations" << manip::normal();
+	    }
 
             size_t number_parts_report = (specifiers_operation ? 1 : 0) + (type_modified ? 1 : 0) + (name_modified ? 1 : 0) + (init_modified ? 1 : 0);
 

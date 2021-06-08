@@ -172,12 +172,15 @@ void diffdoc_view::start_element(const std::string & local_name,
 
   if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
-    if(local_name == "common")
+    if(local_name == "common") {
      diff_stack.push_back(view_t::COMMON);
-    else if(local_name == "delete")
+    }
+    else if(local_name == "delete") {
      diff_stack.push_back(DELETE);
-    else if(local_name == "insert")
+    }
+    else if(local_name == "insert") {
      diff_stack.push_back(INSERT);
+    }
     
   } else {
 

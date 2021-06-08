@@ -17,10 +17,12 @@
 color_diff::color_diff(const std::string & color_diff_file, const std::string & directory, const std::string & version, const OPTION_TYPE & options) 
   : first(true), options(options) {
 
-  if(color_diff_file != "-")
+  if(color_diff_file != "-") {
     outfile = new std::ofstream(color_diff_file.c_str());
-  else
+  }
+  else {
     outfile = &std::cout;
+  }
 }
 
 color_diff::~color_diff() {

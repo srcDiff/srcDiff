@@ -14,8 +14,9 @@ shortest_edit_script_t::shortest_edit_script_t(int (*compare)(const void * item_
 
 shortest_edit_script_t::~shortest_edit_script_t() {
 
-  if(edit_script)
+  if(edit_script) {
     free_shortest_edit_script(edit_script);
+  }
 
 }
 

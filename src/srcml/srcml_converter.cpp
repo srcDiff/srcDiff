@@ -95,8 +95,9 @@ std::shared_ptr<srcml_node> split_text(const char * characters_start,
 void eat_element(xmlTextReaderPtr& reader) {
   int depth = xmlTextReaderDepth(reader);
   xmlTextReaderRead(reader);
-  while (xmlTextReaderDepth(reader) > depth)
+  while (xmlTextReaderDepth(reader) > depth) {
     xmlTextReaderRead(reader);
+  }
   xmlTextReaderRead(reader);
 }
 
@@ -148,20 +149,26 @@ void srcml_converter::convert(const std::string & language, void * context,
     srcml_unit_set_version(unit, burst_config.unit_version ? burst_config.unit_version->c_str() : 0);
 
     // skipping register extension as probably does not need done.  Some of the above may not need to be done as well.
-    for(size_t pos = 0; pos < srcml_archive_get_namespace_size(unit_archive); ++pos)
-      if(srcml_archive_get_namespace_uri(unit_archive, pos) != SRCDIFF_DEFAULT_NAMESPACE_HREF)
+    for(size_t pos = 0; pos < srcml_archive_get_namespace_size(unit_archive); ++pos) {
+      if(srcml_archive_get_namespace_uri(unit_archive, pos) != SRCDIFF_DEFAULT_NAMESPACE_HREF) {
         srcml_archive_register_namespace(srcml_archive, srcml_archive_get_namespace_prefix(unit_archive, pos), srcml_archive_get_namespace_uri(unit_archive, pos));
+      }
+    }
  
-    for(std::string::size_type pos = filename.find('/'); pos != std::string::npos; pos = filename.find('/', pos + 1))
+    for(std::string::size_type pos = filename.find('/'); pos != std::string::npos; pos = filename.find('/', pos + 1)) {
       filename.replace(pos, 1, "_");
+    }
 
-    if(stream_source == SES_DELETE)
+    if(stream_source == SES_DELETE) {
       filename = filename + "_original.srcml";
-    else
+    }
+    else {
       filename = filename + "_modified.srcml";
+    }
 
-    if(burst_config.output_path)
+    if(burst_config.output_path) {
       filename = *burst_config.output_path + "/" + filename;
+    }
 
     srcml_archive_write_open_filename(srcml_archive, filename.c_str());
     srcml_archive_write_unit(srcml_archive, unit);
@@ -271,16 +278,18 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         } else if(element_stack.back()->name == "comment"
                   && is_comment_separate(*characters)) {
 
-          while((*characters) != 0 && is_comment_separate(*characters))
+          while((*characters) != 0 && is_comment_separate(*characters)) {
             ++characters;
+	  }
 
           text = split_text(characters_start, characters, element_stack.back());
 
         } else if(element_stack.back()->name == "file"
                   && is_cpp_file_separate(*characters)) {
 
-          while((*characters) != 0 && is_cpp_file_separate(*characters))
+          while((*characters) != 0 && is_cpp_file_separate(*characters)) {
             ++characters;
+	  }
 
           text = split_text(characters_start, characters, element_stack.back());
 
@@ -319,8 +328,9 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
                 ++characters;
                 size_t pos = 0;
-                while(pos < 2 && *characters >= '0' && *characters <= '7')
+                while(pos < 2 && *characters >= '0' && *characters <= '7') {
                   ++pos, ++characters;
+		}
 
                 --characters;
 
@@ -328,8 +338,9 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
                 ++characters;
                 size_t pos = 0;
-                while(pos < 4 && isxdigit(*characters))
+                while(pos < 4 && isxdigit(*characters)) {
                   ++pos, ++characters;
+		}
 
                 --characters;
 
@@ -337,8 +348,9 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
                 ++characters;
                 size_t pos = 0;
-                while(pos < 8 && isxdigit(*characters))
+                while(pos < 8 && isxdigit(*characters)) {
                   ++pos, ++characters;
+		}
 
                 --characters;
 
@@ -361,8 +373,9 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
                 && !isspace(*characters)
                 && !(in_comment && is_comment_separate(*characters))
                 && !(in_cpp_file && is_cpp_file_separate(*characters))
-                && !is_separate_token(*characters))
+                && !is_separate_token(*characters)) {
             ++characters;
+	  }
 
           // Copy the remainder after (
           text = split_text(characters_start, characters, element_stack.back());
@@ -389,8 +402,9 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
       std::shared_ptr<srcml_node> node = get_current_node(reader, srcml_archive_get_options(archive));
       mutex.unlock();
 
-      if(node->type == XML_READER_TYPE_ELEMENT)
+      if(node->type == XML_READER_TYPE_ELEMENT) {
         node->parent = element_stack.back();
+      }
 
 
       // insert end if temp element for elseif and detect elseif
@@ -403,15 +417,18 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
           is_elseif = true;
       }
 
-      if(node->type == XML_READER_TYPE_ELEMENT && !node->is_empty_tag())
+      if(node->type == XML_READER_TYPE_ELEMENT && !node->is_empty_tag()) {
         element_stack.push_back(node);
-      else if(node->type == XML_READER_TYPE_END_ELEMENT)
+      }
+      else if(node->type == XML_READER_TYPE_END_ELEMENT) {
         element_stack.pop_back();
+      }
 
       if(node->name == "unit") return nodes;
 
-      if(node->type == XML_READER_TYPE_ELEMENT && (*node->parent)->is_simple)
+      if(node->type == XML_READER_TYPE_ELEMENT && (*node->parent)->is_simple) {
         (*node->parent)->is_simple = false;
+      }
       
       if(node->is_empty) {
         node->is_empty = false;

@@ -26,8 +26,9 @@ const char * const view_t::CARRIAGE_RETURN_SYMBOL = "\u23CE";
 static std::string to_lower(const std::string & str) {
 
   std::string lower(str);
-  for(char & character : lower)
+  for(char & character : lower) {
     character = std::tolower(character);
+  }
 
   return lower;
 
@@ -61,17 +62,22 @@ view_t::view_t(const std::string & output_filename,
 
     const std::string theme_lower = to_lower(theme);
     const std::string syntax_level = to_lower(syntax_highlight);
-    if(theme_lower == "default")
+    if(theme_lower == "default") {
       this->theme = (theme_t *)new default_theme(syntax_level, is_html);
-    else if(theme_lower == "monokai")
+    }
+    else if(theme_lower == "monokai") {
       this->theme = (theme_t *)new monokai_theme(to_lower(syntax_highlight), is_html);
-    else
+    }
+    else {
       this->theme = (theme_t *)new user_defined_theme(to_lower(syntax_highlight), is_html, theme);
+    }
 
-  if(output_filename != "-")
+  if(output_filename != "-") {
     output = new std::ofstream(output_filename.c_str());
-  else
+  }
+  else {
     output = &std::cout;
+  }
 
 }
 
@@ -135,8 +141,9 @@ std::string view_t::close_spans(unsigned int close_num_span) {
   if(!is_html) return std::string();
 
   std::string spans;
-  for(unsigned int i = 0; i < close_num_span; ++i)
+  for(unsigned int i = 0; i < close_num_span; ++i) {
     spans += "</span>";
+  }
 
   return spans;
 
@@ -163,8 +170,9 @@ void view_t::output_characters_to_buffer(std::ostream & out,
 
   }
 
-  if(operation != last_character_operation)
+  if(operation != last_character_operation) {
     out << close_spans(close_num_span) << change_operation_to_code(operation);
+  }
 
   last_character_operation = operation;
 
@@ -181,8 +189,9 @@ void view_t::output_characters_to_buffer(std::ostream & out,
                                    in_class_name,
                                    in_call_name,
                                    in_preprocessor_directive);
-    if(!highlight.empty())
+    if(!highlight.empty()) {
       out << highlight;
+    }
 
   }
 
@@ -192,8 +201,9 @@ void view_t::output_characters_to_buffer(std::ostream & out,
 
     if(!highlight.empty()) {
       out << theme->common_color;
-      if(operation != view_t::COMMON)
+      if(operation != view_t::COMMON) {
         out << change_operation_to_code(operation);
+      }
     }
 
     return;
@@ -211,8 +221,9 @@ void view_t::output_characters_to_buffer(std::ostream & out,
 
   }
 
-  if(!highlight.empty())
+  if(!highlight.empty()) {
     out << "</span>";
+  }
 
 }
 
@@ -392,10 +403,12 @@ void view_t::startElement(const char * localname,
 
     }
 
-    if(literal_type == "string" || literal_type == "char")
+    if(literal_type == "string" || literal_type == "char") {
       in_string = true;
-    else
+    }
+    else {
       in_literal = true;
+    }
 
   } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "name"
             && srcml_stack.size() > 1) {
@@ -515,12 +528,15 @@ void view_t::endElement(const char * localname,
   } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "name") {
 
     const std::string & parent = srcml_stack.back();
-    if(is_function_type(parent))
+    if(is_function_type(parent)) {
       in_function_name = false;
-    else if(is_class_type(parent))
+    }
+    else if(is_class_type(parent)) {
       in_class_name = false;
-    else if(is_call(parent))
+    }
+    else if(is_call(parent)) {
       in_call_name = false;
+    }
 
   } else if(URI == SRCML_CPP_NAMESPACE_HREF
             && ( local_name == "literal"

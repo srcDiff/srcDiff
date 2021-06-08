@@ -40,47 +40,59 @@ class replace_summary_t : public summary_t {
 
                 if(number_original) {
 
-                    if(number_original == 1)
+		  if(number_original == 1) {
                         out << get_article(original_type) << ' ' << manip::bold() << original_type << manip::normal();
-                    else
+		  }
+		  else {
                         out << std::to_string(number_original) << ' ' << manip::bold() << original_type << 's' << manip::normal();
+		  }
 
                     if(output_verb) {
-                        if(number_original == 1)
+		      if(number_original == 1) {
                             out << " was";
-                        else
+		      }
+		      else {
                             out << " were";
+		      }
                     }
 
                     out << " replaced with ";
 
-                    if(number_comments_modified == 1)
+                    if(number_comments_modified == 1) {
                         out << "a " << manip::bold() << "comment" << manip::normal();
-                    else
+		    }
+                    else {
                         out << std::to_string(number_comments_modified) << manip::bold() << " comments" << manip::normal();
+		    }
 
 
                 } else {
 
 
-                    if(number_comments_original == 1)
+		  if(number_comments_original == 1) {
                         out << "a " << manip::bold() << "comment" << manip::normal();
-                    else
+		  }
+		  else {
                         out << std::to_string(number_comments_original) << manip::bold() << " comments" << manip::normal();
+		  }
 
                     if(output_verb) {
-                        if(number_comments_original == 1)
+		      if(number_comments_original == 1) {
                             out << " was";
-                        else
+		      }
+		      else {
                             out << " were";
+		      }
                     }
 
                     out << " replaced with ";
 
-                    if(number_modified == 1)
+                    if(number_modified == 1) {
                         out << get_article(modified_type) << ' ' << manip::bold() << modified_type << manip::normal();
-                    else
+		    }
+                    else {
                         out << std::to_string(number_modified) << ' ' << manip::bold() << modified_type << 's' << manip::normal();
+		    }
 
                 }
 
@@ -89,34 +101,44 @@ class replace_summary_t : public summary_t {
                 return out;
             }
 
-            if(number_original == 1)
+            if(number_original == 1) {
                 out << get_article(original_type) << ' ' << manip::bold() << original_type << manip::normal();
-            else
+	    }
+            else {
                 out << std::to_string(number_original) << ' ' << manip::bold() << original_type << 's' << manip::normal();
+	    }
 
-            if(number_comments_original == 1)
+            if(number_comments_original == 1) {
                 out << " and a " << manip::bold() << "comment" << manip::normal();
-            else if(number_comments_original > 1)
+	    }
+            else if(number_comments_original > 1) {
                 out << " and " << std::to_string(number_comments_original) << manip::bold() << " comments" << manip::normal();
+	    }
 
             if(output_verb) {
-                if((number_original + number_comments_original) == 1)
+	      if((number_original + number_comments_original) == 1) {
                     out << " was";
-                else
+	      }
+	      else {
                     out << " were";
+	      }
             }
 
             out << " replaced with ";
 
-            if(number_modified == 1)
+            if(number_modified == 1) {
                 out << (original_type == modified_type ? "another" : get_article(modified_type)) << ' ' << manip::bold() << modified_type << manip::normal();
-            else
+	    }
+            else {
                 out << std::to_string(number_modified) << (original_type == modified_type ? " other " : " ") << manip::bold() << modified_type << 's' << manip::normal();
+	    }
 
-            if(number_comments_modified == 1)
+            if(number_comments_modified == 1) {
                 out << " and a " << manip::bold() << "comment" << manip::normal();
-            else if(number_comments_modified > 1)
+	    }
+            else if(number_comments_modified > 1) {
                 out << " and " << std::to_string(number_comments_modified) << manip::bold() << " comments" << manip::normal();
+	    }
 
             out.end_line();
 

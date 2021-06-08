@@ -23,13 +23,17 @@ void srcdiff_text_measure::collect_text() {
   unsigned int olength = set_original.size();
   unsigned int nlength = set_modified.size();
 
-  for(unsigned int i = 0; i < olength; ++i)
-    if(set_original.nodes().at(set_original.at(i))->is_text() && !set_original.nodes().at(set_original.at(i))->is_white_space())
+  for(unsigned int i = 0; i < olength; ++i) {
+    if(set_original.nodes().at(set_original.at(i))->is_text() && !set_original.nodes().at(set_original.at(i))->is_white_space()) {
       set_original_text.push_back(set_original.at(i));
+    }
+  }
 
-  for(unsigned int i = 0; i < nlength; ++i)
-    if(set_modified.nodes().at(set_modified.at(i))->is_text() && !set_modified.nodes().at(set_modified.at(i))->is_white_space())
+  for(unsigned int i = 0; i < nlength; ++i) {
+    if(set_modified.nodes().at(set_modified.at(i))->is_text() && !set_modified.nodes().at(set_modified.at(i))->is_white_space()) {
       set_modified_text.push_back(set_modified.at(i));
+    }
+  }
 
   original_len = set_original_text.size();
   modified_len = set_modified_text.size();
@@ -50,8 +54,9 @@ void srcdiff_text_measure::collect_text_node_set(const node_set & set, node_set 
       if((set.at(i) + 1) < set.nodes().size() && set.nodes().at(set.at(i) + 1)->is_text()
         && (*set.nodes().at(set.at(i) + 1)->content == "::")) continue;
 
-      while(set.nodes().at(set.at(i))->type != XML_READER_TYPE_END_ELEMENT)
+      while(set.nodes().at(set.at(i))->type != XML_READER_TYPE_END_ELEMENT) {
         ++i;
+      }
 
     }
 
@@ -153,10 +158,12 @@ void srcdiff_text_measure::compute() {
 
   if(!text_collected) {
 
-    if(important_only)
+    if(important_only) {
       collect_important_text();
-    else
+    }
+    else {
       collect_text();
+    }
 
   }
 
@@ -175,8 +182,9 @@ int srcdiff_text_measure::number_match_beginning() {
       while(count < set_original_text.size() & count < set_modified_text.size()
         && srcdiff_compare::node_compare(
           set_original_text.nodes().at(set_original_text.at(count)), 
-          set_modified_text.nodes().at(set_modified_text.at(count))) == 0)
+          set_modified_text.nodes().at(set_modified_text.at(count))) == 0) {
         ++count;
+      }
 
       return count;
 
