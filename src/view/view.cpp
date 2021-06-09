@@ -162,6 +162,12 @@ void view_t::output_characters_to_buffer(std::ostream & out,
                                             int & last_character_operation,
                                             unsigned int & close_num_span) {
 
+  if(ch.back() == ';' && ch.size() > 1) {
+    output_characters_to_buffer(out, ch.substr(0, ch.size() - 1), operation, last_character_operation, close_num_span);
+    output_characters_to_buffer(out, ";", operation, last_character_operation, close_num_span);
+    return;
+  } 
+
   if(save_name) {
 
     saved_name.append(ch.c_str(), ch.size(),
