@@ -12,7 +12,7 @@
 
 
 std::string extract_name(const srcml_nodes & nodes, int start_pos);
-
+void skip_tag(const srcml_nodes & nodes, int & start_pos);
 
 
 
