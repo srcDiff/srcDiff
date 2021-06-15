@@ -52,7 +52,6 @@ bool srcml_node::srcml_attr::operator==(const srcml_attr & attr) const {
 
   return false;
 
-
 }
 
 bool srcml_node::srcml_attr::operator!=(const srcml_attr & attr) const {
