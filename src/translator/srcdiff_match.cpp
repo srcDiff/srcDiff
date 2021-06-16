@@ -357,6 +357,8 @@ bool is_single_call_expr(const srcml_nodes & nodes, int start_pos) {
 /** loop O(n) */
 void skip_tag(const srcml_nodes & nodes, int & start_pos) {
 
+  if(!nodes.at(start_pos)->is_open_tag()) throw std::invalid_argument("skip_tag: start is not open tag");
+
   std::string & start_tag = nodes.at(start_pos)->name;
   int open_type_count = 1;
   ++start_pos;
