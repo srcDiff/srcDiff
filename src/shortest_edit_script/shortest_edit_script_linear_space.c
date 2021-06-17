@@ -26,10 +26,12 @@ struct point compute_next_forward_path_snake(const void * sequence_one, int sequ
   if(diagonal == -distance || (diagonal != distance && forward_paths[diagonal_pos - 1].x < forward_paths[diagonal_pos + 1].x)) {
 
     column = forward_paths[diagonal_pos + 1].x;
-    if(distance != 0) 
+    if(distance != 0) {
       row = forward_paths[diagonal_pos + 1].y + 1;
-    else
+    }
+    else {
       row = forward_paths[diagonal_pos + 1].y;
+    }
 
   } else {
 
@@ -159,13 +161,15 @@ int compute_middle_snake(const void * sequence_one, int sequence_one_start, int 
   struct point * forward_paths = (struct point *)malloc(sizeof(struct point) * paths_length);
   size_t path_pos;
   struct point start_point = { sequence_one_start, sequence_two_start };
-  for(path_pos = 0; path_pos < paths_length; ++path_pos)
+  for(path_pos = 0; path_pos < paths_length; ++path_pos) {
     forward_paths[path_pos] = start_point;
+  }
 
   struct point * reverse_paths = (struct point *)malloc(sizeof(struct point) * paths_length);
   struct point end_point = { sequence_one_end, sequence_two_end };
-  for(path_pos = 0; path_pos < paths_length; ++path_pos)
+  for(path_pos = 0; path_pos < paths_length; ++path_pos) {
     reverse_paths[path_pos] = end_point;
+  }
 
   points[0] = start_point;
   points[1] = end_point;

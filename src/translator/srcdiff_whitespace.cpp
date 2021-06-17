@@ -28,8 +28,9 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned i
 
     output_node(diff_common_start, SES_COMMON);
     
-    for(int i = begin_original; i < ostart; ++i)
+    for(int i = begin_original; i < ostart; ++i) {
       output_node(rbuf_original->nodes.at(i), SES_COMMON);
+    }
     
     output_node(diff_common_end, SES_COMMON);
 
@@ -59,8 +60,9 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned i
       output_node(diff_modified_start, SES_INSERT);
       output_node(diff_ws_start, SES_INSERT);
 
-      for(int k = nstart; k < npivot; ++k)
+      for(int k = nstart; k < npivot; ++k) {
         output_node(rbuf_modified->nodes.at(k), SES_INSERT);
+      }
 
       output_node(diff_ws_end, SES_INSERT);
       output_node(diff_modified_end, SES_INSERT);
@@ -72,8 +74,9 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned i
       output_node(diff_original_start, SES_DELETE);
       output_node(diff_ws_start, SES_DELETE);
 
-      for(int k = ostart; k < opivot; ++k)
+      for(int k = ostart; k < opivot; ++k) {
         output_node(rbuf_original->nodes.at(k), SES_DELETE);
+      }
 
       output_node(diff_ws_end, SES_DELETE);
       output_node(diff_original_end, SES_DELETE);
@@ -87,8 +90,9 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned i
       output_node(diff_original_start, SES_DELETE);
       output_node(diff_ws_start, SES_DELETE);
 
-      for(int k = ostart; k < opivot; ++k)
+      for(int k = ostart; k < opivot; ++k) {
         output_node(rbuf_original->nodes.at(k), SES_DELETE);
+      }
 
       output_node(diff_ws_end, SES_DELETE);
       output_node(diff_original_end, SES_DELETE);
@@ -100,8 +104,9 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned i
       output_node(diff_modified_start, SES_INSERT);
       output_node(diff_ws_start, SES_INSERT);
 
-      for(int k = nstart; k < npivot; ++k)
+      for(int k = nstart; k < npivot; ++k) {
         output_node(rbuf_modified->nodes.at(k), SES_INSERT);
+      }
 
       output_node(diff_ws_end, SES_INSERT);
       output_node(diff_modified_end, SES_INSERT);
@@ -114,8 +119,9 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned i
 
     output_node(diff_common_start, SES_COMMON);
 
-    for(int k = opivot; k < oend; ++k)
+    for(int k = opivot; k < oend; ++k) {
       output_node(rbuf_original->nodes.at(k), SES_COMMON);
+    }
 
     // output diff tag
     output_node(diff_common_end, SES_COMMON);
@@ -132,13 +138,14 @@ void srcdiff_whitespace::output_nested(int operation) {
   unsigned int oend = rbuf_original->last_output;
   unsigned int nend = rbuf_modified->last_output;
 
-  if(operation == SES_DELETE)
+  if(operation == SES_DELETE) {
     for(; oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_white_space(); ++oend) 
       ;
-  else
+  }
+  else {
     for(; nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_white_space(); ++nend)
       ;
-
+  }
   markup_whitespace(oend, nend);
 
 }
@@ -159,11 +166,13 @@ void srcdiff_whitespace::output_statement() {
   for(; nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_white_space() && !rbuf_modified->nodes.at(nend)->is_new_line(); ++nend)
     ;
 
-  if(oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_new_line())
+  if(oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_new_line()) {
     ++oend;
+  }
 
-  if(nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_new_line())
+  if(nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_new_line()) {
     ++nend;
+  }
 
   markup_whitespace(oend, nend);
 
@@ -175,13 +184,15 @@ void srcdiff_whitespace::output_all(int operation) {
   unsigned int nend = rbuf_modified->last_output;
 
   // advance whitespace after targeted end
-  if(operation == SES_COMMON || operation == SES_DELETE)
+  if(operation == SES_COMMON || operation == SES_DELETE) {
     for(; oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_white_space(); ++oend)
       ;
+  }
 
-  if(operation == SES_COMMON || operation == SES_INSERT)
+  if(operation == SES_COMMON || operation == SES_INSERT) {
   for(; nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_white_space(); ++nend)
     ;
+  }
 
   markup_whitespace(oend, nend);
 
@@ -208,24 +219,29 @@ void srcdiff_whitespace::output_prefix() {
   unsigned int save_oend = oend;
   unsigned int save_nend = nend;
 
-  while(rbuf_original->last_output < oend && (rbuf_original->nodes.at(oend - 1)->is_white_space() && !rbuf_original->nodes.at(oend - 1)->is_new_line()))
+  while(rbuf_original->last_output < oend && (rbuf_original->nodes.at(oend - 1)->is_white_space() && !rbuf_original->nodes.at(oend - 1)->is_new_line())) {
     --oend;
+  }
 
-  while(rbuf_modified->last_output < nend && (rbuf_modified->nodes.at(nend - 1)->is_white_space() && !rbuf_modified->nodes.at(nend - 1)->is_new_line()))
+  while(rbuf_modified->last_output < nend && (rbuf_modified->nodes.at(nend - 1)->is_white_space() && !rbuf_modified->nodes.at(nend - 1)->is_new_line())) {
     --nend;
+  }
 
-  if(oend > 0 && !rbuf_original->nodes.at(oend - 1)->is_new_line())
+  if(oend > 0 && !rbuf_original->nodes.at(oend - 1)->is_new_line()) {
     oend = save_oend;
+  }
 
-  if(nend > 0 && !rbuf_modified->nodes.at(nend - 1)->is_new_line())
+  if(nend > 0 && !rbuf_modified->nodes.at(nend - 1)->is_new_line()) {
     nend = save_nend;
+  }
 
   if(ostart < oend && nstart < nend) {
 
     output_node(diff_common_start, SES_COMMON);
 
-    for(unsigned int i = ostart; i < oend; ++i)
+    for(unsigned int i = ostart; i < oend; ++i) {
       output_node(rbuf_original->nodes.at(i), SES_COMMON);
+    }
 
     output_node(diff_common_end, SES_COMMON);
 
@@ -273,8 +289,9 @@ void srcdiff_whitespace::output_suffix() {
     // output delete
     output_node(diff_original_start, SES_DELETE);
 
-    for(int i = ostart; i < opivot; ++i)
+    for(int i = ostart; i < opivot; ++i) {
       output_node(rbuf_original->nodes.at(i), SES_DELETE);
+    }
 
     // output diff tag begin
     output_node(diff_original_end, SES_DELETE);
@@ -286,8 +303,9 @@ void srcdiff_whitespace::output_suffix() {
     // output insert
     output_node(diff_modified_start, SES_INSERT);
 
-    for(int i = nstart; i < npivot; ++i)
+    for(int i = nstart; i < npivot; ++i) {
       output_node(rbuf_modified->nodes.at(i), SES_INSERT);
+    }
 
     // output diff tag begin
     output_node(diff_modified_end, SES_INSERT);
@@ -299,8 +317,9 @@ void srcdiff_whitespace::output_suffix() {
   // output common
   output_node(diff_common_start, SES_COMMON);
 
-  for(int i = opivot; i < oend; ++i)
+  for(int i = opivot; i < oend; ++i) {
     output_node(rbuf_original->nodes.at(i), SES_COMMON);
+  }
 
   output_node(diff_common_end, SES_COMMON);
 

@@ -39,8 +39,9 @@ protected:
 
 			while(str[pos] == '\x1b') {
 
-				while(str[pos] != 'm')
+				while(str[pos] != 'm') {
 					++pos, ++non_count_characters;
+				}
 
 				++pos, ++non_count_characters;
 
@@ -64,8 +65,9 @@ protected:
 					out << "  ";
 					number_characters_output += 2;
 
-					while(start_pos < str.size() && str[start_pos] == ' ')
+					while(start_pos < str.size() && str[start_pos] == ' ') {
 						++start_pos;
+					}
 
 					if(start_pos <= pos) {
 
@@ -151,8 +153,9 @@ public:
 
     virtual summary_output_stream & pad() {
 
-        for(size_t i = 0; i < depth_; ++i)
+        for(size_t i = 0; i < depth_; ++i) {
             out << '\t';
+		}
 
         number_characters_output = depth_ * 8;
 

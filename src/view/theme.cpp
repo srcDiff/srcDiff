@@ -13,12 +13,15 @@
 
 theme_t::theme_t(const std::string & highlight_level, bool is_html) : keywords(nullptr) {
 
-    if(highlight_level == "full")
+    if(highlight_level == "full") {
         level = FULL;
-    else if(highlight_level == "partial")
+    }
+    else if(highlight_level == "partial") {
         level = PARTIAL;
-    else
+    }
+    else {
         level = NONE;
+    }
 
 }
 

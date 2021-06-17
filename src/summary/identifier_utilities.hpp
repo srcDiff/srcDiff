@@ -36,8 +36,9 @@ private:
 
             std::string::size_type start_pos = pos;
             bool is_identifier_character = is_identifier_char(identifier_[start_pos]);
-            while(pos < identifier_.size() && is_identifier_char(identifier_[pos]) == is_identifier_character)
+            while(pos < identifier_.size() && is_identifier_char(identifier_[pos]) == is_identifier_character) {
                 ++pos;
+	    }
 
             split_identifiers.push_back(identifier_.substr(start_pos, pos - start_pos));
 
@@ -142,15 +143,17 @@ public:
 
                 }
 
-                for(int pos = 0; pos < edits->length; ++pos)
+                for(int pos = 0; pos < edits->length; ++pos) {
                     list_->emplace_back(modified_identifiers[modified_pos++], SRCDIFF_INSERT);
+		}
 
             }
 
         }
 
-        while(original_pos < original_identifiers.size())
-            list_->emplace_back(original_identifiers[original_pos++], SRCDIFF_COMMON);
+        while(original_pos < original_identifiers.size()) {
+	  list_->emplace_back(original_identifiers[original_pos++], SRCDIFF_COMMON);
+	}
 
 
         return *list_;
@@ -169,8 +172,9 @@ public:
  
         split_identifier();
 
-        if(original_identifiers.size() > 1 || modified_identifiers.size() > 1)
+        if(original_identifiers.size() > 1 || modified_identifiers.size() > 1) {
             is_complex = true;
+	}
 
         if(!is_call || original_identifiers.size() <= 2 || modified_identifiers.size() <= 2) {
 
@@ -187,11 +191,13 @@ public:
 
         versioned_string ident;
 
-        for(const std::string & original : original_identifiers)
+        for(const std::string & original : original_identifiers) {
             ident.append(original.c_str(), original.size(), SRCDIFF_DELETE);
+	}
 
-        for(const std::string & modified : modified_identifiers)
+        for(const std::string & modified : modified_identifiers) {
             ident.append(modified.c_str(), modified.size(), SRCDIFF_INSERT);
+	}
 
         trimmed_ = ident;
 
@@ -264,8 +270,9 @@ public:
 
         }
 
-        if(pos > 0 && original_identifiers[pos - 1] == modified_identifiers[pos - 1])
+        if(pos > 0 && original_identifiers[pos - 1] == modified_identifiers[pos - 1]) {
              start_pos -= original_identifiers[pos - 1].size();
+	}
 
         size_t end_offset = 1;
         std::string::size_type end_original = identifier_.original().size(), end_modified = identifier_.modified().size();

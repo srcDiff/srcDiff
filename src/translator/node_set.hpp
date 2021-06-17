@@ -56,19 +56,22 @@ public:
       for(; is_open; ++start) {
 
         // skip whitespace
-        if(is_white_space(node_list.at(start)))
+        if(is_white_space(node_list.at(start))) {
           continue;
+        }
 
         push_back(start);
 
         // opening tags
         if((xmlReaderTypes)node_list.at(start)->type == XML_READER_TYPE_ELEMENT
-           && !(node_list.at(start)->is_empty))
+           && !(node_list.at(start)->is_empty)) {
           ++is_open;
+        }
 
         // closing tags
-        else if((xmlReaderTypes)node_list.at(start)->type == XML_READER_TYPE_END_ELEMENT)
+        else if((xmlReaderTypes)node_list.at(start)->type == XML_READER_TYPE_END_ELEMENT) {
           --is_open;
+        }
 
       }
 
@@ -92,8 +95,9 @@ public:
 
     friend std::ostream & operator<<(std::ostream & out, const node_set & that) {
 
-        for(std::size_t pos = 0, size = that.size(); pos < size; ++pos)
+        for(std::size_t pos = 0, size = that.size(); pos < size; ++pos) {
             out << *that.nodes()[that.vec[pos]];
+        }
 
         return out;
 
@@ -149,8 +153,9 @@ struct hash<node_set> {
 
         const shared_ptr<srcml_node> & node = set.nodes().at(set.at(pos));
         const string & hash_item = node->is_text() ? *node->content : node->name;
-        for(size_t hash_pos = 0, hash_size = hash_item.size(); hash_pos < hash_size; ++hash_pos)
+        for(size_t hash_pos = 0, hash_size = hash_item.size(); hash_pos < hash_size; ++hash_pos) {
             result = (result * 16777619) ^ hash_item[hash_pos];
+        }
 
     }
 

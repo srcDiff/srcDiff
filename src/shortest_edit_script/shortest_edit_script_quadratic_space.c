@@ -88,7 +88,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
       int edit_array = num_edits / (max_distance + 1);
       int edit = num_edits % (max_distance + 1);
 
-      if(edit == 0)
+      if(edit == 0) {
         if((edit_pointers[edit_array] = (struct edit_t *)calloc(max_distance + 1, sizeof(struct edit_t))) == NULL) {
 
           // clean allocates
@@ -103,6 +103,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
           return -1;
 
         }
+      }
 
       int diagonal_pos = diagonal + center;
 
@@ -153,8 +154,9 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
 
         // clean allocates
         int i;
-        for(i = 0; i <= edit_array; ++i)
+        for(i = 0; i <= edit_array; ++i) {
           free(edit_pointers[i]);
+	}
 
         free(edit_pointers);
 
@@ -173,8 +175,9 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
 
   // clean allocates
   int i;
-  for(i = 0; i <= edit_array; ++i)
+  for(i = 0; i <= edit_array; ++i) {
     free(edit_pointers[i]);
+  }
 
   free(edit_pointers);
 

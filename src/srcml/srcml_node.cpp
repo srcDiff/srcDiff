@@ -52,7 +52,6 @@ bool srcml_node::srcml_attr::operator==(const srcml_attr & attr) const {
 
   return false;
 
-
 }
 
 bool srcml_node::srcml_attr::operator!=(const srcml_attr & attr) const {
@@ -76,23 +75,27 @@ srcml_node::srcml_node(const xmlNode & node, bool is_archive) : type((xmlReaderT
 
   name = std::string((const char *)node.name);
 
-  if(content)
+  if(content) {
     content = std::string((const char *)node.content);
+  }
 
   if(node.ns) {
 
-    if(node.ns->href)
+    if(node.ns->href) {
       ns.href = std::string((const char *)node.ns->href);
+    }
 
-    if(node.ns->prefix)
+    if(node.ns->prefix) {
       ns.prefix = std::string((const char *)node.ns->prefix);
+    }
   }
 
   xmlNsPtr node_ns = node.nsDef;
   if(name == "unit" && node_ns) {
 
-    while(is_archive && node_ns && (const char *)node_ns->href != SRCML_CPP_NAMESPACE_HREF)
+    while(is_archive && node_ns && (const char *)node_ns->href != SRCML_CPP_NAMESPACE_HREF) {
         node_ns = node_ns->next;
+    }
 
     if(!node_ns) goto end_ns_def;
 
@@ -157,8 +160,9 @@ srcml_node::srcml_node(const srcml_node & node) : type(node.type), name(node.nam
 
   ns = node.ns;
 
-  for(const srcml_attr & attr : node.properties)
+  for(const srcml_attr & attr : node.properties) {
     properties.push_back(attr);
+  }
 
 }
 

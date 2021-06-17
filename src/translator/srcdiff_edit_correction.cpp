@@ -34,15 +34,19 @@ void srcdiff_edit_correction::split_change(edit_t * delete_edit, edit_t * insert
     edit_t * left_delete = nullptr, * right_delete = nullptr,
            * left_insert = nullptr, * right_insert = nullptr;
 
-    if(original_pos != 0)
+    if(original_pos != 0) {
         left_delete = delete_edit;
-    else if(original_length != 1)
+    }
+    else if(original_length != 1) {
         right_delete = delete_edit;
+    }
 
-    if(modified_pos != 0)
+    if(modified_pos != 0) {
         left_insert = insert_edit;
-    else if(modified_length != 1)
+    }
+    else if(modified_length != 1) {
         right_insert = insert_edit;
+    }
 
     if(original_pos != 0 && original_pos != (original_length - 1)) {
 
@@ -56,8 +60,9 @@ void srcdiff_edit_correction::split_change(edit_t * delete_edit, edit_t * insert
 
         right_insert = (struct edit_t *)malloc(sizeof(struct edit_t));
         if(right_insert == nullptr) {
-            if(original_pos != 0 && original_pos != (original_length - 1))
+            if(original_pos != 0 && original_pos != (original_length - 1)) {
                 free(right_delete);
+            }
             throw std::bad_alloc();
 
         }
@@ -67,10 +72,12 @@ void srcdiff_edit_correction::split_change(edit_t * delete_edit, edit_t * insert
     edit_t * common_edit = (struct edit_t *)malloc(sizeof(struct edit_t));
     if(common_edit == nullptr) {
 
-        if(original_pos != 0 && original_pos != (original_length - 1))
+        if(original_pos != 0 && original_pos != (original_length - 1)) {
             free(right_delete);
-        if(modified_pos != 0 && modified_pos != (modified_length - 1))
+        }
+        if(modified_pos != 0 && modified_pos != (modified_length - 1)) {
             free(right_insert);
+        }
         throw std::bad_alloc();
 
     }
@@ -80,39 +87,51 @@ void srcdiff_edit_correction::split_change(edit_t * delete_edit, edit_t * insert
     common_edit->offset_sequence_two = modified_sequence_two_offset + modified_pos;
     common_edit->length = 1;
 
-    if(left_insert)
+    if(left_insert) {
         common_edit->previous = left_insert;
-    else if(left_delete)
+    }
+    else if(left_delete) {
         common_edit->previous = left_delete;
-    else
+    }
+    else {
         common_edit->previous = original_previous;
+    }
 
-    if(right_delete)
+    if(right_delete) {
         common_edit->next = right_delete;
-    else if(right_insert)
+    }
+    else if(right_insert) {
         common_edit->next = right_insert;
-    else
+    }
+    else {
         common_edit->next = modified_next;
+    }
 
     if(original_previous) {
 
-        if(left_delete)
+        if(left_delete) {
             original_previous->next = left_delete;
-        else if(left_insert)
+        }
+        else if(left_insert) {
             original_previous->next = left_insert;
-        else
+        }
+        else {
             original_previous->next = common_edit;
+        }
 
     }
 
     if(modified_next) {
 
-        if(right_insert)
+        if(right_insert) {
             modified_next->previous = right_insert;
-        else if(right_delete)
+        }
+        else if(right_delete) {
             modified_next->previous = right_delete;
-        else
+        }
+        else {
             modified_next->previous = common_edit;
+        }
 
     }
 
@@ -156,10 +175,12 @@ void srcdiff_edit_correction::split_change(edit_t * delete_edit, edit_t * insert
         right_insert->operation = SES_INSERT;
 
         int offset_one = 0;
-        if(right_delete)
+        if(right_delete) {
             right_insert->offset_sequence_one = right_delete->offset_sequence_one + right_delete->length;
-        else
+        }
+        else {
             right_insert->offset_sequence_one = common_edit->offset_sequence_one + 1;
+        }
 
         right_insert->offset_sequence_two = common_edit->offset_sequence_two + 1;
         right_insert->length = modified_length - modified_pos - 1;
@@ -169,33 +190,42 @@ void srcdiff_edit_correction::split_change(edit_t * delete_edit, edit_t * insert
     }
 
     edit_t * start_edit = nullptr;
-    if(left_delete)
+    if(left_delete) {
         start_edit = left_delete;
-    else if(left_insert)
+    }
+    else if(left_insert) {
         start_edit = left_insert;
-    else
+    }
+    else {
         start_edit = common_edit;
+    }
 
-    if(delete_edit == ses.script())
+    if(delete_edit == ses.script()) {
        ses.script(start_edit);
+    }
 
     start_edits = start_edit;
 
     edit_t * last_edit = nullptr;
-    if(right_insert)
+    if(right_insert) {
         last_edit = right_insert;
-    else if(right_delete)
+    }
+    else if(right_delete) {
         last_edit = right_delete;
-    else
+    }
+    else {
         last_edit = common_edit;
+    }
 
     last_edits = last_edit;
 
-    if(original_length == 1 && delete_edit)
+    if(original_length == 1 && delete_edit) {
         free(delete_edit);
+    }
 
-    if(modified_length == 1 && insert_edit)
+    if(modified_length == 1 && insert_edit) {
         free(insert_edit);
+    }
 
 }
 
@@ -225,8 +255,9 @@ edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
             const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
             const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
 
-            if(srcdiff_compare::node_set_syntax_compare(&set_original, &set_modified, &diff) != 0)
+            if(srcdiff_compare::node_set_syntax_compare(&set_original, &set_modified, &diff) != 0) {
                 continue;
+            }
 
             edit_t * start_edits = nullptr;
             edit_t * last_edits = nullptr;
@@ -251,17 +282,21 @@ edit_t * srcdiff_edit_correction::correct_common(edit_t * start_edit) {
 
     edit_t * current = start_edit;
 
-    if(is_change(current))
+    if(is_change(current)) {
         current = correct_common_inner(current)->next;
-    else
+    }
+    else {
         current = current->next;
+    }
 
     current = current->next;
 
-    if(is_change(current))
+    if(is_change(current)) {
         current = correct_common_inner(current);
-    else if(current->next)
+    }
+    else if(current->next) {
         current = current->next;
+    }
 
     return current;
 
@@ -335,8 +370,9 @@ void srcdiff_edit_correction::correct() {
 
         if(is_change_after && edit_script->next->next->length > 3) continue;
 
-        if(is_change_after)
+        if(is_change_after) {
             free_edit_list.push_back(edit_script->next->next);
+        }
 
         if(    !is_change_before
             && !is_change_after
@@ -355,10 +391,12 @@ void srcdiff_edit_correction::correct() {
         if(start_edit->operation == SES_DELETE) {
 
             delete_edit = copy_edit(start_edit);
-            if(!is_change_before && is_change_after)
+            if(!is_change_before && is_change_after) {
                 insert_edit = copy_edit(start_edit->next->next);
-            else
+            }
+            else {
                 insert_edit = copy_edit(start_edit->next);
+            }
 
         } else {
 
@@ -404,8 +442,9 @@ void srcdiff_edit_correction::correct() {
 
                 --insert_edit->offset_sequence_two;
 
-                if(is_change_after)
+                if(is_change_after) {
                     delete_edit->length += edit_script->next->length;  
+                }
 
             } else {
 
@@ -416,8 +455,9 @@ void srcdiff_edit_correction::correct() {
                 delete_edit->offset_sequence_two -= insert_edit->length;
                 insert_edit->offset_sequence_one += delete_edit->length;
 
-                if(is_change_after)
+                if(is_change_after) {
                     insert_edit->length += edit_script->next->next->length;
+                }
 
             }
 
@@ -463,17 +503,21 @@ void srcdiff_edit_correction::correct() {
                 const node_set & set_original = sets_original.at(original_set_pos);
                 const node_set & set_modified = sets_modified.at(modified_set_pos);
 
-                if(set_original.size() >= 3 * set_modified.size())
+                if(set_original.size() >= 3 * set_modified.size()) {
                     continue;
+                }
 
-                if(set_modified.size() >= 3 * set_original.size())
+                if(set_modified.size() >= 3 * set_original.size()) {
                     continue;
+                }
 
-                if(set_original.size() < 3 * common_set.size())
+                if(set_original.size() < 3 * common_set.size()) {
                     continue;
+                }
 
-                if(set_modified.size() < 3 * common_set.size())
+                if(set_modified.size() < 3 * common_set.size()) {
                     continue;
+                }
 
                 bool is_similar = measure->max_length() >= 8 
                     ? (10 * measure->similarity() >= 9 * measure->max_length() 
@@ -486,16 +530,20 @@ void srcdiff_edit_correction::correct() {
                 if(is_similar
                     && 3 * common_set_text.size() <= measure->similarity()) {
 
-                    if(before)
+                    if(before) {
                         before->next = delete_edit;
-                    if(after)
+                    }
+                    if(after) {
                         after->previous = insert_edit;
+                    }
 
-                    for(edit_t * edit : free_edit_list)
+                    for(edit_t * edit : free_edit_list) {
                         free(edit);
+                    }
 
-                    if(start_edit == ses.script())
+                    if(start_edit == ses.script()) {
                         ses.script(delete_edit);
+                    }
 
                     edit_t * last_edits = nullptr;
                     split_change(delete_edit,

@@ -51,19 +51,23 @@ int shortest_edit_script_hybrid_inner(const void * sequence_one, int sequence_on
 
       struct edit_t * previous_edits = 0;
       struct edit_t * previous_last_edit = 0;
-      if(edit_distance < threshold)
+      if(edit_distance < threshold) {
         shortest_edit_script_inner(sequence_one, sequence_one_start, points[0].x, sequence_two, sequence_two_start, points[0].y, &previous_edits, &previous_last_edit, compare, accessor, context);
-      else
+      }
+      else {
         shortest_edit_script_hybrid_inner(sequence_one, sequence_one_start, points[0].x, sequence_two, sequence_two_start, points[0].y, &previous_edits, &previous_last_edit, compare, accessor, context, threshold);
+      }
 
       if(edit_script) (*edit_script) = previous_edits;
 
       struct edit_t * new_edits = 0;
       struct edit_t * next_last_edit = 0;
-      if(edit_distance < threshold)
+      if(edit_distance < threshold) {
         shortest_edit_script_inner(sequence_one, points[1].x, sequence_one_end, sequence_two, points[1].y, sequence_two_end, &new_edits, &next_last_edit, compare, accessor, context);
-      else
+      }
+      else {
         shortest_edit_script_hybrid_inner(sequence_one, points[1].x, sequence_one_end, sequence_two, points[1].y, sequence_two_end, &new_edits, &next_last_edit, compare, accessor, context, threshold);
+      }
 
       previous_last_edit->next = new_edits;
       new_edits->previous = previous_last_edit;
@@ -184,12 +188,14 @@ int shortest_edit_script_hybrid(const void * sequence_one, int sequence_one_end,
 
   int max_distance = ceil(((sequence_one_end - sequence_one_start) + (sequence_two_end - sequence_two_start)) / 2.0) * 2;
 
-  if(max_distance < threshold)
+  if(max_distance < threshold) {
     shortest_edit_script_inner(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, edit_script, 0,
       compare, accessor, context);
-  else
+  }
+  else {
     shortest_edit_script_hybrid_inner(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, edit_script, 0,
       compare, accessor, context, threshold);
+  }
 
   int edit_distance = merge_sequential_edits(edit_script);
 

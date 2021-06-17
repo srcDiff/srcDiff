@@ -495,16 +495,19 @@ void srcdiff_input_source_svn::process_files_from() {
       line.erase(0, white_length);
 
       // skip blank lines or comment lines
-      if (line[0] == '\0' || line[0] == '#')
+      if (line[0] == '\0' || line[0] == '#') {
         continue;
+      }
 
       // remove any end whitespace
       // TODO:  Extract function, and use elsewhere
       for (int i = line.size() - 1; i != 0; --i) {
-        if (isspace(line[i]))
+        if (isspace(line[i])) {
           line[i] = 0;
-        else
+	}
+        else {
           break;
+	}
 
       }
 

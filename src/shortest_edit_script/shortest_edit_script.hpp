@@ -85,8 +85,9 @@ int shortest_edit_script_t::approximate_compute(const T & structure_one, const T
         const void * left = accessor(pos_one, (const void *)structure_one.data(), context);
         const void * right = accessor(pos_two, (const void *)structure_two.data(), context);
 
-        if(compare(left, right, context) != 0)
+        if(compare(left, right, context) != 0) {
           continue;
+	}
 
         match_one = pos_one;
         match_two = pos_two;
@@ -133,11 +134,13 @@ int shortest_edit_script_t::approximate_compute(const T & structure_one, const T
       edit->previous = last_edit;
       edit->next = nullptr;
 
-      if(edit_script == nullptr)
+      if(edit_script == nullptr) {
         edit_script = edit;
+      }
 
-      if(last_edit)
+      if(last_edit) {
         last_edit->next = edit;
+      }
 
       last_edit = edit;
 
@@ -153,11 +156,13 @@ int shortest_edit_script_t::approximate_compute(const T & structure_one, const T
       edit->previous = last_edit;
       edit->next = nullptr;
 
-      if(edit_script == nullptr)
+      if(edit_script == nullptr) {
         edit_script = edit;
+      }
 
-      if(last_edit)
+      if(last_edit) {
         last_edit->next = edit;
+      }
 
       last_edit = edit;
 
@@ -183,11 +188,13 @@ int shortest_edit_script_t::approximate_compute(const T & structure_one, const T
     edit->previous = last_edit;
     edit->next = nullptr;
 
-    if(edit_script == nullptr)
+    if(edit_script == nullptr) {
       edit_script = edit;
+    }
 
-    if(last_edit)
+    if(last_edit) {
       last_edit->next = edit;
+    }
 
     last_edit = edit;
 
@@ -203,11 +210,13 @@ int shortest_edit_script_t::approximate_compute(const T & structure_one, const T
     edit->previous = last_edit;
     edit->next = nullptr;
 
-    if(edit_script == nullptr)
+    if(edit_script == nullptr) {
       edit_script = edit;
+    }
 
-    if(last_edit)
+    if(last_edit) {
       last_edit->next = edit;
+    }
 
     last_edit = edit;
 

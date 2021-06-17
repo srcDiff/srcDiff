@@ -98,8 +98,9 @@ public:
 boost::program_options::variables_map parse_user_definition_file(const std::string & theme_filename) {
 
     std::ifstream theme_file(theme_filename.c_str());
-    if(!theme_file)
+    if(!theme_file) {
         throw std::string("unable to open '" + theme_filename + '\'');
+    }
 
     // Declare the supported options.
     boost::program_options::options_description desc("Theme options");

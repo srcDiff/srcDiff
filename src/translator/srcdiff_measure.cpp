@@ -109,7 +109,8 @@ void srcdiff_measure::process_edit_script(const edit_t * edit_script) {
 
     a_similarity = std::min(delete_similarity, insert_similarity);
 
-    if(a_similarity <= 0)
+    if(a_similarity <= 0) {
       a_similarity = 0;
+    }
 
 }

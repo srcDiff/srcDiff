@@ -16,16 +16,19 @@ void advance_to_child(const srcml_nodes & nodes,
 
   while(start_pos < size) {
 
-    if(nodes.at(start_pos)->type == END_TAG_TYPE)
+    if(nodes.at(start_pos)->type == END_TAG_TYPE) {
       --depth;
+    }
 
     if(nodes.at(start_pos)->type == type
       && nodes.at(start_pos)->name == name
-      && depth == 0)
+       && depth == 0) {
       break;
+    }
 
-    if(!nodes.at(start_pos)->is_empty && nodes.at(start_pos)->type == START_TAG_TYPE)
+    if(!nodes.at(start_pos)->is_empty && nodes.at(start_pos)->type == START_TAG_TYPE) {
         ++depth;
+    }
 
     if(depth < 0) {
 

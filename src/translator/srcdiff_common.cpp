@@ -63,8 +63,9 @@ void srcdiff_common::markup_common() {
         output_node(diff_original_start, SES_DELETE);
         output_node(diff_ws_start, SES_DELETE);
 
-        for(int k = i; k < opivot; ++k)
+        for(int k = i; k < opivot; ++k) {
           output_node(rbuf_original->nodes.at(k), SES_DELETE);
+        }
 
         output_node(diff_ws_end, SES_DELETE);
         output_node(diff_original_end, SES_DELETE);
@@ -76,8 +77,9 @@ void srcdiff_common::markup_common() {
         output_node(diff_modified_start, SES_INSERT);
         output_node(diff_ws_start, SES_INSERT);
 
-        for(int k = j; k < npivot; ++k)
+        for(int k = j; k < npivot; ++k) {
           output_node(rbuf_modified->nodes.at(k), SES_INSERT);
+        }
 
         output_node(diff_ws_end, SES_INSERT);
         output_node(diff_modified_end, SES_INSERT);
@@ -86,8 +88,9 @@ void srcdiff_common::markup_common() {
 
         if(opivot < olength) {
 
-        for(int k = opivot; k < olength; ++k)
+        for(int k = opivot; k < olength; ++k) {
           output_node(rbuf_original->nodes.at(k), SES_COMMON);
+        }
 
         }
 
@@ -100,8 +103,9 @@ void srcdiff_common::markup_common() {
       output_node(diff_original_start, SES_DELETE);
         output_node(diff_ws_start, SES_DELETE);
 
-      for(; i < oend && rbuf_original->nodes.at(i)->is_white_space(); ++i)
+      for(; i < oend && rbuf_original->nodes.at(i)->is_white_space(); ++i) {
         output_node(rbuf_original->nodes.at(i), SES_DELETE);
+      }
 
 
       output_node(diff_ws_end, SES_DELETE);
@@ -116,8 +120,9 @@ void srcdiff_common::markup_common() {
       output_node(diff_ws_start, SES_INSERT);
 
 
-      for(; j < nend && rbuf_modified->nodes.at(j)->is_white_space(); ++j)
+      for(; j < nend && rbuf_modified->nodes.at(j)->is_white_space(); ++j) {
         output_node(rbuf_modified->nodes.at(j), SES_INSERT);
+      }
 
 
       output_node(diff_ws_end, SES_INSERT);
@@ -130,12 +135,14 @@ void srcdiff_common::markup_common() {
 
       // collect all adjacent text nodes character arrays and input difference
       std::string text_original = "";
-      for(; i < oend && rbuf_original->nodes.at(i)->is_text(); ++i)
+      for(; i < oend && rbuf_original->nodes.at(i)->is_text(); ++i) {
         text_original += rbuf_original->nodes.at(i)->content ? *rbuf_original->nodes.at(i)->content : "";
+      }
 
       std::string text_modified = "";
-      for(; j < nend && rbuf_modified->nodes.at(j)->is_text(); ++j)
+      for(; j < nend && rbuf_modified->nodes.at(j)->is_text(); ++j) {
         text_modified += rbuf_modified->nodes.at(j)->content ? *rbuf_modified->nodes.at(j)->content : "";
+      }
 
       --i;
       --j;
@@ -221,14 +228,18 @@ void srcdiff_common::markup_common() {
     } else {
 
 #if DEBUG
-      if(rbuf_original->nodes.at(i)->is_text())
+      if(rbuf_original->nodes.at(i)->is_text()) {
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_original->nodes.at(i)->content->c_str());
-      else
+      }
+      else {
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_original->nodes.at(i)->name.c_str());
-      if(rbuf_modified->nodes.at(j)->is_text())
+      }
+      if(rbuf_modified->nodes.at(j)->is_text()) {
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_modified->nodes.at(j)->content->c_str());
-      else
+      }
+      else {
         fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_modified->nodes.at(j)->name.c_str());
+      }
 
       std::cerr << "Original:\n";
       for(int pos = begin_original; pos < oend; ++pos) {
@@ -266,8 +277,9 @@ void srcdiff_common::markup_common() {
     // whitespace delete
     // output diff tag
 
-    for( ; i < oend; ++i)
+    for( ; i < oend; ++i) {
       output_node(rbuf_original->nodes.at(i), SES_DELETE);
+    }
 
     // output diff tag
     output_node(diff_original_end, SES_DELETE);
@@ -278,8 +290,9 @@ void srcdiff_common::markup_common() {
     // whitespace delete
     // output diff tag
 
-    for( ; j < nend; ++j)
+    for( ; j < nend; ++j) {
       output_node(rbuf_modified->nodes.at(j), SES_INSERT);
+    }
 
     // output diff tag
     output_node(diff_modified_end, SES_INSERT);

@@ -31,9 +31,11 @@ std::string remove_white_space(std::string & source) {
 
   std::string dest;
 
-  for(unsigned int i = 0; i < source.size(); ++i)
-    if(!isspace(source[i]))
+  for(unsigned int i = 0; i < source.size(); ++i) {
+    if(!isspace(source[i])) {
        dest += source[i];
+    }
+  }
 
   return dest;
 
