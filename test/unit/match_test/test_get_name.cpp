@@ -207,7 +207,7 @@ const int names_start_pos[] = {
 	 26,
 	 32,
 
-	 2,
+	 2,  // std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) {
 	 3,
 	 9,
 	 19,
@@ -318,12 +318,6 @@ const std::string names[] = {
 
 
 BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(names_start_pos) ^ bu::make(names), node, names_start_pos, rhs) {
- 
-        for(int i = 0; i < node->size(); ++i) {
-        const auto & n = node->at(i);
-        std::cerr << *n << " : " << i << '\n';
-    }
-    std::cerr << "\n\n";
   
         BOOST_TEST(get_name(*node, names_start_pos) == rhs);
 
