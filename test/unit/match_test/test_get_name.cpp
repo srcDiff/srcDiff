@@ -92,11 +92,6 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 	create_nodes("union union_name { int var_name1; int var_name2; };", "C++"),
 	create_nodes("union union_name { int var_name1; int var_name2; };", "C++"),
 
-	create_nodes("union union_name obj;", "C++"),
-	create_nodes("union union_name obj;", "C++"),
-	create_nodes("union union_name obj;", "C++"),
-	create_nodes("union union_name obj;", "C++"),
-
 	create_nodes("using namespace std;", "C++"),
 
 	create_nodes("template <class T> Stack { };", "C++"),
@@ -110,6 +105,11 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 	create_nodes("const auto & n = node->at(i);", "C++"),
 	create_nodes("const auto & n = node->at(i);", "C++"),
 
+	create_nodes("std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) {", "C++"),
+	create_nodes("std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) {", "C++"),
+	create_nodes("std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) {", "C++"),
+	create_nodes("std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) {", "C++"),
+	create_nodes("std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) {", "C++"),
 	
 };
 
@@ -169,12 +169,12 @@ const int names_start_pos[] = {
 	 6,  // const int&& function();
 	 14,
 
-	 8,  // decltype(forwards<T1>(t1) + forward<T2>(t2) 8,42 MAYBE DOESNT WORK RIGHT?
+	 8,  // decltype(forwards<T1>(t1) + forward<T2>(t2)
 	 9,  
 	 42,
 	 43,
 
-	 3,  // A<T> a; simpler version of problem with case above
+	 3,  // A<T> a;
 	 4,
 	 11,
 	 21,
@@ -194,11 +194,6 @@ const int names_start_pos[] = {
 	 29,
 	 34, 
 
-	 3,  // union union_name obj; MAYBE DOESNT WORK
-	 4,
-	 8,
-	 14,
-
 	 6,  // using namespace std;
 
 	 7,  // template <class T> Stack { };
@@ -212,6 +207,12 @@ const int names_start_pos[] = {
 	 26,
 	 32,
 
+	 2,
+	 3,
+	 9,
+	 19,
+	 21,
+	 
 };
 
 
@@ -269,12 +270,12 @@ const std::string names[] = {
 	"int",
 	"function",
 
-	"forwards", // MIGHT NOT BE RIGHT?
 	"forwards",
-	"forward", // MIGHT NOT BE RIGHT?
+	"forwards",
+	"forward", 
 	"forward",
 
-        "A", // Should be A<T> ?? simpler case of above
+        "A",
 	"A",
 	"T",
 	"a",
@@ -293,11 +294,6 @@ const std::string names[] = {
 	"var_name1",
 	"int",
 	"var_name2",
-
-	"unionunion_name", // NOT RIGHT should return union union_name?
-	"union",
-	"union_name",
-	"obj",
 	
 	"std",
 
@@ -312,11 +308,23 @@ const std::string names[] = {
 	"node",
 	"at",
 
+	"std::ostream",
+	"std",
+	"ostream",
+	"operator<<",
+	"<<",
+
 };
 
 
 BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(names_start_pos) ^ bu::make(names), node, names_start_pos, rhs) {
-
+ 
+        for(int i = 0; i < node->size(); ++i) {
+        const auto & n = node->at(i);
+        std::cerr << *n << " : " << i << '\n';
+    }
+    std::cerr << "\n\n";
+  
         BOOST_TEST(get_name(*node, names_start_pos) == rhs);
 
 	std::cerr << names_start_pos << " : " << get_name(*node, names_start_pos) << "\n\n";
