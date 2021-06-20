@@ -47,7 +47,7 @@ const int start_pos[] = {
     16,     // <while>:16, skip to ' ':35
 
     // Skip Empty Tag
-    17,     // <incr/>:17, should skip <incr>:17 to ')':19
+    17,     // <incr/>:17, skip <incr>:17 to ')':19
 
 };
 
@@ -71,16 +71,34 @@ const int end_pos[] = {
 
 };
 
-BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(start_pos) ^ bu::make(end_pos), node, start_pos, rhs) {
-    int start = start_pos;
+const std::shared_ptr<srcml_nodes> errors[] = {
 
-    for(int i = 0; i < node->size(); ++i) {
-        const auto & n = node->at(i);
-        std::cerr << *n << " : " << i << '\n';
-    }
-    std::cerr << "\n\n";
+    // Start position is not a starting tag
+    create_nodes("if(1) {}", "C++"),
+    create_nodes("if(1) {}", "C++"),
+
+};
+
+int error_start_pos[] = {
+
+    // Start position is not a starting tag
+    2,      // 'if':2
+    8,      // </literal>:8
+
+};
+
+BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(start_pos) ^ bu::make(end_pos), node, start_pos, rhs) {
+    
+    int start = start_pos;
 
     skip_tag(*node, start);
     
     BOOST_TEST(start == rhs);
+}
+
+BOOST_DATA_TEST_CASE(error, bu::make(errors) ^ bu::make(error_start_pos), node, error_start_pos) {
+    
+    int start = error_start_pos;
+
+    BOOST_CHECK_THROW(skip_tag(*node, start);, std::invalid_argument);
 }
