@@ -24,9 +24,8 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 
 	create_nodes("public foo:", "C++"),
 
-	create_nodes("foreach (int i = 0; i < count; ++i) {}(", "C++"),
-	create_nodes("foreach (int i = 0; i < count; ++i) {}(", "C++"),
-	create_nodes("foreach (int i = 0; i < count; ++i) {}(", "C++"),
+	create_nodes("for(int i = 0; i < count; ++i) {}", "C++"),
+	create_nodes("for(int i = 0; i < count; ++i) {}", "C++"),
 
 	create_nodes("a::b;", "C++"),
 	create_nodes("a::b;", "C++"),
@@ -56,9 +55,7 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 	create_nodes("Color my_colors = Color::red;", "C++"),
 
 	create_nodes("struct name_of_struct { }", "C++"),
-	
-	create_nodes("struct name_of _struct { }", "C++"),
-	create_nodes("struct name_of _struct { }", "C++"),
+	create_nodes("struct name_of_struct { }", "C++"),
 
 	create_nodes("object_name.param_name = 5;", "C++"),
 	create_nodes("object_name.param_name = 5;", "C++"),
@@ -105,11 +102,11 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 	create_nodes("const auto & n = node->at(i);", "C++"),
 	create_nodes("const auto & n = node->at(i);", "C++"),
 
-	create_nodes("std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) {", "C++"),
-	create_nodes("std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) {", "C++"),
-	create_nodes("std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) {", "C++"),
-	create_nodes("std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) {", "C++"),
-	create_nodes("std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) {", "C++"),
+	create_nodes("std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) { }", "C++"),
+	create_nodes("std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) { }", "C++"),
+	create_nodes("std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) { }", "C++"),
+	create_nodes("std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) { }", "C++"),
+	create_nodes("std::ostream & operator<<(std::ostream & out, const srcml_node::srcml_attr & that) { }", "C++"),
 	
 };
 
@@ -126,9 +123,8 @@ const int names_start_pos[] = {
 	 
 	 3,  // public foo:
 
-	 13, // foreach (int i = 0; i < count; ++i) {}(
-	 40,
-	 8,
+	 7, // foreach (int i = 0; i < count; ++i) {}(
+	 12,
 
 	 2,  // a::b;
 	 3,
@@ -158,9 +154,7 @@ const int names_start_pos[] = {
 	 23,
 	 
 	 3,  // struct name_of_struct { }
-
-	 4,  // struct name_of struct { }
-	 9,
+	 4,  
 
 	 2,  // object_name.param_name = 5;
 	 3,
@@ -227,9 +221,8 @@ const std::string names[] = {
 	
         "foo",
 
-	"i",
-	"count",
 	"int",
+	"i",
 
 	"a::b",
 	"a",
@@ -259,9 +252,7 @@ const std::string names[] = {
 	"red",
 
 	"name_of_struct",
-	
-	"name_of",
-	"_struct",
+	"",
 
 	"object_name.param_name",
 	"object_name",
@@ -318,7 +309,7 @@ const std::string names[] = {
 
 
 BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(names_start_pos) ^ bu::make(names), node, names_start_pos, rhs) {
-  
+
         BOOST_TEST(get_name(*node, names_start_pos) == rhs);
 
 	std::cerr << names_start_pos << " : " << get_name(*node, names_start_pos) << "\n\n";
