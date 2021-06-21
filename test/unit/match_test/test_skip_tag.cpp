@@ -71,7 +71,7 @@ const int end_pos[] = {
 
 };
 
-const std::shared_ptr<srcml_nodes> errors[] = {
+const std::shared_ptr<srcml_nodes> error_nodes[] = {
 
     // Start position is not a starting tag
     create_nodes("if(1) {}", "C++"),
@@ -96,7 +96,7 @@ BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(start_pos) ^ bu::make(en
     BOOST_TEST(start == rhs);
 }
 
-BOOST_DATA_TEST_CASE(error, bu::make(errors) ^ bu::make(error_start_pos), node, error_start_pos) {
+BOOST_DATA_TEST_CASE(errors, bu::make(error_nodes) ^ bu::make(error_start_pos), node, error_start_pos) {
     
     int start = error_start_pos;
 
