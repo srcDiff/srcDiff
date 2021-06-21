@@ -22,3 +22,4 @@
 # add tests
 add_unit_test(test_is_interchangeable_match.cpp $<TARGET_OBJECTS:common>)
 add_unit_test(test_extract_name.cpp $<TARGET_OBJECTS:common>)
+add_unit_test(test_top_level_name_seek.cpp $<TARGET_OBJECTS:common>)
