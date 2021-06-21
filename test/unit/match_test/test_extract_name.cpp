@@ -27,96 +27,200 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 	
 	
 	create_nodes("int i", "C++"),
-	create_nodes("int i", "C++"),
-	create_nodes("int i", "C++"),
-	create_nodes("int i", "C++"),
 	
-	create_nodes("int decl_stmt;", "C++"),
-	create_nodes("int parameter;", "C++"),
-	create_nodes("int param;", "C++"),
-	create_nodes("int decl;", "C++"),
+	create_nodes("int i;", "C++"),
 
-	create_nodes("const std::shared_ptr<srcml_nodes> nodes[] = {", "C++"),
+	create_nodes("a::b", "C++"),
+        create_nodes("a::b", "C++"),
+	create_nodes("a::b", "C++"),
+
+	create_nodes("a::b;", "C++"),
+
+	create_nodes("const int NUM = 6;", "C++"),
+	create_nodes("const int NUM = 6;", "C++"),
+	create_nodes("const int NUM = 6;", "C++"),
+	create_nodes("const int NUM = 6;", "C++"),
+
+	create_nodes("*number1 = * number2;", "C++"),
+	create_nodes("*number1 = * number2;", "C++"),
+	create_nodes("*number1 = * number2;", "C++"),
+	create_nodes("*number1 = * number2;", "C++"),
+	create_nodes("*number1 = * number2;", "C++"),
+	create_nodes("*number1 = * number2;", "C++"),
+
+	create_nodes("object_name.param_name = 5;", "C++"),
+	create_nodes("object_name.param_name = 5;", "C++"),
+	create_nodes("object_name.param_name = 5;", "C++"),
 	
-	create_nodes("const", "C++"),
-	create_nodes("const", "C++"),
-	create_nodes("const", "C++"),
-	create_nodes("const", "C++"),
+	create_nodes("object_name.obj_array[3] = 4;", "C++"),
+	create_nodes("object_name.obj_array[3] = 4;", "C++"),
+	create_nodes("object_name.obj_array[3] = 4;", "C++"),
+	create_nodes("object_name.obj_array[3] = 4;", "C++"),
 
-	create_nodes("int numbers[5] = { 1, 2, 3, 4, 5 };", "C++"),
+	create_nodes("A<T> a;", "C++"),
+	create_nodes("A<T> a;", "C++"),
+	create_nodes("A<T> a;", "C++"),
+	create_nodes("A<T> a;", "C++"),
+	create_nodes("A<T> a;", "C++"),
+	
+	create_nodes("A<T> a;", "C++"),
+	create_nodes("A<T> a;", "C++"),
+	create_nodes("A<T> a;", "C++"),
 
-	create_nodes("int numbers[5];", "C++"),
-	create_nodes("int numbers[5];", "C++"),
+	create_nodes("enum Color { red, blue } c;", "C++"),
+	create_nodes("enum Color { red, blue } c;", "C++"),
+	create_nodes("enum Color { red, blue } c;", "C++"),
+	create_nodes("enum Color { red, blue } c;", "C++"),
+
+	create_nodes("struct name_of_struct { }", "C++"),
+	create_nodes("struct name_of_struct { }", "C++"),
+	create_nodes("struct name_of_struct { }", "C++"),
+
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
+
 	
 };
 
 
 
 const int start_pos[] = {
-	
 
-	0,
-	1,
-	2,
-	3,
+        1, // int i
 	
-	1,
-	1,
-	4,
-	4,
-	
-	2,
-	
-	0,
-	1,
-	2,
-	3,
+	7, // int i;
 
-	0,
-	
+	0, // a::b
+	1,
 	7,
-        0,
 	
-};
+	1, // a::b;
+	
+	4, // const int NUM = 6;
+	1,
+	2,
+	0,
 
+	0, // *number1 = * number2;
+	1,
+	2,
+	3,
+	4,
+	5,
+
+	0, // object_name.param_name = 5;
+	1,
+	2,
+
+	0, // object_name.obj_array[3] = 4
+	1,
+	2,
+	3,
+
+	0, // A<T> a;
+	1,
+	2,
+	3,
+	4,
+
+	9, // A<T> a;
+	10,
+	11,
+
+	0, // enum Color { red, blue } c;
+	1,
+	2,
+	26,
+
+	0, // struct name_of_struct { }
+	1,
+	2,
+
+	0, // const auto & n = node->at(i)
+	1,
+	24,
+	25,
+	28,
+};
 
 
 
 const std::string names[] = {
 
 
-	"i",
-	"int i",
-	"int i",
-	"int i",
-	
-	"decl_stmt",
-	"parameter",
-	"param",
-	"decl",
-
-	"",
-	
-	"",
-	"",
-	"",
-	"",
-
 	"int",
+	"i",
+
+	"a::b",
+	"a",
+	"b",
+
+	"a::b",
 	
-	"ee",
-	"ww",
+        "int",
+	"NUM",
+	"int",
+	"",
+
+	"",
+	"number1",
+	"",
+	"number1",
+	"number1",
+	"",
 	
+	"",
+	"object_name.param_name",
+	"object_name",
+
+	"",
+	"object_name.obj_array[3]",
+	"object_name",
+	"",
+
+	"",
+	"a",
+	"A",
+	"A",
+	"",
+
+	"",
+	"T",
+	"",
+
+	"Color",
+	"Color",
+	"Color",
+	"c",
+
+	"name_of_struct",
+        "name_of_struct",
+	"name_of_struct",
+
+	"",
+	"n",
+	"node->at",
+	"node",
+	""
 };
 
 
 
 BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(start_pos) ^ bu::make(names), node, start_pos, rhs) {
 
+        for(int i = 0; i < node->size(); ++i) {
+              const auto & n = node->at(i);
+              std::cerr << *n << " : " << i << '\n';
+        }
+	std::cerr << "\n";
+	
+
+	BOOST_TEST(extract_name(*node, start_pos) == rhs);
   
 	std::cerr << node->at(start_pos)->name << ":" << start_pos << ":" << rhs << "\n\n";
-
-    BOOST_TEST(extract_name(*node, start_pos) == rhs);
 }
 
 
