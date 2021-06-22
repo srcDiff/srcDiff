@@ -141,14 +141,13 @@ const int start_pos[] = {
 	15,
 
 	16,
-	17, // Causes error when there are no names it can find. Error happens when starting node
-	    // contains something such as 'n', but works fine and returns "" if node contains start/end tag.
+	17, 
 	18,  
 
-	19, // same error as position 17 
+	19,  
 	20,
-	21, // same error as position 17
-	22, // same error as position 17
+	21,
+	22,
 	
 	23,
 	24,
@@ -159,7 +158,7 @@ const int start_pos[] = {
 	28,
 
 	36,
-	37, // same error as position 17
+	37,
 };
 
 
@@ -199,22 +198,20 @@ const std::string names[] = {
         "name_of_struct",
 	"name_of_struct",
 
-	"",  // 0
+	"",  // Position 0 in const auto & n = node->at(i);
 	"n", 
 	"", 
 	"",
 	"n",
-
-	"n", // 5
 	"n",
-
+	"n",
+	
 	"",  // 11
 	"n",
 	"n",
 	"n",
 	"n",
-
-	"", // 16
+	"",
 	"",
 	"",
 
