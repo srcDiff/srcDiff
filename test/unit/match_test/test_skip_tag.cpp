@@ -14,8 +14,7 @@ namespace bu = boost::unit_test::data;
 
 const std::shared_ptr<srcml_nodes> nodes[] = {
 
-    create_nodes("int i", "C++"),
-    create_nodes("int main { int num = 0; }", "C++"),
+    create_nodes("int i;", "C++"),
 
     // Nested - Skip Outer Tag
     create_nodes("if(x >= 10) { if(y <= 10) {} }", "C++"),
@@ -33,8 +32,7 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 
 const int start_pos[] = {
 
-    0,      // <decl>:0, skip to '':11
-    1,      // <decl>:1, skip to </decl_stmt>:37
+    0,      // <decl>:0, skip to '':14
 
     // Nested - Skip Outer Tag
     1,      // <if>:1, skip to </if_stmt>:59
@@ -53,8 +51,7 @@ const int start_pos[] = {
 
 const int end_pos[] = {
 
-    11,     // '':11
-    37,     // </decl_stmt>:37
+    14,     // '':14
 
     // Nested - Skip Outer Tag
     59,     // </if_stmt>:59
