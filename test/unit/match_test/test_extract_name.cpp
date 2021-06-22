@@ -51,8 +51,8 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 	create_nodes("struct name_of_struct { }", "C++"),
 	create_nodes("struct name_of_struct { }", "C++"),
 
-	create_nodes("const auto & n = node->at(i);", "C++"), // Bunch with the same input trying different 
-	create_nodes("const auto & n = node->at(i);", "C++"), // start positions 
+	create_nodes("const auto & n = node->at(i);", "C++"), 
+	create_nodes("const auto & n = node->at(i);", "C++"),  
 	create_nodes("const auto & n = node->at(i);", "C++"),
 	create_nodes("const auto & n = node->at(i);", "C++"),
 	create_nodes("const auto & n = node->at(i);", "C++"),
@@ -141,8 +141,9 @@ const int start_pos[] = {
 	15,
 
 	16,
-	17, // Causes error because no names it can find, error happens when starting node
-	18, // is not one containing xml start and end tags, such as 'n'. 
+	17, // Causes error when there are no names it can find. Error happens when starting node
+	    // contains something such as 'n', but works fine and returns "" if node contains start/end tag.
+	18,  
 
 	19, // same error as position 17 
 	20,
@@ -163,8 +164,7 @@ const int start_pos[] = {
 
 
 const std::string names[] = {
-
-
+	
 	"int",
 	"i",
 
@@ -237,13 +237,6 @@ const std::string names[] = {
 
 
 BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(start_pos) ^ bu::make(names), node, start_pos, rhs) {
-
-        for(int i = 0; i < node->size(); ++i) {
-              const auto & n = node->at(i);
-              std::cerr << *n << " : " << i << '\n';
-        }
-	std::cerr << "\n";
-	
 
 	BOOST_TEST(extract_name(*node, start_pos) == rhs);
   
