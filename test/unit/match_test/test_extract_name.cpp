@@ -12,16 +12,6 @@
 
 namespace bu = boost::unit_test::data;
 
-
-
-
-//=========================================================================
-//===================== passing test set Start here =======================
-//=========================================================================
-
-
-
-
 	
 const std::shared_ptr<srcml_nodes> nodes[] = {
 	
@@ -57,34 +47,45 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 	create_nodes("object_name.obj_array[3] = 4;", "C++"),
 	create_nodes("object_name.obj_array[3] = 4;", "C++"),
 
-	create_nodes("A<T> a;", "C++"),
-	create_nodes("A<T> a;", "C++"),
-	create_nodes("A<T> a;", "C++"),
-	create_nodes("A<T> a;", "C++"),
-	create_nodes("A<T> a;", "C++"),
+	create_nodes("struct name_of_struct { }", "C++"),
+	create_nodes("struct name_of_struct { }", "C++"),
+	create_nodes("struct name_of_struct { }", "C++"),
+
+	create_nodes("const auto & n = node->at(i);", "C++"), // Bunch with the same input trying different 
+	create_nodes("const auto & n = node->at(i);", "C++"), // start positions 
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
+
+	create_nodes("const auto & n = node->at(i);", "C++"),
+        create_nodes("const auto & n = node->at(i);", "C++"),
+
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
+
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
+
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
 	
-	create_nodes("A<T> a;", "C++"),
-	create_nodes("A<T> a;", "C++"),
-	create_nodes("A<T> a;", "C++"),
-
-	create_nodes("enum Color { red, blue } c;", "C++"),
-	create_nodes("enum Color { red, blue } c;", "C++"),
-	create_nodes("enum Color { red, blue } c;", "C++"),
-	create_nodes("enum Color { red, blue } c;", "C++"),
-
-	create_nodes("struct name_of_struct { }", "C++"),
-	create_nodes("struct name_of_struct { }", "C++"),
-	create_nodes("struct name_of_struct { }", "C++"),
-
 	create_nodes("const auto & n = node->at(i);", "C++"),
 	create_nodes("const auto & n = node->at(i);", "C++"),
 	create_nodes("const auto & n = node->at(i);", "C++"),
 	create_nodes("const auto & n = node->at(i);", "C++"),
-	create_nodes("const auto & n = node->at(i);", "C++"),
-
 	
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
+
+	create_nodes("const auto & n = node->at(i);", "C++"),
+	create_nodes("const auto & n = node->at(i);", "C++"),
 };
-
 
 
 const int start_pos[] = {
@@ -120,32 +121,45 @@ const int start_pos[] = {
 	2,
 	3,
 
-	0, // A<T> a;
-	1,
-	2,
-	3,
-	4,
-
-	9, // A<T> a;
-	10,
-	11,
-
-	0, // enum Color { red, blue } c;
-	1,
-	2,
-	26,
-
 	0, // struct name_of_struct { }
 	1,
 	2,
 
 	0, // const auto & n = node->at(i)
 	1,
+	2,
+	3,
+	4,
+	
+	5,
+	6,
+
+	11,
+	12,
+	13,
+	14,
+	15,
+
+	16,
+	17, // Causes error because no names it can find, error happens when starting node
+	18, // is not one containing xml start and end tags, such as 'n'. 
+
+	19, // same error as position 17 
+	20,
+	21, // same error as position 17
+	22, // same error as position 17
+	
+	23,
 	24,
 	25,
+	26,
+	
+	27,
 	28,
-};
 
+	36,
+	37, // same error as position 17
+};
 
 
 const std::string names[] = {
@@ -181,32 +195,45 @@ const std::string names[] = {
 	"object_name",
 	"",
 
-	"",
-	"a",
-	"A",
-	"A",
-	"",
-
-	"",
-	"T",
-	"",
-
-	"Color",
-	"Color",
-	"Color",
-	"c",
-
 	"name_of_struct",
         "name_of_struct",
 	"name_of_struct",
 
+	"",  // 0
+	"n", 
+	"", 
 	"",
 	"n",
+
+	"n", // 5
+	"n",
+
+	"",  // 11
+	"n",
+	"n",
+	"n",
+	"n",
+
+	"", // 16
+	"",
+	"",
+
+	"", // 19
+	"",
+	"",
+	"",
+
+	"", // 23
 	"node->at",
 	"node",
-	""
-};
+	"",
+	
+	"at", // 27 
+	"",
 
+	"",  // 36
+	"i", 
+};
 
 
 BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(start_pos) ^ bu::make(names), node, start_pos, rhs) {
