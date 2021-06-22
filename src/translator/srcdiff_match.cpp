@@ -385,8 +385,7 @@ void skip_tag(const srcml_nodes & nodes, int & start_pos) {
 /** loop O(n) */
 void top_level_name_seek(const srcml_nodes & nodes, int & start_pos) {
 
-    if(nodes.at(start_pos)->type == XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name == "name")
-      return;
+    if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT) return;
 
     std::string & start_tag = nodes.at(start_pos)->name;
     int name_start_pos = start_pos + 1;
