@@ -357,6 +357,8 @@ bool is_single_call_expr(const srcml_nodes & nodes, int start_pos) {
 /** loop O(n) */
 void skip_tag(const srcml_nodes & nodes, int & start_pos) {
 
+  if(!nodes.at(start_pos)->is_open_tag()) throw std::invalid_argument("skip_tag: start is not open tag");
+
   std::string & start_tag = nodes.at(start_pos)->name;
   int open_type_count = 1;
   ++start_pos;
@@ -383,8 +385,7 @@ void skip_tag(const srcml_nodes & nodes, int & start_pos) {
 /** loop O(n) */
 void top_level_name_seek(const srcml_nodes & nodes, int & start_pos) {
 
-    if(nodes.at(start_pos)->type == XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name == "name")
-      return;
+    if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT) return;
 
     std::string & start_tag = nodes.at(start_pos)->name;
     int name_start_pos = start_pos + 1;
