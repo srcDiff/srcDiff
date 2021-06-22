@@ -76,7 +76,7 @@ const std::shared_ptr<srcml_nodes> error_nodes[] = {
 
 };
 
-int error_start_pos[] = {
+const int error_start_pos[] = {
 
     // Start position is not a starting tag
     2,      // 'if':2
