@@ -354,7 +354,18 @@ bool is_single_call_expr(const srcml_nodes & nodes, int start_pos) {
  
 }
 
-/** loop O(n) */
+/**
+ * skip_tag
+ * @param nodes List of srcml nodes
+ * @param start_pos The position of starting tag to be skipped
+ *
+ * This function can be used to skip a matching set of XML tags at the given
+ * start position. If the position does not correspond with a starting tag 
+ * an invalid argument exception is thrown.
+ * 
+ * loop O(n)
+ * 
+ */
 void skip_tag(const srcml_nodes & nodes, int & start_pos) {
 
   if(!nodes.at(start_pos)->is_open_tag()) throw std::invalid_argument("skip_tag: start is not open tag");
