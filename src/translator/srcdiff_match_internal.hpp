@@ -11,6 +11,7 @@
 
 
 
+std::string get_name(const srcml_nodes & nodes, int name_start_pos);
 std::string extract_name(const srcml_nodes & nodes, int start_pos);
 
 

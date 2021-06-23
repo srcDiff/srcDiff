@@ -408,7 +408,27 @@ void top_level_name_seek(const srcml_nodes & nodes, int & start_pos) {
 
 }
 
+
+/**
+ * get_name
+ * @param nodes Nodes that the name will be retrieved from. 
+ * @param name_start_pos The position to start at in the given nodes.
+ *
+ * @pre parameter name_start_pos must be the location of a node containing an open name tag.
+ *
+ * Description of method
+ * @brief This function can be used to get the contents between an open XML name tag 
+ *        and its corresponding closing name tag. The contents of other sets of opening 
+ *        and closing name tags found within the given start and end tag will also be 
+ *        included in the result. 
+ * 
+ * @returns name A string containing what was found in the name 
+ *               tag set beginning at the given starting position.
+ *. 
+ */
+
 /** loop O(n) */
+
 std::string get_name(const srcml_nodes & nodes, int name_start_pos) {
 
   int open_name_count = 1;
