@@ -473,7 +473,26 @@ std::string get_name(const srcml_nodes & nodes, int name_start_pos) {
 
 }
 
-/** loop O(n) */
+
+/**
+ * extract__name
+ * @param nodes list of srcml nodes
+ * @param start_pos position of starting tag to begin at
+ *
+ * This function can be used to extract a name from a set of name tags, given that
+ * the name tags to fetch the name from are a child of the node at the given start 
+ * position, if no name tags can be found using the given position or the position
+ * given contains something other than a  starting tag, "" will be the result.
+ *
+ * loop 0(n)
+ * 
+ * @returns  A string containing what was found in the top-level most name tag set
+ *           located within the given starting positions open and closing tags.
+ *           If no name tags are present or if the given starting position was not 
+ *           the location of a starting tag, "" will be returned
+ *
+ */
+
 std::string extract_name(const srcml_nodes & nodes, int start_pos) {
 
   int name_start_pos = start_pos;
