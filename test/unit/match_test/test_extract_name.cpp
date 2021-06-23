@@ -85,6 +85,11 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 
 	create_nodes("const auto & n = node->at(i);", "C++"),
 	create_nodes("const auto & n = node->at(i);", "C++"),
+
+	create_nodes("int b = a.size();", "C++"),
+	create_nodes("int b = a.size();", "C++"),
+	create_nodes("int b = a.size();", "C++"),
+	create_nodes("int b = a.size();", "C++"),
 };
 
 
@@ -159,21 +164,26 @@ const int start_pos[] = {
 
 	36,
 	37,
+
+	0, // int b = a.size();
+	1,
+	2,
+	6,
 };
 
 
 const std::string names[] = {
 	
 	"int",
-	"i",
+	"",
 
 	"a::b",
 	"a",
-	"b",
+	"",
 
 	"a::b",
 	
-        "int",
+        "",
 	"NUM",
 	"int",
 	"",
@@ -181,8 +191,8 @@ const std::string names[] = {
 	"",
 	"number1",
 	"",
-	"number1",
-	"number1",
+	"",
+	"",
 	"",
 	
 	"",
@@ -195,22 +205,22 @@ const std::string names[] = {
 	"",
 
 	"name_of_struct",
-        "name_of_struct",
-	"name_of_struct",
+        "",
+	"",
 
 	"",  // Position 0 in const auto & n = node->at(i);
 	"n", 
 	"", 
 	"",
-	"n",
-	"n",
-	"n",
+	"",
+	"",
+	"",
 	
 	"",  // 11
-	"n",
-	"n",
-	"n",
-	"n",
+	"",
+	"",
+	"",
+	"",
 	"",
 	"",
 	"",
@@ -225,11 +235,16 @@ const std::string names[] = {
 	"node",
 	"",
 	
-	"at", // 27 
+	"", // 27 
 	"",
 
 	"",  // 36
-	"i", 
+	"",
+
+	"",
+	"b",
+	"int",
+	"",
 };
 
 
