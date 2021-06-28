@@ -113,5 +113,4 @@ BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(start_pos) ^ bu::make(na
   
        BOOST_TEST(get_decl_name(*node, start_pos) == rhs);
   
-       std::cerr << node->at(start_pos)->name << ":" << start_pos << ":" << rhs << "\n\n";
 }

@@ -601,24 +601,19 @@ int name_list_similarity(std::vector<std::string> name_list_original, std::vecto
 
 
 /**
- * get_decl__name
+ * get_decl_name
  * @param nodes list of srcml nodes
  * @param start_pos position of starting tag to begin at
  *
- * @pre parameter start_pos must be the location of a starting decl_stmt,
+ * @pre start_pos must be the location of a starting decl_stmt,
  *      parameter, param, or decl tag
  *
- * This function can be used to extract a name directly from a set of decl tags
- * if the starting decl tag is located directly at the given start position, 
- * or from a starting position containing a starting decl_stmt, parameter, or
- * param tag with a decl tag located inside of it
+ * Extracts the name from a declaration
  *
- * loop 0(n)
+ * loop O(n)
  * 
- * @returns  A string containing what was found within a set of decl tags
- *           using the given starting position. If no opening decl tag is
- *           present or if the given starting position was not the 
- *           location of a starting tag, "" will be returned
+ * @returns declaration's name
+ *          or empty string when not found
  *
  */
 
