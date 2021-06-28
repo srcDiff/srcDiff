@@ -609,7 +609,24 @@ int name_list_similarity(std::vector<std::string> name_list_original, std::vecto
 
 }
 
-/** loop O(n) */
+
+/**
+ * get_decl_name
+ * @param nodes list of srcml nodes
+ * @param start_pos position of starting tag to begin at
+ *
+ * @pre start_pos must be the location of a starting decl_stmt,
+ *      parameter, param, or decl tag
+ *
+ * Extracts the name from a declaration
+ *
+ * loop O(n)
+ * 
+ * @returns declaration's name
+ *          or empty string when not found
+ *
+ */
+
 std::string get_decl_name(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT
