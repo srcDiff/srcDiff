@@ -393,7 +393,17 @@ void skip_tag(const srcml_nodes & nodes, int & start_pos) {
 
 }
 
-/** loop O(n) */
+/**
+ * top_level_name_seek
+ * @param nodes List of srcml nodes
+ * @param start_pos The position of a node to search children for name tag
+ *
+ * This function is used by extract_name to supply the function get_name with the
+ * position of the starting name tag.
+ * 
+ * loop O(n)
+ * 
+ */
 void top_level_name_seek(const srcml_nodes & nodes, int & start_pos) {
 
     if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT) return;
