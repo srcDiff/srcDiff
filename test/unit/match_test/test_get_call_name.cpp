@@ -5,7 +5,7 @@
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/data/monomorphic.hpp>
 #include <boost/test/data/test_case.hpp>
-#include <string>
+#include <vector>
 #include <test_utils.hpp>
 #include <srcdiff_match_internal.hpp>
 
@@ -15,26 +15,26 @@ namespace bu = boost::unit_test::data;
 
 const std::shared_ptr<srcml_nodes> nodes[] = {
 
-        create_nodes("int i;", "C++"),
+        create_nodes("b.Area(x, y);", "C++"),
 	
 };
 
 
-const int start_pos[] = {
+const int start_positions[] = {
 
-       	0,
+       	2,
 	
 };
 
 
-const std::vector<std::string> names[] = {
+const std::vector<std::string> name_vectors[] = {
 
-        {"ee", "ee"},
-			     
+        std::vector<std::string>{"b", "Area"},
+						 
 };
 
 
-BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(start_pos) ^ bu::make(names), node, start_pos, rhs) {
+BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(start_positions) ^ bu::make(name_vectors), node, start_pos, rhs) {
   
        BOOST_TEST(get_call_name(*node, start_pos) == rhs);
   
