@@ -504,7 +504,23 @@ std::string extract_name(const srcml_nodes & nodes, int start_pos) {
 
 }
 
-/** loop O(n) */
+
+/**
+ * get_call__name
+ * @param nodes list of srcml nodes
+ * @param start_pos position of starting tag to begin at
+ *
+ * @pre start_pos must be the location of a starting call tag
+ *
+ * Extracts the name from a function call
+ *
+ * loop 0(n)
+ * 
+ * @returns call's name
+ *          or empty string when not found
+ *
+ */
+
 std::vector<std::string> get_call_name(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT || nodes.at(start_pos)->name != "call")
