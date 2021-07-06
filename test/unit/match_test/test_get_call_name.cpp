@@ -184,6 +184,4 @@ const string_vector_wrapper names_array[] = {
 BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(start_positions) ^ bu::make(names_array), node, start_pos, rhs) {
  
        BOOST_TEST(get_call_name(*node, start_pos) == rhs.names);
-
-       std::cerr << node->at(start_pos)->name << ":" << start_pos << "\n";
 }
