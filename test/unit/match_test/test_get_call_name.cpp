@@ -60,7 +60,7 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 	create_nodes("decltype(std::declval<NonDefault>().foo()) n2 = n1;", "C++"),
 	create_nodes("decltype(std::declval<NonDefault>().foo()) n2 = n1;", "C++"),
 
-	create_nodes("traits_t::construct(alloc, p, 7);", "C++"),
+	create_nodes("traits::constr(alloc, p, 7);", "C++"),
 
 	create_nodes("assert(std::equal(s.begin(), s.end(), s.c_str()));", "C++"),
 	create_nodes("assert(std::equal(s.begin(), s.end(), s.c_str()));", "C++"),
@@ -73,79 +73,105 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 
 const int start_positions[] = {
 
-         2,
+         2,    // <call>:2    b.Area(x, y)
+
 	 
-	 2,
-	 14,
+	 2,    // <call>:2    a().b();
+	 14,   // <call>:14
+	 
 
-	 2,
+	 2,    // <call>:2    v1.emplace<std::string>(\"def\");
+	 
 
-	 2,
-	 27,
+	 2,    // <call>:2    a<foo>().b<foo>()
+	 27,   // <call>:27
 
-	 2,
+	 
+	 2,    // <call>:2    obj.func_name();
 
-	 2,
+	 
+	 2,    // <call>:2    a.b.func_name();
 
-	 2,
+	 
+	 2,    // <call>:2    a.b.c();
 
-	 2,
+	 
+	 2,    // <call>:2    a().b().c();
 
-	 4,
+	 
+	 4,    // <call>:4    return func(value);
 
-	 9,
-	 21,
+	 
+	 9,    // <call>:9    decltype(Default().foo()) n1 = 1;
+	 21,   // <call>:21
+	 
 
-	 9,
-	 40,
+	 9,    // <call>:9    decltype(std::declval<NonDefault>().foo()) n2 = n1;
+	 40,   // <call>:40
+	 
 
-	 2,
+	 2,    // <call>:2    traits::constr(alloc, p, 7)
 
-	 2,
-	 26,
-	 49,
-	 72,
+	 
+	 2,    // <call>:2    assert(std::equal(s.begin(), s.end(), s.c_str()));
+	 26,   // <call>:26
+	 49,   // <call>:49
+	 72,   // <call>:72
 
-	 4,
+	 
+	 4,    // <call>:4    return a.operator+(b)
 };
 
 
 const string_vector_wrapper names_array[] = {
 
-        std::vector<std::string>{"b", "Area"},
+        std::vector<std::string>{"b", "Area"},           // <call>:2    b.Area(x, y)
+
 	
-	std::vector<std::string>{"a"},
-	std::vector<std::string>{"b"},
+	std::vector<std::string>{"a"},                   // <call>:2    a().b();
+	std::vector<std::string>{"b"},                   // <call>:14
 
-	std::vector<std::string>{"v1", "emplace"},
+	
+	std::vector<std::string>{"v1", "emplace"},       // <call>:2    v1.emplace<std::string>(\"def\");
 
-	std::vector<std::string>{"a"},
-	std::vector<std::string>{"b"},
+	
+	std::vector<std::string>{"a"},                   // <call>:2    a<foo>().b<foo>()
+	std::vector<std::string>{"b"},                   // <call>:27
 
-	std::vector<std::string>{"obj", "func_name"},
+	
+	std::vector<std::string>{"obj", "func_name"},    // <call>:2    obj.func_name();
 
-	std::vector<std::string>{"a", "b", "func_name"},
+	
+	std::vector<std::string>{"a", "b", "func_name"}, // <call>:2    a.b.func_name();
 
-	std::vector<std::string>{"a", "b", "c"},
+	
+	std::vector<std::string>{"a", "b", "c"},         // <call>:2    a.b.c(); 
 
-	std::vector<std::string>{"a"},
+	
+	std::vector<std::string>{"a"},                   // <call>:2    a().b().c(); 
 
-	std::vector<std::string>{"func"},
+	
+	std::vector<std::string>{"func"},                // <call>:4    return func(value);
 
-	std::vector<std::string>{"Default"},
-	std::vector<std::string>{"foo"},
+	
+	std::vector<std::string>{"Default"},             // <call>:9    decltype(Default().foo()) n1 = 1;
+	std::vector<std::string>{"foo"},                 // <call>:21
 
-	std::vector<std::string>{"std", "declval"},
-	std::vector<std::string>{"foo"},
+	
+	std::vector<std::string>{"std", "declval"},      // <call>:9    decltype(std::declval<NonDefault>().foo()) n2 = n1;
+	std::vector<std::string>{"foo"},                 // <call>:40
 
-	std::vector<std::string>{"traits_t", "construct"},
+	
+	std::vector<std::string>{"traits", "constr"},    // <call>:2    traits::constr(alloc, p, 7)
 
-	std::vector<std::string>{"assert"},
-	std::vector<std::string>{"s", "begin"},
-	std::vector<std::string>{"s", "end"},
-	std::vector<std::string>{"s", "c_str"},
+	
+	std::vector<std::string>{"assert"},              // <call>:2    assert(std::equal(s.begin(), s.end(), s.c_str()));
+	std::vector<std::string>{"s", "begin"},          // <call>:26
+	std::vector<std::string>{"s", "end"},            // <call>:49
+	std::vector<std::string>{"s", "c_str"},          // <call>:72
 
-	std::vector<std::string>{"a", "+"},
+	
+	std::vector<std::string>{"a", "+"},              // <call>:4    return a.operator+(b)
 };
 
 
