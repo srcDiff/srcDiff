@@ -516,8 +516,8 @@ std::string extract_name(const srcml_nodes & nodes, int start_pos) {
  *
  * loop 0(n)
  * 
- * @returns call's name
- *          or empty string when not found
+ * @returns vector of strings containing the name of the function call
+ *          or empty vector when not found
  *
  */
 

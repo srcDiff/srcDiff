@@ -35,6 +35,7 @@ struct string_vector_wrapper {
 const std::shared_ptr<srcml_nodes> nodes[] = {
 
         create_nodes("b.Area(x, y);", "C++"),
+	create_nodes("b.Area(x, y);", "C++"),
 	
 	create_nodes("a().b();", "C++"),
 	create_nodes("a().b();", "C++"),
@@ -68,13 +69,15 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 	create_nodes("assert(std::equal(s.begin(), s.end(), s.c_str()));", "C++"),
 
 	create_nodes("return a.operator+(b);", "C++"),
+	create_nodes("return a.operator+(b);", "C++"),
 };
 
 
 const int start_positions[] = {
 
          2,    // <call>:2    b.Area(x, y)
-
+	 3,    // <name>:3
+	 
 	 
 	 2,    // <call>:2    a().b();
 	 14,   // <call>:14
@@ -120,12 +123,14 @@ const int start_positions[] = {
 
 	 
 	 4,    // <call>:4    return a.operator+(b)
+	 5,    // <name>:5
 };
 
 
 const string_vector_wrapper names_array[] = {
 
         std::vector<std::string>{"b", "Area"},           // <call>:2    b.Area(x, y)
+	std::vector<std::string>{},                      // <name>:3
 
 	
 	std::vector<std::string>{"a"},                   // <call>:2    a().b();
@@ -172,10 +177,13 @@ const string_vector_wrapper names_array[] = {
 
 	
 	std::vector<std::string>{"a", "+"},              // <call>:4    return a.operator+(b)
+	std::vector<std::string>{},                      // <name>:5
 };
 
 
 BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(start_positions) ^ bu::make(names_array), node, start_pos, rhs) {
  
-       BOOST_TEST(get_call_name(*node, start_pos) == rhs.names); 
+       BOOST_TEST(get_call_name(*node, start_pos) == rhs.names);
+
+       std::cerr << node->at(start_pos)->name << ":" << start_pos << "\n";
 }
