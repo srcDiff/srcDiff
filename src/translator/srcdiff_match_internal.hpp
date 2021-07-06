@@ -12,6 +12,7 @@ std::string extract_name(const srcml_nodes & nodes, int start_pos);
 void skip_tag(const srcml_nodes & nodes, int & start_pos);
 std::vector<std::string> get_call_name(const srcml_nodes & nodes, int start_pos);
 void top_level_name_seek(const srcml_nodes & nodes, int & start_pos);
+std::string get_class_type_name(const srcml_nodes & nodes, int start_pos);
 
 #endif
 
