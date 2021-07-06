@@ -393,7 +393,17 @@ void skip_tag(const srcml_nodes & nodes, int & start_pos) {
 
 }
 
-/** loop O(n) */
+/**
+ * top_level_name_seek
+ * @param nodes List of srcml nodes
+ * @param start_pos The position of a node to search children for name tag
+ *
+ * This function is used by extract_name to supply the function get_name with the
+ * position of the starting name tag.
+ * 
+ * loop O(n)
+ * 
+ */
 void top_level_name_seek(const srcml_nodes & nodes, int & start_pos) {
 
     if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT) return;
@@ -615,7 +625,24 @@ int name_list_similarity(std::vector<std::string> name_list_original, std::vecto
 
 }
 
-/** loop O(n) */
+
+/**
+ * get_decl_name
+ * @param nodes list of srcml nodes
+ * @param start_pos position of starting tag to begin at
+ *
+ * @pre start_pos must be the location of a starting decl_stmt,
+ *      parameter, param, or decl tag
+ *
+ * Extracts the name from a declaration
+ *
+ * loop O(n)
+ * 
+ * @returns declaration's name
+ *          or empty string when not found
+ *
+ */
+
 std::string get_decl_name(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT
