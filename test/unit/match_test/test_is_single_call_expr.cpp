@@ -23,6 +23,9 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
     create_nodes("a.b();", "C++"),
     create_nodes("a.b();", "C++"),
     create_nodes("a.b(c.d());", "C++"),
+
+    // Arrow operator
+    create_nodes("a->b();", "C++"),
     
     // Call chain
     create_nodes("a().b();", "C++"),
@@ -51,6 +54,9 @@ const int start_pos[] = {
     1,      // <expr>:1
     0,      // <expr_stmt>:0
 
+    // Arrow operator
+    0,
+
     // Call chain
     0,      // <expr_stmt>:0
 
@@ -76,6 +82,9 @@ const bool result[] = {
     // Class methods
     true,
     true,
+    true,
+
+    // Arrow operator
     true,
 
     // Call chain
