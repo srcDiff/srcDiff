@@ -309,7 +309,17 @@ boost::optional<std::string> find_attribute(const std::shared_ptr<srcml_node> & 
   Begin internal heuristic functions for reject_match
 */
 
-
+/**
+ * is_single_call_expr
+ * @param nodes List of srcml nodes
+ * @param start_pos The position of a expr_stmt or expr start tag
+ *
+ * Returns whether or not an expression statement contains an expression
+ * that is made entirely of one call
+ * 
+ * @returns true if a single call expression
+ *          or false if not
+ */
 bool is_single_call_expr(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT
