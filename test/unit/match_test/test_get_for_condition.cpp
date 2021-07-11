@@ -24,6 +24,9 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
     // For loop without condition
     create_nodes("for(;;) {}", "C++"),
 
+    // For loop with ternary condition
+    create_nodes("for(int i = 0; (i < 10) ? true : false; i++ {}", "C++"),
+
 };
 
 const int start_pos[] = {
@@ -37,6 +40,9 @@ const int start_pos[] = {
     0,      // <for>:0
 
     // For loop without condition
+    0,      // <for>:0
+
+    // For loop with ternary condition
     0,      // <for>:0
 
 };
@@ -53,6 +59,9 @@ const std::string result[] = {
 
     // For loop without condition
     "",
+
+    // For loop with ternary condition
+    "(i<10)?true:false",
 
 };
 
