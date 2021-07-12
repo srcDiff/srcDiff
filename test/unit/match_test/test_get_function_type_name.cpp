@@ -16,19 +16,24 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 
     // Function
     create_nodes("int main() {}", "C++"),
+    create_nodes("int foo::sum(int a, int b) { return a + b; }", "C++"),
 
     // Function decl
     create_nodes("std::string foo();", "C++"),
     create_nodes("void bar();", "C++"),
+    create_nodes("int foo::sum(int a, int b);", "C++"),
 
     // Constructor
     create_nodes("class Animal { public: int age; Animal() { age = 10;} };", "C++"),
+    create_nodes("Animal::Animal() {age = 10;}", "C++"),
 
     // Constructor decl
     create_nodes("class Animal { public: int age; Animal(); }", "C++"),
+    create_nodes("Animal::Animal();", "C++"),
 
     // Destructor
     create_nodes("class Animal { public: int age; ~Animal() {} };", "C++"),
+    create_nodes("Animal::~Animal() {}", "C++"),
 
     // Destructor decl
     create_nodes("class Animal { public: int age; ~Animal(); };", "C++"),
@@ -54,19 +59,24 @@ const int start_pos[] = {
 
     // Function
     0,      // <function>:0
+    0,      // <function>:0
 
     // Function decl
+    0,      // <function_decl>:0
     0,      // <function_decl>:0
     0,      // <function_decl>:0
 
     // Constuctor
     30,     // <constructor>:30
+    0,      // <constructor>:0
 
     // Constructor decl
     30,     // <constructor_decl>:30
+    0,      // <constructor_decl>:0
 
     // Destructor
     30,     // <destructor>:30
+    0,      // <destructor>:0
 
     // Destructor decl
     30,     // <destructor_decl>:30
@@ -92,19 +102,24 @@ const std::string function_type_name[] = {
 
     // Function
     "main",
+    "foo::sum",
 
     // Function decl
     "foo",
     "bar",
+    "foo::sum",
 
     // Constructor
     "Animal",
+    "Animal::Animal",
 
     // Constructor decl
     "Animal",
+    "Animal::Animal",
 
     // Destructor
     "~Animal",
+    "Animal::~Animal",
 
     // Destructor decl
     "~Animal",
