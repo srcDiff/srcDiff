@@ -643,7 +643,18 @@ std::string get_decl_name(const srcml_nodes & nodes, int start_pos) {
 
 }
 
-/** loop O(n) */
+/**
+ * get_for_condition
+ * @param nodes List of srcml nodes
+ * @param start_pos Position of a for loop starting tag
+ *
+ * Extracts the condition from a for loop
+ *
+ * loop O(n)
+ * 
+ * @returns for loop's condition
+ * 
+ */
 std::string get_for_condition(const srcml_nodes & nodes, int start_pos) {
 
   int control_start_pos = start_pos;
