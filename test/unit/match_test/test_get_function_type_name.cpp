@@ -37,6 +37,7 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 
     // Destructor decl
     create_nodes("class Animal { public: int age; ~Animal(); };", "C++"),
+    create_nodes("Animal::~Animal();", "C++"),
     
     // Operator
     create_nodes("operator void*() const {}", "C++"),
@@ -80,6 +81,7 @@ const int start_pos[] = {
 
     // Destructor decl
     30,     // <destructor_decl>:30
+    0,      // <destructor_decl>:0
 
     // Operator
     0,      // <function type="operator">:0
@@ -123,6 +125,7 @@ const std::string function_type_name[] = {
 
     // Destructor decl
     "~Animal",
+    "Animal::~Animal",
 
     // Operator
     "operatorvoid*",
