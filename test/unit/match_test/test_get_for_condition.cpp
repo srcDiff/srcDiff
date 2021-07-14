@@ -27,6 +27,13 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
     // For loop with ternary condition
     create_nodes("for(int i = 0; (i < 10) ? true : false; i++ {}", "C++"),
 
+    // Range based for
+    create_nodes("for(const int& i : nums) {}", "C++"),
+    create_nodes("for(auto i : nums) {}", "C++"),
+
+    // QT foreach
+    create_nodes("foreach(const QString &str, values) {}", "C++"),
+
 };
 
 const int start_pos[] = {
@@ -45,6 +52,13 @@ const int start_pos[] = {
     // For loop with ternary condition
     0,      // <for>:0
 
+    // Range based for
+    0,      // <for>:0
+    0,      // <for>:0
+
+    // QT foreach
+    0,      // <foreach>:0
+
 };
 
 const std::string result[] = {
@@ -62,6 +76,13 @@ const std::string result[] = {
 
     // For loop with ternary condition
     "(i<10)?true:false",
+
+    // Range based for
+    "",
+    "",
+
+    // QT foreach
+    "",
 
 };
 
