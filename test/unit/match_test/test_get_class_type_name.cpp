@@ -16,18 +16,61 @@ namespace bu = boost::unit_test::data;
 const std::shared_ptr<srcml_nodes> nodes[] = {
 						
        create_nodes("class Animal { string species; };", "C++"),
+       create_nodes("class Animal { string species; };", "C++"),
+       create_nodes("class Animal { string species; };", "C++"),
+       create_nodes("class Animal { string species; };", "C++"),
+       
+       create_nodes("enum Color { red, blue };", "C++"), // fails to get Color
+
+       create_nodes("enum class Kind { None, A, B, Integer };", "C++"), // fails to get Kind
+
+       create_nodes("enum class Shape : uint8_t;", "C++"), // Gets Shape just fine? <enum_decl>:0
+       
+       create_nodes("struct Employee { int age; };", "C++"),
+       
+       create_nodes("union RecordType { };", "C++"),
+       
+        
+       
 };
 
 
 const int start_pos[] = {
 
-       0, 
+       0,
+       1,
+       2,
+       3,
+
+       0, // Fails?
+
+       0, // fails
+
+       0,
+
+       0,
+
+       0,
 };
 
 
 const std::string names[] = {
 
        "Animal",
+       "",
+       "",
+       "",
+
+       "Color", // fails
+       
+       "Kind",  // fails
+
+       "Shape",
+       
+       "Employee",
+       
+       "RecordType",
+
 };
 
 
