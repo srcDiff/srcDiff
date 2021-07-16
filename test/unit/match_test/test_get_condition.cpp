@@ -19,6 +19,16 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
     create_nodes("while(1) {}", "C++"),
     create_nodes("while(i <= 10) {}", "C++"),
 
+    // Switch
+    create_nodes("switch(value) {}", "C++"),
+
+    // Do
+    create_nodes("do {} while(i <= 10);", "C++"),
+
+    // If
+    create_nodes("if(i <= 10) {}", "C++"),
+    create_nodes("if(true) {}", "C++"),
+
 };
 
 const int start_pos[] = {
@@ -26,6 +36,16 @@ const int start_pos[] = {
     // While
     0,
     0,
+    0,
+    0,
+
+    // Switch
+    0,
+
+    // Do
+    0,
+
+    // If
     0,
     0,
 
@@ -38,6 +58,16 @@ const std::string result[] = {
     "true",
     "1",
     "i<=10",
+
+    // Switch
+    "value",
+
+    // Do
+    "i<=10",
+
+    // If
+    "i<=10",
+    "true",
 
 };
 
