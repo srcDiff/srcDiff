@@ -25,7 +25,7 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
     create_nodes("for(;;) {}", "C++"),
 
     // For loop with ternary condition
-    create_nodes("for(int i = 0; (i < 10) ? true : false; i++ {}", "C++"),
+    create_nodes("for(int i = 0; (i < 10) ? true : false; i++) {}", "C++"),
 
     // Range based for
     create_nodes("for(const int& i : nums) {}", "C++"),
