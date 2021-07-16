@@ -29,6 +29,17 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
     create_nodes("if(i <= 10) {}", "C++"),
     create_nodes("if(true) {}", "C++"),
 
+    // For
+    create_nodes("for(int i = 0; i <= 10; i++) {}", "C++"),
+    create_nodes("for(; 1; ) {}", "C++"),
+    create_nodes("for(;;) {}", "C++"),
+    create_nodes("for(int i = 0; (i < 10) ? true : false; i++) {}", "C++"),
+    create_nodes("for(const int& i : nums) {}", "C++"),
+    create_nodes("for(auto i : nums) {}", "C++"),
+
+    // Qt foreach
+    create_nodes("foreach(const QString &str, values) {}", "C++"),
+
 };
 
 const int start_pos[] = {
@@ -47,6 +58,17 @@ const int start_pos[] = {
 
     // If
     0,
+    0,
+
+    // For
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+
+    // QT foreach
     0,
 
 };
@@ -68,6 +90,17 @@ const std::string result[] = {
     // If
     "i<=10",
     "true",
+
+    // For
+    "i<=10",
+    "1",
+    "",
+    "(i<10)?true:false",
+    "",
+    "",
+
+    // QT foreach
+    "",
 
 };
 
