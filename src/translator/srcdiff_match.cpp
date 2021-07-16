@@ -712,7 +712,17 @@ std::string get_for_condition(const srcml_nodes & nodes, int start_pos) {
 
 }
 
-/** loop O(n) */
+/**
+ * get_condition
+ * @param nodes List of srcml nodes
+ * @param start_pos Position of starting while, switch, do, if, or for tag
+ *
+ * Extracts the condition from while, switch, do, if, or for
+ * 
+ * loop O(n)
+ * 
+ * @returns condition as a string
+ */
 std::string get_condition(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->name == "for" || nodes.at(start_pos)->name == "foreach") {
