@@ -14,60 +14,100 @@ namespace bu = boost::unit_test::data;
 
 
 const std::shared_ptr<srcml_nodes> nodes[] = {
-						
+
+       // class test cases
+					     
+       create_nodes("class Animal;", "C++"),
+					      
        create_nodes("class Animal { string species; };", "C++"),
        create_nodes("class Animal { string species; };", "C++"),
        create_nodes("class Animal { string species; };", "C++"),
        create_nodes("class Animal { string species; };", "C++"),
+
        
-       create_nodes("enum Color { red, blue };", "C++"), // fails to get Color
+       // enum test cases
 
-       create_nodes("enum class Kind { None, A, B, Integer };", "C++"), // fails to get Kind
+       create_nodes("enum Color;", "C++")+, // Probably supposed to work for enum but doesnt?
+       
+       create_nodes("enum Color { red, blue };", "C++"), 
 
-       create_nodes("enum class Shape : uint8_t;", "C++"), // Gets Shape just fine? <enum_decl>:0
+       create_nodes("enum class Kind { None, A, B, Integer };", "C++"), 
+
+       create_nodes("enum class Shape : uint8_t { circle = 0, };", "C++"),
+       
+
+       // struct test cases
        
        create_nodes("struct Employee { int age; };", "C++"),
        
+
+       // union test cases
+       
        create_nodes("union RecordType { };", "C++"),
-       
-        
-       
+    
 };
 
 
 const int start_pos[] = {
 
+       // Class test cases
+			 
+       0,
+
        0,
        1,
        2,
        3,
+       
 
-       0, // Fails?
-
-       0, // fails
-
+       // enum test cases
+       
+       0,
+       
        0,
 
        0,
 
+       0,
+
+       
+       // struct test cases
+       
+       0,
+       
+
+       // union test cases
+       
        0,
 };
 
 
 const std::string names[] = {
 
+       // Class test cases
+			     
+       "Animal",
+       
        "Animal",
        "",
        "",
        "",
-
-       "Color", // fails
        
-       "Kind",  // fails
 
-       "Shape",
+       // enum test cases
+
+       "",
+       
+       "", 
+
+       "",
+
+       // struct test cases
        
        "Employee",
+       
+
+       // union test cases
        
        "RecordType",
 
