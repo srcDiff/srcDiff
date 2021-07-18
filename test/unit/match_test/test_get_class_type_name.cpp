@@ -32,7 +32,7 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 
        create_nodes("enum Color;", "C++"),
        
-       create_nodes("enum Color { red, blue };", "C++"), // Probably supposed to work for enum but doesnt?
+       create_nodes("enum Color { red, blue };", "C++"), 
 
        create_nodes("enum class Kind { None, A, B, Integer };", "C++"), 
 
