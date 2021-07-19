@@ -812,7 +812,7 @@ std::string get_class_type_name(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT
     || (nodes.at(start_pos)->name != "class" && nodes.at(start_pos)->name != "struct"
-      && nodes.at(start_pos)->name != "union" && nodes.at(start_pos)->name == "enum")) return "";
+      && nodes.at(start_pos)->name != "union" && nodes.at(start_pos)->name != "enum")) return "";
 
   return extract_name(nodes, start_pos);
 
