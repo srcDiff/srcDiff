@@ -763,7 +763,19 @@ std::string get_condition(const srcml_nodes & nodes, int start_pos) {
 
 }
 
-/** loop O(n) */
+/**
+ * get_function_type_name
+ * @param nodes List of srcml nodes
+ * @param start_pos Position of starting function, constructor, destructor tag
+ *
+ * Extracts the name from a function, constructor, or destructor
+ * 
+ * loop O(n)
+ * 
+ * @returns function's name
+ *          or empty string if not found
+ * 
+ */
 std::string get_function_type_name(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT
