@@ -40,6 +40,9 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
     // Qt foreach
     create_nodes("foreach(const QString &str, values) {}", "C++"),
 
+    // No condition
+    create_nodes("int value = 0;", "C++"),
+
 };
 
 const int start_pos[] = {
@@ -71,6 +74,9 @@ const int start_pos[] = {
     // QT foreach
     0,
 
+    // No condition
+    0,
+
 };
 
 const std::string result[] = {
@@ -100,6 +106,9 @@ const std::string result[] = {
     "",
 
     // QT foreach
+    "",
+
+    // No condition
     "",
 
 };
