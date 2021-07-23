@@ -34,6 +34,10 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
     // QT foreach
     create_nodes("foreach(const QString &str, values) {}", "C++"),
 
+    // Not for loop
+    create_nodes("while(true) {}", "C++"),
+    create_nodes("int value = 0;", "C++"),
+
 };
 
 const int start_pos[] = {
@@ -59,6 +63,10 @@ const int start_pos[] = {
     // QT foreach
     0,      // <foreach>:0
 
+    // Not for loop
+    0,      // <while>:0
+    0,      // <decl_stmt>:0
+
 };
 
 const std::string result[] = {
@@ -82,6 +90,10 @@ const std::string result[] = {
     "",
 
     // QT foreach
+    "",
+
+    // Not for loop
+    "",
     "",
 
 };
