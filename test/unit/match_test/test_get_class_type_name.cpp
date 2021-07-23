@@ -55,9 +55,9 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 
        // union test cases
        
-       create_nodes("union RecordType { };", "C++"),
-
        create_nodes("union RecordType;", "C++"),
+
+       create_nodes("union RecordType { };", "C++"),
 
        create_nodes("struct A { union B { }; };", "C++"),
        create_nodes("struct A { union B { }; };", "C++"),
@@ -134,13 +134,13 @@ const std::string names[] = {
 
        "Color",
        
-       "", 
+       "Color", 
 
-       "",
+       "Kind",
 
-       "",
+       "Shape",
 
-       "",
+       "Type",
        
 
        // struct test cases
