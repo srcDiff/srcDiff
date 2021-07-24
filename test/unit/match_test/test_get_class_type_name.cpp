@@ -27,6 +27,7 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
        create_nodes("class A { class B { }; };", "C++"),
        create_nodes("class A { class B { }; };", "C++"),
 
+
        
        // enum test cases
 
@@ -41,6 +42,7 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
        create_nodes("enum Type { new, old } c ;", "C++"),
        
 
+       
        // struct test cases
 
        create_nodes("struct Employee;", "C++"),
@@ -53,6 +55,7 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
        create_nodes("struct A { struct B { }; };", "C++"),
        
 
+       
        // union test cases
        
        create_nodes("union RecordType;", "C++"),
@@ -68,50 +71,53 @@ const int start_pos[] = {
 
        // Class test cases
 			 
-       0,
+       0,   // <class_decl>:0   class Animal;
 
-       0,
-       1,
-       2,
-       3,
+       0,   // <class>:0        class Animal { string species; }
+       1,   // 'class':1
+       2,   // ' ':2 
+       3,   // <name>:3 
 
-       0,
-       11,
+       0,   // <class>:0        class A { class B { }; };
+       11,  // <class>:11
        
 
+       
        // enum test cases
        
-       0,
+       0,   // <enum_decl>:0            enum Color;
        
-       0,
+       0,   // <enum>:0                 enum Color { red, blue };
 
-       0,
+       0,   // <enum type="class">:0    enum class Kind { None, A, B, Integer };
 
-       0,
+       0,   // <enum type="class">:0    enum class Shape : uint8_t { circle = 0, };
+ 
+       0,   // <enum>:0                 enum Type { new, old } c ; 
 
-       0,
 
        
        // struct test cases
        
-       0,
+       0,   // <struct_decl>:0   struct Employee;
        
-       0,
+       0,   // <struct>:0        struct Employee { int age; }
 
-       0,
+       0,   // <struct>:0        struct X { enum direction { left = 'l', right = 'r' }; }
 
-       0,
-       11,
+       0,   // <struct>:0        struct A { struct B { }; };
+       11,  // <struct>:11       
+
        
 
        // union test cases
        
-       0,
+       0,   // <union_decl>:0    union RecordType;
 
-       0,
+       0,   // <union>:0         union RecordType { };
 
-       0,
-       11,
+       0,   // <union>:0         struct A { union B { }; };
+       11,  // <union>:11
 };
 
 
@@ -119,54 +125,57 @@ const std::string names[] = {
 
        // Class test cases
 			     
-       "Animal",
+       "Animal",   // <class_decl>:0   class Animal;
        
-       "Animal",
-       "",
-       "",
-       "",
+       "Animal",   // <class>:0        class Animal { string species; }
+       "",         // 'class':1
+       "",         // ' ':2 
+       "",         // <name>:3 
 
-       "A",
-       "B",
+       "A",        // <class>:0        class A { class B { }; };
+       "B",        // <class>:11
        
 
+       
        // enum test cases
 
-       "Color",
+       "Color",    // <enum_decl>:0            enum Color;
        
-       "Color", 
+       "Color",    // <enum>:0                 enum Color { red, blue };
 
-       "Kind",
+       "Kind",     // <enum type="class">:0    enum class Kind { None, A, B, Integer };
 
-       "Shape",
+       "Shape",    // <enum type="class">:0    enum class Shape : uint8_t { circle = 0, };
 
-       "Type",
+       "Type",     // <enum>:0                 enum Type { new, old } c ; 
        
 
+       
        // struct test cases
 
-       "Employee",
+       "Employee",    // <struct_decl>:0   struct Employee;
        
-       "Employee",
+       "Employee",    // <struct>:0        struct Employee { int age; }
 
-       "X",
+       "X",           // <struct>:0        struct X { enum direction { left = 'l', right = 'r' }; }
 
-       "A",
-       "B",
+       "A",           // <struct>:0        struct A { struct B { }; };
+       "B",           // <struct>:11 
        
 
+       
        // union test cases
        
-       "RecordType",
+       "RecordType",   // <union_decl>:0    union RecordType;
 
-       "RecordType",
-
-       "A",
-       "B",
+       "RecordType",   // <union>:0         union RecordType { };
+ 
+       "A",            // <union>:0         struct A { union B { }; };
+       "B",            // <union>:11
 };
 
 
 BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(start_pos) ^ bu::make(names), node, start_pos, rhs) {
-  
+
        BOOST_TEST(get_class_type_name(*node, start_pos) == rhs);
 }
