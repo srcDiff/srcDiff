@@ -27,6 +27,10 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
        create_nodes("class A { class B { }; };", "C++"),
        create_nodes("class A { class B { }; };", "C++"),
 
+       create_nodes("template<class T> class Z { };", "C++"),
+
+       create_nodes("class B final : A { };", "C++"),
+
 
        
        // enum test cases
@@ -53,6 +57,12 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 
        create_nodes("struct A { struct B { }; };", "C++"),
        create_nodes("struct A { struct B { }; };", "C++"),
+
+       create_nodes("template <typename T> struct struct_name { };", "C++"),
+
+       create_nodes("struct B final : A { };", "C++"),
+
+       create_nodes("struct derived : base { };", "C++"),
        
 
        
@@ -80,7 +90,10 @@ const int start_pos[] = {
 
        0,   // <class>:0        class A { class B { }; };
        11,  // <class>:11
-       
+
+       0,   // <class>:0        template<class T> class Z { };
+
+       0,   // <class>:0        class B final : A { };
 
        
        // enum test cases
@@ -106,7 +119,13 @@ const int start_pos[] = {
        0,   // <struct>:0        struct X { enum direction { left = 'l', right = 'r' }; }
 
        0,   // <struct>:0        struct A { struct B { }; };
-       11,  // <struct>:11       
+       11,  // <struct>:11
+
+       0,   // <struct>:0        template <typename T> struct struct_name { };
+
+       0,   // <struct>:0        struct B final : A { }
+
+       0,   // <struct>:0        struct derived : base { };
 
        
 
@@ -134,6 +153,10 @@ const std::string names[] = {
 
        "A",        // <class>:0        class A { class B { }; };
        "B",        // <class>:11
+
+       "Z",        // <class>:0        template<class T> class Z { };
+
+       "B",        // <class>:0        class B final : A { };
        
 
        
@@ -153,14 +176,20 @@ const std::string names[] = {
        
        // struct test cases
 
-       "Employee",    // <struct_decl>:0   struct Employee;
+       "Employee",     // <struct_decl>:0   struct Employee;
        
-       "Employee",    // <struct>:0        struct Employee { int age; }
+       "Employee",     // <struct>:0        struct Employee { int age; }
 
-       "X",           // <struct>:0        struct X { enum direction { left = 'l', right = 'r' }; }
+       "X",            // <struct>:0        struct X { enum direction { left = 'l', right = 'r' }; }
 
-       "A",           // <struct>:0        struct A { struct B { }; };
-       "B",           // <struct>:11 
+       "A",            // <struct>:0        struct A { struct B { }; };
+       "B",            // <struct>:11
+
+       "struct_name",  // <struct>:0        template <typename T> struct struct_name { };
+
+       "B",            // <struct>:0        struct B final : A { }
+
+       "derived",      // <struct>:0        struct derived : base { };
        
 
        
@@ -177,5 +206,11 @@ const std::string names[] = {
 
 BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(start_pos) ^ bu::make(names), node, start_pos, rhs) {
 
+       for(int i = 0; i < node->size(); ++i) {
+        const auto & n = node->at(i);
+        std::cerr << *n << " : " << i << '\n';
+    }
+    std::cerr << "\n\n";
+  
        BOOST_TEST(get_class_type_name(*node, start_pos) == rhs);
 }
