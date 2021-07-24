@@ -309,7 +309,17 @@ boost::optional<std::string> find_attribute(const std::shared_ptr<srcml_node> & 
   Begin internal heuristic functions for reject_match
 */
 
-
+/**
+ * is_single_call_expr
+ * @param nodes List of srcml nodes
+ * @param start_pos The position of a expr_stmt or expr start tag
+ *
+ * Returns whether or not an expression statement contains an expression
+ * that is made entirely of one call
+ * 
+ * @returns true if a single call expression
+ *          or false if not
+ */
 bool is_single_call_expr(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT
@@ -651,7 +661,18 @@ std::string get_decl_name(const srcml_nodes & nodes, int start_pos) {
 
 }
 
-/** loop O(n) */
+/**
+ * get_for_condition
+ * @param nodes List of srcml nodes
+ * @param start_pos Position of a for loop starting tag
+ *
+ * Extracts the condition from a for loop
+ *
+ * loop O(n)
+ * 
+ * @returns for loop's condition
+ * 
+ */
 std::string get_for_condition(const srcml_nodes & nodes, int start_pos) {
 
   int control_start_pos = start_pos;
@@ -761,7 +782,19 @@ std::string get_condition(const srcml_nodes & nodes, int start_pos) {
 
 }
 
-/** loop O(n) */
+/**
+ * get_function_type_name
+ * @param nodes List of srcml nodes
+ * @param start_pos Position of starting function, constructor, destructor tag
+ *
+ * Extracts the name from a function, constructor, or destructor
+ * 
+ * loop O(n)
+ * 
+ * @returns function's name
+ *          or empty string if not found
+ * 
+ */
 std::string get_function_type_name(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT
@@ -795,8 +828,10 @@ std::string get_function_type_name(const srcml_nodes & nodes, int start_pos) {
 std::string get_class_type_name(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT
-    || (nodes.at(start_pos)->name != "class" && nodes.at(start_pos)->name != "struct"
-      && nodes.at(start_pos)->name != "union" && nodes.at(start_pos)->name == "enum")) return "";
+    || (nodes.at(start_pos)->name != "class" && nodes.at(start_pos)->name != "class_decl"
+      && nodes.at(start_pos)->name != "struct" && nodes.at(start_pos)->name != "struct_decl"
+      && nodes.at(start_pos)->name != "union" && nodes.at(start_pos)->name != "union_decl"
+      && nodes.at(start_pos)->name != "enum" && nodes.at(start_pos)->name != "enum_decl")) return "";
 
   return extract_name(nodes, start_pos);
 

@@ -13,6 +13,9 @@ void skip_tag(const srcml_nodes & nodes, int & start_pos);
 std::vector<std::string> get_call_name(const srcml_nodes & nodes, int start_pos);
 void top_level_name_seek(const srcml_nodes & nodes, int & start_pos);
 std::string get_class_type_name(const srcml_nodes & nodes, int start_pos);
+bool is_single_call_expr(const srcml_nodes & nodes, int start_pos);
+std::string get_function_type_name(const srcml_nodes & nodes, int start_pos);
+std::string get_for_condition(const srcml_nodes & nodes, int start_pos);
+int name_list_similarity(std::vector<std::string> name_list_original, std::vector<std::string> name_list_modified);
 
 #endif
-
