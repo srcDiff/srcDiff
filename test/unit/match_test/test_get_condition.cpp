@@ -48,34 +48,34 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 const int start_pos[] = {
 
     // While
-    0,
-    0,
-    0,
-    0,
+    0,      // <while>:0
+    0,      // <while>:0
+    0,      // <while>:0
+    0,      // <while>:0
 
     // Switch
-    0,
+    0,      // <switch>:0
 
     // Do
-    0,
+    0,      // <do>:0
 
     // If
-    0,
-    0,
+    0,      // <if_stmt>:0
+    0,      // <if_stmt>:0
 
     // For
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    0,      // <for>:0
+    0,      // <for>:0
+    0,      // <for>:0
+    0,      // <for>:0
+    0,      // <for>:0
+    0,      // <for>:0
 
     // QT foreach
-    0,
+    0,      // <foreach>:0
 
     // No condition
-    0,
+    0,      // <decl_stmt>:0
 
 };
 
