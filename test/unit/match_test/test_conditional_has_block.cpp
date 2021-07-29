@@ -21,6 +21,13 @@ const node_set_data nodes[] = {
     create_node_set("for(int i = 0; i <= 10; i++) {}", "C++"),
     create_node_set("foreach(const QString &str, values) {}", "C++"),
 
+    // Conditional without block
+    create_node_set("while(x <= 10) cout << x;", "C++"),
+    create_node_set("if(x <= 10) return true;", "C++"),
+    create_node_set("for(int i = 0; i <= 10; i++) cout << i;", "C++"),
+    create_node_set("foreach(const QString &str, values) cout << str;", "C++"),
+    create_node_set("(value % 2 == 0) ? cout << \"even\" : cout << \"odd\";", "C++"),
+
 };
 
 const bool result[] = {
@@ -32,6 +39,13 @@ const bool result[] = {
     true,
     true,
     true,
+
+    // Conditional without block
+    false,
+    false,
+    false,
+    false,
+    false,
 
 };
 
