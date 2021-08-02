@@ -854,6 +854,19 @@ bool conditional_has_block(const node_set & set) {
 
 }
 
+
+/**
+ * get_first_child
+ * @param set set of srcml nodes
+ *
+ * @pre The first node of the given node set should contain an opening if node tag
+ *
+ * Extracts the node set of the first child of the given parent node set
+ *
+ * @returns child node set
+ *          
+ */
+
 node_set get_first_child(const node_set & set) {
 
   node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
