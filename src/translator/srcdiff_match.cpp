@@ -831,7 +831,8 @@ std::string get_class_type_name(const srcml_nodes & nodes, int start_pos) {
  * 
  */
 bool conditional_has_block(const node_set & set) {
-
+  
+  // Todo: Add assertions that set is a conditional
   node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
 
   for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
