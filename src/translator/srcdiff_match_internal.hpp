@@ -18,5 +18,6 @@ std::string get_function_type_name(const srcml_nodes & nodes, int start_pos);
 std::string get_for_condition(const srcml_nodes & nodes, int start_pos);
 bool conditional_has_block(const node_set & set);
 node_set get_first_child(const node_set & set);
+std::string get_condition(const srcml_nodes & nodes, int start_pos);
 
 #endif
