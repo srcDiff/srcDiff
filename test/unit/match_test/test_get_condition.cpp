@@ -29,6 +29,9 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
     create_nodes("if(i <= 10) {}", "C++"),
     create_nodes("if(true) {}", "C++"),
 
+    // Else If
+    create_nodes("if(i < 10) {} else if(i > 10) {}", "C++"),
+
     // For
     create_nodes("for(int i = 0; i <= 10; i++) {}", "C++"),
     create_nodes("for(; 1; ) {}", "C++"),
@@ -63,6 +66,9 @@ const int start_pos[] = {
     0,      // <if_stmt>:0
     0,      // <if_stmt>:0
 
+    // Else If
+    29,      // <if type="elseif">:29
+
     // For
     0,      // <for>:0
     0,      // <for>:0
@@ -96,6 +102,9 @@ const std::string result[] = {
     // If
     "i<=10",
     "true",
+
+    // Else If
+    "i>10",
 
     // For
     "i<=10",
