@@ -13,24 +13,66 @@ namespace bu = boost::unit_test::data;
 
 const node_set_data original[] = {
 
-    // Matches
+    // ===== Match =====
 
     create_node_set("for(int i = 0; i <= 10; i++) {}", "C++"),
+
+    // For loops without initialization, increment, and/or condition
+    create_node_set("for(; 1; ) {}", "C++"),
+    create_node_set("for(;;) {}", "C++"),
+
+    // For loop with ternary condition
+    create_node_set("for(int i = 0; (i < 10) ? true : false; i++) {}", "C++"),
+
+    // Range based for
+    create_node_set("for(const int& i : nums) {}", "C++"),
+    create_node_set("for(auto i : nums) {}", "C++"),
+
+    // QT foreach
+    create_node_set("foreach(const QString &str, values) {}", "C++"),
 
 };
 
 const node_set_data modified[] = {
 
-    // Matches
+    // ===== Match =====
 
     create_node_set("for(int i = 0; i <= 10; i++) {}", "C++"),
+
+    // For loops without initialization, increment, and/or, condition
+    create_node_set("for(; 1; ) {}", "C++"),
+    create_node_set("for(;;) {}", "C++"),
+
+    // For loop with ternary condition
+    create_node_set("for(int i = 0; (i < 10) ? true : false; i++) {}", "C++"),
+
+    // Range based for
+    create_node_set("for(const int& i : nums) {}", "C++"),
+    create_node_set("for(auto i : nums) {}", "C++"),
+
+    // QT foreach
+    create_node_set("foreach(const QString &str, values) {}", "C++"),
 
 };
 
 const bool result[] = {
 
-    // Matches
-    
+    // ===== Match =====
+
+    true,
+
+    // For loops without initialization, increment, and/or condition
+    true,
+    true,
+
+    // For loop with ternary condition
+    true,
+
+    // Range based for
+    true,
+    true,
+
+    // QT foreach
     true,
 
 };
