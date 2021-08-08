@@ -585,7 +585,19 @@ std::vector<std::string> get_call_name(const srcml_nodes & nodes, int start_pos)
 
 }
 
-/** loop O(name_size*edits) */
+
+/**
+ * name_list_similarity
+ * @param name_list_original original vector of strings
+ * @param name_list_modified vector of strings with changes
+ *
+ * Calculates number of similarities between two vectors of strings
+ *
+ * loop O(name_size*edits)
+ * 
+ * @returns integer representing number of similarities found
+ */
+
 int name_list_similarity(std::vector<std::string> name_list_original, std::vector<std::string> name_list_modified) {
 
   shortest_edit_script_t ses(srcdiff_compare::string_compare, srcdiff_compare::string_index, 0);

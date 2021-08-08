@@ -13,25 +13,6 @@
 namespace bu = boost::unit_test::data;
 
 
-struct string_vector_wrapper {
-  
-        std::vector<std::string> names;
-  
-        string_vector_wrapper(const std::vector<std::string> & names) : names(names) {}
-
-        friend std::ostream & operator<<(std::ostream & out, const string_vector_wrapper & wrapper) {
-	  
-                if(wrapper.names.empty()) return out;
-
-                out << wrapper.names[0];
-                for(size_t pos = 1; pos < wrapper.names.size(); ++pos) {
-                        out << ", " << wrapper.names[pos];
-                }
-                return out;
-        }
-};
-
-
 const std::shared_ptr<srcml_nodes> nodes[] = {
 
         create_nodes("b.Area(x, y);", "C++"),

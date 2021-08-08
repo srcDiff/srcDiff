@@ -30,8 +30,6 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
        create_nodes("template<class T> class Z { };", "C++"),
 
        create_nodes("class B final : A { };", "C++"),
-
-
        
        // enum test cases
 
@@ -46,7 +44,6 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
        create_nodes("enum Type { new, old } c ;", "C++"),
        
 
-       
        // struct test cases
 
        create_nodes("struct Employee;", "C++"),
@@ -57,6 +54,13 @@ const std::shared_ptr<srcml_nodes> nodes[] = {
 
        create_nodes("struct A { struct B { }; };", "C++"),
        create_nodes("struct A { struct B { }; };", "C++"),
+       
+
+       // union test cases
+       
+       create_nodes("union RecordType { };", "C++"),
+
+       create_nodes("union RecordType;", "C++"),
 
        create_nodes("template <typename T> struct struct_name { };", "C++"),
 
@@ -81,6 +85,29 @@ const int start_pos[] = {
 
        // Class test cases
 			 
+       0,
+
+       0,
+       1,
+       2,
+       3,
+
+       0,
+       11,
+       
+
+       // enum test cases
+       
+       0,
+       
+       0,
+
+       0,
+
+       0,
+
+       0,
+
        0,   // <class_decl>:0   class Animal;
 
        0,   // <class>:0        class Animal { string species; }
@@ -108,10 +135,18 @@ const int start_pos[] = {
  
        0,   // <enum>:0                 enum Type { new, old } c ; 
 
-
-       
+  
        // struct test cases
+
+       0,
        
+       0,
+
+       0,
+
+       0,
+       11,
+
        0,   // <struct_decl>:0   struct Employee;
        
        0,   // <struct>:0        struct Employee { int age; }
@@ -126,11 +161,17 @@ const int start_pos[] = {
        0,   // <struct>:0        struct B final : A { }
 
        0,   // <struct>:0        struct derived : base { };
-
        
 
        // union test cases
        
+       0,
+
+       0,
+
+       0,
+       11,
+  
        0,   // <union_decl>:0    union RecordType;
 
        0,   // <union>:0         union RecordType { };
@@ -144,6 +185,51 @@ const std::string names[] = {
 
        // Class test cases
 			     
+       "Animal",
+       
+       "Animal",
+       "",
+       "",
+       "",
+
+       "A",
+       "B",
+       
+
+       // enum test cases
+
+       "Color",
+       
+       "", 
+
+       "",
+
+       "",
+
+       "",
+       
+
+       // struct test cases
+
+       "Employee",
+       
+       "Employee",
+
+       "X",
+
+       "A",
+       "B",
+       
+
+       // union test cases
+       
+       "RecordType",
+
+       "RecordType",
+
+       "A",
+       "B",
+
        "Animal",   // <class_decl>:0   class Animal;
        
        "Animal",   // <class>:0        class Animal { string species; }
@@ -206,11 +292,5 @@ const std::string names[] = {
 
 BOOST_DATA_TEST_CASE(passes, bu::make(nodes) ^ bu::make(start_pos) ^ bu::make(names), node, start_pos, rhs) {
 
-       for(int i = 0; i < node->size(); ++i) {
-        const auto & n = node->at(i);
-        std::cerr << *n << " : " << i << '\n';
-    }
-    std::cerr << "\n\n";
-  
        BOOST_TEST(get_class_type_name(*node, start_pos) == rhs);
 }

@@ -63,3 +63,21 @@ node_set_data create_node_set(const std::string & code, const std::string & lang
 	node_set_data set = { nodes, node_set(*nodes, pos) };
 	return set;
 }
+
+struct string_vector_wrapper {
+  
+        std::vector<std::string> contents;
+  
+        string_vector_wrapper(const std::vector<std::string> & contents) : contents(contents) {}
+
+        friend std::ostream & operator<<(std::ostream & out, const string_vector_wrapper & wrapper) {
+	  
+                if(wrapper.contents.empty()) return out;
+
+                out << wrapper.contents[0];
+                for(size_t pos = 1; pos < wrapper.contents.size(); ++pos) {
+                        out << ", " << wrapper.contents[pos];
+                }
+                return out;
+        }
+};
