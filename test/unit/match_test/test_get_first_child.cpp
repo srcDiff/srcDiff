@@ -7,6 +7,7 @@
 #include <boost/test/data/test_case.hpp>
 #include <string>
 #include <test_utils.hpp>
+#include <utility>
 #include <srcdiff_match_internal.hpp>
 
 
@@ -33,29 +34,73 @@ const node_set_data original_node_sets[] = {
 };
 
 
-const std::string child_starting_node_tags[] = {
+const int child_start_positions[] = {
+				   
+        1,
 
-	"if",
+        1,
 
-	"if",
+        1,
 
-	"if",
+        1,
 
-	"if",
+        1,
 
-	"if",
+        1,
 
-	"if",
+        1,
 
-	"if",
-
-	"if",
+        1,
+	
 };
 
 
-BOOST_DATA_TEST_CASE(passes, bu::make(original_node_sets) ^ bu::make(child_starting_node_tags), original, child_start_tag) {
-  
-        BOOST_TEST(get_first_child(original.set).get_node_name(0) == child_start_tag);
+const int child_end_positions[] = {
+				   
+        18,
+
+        25,
+
+        50,
+
+        19,
+
+        20,
+
+        13,
+
+        13,
+
+        13,	
+};
+
+
+const int child_node_lengths[] = {
+
+        18,
+
+	25,
+
+	50,
+
+	19,
+
+	20,
+
+	13,
+
+	13,
+
+	13,
+
+};
+
+
+BOOST_DATA_TEST_CASE(passes, bu::make(original_node_sets) ^ bu::make(child_start_positions) ^ bu::make(child_end_positions) ^ bu::make(child_node_lengths), original, child_start, child_end, child_length) {
+
+  BOOST_TEST((get_first_child(original.set).get_node_name(0) == original.set.get_node_name(child_start))
+	     & (get_first_child(original.set).get_node_name(get_first_child(original.set).size()-1) == original.set.get_node_name(child_end))
+	     & (get_first_child(original.set).size() == child_length));
 }
 
 
