@@ -18,5 +18,8 @@ std::string get_function_type_name(const srcml_nodes & nodes, int start_pos);
 std::string get_for_condition(const srcml_nodes & nodes, int start_pos);
 int name_list_similarity(std::vector<std::string> name_list_original, std::vector<std::string> name_list_modified);
 node_set get_first_child(const node_set & set);
+bool conditional_has_block(const node_set & set);
+node_set get_first_child(const node_set & set);
+std::string get_condition(const srcml_nodes & nodes, int start_pos);
 
 #endif
