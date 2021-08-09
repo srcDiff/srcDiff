@@ -951,7 +951,19 @@ bool if_block_equal(const node_set & set_original, const node_set & set_modified
 
 }
 
-/** loop O(n) */
+/**
+ * for_control_matches
+ * @param set_original Original set of srcml nodes
+ * @param set_modified Modified set of srcml nodes
+ *
+ * Checks if two for loops have matching controls
+ * 
+ * loop O(n)
+ * 
+ * @returns true if controls match
+ *          or false if not a match
+ * 
+ */
 bool for_control_matches(const node_set & set_original, const node_set & set_modified) {
 
   diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
