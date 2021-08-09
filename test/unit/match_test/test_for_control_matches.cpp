@@ -31,6 +31,23 @@ const node_set_data original[] = {
     // QT foreach
     create_node_set("foreach(const QString &str, values) {}", "C++"),
 
+
+    // ===== Not Match =====
+
+    // Different variable name / value
+    create_node_set("for(int i = 0; i <= 10; i++) {}", "C++"),
+    create_node_set("for(int i = 0; i <= 10; i++) {}", "C++"),
+
+    // Different condition
+    create_node_set("for(int i = 0; i <= 10; i++) {}", "C++"),
+
+    // Different increment
+    create_node_set("for(int i = 0; i <= 10; i++) {}", "C++"),
+
+    // Invalid syntax
+    create_node_set("for;", "C++"),
+    create_node_set("foreach;", "C++"),
+
 };
 
 const node_set_data modified[] = {
@@ -53,6 +70,23 @@ const node_set_data modified[] = {
     // QT foreach
     create_node_set("foreach(const QString &str, values) {}", "C++"),
 
+
+    // ===== Not Match =====
+
+    // Different variable name / value
+    create_node_set("for(int a = 0; a <= 10; a++) {}", "C++"),
+    create_node_set("for(int i = 1; i <= 10; i++) {}", "C++"),
+
+    // Different condition
+    create_node_set("for(int i = 0; i > 10; i++) {}", "C++"),
+
+    // Different increment
+    create_node_set("for(int i = 0; i <= 10; i--) {}", "C++"),
+
+    // Invalid syntax
+    create_node_set("for;", "C++"),
+    create_node_set("foreach;", "C++"),
+
 };
 
 const bool result[] = {
@@ -74,6 +108,23 @@ const bool result[] = {
 
     // QT foreach
     true,
+
+
+    // ===== Not Match =====
+    
+    // Different variable name / value
+    false,
+    false,
+
+    // Different condition
+    false,
+
+    // Different increment
+    false,
+
+    // Invalid syntax
+    false,
+    false,
 
 };
 
