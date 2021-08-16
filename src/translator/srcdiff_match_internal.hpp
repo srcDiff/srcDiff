@@ -21,5 +21,6 @@ node_set get_first_child(const node_set & set);
 bool conditional_has_block(const node_set & set);
 node_set get_first_child(const node_set & set);
 std::string get_condition(const srcml_nodes & nodes, int start_pos);
+bool for_control_matches(const node_set & set_original, const node_set & set_modified);
 
 #endif
