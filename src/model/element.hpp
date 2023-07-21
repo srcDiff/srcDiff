@@ -22,9 +22,9 @@
 #define INCLUDED_ELEMENT_HPP
 #include <string>
 
-class Element {
+class element {
 public:
-    virtual bool is_match(const Element & element) {
+    virtual bool is_match(const element & other) {
         return name == element.name;
     }
 
