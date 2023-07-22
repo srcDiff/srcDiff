@@ -210,26 +210,6 @@
 <diff:delete type="convert"><class>class<diff:insert type="convert"><struct>struct<diff:common> <name>foo</name> <block>{<diff:delete type="convert"><private type="default"><diff:insert type="convert"><public type="default"/></diff:insert></private></diff:delete>}</block>;</diff:common></struct></diff:insert></class></diff:delete>
 </unit>
 
-<!-- This could be better with decl_stmt matching -->
-<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
-<diff:delete type="convert"><struct>struct<diff:insert type="convert"><class>class<diff:common> <name>function_profile_t</name> <super_list>: <super><specifier>public</specifier> <name>profile_t</name></super></super_list> <block>{<diff:delete type="convert"><public type="default"><diff:insert type="convert"><private type="default"><diff:common>
-
-    </diff:common></private></diff:insert></public></diff:delete><private>private:
-
-    </private><public>public:
-
-        <decl_stmt><decl><type><name>versioned_string</name></type> <name>return_type</name></decl>;</decl_stmt>
-        <decl_stmt><decl><type><name>versioned_string</name></type> <name>name</name></decl>;</decl_stmt>
-
-        <decl_stmt><decl><type><diff:delete><name><name>std</name><operator>::</operator><name>multimap</name><argument_list type="generic">&lt;<argument><expr><name>srcdiff_type</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><diff:common><name><name><diff:delete type="replace">std</diff:delete><diff:insert type="replace">change_entity_map</diff:insert></name><diff:delete><operator>::</operator><name>shared_ptr</name></diff:delete><argument_list type="generic">&lt;<argument><expr><name>parameter_profile_t</name></expr></argument>&gt;</argument_list></name></diff:common></expr></argument>&gt;</argument_list></name></diff:delete></type> <name>parameters</name></decl>;</decl_stmt>
-        <decl_stmt><decl><type><diff:delete><name><name>std</name><operator>::</operator><name>multimap</name><argument_list type="generic">&lt;<argument><expr><name>srcdiff_type</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><diff:common><name><name><diff:delete type="replace">std</diff:delete><diff:insert type="replace">change_entity_map</diff:insert></name><diff:delete><operator>::</operator><name>shared_ptr</name></diff:delete><argument_list type="generic">&lt;<argument><expr><name>profile_t</name></expr></argument>&gt;</argument_list></name></diff:common></expr></argument>&gt;</argument_list></name></diff:delete></type> <diff:insert><diff:ws>          </diff:ws></diff:insert><name>conditionals</name></decl>;</decl_stmt>
-
-        <constructor><name>function_profile_t</name><parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name>type_name</name></decl></parameter>, <parameter><decl><type><name>srcdiff_type</name></type> <name>operation</name></decl></parameter>)</parameter_list> <member_init_list>: <call><name>profile_t</name><argument_list>(<argument><expr><name>type_name</name></expr></argument>, <argument><expr><name>operation</name></expr></argument>)</argument_list></call> </member_init_list><block>{<block_content/>}</block></constructor>
-
-</public>}</block>;</diff:common></class></diff:insert></struct></diff:delete>
-
-<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></unit>
-
 <unit language="C++" filename="interchange|interchange">
 <diff:delete type="convert"><struct>struct<diff:insert type="convert"><class>class<diff:common> <name>A</name> <block>{<diff:insert><private type="default"><diff:ws>
 
@@ -341,5 +321,25 @@
 
 <unit language="C++" filename="interchange|interchange">
 <diff:delete type="convert"><expr_stmt><diff:insert type="convert"><decl_stmt><decl><type><name>foo</name></type><diff:ws> </diff:ws><name>bar</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><diff:common><expr><diff:insert><call><name>get</name><argument_list>()</argument_list></call><operator>.</operator></diff:insert><call><diff:delete><name><name>bar</name><operator>.</operator><diff:common><name>call</name></diff:common></name></diff:delete><argument_list>(<argument><expr><name>foobar</name></expr></argument>)</argument_list></call></expr></diff:common></init></decl><diff:common>;</diff:common></decl_stmt></diff:insert></expr_stmt></diff:delete></unit>
+
+<!-- This could be better with decl_stmt matching -->
+<unit xmlns:cpp="http://www.srcML.org/srcML/cpp" language="C++" filename="interchange|interchange">
+<diff:delete type="convert"><struct>struct<diff:insert type="convert"><class>class<diff:common> <name>function_profile_t</name> <super_list>: <super><specifier>public</specifier> <name>profile_t</name></super></super_list> <block>{<diff:delete type="convert"><public type="default"><diff:insert type="convert"><private type="default"><diff:common>
+
+    </diff:common></private></diff:insert></public></diff:delete><private>private:
+
+    </private><public>public:
+
+        <decl_stmt><decl><type><name>versioned_string</name></type> <name>return_type</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><name>versioned_string</name></type> <name>name</name></decl>;</decl_stmt>
+
+        <decl_stmt><decl><type><diff:delete><name><name>std</name><operator>::</operator><name>multimap</name><argument_list type="generic">&lt;<argument><expr><name>srcdiff_type</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><diff:common><name><name><diff:delete type="replace">std</diff:delete><diff:insert type="replace">change_entity_map</diff:insert></name><diff:delete><operator>::</operator><name>shared_ptr</name></diff:delete><argument_list type="generic">&lt;<argument><expr><name>parameter_profile_t</name></expr></argument>&gt;</argument_list></name></diff:common></expr></argument>&gt;</argument_list></name></diff:delete></type> <name>parameters</name></decl>;</decl_stmt>
+        <decl_stmt><decl><type><diff:delete><name><name>std</name><operator>::</operator><name>multimap</name><argument_list type="generic">&lt;<argument><expr><name>srcdiff_type</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><diff:common><name><name><diff:delete type="replace">std</diff:delete><diff:insert type="replace">change_entity_map</diff:insert></name><diff:delete><operator>::</operator><name>shared_ptr</name></diff:delete><argument_list type="generic">&lt;<argument><expr><name>profile_t</name></expr></argument>&gt;</argument_list></name></diff:common></expr></argument>&gt;</argument_list></name></diff:delete></type> <diff:insert><diff:ws>          </diff:ws></diff:insert><name>conditionals</name></decl>;</decl_stmt>
+
+        <constructor><name>function_profile_t</name><parameter_list>(<parameter><decl><type><name><name>std</name><operator>::</operator><name>string</name></name></type> <name>type_name</name></decl></parameter>, <parameter><decl><type><name>srcdiff_type</name></type> <name>operation</name></decl></parameter>)</parameter_list> <member_init_list>: <call><name>profile_t</name><argument_list>(<argument><expr><name>type_name</name></expr></argument>, <argument><expr><name>operation</name></expr></argument>)</argument_list></call> </member_init_list><block>{<block_content/>}</block></constructor>
+
+</public>}</block>;</diff:common></class></diff:insert></struct></diff:delete>
+
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif></unit>
 
 </unit>
