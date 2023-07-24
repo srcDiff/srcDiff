@@ -8,13 +8,13 @@
 namespace srcdiff_compare {
 
   // diff node accessor function
-  const void * node_set_index(int idx, const void *s, const void * context) {
+  const void * element_index(int idx, const void *s, const void * context) {
     element_list & sets = *(element_list *)s;
     return &sets[idx];
   }
 
   // diff node accessor function
-  const void * node_set_array_index(int idx, const void *s, const void * context) {
+  const void * element_array_index(int idx, const void *s, const void * context) {
     element_t * sets = (element_t *)s;
     return &sets[idx];
   }
@@ -74,44 +74,44 @@ namespace srcdiff_compare {
 
 
   // diff node comparison function
-  int node_set_syntax_compare(const void * e1, const void * e2, const void * context) {
+  int element_syntax_compare(const void * e1, const void * e2, const void * context) {
 
     diff_nodes & dnodes = *(diff_nodes *)context;
 
-    element_t * node_set1 = (element_t *)e1;
-    element_t * node_set2 = (element_t *)e2;
+    element_t * element_1 = (element_t *)e1;
+    element_t * element_2 = (element_t *)e2;
 
-    if(!node_set1->hash()) {
-      node_set1->hash(std::hash<element_t>()(*node_set1));
+    if(!element_1->hash()) {
+      element_1->hash(std::hash<element_t>()(*element_1));
     }
 
-    if(!node_set2->hash()) {
-      node_set2->hash(std::hash<element_t>()(*node_set2));
+    if(!element_2->hash()) {
+      element_2->hash(std::hash<element_t>()(*element_2));
     }
 
-    if(!(node_set1->hash() == node_set2->hash()))
+    if(!(element_1->hash() == element_2->hash()))
       return 1;
 
-    for(unsigned int i = 0, j = 0; i < node_set1->size() && j < node_set2->size();) {
+    for(unsigned int i = 0, j = 0; i < element_1->size() && j < element_2->size();) {
 
       // string consecutive non whitespace text nodes
       // TODO:  Why create the string?  Just compare directly as you go through
-      if(dnodes.nodes_original.at(node_set1->at(i))->is_text() && dnodes.nodes_modified.at(node_set2->at(j))->is_text()) {
+      if(dnodes.nodes_original.at(element_1->at(i))->is_text() && dnodes.nodes_modified.at(element_2->at(j))->is_text()) {
 
         std::string text1 = "";
-        for(; i < node_set1->size() && dnodes.nodes_original.at(node_set1->at(i))->is_text(); ++i) {
-          text1 += dnodes.nodes_original.at(node_set1->at(i))->content ? *dnodes.nodes_original.at(node_set1->at(i))->content : "";
+        for(; i < element_1->size() && dnodes.nodes_original.at(element_1->at(i))->is_text(); ++i) {
+          text1 += dnodes.nodes_original.at(element_1->at(i))->content ? *dnodes.nodes_original.at(element_1->at(i))->content : "";
         }
 
         std::string text2 = "";
-        for(; j < node_set2->size() && dnodes.nodes_modified.at(node_set2->at(j))->is_text(); ++j) {
-          text2 += dnodes.nodes_modified.at(node_set2->at(j))->content ? *dnodes.nodes_modified.at(node_set2->at(j))->content : "";
+        for(; j < element_2->size() && dnodes.nodes_modified.at(element_2->at(j))->is_text(); ++j) {
+          text2 += dnodes.nodes_modified.at(element_2->at(j))->content ? *dnodes.nodes_modified.at(element_2->at(j))->content : "";
         }
 
         if(text1 != text2)
           return 1;
 
-      } else if(node_compare(dnodes.nodes_original.at(node_set1->at(i)), dnodes.nodes_modified.at(node_set2->at(j))))
+      } else if(node_compare(dnodes.nodes_original.at(element_1->at(i)), dnodes.nodes_modified.at(element_2->at(j))))
         return 1;
       else {
 

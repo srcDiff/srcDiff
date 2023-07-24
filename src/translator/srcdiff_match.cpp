@@ -958,7 +958,7 @@ bool if_block_equal(const element_t & set_original, const element_t & set_modifi
 
   if(block_modified == element_list_modified.end()) return false;
 
-  bool block_is_equal = srcdiff_compare::node_set_syntax_compare((void *)&*block_original, (void *)&*block_modified, (void *)&dnodes) == 0;
+  bool block_is_equal = srcdiff_compare::element_syntax_compare((void *)&*block_original, (void *)&*block_modified, (void *)&dnodes) == 0;
 
   return block_is_equal;
 
@@ -999,7 +999,7 @@ bool for_control_matches(const element_t & set_original, const element_t & set_m
   }
 
   bool matches = control_pos_original != element_list_original.size() && control_pos_modified != element_list_modified.size() 
-    && srcdiff_compare::node_set_syntax_compare((void *)&element_list_original.at(control_pos_original), (void *)&element_list_modified.at(control_pos_modified), (void *)&dnodes) == 0;
+    && srcdiff_compare::element_syntax_compare((void *)&element_list_original.at(control_pos_original), (void *)&element_list_modified.at(control_pos_modified), (void *)&dnodes) == 0;
 
   return matches;
 

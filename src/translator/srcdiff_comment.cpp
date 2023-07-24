@@ -18,7 +18,7 @@ srcdiff_comment::srcdiff_comment(srcdiff_output & out, const element_list & elem
 void srcdiff_comment::output() {
 
   diff_nodes dnodes = { out.nodes_original(), out.nodes_modified() };
-  shortest_edit_script_t ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
+  shortest_edit_script_t ses(srcdiff_compare::element_syntax_compare, srcdiff_compare::element_index, &dnodes);
 
   int distance = ses.compute((const void *)&element_list_original, element_list_original.size(), (const void *)&element_list_modified, element_list_modified.size());
 

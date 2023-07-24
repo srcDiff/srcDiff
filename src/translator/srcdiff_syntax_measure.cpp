@@ -65,7 +65,7 @@ void srcdiff_syntax_measure::compute() {
   original_len = next_element_list_original.size();
   modified_len = next_element_list_modified.size();
 
-  shortest_edit_script_t ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_array_index, &dnodes);
+  shortest_edit_script_t ses(srcdiff_compare::element_syntax_compare, srcdiff_compare::element_array_index, &dnodes);
   ses.compute<element_list>(next_element_list_original, next_element_list_modified, false);
   process_edit_script(ses.script());
 
