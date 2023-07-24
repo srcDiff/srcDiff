@@ -3,7 +3,7 @@
 #include <srcdiff_diff.hpp>
 
 #include <list>
-#include <node_set.hpp>
+#include <element.hpp>
 
 namespace srcdiff_compare {
 

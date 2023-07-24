@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCDIFF_MEASURE_HPP
 #define INCLUDED_SRCDIFF_MEASURE_HPP
 
-#include <node_set.hpp>
+#include <element.hpp>
 #include <shortest_edit_script.hpp>
 
 class srcdiff_measure {

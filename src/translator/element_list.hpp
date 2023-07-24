@@ -3,7 +3,7 @@
 
 #include <srcdiff_vector.hpp>
 
-#include <node_set.hpp>
+#include <element.hpp>
 #include <srcml_nodes.hpp>
 
 #include <srcdiff_macros.hpp>
