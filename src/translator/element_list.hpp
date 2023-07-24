@@ -10,7 +10,7 @@
 
 #include <iostream>
 
-class element_list : public srcdiff_vector<node_set> {
+class element_list : public srcdiff_vector<element_t> {
 
 private:
 

@@ -13,7 +13,7 @@ private:
 
 public:
 
-	srcdiff_syntax_measure(const node_set & set_original, const node_set & set_modified);
+	srcdiff_syntax_measure(const element_t & set_original, const element_t & set_modified);
 
 	virtual void compute();
 

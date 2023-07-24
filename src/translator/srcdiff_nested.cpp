@@ -110,7 +110,7 @@ const nest_info nesting[] = {
 
 };
 
-int is_block_type(const node_set & structure) {
+int is_block_type(const element_t & structure) {
 
   if((xmlReaderTypes)structure.nodes().at(structure.at(0))->type != XML_READER_TYPE_ELEMENT)
     return -1;
@@ -125,7 +125,7 @@ int is_block_type(const node_set & structure) {
   return -1;
 }
 
-bool has_internal_structure(const node_set & structure, const boost::optional<std::string> & type) {
+bool has_internal_structure(const element_t & structure, const boost::optional<std::string> & type) {
 
   if(!type) return false;
 
@@ -138,8 +138,8 @@ bool has_internal_structure(const node_set & structure, const boost::optional<st
   return false;
 }
 
-bool is_nest_type(const node_set & structure,
-                  const node_set & structure_other,
+bool is_nest_type(const element_t & structure,
+                  const element_t & structure_other,
                   int type_index) {
 
   if((xmlReaderTypes)structure.nodes().at(structure.at(0))->type != XML_READER_TYPE_ELEMENT)
@@ -174,7 +174,7 @@ bool srcdiff_nested::is_match(int & node_pos, const srcml_nodes & nodes, const v
  *
  * Search sets to find best match for match
  */
-int srcdiff_nested::best_match(const element_list & sets, const node_set & match) {
+int srcdiff_nested::best_match(const element_list & sets, const element_t & match) {
 
   int match_pos = sets.size();
   int match_similarity = -1;
@@ -204,8 +204,8 @@ int srcdiff_nested::best_match(const element_list & sets, const node_set & match
 
 }
 
-bool is_nestable_internal(const node_set & structure_one,
-                          const node_set & structure_two) {
+bool is_nestable_internal(const element_t & structure_one,
+                          const element_t & structure_two) {
 
   int block = is_block_type(structure_two);
 
@@ -226,8 +226,8 @@ bool is_nestable_internal(const node_set & structure_one,
   return false;
 }
 
-bool srcdiff_nested::is_same_nestable(const node_set & structure_one,
-                                      const node_set & structure_two) {
+bool srcdiff_nested::is_same_nestable(const element_t & structure_one,
+                                      const element_t & structure_two) {
 
   if(!is_nestable_internal(structure_one, structure_two))
     return false;
@@ -255,8 +255,8 @@ bool srcdiff_nested::is_same_nestable(const node_set & structure_one,
 
 }
 
-bool srcdiff_nested::is_nestable(const node_set & structure_one,
-                                 const node_set & structure_two) {
+bool srcdiff_nested::is_nestable(const element_t & structure_one,
+                                 const element_t & structure_two) {
 
   if(srcdiff_compare::node_compare(structure_one.nodes().at(structure_one.at(0)), structure_two.nodes().at(structure_two.at(0))) == 0)
     return is_same_nestable(structure_one, structure_two);
@@ -265,8 +265,8 @@ bool srcdiff_nested::is_nestable(const node_set & structure_one,
 
 }
 
-bool is_better_nest_no_recursion(const node_set & node_set_outer,
-                                 const node_set & node_set_inner,
+bool is_better_nest_no_recursion(const element_t & node_set_outer,
+                                 const element_t & node_set_inner,
                                  const srcdiff_measure & measure) {
 
     if(srcdiff_nested::is_nestable(node_set_inner, node_set_outer)) {
@@ -297,7 +297,7 @@ bool is_better_nest_no_recursion(const node_set & node_set_outer,
 
 }
 
-bool has_compound_inner(const node_set & node_set_outer) {
+bool has_compound_inner(const element_t & node_set_outer) {
 
   if(node_set_outer.nodes().at(node_set_outer.at(0))->is_simple) return false;
 
@@ -311,8 +311,8 @@ bool has_compound_inner(const node_set & node_set_outer) {
 
 }
 
-bool is_better_nest(const node_set & node_set_outer,
-                    const node_set & node_set_inner,
+bool is_better_nest(const element_t & node_set_outer,
+                    const element_t & node_set_inner,
                     const srcdiff_measure & measure) {
 
   // do not nest compound name in simple or anything into something that is not compound
@@ -412,9 +412,9 @@ static bool is_decl_stmt_from_expr(const srcml_nodes & nodes, int pos) {
 
 }
 
-bool check_nest_name(const node_set & set_original,
+bool check_nest_name(const element_t & set_original,
                      boost::optional<std::shared_ptr<srcml_node>> parent_original,
-                     const node_set & set_modified,
+                     const element_t & set_modified,
                      boost::optional<std::shared_ptr<srcml_node>> parent_modified) {
 
   int original_pos = set_original.at(0);
@@ -445,7 +445,7 @@ bool check_nest_name(const node_set & set_original,
     int simple_name_pos = set_original.at(0);
     if(set_original.nodes().at(simple_name_pos)->name == "name") {
 
-      node_set inner_set(set_original.nodes(), simple_name_pos);
+      element_t inner_set(set_original.nodes(), simple_name_pos);
       srcdiff_text_measure measure(inner_set, set_modified);
       int count = measure.number_match_beginning();
       return 2 * count >= measure.max_length();
@@ -459,7 +459,7 @@ bool check_nest_name(const node_set & set_original,
     int simple_name_pos = set_modified.at(0);
     if(set_modified.nodes().at(simple_name_pos)->name == "name") {
 
-      node_set inner_set(set_modified.nodes(), simple_name_pos);
+      element_t inner_set(set_modified.nodes(), simple_name_pos);
       srcdiff_text_measure measure(set_original, inner_set);
       int count = measure.number_match_beginning();
       return 2 * count >= measure.max_length();
@@ -473,8 +473,8 @@ bool check_nest_name(const node_set & set_original,
 }
 
 bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
-                                         const node_set & set_original,
-                                         const node_set & set_modified) {
+                                         const element_t & set_original,
+                                         const element_t & set_modified) {
 
   int original_pos = set_original.at(0);
   int modified_pos = set_modified.at(0);
@@ -735,7 +735,7 @@ bool srcdiff_nested::check_nestable_predicate(const element_list & element_list_
 
   if(match_pos >= set.size()) return true;
 
-  const node_set & match = set.at(match_pos);
+  const element_t & match = set.at(match_pos);
 
   srcdiff_text_measure measure(match, element_list_inner.at(pos_inner));
   measure.compute();

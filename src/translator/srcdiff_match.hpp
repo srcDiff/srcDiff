@@ -55,17 +55,17 @@ public:
   offset_pair * match_differences();
 
   static bool reject_match(const srcdiff_measure & measure,
-                           const node_set & set_original,
-                           const node_set & set_modified);
+                           const element_t & set_original,
+                           const element_t & set_modified);
   static bool reject_similarity(const srcdiff_measure & measure,
-                                const node_set & set_original,
-                                const node_set & set_modified);
+                                const element_t & set_original,
+                                const element_t & set_modified);
 
-  static bool reject_similarity_match_only(const node_set & set_original,
-                                           const node_set & set_modified);
+  static bool reject_similarity_match_only(const element_t & set_original,
+                                           const element_t & set_modified);
 
 
-  static bool is_interchangeable_match(const node_set & original_set, const node_set & modified_set);
+  static bool is_interchangeable_match(const element_t & original_set, const element_t & modified_set);
 
 };
 

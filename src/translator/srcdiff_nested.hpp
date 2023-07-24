@@ -24,7 +24,7 @@ static bool check_nestable_predicate(const element_list & element_list_outer, in
 public:
 
   static bool is_match(int & node_pos, const srcml_nodes & nodes, const void * context);
-  static int best_match(const element_list & set, const node_set & match);
+  static int best_match(const element_list & set, const element_t & match);
   
   srcdiff_nested(const srcdiff_many & diff, int start_original, int end_original, int start_modified, int end_modified, int operation);
 
@@ -44,20 +44,20 @@ public:
                  , int & start_nest_original, int & end_nest_original, int & start_nest_modified, int & end_nest_modified
                  , int & operation);
 
-  static bool is_nestable(const node_set & structure_one,
-                          const node_set & structure_two);
+  static bool is_nestable(const element_t & structure_one,
+                          const element_t & structure_two);
 
 
-  static bool is_same_nestable(const node_set & structure_one,
-                               const node_set & structure_two);
+  static bool is_same_nestable(const element_t & structure_one,
+                               const element_t & structure_two);
 
   static bool is_better_nested(const element_list & element_list_original, int start_pos_original,
                                const element_list & element_list_modified, int start_pos_modified,
                                const srcdiff_measure & measure);
 
   static bool reject_match_nested(const srcdiff_measure & measure,
-                                  const node_set & set_original,
-                                  const node_set & set_modified);
+                                  const element_t & set_original,
+                                  const element_t & set_modified);
 
 };
 

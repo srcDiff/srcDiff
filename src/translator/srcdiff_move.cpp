@@ -19,7 +19,7 @@ typedef std::vector<move_info> move_infos;
 srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation)
   : srcdiff_output(out), position(position), operation(operation) {}
 
-bool srcdiff_move::is_move(const node_set & set) {
+bool srcdiff_move::is_move(const element_t & set) {
 
   return set.nodes().at(set.at(0))->move;
 
@@ -34,10 +34,10 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
   std::map<std::string, move_infos > constructs;
 
-  typedef std::unordered_multiset<node_set>::iterator lookup_iterator;
-  std::unordered_multiset<node_set> node_set_lookup_table;
+  typedef std::unordered_multiset<element_t>::iterator lookup_iterator;
+  std::unordered_multiset<element_t> node_set_lookup_table;
 
-  std::vector<const node_set *> delete_sets;
+  std::vector<const element_t *> delete_sets;
 
   for(edit_t * edits = edit_script; edits; edits = edits->next) {
 
@@ -76,7 +76,7 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
   }
 
-  for(const node_set * set : delete_sets) {
+  for(const element_t * set : delete_sets) {
 
     std::pair<lookup_iterator, lookup_iterator> range = node_set_lookup_table.equal_range(*set);
 

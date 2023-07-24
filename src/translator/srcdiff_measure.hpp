@@ -7,8 +7,8 @@
 class srcdiff_measure {
 
 protected:
-	const node_set & set_original;
-	const node_set & set_modified;
+	const element_t & set_original;
+	const element_t & set_modified;
 
 	bool computed;
 
@@ -22,7 +22,7 @@ protected:
 
 public:
 
-	srcdiff_measure(const node_set & set_original, const node_set & set_modified);
+	srcdiff_measure(const element_t & set_original, const element_t & set_modified);
 
 	int similarity()          const;
 	int difference()          const;

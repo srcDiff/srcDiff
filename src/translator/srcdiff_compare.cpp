@@ -15,12 +15,12 @@ namespace srcdiff_compare {
 
   // diff node accessor function
   const void * node_set_array_index(int idx, const void *s, const void * context) {
-    node_set * sets = (node_set *)s;
+    element_t * sets = (element_t *)s;
     return &sets[idx];
   }
 
   const void * node_index(int idx, const void *s, const void * context) {
-    node_set & set = *(node_set *)s;
+    element_t & set = *(element_t *)s;
     return &set[idx];
   }
 
@@ -78,15 +78,15 @@ namespace srcdiff_compare {
 
     diff_nodes & dnodes = *(diff_nodes *)context;
 
-    node_set * node_set1 = (node_set *)e1;
-    node_set * node_set2 = (node_set *)e2;
+    element_t * node_set1 = (element_t *)e1;
+    element_t * node_set2 = (element_t *)e2;
 
     if(!node_set1->hash()) {
-      node_set1->hash(std::hash<node_set>()(*node_set1));
+      node_set1->hash(std::hash<element_t>()(*node_set1));
     }
 
     if(!node_set2->hash()) {
-      node_set2->hash(std::hash<node_set>()(*node_set2));
+      node_set2->hash(std::hash<element_t>()(*node_set2));
     }
 
     if(!(node_set1->hash() == node_set2->hash()))

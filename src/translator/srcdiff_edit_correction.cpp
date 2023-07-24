@@ -243,8 +243,8 @@ edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
             std::size_t original_set_pos = delete_edit->offset_sequence_one + i;
             std::size_t modified_set_pos = insert_edit->offset_sequence_two + j;
 
-            const node_set & set_original = sets_original.at(original_set_pos);
-            const node_set & set_modified = sets_modified.at(modified_set_pos);
+            const element_t & set_original = sets_original.at(original_set_pos);
+            const element_t & set_modified = sets_modified.at(modified_set_pos);
 
             int original_pos = set_original.at(0);
             int modified_pos = set_modified.at(0);
@@ -307,8 +307,8 @@ std::shared_ptr<srcdiff_text_measure> srcdiff_edit_correction::edit2measure(int 
     std::size_t original_set_pos = original_offset;
     std::size_t modified_set_pos = modified_offset;
 
-    const node_set & set_original = sets_original.at(original_set_pos);
-    const node_set & set_modified = sets_modified.at(modified_set_pos);
+    const element_t & set_original = sets_original.at(original_set_pos);
+    const element_t & set_modified = sets_modified.at(modified_set_pos);
 
     int original_pos = set_original.at(0);
     int modified_pos = set_modified.at(0);
@@ -465,8 +465,8 @@ void srcdiff_edit_correction::correct() {
 
         std::size_t common_pos = delete_edit->offset_sequence_one + original_offset;
 
-        const node_set & common_set = sets_original.at(common_pos);
-        node_set common_set_text(sets_original.nodes());
+        const element_t & common_set = sets_original.at(common_pos);
+        element_t common_set_text(sets_original.nodes());
         srcdiff_text_measure::collect_text_node_set(common_set, common_set_text);
 
         std::vector<std::size_t> original_similarities(delete_edit->length);
@@ -500,8 +500,8 @@ void srcdiff_edit_correction::correct() {
                 std::size_t original_set_pos = delete_edit->offset_sequence_one + i;
                 std::size_t modified_set_pos = insert_edit->offset_sequence_two + j;
 
-                const node_set & set_original = sets_original.at(original_set_pos);
-                const node_set & set_modified = sets_modified.at(modified_set_pos);
+                const element_t & set_original = sets_original.at(original_set_pos);
+                const element_t & set_modified = sets_modified.at(modified_set_pos);
 
                 if(set_original.size() >= 3 * set_modified.size()) {
                     continue;

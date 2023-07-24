@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <cassert>
 
-srcdiff_text_measure::srcdiff_text_measure(const node_set & set_original, const node_set & set_modified, bool important_only) 
+srcdiff_text_measure::srcdiff_text_measure(const element_t & set_original, const element_t & set_modified, bool important_only) 
   : srcdiff_measure(set_original, set_modified),
     set_original_text(set_original.nodes()),
     set_modified_text(set_modified.nodes()),
@@ -40,7 +40,7 @@ void srcdiff_text_measure::collect_text() {
 
 }
 
-void srcdiff_text_measure::collect_text_node_set(const node_set & set, node_set & set_text) {
+void srcdiff_text_measure::collect_text_node_set(const element_t & set, element_t & set_text) {
 
   std::size_t length = set.size();
 
@@ -102,8 +102,8 @@ void srcdiff_text_measure::collect_important_text() {
 
 }
 
-void srcdiff_text_measure::unigrams(node_set & collected_set_original,
-                                    node_set & collected_set_modified) {
+void srcdiff_text_measure::unigrams(element_t & collected_set_original,
+                                    element_t & collected_set_modified) {
 
   std::sort(collected_set_original.begin(), collected_set_original.end());
   std::sort(collected_set_modified.begin(), collected_set_modified.end());
@@ -168,7 +168,7 @@ void srcdiff_text_measure::compute() {
   }
 
     shortest_edit_script_t ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
-    ses.compute<node_set>(set_original_text, set_modified_text, false);
+    ses.compute<element_t>(set_original_text, set_modified_text, false);
     process_edit_script(ses.script());
 
 }

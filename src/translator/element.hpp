@@ -1,5 +1,5 @@
-#ifndef INCLUDED_NODE_SET_HPP
-#define INCLUDED_NODE_SET_HPP
+#ifndef INCLUDED_ELEMENT_HPP
+#define INCLUDED_ELEMENT_HPP
 
 #include <srcdiff_vector.hpp>
 
@@ -11,7 +11,7 @@
 #include <iostream>
 #include <memory>
 
-class node_set : public srcdiff_vector<int> {
+class element_t : public srcdiff_vector<int> {
 
 private:
 
@@ -27,10 +27,10 @@ private:
 
 public:
 
-    node_set(const srcml_nodes & node_list) : node_list(node_list), hash_value() {}
+    element_t(const srcml_nodes & node_list) : node_list(node_list), hash_value() {}
 
     /** loop O(n) */
-    node_set(const node_set & set) : node_list(set.node_list), hash_value(set.hash_value) {
+    element_t(const element_t & set) : node_list(set.node_list), hash_value(set.hash_value) {
 
         for(size_type pos = 0; pos < set.size(); ++pos) {
 
@@ -41,7 +41,7 @@ public:
     }
 
     /** loop O(n) */
-    node_set(const srcml_nodes & node_list, int & start) : node_list(node_list), hash_value() {
+    element_t(const srcml_nodes & node_list, int & start) : node_list(node_list), hash_value() {
 
       if((xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_ELEMENT) return;
 
@@ -78,7 +78,7 @@ public:
       --start;
     }
 
-    node_set & operator=(node_set set) {
+    element_t & operator=(element_t set) {
 
         std::swap(vec, set.vec);
 
@@ -86,14 +86,14 @@ public:
 
     }
 
-    bool operator==(const node_set & that) const {
+    bool operator==(const element_t & that) const {
 
         diff_nodes diff = { nodes(), that.nodes() };
         return srcdiff_compare::node_set_syntax_compare((const void *)this, (const void *)&that, &diff) == 0;
 
     }
 
-    friend std::ostream & operator<<(std::ostream & out, const node_set & that) {
+    friend std::ostream & operator<<(std::ostream & out, const element_t & that) {
 
         for(std::size_t pos = 0, size = that.size(); pos < size; ++pos) {
             out << *that.nodes()[that.vec[pos]];
@@ -141,9 +141,9 @@ public:
 namespace std {
 
 template<>
-struct hash<node_set> {
+struct hash<element_t> {
 
-  size_t operator()(const node_set & set) const {
+  size_t operator()(const element_t & set) const {
 
     if(set.hash())
         return *set.hash();
@@ -159,7 +159,7 @@ struct hash<node_set> {
 
     }
 
-    ((node_set &)set).hash(result);
+    ((element_t &)set).hash(result);
     return result;
 
   }

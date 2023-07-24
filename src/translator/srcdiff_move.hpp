@@ -19,7 +19,7 @@ public:
 
 	srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation);
 
-	static bool is_move(const node_set & set);
+	static bool is_move(const element_t & set);
 
 	static void mark_moves(srcml_nodes & nodes_original,
                            const element_list & element_list_original,
