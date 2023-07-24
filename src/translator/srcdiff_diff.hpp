@@ -2,7 +2,7 @@
 #define INCLUDED_SRCDIFF_DIFF_HPP
 
 #include <srcdiff_output.hpp>
-#include <node_sets.hpp>
+#include <element_list.hpp>
 #include <shortest_edit_script.h>
 
 #include <vector>
@@ -12,11 +12,11 @@ class srcdiff_diff {
 protected:
   srcdiff_output & out;
 
-  const node_sets & node_sets_original;
-  const node_sets & node_sets_modified;
+  const element_list & element_list_original;
+  const element_list & element_list_modified;
 
 public:
-  srcdiff_diff(srcdiff_output & out, const node_sets & node_sets_original, const node_sets & node_sets_modified);
+  srcdiff_diff(srcdiff_output & out, const element_list & element_list_original, const element_list & element_list_modified);
 
   virtual void output();
   virtual void output_common(int end_original, int end_modified);

@@ -60,13 +60,13 @@ void srcdiff_syntax_measure::compute() {
   }
 
   // collect subset of nodes
-  node_sets next_node_sets_original = set_original.size() > 1 ? node_sets(set_original.nodes(), set_original.at(1), set_original.back(), is_significant) : node_sets(set_original.nodes());
-  node_sets next_node_sets_modified = set_modified.size() > 1 ? node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back(), is_significant) : node_sets(set_modified.nodes());
-  original_len = next_node_sets_original.size();
-  modified_len = next_node_sets_modified.size();
+  element_list next_element_list_original = set_original.size() > 1 ? element_list(set_original.nodes(), set_original.at(1), set_original.back(), is_significant) : element_list(set_original.nodes());
+  element_list next_element_list_modified = set_modified.size() > 1 ? element_list(set_modified.nodes(), set_modified.at(1), set_modified.back(), is_significant) : element_list(set_modified.nodes());
+  original_len = next_element_list_original.size();
+  modified_len = next_element_list_modified.size();
 
   shortest_edit_script_t ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_array_index, &dnodes);
-  ses.compute<node_sets>(next_node_sets_original, next_node_sets_modified, false);
+  ses.compute<element_list>(next_element_list_original, next_element_list_modified, false);
   process_edit_script(ses.script());
 
 }

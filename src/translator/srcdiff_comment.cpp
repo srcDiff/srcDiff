@@ -4,8 +4,8 @@
 #include <srcdiff_compare.hpp>
 #include <shortest_edit_script.hpp>
 
-srcdiff_comment::srcdiff_comment(srcdiff_output & out, const node_sets & node_sets_original, const node_sets & node_sets_modified) 
-  : srcdiff_diff(out, node_sets_original, node_sets_modified) {}
+srcdiff_comment::srcdiff_comment(srcdiff_output & out, const element_list & element_list_original, const element_list & element_list_modified) 
+  : srcdiff_diff(out, element_list_original, element_list_modified) {}
 
 /*
 
@@ -20,7 +20,7 @@ void srcdiff_comment::output() {
   diff_nodes dnodes = { out.nodes_original(), out.nodes_modified() };
   shortest_edit_script_t ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_index, &dnodes);
 
-  int distance = ses.compute((const void *)&node_sets_original, node_sets_original.size(), (const void *)&node_sets_modified, node_sets_modified.size());
+  int distance = ses.compute((const void *)&element_list_original, element_list_original.size(), (const void *)&element_list_modified, element_list_modified.size());
 
   edit_t * edit_script = ses.script();
 
@@ -43,13 +43,13 @@ void srcdiff_comment::output() {
     diff_end_modified = out.last_output_modified();
     if(edits->operation == SES_DELETE && last_diff_original < edits->offset_sequence_one) {
 
-      diff_end_original = node_sets_original.at(edits->offset_sequence_one - 1).back() + 1;
-      diff_end_modified = node_sets_modified.at(edits->offset_sequence_two - 1).back() + 1;
+      diff_end_original = element_list_original.at(edits->offset_sequence_one - 1).back() + 1;
+      diff_end_modified = element_list_modified.at(edits->offset_sequence_two - 1).back() + 1;
 
     } else if(edits->operation == SES_INSERT && edits->offset_sequence_one != 0 && last_diff_original <= edits->offset_sequence_one)  {
 
-      diff_end_original = node_sets_original.at(edits->offset_sequence_one - 1).back() + 1;
-      diff_end_modified = node_sets_modified.at(edits->offset_sequence_two - 1).back() + 1;
+      diff_end_original = element_list_original.at(edits->offset_sequence_one - 1).back() + 1;
+      diff_end_modified = element_list_modified.at(edits->offset_sequence_two - 1).back() + 1;
 
     }
 
@@ -62,16 +62,16 @@ void srcdiff_comment::output() {
 
       // TODO: simplify unless plan to handle many to many different // 1-1
       if(edits->length == edit_next->length && edits->length == 1
-         && (node_sets_original.at(edits->offset_sequence_one).size() > 1
-             || node_sets_original.at(edits->offset_sequence_one).size() > 1)) {
+         && (element_list_original.at(edits->offset_sequence_one).size() > 1
+             || element_list_original.at(edits->offset_sequence_one).size() > 1)) {
 
-        output_change_whitespace(node_sets_original.at(edits->offset_sequence_one).back() + 1, node_sets_modified.at(edit_next->offset_sequence_two).back() + 1);
+        output_change_whitespace(element_list_original.at(edits->offset_sequence_one).back() + 1, element_list_modified.at(edit_next->offset_sequence_two).back() + 1);
 
       } else {
 
         // many to many
-        output_change_whitespace(node_sets_original.at(edits->offset_sequence_one + edits->length - 1).back() + 1,
-         node_sets_modified.at(edit_next->offset_sequence_two + edit_next->length - 1).back() + 1);
+        output_change_whitespace(element_list_original.at(edits->offset_sequence_one + edits->length - 1).back() + 1,
+         element_list_modified.at(edit_next->offset_sequence_two + edit_next->length - 1).back() + 1);
 
       }
 
@@ -87,7 +87,7 @@ void srcdiff_comment::output() {
 
       case SES_INSERT:
 
-        output_pure(0, node_sets_modified.at(edits->offset_sequence_two + edits->length - 1).back() + 1);
+        output_pure(0, element_list_modified.at(edits->offset_sequence_two + edits->length - 1).back() + 1);
 
         // update for common
         last_diff_original = edits->offset_sequence_one;
@@ -97,7 +97,7 @@ void srcdiff_comment::output() {
 
       case SES_DELETE:
 
-        output_pure(node_sets_original.at(edits->offset_sequence_one + edits->length - 1).back() + 1, 0);
+        output_pure(element_list_original.at(edits->offset_sequence_one + edits->length - 1).back() + 1, 0);
 
         // update for common
         last_diff_original = edits->offset_sequence_one + edits->length;
@@ -112,10 +112,10 @@ void srcdiff_comment::output() {
   // determine ending position to output
   diff_end_original = out.last_output_original();
   diff_end_modified = out.last_output_modified();
-  if(last_diff_original < (signed)node_sets_original.size()) {
+  if(last_diff_original < (signed)element_list_original.size()) {
 
-    diff_end_original = node_sets_original.back().back() + 1;
-    diff_end_modified = node_sets_modified.back().back() + 1;
+    diff_end_original = element_list_original.back().back() + 1;
+    diff_end_modified = element_list_modified.back().back() + 1;
 
   }
 

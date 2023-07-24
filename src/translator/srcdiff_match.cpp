@@ -24,8 +24,8 @@ struct difference {
 
 };
 
-bool srcdiff_match::is_match_default(const node_sets & sets_original, int start_pos_original,
-                                     const node_sets & sets_modified, int start_pos_modified,
+bool srcdiff_match::is_match_default(const element_list & sets_original, int start_pos_original,
+                                     const element_list & sets_modified, int start_pos_modified,
                                      const srcdiff_measure & measure) {
 
   if(measure.similarity() == MAX_INT) return false;
@@ -47,9 +47,9 @@ bool srcdiff_match::is_match_default(const node_sets & sets_original, int start_
 }
 
 
-srcdiff_match::srcdiff_match(const node_sets & node_sets_original, const node_sets & node_sets_modified,
+srcdiff_match::srcdiff_match(const element_list & element_list_original, const element_list & element_list_modified,
                              const is_match_func & is_match)
-  : node_sets_original(node_sets_original), node_sets_modified(node_sets_modified),
+  : element_list_original(element_list_original), element_list_modified(element_list_modified),
     is_match(is_match) {}
 
 /** loop O(D) */
@@ -142,8 +142,8 @@ offset_pair * srcdiff_match::match_differences() {
 
   */
 
-  int olength = node_sets_original.size();
-  int nlength = node_sets_modified.size();
+  int olength = element_list_original.size();
+  int nlength = element_list_modified.size();
 
   size_t mem_size = olength * nlength * sizeof(difference);
 
@@ -155,7 +155,7 @@ offset_pair * srcdiff_match::match_differences() {
     for(int j = 0; j < olength; ++j) {
 
       /** loop O(nd) */
-      srcdiff_text_measure measure(node_sets_original.at(j), node_sets_modified.at(i));
+      srcdiff_text_measure measure(element_list_original.at(j), element_list_modified.at(i));
       measure.compute();
       int similarity = measure.similarity();
 
@@ -165,7 +165,7 @@ offset_pair * srcdiff_match::match_differences() {
 
       // check if unmatched
       /** loop text O(nd) + syntax O(nd) + best match is O(nd) times number of matches */
-      if(!is_match(node_sets_original, j, node_sets_modified, i, measure)) {
+      if(!is_match(element_list_original, j, element_list_modified, i, measure)) {
 
         similarity = 0;
         unmatched = 2;
@@ -705,9 +705,9 @@ std::string get_for_condition(const srcml_nodes & nodes, int start_pos) {
 
   --control_end_pos;
 
-  node_sets control_sets = node_sets(nodes, control_start_pos + 1, control_end_pos);
+  element_list control_sets = element_list(nodes, control_start_pos + 1, control_end_pos);
 
-  node_sets::const_iterator citr;
+  element_list::const_iterator citr;
   for(citr = control_sets.begin(); citr != control_sets.end(); ++citr) {
     if(nodes.at(citr->front())->name == "condition") {
       break;
@@ -862,9 +862,9 @@ std::string get_class_type_name(const srcml_nodes & nodes, int start_pos) {
 bool conditional_has_block(const node_set & set) {
   
   // Todo: Add assertions that set is a conditional
-  node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
+  element_list sets = element_list(set.nodes(), set.at(1), set.back());
 
-  for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
+  for(element_list::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
     if(set.nodes().at(itr->at(0))->name == "block" && !bool(find_attribute(set.nodes().at(itr->at(0)), "type"))) {
       return true;
@@ -891,7 +891,7 @@ bool conditional_has_block(const node_set & set) {
 
 node_set get_first_child(const node_set & set) {
 
-  node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
+  element_list sets = element_list(set.nodes(), set.at(1), set.back());
   return sets.at(0);
 }
 
@@ -909,8 +909,8 @@ bool is_child_if(const node_set & child) {
 /** loop O(n) */
 bool if_stmt_has_else(const node_set & set) {
 
-  node_sets sets = node_sets(set.nodes(), set.at(1), set.back());
-  for(node_sets::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
+  element_list sets = element_list(set.nodes(), set.at(1), set.back());
+  for(element_list::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
     if(set.nodes().at(itr->at(0))->name == "else" 
       || ( set.nodes().at(itr->at(0))->name == "if" 
         && bool(find_attribute(set.nodes().at(itr->at(0)), "type")))) {
@@ -929,11 +929,11 @@ bool if_block_equal(const node_set & set_original, const node_set & set_modified
 
   diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
 
-  node_sets node_sets_original = node_sets(set_original.nodes(), set_original.at(1), set_original.back());
-  node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back());
+  element_list element_list_original = element_list(set_original.nodes(), set_original.at(1), set_original.back());
+  element_list element_list_modified = element_list(set_modified.nodes(), set_modified.at(1), set_modified.back());
 
-  node_sets::iterator block_original;
-  for(block_original = node_sets_original.begin(); block_original != node_sets_original.end(); ++block_original) {
+  element_list::iterator block_original;
+  for(block_original = element_list_original.begin(); block_original != element_list_original.end(); ++block_original) {
 
     if(set_original.nodes().at(block_original->at(0))->name == "block") {
 
@@ -943,10 +943,10 @@ bool if_block_equal(const node_set & set_original, const node_set & set_modified
 
   }
 
-  if(block_original == node_sets_original.end()) return false;
+  if(block_original == element_list_original.end()) return false;
 
-  node_sets::iterator block_modified;
-  for(block_modified = node_sets_modified.begin(); block_modified != node_sets_modified.end(); ++block_modified) {
+  element_list::iterator block_modified;
+  for(block_modified = element_list_modified.begin(); block_modified != element_list_modified.end(); ++block_modified) {
 
     if(set_modified.nodes().at(block_modified->at(0))->name == "block") {
 
@@ -956,7 +956,7 @@ bool if_block_equal(const node_set & set_original, const node_set & set_modified
 
   }
 
-  if(block_modified == node_sets_modified.end()) return false;
+  if(block_modified == element_list_modified.end()) return false;
 
   bool block_is_equal = srcdiff_compare::node_set_syntax_compare((void *)&*block_original, (void *)&*block_modified, (void *)&dnodes) == 0;
 
@@ -981,25 +981,25 @@ bool for_control_matches(const node_set & set_original, const node_set & set_mod
 
   diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
 
-  node_sets node_sets_original = node_sets(set_original.nodes(), set_original.at(1), set_original.back());
-  node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back());
+  element_list element_list_original = element_list(set_original.nodes(), set_original.at(1), set_original.back());
+  element_list element_list_modified = element_list(set_modified.nodes(), set_modified.at(1), set_modified.back());
 
-  node_sets::size_type control_pos_original;
-  for(control_pos_original = 0; control_pos_original < node_sets_original.size(); ++control_pos_original) {
-    if(set_original.nodes().at(node_sets_original.at(control_pos_original).front())->name == "control") {
+  element_list::size_type control_pos_original;
+  for(control_pos_original = 0; control_pos_original < element_list_original.size(); ++control_pos_original) {
+    if(set_original.nodes().at(element_list_original.at(control_pos_original).front())->name == "control") {
       break;
     }
   }
 
-  node_sets::size_type control_pos_modified;
-  for(control_pos_modified = 0; control_pos_modified < node_sets_modified.size(); ++control_pos_modified) {
-    if(set_modified.nodes().at(node_sets_modified.at(control_pos_modified).front())->name == "control") {
+  element_list::size_type control_pos_modified;
+  for(control_pos_modified = 0; control_pos_modified < element_list_modified.size(); ++control_pos_modified) {
+    if(set_modified.nodes().at(element_list_modified.at(control_pos_modified).front())->name == "control") {
       break;
     }
   }
 
-  bool matches = control_pos_original != node_sets_original.size() && control_pos_modified != node_sets_modified.size() 
-    && srcdiff_compare::node_set_syntax_compare((void *)&node_sets_original.at(control_pos_original), (void *)&node_sets_modified.at(control_pos_modified), (void *)&dnodes) == 0;
+  bool matches = control_pos_original != element_list_original.size() && control_pos_modified != element_list_modified.size() 
+    && srcdiff_compare::node_set_syntax_compare((void *)&element_list_original.at(control_pos_original), (void *)&element_list_modified.at(control_pos_modified), (void *)&dnodes) == 0;
 
   return matches;
 
@@ -1262,11 +1262,11 @@ bool reject_match_same(const srcdiff_measure & measure,
         }
         ++block_contents_pos;
 
-        node_sets node_sets_original = node_sets(set_original.nodes(), set_original.at(block_contents_pos), set_original.back());
-        node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(0), set_modified.back() + 1);
+        element_list element_list_original = element_list(set_original.nodes(), set_original.at(block_contents_pos), set_original.back());
+        element_list element_list_modified = element_list(set_modified.nodes(), set_modified.at(0), set_modified.back() + 1);
 
         int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
-        srcdiff_nested::check_nestable(node_sets_original, 0, node_sets_original.size(), node_sets_modified, 0, 1,
+        srcdiff_nested::check_nestable(element_list_original, 0, element_list_original.size(), element_list_modified, 0, 1,
                       start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
 
         is_reject = !(operation == SES_INSERT);
@@ -1279,11 +1279,11 @@ bool reject_match_same(const srcdiff_measure & measure,
         }
         ++block_contents_pos;
 
-        node_sets node_sets_original = node_sets(set_original.nodes(), set_original.at(0), set_original.back() + 1);
-        node_sets node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(block_contents_pos), set_modified.back());
+        element_list element_list_original = element_list(set_original.nodes(), set_original.at(0), set_original.back() + 1);
+        element_list element_list_modified = element_list(set_modified.nodes(), set_modified.at(block_contents_pos), set_modified.back());
 
         int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
-        srcdiff_nested::check_nestable(node_sets_original, 0, 1, node_sets_modified, 0, node_sets_modified.size(),
+        srcdiff_nested::check_nestable(element_list_original, 0, 1, element_list_modified, 0, element_list_modified.size(),
                       start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
 
         is_reject = !(operation == SES_DELETE);
@@ -1466,7 +1466,7 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
         if(!expr_modified.empty()) {
 
-          node_sets sets = node_sets(set_original.nodes(), set_original.at(1), set_original.back(), srcdiff_nested::is_match,
+          element_list sets = element_list(set_original.nodes(), set_original.at(1), set_original.back(), srcdiff_nested::is_match,
                                     &set_modified.nodes().at(expr_modified.at(0)));
           int match = srcdiff_nested::best_match(sets, expr_modified);
 
@@ -1482,7 +1482,7 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
         if(!expr_original.empty()) {
 
-          node_sets sets = node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back(), srcdiff_nested::is_match,
+          element_list sets = element_list(set_modified.nodes(), set_modified.at(1), set_modified.back(), srcdiff_nested::is_match,
                                     &set_original.nodes().at(expr_original.at(0)));
           int match = srcdiff_nested::best_match(sets, expr_original);
 
@@ -1577,39 +1577,39 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
 
   }
 
-  node_sets child_node_sets_original = node_sets(set_original.nodes(), set_original.at(1), set_original.back());
-  node_sets child_node_sets_modified = node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back());    
+  element_list child_element_list_original = element_list(set_original.nodes(), set_original.at(1), set_original.back());
+  element_list child_element_list_modified = element_list(set_modified.nodes(), set_modified.at(1), set_modified.back());    
 
   // check block of first child of if_stmt (old if behavior)
-  if(original_tag == "if_stmt" && !child_node_sets_original.empty()) {
+  if(original_tag == "if_stmt" && !child_element_list_original.empty()) {
 
-    std::string tag = set_original.nodes().at(child_node_sets_original.at(0).at(0))->name;
+    std::string tag = set_original.nodes().at(child_element_list_original.at(0).at(0))->name;
     if(tag == "else" || tag == "if") {
-      node_sets temp = node_sets(set_original.nodes(), child_node_sets_original.at(0).at(1), child_node_sets_original.back().back());
-      child_node_sets_original = temp;
+      element_list temp = element_list(set_original.nodes(), child_element_list_original.at(0).at(1), child_element_list_original.back().back());
+      child_element_list_original = temp;
     }
 
   }
 
   // check block of first child of if_stmt (old if behavior)
-  if(modified_tag == "if_stmt" && !child_node_sets_modified.empty()) {
+  if(modified_tag == "if_stmt" && !child_element_list_modified.empty()) {
 
-    std::string tag =  set_modified.nodes().at(child_node_sets_modified.at(0).at(0))->name;
+    std::string tag =  set_modified.nodes().at(child_element_list_modified.at(0).at(0))->name;
     if(tag == "else" || tag == "if") {
-      node_sets temp = node_sets(set_modified.nodes(), child_node_sets_modified.at(0).at(1), child_node_sets_modified.back().back());
-      child_node_sets_modified = temp;
+      element_list temp = element_list(set_modified.nodes(), child_element_list_modified.at(0).at(1), child_element_list_modified.back().back());
+      child_element_list_modified = temp;
     }
 
   }
 
-  if(!child_node_sets_original.empty() && !child_node_sets_modified.empty()
-    && set_original.nodes().at(child_node_sets_original.back().at(0))->name == "block" && set_modified.nodes().at(child_node_sets_modified.back().at(0))->name == "block") {
+  if(!child_element_list_original.empty() && !child_element_list_modified.empty()
+    && set_original.nodes().at(child_element_list_original.back().at(0))->name == "block" && set_modified.nodes().at(child_element_list_modified.back().at(0))->name == "block") {
 
-    node_set original_set = child_node_sets_original.back();
-    node_set modified_set = child_node_sets_modified.back();
+    node_set original_set = child_element_list_original.back();
+    node_set modified_set = child_element_list_modified.back();
 
     // block children actually in block_content
-    node_sets original_temp = node_sets(set_original.nodes(), child_node_sets_original.back().at(1), child_node_sets_original.back().back());
+    element_list original_temp = element_list(set_original.nodes(), child_element_list_original.back().at(1), child_element_list_original.back().back());
     for(const node_set & set : original_temp) {
       if(set_original.nodes().at(set.at(0))->name == "block_content") {
         original_set = set;
@@ -1617,7 +1617,7 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
     }
 
     // block children actually in block_content
-    node_sets modified_temp = node_sets(set_modified.nodes(), child_node_sets_modified.back().at(1), child_node_sets_modified.back().back());
+    element_list modified_temp = element_list(set_modified.nodes(), child_element_list_modified.back().at(1), child_element_list_modified.back().back());
     for(const node_set & set : modified_temp) {
       if(set_modified.nodes().at(set.at(0))->name == "block_content") {
         modified_set = set;

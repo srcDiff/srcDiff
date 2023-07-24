@@ -7,8 +7,8 @@
 
 #include <iostream>
 
-srcdiff_edit_correction::srcdiff_edit_correction(const node_sets & sets_original,
-                                                 const node_sets & sets_modified,
+srcdiff_edit_correction::srcdiff_edit_correction(const element_list & sets_original,
+                                                 const element_list & sets_modified,
                                                  shortest_edit_script_t & ses) 
     : sets_original(sets_original),
       sets_modified(sets_modified),

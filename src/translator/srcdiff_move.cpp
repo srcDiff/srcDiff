@@ -27,9 +27,9 @@ bool srcdiff_move::is_move(const node_set & set) {
 
 /** loop O(CD^2) */
 void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
-                              const node_sets & node_sets_original,
+                              const element_list & element_list_original,
                               srcml_nodes & nodes_modified,
-                              const node_sets & node_sets_modified,
+                              const element_list & element_list_modified,
                               edit_t * edit_script) {
 
   std::map<std::string, move_infos > constructs;
@@ -50,10 +50,10 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
         for(int i = 0; i < edits->length; ++i) {
 
-          if(node_sets_modified.nodes().at(node_sets_modified.at(edits->offset_sequence_two + i).at(0))->is_text()) {
+          if(element_list_modified.nodes().at(element_list_modified.at(edits->offset_sequence_two + i).at(0))->is_text()) {
             continue;
           }
-          node_set_lookup_table.insert(node_sets_modified.at(edits->offset_sequence_two + i));
+          node_set_lookup_table.insert(element_list_modified.at(edits->offset_sequence_two + i));
 
         }
 
@@ -63,10 +63,10 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
         for(int i = 0; i < edits->length; ++i) {
 
-          if(node_sets_original.nodes().at(node_sets_original.at(edits->offset_sequence_one + i).at(0))->is_text()) {
+          if(element_list_original.nodes().at(element_list_original.at(edits->offset_sequence_one + i).at(0))->is_text()) {
             continue;
           }
-          delete_sets.push_back(&node_sets_original.at(edits->offset_sequence_one + i));
+          delete_sets.push_back(&element_list_original.at(edits->offset_sequence_one + i));
 
         }
 

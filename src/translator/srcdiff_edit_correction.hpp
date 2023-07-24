@@ -10,15 +10,15 @@
 #define INCLUDED_SRCDIFF_EDIT_CORRECTION_HPP
 
 #include <shortest_edit_script.hpp>
-#include <node_sets.hpp>
+#include <element_list.hpp>
 #include <srcdiff_text_measure.hpp>
 #include <memory>
 
 class srcdiff_edit_correction {
 
 private:
-	const node_sets & sets_original;
-	const node_sets & sets_modified;
+	const element_list & sets_original;
+	const element_list & sets_modified;
 	shortest_edit_script_t & ses;
 
 private:
@@ -31,8 +31,8 @@ private:
 	std::shared_ptr<srcdiff_text_measure> edit2measure(int original_offset, int modified_offset);
 
 public:
-	srcdiff_edit_correction(const node_sets & sets_original,
-							const node_sets & sets_modified,
+	srcdiff_edit_correction(const element_list & sets_original,
+							const element_list & sets_modified,
 							shortest_edit_script_t & ses);
 	void correct();
 
