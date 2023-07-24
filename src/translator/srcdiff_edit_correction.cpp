@@ -467,7 +467,7 @@ void srcdiff_edit_correction::correct() {
 
         const element_t & common_set = sets_original.at(common_pos);
         element_t common_set_text(sets_original.nodes());
-        srcdiff_text_measure::collect_text_node_set(common_set, common_set_text);
+        srcdiff_text_measure::collect_text_element(common_set, common_set_text);
 
         std::vector<std::size_t> original_similarities(delete_edit->length);
         std::vector<std::size_t> modified_similarities(insert_edit->length);

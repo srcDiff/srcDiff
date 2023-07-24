@@ -40,7 +40,7 @@ void srcdiff_text_measure::collect_text() {
 
 }
 
-void srcdiff_text_measure::collect_text_node_set(const element_t & set, element_t & set_text) {
+void srcdiff_text_measure::collect_text_element(const element_t & set, element_t & set_text) {
 
   std::size_t length = set.size();
 
@@ -94,8 +94,8 @@ void srcdiff_text_measure::collect_important_text() {
 
   text_collected = true;
 
-  collect_text_node_set(set_original, set_original_text);
-  collect_text_node_set(set_modified, set_modified_text);
+  collect_text_element(set_original, set_original_text);
+  collect_text_element(set_modified, set_modified_text);
 
   original_len = set_original_text.size();
   modified_len = set_modified_text.size();

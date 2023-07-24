@@ -23,7 +23,7 @@ public:
                        const element_t & set_modified,
                        bool important_only = true);
 
-    static void collect_text_node_set(const element_t & set, element_t & set_text);
+    static void collect_text_element(const element_t & set, element_t & set_text);
     void collect_text();
     void collect_important_text();
 

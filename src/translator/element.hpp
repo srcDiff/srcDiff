@@ -13,18 +13,6 @@
 
 class element_t : public srcdiff_vector<int> {
 
-private:
-
-    const srcml_nodes & node_list;
-    boost::optional<std::size_t> hash_value;
-
-    static bool is_white_space(const std::shared_ptr<srcml_node> & node) {
-
-      // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
-      return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content && node->is_white_space();
-
-    }
-
 public:
 
     element_t(const srcml_nodes & node_list) : node_list(node_list), hash_value() {}
@@ -134,6 +122,20 @@ public:
     }
     const std::string & get_root_name() const {
         return get_node_name(0);
+    }
+
+
+protected:
+
+    const srcml_nodes & node_list;
+    boost::optional<std::size_t> hash_value;
+
+    /// @todo remove, as should be part of node
+    static bool is_white_space(const std::shared_ptr<srcml_node> & node) {
+
+      // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
+      return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content && node->is_white_space();
+
     }
 
 };
