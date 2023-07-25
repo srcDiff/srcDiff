@@ -15,10 +15,10 @@ class element_t : public srcdiff_vector<int> {
 
 public:
 
-    element_t(const srcml_nodes & terms) : terms(terms), hash_value() {}
+    element_t(const srcml_nodes & node_list) : node_list(node_list), hash_value() {}
 
     /** loop O(n) */
-    element_t(const element_t & that) : terms(that.terms), hash_value(that.hash_value) {
+    element_t(const element_t & that) : node_list(that.node_list), hash_value(that.hash_value) {
 
         for(size_type pos = 0; pos < that.size(); ++pos) {
 
@@ -29,13 +29,13 @@ public:
     }
 
     /** loop O(n) */
-    element_t(const srcml_nodes & terms, int & start) : terms(terms), hash_value() {
+    element_t(const srcml_nodes & node_list, int & start) : node_list(node_list), hash_value() {
 
-      if((xmlReaderTypes)terms.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)terms.at(start)->type != XML_READER_TYPE_ELEMENT) return;
+      if((xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_ELEMENT) return;
 
       push_back(start);
 
-      if(terms.at(start)->is_empty || (xmlReaderTypes)terms.at(start)->type == XML_READER_TYPE_TEXT) return;
+      if(node_list.at(start)->is_empty || (xmlReaderTypes)node_list.at(start)->type == XML_READER_TYPE_TEXT) return;
 
       ++start;
 
@@ -44,20 +44,20 @@ public:
       for(; is_open; ++start) {
 
         // skip whitespace
-        if(is_white_space(terms.at(start))) {
+        if(is_white_space(node_list.at(start))) {
           continue;
         }
 
         push_back(start);
 
         // opening tags
-        if((xmlReaderTypes)terms.at(start)->type == XML_READER_TYPE_ELEMENT
-           && !(terms.at(start)->is_empty)) {
+        if((xmlReaderTypes)node_list.at(start)->type == XML_READER_TYPE_ELEMENT
+           && !(node_list.at(start)->is_empty)) {
           ++is_open;
         }
 
         // closing tags
-        else if((xmlReaderTypes)terms.at(start)->type == XML_READER_TYPE_END_ELEMENT) {
+        else if((xmlReaderTypes)node_list.at(start)->type == XML_READER_TYPE_END_ELEMENT) {
           --is_open;
         }
 
@@ -66,12 +66,13 @@ public:
       --start;
     }
 
-    element_t & operator=(element_t set) {
+    void swap(element_t & that) {
+        std::swap(vec, that.vec);
+    }
 
-        std::swap(vec, set.vec);
-
+    element_t & operator=(element_t that) {
+        swap(that);
         return *this;
-
     }
 
     bool operator==(const element_t & that) const {
@@ -93,7 +94,7 @@ public:
 
     const srcml_nodes & nodes() const {
 
-        return terms;
+        return node_list;
 
     }
 
@@ -127,8 +128,10 @@ public:
 
 protected:
 
-    const srcml_nodes & terms;
+    const srcml_nodes & node_list;
     boost::optional<std::size_t> hash_value;
+
+    std::vector<int> terms;
 
     /// @todo remove, as should be part of node
     static bool is_white_space(const std::shared_ptr<srcml_node> & node) {
