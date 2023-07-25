@@ -1,45 +1,145 @@
-/**
- * @file element.hpp
- *
- * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
- *
- * srcDiff is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * srcDiff is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
-
 #ifndef INCLUDED_ELEMENT_HPP
 #define INCLUDED_ELEMENT_HPP
-#include <string>
 
-class element {
+#include <srcdiff_vector.hpp>
+
+#include <srcdiff_compare.hpp>
+#include <srcml_nodes.hpp>
+
+#include <boost/optional.hpp>
+
+#include <iostream>
+#include <memory>
+
+class element_t : public srcdiff_vector<int> {
+
 public:
-    virtual bool is_match(const element & other) {
-        return name == element.name;
+
+    element_t(const srcml_nodes & terms) : terms(terms), hash_value() {}
+
+    /** loop O(n) */
+    element_t(const element_t & that) : terms(that.terms), hash_value(that.hash_value) {
+
+        for(size_type pos = 0; pos < that.size(); ++pos) {
+
+            push_back(that.vec[pos]);
+
+        }
+
     }
 
-    virtual bool is_nestable() {
-        return false;
+    /** loop O(n) */
+    element_t(const srcml_nodes & terms, int & start) : terms(terms), hash_value() {
+
+      if((xmlReaderTypes)terms.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)terms.at(start)->type != XML_READER_TYPE_ELEMENT) return;
+
+      push_back(start);
+
+      if(terms.at(start)->is_empty || (xmlReaderTypes)terms.at(start)->type == XML_READER_TYPE_TEXT) return;
+
+      ++start;
+
+      // track open tags because could have same type nested
+      int is_open = 1;
+      for(; is_open; ++start) {
+
+        // skip whitespace
+        if(is_white_space(terms.at(start))) {
+          continue;
+        }
+
+        push_back(start);
+
+        // opening tags
+        if((xmlReaderTypes)terms.at(start)->type == XML_READER_TYPE_ELEMENT
+           && !(terms.at(start)->is_empty)) {
+          ++is_open;
+        }
+
+        // closing tags
+        else if((xmlReaderTypes)terms.at(start)->type == XML_READER_TYPE_END_ELEMENT) {
+          --is_open;
+        }
+
+      }
+
+      --start;
     }
 
-    virtual bool is_exchangeable() {
-        return false;
+    element_t & operator=(element_t set) {
+
+        std::swap(vec, set.vec);
+
+        return *this;
+
     }
 
-private:
-    std::string name;
+    bool operator==(const element_t & that) const {
+
+        diff_nodes diff = { nodes(), that.nodes() };
+        return srcdiff_compare::element_syntax_compare((const void *)this, (const void *)&that, &diff) == 0;
+
+    }
+
+    friend std::ostream & operator<<(std::ostream & out, const element_t & that) {
+
+        for(std::size_t pos = 0, size = that.size(); pos < size; ++pos) {
+            out << *that.nodes()[that.vec[pos]];
+        }
+
+        return out;
+
+    }
+
+    const srcml_nodes & nodes() const {
+
+        return terms;
+
+    }
+
+    boost::optional<std::size_t> hash() const {
+
+        return hash_value;
+
+    }
+
+    void hash(std::size_t hash_value) {
+
+        this->hash_value = hash_value;
+
+    }
+
+    const std::shared_ptr<srcml_node> & get_node(std::size_t pos) const {
+        return nodes().at(at(pos));
+    }
+
+    const std::shared_ptr<srcml_node> & get_root() const {
+        return get_node(0);
+    }
+
+    const std::string & get_node_name(std::size_t pos) const {
+        return get_node(pos)->name;
+    }
+    const std::string & get_root_name() const {
+        return get_node_name(0);
+    }
+
+
+protected:
+
+    const srcml_nodes & terms;
+    boost::optional<std::size_t> hash_value;
+
+    /// @todo remove, as should be part of node
+    static bool is_white_space(const std::shared_ptr<srcml_node> & node) {
+
+      // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
+      return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content && node->is_white_space();
+
+    }
 
 };
 
+#include <element_hash.hpp>
 
 #endif

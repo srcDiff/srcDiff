@@ -1,7 +1,7 @@
 ##
 #  CMakeLists.txt
 #
-#  Copyright (C) 2011-2021  SDML (www.srcML.org)
+#  Copyright (C) 2023  SDML (www.srcML.org)
 #
 #  This file is part of the srcDiff translator.
 #
@@ -19,33 +19,7 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-cmake_minimum_required(VERSION 3.14)
-project(srcDiff)
+file(GLOB MODEL_HEADERS *.hpp)
+file(GLOB MODEL_SOURCE  *.cpp)
 
-enable_testing()
-
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
-include(srcdiff)
-
-# setup project includes
-include_directories(src/shortest_edit_script
-					src/translator
-					src/model
-					src/client
-					src/srcml
-					src/windows
-					src/project
-					src/view
-					src/summary
-					
-					src/srcSAX/src/srcsax
-					src/srcSAX/src/cpp
-					src/srcSAX/src/windows)
-
-# include sub directories
-add_subdirectory(src)
-
-if(BUILD_TRANSLATOR_TESTS OR BUILD_UNIT_TESTS)
-	add_subdirectory(test)
-endif()
-
+add_library(model OBJECT ${MODEL_HEADERS} ${MODEL_SOURCE})
