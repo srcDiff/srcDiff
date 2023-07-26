@@ -246,14 +246,14 @@ edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
             const element_t & set_original = sets_original.at(original_set_pos);
             const element_t & set_modified = sets_modified.at(modified_set_pos);
 
-            int original_pos = set_original.at(0);
-            int modified_pos = set_modified.at(0);
+            int original_pos = set_original.start_position();
+            int modified_pos = set_modified.start_position();
 
-            const std::string & original_tag = set_original.nodes().at(original_pos)->name;
-            const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
+            const std::string & original_tag = set_original.term(0)->name;
+            const std::string & modified_tag = set_modified.term(0)->name;
 
-            const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
-            const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
+            const std::string & original_uri = set_original.term(0)->ns.href;
+            const std::string & modified_uri = set_modified.term(0)->ns.href;
 
             if(srcdiff_compare::element_syntax_compare(&set_original, &set_modified, &diff) != 0) {
                 continue;
@@ -310,14 +310,14 @@ std::shared_ptr<srcdiff_text_measure> srcdiff_edit_correction::edit2measure(int 
     const element_t & set_original = sets_original.at(original_set_pos);
     const element_t & set_modified = sets_modified.at(modified_set_pos);
 
-    int original_pos = set_original.at(0);
-    int modified_pos = set_modified.at(0);
+    int original_pos = set_original.start_position();
+    int modified_pos = set_modified.start_position();
 
-    const std::string & original_tag = set_original.nodes().at(original_pos)->name;
-    const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
+    const std::string & original_tag = set_original.term(0)->name;
+    const std::string & modified_tag = set_modified.term(0)->name;
 
-    const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
-    const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
+    const std::string & original_uri = set_original.term(0)->ns.href;
+    const std::string & modified_uri = set_modified.term(0)->ns.href;
 
     if(!(original_tag == modified_tag && original_uri == modified_uri)
         && !srcdiff_match::is_interchangeable_match(set_original, set_modified))

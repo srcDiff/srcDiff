@@ -21,7 +21,7 @@ srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, 
 
 bool srcdiff_move::is_move(const element_t & set) {
 
-  return set.nodes().at(set.at(0))->move;
+  return set.term(0)->move;
 
 }
 
@@ -50,7 +50,7 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
         for(int i = 0; i < edits->length; ++i) {
 
-          if(element_list_modified.nodes().at(element_list_modified.at(edits->offset_sequence_two + i).at(0))->is_text()) {
+          if(element_list_modified.at(edits->offset_sequence_two + i).term(0)->is_text()) {
             continue;
           }
           node_set_lookup_table.insert(element_list_modified.at(edits->offset_sequence_two + i));
@@ -63,7 +63,7 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
 
         for(int i = 0; i < edits->length; ++i) {
 
-          if(element_list_original.nodes().at(element_list_original.at(edits->offset_sequence_one + i).at(0))->is_text()) {
+          if(element_list_original.at(edits->offset_sequence_one + i).term(0)->is_text()) {
             continue;
           }
           delete_sets.push_back(&element_list_original.at(edits->offset_sequence_one + i));
@@ -91,26 +91,27 @@ void srcdiff_move::mark_moves(srcml_nodes & nodes_original,
       }
 
       ++move_id;
-      std::shared_ptr<srcml_node> start_node_one = std::make_shared<srcml_node>(*set->nodes().at(set->at(0)));
+      std::shared_ptr<srcml_node> start_node_one = std::make_shared<srcml_node>(*set->term(0));
       start_node_one->move = move_id;
 
-      std::shared_ptr<srcml_node> start_node_two = std::make_shared<srcml_node>(*pos->nodes().at(pos->at(0)));
+      std::shared_ptr<srcml_node> start_node_two = std::make_shared<srcml_node>(*pos->term(0));
       start_node_two->move = move_id;
 
       // breaks const
-      ((srcml_nodes &)set->nodes()).at(set->at(0)) = start_node_one;
-      ((srcml_nodes &)pos->nodes()).at(pos->at(0)) = start_node_two;
+      // Not sure if I can use terms here. Also, probably should fix the break const thing
+      ((srcml_nodes &)set->nodes()).at(set->start_position()) = start_node_one;
+      ((srcml_nodes &)pos->nodes()).at(pos->start_position()) = start_node_two;
 
       if(!start_node_one->is_empty) {
 
-        std::shared_ptr<srcml_node> end_node_one = std::make_shared<srcml_node>(*set->nodes().at(set->back()));
+        std::shared_ptr<srcml_node> end_node_one = std::make_shared<srcml_node>(*set->last_term());
         end_node_one->move = move_id;
 
-        std::shared_ptr<srcml_node> end_node_two = std::make_shared<srcml_node>(*pos->nodes().at(pos->back()));
+        std::shared_ptr<srcml_node> end_node_two = std::make_shared<srcml_node>(*pos->last_term());
         end_node_two->move = move_id;
 
-        ((srcml_nodes &)set->nodes()).at(set->back()) = end_node_one;
-        ((srcml_nodes &)pos->nodes()).at(pos->back()) = end_node_two;
+        ((srcml_nodes &)set->nodes()).at(set->end_position()) = end_node_one;
+        ((srcml_nodes &)pos->nodes()).at(pos->end_position()) = end_node_two;
 
       }
 

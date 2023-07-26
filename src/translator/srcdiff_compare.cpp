@@ -8,25 +8,25 @@
 namespace srcdiff_compare {
 
   // diff node accessor function
-  const void * element_index(int idx, const void *s, const void * context) {
-    element_list & sets = *(element_list *)s;
-    return &sets[idx];
+  const void * element_index(int index, const void* data, const void * context) {
+    element_list & elements = *(element_list *)data;
+    return &elements[index];
   }
 
   // diff node accessor function
-  const void * element_array_index(int idx, const void *s, const void * context) {
-    element_t * sets = (element_t *)s;
-    return &sets[idx];
+  const void * element_array_index(int index, const void* data, const void * context) {
+    element_t * elements = (element_t *)data;
+    return &elements[index];
   }
 
-  const void * node_index(int idx, const void *s, const void * context) {
-    element_t & set = *(element_t *)s;
-    return &set[idx];
+  const void * node_index(int index, const void* data, const void * context) {
+    element_t & element = *(element_t *)data;
+    return &element.get_terms()[index];
   }
 
-  const void * node_array_index(int idx, const void *s, const void * context) {
-    int * set = (int *)s;
-    return &set[idx];
+  const void * node_array_index(int index, const void* data, const void * context) {
+    int * element = (int *)data;
+    return &element[index];
   }
 
   int node_index_compare(const void * node1, const void * node2, const void * context) {
@@ -96,22 +96,22 @@ namespace srcdiff_compare {
 
       // string consecutive non whitespace text nodes
       // TODO:  Why create the string?  Just compare directly as you go through
-      if(dnodes.nodes_original.at(element_1->at(i))->is_text() && dnodes.nodes_modified.at(element_2->at(j))->is_text()) {
+      if(element_1->term(i)->is_text() && element_2->term(j)->is_text()) {
 
         std::string text1 = "";
-        for(; i < element_1->size() && dnodes.nodes_original.at(element_1->at(i))->is_text(); ++i) {
-          text1 += dnodes.nodes_original.at(element_1->at(i))->content ? *dnodes.nodes_original.at(element_1->at(i))->content : "";
+        for(; i < element_1->size() && element_1->term(i)->is_text(); ++i) {
+          text1 += element_1->term(i)->content ? *element_1->term(i)->content : "";
         }
 
         std::string text2 = "";
-        for(; j < element_2->size() && dnodes.nodes_modified.at(element_2->at(j))->is_text(); ++j) {
-          text2 += dnodes.nodes_modified.at(element_2->at(j))->content ? *dnodes.nodes_modified.at(element_2->at(j))->content : "";
+        for(; j < element_2->size() && element_2->term(j)->is_text(); ++j) {
+          text2 += element_2->term(j)->content ? *element_2->term(j)->content : "";
         }
 
         if(text1 != text2)
           return 1;
 
-      } else if(node_compare(dnodes.nodes_original.at(element_1->at(i)), dnodes.nodes_modified.at(element_2->at(j))))
+      } else if(node_compare(element_1->term(i), element_2->term(j)))
         return 1;
       else {
 
@@ -133,11 +133,11 @@ namespace srcdiff_compare {
 
   }
 
-  const void * string_index(int idx, const void * s, const void * context) {
+  const void * string_index(int index, const void * s, const void * context) {
 
     std::vector<std::string> & string_list = *(std::vector<std::string> *)s;
 
-    return &string_list[idx];
+    return &string_list[index];
 
   }
 

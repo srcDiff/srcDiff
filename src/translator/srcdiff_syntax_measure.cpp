@@ -45,11 +45,11 @@ void srcdiff_syntax_measure::compute() {
   
   diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
 
-  if((xmlReaderTypes)set_original.nodes().at(set_original.at(0))->type != XML_READER_TYPE_ELEMENT
-     || (xmlReaderTypes)set_modified.nodes().at(set_modified.at(0))->type != XML_READER_TYPE_ELEMENT
-     || (srcdiff_compare::node_compare(set_original.nodes().at(set_original.at(0)), set_modified.nodes().at(set_modified.at(0))) != 0
+  if((xmlReaderTypes)set_original.term(0)->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)set_modified.term(0)->type != XML_READER_TYPE_ELEMENT
+     || (srcdiff_compare::node_compare(set_original.term(0), set_modified.term(0)) != 0
         && !srcdiff_match::is_interchangeable_match(set_original, set_modified)
-        && (set_original.nodes().at(set_original.at(0))->name != "block" || set_modified.nodes().at(set_modified.at(0))->name != "block"))) {
+        && (set_original.term(0)->name != "block" || set_modified.term(0)->name != "block"))) {
 
     a_similarity = 0;
     a_original_difference = MAX_INT;
@@ -60,8 +60,8 @@ void srcdiff_syntax_measure::compute() {
   }
 
   // collect subset of nodes
-  element_list next_element_list_original = set_original.size() > 1 ? element_list(set_original.nodes(), set_original.at(1), set_original.back(), is_significant) : element_list(set_original.nodes());
-  element_list next_element_list_modified = set_modified.size() > 1 ? element_list(set_modified.nodes(), set_modified.at(1), set_modified.back(), is_significant) : element_list(set_modified.nodes());
+  element_list next_element_list_original = set_original.size() > 1 ? element_list(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position(), is_significant) : element_list(set_original.nodes());
+  element_list next_element_list_modified = set_modified.size() > 1 ? element_list(set_modified.nodes(), set_modified.get_terms().at(1), set_modified.end_position(), is_significant) : element_list(set_modified.nodes());
   original_len = next_element_list_original.size();
   modified_len = next_element_list_modified.size();
 

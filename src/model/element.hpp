@@ -11,19 +11,18 @@
 #include <iostream>
 #include <memory>
 
-class element_t : public srcdiff_vector<int> {
+/// @todo rename to construct
+class element_t {
 
 public:
 
-    element_t(const srcml_nodes & node_list) : node_list(node_list), hash_value() {}
+    element_t(const srcml_nodes & node_list) : node_list(node_list), terms(), hash_value() {}
 
     /** loop O(n) */
-    element_t(const element_t & that) : node_list(that.node_list), hash_value(that.hash_value) {
+    element_t(const element_t & that) : node_list(that.node_list), terms(), hash_value(that.hash_value) {
 
-        for(size_type pos = 0; pos < that.size(); ++pos) {
-
-            push_back(that.vec[pos]);
-
+        for(std::size_t pos = 0; pos < that.size(); ++pos) {
+            terms.push_back(that.terms[pos]);
         }
 
     }
@@ -33,7 +32,7 @@ public:
 
       if((xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_ELEMENT) return;
 
-      push_back(start);
+      terms.push_back(start);
 
       if(node_list.at(start)->is_empty || (xmlReaderTypes)node_list.at(start)->type == XML_READER_TYPE_TEXT) return;
 
@@ -48,7 +47,7 @@ public:
           continue;
         }
 
-        push_back(start);
+        terms.push_back(start);
 
         // opening tags
         if((xmlReaderTypes)node_list.at(start)->type == XML_READER_TYPE_ELEMENT
@@ -67,7 +66,8 @@ public:
     }
 
     void swap(element_t & that) {
-        std::swap(vec, that.vec);
+        std::swap(terms, that.terms);
+        std::swap(hash_value, that.hash_value);
     }
 
     element_t & operator=(element_t that) {
@@ -85,33 +85,64 @@ public:
     friend std::ostream & operator<<(std::ostream & out, const element_t & that) {
 
         for(std::size_t pos = 0, size = that.size(); pos < size; ++pos) {
-            out << *that.nodes()[that.vec[pos]];
+            out << *that.term(pos);
         }
 
         return out;
 
     }
 
+    /// term access api ///
+    std::size_t size() const {
+        return terms.size();
+    }
+
+    bool empty() const {
+        return terms.empty();
+    }
+
+    const std::shared_ptr<srcml_node> & term(std::size_t pos) const {
+        return node_list[terms[pos]];
+    }
+
+    const std::vector<int> & get_terms() const {
+        return terms;
+    }
+
+    // @todo possibly remove this
+    std::vector<int> & get_terms() {
+        return terms;
+    }
+
+    const std::shared_ptr<srcml_node> & last_term() const {
+        return node_list[terms.back()];
+    } 
+
+    /// position info of element
+    std::size_t start_position() const {
+        return terms.front();
+    }
+
+    std::size_t end_position() const {
+        return terms.back();
+    }
+
+
+
     const srcml_nodes & nodes() const {
-
         return node_list;
-
     }
 
     boost::optional<std::size_t> hash() const {
-
         return hash_value;
-
     }
 
     void hash(std::size_t hash_value) {
-
         this->hash_value = hash_value;
-
     }
 
     const std::shared_ptr<srcml_node> & get_node(std::size_t pos) const {
-        return nodes().at(at(pos));
+        return term(pos);
     }
 
     const std::shared_ptr<srcml_node> & get_root() const {
@@ -129,9 +160,9 @@ public:
 protected:
 
     const srcml_nodes & node_list;
-    boost::optional<std::size_t> hash_value;
 
     std::vector<int> terms;
+    boost::optional<std::size_t> hash_value;
 
     /// @todo remove, as should be part of node
     static bool is_white_space(const std::shared_ptr<srcml_node> & node) {

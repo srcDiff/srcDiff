@@ -71,13 +71,13 @@ void srcdiff_diff::output() {
 
     if(edits->operation == SES_DELETE && last_diff_original < edits->offset_sequence_one) {
 
-      diff_end_original = element_list_original.at(edits->offset_sequence_one - 1).back() + 1;
-      diff_end_modified = element_list_modified.at(edits->offset_sequence_two - 1).back() + 1;
+      diff_end_original = element_list_original.at(edits->offset_sequence_one - 1).end_position() + 1;
+      diff_end_modified = element_list_modified.at(edits->offset_sequence_two - 1).end_position() + 1;
 
     } else if(edits->operation == SES_INSERT && last_diff_modified < edits->offset_sequence_two) {
 
-      diff_end_original = element_list_original.at(edits->offset_sequence_one - 1).back() + 1;
-      diff_end_modified = element_list_modified.at(edits->offset_sequence_two - 1).back() + 1;
+      diff_end_original = element_list_original.at(edits->offset_sequence_one - 1).end_position() + 1;
+      diff_end_modified = element_list_modified.at(edits->offset_sequence_two - 1).end_position() + 1;
 
     }
 
@@ -105,7 +105,7 @@ void srcdiff_diff::output() {
 
         case SES_COMMON:
 
-          if((xmlReaderTypes)out.nodes_original().at(element_list_original.at(edits->offset_sequence_one).at(0))->type != XML_READER_TYPE_TEXT) {
+          if((xmlReaderTypes)element_list_original.at(edits->offset_sequence_one).term(0)->type != XML_READER_TYPE_TEXT) {
 
             srcdiff_single diff(*this, edits->offset_sequence_one, edits->offset_sequence_two);
             diff.output();
@@ -113,14 +113,14 @@ void srcdiff_diff::output() {
           } else {
 
             // common text nodes
-            output_common(element_list_original.at(edits->offset_sequence_one).back() + 1,
-                          element_list_modified.at(edits->offset_sequence_two).back() + 1);
+            output_common(element_list_original.at(edits->offset_sequence_one).end_position() + 1,
+                          element_list_modified.at(edits->offset_sequence_two).end_position() + 1);
 
           }
 
         case SES_INSERT:
 
-          output_pure(0, element_list_modified.at(edits->offset_sequence_two + edits->length - 1).back() + 1);
+          output_pure(0, element_list_modified.at(edits->offset_sequence_two + edits->length - 1).end_position() + 1);
 
 
           // update for common
@@ -131,7 +131,7 @@ void srcdiff_diff::output() {
 
         case SES_DELETE:
 
-          output_pure(element_list_original.at(edits->offset_sequence_one + edits->length - 1).back() + 1, 0);
+          output_pure(element_list_original.at(edits->offset_sequence_one + edits->length - 1).end_position() + 1, 0);
 
           // update for common
           last_diff_original = edits->offset_sequence_one + edits->length;
@@ -149,8 +149,8 @@ void srcdiff_diff::output() {
   diff_end_modified = out.last_output_modified();
   if(last_diff_original < (signed)element_list_original.size()) {
 
-    diff_end_original = element_list_original.back().back() + 1;
-    diff_end_modified = element_list_modified.back().back() + 1;
+    diff_end_original = element_list_original.back().end_position() + 1;
+    diff_end_modified = element_list_modified.back().end_position() + 1;
 
   }
 

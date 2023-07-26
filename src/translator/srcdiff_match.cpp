@@ -709,7 +709,7 @@ std::string get_for_condition(const srcml_nodes & nodes, int start_pos) {
 
   element_list::const_iterator citr;
   for(citr = control_sets.begin(); citr != control_sets.end(); ++citr) {
-    if(nodes.at(citr->front())->name == "condition") {
+    if(citr->term(0)->name == "condition") {
       break;
     }
   }
@@ -717,9 +717,9 @@ std::string get_for_condition(const srcml_nodes & nodes, int start_pos) {
   if(citr == control_sets.end()) return "";
 
   std::string condition = "";
-  for(element_t::const_iterator node_itr = citr->begin(); node_itr != citr->end(); ++node_itr) {
-    if(nodes.at(*node_itr)->is_text()) {
-      condition += nodes.at(*node_itr)->content ? *nodes.at(*node_itr)->content : "";
+  for(std::size_t pos = 0; pos < citr->size(); ++pos) {
+    if(citr->term(pos)->is_text()) {
+      condition += citr->term(pos)->content ? *citr->term(pos)->content : "";
     }
   }
 
@@ -862,11 +862,11 @@ std::string get_class_type_name(const srcml_nodes & nodes, int start_pos) {
 bool conditional_has_block(const element_t & set) {
   
   // Todo: Add assertions that set is a conditional
-  element_list sets = element_list(set.nodes(), set.at(1), set.back());
+  element_list sets = element_list(set.nodes(), set.get_terms().at(1), set.end_position());
 
   for(element_list::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
-    if(set.nodes().at(itr->at(0))->name == "block" && !bool(find_attribute(set.nodes().at(itr->at(0)), "type"))) {
+    if(itr->term(0)->name == "block" && !bool(find_attribute(itr->term(0), "type"))) {
       return true;
     } 
 
@@ -891,13 +891,13 @@ bool conditional_has_block(const element_t & set) {
 
 element_t get_first_child(const element_t & set) {
 
-  element_list sets = element_list(set.nodes(), set.at(1), set.back());
+  element_list sets = element_list(set.nodes(), set.get_terms().at(1), set.end_position());
   return sets.at(0);
 }
 
 bool is_child_if(const element_t & child) {
 
-  if(child.nodes().at(child.at(0))->name == "if") {
+  if(child.term(0)->name == "if") {
       return true;
   }
 
@@ -909,11 +909,11 @@ bool is_child_if(const element_t & child) {
 /** loop O(n) */
 bool if_stmt_has_else(const element_t & set) {
 
-  element_list sets = element_list(set.nodes(), set.at(1), set.back());
+  element_list sets = element_list(set.nodes(), set.get_terms().at(1), set.end_position());
   for(element_list::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
-    if(set.nodes().at(itr->at(0))->name == "else" 
-      || ( set.nodes().at(itr->at(0))->name == "if" 
-        && bool(find_attribute(set.nodes().at(itr->at(0)), "type")))) {
+    if(itr->term(0)->name == "else" 
+      || ( itr->term(0)->name == "if" 
+        && bool(find_attribute(itr->term(0), "type")))) {
       return true;
 
     }
@@ -929,13 +929,13 @@ bool if_block_equal(const element_t & set_original, const element_t & set_modifi
 
   diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
 
-  element_list element_list_original = element_list(set_original.nodes(), set_original.at(1), set_original.back());
-  element_list element_list_modified = element_list(set_modified.nodes(), set_modified.at(1), set_modified.back());
+  element_list element_list_original = element_list(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position());
+  element_list element_list_modified = element_list(set_modified.nodes(), set_modified.get_terms().at(1), set_modified.end_position());
 
   element_list::iterator block_original;
   for(block_original = element_list_original.begin(); block_original != element_list_original.end(); ++block_original) {
 
-    if(set_original.nodes().at(block_original->at(0))->name == "block") {
+    if(block_original->term(0)->name == "block") {
 
       break;
 
@@ -948,7 +948,7 @@ bool if_block_equal(const element_t & set_original, const element_t & set_modifi
   element_list::iterator block_modified;
   for(block_modified = element_list_modified.begin(); block_modified != element_list_modified.end(); ++block_modified) {
 
-    if(set_modified.nodes().at(block_modified->at(0))->name == "block") {
+    if(block_modified->term(0)->name == "block") {
 
       break;
 
@@ -981,19 +981,19 @@ bool for_control_matches(const element_t & set_original, const element_t & set_m
 
   diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
 
-  element_list element_list_original = element_list(set_original.nodes(), set_original.at(1), set_original.back());
-  element_list element_list_modified = element_list(set_modified.nodes(), set_modified.at(1), set_modified.back());
+  element_list element_list_original = element_list(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position());
+  element_list element_list_modified = element_list(set_modified.nodes(), set_modified.get_terms().at(1), set_modified.end_position());
 
   element_list::size_type control_pos_original;
   for(control_pos_original = 0; control_pos_original < element_list_original.size(); ++control_pos_original) {
-    if(set_original.nodes().at(element_list_original.at(control_pos_original).front())->name == "control") {
+    if(element_list_original.at(control_pos_original).term(0)->name == "control") {
       break;
     }
   }
 
   element_list::size_type control_pos_modified;
   for(control_pos_modified = 0; control_pos_modified < element_list_modified.size(); ++control_pos_modified) {
-    if(set_modified.nodes().at(element_list_modified.at(control_pos_modified).front())->name == "control") {
+    if(element_list_modified.at(control_pos_modified).term(0)->name == "control") {
       break;
     }
   }
@@ -1204,14 +1204,14 @@ bool reject_match_same(const srcdiff_measure & measure,
                        const element_t & set_original,
                        const element_t & set_modified) {
 
-  int original_pos = set_original.at(0);
-  int modified_pos = set_modified.at(0);
+  int original_pos = set_original.start_position();
+  int modified_pos = set_modified.start_position();
 
-  const std::string & original_tag = set_original.nodes().at(original_pos)->name;
-  const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
+  const std::string & original_tag = set_original.term(0)->name;
+  const std::string & modified_tag = set_modified.term(0)->name;
 
-  const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
-  const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
+  const std::string & original_uri = set_original.term(0)->ns.href;
+  const std::string & modified_uri = set_modified.term(0)->ns.href;
 
   if(original_tag != modified_tag) return true;
 
@@ -1231,20 +1231,20 @@ bool reject_match_same(const srcdiff_measure & measure,
     )
     return false;
 
-  if(original_tag == "name" && set_original.nodes().at(original_pos)->is_simple && set_modified.nodes().at(modified_pos)->is_simple) return false;
-  if(original_tag == "name" && set_original.nodes().at(original_pos)->is_simple != set_modified.nodes().at(modified_pos)->is_simple) return true;
+  if(original_tag == "name" && set_original.term(0)->is_simple && set_modified.term(0)->is_simple) return false;
+  if(original_tag == "name" && set_original.term(0)->is_simple != set_modified.term(0)->is_simple) return true;
 
   if((original_tag == "expr" || original_tag == "expr_stmt") && measure.similarity() > 0 && measure.difference() <= measure.max_length()) return false;
 
   // may need to refine to if child only single name
-  if(original_tag == "expr" && set_original.nodes().at(original_pos)->parent && (*set_original.nodes().at(original_pos)->parent)->name == "argument") return false;
-  if(original_tag == "expr" && set_modified.nodes().at(modified_pos)->parent && (*set_modified.nodes().at(modified_pos)->parent)->name == "argument") return false;
+  if(original_tag == "expr" && set_original.term(0)->parent && (*set_original.term(0)->parent)->name == "argument") return false;
+  if(original_tag == "expr" && set_modified.term(0)->parent && (*set_modified.term(0)->parent)->name == "argument") return false;
   if(original_tag == "expr" && is_single_name_expr(set_original.nodes(), original_pos) && is_single_name_expr(set_modified.nodes(), modified_pos)) return false;
 
   if(original_tag == "block") {
 
-    bool is_pseudo_original = bool(find_attribute(set_original.nodes().at(original_pos), "type"));
-    bool is_pseudo_modified = bool(find_attribute(set_modified.nodes().at(modified_pos), "type"));
+    bool is_pseudo_original = bool(find_attribute(set_original.term(0), "type"));
+    bool is_pseudo_modified = bool(find_attribute(set_modified.term(0), "type"));
 
     if(is_pseudo_original == is_pseudo_modified) {
 
@@ -1262,8 +1262,8 @@ bool reject_match_same(const srcdiff_measure & measure,
         }
         ++block_contents_pos;
 
-        element_list element_list_original = element_list(set_original.nodes(), set_original.at(block_contents_pos), set_original.back());
-        element_list element_list_modified = element_list(set_modified.nodes(), set_modified.at(0), set_modified.back() + 1);
+        element_list element_list_original = element_list(set_original.nodes(), set_original.get_terms().at(block_contents_pos), set_original.end_position());
+        element_list element_list_modified = element_list(set_modified.nodes(), set_modified.get_terms().at(0), set_modified.end_position() + 1);
 
         int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
         srcdiff_nested::check_nestable(element_list_original, 0, element_list_original.size(), element_list_modified, 0, 1,
@@ -1279,8 +1279,8 @@ bool reject_match_same(const srcdiff_measure & measure,
         }
         ++block_contents_pos;
 
-        element_list element_list_original = element_list(set_original.nodes(), set_original.at(0), set_original.back() + 1);
-        element_list element_list_modified = element_list(set_modified.nodes(), set_modified.at(block_contents_pos), set_modified.back());
+        element_list element_list_original = element_list(set_original.nodes(), set_original.get_terms().at(0), set_original.end_position() + 1);
+        element_list element_list_modified = element_list(set_modified.nodes(), set_modified.get_terms().at(block_contents_pos), set_modified.end_position());
 
         int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
         srcdiff_nested::check_nestable(element_list_original, 0, 1, element_list_modified, 0, element_list_modified.size(),
@@ -1394,14 +1394,14 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
                                   const element_t & set_original,
                                   const element_t & set_modified) {
 
-  int original_pos = set_original.at(0);
-  int modified_pos = set_modified.at(0);
+  int original_pos = set_original.start_position();
+  int modified_pos = set_modified.start_position();
 
-  const std::string & original_tag = set_original.nodes().at(original_pos)->name;
-  const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
+  const std::string & original_tag = set_original.term(0)->name;
+  const std::string & modified_tag = set_modified.term(0)->name;
 
-  const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
-  const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
+  const std::string & original_uri = set_original.term(0)->ns.href;
+  const std::string & modified_uri = set_modified.term(0)->ns.href;
 
   std::string original_name;
   if(original_tag == "class" || original_tag == "struct" || original_tag == "union" || original_tag == "enum") {
@@ -1466,8 +1466,8 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
         if(!expr_modified.empty()) {
 
-          element_list sets = element_list(set_original.nodes(), set_original.at(1), set_original.back(), srcdiff_nested::is_match,
-                                    &set_modified.nodes().at(expr_modified.at(0)));
+          element_list sets = element_list(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position(), srcdiff_nested::is_match,
+                                    &expr_modified.term(0));
           int match = srcdiff_nested::best_match(sets, expr_modified);
 
           if(match < sets.size()) {
@@ -1482,8 +1482,8 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
         if(!expr_original.empty()) {
 
-          element_list sets = element_list(set_modified.nodes(), set_modified.at(1), set_modified.back(), srcdiff_nested::is_match,
-                                    &set_original.nodes().at(expr_original.at(0)));
+          element_list sets = element_list(set_modified.nodes(), set_modified.get_terms().at(1), set_modified.end_position(), srcdiff_nested::is_match,
+                                    &expr_original.term(0));
           int match = srcdiff_nested::best_match(sets, expr_original);
 
           if(match < sets.size()) {
@@ -1527,14 +1527,14 @@ bool srcdiff_match::reject_match(const srcdiff_measure & measure,
                                  const element_t & set_modified) {
 
   /** if different prefix should not reach here, however, may want to add that here */
-  int original_pos = set_original.at(0);
-  int modified_pos = set_modified.at(0);
+  int original_pos = set_original.start_position();
+  int modified_pos = set_modified.start_position();
 
-  const std::string & original_tag = set_original.nodes().at(original_pos)->name;
-  const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
+  const std::string & original_tag = set_original.term(0)->name;
+  const std::string & modified_tag = set_modified.term(0)->name;
 
-  const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
-  const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
+  const std::string & original_uri = set_original.term(0)->ns.href;
+  const std::string & modified_uri = set_modified.term(0)->ns.href;
 
   if(original_tag == modified_tag && original_uri == modified_uri) {
     return reject_match_same(measure, set_original, set_modified);
@@ -1550,8 +1550,8 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
                                       const element_t & set_original,
                                       const element_t & set_modified) {
 
-  const std::string & original_tag = set_original.nodes().at(set_original.front())->name;
-  const std::string & modified_tag = set_modified.nodes().at(set_modified.front())->name;
+  const std::string & original_tag = set_original.term(0)->name;
+  const std::string & modified_tag = set_modified.term(0)->name;
 
   if(set_original.size() == 1 && set_modified.size() == 1) {
     return original_tag != modified_tag;
@@ -1577,15 +1577,15 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
 
   }
 
-  element_list child_element_list_original = element_list(set_original.nodes(), set_original.at(1), set_original.back());
-  element_list child_element_list_modified = element_list(set_modified.nodes(), set_modified.at(1), set_modified.back());    
+  element_list child_element_list_original = element_list(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position());
+  element_list child_element_list_modified = element_list(set_modified.nodes(), set_modified.get_terms().at(1), set_modified.end_position());    
 
   // check block of first child of if_stmt (old if behavior)
   if(original_tag == "if_stmt" && !child_element_list_original.empty()) {
 
-    std::string tag = set_original.nodes().at(child_element_list_original.at(0).at(0))->name;
+    std::string tag = child_element_list_original.at(0).term(0)->name;
     if(tag == "else" || tag == "if") {
-      element_list temp = element_list(set_original.nodes(), child_element_list_original.at(0).at(1), child_element_list_original.back().back());
+      element_list temp = element_list(set_original.nodes(), child_element_list_original.at(0).get_terms().at(1), child_element_list_original.back().end_position());
       child_element_list_original = temp;
     }
 
@@ -1594,32 +1594,33 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
   // check block of first child of if_stmt (old if behavior)
   if(modified_tag == "if_stmt" && !child_element_list_modified.empty()) {
 
-    std::string tag =  set_modified.nodes().at(child_element_list_modified.at(0).at(0))->name;
+    std::string tag =  child_element_list_modified.at(0).term(0)->name;
     if(tag == "else" || tag == "if") {
-      element_list temp = element_list(set_modified.nodes(), child_element_list_modified.at(0).at(1), child_element_list_modified.back().back());
+      element_list temp = element_list(set_modified.nodes(), child_element_list_modified.at(0).get_terms().at(1), child_element_list_modified.back().end_position());
       child_element_list_modified = temp;
     }
 
   }
 
   if(!child_element_list_original.empty() && !child_element_list_modified.empty()
-    && set_original.nodes().at(child_element_list_original.back().at(0))->name == "block" && set_modified.nodes().at(child_element_list_modified.back().at(0))->name == "block") {
+    && child_element_list_original.back().term(0)->name == "block" && child_element_list_modified.back().term(0)->name == "block") {
 
+    /// Why a copy?
     element_t original_set = child_element_list_original.back();
     element_t modified_set = child_element_list_modified.back();
 
     // block children actually in block_content
-    element_list original_temp = element_list(set_original.nodes(), child_element_list_original.back().at(1), child_element_list_original.back().back());
+    element_list original_temp = element_list(set_original.nodes(), child_element_list_original.back().get_terms().at(1), child_element_list_original.back().end_position());
     for(const element_t & set : original_temp) {
-      if(set_original.nodes().at(set.at(0))->name == "block_content") {
+      if(set.term(0)->name == "block_content") {
         original_set = set;
       }
     }
 
     // block children actually in block_content
-    element_list modified_temp = element_list(set_modified.nodes(), child_element_list_modified.back().at(1), child_element_list_modified.back().back());
+    element_list modified_temp = element_list(set_modified.nodes(), child_element_list_modified.back().get_terms().at(1), child_element_list_modified.back().end_position());
     for(const element_t & set : modified_temp) {
-      if(set_modified.nodes().at(set.at(0))->name == "block_content") {
+      if(set.term(0)->name == "block_content") {
         modified_set = set;
       }
     }
@@ -1669,11 +1670,11 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
 bool srcdiff_match::reject_similarity_match_only(const element_t & set_original,
                                                  const element_t & set_modified) {
 
-  int original_pos = set_original.at(0);
-  int modified_pos = set_modified.at(0);
+  int original_pos = set_original.start_position();
+  int modified_pos = set_modified.start_position();
 
-  if(srcdiff_compare::node_compare(set_original.nodes().at(original_pos),
-                                  set_modified.nodes().at(modified_pos)) != 0)
+  if(srcdiff_compare::node_compare(set_original.term(0),
+                                  set_modified.term(0)) != 0)
     return true;
 
   srcdiff_text_measure complete_measure(set_original, set_modified, false);

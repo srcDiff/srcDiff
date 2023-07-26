@@ -32,20 +32,20 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
                         , element_list_modified, start_modified, end_modified + 1
                         , start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation);
 
-        finish_original = element_list_original.at(end_original).back() + 1;
-        finish_modified = element_list_modified.at(end_modified).back() + 1;
+        finish_original = element_list_original.at(end_original).end_position() + 1;
+        finish_modified = element_list_modified.at(end_modified).end_position() + 1;
 
         unsigned int pre_nest_end_original = 0;
         if(start_nest_original > 0) {
 
-          pre_nest_end_original = element_list_original.at(start_nest_original - 1).back() + 1;
+          pre_nest_end_original = element_list_original.at(start_nest_original - 1).end_position() + 1;
 
         }
 
         unsigned int pre_nest_end_modified = 0;
         if(start_nest_modified > 0) {
 
-          pre_nest_end_modified = element_list_modified.at(start_nest_modified - 1).back() + 1;
+          pre_nest_end_modified = element_list_modified.at(start_nest_modified - 1).end_position() + 1;
 
         }
 
@@ -75,12 +75,12 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
 
       if(start_original <= end_original && start_original >= 0 && end_original < (signed)element_list_original.size()) {
 
-        finish_original = element_list_original.at(end_original).back() + 1;
+        finish_original = element_list_original.at(end_original).end_position() + 1;
       }
 
       if(start_modified <= end_modified && start_modified >= 0 && end_modified < (signed)element_list_modified.size()) {
 
-        finish_modified = element_list_modified.at(end_modified).back() + 1;
+        finish_modified = element_list_modified.at(end_modified).end_position() + 1;
       }
 
     }
@@ -88,24 +88,24 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
     if(start_original == end_original && start_original >= 0 && end_original < (signed)element_list_original.size()
       && start_modified == end_modified && start_modified >= 0 && end_modified < (signed)element_list_modified.size()) {
 
-      if(is_identifier(out.nodes_original().at(element_list_original.at(start_original).at(0))->name)
-         && is_identifier(out.nodes_modified().at(element_list_modified.at(start_modified).at(0))->name)) {
-         output_replace_inner_whitespace(element_list_original.at(start_original).at(0), finish_original,
-                                         element_list_modified.at(start_modified).at(0), finish_modified,
+      if(is_identifier(element_list_original.at(start_original).term(0)->name)
+         && is_identifier(element_list_modified.at(start_modified).term(0)->name)) {
+         output_replace_inner_whitespace(element_list_original.at(start_original).start_position(), finish_original,
+                                         element_list_modified.at(start_modified).start_position(), finish_modified,
                                          1);
           }
 
-       if(out.nodes_original().at(element_list_original.at(start_original).at(0))->name == "return"
-          && out.nodes_modified().at(element_list_modified.at(start_modified).at(0))->name == "return") {
-          output_replace_inner_whitespace(element_list_original.at(start_original).at(0), finish_original,
-                                          element_list_modified.at(start_modified).at(0), finish_modified,
+       if(element_list_original.at(start_original).term(0)->name == "return"
+          && element_list_modified.at(start_modified).term(0)->name == "return") {
+          output_replace_inner_whitespace(element_list_original.at(start_original).start_position(), finish_original,
+                                          element_list_modified.at(start_modified).start_position(), finish_modified,
                                           2);
           }
 
-       if(out.nodes_original().at(element_list_original.at(start_original).at(0))->name == "throw"
-          && out.nodes_modified().at(element_list_modified.at(start_modified).at(0))->name == "throw") {
-          output_replace_inner_whitespace(element_list_original.at(start_original).at(0), finish_original,
-                                          element_list_modified.at(start_modified).at(0), finish_modified,
+       if(element_list_original.at(start_original).term(0)->name == "throw"
+          && element_list_modified.at(start_modified).term(0)->name == "throw") {
+          output_replace_inner_whitespace(element_list_original.at(start_original).start_position(), finish_original,
+                                          element_list_modified.at(start_modified).start_position(), finish_modified,
                                           2);
           }
 
@@ -133,7 +133,7 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
     unsigned int index = edits->offset_sequence_one + i;
 
-    if(out.nodes_original().at(element_list_original.at(index).at(0))->move) {
+    if(element_list_original.at(index).term(0)->move) {
 
       original_moved.push_back(int_pair(MOVE, 0));
 
@@ -155,7 +155,7 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
     unsigned int index = edit_next->offset_sequence_two + i;
 
-    if(out.nodes_modified().at(element_list_modified.at(index).at(0))->move) {
+    if(element_list_modified.at(index).term(0)->move) {
 
       modified_moved.push_back(int_pair(MOVE, 0));
 
@@ -243,7 +243,7 @@ void srcdiff_many::output() {
 
     if(original_moved.at(i).first == SES_COMMON && modified_moved.at(j).first == SES_COMMON) {
  
-      if((xmlReaderTypes)out.nodes_original().at(element_list_original.at(edits->offset_sequence_one + i).at(0))->type != XML_READER_TYPE_TEXT) {
+      if((xmlReaderTypes)element_list_original.at(edits->offset_sequence_one + i).term(0)->type != XML_READER_TYPE_TEXT) {
 
         srcdiff_single diff(*this, edits->offset_sequence_one + i, edit_next->offset_sequence_two + j);
         diff.output();
@@ -251,8 +251,8 @@ void srcdiff_many::output() {
       } else {
 
         // syntax mismatch
-        output_change_whitespace(element_list_original.at(edits->offset_sequence_one + i).back() + 1,
-          element_list_modified.at(edit_next->offset_sequence_two + j).back() + 1);
+        output_change_whitespace(element_list_original.at(edits->offset_sequence_one + i).end_position() + 1,
+          element_list_modified.at(edit_next->offset_sequence_two + j).end_position() + 1);
 
       }
 

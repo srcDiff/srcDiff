@@ -24,14 +24,14 @@ void srcdiff_text_measure::collect_text() {
   unsigned int nlength = set_modified.size();
 
   for(unsigned int i = 0; i < olength; ++i) {
-    if(set_original.nodes().at(set_original.at(i))->is_text() && !set_original.nodes().at(set_original.at(i))->is_white_space()) {
-      set_original_text.push_back(set_original.at(i));
+    if(set_original.term(i)->is_text() && !set_original.term(i)->is_white_space()) {
+      set_original_text.get_terms().push_back(set_original.get_terms().at(i));
     }
   }
 
   for(unsigned int i = 0; i < nlength; ++i) {
-    if(set_modified.nodes().at(set_modified.at(i))->is_text() && !set_modified.nodes().at(set_modified.at(i))->is_white_space()) {
-      set_modified_text.push_back(set_modified.at(i));
+    if(set_modified.term(i)->is_text() && !set_modified.term(i)->is_white_space()) {
+      set_modified_text.get_terms().push_back(set_modified.get_terms().at(i));
     }
   }
 
@@ -46,21 +46,21 @@ void srcdiff_text_measure::collect_text_element(const element_t & set, element_t
 
   for(unsigned int i = 0; i < length; ++i) {
 
-    if(set.nodes().at(set.at(i))->name == "operator"
-      || set.nodes().at(set.at(i))->name == "modifier") {
+    if(set.term(i)->name == "operator"
+      || set.term(i)->name == "modifier") {
 
-      if(set.nodes().at(set.at(i))->parent && (*set.nodes().at(set.at(i))->parent)->name != "name") continue;
+      if(set.term(i)->parent && (*set.term(i)->parent)->name != "name") continue;
 
-      if((set.at(i) + 1) < set.nodes().size() && set.nodes().at(set.at(i) + 1)->is_text()
-        && (*set.nodes().at(set.at(i) + 1)->content == "::")) continue;
+      if((set.get_terms().at(i) + 1) < set.nodes().size() && set.nodes().at(set.get_terms().at(i) + 1)->is_text()
+        && (*set.nodes().at(set.get_terms().at(i) + 1)->content == "::")) continue;
 
-      while(set.nodes().at(set.at(i))->type != XML_READER_TYPE_END_ELEMENT) {
+      while(set.term(i)->type != XML_READER_TYPE_END_ELEMENT) {
         ++i;
       }
 
     }
 
-    const std::shared_ptr<srcml_node> & node = set.nodes().at(set.at(i));
+    const std::shared_ptr<srcml_node> & node = set.term(i);
 
     bool is_text = node->is_text() && !node->is_white_space() && node->content;
     bool is_operator = node->parent && (*node->parent)->name == "operator";
@@ -83,7 +83,7 @@ void srcdiff_text_measure::collect_text_element(const element_t & set, element_t
           && *node->content != ":"
           && *node->content != ";"
           && *node->content != ",")))
-      set_text.push_back(set.at(i));
+      set_text.get_terms().push_back(set.get_terms().at(i));
 
   }
 
@@ -102,16 +102,18 @@ void srcdiff_text_measure::collect_important_text() {
 
 }
 
+/// @todo this is not really used, and it seems like it was always wrong even before
+/// construct refactoring
 void srcdiff_text_measure::unigrams(element_t & collected_set_original,
                                     element_t & collected_set_modified) {
 
-  std::sort(collected_set_original.begin(), collected_set_original.end());
-  std::sort(collected_set_modified.begin(), collected_set_modified.end());
+  std::sort(collected_set_original.get_terms().begin(), collected_set_original.get_terms().end());
+  std::sort(collected_set_modified.get_terms().begin(), collected_set_modified.get_terms().end());
 
   int i = 0, j = 0;
   while(i < original_len && j < modified_len) {
 
-   if(collected_set_original.at(i) == collected_set_modified.at(j)) {
+   if(collected_set_original.get_terms().at(i) == collected_set_modified.get_terms().at(j)) {
 
      ++a_similarity;
      ++i;
@@ -119,7 +121,7 @@ void srcdiff_text_measure::unigrams(element_t & collected_set_original,
 
    } else {
 
-     if(collected_set_original.at(i) < collected_set_modified.at(j)) {
+     if(collected_set_original.get_terms().at(i) < collected_set_modified.get_terms().at(j)) {
        ++i;
        ++a_original_difference;      
      }
@@ -142,11 +144,11 @@ void srcdiff_text_measure::compute() {
 
   diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
 
-  if((xmlReaderTypes)set_original.nodes().at(set_original.at(0))->type != XML_READER_TYPE_ELEMENT
-     || (xmlReaderTypes)set_modified.nodes().at(set_modified.at(0))->type != XML_READER_TYPE_ELEMENT
-     || (srcdiff_compare::node_compare(set_original.nodes().at(set_original.at(0)), set_modified.nodes().at(set_modified.at(0))) != 0
+  if((xmlReaderTypes)set_original.term(0)->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)set_modified.term(0)->type != XML_READER_TYPE_ELEMENT
+     || (srcdiff_compare::node_compare(set_original.term(0), set_modified.term(0)) != 0
         && !srcdiff_match::is_interchangeable_match(set_original, set_modified)
-        && (set_original.nodes().at(set_original.at(0))->name != "block" || set_modified.nodes().at(set_modified.at(0))->name != "block"))) {
+        && (set_original.term(0)->name != "block" || set_modified.term(0)->name != "block"))) {
 
     a_similarity = MAX_INT;
     a_original_difference = MAX_INT;
@@ -168,7 +170,7 @@ void srcdiff_text_measure::compute() {
   }
 
     shortest_edit_script_t ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
-    ses.compute<element_t>(set_original_text, set_modified_text, false);
+    ses.compute<std::vector<int>>(set_original_text.get_terms(), set_modified_text.get_terms(), false);
     process_edit_script(ses.script());
 
 }
@@ -181,8 +183,8 @@ int srcdiff_text_measure::number_match_beginning() {
       int count = 0;
       while(count < set_original_text.size() & count < set_modified_text.size()
         && srcdiff_compare::node_compare(
-          set_original_text.nodes().at(set_original_text.at(count)), 
-          set_modified_text.nodes().at(set_modified_text.at(count))) == 0) {
+          set_original_text.term(count), 
+          set_modified_text.term(count)) == 0) {
         ++count;
       }
 

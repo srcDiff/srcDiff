@@ -43,13 +43,13 @@ void srcdiff_comment::output() {
     diff_end_modified = out.last_output_modified();
     if(edits->operation == SES_DELETE && last_diff_original < edits->offset_sequence_one) {
 
-      diff_end_original = element_list_original.at(edits->offset_sequence_one - 1).back() + 1;
-      diff_end_modified = element_list_modified.at(edits->offset_sequence_two - 1).back() + 1;
+      diff_end_original = element_list_original.at(edits->offset_sequence_one - 1).end_position() + 1;
+      diff_end_modified = element_list_modified.at(edits->offset_sequence_two - 1).end_position() + 1;
 
     } else if(edits->operation == SES_INSERT && edits->offset_sequence_one != 0 && last_diff_original <= edits->offset_sequence_one)  {
 
-      diff_end_original = element_list_original.at(edits->offset_sequence_one - 1).back() + 1;
-      diff_end_modified = element_list_modified.at(edits->offset_sequence_two - 1).back() + 1;
+      diff_end_original = element_list_original.at(edits->offset_sequence_one - 1).end_position() + 1;
+      diff_end_modified = element_list_modified.at(edits->offset_sequence_two - 1).end_position() + 1;
 
     }
 
@@ -65,13 +65,13 @@ void srcdiff_comment::output() {
          && (element_list_original.at(edits->offset_sequence_one).size() > 1
              || element_list_original.at(edits->offset_sequence_one).size() > 1)) {
 
-        output_change_whitespace(element_list_original.at(edits->offset_sequence_one).back() + 1, element_list_modified.at(edit_next->offset_sequence_two).back() + 1);
+        output_change_whitespace(element_list_original.at(edits->offset_sequence_one).end_position() + 1, element_list_modified.at(edit_next->offset_sequence_two).end_position() + 1);
 
       } else {
 
         // many to many
-        output_change_whitespace(element_list_original.at(edits->offset_sequence_one + edits->length - 1).back() + 1,
-         element_list_modified.at(edit_next->offset_sequence_two + edit_next->length - 1).back() + 1);
+        output_change_whitespace(element_list_original.at(edits->offset_sequence_one + edits->length - 1).end_position() + 1,
+         element_list_modified.at(edit_next->offset_sequence_two + edit_next->length - 1).end_position() + 1);
 
       }
 
@@ -87,7 +87,7 @@ void srcdiff_comment::output() {
 
       case SES_INSERT:
 
-        output_pure(0, element_list_modified.at(edits->offset_sequence_two + edits->length - 1).back() + 1);
+        output_pure(0, element_list_modified.at(edits->offset_sequence_two + edits->length - 1).end_position() + 1);
 
         // update for common
         last_diff_original = edits->offset_sequence_one;
@@ -97,7 +97,7 @@ void srcdiff_comment::output() {
 
       case SES_DELETE:
 
-        output_pure(element_list_original.at(edits->offset_sequence_one + edits->length - 1).back() + 1, 0);
+        output_pure(element_list_original.at(edits->offset_sequence_one + edits->length - 1).end_position() + 1, 0);
 
         // update for common
         last_diff_original = edits->offset_sequence_one + edits->length;
@@ -114,8 +114,8 @@ void srcdiff_comment::output() {
   diff_end_modified = out.last_output_modified();
   if(last_diff_original < (signed)element_list_original.size()) {
 
-    diff_end_original = element_list_original.back().back() + 1;
-    diff_end_modified = element_list_modified.back().back() + 1;
+    diff_end_original = element_list_original.back().end_position() + 1;
+    diff_end_modified = element_list_modified.back().end_position() + 1;
 
   }
 
