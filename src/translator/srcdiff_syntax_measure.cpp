@@ -7,7 +7,7 @@
 
 #include <algorithm>
 
-srcdiff_syntax_measure::srcdiff_syntax_measure(const element_t & set_original, const element_t & set_modified) 
+srcdiff_syntax_measure::srcdiff_syntax_measure(const construct & set_original, const construct & set_modified) 
   : srcdiff_measure(set_original, set_modified) {}
 
 
@@ -60,13 +60,13 @@ void srcdiff_syntax_measure::compute() {
   }
 
   // collect subset of nodes
-  element_list next_element_list_original = set_original.size() > 1 ? element_list(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position(), is_significant) : element_list(set_original.nodes());
-  element_list next_element_list_modified = set_modified.size() > 1 ? element_list(set_modified.nodes(), set_modified.get_terms().at(1), set_modified.end_position(), is_significant) : element_list(set_modified.nodes());
-  original_len = next_element_list_original.size();
-  modified_len = next_element_list_modified.size();
+  construct_list next_construct_list_original = set_original.size() > 1 ? construct_list(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position(), is_significant) : construct_list(set_original.nodes());
+  construct_list next_construct_list_modified = set_modified.size() > 1 ? construct_list(set_modified.nodes(), set_modified.get_terms().at(1), set_modified.end_position(), is_significant) : construct_list(set_modified.nodes());
+  original_len = next_construct_list_original.size();
+  modified_len = next_construct_list_modified.size();
 
   shortest_edit_script_t ses(srcdiff_compare::element_syntax_compare, srcdiff_compare::element_array_index, &dnodes);
-  ses.compute<element_list>(next_element_list_original, next_element_list_modified, false);
+  ses.compute<construct_list>(next_construct_list_original, next_construct_list_modified, false);
   process_edit_script(ses.script());
 
 }

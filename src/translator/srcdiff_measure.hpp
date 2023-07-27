@@ -1,14 +1,14 @@
 #ifndef INCLUDED_SRCDIFF_MEASURE_HPP
 #define INCLUDED_SRCDIFF_MEASURE_HPP
 
-#include <element.hpp>
+#include <construct.hpp>
 #include <shortest_edit_script.hpp>
 
 class srcdiff_measure {
 
 protected:
-	const element_t & set_original;
-	const element_t & set_modified;
+	const construct & set_original;
+	const construct & set_modified;
 
 	bool computed;
 
@@ -22,7 +22,7 @@ protected:
 
 public:
 
-	srcdiff_measure(const element_t & set_original, const element_t & set_modified);
+	srcdiff_measure(const construct & set_original, const construct & set_modified);
 
 	int similarity()          const;
 	int difference()          const;

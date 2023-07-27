@@ -9,7 +9,7 @@
 #include <algorithm>
 #include <cassert>
 
-srcdiff_text_measure::srcdiff_text_measure(const element_t & set_original, const element_t & set_modified, bool important_only) 
+srcdiff_text_measure::srcdiff_text_measure(const construct & set_original, const construct & set_modified, bool important_only) 
   : srcdiff_measure(set_original, set_modified),
     set_original_text(set_original.nodes()),
     set_modified_text(set_modified.nodes()),
@@ -40,7 +40,7 @@ void srcdiff_text_measure::collect_text() {
 
 }
 
-void srcdiff_text_measure::collect_text_element(const element_t & set, element_t & set_text) {
+void srcdiff_text_measure::collect_text_element(const construct & set, construct & set_text) {
 
   std::size_t length = set.size();
 
@@ -104,8 +104,8 @@ void srcdiff_text_measure::collect_important_text() {
 
 /// @todo this is not really used, and it seems like it was always wrong even before
 /// construct refactoring
-void srcdiff_text_measure::unigrams(element_t & collected_set_original,
-                                    element_t & collected_set_modified) {
+void srcdiff_text_measure::unigrams(construct & collected_set_original,
+                                    construct & collected_set_modified) {
 
   std::sort(collected_set_original.get_terms().begin(), collected_set_original.get_terms().end());
   std::sort(collected_set_modified.get_terms().begin(), collected_set_modified.get_terms().end());

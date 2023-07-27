@@ -110,7 +110,7 @@ const nest_info nesting[] = {
 
 };
 
-int is_block_type(const element_t & structure) {
+int is_block_type(const construct & structure) {
 
   if((xmlReaderTypes)structure.term(0)->type != XML_READER_TYPE_ELEMENT)
     return -1;
@@ -125,7 +125,7 @@ int is_block_type(const element_t & structure) {
   return -1;
 }
 
-bool has_internal_structure(const element_t & structure, const boost::optional<std::string> & type) {
+bool has_internal_structure(const construct & structure, const boost::optional<std::string> & type) {
 
   if(!type) return false;
 
@@ -138,8 +138,8 @@ bool has_internal_structure(const element_t & structure, const boost::optional<s
   return false;
 }
 
-bool is_nest_type(const element_t & structure,
-                  const element_t & structure_other,
+bool is_nest_type(const construct & structure,
+                  const construct & structure_other,
                   int type_index) {
 
   if((xmlReaderTypes)structure.term(0)->type != XML_READER_TYPE_ELEMENT)
@@ -174,7 +174,7 @@ bool srcdiff_nested::is_match(int & node_pos, const srcml_nodes & nodes, const v
  *
  * Search sets to find best match for match
  */
-int srcdiff_nested::best_match(const element_list & sets, const element_t & match) {
+int srcdiff_nested::best_match(const construct_list & sets, const construct & match) {
 
   int match_pos = sets.size();
   int match_similarity = -1;
@@ -204,8 +204,8 @@ int srcdiff_nested::best_match(const element_list & sets, const element_t & matc
 
 }
 
-bool is_nestable_internal(const element_t & structure_one,
-                          const element_t & structure_two) {
+bool is_nestable_internal(const construct & structure_one,
+                          const construct & structure_two) {
 
   int block = is_block_type(structure_two);
 
@@ -226,13 +226,13 @@ bool is_nestable_internal(const element_t & structure_one,
   return false;
 }
 
-bool srcdiff_nested::is_same_nestable(const element_t & structure_one,
-                                      const element_t & structure_two) {
+bool srcdiff_nested::is_same_nestable(const construct & structure_one,
+                                      const construct & structure_two) {
 
   if(!is_nestable_internal(structure_one, structure_two))
     return false;
 
-  element_list set = element_list(structure_two.nodes(), structure_two.get_terms().at(1), structure_two.end_position(), srcdiff_nested::is_match
+  construct_list set = construct_list(structure_two.nodes(), structure_two.get_terms().at(1), structure_two.end_position(), srcdiff_nested::is_match
                                                              , &structure_one.term(0));
 
   unsigned int match = best_match(set, structure_one);
@@ -255,8 +255,8 @@ bool srcdiff_nested::is_same_nestable(const element_t & structure_one,
 
 }
 
-bool srcdiff_nested::is_nestable(const element_t & structure_one,
-                                 const element_t & structure_two) {
+bool srcdiff_nested::is_nestable(const construct & structure_one,
+                                 const construct & structure_two) {
 
   if(srcdiff_compare::node_compare(structure_one.term(0), structure_two.term(0)) == 0)
     return is_same_nestable(structure_one, structure_two);
@@ -265,13 +265,13 @@ bool srcdiff_nested::is_nestable(const element_t & structure_one,
 
 }
 
-bool is_better_nest_no_recursion(const element_t & node_set_outer,
-                                 const element_t & node_set_inner,
+bool is_better_nest_no_recursion(const construct & node_set_outer,
+                                 const construct & node_set_inner,
                                  const srcdiff_measure & measure) {
 
     if(srcdiff_nested::is_nestable(node_set_inner, node_set_outer)) {
 
-      element_list set = element_list(node_set_outer.nodes(), node_set_outer.get_terms().at(1), node_set_outer.end_position(), srcdiff_nested::is_match,
+      construct_list set = construct_list(node_set_outer.nodes(), node_set_outer.get_terms().at(1), node_set_outer.end_position(), srcdiff_nested::is_match,
                                 &node_set_inner.term(0));
 
       int match = srcdiff_nested::best_match(set, node_set_inner);
@@ -297,7 +297,7 @@ bool is_better_nest_no_recursion(const element_t & node_set_outer,
 
 }
 
-bool has_compound_inner(const element_t & node_set_outer) {
+bool has_compound_inner(const construct & node_set_outer) {
 
   if(node_set_outer.term(0)->is_simple) return false;
 
@@ -311,8 +311,8 @@ bool has_compound_inner(const element_t & node_set_outer) {
 
 }
 
-bool is_better_nest(const element_t & node_set_outer,
-                    const element_t & node_set_inner,
+bool is_better_nest(const construct & node_set_outer,
+                    const construct & node_set_inner,
                     const srcdiff_measure & measure) {
 
   // do not nest compound name in simple or anything into something that is not compound
@@ -323,7 +323,7 @@ bool is_better_nest(const element_t & node_set_outer,
   // parents and children same do not nest.
   if(srcdiff_nested::is_nestable(node_set_inner, node_set_outer)) {
 
-    element_list set = element_list(node_set_outer.nodes(), node_set_outer.get_terms().at(1), node_set_outer.end_position(), srcdiff_nested::is_match
+    construct_list set = construct_list(node_set_outer.nodes(), node_set_outer.get_terms().at(1), node_set_outer.end_position(), srcdiff_nested::is_match
                                                            , &node_set_inner.term(0));
 
     int match = srcdiff_nested::best_match(set, node_set_inner);
@@ -357,33 +357,33 @@ bool is_better_nest(const element_t & node_set_outer,
 
 }
 
-bool srcdiff_nested::is_better_nested(const element_list & element_list_original, int start_pos_original,
-                                      const element_list & element_list_modified, int start_pos_modified,
+bool srcdiff_nested::is_better_nested(const construct_list & construct_list_original, int start_pos_original,
+                                      const construct_list & construct_list_modified, int start_pos_modified,
                                       const srcdiff_measure & measure) {
 
-  for(int pos = start_pos_original; pos < element_list_original.size(); ++pos) {
+  for(int pos = start_pos_original; pos < construct_list_original.size(); ++pos) {
 
     int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
-    check_nestable(element_list_original, pos, pos + 1
-                 , element_list_modified, start_pos_modified, start_pos_modified + 1
+    check_nestable(construct_list_original, pos, pos + 1
+                 , construct_list_modified, start_pos_modified, start_pos_modified + 1
                  , start_nest_original, end_nest_original, start_nest_modified, end_nest_modified
                  , operation);
     if(operation == SES_COMMON) continue;
-    if(is_better_nest(element_list_original.at(pos), element_list_modified.at(start_pos_modified), measure)) {
+    if(is_better_nest(construct_list_original.at(pos), construct_list_modified.at(start_pos_modified), measure)) {
       return true;
     }
 
   }
 
-  for(int pos = start_pos_modified; pos < element_list_modified.size(); ++pos) {
+  for(int pos = start_pos_modified; pos < construct_list_modified.size(); ++pos) {
 
     int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
-    check_nestable(element_list_original, start_pos_original, start_pos_original + 1
-                 , element_list_modified, pos, pos + 1
+    check_nestable(construct_list_original, start_pos_original, start_pos_original + 1
+                 , construct_list_modified, pos, pos + 1
                  , start_nest_original, end_nest_original, start_nest_modified, end_nest_modified
                  , operation);
     if(operation == SES_COMMON) continue;
-    if(is_better_nest(element_list_modified.at(pos), element_list_original.at(start_pos_original), measure)) {
+    if(is_better_nest(construct_list_modified.at(pos), construct_list_original.at(start_pos_original), measure)) {
       return true;
     }
 
@@ -414,9 +414,9 @@ static bool is_decl_stmt_from_expr(const srcml_nodes & nodes, int pos) {
 
 }
 
-bool check_nest_name(const element_t & set_original,
+bool check_nest_name(const construct & set_original,
                      boost::optional<std::shared_ptr<srcml_node>> parent_original,
-                     const element_t & set_modified,
+                     const construct & set_modified,
                      boost::optional<std::shared_ptr<srcml_node>> parent_modified) {
 
   int original_pos = set_original.start_position();
@@ -447,7 +447,7 @@ bool check_nest_name(const element_t & set_original,
     int simple_name_pos = set_original.start_position();
     if(set_original.nodes().at(simple_name_pos)->name == "name") {
 
-      element_t inner_set(set_original.nodes(), simple_name_pos);
+      construct inner_set(set_original.nodes(), simple_name_pos);
       srcdiff_text_measure measure(inner_set, set_modified);
       int count = measure.number_match_beginning();
       return 2 * count >= measure.max_length();
@@ -461,7 +461,7 @@ bool check_nest_name(const element_t & set_original,
     int simple_name_pos = set_modified.start_position();
     if(set_modified.nodes().at(simple_name_pos)->name == "name") {
 
-      element_t inner_set(set_modified.nodes(), simple_name_pos);
+      construct inner_set(set_modified.nodes(), simple_name_pos);
       srcdiff_text_measure measure(set_original, inner_set);
       int count = measure.number_match_beginning();
       return 2 * count >= measure.max_length();
@@ -475,8 +475,8 @@ bool check_nest_name(const element_t & set_original,
 }
 
 bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
-                                         const element_t & set_original,
-                                         const element_t & set_modified) {
+                                         const construct & set_original,
+                                         const construct & set_modified) {
 
   int original_pos = set_original.start_position();
   int modified_pos = set_modified.start_position();
@@ -517,8 +517,8 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
 
 }
 
-static bool check_nested_single_to_many(const element_list & element_list_original, int start_original, int end_original
-                 , const element_list & element_list_modified, int start_modified, int end_modified
+static bool check_nested_single_to_many(const construct_list & construct_list_original, int start_original, int end_original
+                 , const construct_list & construct_list_modified, int start_modified, int end_modified
                  , int & start_nest_original, int & end_nest_original, int & start_nest_modified, int & end_nest_modified
                  , int & operation) {
 
@@ -529,40 +529,40 @@ static bool check_nested_single_to_many(const element_list & element_list_origin
   int is_name_nest_original = 0;
   for(int i = start_original; i < end_original; ++i) {
 
-    if(element_list_original.at(i).term(0)->move) continue;
+    if(construct_list_original.at(i).term(0)->move) continue;
 
     for(int j = start_modified; j < end_modified; ++j) {
 
-      if(element_list_modified.at(j).term(0)->move) continue;
+      if(construct_list_modified.at(j).term(0)->move) continue;
 
-      if(srcdiff_nested::is_nestable(element_list_modified.at(j), element_list_original.at(i))) {
+      if(srcdiff_nested::is_nestable(construct_list_modified.at(j), construct_list_original.at(i))) {
 
-        element_list set = element_list(element_list_original.nodes(), element_list_original.at(i).get_terms().at(1), element_list_original.at(i).end_position(), srcdiff_nested::is_match
-                                                             , &element_list_modified.at(j).term(0));
+        construct_list set = construct_list(construct_list_original.nodes(), construct_list_original.at(i).get_terms().at(1), construct_list_original.at(i).end_position(), srcdiff_nested::is_match
+                                                             , &construct_list_modified.at(j).term(0));
 
-        int match = srcdiff_nested::best_match(set, element_list_modified.at(j));
+        int match = srcdiff_nested::best_match(set, construct_list_modified.at(j));
 
         if(match >= set.size()) continue;
 
-        srcdiff_text_measure measure(set.at(match), element_list_modified.at(j));
+        srcdiff_text_measure measure(set.at(match), construct_list_modified.at(j));
         measure.compute();
 
         if(srcdiff_nested::reject_match_nested(measure,
                                                set.at(match),
-                                               element_list_modified.at(j))) {
+                                               construct_list_modified.at(j))) {
           continue;
         }
 
-        if(element_list_modified.at(j).term(0)->name == "name"
-          && element_list_modified.at(j).term(0)->parent && (*element_list_modified.at(j).term(0)->parent)->name == "expr"
-          && element_list_original.at(i).term(0)->parent && (*element_list_original.at(i).term(0)->parent)->name == "expr"
+        if(construct_list_modified.at(j).term(0)->name == "name"
+          && construct_list_modified.at(j).term(0)->parent && (*construct_list_modified.at(j).term(0)->parent)->name == "expr"
+          && construct_list_original.at(i).term(0)->parent && (*construct_list_original.at(i).term(0)->parent)->name == "expr"
           && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1)) {
           ++is_name_nest_original;
         }
 
-        if(element_list_modified.at(j).term(0)->name == "name") {
+        if(construct_list_modified.at(j).term(0)->name == "name") {
 
-            if(!element_list_modified.at(j).term(0)->parent || !set.at(match).term(0)->parent) {
+            if(!construct_list_modified.at(j).term(0)->parent || !set.at(match).term(0)->parent) {
               continue;
             }
 
@@ -571,14 +571,14 @@ static bool check_nested_single_to_many(const element_list & element_list_origin
               parent_original = (*parent_original)->parent;
             }
 
-            boost::optional<std::shared_ptr<srcml_node>> parent_modified = element_list_modified.at(j).term(0)->parent;
+            boost::optional<std::shared_ptr<srcml_node>> parent_modified = construct_list_modified.at(j).term(0)->parent;
             while((*parent_modified)->name == "name") {
               parent_modified = (*parent_modified)->parent;
             }
 
             if((*parent_original)->name != (*parent_modified)->name
               && !check_nest_name(set.at(match), parent_original,
-                                  element_list_modified.at(j), parent_modified)) {
+                                  construct_list_modified.at(j), parent_modified)) {
               continue;
             }
 
@@ -613,44 +613,44 @@ static bool check_nested_single_to_many(const element_list & element_list_origin
   int is_name_nest_modified = 0;
   for(int i = start_modified; i < end_modified; ++i) {
 
-    if(element_list_modified.at(i).term(0)->move) continue;
+    if(construct_list_modified.at(i).term(0)->move) continue;
 
     for(int j = start_original; j < end_original; ++j) {
 
-      if(element_list_original.at(j).term(0)->move) continue;
+      if(construct_list_original.at(j).term(0)->move) continue;
 
-      if(srcdiff_nested::is_nestable(element_list_original.at(j), element_list_modified.at(i))) {
+      if(srcdiff_nested::is_nestable(construct_list_original.at(j), construct_list_modified.at(i))) {
 
-        element_list set = element_list(element_list_modified.nodes(), element_list_modified.at(i).get_terms().at(1), element_list_modified.at(i).end_position(), srcdiff_nested::is_match
-                                                             , &element_list_original.at(j).term(0));
+        construct_list set = construct_list(construct_list_modified.nodes(), construct_list_modified.at(i).get_terms().at(1), construct_list_modified.at(i).end_position(), srcdiff_nested::is_match
+                                                             , &construct_list_original.at(j).term(0));
 
-        int match = srcdiff_nested::best_match(set, element_list_original.at(j));
+        int match = srcdiff_nested::best_match(set, construct_list_original.at(j));
 
         if(match >= set.size()) continue;
 
-        srcdiff_text_measure measure(element_list_original.at(j), set.at(match));
+        srcdiff_text_measure measure(construct_list_original.at(j), set.at(match));
         measure.compute();
 
         if(srcdiff_nested::reject_match_nested(measure,
-                                               element_list_original.at(j),
+                                               construct_list_original.at(j),
                                                set.at(match))) {
           continue;
         }
 
-        if(element_list_original.at(j).term(0)->name == "name"
-          && element_list_original.at(j).term(0)->parent && (*element_list_original.at(j).term(0)->parent)->name == "expr"
-          && element_list_modified.at(i).term(0)->parent && (*element_list_modified.at(i).term(0)->parent)->name == "expr"
+        if(construct_list_original.at(j).term(0)->name == "name"
+          && construct_list_original.at(j).term(0)->parent && (*construct_list_original.at(j).term(0)->parent)->name == "expr"
+          && construct_list_modified.at(i).term(0)->parent && (*construct_list_modified.at(i).term(0)->parent)->name == "expr"
           && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1)) {
             ++is_name_nest_modified;
           }
 
-        if(element_list_original.at(j).term(0)->name == "name") {
+        if(construct_list_original.at(j).term(0)->name == "name") {
 
-            if(!element_list_original.at(j).term(0)->parent || !set.at(match).term(0)->parent) {
+            if(!construct_list_original.at(j).term(0)->parent || !set.at(match).term(0)->parent) {
               continue;
             }
 
-            boost::optional<std::shared_ptr<srcml_node>> parent_original = element_list_original.at(j).term(0)->parent;
+            boost::optional<std::shared_ptr<srcml_node>> parent_original = construct_list_original.at(j).term(0)->parent;
             while(parent_original && (*parent_original)->name == "name") {
               parent_original = (*parent_original)->parent;
             }
@@ -661,7 +661,7 @@ static bool check_nested_single_to_many(const element_list & element_list_origin
             }
 
             if((*parent_original)->name != (*parent_modified)->name
-              && !check_nest_name(element_list_original.at(j), parent_original,
+              && !check_nest_name(construct_list_original.at(j), parent_original,
                                   set.at(match), parent_modified)) {
               continue;
             }
@@ -719,50 +719,50 @@ static bool check_nested_single_to_many(const element_list & element_list_origin
 
 }
 
-bool srcdiff_nested::check_nestable_predicate(const element_list & element_list_outer,
+bool srcdiff_nested::check_nestable_predicate(const construct_list & construct_list_outer,
                                               int pos_outer, int start_outer, int end_outer,
-                                              const element_list & element_list_inner,
+                                              const construct_list & construct_list_inner,
                                               int pos_inner, int start_inner, int end_inner) {
 
-  if(element_list_inner.at(pos_inner).term(0)->move) return true;
+  if(construct_list_inner.at(pos_inner).term(0)->move) return true;
 
-  if(!is_nestable(element_list_inner.at(pos_inner), element_list_outer.at(pos_outer)))
+  if(!is_nestable(construct_list_inner.at(pos_inner), construct_list_outer.at(pos_outer)))
     return true;
 
-  element_list set = element_list(element_list_outer.nodes(), element_list_outer.at(pos_outer).get_terms().at(1),
-                            element_list_outer.at(pos_outer).end_position(), is_match,
-                            &element_list_inner.at(pos_inner).term(0));
+  construct_list set = construct_list(construct_list_outer.nodes(), construct_list_outer.at(pos_outer).get_terms().at(1),
+                            construct_list_outer.at(pos_outer).end_position(), is_match,
+                            &construct_list_inner.at(pos_inner).term(0));
 
-  int match_pos = best_match(set, element_list_inner.at(pos_inner));
+  int match_pos = best_match(set, construct_list_inner.at(pos_inner));
 
   if(match_pos >= set.size()) return true;
 
-  const element_t & match = set.at(match_pos);
+  const construct & match = set.at(match_pos);
 
-  srcdiff_text_measure measure(match, element_list_inner.at(pos_inner));
+  srcdiff_text_measure measure(match, construct_list_inner.at(pos_inner));
   measure.compute();
 
-  if(reject_match_nested(measure, match, element_list_inner.at(pos_inner)))
+  if(reject_match_nested(measure, match, construct_list_inner.at(pos_inner)))
     return true;
 
-  if(is_better_nest(element_list_inner.at(pos_inner), element_list_outer.at(pos_outer), measure))
+  if(is_better_nest(construct_list_inner.at(pos_inner), construct_list_outer.at(pos_outer), measure))
     return true;
 
-  if(pos_outer + 1 < end_outer && is_better_nest(element_list_outer.at(pos_outer + 1), element_list_inner.at(pos_inner), measure))
+  if(pos_outer + 1 < end_outer && is_better_nest(construct_list_outer.at(pos_outer + 1), construct_list_inner.at(pos_inner), measure))
     return true;
 
-  if(pos_inner + 1 < end_inner && is_better_nest(element_list_inner.at(pos_inner + 1), element_list_outer.at(pos_outer), measure))
+  if(pos_inner + 1 < end_inner && is_better_nest(construct_list_inner.at(pos_inner + 1), construct_list_outer.at(pos_outer), measure))
     return true;
 
-  if(element_list_inner.at(pos_inner).term(0)->name == "name"
-    && element_list_inner.at(pos_inner).term(0)->parent && (*element_list_inner.at(pos_inner).term(0)->parent)->name == "expr"
-    && element_list_outer.at(pos_outer).term(0)->parent && (*element_list_outer.at(pos_outer).term(0)->parent)->name == "expr"
+  if(construct_list_inner.at(pos_inner).term(0)->name == "name"
+    && construct_list_inner.at(pos_inner).term(0)->parent && (*construct_list_inner.at(pos_inner).term(0)->parent)->name == "expr"
+    && construct_list_outer.at(pos_outer).term(0)->parent && (*construct_list_outer.at(pos_outer).term(0)->parent)->name == "expr"
     && ((end_outer - start_outer) > 1 || (end_inner - start_inner) > 1))
     return true;
 
-  if(element_list_inner.at(pos_inner).term(0)->name == "name") {
+  if(construct_list_inner.at(pos_inner).term(0)->name == "name") {
 
-      if(!element_list_inner.at(pos_inner).term(0)->parent || !match.term(0)->parent)
+      if(!construct_list_inner.at(pos_inner).term(0)->parent || !match.term(0)->parent)
         return true;
 
       boost::optional<std::shared_ptr<srcml_node>> parent_outer = match.term(0)->parent;
@@ -770,14 +770,14 @@ bool srcdiff_nested::check_nestable_predicate(const element_list & element_list_
         parent_outer = (*parent_outer)->parent;
       }
 
-      boost::optional<std::shared_ptr<srcml_node>> parent_inner = element_list_inner.at(pos_inner).term(0)->parent;
+      boost::optional<std::shared_ptr<srcml_node>> parent_inner = construct_list_inner.at(pos_inner).term(0)->parent;
       while((*parent_inner)->name == "name") {
         parent_inner = (*parent_inner)->parent;
       }
 
       if((*parent_outer)->name != (*parent_inner)->name
         && !check_nest_name(match, parent_outer,
-                            element_list_inner.at(pos_inner), parent_inner))
+                            construct_list_inner.at(pos_inner), parent_inner))
         return true;
 
   }
@@ -795,8 +795,8 @@ bool srcdiff_nested::check_nestable_predicate(const element_list & element_list_
  *
  */
 
-void srcdiff_nested::check_nestable(const element_list & element_list_original, int start_original, int end_original
-                 , const element_list & element_list_modified, int start_modified, int end_modified
+void srcdiff_nested::check_nestable(const construct_list & construct_list_original, int start_original, int end_original
+                 , const construct_list & construct_list_modified, int start_modified, int end_modified
                  , int & start_nest_original, int & end_nest_original, int & start_nest_modified, int & end_nest_modified
                  , int & operation) {
 
@@ -810,8 +810,8 @@ void srcdiff_nested::check_nestable(const element_list & element_list_original, 
 
   if((end_original - start_original) == 1 || (end_modified - start_modified) == 1) {
 
-    if(check_nested_single_to_many(element_list_original, start_original, end_original,
-                                element_list_modified, start_modified, end_modified,
+    if(check_nested_single_to_many(construct_list_original, start_original, end_original,
+                                construct_list_modified, start_modified, end_modified,
                                 start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation))
       return;
 
@@ -822,12 +822,12 @@ void srcdiff_nested::check_nestable(const element_list & element_list_original, 
 
   for(int i = start_original; i < end_original; ++i) {
 
-    if(element_list_original.at(i).term(0)->move) continue;
+    if(construct_list_original.at(i).term(0)->move) continue;
 
     for(int j = start_modified; j < end_modified; ++j) {
 
-      if(check_nestable_predicate(element_list_original, i, start_original, end_original,
-                                  element_list_modified, j, start_modified, end_modified))
+      if(check_nestable_predicate(construct_list_original, i, start_original, end_original,
+                                  construct_list_modified, j, start_modified, end_modified))
         continue;
 
       valid_nests_original.push_back(j);
@@ -837,8 +837,8 @@ void srcdiff_nested::check_nestable(const element_list & element_list_original, 
 
       for(int k = j + 1; k < end_modified; ++k) {
 
-        if(check_nestable_predicate(element_list_original, i, start_original, end_original,
-                                    element_list_modified, k, start_modified, end_modified)) {
+        if(check_nestable_predicate(construct_list_original, i, start_original, end_original,
+                                    construct_list_modified, k, start_modified, end_modified)) {
           continue;
         }
 
@@ -856,12 +856,12 @@ void srcdiff_nested::check_nestable(const element_list & element_list_original, 
 
   for(int i = start_modified; i < end_modified; ++i) {
 
-    if(element_list_modified.at(i).term(0)->move) continue;
+    if(construct_list_modified.at(i).term(0)->move) continue;
 
     for(int j = start_original; j < end_original; ++j) {
 
-      if(check_nestable_predicate(element_list_modified, i, start_modified, end_modified,
-                                  element_list_original, j, start_original, end_original)) {
+      if(check_nestable_predicate(construct_list_modified, i, start_modified, end_modified,
+                                  construct_list_original, j, start_original, end_original)) {
         continue;
       }
 
@@ -872,8 +872,8 @@ void srcdiff_nested::check_nestable(const element_list & element_list_original, 
 
       for(int k = j + 1; k < end_original; ++k) {
       
-        if(check_nestable_predicate(element_list_modified, i, start_modified, end_modified,
-                                    element_list_original, k, start_original, end_original)) {
+        if(check_nestable_predicate(construct_list_modified, i, start_modified, end_modified,
+                                    construct_list_original, k, start_original, end_original)) {
           continue;
         }
 
@@ -914,53 +914,53 @@ void srcdiff_nested::check_nestable(const element_list & element_list_original, 
 }
 
 void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
-                  const element_list & element_list_outer,
+                  const construct_list & construct_list_outer,
                   int start_outer,
                   int end_outer,
-                  const element_list & element_list_inner,
+                  const construct_list & construct_list_inner,
                   int start_inner,
                   int end_inner,
                   int operation) {
 
-  size_t start_pos = element_list_outer.at(start_outer).get_terms().at(1);
-  size_t end_pos = element_list_outer.at(end_outer - 1).end_position();
+  size_t start_pos = construct_list_outer.at(start_outer).get_terms().at(1);
+  size_t end_pos = construct_list_outer.at(end_outer - 1).end_position();
 
-  const std::string & structure_outer = element_list_outer.at(start_outer).term(0)->name;
+  const std::string & structure_outer = construct_list_outer.at(start_outer).term(0)->name;
   if(structure_outer == "block_content") {
     // do not skip whitespace
-    start_pos = element_list_outer.at(start_outer).start_position() + 1;
+    start_pos = construct_list_outer.at(start_outer).start_position() + 1;
 
-  } else if(structure_outer == "if" && !bool(find_attribute(element_list_outer.at(start_outer).get_root(), "type"))) {
+  } else if(structure_outer == "if" && !bool(find_attribute(construct_list_outer.at(start_outer).get_root(), "type"))) {
 
-    advance_to_child(element_list_outer.nodes(), start_pos, XML_READER_TYPE_ELEMENT, "block");
+    advance_to_child(construct_list_outer.nodes(), start_pos, XML_READER_TYPE_ELEMENT, "block");
 
   } else if(structure_outer == "while") {
 
-    advance_to_child(element_list_outer.nodes(), start_pos, XML_READER_TYPE_END_ELEMENT, "condition");
+    advance_to_child(construct_list_outer.nodes(), start_pos, XML_READER_TYPE_END_ELEMENT, "condition");
     ++start_pos;
 
   } else if(structure_outer == "for") {
 
-    advance_to_child(element_list_outer.nodes(), start_pos, XML_READER_TYPE_END_ELEMENT, "control");
+    advance_to_child(construct_list_outer.nodes(), start_pos, XML_READER_TYPE_END_ELEMENT, "control");
     ++start_pos;
 
   } else if(is_class_type(structure_outer)) {
 
-    advance_to_child(element_list_outer.nodes(), start_pos, XML_READER_TYPE_ELEMENT, "block");
+    advance_to_child(construct_list_outer.nodes(), start_pos, XML_READER_TYPE_ELEMENT, "block");
     ++start_pos;
 
     end_pos = start_pos - 1;
-    advance_to_child(element_list_outer.nodes(), end_pos, XML_READER_TYPE_END_ELEMENT, "block");
+    advance_to_child(construct_list_outer.nodes(), end_pos, XML_READER_TYPE_END_ELEMENT, "block");
 
   }
 
-  element_list set = element_list(element_list_outer.nodes(),
+  construct_list set = construct_list(construct_list_outer.nodes(),
                             start_pos, end_pos);
 
-  element_list nest_set(element_list_inner.nodes());
+  construct_list nest_set(construct_list_inner.nodes());
 
   for(int i = start_inner; i < end_inner; ++i) {
-      nest_set.push_back(element_list_inner.at(i));
+      nest_set.push_back(construct_list_inner.at(i));
   }
 
   if(operation == SES_DELETE) {
@@ -995,10 +995,10 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
   }
 
   if(operation == SES_DELETE) {
-    output_change(element_list_outer.at(end_outer - 1).end_position() + 1, out.last_output_modified());
+    output_change(construct_list_outer.at(end_outer - 1).end_position() + 1, out.last_output_modified());
   }
   else {
-    output_change(out.last_output_original(), element_list_outer.at(end_outer - 1).end_position() + 1);
+    output_change(out.last_output_original(), construct_list_outer.at(end_outer - 1).end_position() + 1);
   }
 
 }
@@ -1011,20 +1011,20 @@ void srcdiff_nested::output() {
 
   if(operation == SES_DELETE)
     output_inner(whitespace,
-                 element_list_original,
+                 construct_list_original,
                  start_original,
                  end_original,
-                 element_list_modified,
+                 construct_list_modified,
                  start_modified,
                  end_modified,
                  operation);
 
   else
     output_inner(whitespace,
-                 element_list_modified,
+                 construct_list_modified,
                  start_modified,
                  end_modified,
-                 element_list_original,
+                 construct_list_original,
                  start_original,
                  end_original,
                  operation);

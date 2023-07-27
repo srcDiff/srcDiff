@@ -1,5 +1,5 @@
-#ifndef INCLUDED_ELEMENT_HPP
-#define INCLUDED_ELEMENT_HPP
+#ifndef INCLUDED_CONSTRUCT_HPP
+#define INCLUDED_CONSTRUCT_HPP
 
 #include <srcdiff_vector.hpp>
 
@@ -11,15 +11,14 @@
 #include <iostream>
 #include <memory>
 
-/// @todo rename to construct
-class element_t {
+class construct {
 
 public:
 
-    element_t(const srcml_nodes & node_list) : node_list(node_list), terms(), hash_value() {}
+    construct(const srcml_nodes & node_list) : node_list(node_list), terms(), hash_value() {}
 
     /** loop O(n) */
-    element_t(const element_t & that) : node_list(that.node_list), terms(), hash_value(that.hash_value) {
+    construct(const construct & that) : node_list(that.node_list), terms(), hash_value(that.hash_value) {
 
         for(std::size_t pos = 0; pos < that.size(); ++pos) {
             terms.push_back(that.terms[pos]);
@@ -28,7 +27,7 @@ public:
     }
 
     /** loop O(n) */
-    element_t(const srcml_nodes & node_list, int & start) : node_list(node_list), hash_value() {
+    construct(const srcml_nodes & node_list, int & start) : node_list(node_list), hash_value() {
 
       if((xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_ELEMENT) return;
 
@@ -65,24 +64,24 @@ public:
       --start;
     }
 
-    void swap(element_t & that) {
+    void swap(construct & that) {
         std::swap(terms, that.terms);
         std::swap(hash_value, that.hash_value);
     }
 
-    element_t & operator=(element_t that) {
+    construct & operator=(construct that) {
         swap(that);
         return *this;
     }
 
-    bool operator==(const element_t & that) const {
+    bool operator==(const construct & that) const {
 
         diff_nodes diff = { nodes(), that.nodes() };
         return srcdiff_compare::element_syntax_compare((const void *)this, (const void *)&that, &diff) == 0;
 
     }
 
-    friend std::ostream & operator<<(std::ostream & out, const element_t & that) {
+    friend std::ostream & operator<<(std::ostream & out, const construct & that) {
 
         for(std::size_t pos = 0, size = that.size(); pos < size; ++pos) {
             out << *that.term(pos);
@@ -174,6 +173,6 @@ protected:
 
 };
 
-#include <element_hash.hpp>
+#include <construct_hash.hpp>
 
 #endif

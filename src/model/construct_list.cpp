@@ -1,6 +1,6 @@
-#include <element_list.hpp>
+#include <construct_list.hpp>
 
-bool element_list::is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context UNUSED) {
+bool construct_list::is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context UNUSED) {
 
 	const std::shared_ptr<srcml_node> & node = node_list[node_pos];
 
@@ -9,10 +9,10 @@ bool element_list::is_non_white_space(int & node_pos, const srcml_nodes & node_l
 
 }
 
-element_list::element_list(const srcml_nodes & node_list) : node_list(node_list) {}
+construct_list::construct_list(const srcml_nodes & node_list) : node_list(node_list) {}
 
 /** loop O(sets) */
-element_list::element_list(const element_list & sets) : node_list(sets.node_list) {
+construct_list::construct_list(const construct_list & sets) : node_list(sets.node_list) {
 
 
 	for(size_type pos = 0; pos < sets.size(); ++pos) {
@@ -26,7 +26,7 @@ element_list::element_list(const element_list & sets) : node_list(sets.node_list
 	
 // create the node sets for shortest edit script
 /** loop O(n) */
-element_list::element_list(const srcml_nodes & node_list, int start, int end, const node_set_filter & filter, const void * context) : node_list(node_list) {
+construct_list::construct_list(const srcml_nodes & node_list, int start, int end, const node_set_filter & filter, const void * context) : node_list(node_list) {
 
   // runs on a subset of base array
   for(int i = start; i < end; ++i) {
@@ -52,15 +52,15 @@ element_list::element_list(const srcml_nodes & node_list, int start, int end, co
 }
 
 
-element_list::~element_list() {}
+construct_list::~construct_list() {}
 
-const srcml_nodes & element_list::nodes() const {
+const srcml_nodes & construct_list::nodes() const {
 
   return node_list;
 
 }
 
-element_list & element_list::operator=(element_list sets) {
+construct_list & construct_list::operator=(construct_list sets) {
 
     vec.swap(sets.vec);
     
@@ -68,7 +68,7 @@ element_list & element_list::operator=(element_list sets) {
 
 }
 
-std::ostream & operator<<(std::ostream & out, const element_list & that) {
+std::ostream & operator<<(std::ostream & out, const construct_list & that) {
 
   for(std::size_t pos = 0, size = that.size(); pos < size; ++pos) {
     out << that.vec[pos] << '\n';

@@ -1,5 +1,5 @@
 /**
- * @file element_hash.hpp
+ * @file construct_hash.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,10 +18,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_ELEMENT_HASH_HPP
-#define INCLUDED_ELEMENT_HASH_HPP
+#ifndef INCLUDED_CONSTUCT_HASH_HPP
+#define INCLUDED_CONSTUCT_HASH_HPP
 
-#include <element.hpp>
+#include <construct.hpp>
 
 #include <string>
 #include <memory>
@@ -29,9 +29,9 @@
 namespace std {
 
 template<>
-struct hash<element_t> {
+struct hash<construct> {
 
-  size_t operator()(const element_t & element) const {
+  size_t operator()(const construct & element) const {
 
     if(element.hash()) {
         return *element.hash();
@@ -40,15 +40,15 @@ struct hash<element_t> {
     size_t result = 2166136261;
     for(std::size_t pos = 0, size = element.size(); pos < size; ++pos) {
 
-        const shared_ptr<srcml_node> & node = element.term(pos);
-        const string & hash_item = node->is_text() ? *node->content : node->name;
+        const shared_ptr<srcml_node> & term = element.term(pos);
+        const string & hash_item = term->is_text() ? *term->content : term->name;
         for(size_t hash_pos = 0, hash_size = hash_item.size(); hash_pos < hash_size; ++hash_pos) {
             result = (result * 16777619) ^ hash_item[hash_pos];
         }
 
     }
 
-    ((element_t &)element).hash(result);
+    ((construct &)element).hash(result);
     return result;
 
   }

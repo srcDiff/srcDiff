@@ -3,24 +3,24 @@
 #include <srcdiff_diff.hpp>
 
 #include <list>
-#include <element.hpp>
+#include <construct.hpp>
 
 namespace srcdiff_compare {
 
   // diff node accessor function
   const void * element_index(int index, const void* data, const void * context) {
-    element_list & elements = *(element_list *)data;
+    construct_list & elements = *(construct_list *)data;
     return &elements[index];
   }
 
   // diff node accessor function
   const void * element_array_index(int index, const void* data, const void * context) {
-    element_t * elements = (element_t *)data;
-    return &elements[index];
+    construct * element = (construct *)data;
+    return &element[index];
   }
 
   const void * node_index(int index, const void* data, const void * context) {
-    element_t & element = *(element_t *)data;
+    construct & element = *(construct *)data;
     return &element.get_terms()[index];
   }
 
@@ -78,15 +78,15 @@ namespace srcdiff_compare {
 
     diff_nodes & dnodes = *(diff_nodes *)context;
 
-    element_t * element_1 = (element_t *)e1;
-    element_t * element_2 = (element_t *)e2;
+    construct * element_1 = (construct *)e1;
+    construct * element_2 = (construct *)e2;
 
     if(!element_1->hash()) {
-      element_1->hash(std::hash<element_t>()(*element_1));
+      element_1->hash(std::hash<construct>()(*element_1));
     }
 
     if(!element_2->hash()) {
-      element_2->hash(std::hash<element_t>()(*element_2));
+      element_2->hash(std::hash<construct>()(*element_2));
     }
 
     if(!(element_1->hash() == element_2->hash()))

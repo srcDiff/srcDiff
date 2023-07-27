@@ -108,8 +108,8 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
     boost::timer::auto_cpu_timer t;
 #endif
 
-  element_list set_original(output.nodes_original(), 0, output.nodes_original().size());
-  element_list set_modified(output.nodes_modified(), 0, output.nodes_modified().size());
+  construct_list set_original(output.nodes_original(), 0, output.nodes_original().size());
+  construct_list set_modified(output.nodes_modified(), 0, output.nodes_modified().size());
 
   output.initialize(is_original, is_modified);
 

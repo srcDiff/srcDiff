@@ -91,20 +91,20 @@ void srcdiff_single::output_recursive_same() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_all();
 
-  if(element_list_original.at(start_original).get_root()->is_temporary == element_list_modified.at(start_modified).get_root()->is_temporary) {
+  if(construct_list_original.at(start_original).get_root()->is_temporary == construct_list_modified.at(start_modified).get_root()->is_temporary) {
     out.output_node(out.diff_common_start, SES_COMMON);
   }
 
-  if(srcdiff_compare::node_compare(element_list_original.at(start_original).get_root(), element_list_modified.at(start_modified).get_root()) == 0) {
+  if(srcdiff_compare::node_compare(construct_list_original.at(start_original).get_root(), construct_list_modified.at(start_modified).get_root()) == 0) {
 
-    out.output_node(element_list_original.at(start_original).get_root(), element_list_modified.at(start_modified).get_root(), SES_COMMON);
+    out.output_node(construct_list_original.at(start_original).get_root(), construct_list_modified.at(start_modified).get_root(), SES_COMMON);
 
   } else {
 
-    std::shared_ptr<srcml_node> merged_node = std::make_shared<srcml_node>(*element_list_original.at(start_original).get_root());
-    merged_node->is_empty = element_list_original.at(start_original).get_root()->is_empty && element_list_modified.at(start_modified).get_root()->is_empty;
-    merged_node->properties = merge_properties(element_list_original.at(start_original).get_root()->properties,
-                                              element_list_modified.at(start_modified).get_root()->properties);
+    std::shared_ptr<srcml_node> merged_node = std::make_shared<srcml_node>(*construct_list_original.at(start_original).get_root());
+    merged_node->is_empty = construct_list_original.at(start_original).get_root()->is_empty && construct_list_modified.at(start_modified).get_root()->is_empty;
+    merged_node->properties = merge_properties(construct_list_original.at(start_original).get_root()->properties,
+                                              construct_list_modified.at(start_modified).get_root()->properties);
     out.output_node(merged_node, SES_COMMON);
 
   }
@@ -113,16 +113,16 @@ void srcdiff_single::output_recursive_same() {
   ++out.last_output_modified();
 
   // diff comments differently then source-code
-  if(element_list_original.at(start_original).get_root()->name == "comment") {
+  if(construct_list_original.at(start_original).get_root()->name == "comment") {
 
     // collect subset of nodes
-    element_list next_set_original
-      = element_list(out.nodes_original(), element_list_original.at(start_original).get_terms().at(1)
-                        , element_list_original.at(start_original).end_position());
+    construct_list next_set_original
+      = construct_list(out.nodes_original(), construct_list_original.at(start_original).get_terms().at(1)
+                        , construct_list_original.at(start_original).end_position());
 
-    element_list next_set_modified
-      = element_list(out.nodes_modified(), element_list_modified.at(start_modified).get_terms().at(1)
-                        , element_list_modified.at(start_modified).end_position());
+    construct_list next_set_modified
+      = construct_list(out.nodes_modified(), construct_list_modified.at(start_modified).get_terms().at(1)
+                        , construct_list_modified.at(start_modified).end_position());
 
     srcdiff_comment diff(out, next_set_original, next_set_modified);
     diff.output();
@@ -130,26 +130,26 @@ void srcdiff_single::output_recursive_same() {
   } else {
 
       // collect subset of nodes
-      element_list next_set_original(out.nodes_original());
-      if(!element_list_original.at(start_original).get_root()->is_empty)
-        next_set_original = element_list(out.nodes_original(),
-                                      element_list_original.at(start_original).get_terms().at(1),
-                                      element_list_original.at(start_original).end_position());
+      construct_list next_set_original(out.nodes_original());
+      if(!construct_list_original.at(start_original).get_root()->is_empty)
+        next_set_original = construct_list(out.nodes_original(),
+                                      construct_list_original.at(start_original).get_terms().at(1),
+                                      construct_list_original.at(start_original).end_position());
 
-      element_list next_set_modified(out.nodes_modified());
-      if(!element_list_modified.at(start_modified).get_root()->is_empty)
-        next_set_modified = element_list(out.nodes_modified(),
-                                      element_list_modified.at(start_modified).get_terms().at(1),
-                                      element_list_modified.at(start_modified).end_position());
+      construct_list next_set_modified(out.nodes_modified());
+      if(!construct_list_modified.at(start_modified).get_root()->is_empty)
+        next_set_modified = construct_list(out.nodes_modified(),
+                                      construct_list_modified.at(start_modified).get_terms().at(1),
+                                      construct_list_modified.at(start_modified).end_position());
 
       srcdiff_diff diff(out, next_set_original, next_set_modified);
       diff.output();
 
   }
 
-  output_common(element_list_original.at(start_original).end_position() + 1, element_list_modified.at(start_modified).end_position() + 1);
+  output_common(construct_list_original.at(start_original).end_position() + 1, construct_list_modified.at(start_modified).end_position() + 1);
 
-  if(element_list_original.at(start_original).get_root()->is_temporary == element_list_modified.at(start_modified).get_root()->is_temporary) {
+  if(construct_list_original.at(start_original).get_root()->is_temporary == construct_list_modified.at(start_modified).get_root()->is_temporary) {
     out.output_node(out.diff_common_end, SES_COMMON);
   }
 
@@ -160,13 +160,13 @@ void srcdiff_single::output_recursive_interchangeable() {
   srcdiff_whitespace whitespace(out);
   whitespace.output_all();
 
-  const std::shared_ptr<srcml_node> & original_start_node = element_list_original.at(start_original).get_root();
-  const std::shared_ptr<srcml_node> & modified_start_node = element_list_modified.at(start_modified).get_root();
+  const std::shared_ptr<srcml_node> & original_start_node = construct_list_original.at(start_original).get_root();
+  const std::shared_ptr<srcml_node> & modified_start_node = construct_list_modified.at(start_modified).get_root();
 
   int original_collect_start_pos = 1;
   if(original_start_node->name == "if_stmt") {
     // must have if, if interchange passed
-    while(element_list_original.at(start_original).term(original_collect_start_pos)->name != "if") {
+    while(construct_list_original.at(start_original).term(original_collect_start_pos)->name != "if") {
       ++original_collect_start_pos;
     }
     ++original_collect_start_pos;
@@ -175,15 +175,15 @@ void srcdiff_single::output_recursive_interchangeable() {
   int modified_collect_start_pos = 1;
   if(modified_start_node->name == "if_stmt") {
     // must have if, if interchange passed
-    while(element_list_modified.at(start_modified).term(modified_collect_start_pos)->name != "if") {
+    while(construct_list_modified.at(start_modified).term(modified_collect_start_pos)->name != "if") {
       ++modified_collect_start_pos;
     }
     ++modified_collect_start_pos;
   }
 
   // get keyword if present
-  const std::shared_ptr<srcml_node> & keyword_node_original = element_list_original.at(start_original).term(original_collect_start_pos);
-  const std::shared_ptr<srcml_node> & keyword_node_modified = element_list_modified.at(start_modified).term(modified_collect_start_pos);
+  const std::shared_ptr<srcml_node> & keyword_node_original = construct_list_original.at(start_original).term(original_collect_start_pos);
+  const std::shared_ptr<srcml_node> & keyword_node_modified = construct_list_modified.at(start_modified).term(modified_collect_start_pos);
   bool is_keyword  = keyword_node_original->is_text() && !keyword_node_original->is_white_space();
   bool is_keywords = is_keyword
                      && keyword_node_modified->is_text() && !keyword_node_modified->is_white_space();
@@ -200,7 +200,7 @@ void srcdiff_single::output_recursive_interchangeable() {
   out.diff_original_start->properties.clear();
 
   for(int output_pos = 0; output_pos < original_collect_start_pos; ++output_pos) {
-    out.output_node(element_list_original.at(start_original).term(output_pos), SES_DELETE);
+    out.output_node(construct_list_original.at(start_original).term(output_pos), SES_DELETE);
     ++out.last_output_original();
   }
 
@@ -214,32 +214,32 @@ void srcdiff_single::output_recursive_interchangeable() {
   }
 
   for(int output_pos = 0; output_pos < modified_collect_start_pos; ++output_pos) {
-    out.output_node(element_list_modified.at(start_modified).term(output_pos), SES_INSERT);
+    out.output_node(construct_list_modified.at(start_modified).term(output_pos), SES_INSERT);
     ++out.last_output_modified();
   }
 
   // collect subset of nodes
-  element_list next_set_original
-    = element_list(out.nodes_original(), element_list_original.at(start_original).get_terms().at(original_collect_start_pos)
-                      , element_list_original.at(start_original).end_position());
+  construct_list next_set_original
+    = construct_list(out.nodes_original(), construct_list_original.at(start_original).get_terms().at(original_collect_start_pos)
+                      , construct_list_original.at(start_original).end_position());
 
-  element_list next_set_modified
-    = element_list(out.nodes_modified(), element_list_modified.at(start_modified).get_terms().at(modified_collect_start_pos)
-                      , element_list_modified.at(start_modified).end_position());
+  construct_list next_set_modified
+    = construct_list(out.nodes_modified(), construct_list_modified.at(start_modified).get_terms().at(modified_collect_start_pos)
+                      , construct_list_modified.at(start_modified).end_position());
 
   srcdiff_diff diff(out, next_set_original, next_set_modified);
   diff.output();
 
   output_whitespace();
 
-  output_change(out.last_output_original(), element_list_modified.at(start_modified).end_position() + 1);
+  output_change(out.last_output_original(), construct_list_modified.at(start_modified).end_position() + 1);
 
   out.output_node(out.diff_modified_end, SES_INSERT, true);
   if(out.output_state() == SES_INSERT) {
     out.output_node(out.diff_modified_end, SES_INSERT);
   }
 
-  output_change(element_list_original.at(start_original).end_position() + 1, out.last_output_modified());
+  output_change(construct_list_original.at(start_original).end_position() + 1, out.last_output_modified());
 
   out.output_node(out.diff_original_end, SES_DELETE, true);
   if(out.output_state() == SES_DELETE) {
@@ -250,8 +250,8 @@ void srcdiff_single::output_recursive_interchangeable() {
 
 void srcdiff_single::output() {
 
-  const std::shared_ptr<srcml_node> & start_node_original = element_list_original.at(start_original).term(0);
-  const std::shared_ptr<srcml_node> & start_node_modified = element_list_modified.at(start_modified).term(0);
+  const std::shared_ptr<srcml_node> & start_node_original = construct_list_original.at(start_original).term(0);
+  const std::shared_ptr<srcml_node> & start_node_modified = construct_list_modified.at(start_modified).term(0);
 
   if(start_node_original->name == start_node_modified->name
     && start_node_original->ns.href == start_node_modified->ns.href) {
