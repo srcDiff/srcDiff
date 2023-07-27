@@ -9,74 +9,57 @@ namespace srcdiff_compare {
 
   // diff node accessor function
   const void * element_index(int index, const void* data, const void * context) {
+    
     construct_list & elements = *(construct_list *)data;
     return &elements[index];
   }
 
   // diff node accessor function
-  const void * element_array_index(int index, const void* data, const void * context) {
+  const void * construct_node_index(int index, const void* data, const void * context) {
     construct * element = (construct *)data;
-    return &element[index];
+    return &element->term(index);
   }
 
-  const void * node_index(int index, const void* data, const void * context) {
-    construct & element = *(construct *)data;
-    return &element.get_terms()[index];
-  }
-
-  const void * node_array_index(int index, const void* data, const void * context) {
-    int * element = (int *)data;
-    return &element[index];
-  }
-
-  int node_index_compare(const void * node1, const void * node2, const void * context) {
-
-    diff_nodes & dnodes = *(diff_nodes *)context;
-
-    const std::shared_ptr<srcml_node> & node_original = dnodes.nodes_original.at(*(int *)node1);
-    const std::shared_ptr<srcml_node> & node_modified = dnodes.nodes_modified.at(*(int *)node2);
-
-    return node_compare(node_original, node_modified);
+  int node_compare(const void * node_one, const void * node_two, const void * context) {
+    return node_compare(*(const std::shared_ptr<srcml_node> *)node_one, *(const std::shared_ptr<srcml_node>*)node_two);
   }
 
   // diff node comparison function
-  int node_compare(const std::shared_ptr<srcml_node> & node1, const std::shared_ptr<srcml_node> & node2) {
+  int node_compare(const std::shared_ptr<srcml_node> & node_one, const std::shared_ptr<srcml_node> & node_two) {
 
-    if (node1 == node2)
+    if (node_one == node_two)
       return 0;
 
-    if(node1->type != node2->type)
+    if(node_one->type != node_two->type)
       return 1;
 
-    if(node1->name != node2->name)
+    if(node_one->name != node_two->name)
       return 1;
 
     // end if text node contents differ
-    if((xmlReaderTypes)node1->type == XML_READER_TYPE_TEXT)
-      return node1->content == node2->content && (!node1->content || *node1->content == *node2->content) ? 0 : 1;
+    if((xmlReaderTypes)node_one->type == XML_READER_TYPE_TEXT)
+      return node_one->content == node_two->content && (!node_one->content || *node_one->content == *node_two->content) ? 0 : 1;
 
-    if(node1->is_empty != node2->is_empty)
+    if(node_one->is_empty != node_two->is_empty)
       return 1;
 
-    if(node1->ns.prefix || node2->ns.prefix) {
+    if(node_one->ns.prefix || node_two->ns.prefix) {
 
-      if(!node1->ns.prefix)
+      if(!node_one->ns.prefix)
         return 1;
-      else if(!node2->ns.prefix)
+      else if(!node_two->ns.prefix)
         return 1;
-      else if(*node1->ns.prefix != *node2->ns.prefix) 
+      else if(*node_one->ns.prefix != *node_two->ns.prefix) 
       return 1;
 
     }
 
-    return node1->properties != node2->properties;
+    return node_one->properties != node_two->properties;
   }
 
 
   // diff node comparison function
   int element_syntax_compare(const void * e1, const void * e2, const void * context) {
-
-    diff_nodes & dnodes = *(diff_nodes *)context;
 
     construct * element_1 = (construct *)e1;
     construct * element_2 = (construct *)e2;

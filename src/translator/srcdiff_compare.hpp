@@ -3,25 +3,18 @@
 
 #include <srcml_nodes.hpp>
 
-struct diff_nodes {
-
-  const srcml_nodes & nodes_original;
-  const srcml_nodes & nodes_modified;
-
-};
-
 namespace srcdiff_compare {
 
 	// diff node accessor function
 	const void * element_index(int idx, const void *s, const void * context);
 
-	const void * element_array_index(int idx, const void *s, const void * context);
+	const void * construct_node_index(int idx, const void *s, const void * context);
 	
 	const void * node_index(int idx, const void *s, const void * context);
 
 	const void * node_array_index(int idx, const void *s, const void * context);
 
-	int node_index_compare(const void * node1, const void * node2, const void * context);
+	int node_compare(const void * node1, const void * node2, const void * context);
 
 	// diff node comparison function
 	int node_compare(const std::shared_ptr<srcml_node> & node1, const std::shared_ptr<srcml_node> & node2);

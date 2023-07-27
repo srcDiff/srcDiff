@@ -38,25 +38,11 @@ public:
   bool is_approximate() const;
 
   template<typename T>
-  int compute(const T & structure_one, const T & structure_two, bool approximate);
-
-  template<typename T>
   int approximate_compute(const T & structure_one, const T & structure_two);
 
   int compute(const void * structure_one, int size_one, const void * structure_two, int size_two);
 
 };
-
-template<typename T>
-int shortest_edit_script_t::compute(const T & structure_one, const T & structure_two, bool approximate) {
-
-    const size_t size_one = structure_one.size();
-    const size_t size_two = structure_two.size();
-
-      return shortest_edit_script_hybrid((const void *)structure_one.data(), size_one, (const void *)structure_two.data(), size_two, &edit_script, compare, accessor, context, threshold);
-
-}
-
 
 template<typename T>
 int shortest_edit_script_t::approximate_compute(const T & structure_one, const T & structure_two) {

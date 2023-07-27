@@ -31,12 +31,11 @@ srcdiff_diff::srcdiff_diff(srcdiff_output & out, const construct_list & construc
 */
 void srcdiff_diff::output() {
 
-  diff_nodes dnodes = { construct_list_original.nodes(), construct_list_modified.nodes() };
-
-  shortest_edit_script_t ses(srcdiff_compare::element_syntax_compare, srcdiff_compare::element_array_index, &dnodes);
+  shortest_edit_script_t ses(srcdiff_compare::element_syntax_compare, srcdiff_compare::element_index, nullptr);
 
   /** O(CND) */
-  int distance = ses.compute<construct_list>(construct_list_original, construct_list_modified, false);
+  int distance = ses.compute(&construct_list_original, construct_list_original.size(),
+                             &construct_list_modified, construct_list_modified.size());
   if(ses.is_approximate()) out.approximate(true);
 
   srcdiff_edit_correction corrector(construct_list_original, construct_list_modified, ses);

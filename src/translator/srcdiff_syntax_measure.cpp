@@ -43,8 +43,6 @@ void srcdiff_syntax_measure::compute() {
 
   computed = true;
   
-  diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
-
   if((xmlReaderTypes)set_original.term(0)->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)set_modified.term(0)->type != XML_READER_TYPE_ELEMENT
      || (srcdiff_compare::node_compare(set_original.term(0), set_modified.term(0)) != 0
@@ -65,8 +63,9 @@ void srcdiff_syntax_measure::compute() {
   original_len = next_construct_list_original.size();
   modified_len = next_construct_list_modified.size();
 
-  shortest_edit_script_t ses(srcdiff_compare::element_syntax_compare, srcdiff_compare::element_array_index, &dnodes);
-  ses.compute<construct_list>(next_construct_list_original, next_construct_list_modified, false);
+  shortest_edit_script_t ses(srcdiff_compare::element_syntax_compare, srcdiff_compare::element_index, nullptr);
+  ses.compute(&next_construct_list_original, next_construct_list_original.size(),
+              &next_construct_list_modified, next_construct_list_modified.size());
   process_edit_script(ses.script());
 
 }

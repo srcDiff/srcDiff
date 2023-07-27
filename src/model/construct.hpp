@@ -75,9 +75,7 @@ public:
     }
 
     bool operator==(const construct & that) const {
-
-        diff_nodes diff = { nodes(), that.nodes() };
-        return srcdiff_compare::element_syntax_compare((const void *)this, (const void *)&that, &diff) == 0;
+        return srcdiff_compare::element_syntax_compare((const void *)this, (const void *)&that, nullptr) == 0;
 
     }
 

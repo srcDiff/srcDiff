@@ -142,8 +142,6 @@ void srcdiff_text_measure::compute() {
 
   computed = true;
 
-  diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
-
   if((xmlReaderTypes)set_original.term(0)->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)set_modified.term(0)->type != XML_READER_TYPE_ELEMENT
      || (srcdiff_compare::node_compare(set_original.term(0), set_modified.term(0)) != 0
@@ -169,8 +167,8 @@ void srcdiff_text_measure::compute() {
 
   }
 
-    shortest_edit_script_t ses(srcdiff_compare::node_index_compare, srcdiff_compare::node_array_index, &dnodes);
-    ses.compute<std::vector<int>>(set_original_text.get_terms(), set_modified_text.get_terms(), false);
+    shortest_edit_script_t ses(srcdiff_compare::node_compare, srcdiff_compare::construct_node_index, nullptr);
+    ses.compute(&set_original_text, set_original_text.size(), &set_modified_text, set_modified_text.size());
     process_edit_script(ses.script());
 
 }

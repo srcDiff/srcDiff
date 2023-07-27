@@ -234,8 +234,6 @@ edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
     edit_t * delete_edit = change_edit;
     edit_t * insert_edit = change_edit->next;
 
-    diff_nodes diff = { sets_original.nodes(), sets_modified.nodes() };
-
     for(int i = 0; i < delete_edit->length; ++i) {
 
         for(int j = 0; j < insert_edit->length; ++j) {
@@ -255,7 +253,7 @@ edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
             const std::string & original_uri = set_original.term(0)->ns.href;
             const std::string & modified_uri = set_modified.term(0)->ns.href;
 
-            if(srcdiff_compare::element_syntax_compare(&set_original, &set_modified, &diff) != 0) {
+            if(srcdiff_compare::element_syntax_compare(&set_original, &set_modified, nullptr) != 0) {
                 continue;
             }
 
