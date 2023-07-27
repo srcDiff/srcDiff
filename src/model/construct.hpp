@@ -76,7 +76,6 @@ public:
 
     bool operator==(const construct & that) const {
         return srcdiff_compare::construct_compare((const void *)this, (const void *)&that, nullptr) == 0;
-
     }
 
     friend std::ostream & operator<<(std::ostream & out, const construct & that) {

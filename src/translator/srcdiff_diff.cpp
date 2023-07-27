@@ -50,11 +50,7 @@ void srcdiff_diff::output() {
   }
 
   /** O(CD^2) */
-  srcdiff_move::mark_moves(out.nodes_original(),
-                           construct_list_original,
-                           out.nodes_modified(),
-                           construct_list_modified,
-                           edit_script);
+  srcdiff_move::mark_moves(construct_list_original, construct_list_modified, edit_script);
 
   int last_diff_original = 0;
   int last_diff_modified = 0;

@@ -21,9 +21,7 @@ public:
 
 	static bool is_move(const construct & set);
 
-	static void mark_moves(srcml_nodes & nodes_original,
-                           const construct_list & construct_list_original,
-                           srcml_nodes & nodes_modified,
+	static void mark_moves(const construct_list & construct_list_original,
                            const construct_list & construct_list_modified,
                            edit_t * edit_script);
 
