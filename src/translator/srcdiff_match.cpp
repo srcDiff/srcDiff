@@ -956,7 +956,7 @@ bool if_block_equal(const construct & set_original, const construct & set_modifi
 
   if(block_modified == construct_list_modified.end()) return false;
 
-  bool block_is_equal = srcdiff_compare::element_syntax_compare((void *)&*block_original, (void *)&*block_modified, nullptr) == 0;
+  bool block_is_equal = srcdiff_compare::construct_compare((void *)&*block_original, (void *)&*block_modified, nullptr) == 0;
 
   return block_is_equal;
 
@@ -995,7 +995,7 @@ bool for_control_matches(const construct & set_original, const construct & set_m
   }
 
   bool matches = control_pos_original != construct_list_original.size() && control_pos_modified != construct_list_modified.size() 
-    && srcdiff_compare::element_syntax_compare((void *)&construct_list_original.at(control_pos_original), (void *)&construct_list_modified.at(control_pos_modified), nullptr) == 0;
+    && srcdiff_compare::construct_compare((void *)&construct_list_original.at(control_pos_original), (void *)&construct_list_modified.at(control_pos_modified), nullptr) == 0;
 
   return matches;
 

@@ -17,7 +17,7 @@ srcdiff_comment::srcdiff_comment(srcdiff_output & out, const construct_list & co
 */
 void srcdiff_comment::output() {
 
-  shortest_edit_script_t ses(srcdiff_compare::element_syntax_compare, srcdiff_compare::element_index, nullptr);
+  shortest_edit_script_t ses(srcdiff_compare::construct_compare, srcdiff_compare::construct_list_index, nullptr);
 
   int distance = ses.compute((const void *)&construct_list_original, construct_list_original.size(), (const void *)&construct_list_modified, construct_list_modified.size());
 

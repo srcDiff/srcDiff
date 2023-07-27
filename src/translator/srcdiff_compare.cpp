@@ -8,13 +8,6 @@
 namespace srcdiff_compare {
 
   // diff node accessor function
-  const void * element_index(int index, const void* data, const void * context) {
-    
-    construct_list & elements = *(construct_list *)data;
-    return &elements[index];
-  }
-
-  // diff node accessor function
   const void * construct_node_index(int index, const void* data, const void * context) {
     construct * element = (construct *)data;
     return &element->term(index);
@@ -58,8 +51,13 @@ namespace srcdiff_compare {
   }
 
 
-  // diff node comparison function
-  int element_syntax_compare(const void * e1, const void * e2, const void * context) {
+  const void * construct_list_index(int index, const void* data, const void * context) {
+
+    construct_list & elements = *(construct_list *)data;
+    return &elements[index];
+  }
+
+  int construct_compare(const void * e1, const void * e2, const void * context) {
 
     construct * element_1 = (construct *)e1;
     construct * element_2 = (construct *)e2;
