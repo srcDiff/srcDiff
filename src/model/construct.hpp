@@ -15,6 +15,25 @@ class construct {
 
 public:
 
+    typedef std::function<bool (int & node_pos, const srcml_nodes & node_list, const void * context)> construct_filter;
+
+    /// @todo remove, as should be part of node
+    static bool is_white_space(const std::shared_ptr<srcml_node> & node) {
+
+      // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
+      return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content && node->is_white_space();
+
+    }
+
+    static bool is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context) {
+
+        const std::shared_ptr<srcml_node> & node = node_list[node_pos];
+
+        // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
+        return (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT || ((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content && !node->is_white_space());
+
+    }
+
     construct(const srcml_nodes & node_list) : node_list(node_list), terms(), hash_value() {}
 
     /** loop O(n) */
@@ -86,6 +105,30 @@ public:
 
         return out;
 
+    }
+
+    void expand_children(construct_filter filter = is_non_white_space, const void * context = nullptr) {
+
+        // runs on a subset of base array
+        for(int pos = start_position() + 1; pos < end_position(); ++pos) {
+
+            // skip whitespace
+            if(filter(pos, node_list, context)) {
+
+                // text is separate node if not surrounded by a tag in range
+                if((xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_TEXT || (xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_ELEMENT) {
+
+                    child_constructs.emplace_back(node_list, pos);
+
+                } else {
+
+                    return;
+
+                }
+
+            }
+
+        }
     }
 
     /// term access api ///
@@ -160,13 +203,7 @@ protected:
     std::vector<int> terms;
     boost::optional<std::size_t> hash_value;
 
-    /// @todo remove, as should be part of node
-    static bool is_white_space(const std::shared_ptr<srcml_node> & node) {
-
-      // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
-      return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content && node->is_white_space();
-
-    }
+    std::vector<construct> child_constructs;
 
 };
 

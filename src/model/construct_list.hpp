@@ -16,15 +16,11 @@ private:
 
 	const srcml_nodes & node_list;
 
-	static bool is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context UNUSED);
-
 public:
-
-	typedef std::function<bool (int & node_pos, const srcml_nodes & node_list, const void * context)> node_set_filter;
 
 	construct_list(const srcml_nodes & node_list);
 	construct_list(const construct_list & sets);
-	construct_list(const srcml_nodes & node_list, int start, int end, const node_set_filter & filter = is_non_white_space, const void * context = 0);
+	construct_list(const srcml_nodes & node_list, int start, int end, const construct::construct_filter & filter = construct::is_non_white_space, const void * context = 0);
 	~construct_list();
 
 	const srcml_nodes & nodes() const;

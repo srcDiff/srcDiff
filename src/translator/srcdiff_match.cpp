@@ -1462,8 +1462,8 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
         if(!expr_modified.empty()) {
 
-          construct_list sets = construct_list(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position(), srcdiff_nested::is_match,
-                                    &expr_modified.term(0));
+          construct_list sets(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position(), srcdiff_nested::is_match,
+                              &expr_modified.term(0));
           int match = srcdiff_nested::best_match(sets, expr_modified);
 
           if(match < sets.size()) {
