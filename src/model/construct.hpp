@@ -1,8 +1,6 @@
 #ifndef INCLUDED_CONSTRUCT_HPP
 #define INCLUDED_CONSTRUCT_HPP
 
-#include <srcdiff_vector.hpp>
-
 #include <srcdiff_compare.hpp>
 #include <srcml_nodes.hpp>
 
