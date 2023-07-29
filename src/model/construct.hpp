@@ -109,6 +109,7 @@ public:
     void swap(construct & that) {
         std::swap(terms, that.terms);
         std::swap(hash_value, that.hash_value);
+        std::swap(child_constructs, that.child_constructs);
     }
 
     construct & operator=(construct that) {
