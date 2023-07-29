@@ -98,7 +98,7 @@ void srcdiff_diff::output() {
       // handle pure delete or insert
       switch (edits->operation) {
 
-        case SES_COMMON:
+        case SES_COMMON: {
 
           if((xmlReaderTypes)construct_list_original.at(edits->offset_sequence_one).term(0)->type != XML_READER_TYPE_TEXT) {
 
@@ -113,7 +113,10 @@ void srcdiff_diff::output() {
 
           }
 
-        case SES_INSERT:
+          break;
+        }
+
+        case SES_INSERT: {
 
           output_pure(0, construct_list_modified.at(edits->offset_sequence_two + edits->length - 1).end_position() + 1);
 
@@ -123,8 +126,9 @@ void srcdiff_diff::output() {
           last_diff_modified = edits->offset_sequence_two + edits->length;
 
           break;
+        }
 
-        case SES_DELETE:
+        case SES_DELETE: {
 
           output_pure(construct_list_original.at(edits->offset_sequence_one + edits->length - 1).end_position() + 1, 0);
 
@@ -133,6 +137,8 @@ void srcdiff_diff::output() {
           last_diff_modified = edits->offset_sequence_two;
 
           break;
+        }
+
       }
       
     }
