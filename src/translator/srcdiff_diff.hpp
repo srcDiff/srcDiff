@@ -2,7 +2,7 @@
 #define INCLUDED_SRCDIFF_DIFF_HPP
 
 #include <srcdiff_output.hpp>
-#include <construct_list.hpp>
+#include <construct.hpp>
 #include <shortest_edit_script.h>
 
 #include <vector>
@@ -12,11 +12,11 @@ class srcdiff_diff {
 protected:
   srcdiff_output & out;
 
-  const construct_list & construct_list_original;
-  const construct_list & construct_list_modified;
+  const construct::construct_list & construct_list_original;
+  const construct::construct_list & construct_list_modified;
 
 public:
-  srcdiff_diff(srcdiff_output & out, const construct_list & construct_list_original, const construct_list & construct_list_modified);
+  srcdiff_diff(srcdiff_output & out, const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified);
 
   virtual void output();
   virtual void output_common(int end_original, int end_modified);

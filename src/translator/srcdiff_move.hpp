@@ -3,7 +3,7 @@
 
 #include <srcdiff_output.hpp>
 
-#include <construct_list.hpp>
+#include <construct.hpp>
 #include <shortest_edit_script.h>
 
 class srcdiff_move : public srcdiff_output {
@@ -21,8 +21,8 @@ public:
 
 	static bool is_move(const construct & set);
 
-	static void mark_moves(const construct_list & construct_list_original,
-                           const construct_list & construct_list_modified,
+	static void mark_moves(const construct::construct_list & construct_list_original,
+                           const construct::construct_list & construct_list_modified,
                            edit_t * edit_script);
 
 	virtual void output();

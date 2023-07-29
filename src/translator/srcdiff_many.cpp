@@ -127,7 +127,7 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
   int_pairs original_moved;
   std::vector<int> pos_original;
-  construct_list original_sets(out.nodes_original());
+  construct::construct_list original_sets;
 
   for(unsigned int i = 0; (signed)i < edits->length; ++i) {
 
@@ -149,7 +149,7 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
   int_pairs modified_moved;
   std::vector<int> pos_modified;
-  construct_list modified_sets(out.nodes_modified());
+  construct::construct_list modified_sets;
 
   for(unsigned int i = 0; (signed)i < edit_next->length; ++i) {
 

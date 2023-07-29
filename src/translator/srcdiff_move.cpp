@@ -26,8 +26,8 @@ bool srcdiff_move::is_move(const construct & set) {
 }
 
 /** loop O(CD^2) */
-void srcdiff_move::mark_moves(const construct_list & construct_list_original,
-                              const construct_list & construct_list_modified,
+void srcdiff_move::mark_moves(const construct::construct_list & construct_list_original,
+                              const construct::construct_list & construct_list_modified,
                               edit_t * edit_script) {
 
   std::map<std::string, move_infos > constructs;

@@ -11,7 +11,7 @@ private:
 
 public:
 
-	srcdiff_comment(srcdiff_output & out, const construct_list & construct_list_original, const construct_list & construct_list_modified);
+	srcdiff_comment(srcdiff_output & out, const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified);
 	virtual void output();
 
 };

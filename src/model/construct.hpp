@@ -35,6 +35,30 @@ public:
 
     }
 
+    /// @todo make member.  Requires modifiying a lot of methods in other classes.
+    // name does not quite match because not a member yet.
+    static construct_list get_descendent_constructs(const srcml_nodes & node_list, std::size_t start_pos, std::size_t end_pos, construct_filter filter = is_non_white_space, const void * context = nullptr) {
+        construct_list descendent_constructs;
+
+        // runs on a subset of base array
+        for(int pos = start_pos; pos < end_pos; ++pos) {
+
+            // skip whitespace
+            if(filter(pos, node_list, context)) {
+
+                // text is separate node if not surrounded by a tag in range
+                if((xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_TEXT || (xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_ELEMENT) {
+                    descendent_constructs.emplace_back(node_list, pos);
+                } else {
+                    return descendent_constructs;
+                }
+
+            }
+
+        }
+        return descendent_constructs;
+    }
+
     construct(const srcml_nodes & node_list) : node_list(node_list), terms(), hash_value() {}
 
     /** loop O(n) */
@@ -108,30 +132,8 @@ public:
 
     }
 
-    construct_list get_descendent_constructs(construct_filter filter = is_non_white_space, const void * context = nullptr) {
-        construct_list descendent_constructs;
-
-        // runs on a subset of base array
-        for(int pos = start_position() + 1; pos < end_position(); ++pos) {
-
-            // skip whitespace
-            if(filter(pos, node_list, context)) {
-
-                // text is separate node if not surrounded by a tag in range
-                if((xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_TEXT || (xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_ELEMENT) {
-                    descendent_constructs.emplace_back(node_list, pos);
-                } else {
-                    return descendent_constructs;
-                }
-
-            }
-
-        }
-        return descendent_constructs;
-    }
-
     void expand_children() {
-        child_constructs = get_descendent_constructs(is_non_white_space, nullptr);
+        child_constructs = get_descendent_constructs(node_list, start_position() + 1, end_position(), is_non_white_space, nullptr);
     }
 
     /// term access api ///

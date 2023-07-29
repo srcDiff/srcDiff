@@ -4,7 +4,7 @@
 #include <srcdiff_compare.hpp>
 #include <shortest_edit_script.hpp>
 
-srcdiff_comment::srcdiff_comment(srcdiff_output & out, const construct_list & construct_list_original, const construct_list & construct_list_modified) 
+srcdiff_comment::srcdiff_comment(srcdiff_output & out, const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified) 
   : srcdiff_diff(out, construct_list_original, construct_list_modified) {}
 
 /*

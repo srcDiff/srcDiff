@@ -53,7 +53,7 @@ namespace srcdiff_compare {
 
   const void * construct_list_index(int index, const void* data, const void * context) {
 
-    construct_list & elements = *(construct_list *)data;
+    construct::construct_list & elements = *(construct::construct_list *)data;
     return &elements[index];
   }
 

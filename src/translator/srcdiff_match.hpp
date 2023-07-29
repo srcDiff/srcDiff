@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCDIFF_MATCH_HPP
 #define INCLUDED_SRCDIFF_MATCH_HPP
 
-#include <construct_list.hpp>
+#include <construct.hpp>
 #include <srcdiff_measure.hpp>
 
 struct offset_pair {
@@ -32,17 +32,17 @@ struct offset_pair {
 class srcdiff_match {
 
 public:
-  typedef std::function<bool (const construct_list & sets_original, int start_pos_original,
-                              const construct_list & sets_modified, int start_pos_modified,
+  typedef std::function<bool (const construct::construct_list & sets_original, int start_pos_original,
+                              const construct::construct_list & sets_modified, int start_pos_modified,
                               const srcdiff_measure & measure)> is_match_func;
-  static bool is_match_default(const construct_list & sets_original, int start_pos_original,
-                               const construct_list & sets_modified, int start_pos_modified,
+  static bool is_match_default(const construct::construct_list & sets_original, int start_pos_original,
+                               const construct::construct_list & sets_modified, int start_pos_modified,
                                const srcdiff_measure & measure);
 
 protected:
 
-  const construct_list & construct_list_original;
-  const construct_list & construct_list_modified;
+  const construct::construct_list & construct_list_original;
+  const construct::construct_list & construct_list_modified;
 
   const is_match_func & is_match;
 
@@ -50,7 +50,7 @@ private:
 
 public:
 
-  srcdiff_match(const construct_list & construct_list_original, const construct_list & construct_list_modified,
+  srcdiff_match(const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified,
                 const is_match_func & is_match = is_match_default);
   offset_pair * match_differences();
 

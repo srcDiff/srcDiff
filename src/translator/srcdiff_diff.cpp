@@ -15,7 +15,7 @@
 #include <cstring>
 #include <methods.hpp>
 
-srcdiff_diff::srcdiff_diff(srcdiff_output & out, const construct_list & construct_list_original, const construct_list & construct_list_modified) 
+srcdiff_diff::srcdiff_diff(srcdiff_output & out, const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified) 
   : out(out), construct_list_original(construct_list_original), construct_list_modified(construct_list_modified) {}
 
 /*

@@ -7,8 +7,8 @@
 
 #include <iostream>
 
-srcdiff_edit_correction::srcdiff_edit_correction(const construct_list & sets_original,
-                                                 const construct_list & sets_modified,
+srcdiff_edit_correction::srcdiff_edit_correction(const construct::construct_list & sets_original,
+                                                 const construct::construct_list & sets_modified,
                                                  shortest_edit_script_t & ses) 
     : sets_original(sets_original),
       sets_modified(sets_modified),
@@ -464,7 +464,7 @@ void srcdiff_edit_correction::correct() {
         std::size_t common_pos = delete_edit->offset_sequence_one + original_offset;
 
         const construct & common_set = sets_original.at(common_pos);
-        construct common_set_text(sets_original.nodes());
+        construct common_set_text(common_set.nodes());
         srcdiff_text_measure::collect_text_element(common_set, common_set_text);
 
         std::vector<std::size_t> original_similarities(delete_edit->length);

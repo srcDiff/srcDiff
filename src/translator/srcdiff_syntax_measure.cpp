@@ -58,8 +58,8 @@ void srcdiff_syntax_measure::compute() {
   }
 
   // collect subset of nodes
-  construct_list next_construct_list_original = set_original.size() > 1 ? construct_list(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position(), is_significant) : construct_list(set_original.nodes());
-  construct_list next_construct_list_modified = set_modified.size() > 1 ? construct_list(set_modified.nodes(), set_modified.get_terms().at(1), set_modified.end_position(), is_significant) : construct_list(set_modified.nodes());
+  construct::construct_list next_construct_list_original = set_original.size() > 1 ? construct::get_descendent_constructs(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position(), is_significant) : construct::construct_list();
+  construct::construct_list next_construct_list_modified = set_modified.size() > 1 ? construct::get_descendent_constructs(set_modified.nodes(), set_modified.get_terms().at(1), set_modified.end_position(), is_significant) : construct::construct_list();
   original_len = next_construct_list_original.size();
   modified_len = next_construct_list_modified.size();
 
