@@ -1573,15 +1573,15 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
 
   }
 
-  construct_list child_construct_list_original = construct_list(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position());
-  construct_list child_construct_list_modified = construct_list(set_modified.nodes(), set_modified.get_terms().at(1), set_modified.end_position());    
+  construct_list child_construct_list_original(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position());
+  construct_list child_construct_list_modified(set_modified.nodes(), set_modified.get_terms().at(1), set_modified.end_position());    
 
   // check block of first child of if_stmt (old if behavior)
   if(original_tag == "if_stmt" && !child_construct_list_original.empty()) {
 
     std::string tag = child_construct_list_original.at(0).term(0)->name;
     if(tag == "else" || tag == "if") {
-      construct_list temp = construct_list(set_original.nodes(), child_construct_list_original.at(0).get_terms().at(1), child_construct_list_original.back().end_position());
+      construct_list temp(set_original.nodes(), child_construct_list_original.at(0).get_terms().at(1), child_construct_list_original.back().end_position());
       child_construct_list_original = temp;
     }
 
@@ -1592,7 +1592,7 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
 
     std::string tag =  child_construct_list_modified.at(0).term(0)->name;
     if(tag == "else" || tag == "if") {
-      construct_list temp = construct_list(set_modified.nodes(), child_construct_list_modified.at(0).get_terms().at(1), child_construct_list_modified.back().end_position());
+      construct_list temp(set_modified.nodes(), child_construct_list_modified.at(0).get_terms().at(1), child_construct_list_modified.back().end_position());
       child_construct_list_modified = temp;
     }
 
@@ -1614,7 +1614,7 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
     }
 
     // block children actually in block_content
-    construct_list modified_temp = construct_list(set_modified.nodes(), child_construct_list_modified.back().get_terms().at(1), child_construct_list_modified.back().end_position());
+    construct_list modified_temp(set_modified.nodes(), child_construct_list_modified.back().get_terms().at(1), child_construct_list_modified.back().end_position());
     for(const construct & set : modified_temp) {
       if(set.term(0)->name == "block_content") {
         modified_set = set;
