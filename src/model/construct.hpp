@@ -15,6 +15,7 @@ class construct {
 
 public:
 
+    typedef std::vector<construct> construct_list;
     typedef std::function<bool (int & node_pos, const srcml_nodes & node_list, const void * context)> construct_filter;
 
     /// @todo remove, as should be part of node
@@ -107,7 +108,8 @@ public:
 
     }
 
-    void expand_children(construct_filter filter = is_non_white_space, const void * context = nullptr) {
+    construct_list get_descendent_constructs(construct_filter filter = is_non_white_space, const void * context = nullptr) {
+        construct_list descendent_constructs;
 
         // runs on a subset of base array
         for(int pos = start_position() + 1; pos < end_position(); ++pos) {
@@ -117,18 +119,19 @@ public:
 
                 // text is separate node if not surrounded by a tag in range
                 if((xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_TEXT || (xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_ELEMENT) {
-
-                    child_constructs.emplace_back(node_list, pos);
-
+                    descendent_constructs.emplace_back(node_list, pos);
                 } else {
-
-                    return;
-
+                    return descendent_constructs;
                 }
 
             }
 
         }
+        return descendent_constructs;
+    }
+
+    void expand_children() {
+        child_constructs = get_descendent_constructs(is_non_white_space, nullptr);
     }
 
     /// term access api ///
@@ -203,7 +206,7 @@ protected:
     std::vector<int> terms;
     boost::optional<std::size_t> hash_value;
 
-    std::vector<construct> child_constructs;
+    construct_list child_constructs;
 
 };
 
