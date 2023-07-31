@@ -53,7 +53,7 @@ void srcdiff_comment::output() {
     }
 
     // output area in common
-    output_common(diff_end_original, diff_end_modified);
+    srcdiff_common::output_common(out, diff_end_original, diff_end_modified);
 
     // detect and change
     edit_t * edit_next = edits->next;
@@ -119,7 +119,7 @@ void srcdiff_comment::output() {
   }
 
   // output area in common
-  output_common(diff_end_original, diff_end_modified);
+  srcdiff_common::output_common(out, diff_end_original, diff_end_modified);
 
 }
 

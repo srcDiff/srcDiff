@@ -77,7 +77,7 @@ void srcdiff_diff::output() {
     }
 
     // output area in common
-    output_common(diff_end_original, diff_end_modified);
+    srcdiff_common::output_common(out, diff_end_original, diff_end_modified);
 
     // detect and change
     edit_t * edit_next = edits->next;
@@ -102,13 +102,15 @@ void srcdiff_diff::output() {
 
           if((xmlReaderTypes)construct_list_original.at(edits->offset_sequence_one).term(0)->type != XML_READER_TYPE_TEXT) {
 
-            srcdiff_single diff(*this, edits->offset_sequence_one, edits->offset_sequence_two);
+            srcdiff_single diff(out,
+                                construct_list_original.at(edits->offset_sequence_one),
+                                construct_list_modified.at(edits->offset_sequence_two));
             diff.output();
 
           } else {
 
             // common text nodes
-            output_common(construct_list_original.at(edits->offset_sequence_one).end_position() + 1,
+            srcdiff_common::output_common(out, construct_list_original.at(edits->offset_sequence_one).end_position() + 1,
                           construct_list_modified.at(edits->offset_sequence_two).end_position() + 1);
 
           }
@@ -156,14 +158,7 @@ void srcdiff_diff::output() {
   }
 
   // output area in common
-  output_common(diff_end_original, diff_end_modified);
-
-}
-
-void srcdiff_diff::output_common(int end_original, int end_modified) {
-
-  srcdiff_common common(out, end_original, end_modified);
-  common.output();
+  srcdiff_common::output_common(out, diff_end_original, diff_end_modified);
 
 }
 
@@ -175,19 +170,6 @@ void srcdiff_diff::output_pure(int end_original, int end_modified) {
 
 }
 
-void srcdiff_diff::output_change(int end_original, int end_modified) {
-
-  srcdiff_change change(out, end_original, end_modified);
-  change.output();
-
-}
-
-void srcdiff_diff::output_whitespace() {
-
-  srcdiff_whitespace whitespace(out);
-  whitespace.output_all();
-
-}
 
 void srcdiff_diff::output_change_whitespace(int end_original, int end_modified) {
 
@@ -217,7 +199,7 @@ void srcdiff_diff::output_replace_inner_whitespace(int start_original, int end_o
   change.output_whitespace_prefix();
   change.output();
 
-  output_common(end_original, end_modified);
+  srcdiff_common::output_common(out, end_original, end_modified);
   out.output_node(out.diff_common_end, SES_COMMON);
 
 }

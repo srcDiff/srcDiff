@@ -963,10 +963,10 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
   }
 
   if(operation == SES_DELETE) {
-    output_change(start_pos, out.last_output_modified());
+    srcdiff_change::output_change(out, start_pos, out.last_output_modified());
   }
   else {
-    output_change(out.last_output_original(), start_pos);
+    srcdiff_change::output_change(out, out.last_output_original(), start_pos);
   }
 
   if(structure_outer == "block_content") {
@@ -994,10 +994,10 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
   }
 
   if(operation == SES_DELETE) {
-    output_change(construct_list_outer.at(end_outer - 1).end_position() + 1, out.last_output_modified());
+    srcdiff_change::output_change(out, construct_list_outer.at(end_outer - 1).end_position() + 1, out.last_output_modified());
   }
   else {
-    output_change(out.last_output_original(), construct_list_outer.at(end_outer - 1).end_position() + 1);
+    srcdiff_change::output_change(out, out.last_output_original(), construct_list_outer.at(end_outer - 1).end_position() + 1);
   }
 
 }

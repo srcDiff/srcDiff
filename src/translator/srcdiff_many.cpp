@@ -49,7 +49,7 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
 
         }
 
-        output_change(pre_nest_end_original, pre_nest_end_modified);
+        srcdiff_change::output_change(out, pre_nest_end_original, pre_nest_end_modified);
 
         if((end_nest_original - start_nest_original) > 0 && (end_nest_modified - start_nest_modified) > 0) {
 
@@ -66,7 +66,7 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
       /** @todo may only need to do this if not at end */
       if(end_nest_original > end_original && end_nest_modified > end_modified) {
 
-        output_change(finish_original, finish_modified);
+        srcdiff_change::output_change(out, finish_original, finish_modified);
         return;
 
       }
@@ -245,7 +245,9 @@ void srcdiff_many::output() {
  
       if((xmlReaderTypes)construct_list_original.at(edits->offset_sequence_one + i).term(0)->type != XML_READER_TYPE_TEXT) {
 
-        srcdiff_single diff(*this, edits->offset_sequence_one + i, edit_next->offset_sequence_two + j);
+        srcdiff_single diff(out,
+                            construct_list_original.at(edits->offset_sequence_one + i), 
+                            construct_list_modified.at(edit_next->offset_sequence_two + j));
         diff.output();
 
       } else {
