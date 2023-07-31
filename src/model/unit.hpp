@@ -33,9 +33,6 @@ public:
         terms.push_back(node_list.size());
     }
 
-
-protected:
-
 };
 
 
