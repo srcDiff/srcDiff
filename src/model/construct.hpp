@@ -9,6 +9,8 @@
 #include <iostream>
 #include <memory>
 
+#include <construct_hash.hpp>
+
 class construct {
 
 public:
@@ -177,6 +179,7 @@ public:
     }
 
     boost::optional<std::size_t> hash() const {
+        if(!hash_value) hash_value = std::hash<construct>()(*this);
         return hash_value;
     }
 
@@ -205,12 +208,11 @@ protected:
     const srcml_nodes & node_list;
 
     std::vector<int> terms;
-    boost::optional<std::size_t> hash_value;
+    mutable boost::optional<std::size_t> hash_value;
 
     construct_list child_constructs;
 
 };
 
-#include <construct_hash.hpp>
 
 #endif
