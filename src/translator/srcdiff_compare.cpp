@@ -62,14 +62,6 @@ namespace srcdiff_compare {
     construct * element_1 = (construct *)e1;
     construct * element_2 = (construct *)e2;
 
-    if(!element_1->hash()) {
-      element_1->hash(std::hash<construct>()(*element_1));
-    }
-
-    if(!element_2->hash()) {
-      element_2->hash(std::hash<construct>()(*element_2));
-    }
-
     if(!(element_1->hash() == element_2->hash()))
       return 1;
 
