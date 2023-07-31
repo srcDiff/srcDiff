@@ -183,10 +183,6 @@ public:
         return hash_value;
     }
 
-    void hash(std::size_t hash_value) {
-        this->hash_value = hash_value;
-    }
-
     const std::shared_ptr<srcml_node> & get_node(std::size_t pos) const {
         return term(pos);
     }
