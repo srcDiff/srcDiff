@@ -55,7 +55,7 @@ private:
 
   const OPTION_TYPE & flags;
 
-  srcdiff_output output;
+  std::shared_ptr<srcdiff_output> output;
 
   const boost::optional<std::string> & unit_filename;
 
@@ -92,16 +92,16 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
                                    const boost::optional<std::string> & unit_filename,
                                    const boost::optional<std::string> & unit_version) {
 
-  const boost::optional<std::string> output_path = is_option(flags, OPTION_BURST) && is_option(flags, OPTION_SRCML) ? output.srcdiff_filename() : boost::optional<std::string>();
+  const boost::optional<std::string> output_path = is_option(flags, OPTION_BURST) && is_option(flags, OPTION_SRCML) ? output->srcdiff_filename() : boost::optional<std::string>();
 
   const srcml_converter::srcml_burst_config burst_config = { output_path, language, (this->unit_filename ? this->unit_filename : unit_filename), unit_version };
   int is_original = 0;
-  std::thread thread_original(std::ref(input_original), SES_DELETE, std::ref(output.nodes_original()), std::ref(is_original), burst_config);
+  std::thread thread_original(std::ref(input_original), SES_DELETE, std::ref(output->nodes_original()), std::ref(is_original), burst_config);
 
   thread_original.join();
 
   int is_modified = 0;
-  std::thread thread_modified(std::ref(input_modified), SES_INSERT, std::ref(output.nodes_modified()), std::ref(is_modified), burst_config);
+  std::thread thread_modified(std::ref(input_modified), SES_INSERT, std::ref(output->nodes_modified()), std::ref(is_modified), burst_config);
 
   thread_modified.join();
 
@@ -110,25 +110,24 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
     boost::timer::auto_cpu_timer t;
 #endif
 
-  output.initialize(is_original, is_modified);
+  output->initialize(is_original, is_modified);
 
   // run on file level
   if(is_original || is_modified) {
 
-    output.start_unit(language, this->unit_filename ? this->unit_filename : unit_filename, unit_version);
+    output->start_unit(language, this->unit_filename ? this->unit_filename : unit_filename, unit_version);
 
-
-    unit original_unit(output.nodes_original());
-    unit modified_unit(output.nodes_modified());
+    unit original_unit(output->nodes_original(), output);
+    unit modified_unit(output->nodes_modified(), output);
 
     srcdiff_diff diff(output, original_unit.children(), modified_unit.children());
     diff.output();
 
     // output remaining whitespace
-    srcdiff_whitespace whitespace(output);
+    srcdiff_whitespace whitespace(*output);
     whitespace.output_all();
 
-    output.finish(line_diff_range);
+    output->finish(line_diff_range);
 
   }
 
@@ -136,7 +135,7 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
 }
 #endif
 
-  output.reset();
+  output->reset();
 
 }
 

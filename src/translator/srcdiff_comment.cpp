@@ -4,7 +4,7 @@
 #include <srcdiff_compare.hpp>
 #include <shortest_edit_script.hpp>
 
-srcdiff_comment::srcdiff_comment(srcdiff_output & out, const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified) 
+srcdiff_comment::srcdiff_comment(std::shared_ptr<srcdiff_output> out, const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified) 
   : srcdiff_diff(out, construct_list_original, construct_list_modified) {}
 
 /*
@@ -31,15 +31,15 @@ void srcdiff_comment::output() {
 
   int last_diff_original = 0;
   int last_diff_modified = 0;
-  int diff_end_original = out.last_output_original();
-  int diff_end_modified = out.last_output_modified();
+  int diff_end_original = out->last_output_original();
+  int diff_end_modified = out->last_output_modified();
 
   edit_t * edits = edit_script;
   for (; edits; edits = edits->next) {
 
     // determine ending position to output
-    diff_end_original = out.last_output_original();
-    diff_end_modified = out.last_output_modified();
+    diff_end_original = out->last_output_original();
+    diff_end_modified = out->last_output_modified();
     if(edits->operation == SES_DELETE && last_diff_original < edits->offset_sequence_one) {
 
       diff_end_original = construct_list_original.at(edits->offset_sequence_one - 1).end_position() + 1;
@@ -109,8 +109,8 @@ void srcdiff_comment::output() {
   }
 
   // determine ending position to output
-  diff_end_original = out.last_output_original();
-  diff_end_modified = out.last_output_modified();
+  diff_end_original = out->last_output_original();
+  diff_end_modified = out->last_output_modified();
   if(last_diff_original < (signed)construct_list_original.size()) {
 
     diff_end_original = construct_list_original.back().end_position() + 1;

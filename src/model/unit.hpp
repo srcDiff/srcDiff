@@ -28,7 +28,7 @@ class unit : public construct {
 
 public:
 
-    unit(const srcml_nodes & node_list) : construct(node_list) {
+    unit(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out) : construct(node_list, out) {
         terms.push_back(-1);
         terms.push_back(node_list.size());
     }

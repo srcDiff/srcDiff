@@ -15,8 +15,8 @@ srcdiff_many::srcdiff_many(const srcdiff_diff & diff, edit_t * edit_script) : sr
 
 void srcdiff_many::output_unmatched(int start_original, int end_original, int start_modified, int end_modified) {
 
-  unsigned int finish_original = out.last_output_original();
-  unsigned int finish_modified = out.last_output_modified();
+  unsigned int finish_original = out->last_output_original();
+  unsigned int finish_modified = out->last_output_modified();
 
   if((start_original <= end_original && start_original >= 0 && end_original < (signed)construct_list_original.size())
       || (start_modified <= end_modified && start_modified >= 0 && end_modified < (signed)construct_list_modified.size())) {

@@ -102,7 +102,7 @@ protected:
 
   bool output_srcdiff;
   srcml_archive * archive;
-  const OPTION_TYPE & flags;
+  OPTION_TYPE flags;
 
   std::shared_ptr<reader_state> rbuf_original;
   std::shared_ptr<reader_state> rbuf_modified;
@@ -145,6 +145,7 @@ private:
 
 public:
 
+  srcdiff_output() {}
   srcdiff_output(srcml_archive * archive,
                  const std::string & srcdiff_filename,
                  const OPTION_TYPE & flags,

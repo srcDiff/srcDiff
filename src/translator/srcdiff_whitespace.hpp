@@ -13,8 +13,8 @@ private:
 
 public:
 
-  static void output_whitespace(const srcdiff_output & out) {
-    srcdiff_whitespace whitespace(out);
+  static void output_whitespace(std::shared_ptr<srcdiff_output> out) {
+    srcdiff_whitespace whitespace(*out);
     whitespace.output_all();
   }
 

@@ -17,8 +17,8 @@ private:
 
 public:
 
-	static void output_common(const srcdiff_output & out, int end_original, int end_modified) {
- 		srcdiff_common common(out, end_original, end_modified);
+	static void output_common(std::shared_ptr<srcdiff_output> out, int end_original, int end_modified) {
+ 		srcdiff_common common(*out, end_original, end_modified);
 		common.output();
 	}
 

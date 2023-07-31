@@ -15,7 +15,7 @@
 #include <cstring>
 #include <methods.hpp>
 
-srcdiff_diff::srcdiff_diff(srcdiff_output & out, const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified) 
+srcdiff_diff::srcdiff_diff(std::shared_ptr<srcdiff_output> out, const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified) 
   : out(out), construct_list_original(construct_list_original), construct_list_modified(construct_list_modified) {}
 
 /*
@@ -36,7 +36,7 @@ void srcdiff_diff::output() {
   /** O(CND) */
   int distance = ses.compute(&construct_list_original, construct_list_original.size(),
                              &construct_list_modified, construct_list_modified.size());
-  if(ses.is_approximate()) out.approximate(true);
+  if(ses.is_approximate()) out->approximate(true);
 
   srcdiff_edit_correction corrector(construct_list_original, construct_list_modified, ses);
   corrector.correct();
@@ -54,15 +54,15 @@ void srcdiff_diff::output() {
 
   int last_diff_original = 0;
   int last_diff_modified = 0;
-  int diff_end_original = out.last_output_original();
-  int diff_end_modified = out.last_output_modified();
+  int diff_end_original = out->last_output_original();
+  int diff_end_modified = out->last_output_modified();
 
   edit_t * edits = edit_script;
   for (; edits; edits = edits->next) {
 
     // determine ending position to output
-    diff_end_original = out.last_output_original();
-    diff_end_modified = out.last_output_modified();
+    diff_end_original = out->last_output_original();
+    diff_end_modified = out->last_output_modified();
 
     if(edits->operation == SES_DELETE && last_diff_original < edits->offset_sequence_one) {
 
@@ -148,8 +148,8 @@ void srcdiff_diff::output() {
   }
 
   // determine ending position to output
-  diff_end_original = out.last_output_original();
-  diff_end_modified = out.last_output_modified();
+  diff_end_original = out->last_output_original();
+  diff_end_modified = out->last_output_modified();
   if(last_diff_original < (signed)construct_list_original.size()) {
 
     diff_end_original = construct_list_original.back().end_position() + 1;
@@ -164,7 +164,7 @@ void srcdiff_diff::output() {
 
 void srcdiff_diff::output_pure(int end_original, int end_modified) {
 
-  srcdiff_change pure(out, end_original, end_modified);
+  srcdiff_change pure(*out, end_original, end_modified);
   pure.output_whitespace_prefix();
   pure.output();
 
@@ -173,7 +173,7 @@ void srcdiff_diff::output_pure(int end_original, int end_modified) {
 
 void srcdiff_diff::output_change_whitespace(int end_original, int end_modified) {
 
-  srcdiff_change change(out, end_original, end_modified);
+  srcdiff_change change(*out, end_original, end_modified);
   change.output_whitespace_prefix();
   change.output();
 
@@ -184,15 +184,15 @@ void srcdiff_diff::output_replace_inner_whitespace(int start_original, int end_o
                                                    int common_offset) {
 
 
-  srcdiff_change change(out, end_original - 1, end_modified - 1);
+  srcdiff_change change(*out, end_original - 1, end_modified - 1);
   change.output_whitespace_all();
 
-  out.output_node(out.diff_common_start, SES_COMMON);
+  out->output_node(out->diff_common_start, SES_COMMON);
   for(int i = 0; i < common_offset; ++i) {
 
-    out.output_node(out.nodes_original().at(start_original + i), SES_COMMON);
-    ++out.last_output_original();
-    ++out.last_output_modified();
+    out->output_node(out->nodes_original().at(start_original + i), SES_COMMON);
+    ++out->last_output_original();
+    ++out->last_output_modified();
 
   }
 
@@ -200,6 +200,6 @@ void srcdiff_diff::output_replace_inner_whitespace(int start_original, int end_o
   change.output();
 
   srcdiff_common::output_common(out, end_original, end_modified);
-  out.output_node(out.diff_common_end, SES_COMMON);
+  out->output_node(out->diff_common_end, SES_COMMON);
 
 }

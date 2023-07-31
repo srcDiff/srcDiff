@@ -14,8 +14,8 @@ private:
 
 public:
 
-	static void output_change(const srcdiff_output & out, int end_original, int end_modified) {
- 	 srcdiff_change change(out, end_original, end_modified);
+	static void output_change(std::shared_ptr<srcdiff_output> out, int end_original, int end_modified) {
+ 	 srcdiff_change change(*out, end_original, end_modified);
 	 change.output();
 	}
 

@@ -21,6 +21,7 @@
 #ifndef INCLUDED_CONSTRUCT_HPP
 #define INCLUDED_CONSTRUCT_HPP
 
+#include <srcdiff_output.hpp>
 #include <srcdiff_compare.hpp>
 #include <srcml_nodes.hpp>
 
@@ -57,7 +58,7 @@ public:
 
     /// @todo make member.  Requires modifiying a lot of methods in other classes.
     // name does not quite match because not a member yet.
-    static construct_list get_descendent_constructs(const srcml_nodes & node_list, std::size_t start_pos, std::size_t end_pos, construct_filter filter = is_non_white_space, const void * context = nullptr) {
+    static construct_list get_descendent_constructs(const srcml_nodes & node_list, std::size_t start_pos, std::size_t end_pos, construct_filter filter = is_non_white_space, const void * context = nullptr, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>()) {
         construct_list descendent_constructs;
 
         // runs on a subset of base array
@@ -68,7 +69,7 @@ public:
 
                 // text is separate node if not surrounded by a tag in range
                 if((xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_TEXT || (xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_ELEMENT) {
-                    descendent_constructs.emplace_back(node_list, pos);
+                    descendent_constructs.emplace_back(node_list, pos, out);
                 } else {
                     return descendent_constructs;
                 }
@@ -79,10 +80,10 @@ public:
         return descendent_constructs;
     }
 
-    construct(const srcml_nodes & node_list) : node_list(node_list), terms(), hash_value() {}
+    construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>()) : out(out), node_list(node_list), terms(), hash_value() {}
 
     /** loop O(n) */
-    construct(const construct & that) : node_list(that.node_list), terms(), hash_value(that.hash_value) {
+    construct(const construct & that) : out(that.out), node_list(that.node_list), terms(), hash_value(that.hash_value) {
 
         for(std::size_t pos = 0; pos < that.size(); ++pos) {
             terms.push_back(that.terms[pos]);
@@ -91,7 +92,7 @@ public:
     }
 
     /** loop O(n) */
-    construct(const srcml_nodes & node_list, int & start) : node_list(node_list), hash_value() {
+    construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>()) : out(out), node_list(node_list), hash_value() {
 
       if((xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_ELEMENT) return;
 
@@ -154,7 +155,7 @@ public:
     }
 
     void expand_children() const {
-        child_constructs = get_descendent_constructs(node_list, start_position() + 1, end_position(), is_non_white_space, nullptr);
+        child_constructs = get_descendent_constructs(node_list, start_position() + 1, end_position(), is_non_white_space, nullptr, out);
     }
 
     const construct_list & children() const {
@@ -231,6 +232,7 @@ public:
 
 
 protected:
+    std::shared_ptr<srcdiff_output> out;
 
     const srcml_nodes & node_list;
 
