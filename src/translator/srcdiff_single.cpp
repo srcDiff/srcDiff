@@ -116,33 +116,25 @@ void srcdiff_single::output_recursive_same() {
   if(construct_list_original.at(start_original).get_root()->name == "comment") {
 
     // collect subset of nodes
-    construct::construct_list next_set_original
-      = construct::get_descendent_constructs(out.nodes_original(), construct_list_original.at(start_original).get_terms().at(1)
-                        , construct_list_original.at(start_original).end_position());
+    construct::construct_list children_original = construct_list_original.at(start_original).children();
 
-    construct::construct_list next_set_modified
-      = construct::get_descendent_constructs(out.nodes_modified(), construct_list_modified.at(start_modified).get_terms().at(1)
-                        , construct_list_modified.at(start_modified).end_position());
+    construct::construct_list children_modified = construct_list_modified.at(start_modified).children();
 
-    srcdiff_comment diff(out, next_set_original, next_set_modified);
+    srcdiff_comment diff(out, children_original, children_modified);
     diff.output();
 
   } else {
 
       // collect subset of nodes
-      construct::construct_list next_set_original;
+      construct::construct_list children_original;
       if(!construct_list_original.at(start_original).get_root()->is_empty)
-        next_set_original = construct::get_descendent_constructs(out.nodes_original(),
-                                      construct_list_original.at(start_original).get_terms().at(1),
-                                      construct_list_original.at(start_original).end_position());
+        children_original = construct_list_original.at(start_original).children();
 
-      construct::construct_list next_set_modified;
+      construct::construct_list children_modified;
       if(!construct_list_modified.at(start_modified).get_root()->is_empty)
-        next_set_modified = construct::get_descendent_constructs(out.nodes_modified(),
-                                      construct_list_modified.at(start_modified).get_terms().at(1),
-                                      construct_list_modified.at(start_modified).end_position());
+        children_modified =  construct_list_modified.at(start_modified).children();
 
-      srcdiff_diff diff(out, next_set_original, next_set_modified);
+      srcdiff_diff diff(out, children_original, children_modified);
       diff.output();
 
   }
