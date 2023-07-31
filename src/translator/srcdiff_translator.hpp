@@ -32,6 +32,8 @@
 #include <srcdiff_options.hpp>
 #include <methods.hpp>
 
+#include <unit.hpp>
+
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
@@ -108,9 +110,6 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
     boost::timer::auto_cpu_timer t;
 #endif
 
-  construct::construct_list set_original = construct::get_descendent_constructs(output.nodes_original(), 0, output.nodes_original().size());
-  construct::construct_list set_modified = construct::get_descendent_constructs(output.nodes_modified(), 0, output.nodes_modified().size());
-
   output.initialize(is_original, is_modified);
 
   // run on file level
@@ -118,7 +117,11 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
 
     output.start_unit(language, this->unit_filename ? this->unit_filename : unit_filename, unit_version);
 
-    srcdiff_diff diff(output, set_original, set_modified);
+
+    unit original_unit(output.nodes_original());
+    unit modified_unit(output.nodes_modified());
+
+    srcdiff_diff diff(output, original_unit.children(), modified_unit.children());
     diff.output();
 
     // output remaining whitespace

@@ -1,5 +1,5 @@
 /**
- * @file element.hpp
+ * @file unit.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,26 +18,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_ELEMENT_HPP
-#define INCLUDED_ELEMENT_HPP
-#include <string>
+#ifndef INCLUDED_UNIT_HPP
+#define INCLUDED_UNIT_HPP
 
-class element {
+
+#include <construct.hpp>
+
+class unit : public construct {
+
 public:
-    virtual bool is_match(const element & other) {
-        return name == element.name;
+
+    unit(const srcml_nodes & node_list) : construct(node_list) {
+        terms.push_back(-1);
+        terms.push_back(node_list.size());
     }
 
-    virtual bool is_nestable() {
-        return false;
-    }
 
-    virtual bool is_exchangeable() {
-        return false;
-    }
-
-private:
-    std::string name;
+protected:
 
 };
 

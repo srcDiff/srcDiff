@@ -1,3 +1,23 @@
+/**
+ * @file construct.hpp
+ *
+ * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
+ *
+ * srcDiff is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * srcDiff is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML Toolkit; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
 #ifndef INCLUDED_CONSTRUCT_HPP
 #define INCLUDED_CONSTRUCT_HPP
 
@@ -133,9 +153,20 @@ public:
 
     }
 
-    void expand_children() {
+    void expand_children() const {
         child_constructs = get_descendent_constructs(node_list, start_position() + 1, end_position(), is_non_white_space, nullptr);
     }
+
+    const construct_list & children() const {
+        if(!child_constructs) expand_children();
+        return *child_constructs;
+    }
+
+    construct_list & children() {
+        if(!child_constructs) expand_children();
+        return *child_constructs;
+    }
+
 
     /// term access api ///
     std::size_t size() const {
@@ -206,7 +237,7 @@ protected:
     std::vector<int> terms;
     mutable boost::optional<std::size_t> hash_value;
 
-    construct_list child_constructs;
+    mutable boost::optional<construct_list> child_constructs;
 
 };
 
