@@ -15,8 +15,8 @@ int srcdiff_shortest_edit_script::compute_edit_script(const construct::construct
 }
 
 int srcdiff_shortest_edit_script::compute_edit_script(const std::string & original, const std::string & modified) {
-  compare = string_compare;
-  accessor = string_index;
+  compare = char_compare;
+  accessor = char_index;
 
   return compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
 }
@@ -60,6 +60,23 @@ int srcdiff_shortest_edit_script::construct_compare(const void * e1, const void 
   
   if(element_1 == element_2) return 0;
   return 1;
+}
+
+int srcdiff_shortest_edit_script::char_compare(const void * c1, const void * c2, const void * context) {
+
+  char ch1 = *(char *)c1;
+  char ch2 = *(char *)c2;
+
+  return ch1 != ch2;
+
+}
+
+const void * srcdiff_shortest_edit_script::char_index(int index, const void * s, const void * context) {
+
+  const std::string & str = *(const std::string *)s;
+
+  return &str[index];
+
 }
 
 int srcdiff_shortest_edit_script::string_compare(const void * s1, const void * s2, const void * context) {
