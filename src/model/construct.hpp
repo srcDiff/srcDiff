@@ -22,7 +22,6 @@
 #define INCLUDED_CONSTRUCT_HPP
 
 #include <srcdiff_output.hpp>
-#include <srcdiff_compare.hpp>
 #include <srcml_nodes.hpp>
 
 #include <boost/optional.hpp>
