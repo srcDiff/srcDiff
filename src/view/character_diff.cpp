@@ -2,16 +2,12 @@
 
 #include <view.hpp>
 
-#include <srcdiff_compare.hpp>
-
 character_diff::character_diff(const versioned_string & str)
-    : ses(srcdiff_compare::string_compare,srcdiff_compare:: string_index, nullptr),
+    : ses(),
       str(str) {}
 
 void character_diff::compute() {
-
-    ses.compute(&str.original(), str.original().size(), &str.modified(), str.modified().size());
-
+    ses.compute_edit_script(str.original(), str.modified());
 }
 
 void character_diff::output(view_t & view, const std::string & type) {

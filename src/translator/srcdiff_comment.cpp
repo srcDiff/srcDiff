@@ -1,8 +1,7 @@
 #include <srcdiff_comment.hpp>
 
 #include <srcdiff_common.hpp>
-#include <srcdiff_compare.hpp>
-#include <shortest_edit_script.hpp>
+#include <srcdiff_shortest_edit_script.hpp>
 
 srcdiff_comment::srcdiff_comment(std::shared_ptr<srcdiff_output> out, const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified) 
   : srcdiff_diff(out, construct_list_original, construct_list_modified) {}
@@ -17,9 +16,9 @@ srcdiff_comment::srcdiff_comment(std::shared_ptr<srcdiff_output> out, const cons
 */
 void srcdiff_comment::output() {
 
-  shortest_edit_script_t ses(srcdiff_compare::construct_compare, srcdiff_compare::construct_list_index, nullptr);
+  srcdiff_shortest_edit_script ses;
 
-  int distance = ses.compute((const void *)&construct_list_original, construct_list_original.size(), (const void *)&construct_list_modified, construct_list_modified.size());
+  int distance = ses.compute_edit_script(construct_list_original, construct_list_modified);
 
   edit_t * edit_script = ses.script();
 

@@ -1,7 +1,6 @@
 #include <srcdiff_edit_correction.hpp>
 
 #include <srcdiff_match.hpp>
-#include <srcdiff_compare.hpp>
 #include <list>
 #include <algorithm>
 
@@ -9,7 +8,7 @@
 
 srcdiff_edit_correction::srcdiff_edit_correction(const construct::construct_list & sets_original,
                                                  const construct::construct_list & sets_modified,
-                                                 shortest_edit_script_t & ses) 
+                                                 srcdiff_shortest_edit_script & ses) 
     : sets_original(sets_original),
       sets_modified(sets_modified),
       ses(ses) {}

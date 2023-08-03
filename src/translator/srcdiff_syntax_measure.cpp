@@ -1,6 +1,6 @@
 #include <srcdiff_syntax_measure.hpp>
 
-#include <srcdiff_compare.hpp>
+#include <srcdiff_shortest_edit_script.hpp>
 #include <srcdiff_constants.hpp>
 #include <srcdiff_match.hpp>
 #include <srcdiff_diff.hpp>
@@ -63,9 +63,8 @@ void srcdiff_syntax_measure::compute() {
   original_len = next_construct_list_original.size();
   modified_len = next_construct_list_modified.size();
 
-  shortest_edit_script_t ses(srcdiff_compare::construct_compare, srcdiff_compare::construct_list_index, nullptr);
-  ses.compute(&next_construct_list_original, next_construct_list_original.size(),
-              &next_construct_list_modified, next_construct_list_modified.size());
+  srcdiff_shortest_edit_script ses;
+  ses.compute_edit_script(next_construct_list_original, next_construct_list_modified);
   process_edit_script(ses.script());
 
 }

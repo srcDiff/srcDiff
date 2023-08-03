@@ -7,9 +7,8 @@
 #include <srcdiff_common.hpp>
 #include <srcdiff_move.hpp>
 #include <srcdiff_measure.hpp>
-#include <srcdiff_compare.hpp>
+#include <srcdiff_shortest_edit_script.hpp>
 #include <srcdiff_match.hpp>
-#include <shortest_edit_script.hpp>
 #include <srcdiff_edit_correction.hpp>
 
 #include <cstring>
@@ -31,11 +30,10 @@ srcdiff_diff::srcdiff_diff(std::shared_ptr<srcdiff_output> out, const construct:
 */
 void srcdiff_diff::output() {
 
-  shortest_edit_script_t ses(srcdiff_compare::construct_compare, srcdiff_compare::construct_list_index, nullptr);
+  srcdiff_shortest_edit_script ses;
 
   /** O(CND) */
-  int distance = ses.compute(&construct_list_original, construct_list_original.size(),
-                             &construct_list_modified, construct_list_modified.size());
+  int distance = ses.compute_edit_script(construct_list_original, construct_list_modified);
   if(ses.is_approximate()) out->approximate(true);
 
   srcdiff_edit_correction corrector(construct_list_original, construct_list_modified, ses);

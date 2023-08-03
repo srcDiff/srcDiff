@@ -11,7 +11,7 @@
 
 class shortest_edit_script_t {
   
-private:
+protected:
 
   const static size_t SIZE_THRESHOLD;
 
@@ -29,18 +29,18 @@ public:
                      const void * (*accessor)(int index, const void * structure, const void * context),
                                         const void * context, int threshold = 1000);
 
-  ~shortest_edit_script_t();
+  virtual ~shortest_edit_script_t();
 
   static size_t get_size_threshold();
 
-  edit_t * script() const;
-  void script(edit_t * edit_script);
+  virtual edit_t * script() const;
+  virtual void script(edit_t * edit_script);
   bool is_approximate() const;
 
   template<typename T>
   int approximate_compute(const T & structure_one, const T & structure_two);
 
-  int compute(const void * structure_one, int size_one, const void * structure_two, int size_two);
+  virtual int compute(const void * structure_one, int size_one, const void * structure_two, int size_two);
 
 };
 

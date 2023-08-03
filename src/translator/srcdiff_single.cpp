@@ -25,7 +25,6 @@
 #include <srcdiff_comment.hpp>
 #include <srcdiff_common.hpp>
 #include <srcdiff_whitespace.hpp>
-#include <srcdiff_compare.hpp>
 #include <shortest_edit_script.h>
 
 #include <cstring>

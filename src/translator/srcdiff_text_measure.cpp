@@ -1,7 +1,7 @@
 #include <srcdiff_text_measure.hpp>
 
 
-#include <srcdiff_compare.hpp>
+#include <srcdiff_shortest_edit_script.hpp>
 #include <srcdiff_constants.hpp>
 #include <srcdiff_match.hpp>
 #include <srcdiff_diff.hpp>
@@ -167,8 +167,8 @@ void srcdiff_text_measure::compute() {
 
   }
 
-    shortest_edit_script_t ses(srcdiff_compare::node_compare, srcdiff_compare::construct_node_index, nullptr);
-    ses.compute(&set_original_text, set_original_text.size(), &set_modified_text, set_modified_text.size());
+    srcdiff_shortest_edit_script ses;
+    ses.compute_edit_script(set_original_text, set_modified_text);
     process_edit_script(ses.script());
 
 }

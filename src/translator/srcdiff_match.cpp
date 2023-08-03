@@ -3,7 +3,7 @@
 #include <srcdiff_nested.hpp>
 #include <srcdiff_text_measure.hpp>
 #include <srcdiff_syntax_measure.hpp>
-#include <srcdiff_compare.hpp>
+#include <srcdiff_shortest_edit_script.hpp>
 #include <srcdiff_constants.hpp>
 #include <srcdiff_match_internal.hpp>
 
@@ -588,9 +588,9 @@ std::vector<std::string> get_call_name(const srcml_nodes & nodes, int start_pos)
 /** loop O(name_size*edits) */
 int name_list_similarity(std::vector<std::string> name_list_original, std::vector<std::string> name_list_modified) {
 
-  shortest_edit_script_t ses(srcdiff_compare::string_compare, srcdiff_compare::string_index, 0);
+  srcdiff_shortest_edit_script ses;
 
-  ses.compute(&name_list_original, name_list_original.size(), &name_list_modified, name_list_modified.size());
+  ses.compute_edit_script(name_list_original, name_list_modified);
 
   edit_t * edits = ses.script();
 
