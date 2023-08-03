@@ -116,7 +116,7 @@ void srcdiff_single::output_recursive_same() {
     out->output_node(out->diff_common_start, SES_COMMON);
   }
 
-  if(srcdiff_compare::node_compare(original_construct.root_term(), modified_construct.root_term()) == 0) {
+  if(*original_construct.root_term() == *modified_construct.root_term()) {
 
     out->output_node(original_construct.root_term(), modified_construct.root_term(), SES_COMMON);
 
@@ -200,7 +200,7 @@ void srcdiff_single::output_recursive_interchangeable() {
   bool is_keyword  = keyword_node_original->is_text() && !keyword_node_original->is_white_space();
   bool is_keywords = is_keyword
                      && keyword_node_modified->is_text() && !keyword_node_modified->is_white_space();
-  bool is_same_keyword = is_keywords && srcdiff_compare::node_compare(keyword_node_original, keyword_node_modified) == 0;
+  bool is_same_keyword = is_keywords && *keyword_node_original == *keyword_node_modified;
 
 
   if((is_keyword && !is_keywords) || (is_keywords && !is_same_keyword)) {

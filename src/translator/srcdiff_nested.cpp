@@ -160,10 +160,9 @@ bool is_nest_type(const construct & structure,
 bool srcdiff_nested::is_match(int & node_pos, const srcml_nodes & nodes, const void * context) {
 
   const std::shared_ptr<srcml_node> & node = nodes[node_pos];
-
   const std::shared_ptr<srcml_node> & context_node = *(const std::shared_ptr<srcml_node> *)context;
 
-  return (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && srcdiff_compare::node_compare(node, context_node) == 0;
+  return (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && *node == *context_node;
 
 }
 
@@ -257,7 +256,7 @@ bool srcdiff_nested::is_same_nestable(const construct & structure_one,
 bool srcdiff_nested::is_nestable(const construct & structure_one,
                                  const construct & structure_two) {
 
-  if(srcdiff_compare::node_compare(structure_one.root_term(), structure_two.root_term()) == 0)
+  if(*structure_one.root_term() == *structure_two.root_term())
     return is_same_nestable(structure_one, structure_two);
   else
     return is_nestable_internal(structure_one, structure_two);

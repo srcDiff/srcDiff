@@ -144,7 +144,7 @@ void srcdiff_text_measure::compute() {
 
   if((xmlReaderTypes)set_original.term(0)->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)set_modified.term(0)->type != XML_READER_TYPE_ELEMENT
-     || (srcdiff_compare::node_compare(set_original.term(0), set_modified.term(0)) != 0
+     || (*set_original.term(0) != *set_modified.term(0)
         && !srcdiff_match::is_interchangeable_match(set_original, set_modified)
         && (set_original.term(0)->name != "block" || set_modified.term(0)->name != "block"))) {
 
@@ -180,9 +180,7 @@ int srcdiff_text_measure::number_match_beginning() {
 
       int count = 0;
       while(count < set_original_text.size() & count < set_modified_text.size()
-        && srcdiff_compare::node_compare(
-          set_original_text.term(count), 
-          set_modified_text.term(count)) == 0) {
+        && *set_original_text.term(count) == *set_modified_text.term(count)) {
         ++count;
       }
 

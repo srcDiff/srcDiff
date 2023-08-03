@@ -1669,9 +1669,7 @@ bool srcdiff_match::reject_similarity_match_only(const construct & set_original,
   int original_pos = set_original.start_position();
   int modified_pos = set_modified.start_position();
 
-  if(srcdiff_compare::node_compare(set_original.term(0),
-                                  set_modified.term(0)) != 0)
-    return true;
+  if(*set_original.term(0) != *set_modified.term(0)) return true;
 
   srcdiff_text_measure complete_measure(set_original, set_modified, false);
   complete_measure.compute();
