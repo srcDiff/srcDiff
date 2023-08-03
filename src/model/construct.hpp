@@ -141,7 +141,37 @@ public:
     }
 
     bool operator==(const construct & that) const {
-        return srcdiff_compare::construct_compare((const void *)this, (const void *)&that, nullptr) == 0;
+
+        if(!(hash() == that.hash())) return false;
+
+        for(std::size_t i = 0, j = 0; i < size() && j < that.size();) {
+
+          // string consecutive non whitespace text nodes
+          if(term(i)->is_text() && that.term(j)->is_text()) {
+
+            std::string text1 = "";
+            for(; i < size() && term(i)->is_text(); ++i) {
+              text1 += term(i)->content ? *term(i)->content : "";
+            }
+
+            std::string text2 = "";
+            for(; j < that.size() && that.term(j)->is_text(); ++j) {
+              text2 += that.term(j)->content ? *that.term(j)->content : "";
+            }
+
+            if(text1 != text2) return false;
+
+          } else {
+
+            if(*term(i) != *that.term(j)) return false;
+
+            ++i;
+            ++j;
+
+          }
+        }
+
+        return true;
     }
 
     friend std::ostream & operator<<(std::ostream & out, const construct & that) {

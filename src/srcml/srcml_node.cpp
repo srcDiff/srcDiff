@@ -44,6 +44,10 @@
 
 srcml_node::srcml_ns::srcml_ns(const srcml_ns & ns) : href(ns.href), prefix(ns.prefix) {}
 
+bool srcml_node::srcml_ns::operator==(const srcml_ns & ns) const {
+  return href == ns.href && prefix == ns.prefix;
+}
+
 bool srcml_node::srcml_attr::operator==(const srcml_attr & attr) const {
 
   if(name != attr.name) return false;
@@ -172,8 +176,15 @@ bool srcml_node::operator==(const srcml_node & node) const {
 
   return type == node.type
     && name == node.name
+    && is_empty == node.is_empty
+    && ns == node.ns
+    && properties == node.properties
     && ((type != XML_READER_TYPE_TEXT && type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
       || (content == node.content && (!content || *content == *node.content)));
+}
+
+bool srcml_node::operator!=(const srcml_node & node) const {
+  return !operator==(node);
 }
 
 std::ostream & operator<<(std::ostream & out, const srcml_node & that) {

@@ -52,7 +52,7 @@ public:
       : href(href), prefix(prefix) {}
 
     srcml_ns(const srcml_ns & ns);
-
+    bool operator==(const srcml_ns & ns) const;
   };
 
   class srcml_attr {
@@ -103,6 +103,7 @@ public:
   ~srcml_node();
 
   bool operator==(const srcml_node & node) const;
+  bool operator!=(const srcml_node & node) const;
 
   friend std::ostream & operator<<(std::ostream & out, const srcml_node & that);
 
