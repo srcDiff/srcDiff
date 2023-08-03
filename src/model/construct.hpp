@@ -174,6 +174,11 @@ public:
         return true;
     }
 
+    bool operator!=(const construct & that) const {
+        return !operator==(that);
+    }
+
+
     friend std::ostream & operator<<(std::ostream & out, const construct & that) {
 
         for(std::size_t pos = 0, size = that.size(); pos < size; ++pos) {

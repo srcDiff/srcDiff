@@ -253,7 +253,7 @@ edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
             const std::string & original_uri = set_original.term(0)->ns.href;
             const std::string & modified_uri = set_modified.term(0)->ns.href;
 
-            if(srcdiff_compare::construct_compare(&set_original, &set_modified, nullptr) != 0) {
+            if(set_original != set_modified) {
                 continue;
             }
 
