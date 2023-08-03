@@ -38,14 +38,6 @@ public:
     typedef std::vector<construct> construct_list;
     typedef std::function<bool (int & node_pos, const srcml_nodes & node_list, const void * context)> construct_filter;
 
-    /// @todo remove, as should be part of node
-    static bool is_white_space(const std::shared_ptr<srcml_node> & node) {
-
-      // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
-      return (xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content && node->is_white_space();
-
-    }
-
     static bool is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context) {
 
         const std::shared_ptr<srcml_node> & node = node_list[node_pos];
@@ -106,7 +98,7 @@ public:
       for(; is_open; ++start) {
 
         // skip whitespace
-        if(is_white_space(node_list.at(start))) {
+        if(node_list.at(start)->is_white_space()) {
           continue;
         }
 
