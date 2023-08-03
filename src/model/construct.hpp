@@ -209,6 +209,7 @@ public:
     }
 
     const std::shared_ptr<srcml_node> & term(std::size_t pos) const {
+        assert(pos < terms.size());
         return node_list[terms[pos]];
     }
 
@@ -222,15 +223,18 @@ public:
     }
 
     const std::shared_ptr<srcml_node> & last_term() const {
+        assert(!node_list.empty());
         return node_list[terms.back()];
     } 
 
     /// position info of element
     std::size_t start_position() const {
+        assert(!terms.empty());
         return terms.front();
     }
 
     std::size_t end_position() const {
+        assert(!terms.empty());
         return terms.back();
     }
 
@@ -245,19 +249,15 @@ public:
         return hash_value;
     }
 
-    const std::shared_ptr<srcml_node> & get_node(std::size_t pos) const {
-        return term(pos);
+    const std::shared_ptr<srcml_node> & root_term() const {
+        return term(0);
     }
 
-    const std::shared_ptr<srcml_node> & get_root() const {
-        return get_node(0);
+    const std::string & term_name(std::size_t pos) const {
+        return term(pos)->name;
     }
-
-    const std::string & get_node_name(std::size_t pos) const {
-        return get_node(pos)->name;
-    }
-    const std::string & get_root_name() const {
-        return get_node_name(0);
+    const std::string & root_term_name() const {
+        return term_name(0);
     }
 
 

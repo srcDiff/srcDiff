@@ -112,20 +112,20 @@ void srcdiff_single::output_recursive_same() {
   srcdiff_whitespace whitespace(*out);
   whitespace.output_all();
 
-  if(original_construct.get_root()->is_temporary == modified_construct.get_root()->is_temporary) {
+  if(original_construct.root_term()->is_temporary == modified_construct.root_term()->is_temporary) {
     out->output_node(out->diff_common_start, SES_COMMON);
   }
 
-  if(srcdiff_compare::node_compare(original_construct.get_root(), modified_construct.get_root()) == 0) {
+  if(srcdiff_compare::node_compare(original_construct.root_term(), modified_construct.root_term()) == 0) {
 
-    out->output_node(original_construct.get_root(), modified_construct.get_root(), SES_COMMON);
+    out->output_node(original_construct.root_term(), modified_construct.root_term(), SES_COMMON);
 
   } else {
 
-    std::shared_ptr<srcml_node> merged_node = std::make_shared<srcml_node>(*original_construct.get_root());
-    merged_node->is_empty = original_construct.get_root()->is_empty && modified_construct.get_root()->is_empty;
-    merged_node->properties = merge_properties(original_construct.get_root()->properties,
-                                              modified_construct.get_root()->properties);
+    std::shared_ptr<srcml_node> merged_node = std::make_shared<srcml_node>(*original_construct.root_term());
+    merged_node->is_empty = original_construct.root_term()->is_empty && modified_construct.root_term()->is_empty;
+    merged_node->properties = merge_properties(original_construct.root_term()->properties,
+                                              modified_construct.root_term()->properties);
     out->output_node(merged_node, SES_COMMON);
 
   }
@@ -134,7 +134,7 @@ void srcdiff_single::output_recursive_same() {
   ++out->last_output_modified();
 
   // diff comments differently then source-code
-  if(original_construct.get_root()->name == "comment") {
+  if(original_construct.root_term()->name == "comment") {
 
     // collect subset of nodes
     construct::construct_list children_original = original_construct.children();
@@ -148,11 +148,11 @@ void srcdiff_single::output_recursive_same() {
 
       // collect subset of nodes
       construct::construct_list children_original;
-      if(!original_construct.get_root()->is_empty)
+      if(!original_construct.root_term()->is_empty)
         children_original = original_construct.children();
 
       construct::construct_list children_modified;
-      if(!modified_construct.get_root()->is_empty)
+      if(!modified_construct.root_term()->is_empty)
         children_modified =  modified_construct.children();
 
       srcdiff_diff diff(out, children_original, children_modified);
@@ -162,7 +162,7 @@ void srcdiff_single::output_recursive_same() {
 
   srcdiff_common::output_common(out, original_construct.end_position() + 1, modified_construct.end_position() + 1);
 
-  if(original_construct.get_root()->is_temporary == modified_construct.get_root()->is_temporary) {
+  if(original_construct.root_term()->is_temporary == modified_construct.root_term()->is_temporary) {
     out->output_node(out->diff_common_end, SES_COMMON);
   }
 
@@ -173,8 +173,8 @@ void srcdiff_single::output_recursive_interchangeable() {
   srcdiff_whitespace whitespace(*out);
   whitespace.output_all();
 
-  const std::shared_ptr<srcml_node> & original_start_node = original_construct.get_root();
-  const std::shared_ptr<srcml_node> & modified_start_node = modified_construct.get_root();
+  const std::shared_ptr<srcml_node> & original_start_node = original_construct.root_term();
+  const std::shared_ptr<srcml_node> & modified_start_node = modified_construct.root_term();
 
   int original_collect_start_pos = 1;
   if(original_start_node->name == "if_stmt") {
@@ -263,8 +263,8 @@ void srcdiff_single::output_recursive_interchangeable() {
 
 void srcdiff_single::output() {
 
-  const std::shared_ptr<srcml_node> & start_node_original = original_construct.term(0);
-  const std::shared_ptr<srcml_node> & start_node_modified = modified_construct.term(0);
+  const std::shared_ptr<srcml_node> & start_node_original = original_construct.root_term();
+  const std::shared_ptr<srcml_node> & start_node_modified = modified_construct.root_term();
 
   if(start_node_original->name == start_node_modified->name
     && start_node_original->ns.href == start_node_modified->ns.href) {

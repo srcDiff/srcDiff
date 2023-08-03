@@ -709,7 +709,7 @@ std::string get_for_condition(const srcml_nodes & nodes, int start_pos) {
 
   construct::construct::construct_list::const_iterator citr;
   for(citr = control_sets.begin(); citr != control_sets.end(); ++citr) {
-    if(citr->term(0)->name == "condition") {
+    if(citr->root_term_name() == "condition") {
       break;
     }
   }
@@ -866,7 +866,7 @@ bool conditional_has_block(const construct & set) {
 
   for(construct::construct::construct_list::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
-    if(itr->term(0)->name == "block" && !bool(find_attribute(itr->term(0), "type"))) {
+    if(itr->root_term_name() == "block" && !bool(find_attribute(itr->term(0), "type"))) {
       return true;
     } 
 
@@ -897,7 +897,7 @@ construct get_first_child(const construct & set) {
 
 bool is_child_if(const construct & child) {
 
-  if(child.term(0)->name == "if") {
+  if(child.root_term_name() == "if") {
       return true;
   }
 
@@ -911,8 +911,8 @@ bool if_stmt_has_else(const construct & set) {
 
   construct::construct_list sets = construct::get_descendent_constructs(set.nodes(), set.get_terms().at(1), set.end_position());
   for(construct::construct::construct_list::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
-    if(itr->term(0)->name == "else" 
-      || ( itr->term(0)->name == "if" 
+    if(itr->root_term_name() == "else" 
+      || ( itr->root_term_name() == "if" 
         && bool(find_attribute(itr->term(0), "type")))) {
       return true;
 
@@ -933,7 +933,7 @@ bool if_block_equal(const construct & set_original, const construct & set_modifi
   construct::construct::construct_list::iterator block_original;
   for(block_original = construct_list_original.begin(); block_original != construct_list_original.end(); ++block_original) {
 
-    if(block_original->term(0)->name == "block") {
+    if(block_original->root_term_name() == "block") {
 
       break;
 
@@ -946,7 +946,7 @@ bool if_block_equal(const construct & set_original, const construct & set_modifi
   construct::construct::construct_list::iterator block_modified;
   for(block_modified = construct_list_modified.begin(); block_modified != construct_list_modified.end(); ++block_modified) {
 
-    if(block_modified->term(0)->name == "block") {
+    if(block_modified->root_term_name() == "block") {
 
       break;
 
@@ -982,14 +982,14 @@ bool for_control_matches(const construct & set_original, const construct & set_m
 
   construct::construct_list::size_type control_pos_original;
   for(control_pos_original = 0; control_pos_original < construct_list_original.size(); ++control_pos_original) {
-    if(construct_list_original.at(control_pos_original).term(0)->name == "control") {
+    if(construct_list_original.at(control_pos_original).root_term_name() == "control") {
       break;
     }
   }
 
   construct::construct_list::size_type control_pos_modified;
   for(control_pos_modified = 0; control_pos_modified < construct_list_modified.size(); ++control_pos_modified) {
-    if(construct_list_modified.at(control_pos_modified).term(0)->name == "control") {
+    if(construct_list_modified.at(control_pos_modified).root_term_name() == "control") {
       break;
     }
   }
@@ -1159,14 +1159,14 @@ static const interchange_list interchange_lists[] = {
 
 bool srcdiff_match::is_interchangeable_match(const construct & original_set, const construct & modified_set) {
 
-  const std::string & original_tag = original_set.get_root_name();
-  const std::string & modified_tag = modified_set.get_root_name();
+  const std::string & original_tag = original_set.root_term_name();
+  const std::string & modified_tag = modified_set.root_term_name();
 
-  const std::string & original_uri = original_set.get_root()->ns.href;
-  const std::string & modified_uri = modified_set.get_root()->ns.href;
+  const std::string & original_uri = original_set.root_term()->ns.href;
+  const std::string & modified_uri = modified_set.root_term()->ns.href;
 
-  bool original_has_type_attribute = bool(find_attribute(original_set.get_root(), "type"));
-  bool modified_has_type_attribute = bool(find_attribute(original_set.get_root(), "type"));
+  bool original_has_type_attribute = bool(find_attribute(original_set.root_term(), "type"));
+  bool modified_has_type_attribute = bool(find_attribute(original_set.root_term(), "type"));
 
   if(original_uri != modified_uri) return false;
 
@@ -1203,8 +1203,8 @@ bool reject_match_same(const srcdiff_measure & measure,
   int original_pos = set_original.start_position();
   int modified_pos = set_modified.start_position();
 
-  const std::string & original_tag = set_original.term(0)->name;
-  const std::string & modified_tag = set_modified.term(0)->name;
+  const std::string & original_tag = set_original.root_term_name();
+  const std::string & modified_tag = set_modified.root_term_name();
 
   const std::string & original_uri = set_original.term(0)->ns.href;
   const std::string & modified_uri = set_modified.term(0)->ns.href;
@@ -1253,7 +1253,7 @@ bool reject_match_same(const srcdiff_measure & measure,
       if(is_pseudo_original) {
 
         size_t block_contents_pos = 1;
-        while(set_original.get_node_name(block_contents_pos) != "block_content") {
+        while(set_original.term_name(block_contents_pos) != "block_content") {
           ++block_contents_pos;
         }
         ++block_contents_pos;
@@ -1270,7 +1270,7 @@ bool reject_match_same(const srcdiff_measure & measure,
       } else {
 
         size_t block_contents_pos = 1;
-        while(set_modified.get_node_name(block_contents_pos) != "block_content") {
+        while(set_modified.term_name(block_contents_pos) != "block_content") {
           ++block_contents_pos;
         }
         ++block_contents_pos;
@@ -1393,8 +1393,8 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
   int original_pos = set_original.start_position();
   int modified_pos = set_modified.start_position();
 
-  const std::string & original_tag = set_original.term(0)->name;
-  const std::string & modified_tag = set_modified.term(0)->name;
+  const std::string & original_tag = set_original.root_term_name();
+  const std::string & modified_tag = set_modified.root_term_name();
 
   const std::string & original_uri = set_original.term(0)->ns.href;
   const std::string & modified_uri = set_modified.term(0)->ns.href;
@@ -1526,8 +1526,8 @@ bool srcdiff_match::reject_match(const srcdiff_measure & measure,
   int original_pos = set_original.start_position();
   int modified_pos = set_modified.start_position();
 
-  const std::string & original_tag = set_original.term(0)->name;
-  const std::string & modified_tag = set_modified.term(0)->name;
+  const std::string & original_tag = set_original.root_term_name();
+  const std::string & modified_tag = set_modified.root_term_name();
 
   const std::string & original_uri = set_original.term(0)->ns.href;
   const std::string & modified_uri = set_modified.term(0)->ns.href;
@@ -1546,8 +1546,8 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
                                       const construct & set_original,
                                       const construct & set_modified) {
 
-  const std::string & original_tag = set_original.term(0)->name;
-  const std::string & modified_tag = set_modified.term(0)->name;
+  const std::string & original_tag = set_original.root_term_name();
+  const std::string & modified_tag = set_modified.root_term_name();
 
   if(set_original.size() == 1 && set_modified.size() == 1) {
     return original_tag != modified_tag;
@@ -1579,7 +1579,7 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
   // check block of first child of if_stmt (old if behavior)
   if(original_tag == "if_stmt" && !child_construct_list_original.empty()) {
 
-    std::string tag = child_construct_list_original.at(0).term(0)->name;
+    std::string tag = child_construct_list_original.at(0).root_term_name();
     if(tag == "else" || tag == "if") {
       construct::construct_list temp = construct::get_descendent_constructs(set_original.nodes(), child_construct_list_original.at(0).get_terms().at(1), child_construct_list_original.back().end_position());
       child_construct_list_original = temp;
@@ -1590,7 +1590,7 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
   // check block of first child of if_stmt (old if behavior)
   if(modified_tag == "if_stmt" && !child_construct_list_modified.empty()) {
 
-    std::string tag =  child_construct_list_modified.at(0).term(0)->name;
+    std::string tag =  child_construct_list_modified.at(0).root_term_name();
     if(tag == "else" || tag == "if") {
       construct::construct_list temp = construct::get_descendent_constructs(set_modified.nodes(), child_construct_list_modified.at(0).get_terms().at(1), child_construct_list_modified.back().end_position());
       child_construct_list_modified = temp;
@@ -1599,7 +1599,7 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
   }
 
   if(!child_construct_list_original.empty() && !child_construct_list_modified.empty()
-    && child_construct_list_original.back().term(0)->name == "block" && child_construct_list_modified.back().term(0)->name == "block") {
+    && child_construct_list_original.back().root_term_name() == "block" && child_construct_list_modified.back().root_term_name() == "block") {
 
     /// Why a copy?
     construct original_set = child_construct_list_original.back();
@@ -1608,7 +1608,7 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
     // block children actually in block_content
     construct::construct_list original_temp = construct::get_descendent_constructs(set_original.nodes(), child_construct_list_original.back().get_terms().at(1), child_construct_list_original.back().end_position());
     for(const construct & set : original_temp) {
-      if(set.term(0)->name == "block_content") {
+      if(set.root_term_name() == "block_content") {
         original_set = set;
       }
     }
@@ -1616,7 +1616,7 @@ bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
     // block children actually in block_content
     construct::construct_list modified_temp = construct::get_descendent_constructs(set_modified.nodes(), child_construct_list_modified.back().get_terms().at(1), child_construct_list_modified.back().end_position());
     for(const construct & set : modified_temp) {
-      if(set.term(0)->name == "block_content") {
+      if(set.root_term_name() == "block_content") {
         modified_set = set;
       }
     }
