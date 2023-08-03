@@ -32,7 +32,7 @@
 #include <list>
 #include <memory>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
@@ -46,9 +46,9 @@ public:
   public:
 
     std::string href;
-    boost::optional<std::string> prefix;
+    std::optional<std::string> prefix;
 
-    srcml_ns(const std::string & href = std::string(), const boost::optional<std::string> & prefix = boost::optional<std::string>())
+    srcml_ns(const std::string & href = std::string(), const std::optional<std::string> & prefix = std::optional<std::string>())
       : href(href), prefix(prefix) {}
 
     srcml_ns(const srcml_ns & ns);
@@ -60,9 +60,9 @@ public:
   public:
 
     std::string name;
-    boost::optional<std::string> value;
+    std::optional<std::string> value;
 
-    srcml_attr(const std::string & name = std::string(), const boost::optional<std::string> & value = boost::optional<std::string>())
+    srcml_attr(const std::string & name = std::string(), const std::optional<std::string> & value = std::optional<std::string>())
       : name(name), value(value) {}
 
     bool operator==(const srcml_attr & attr) const;
@@ -74,9 +74,9 @@ public:
   xmlReaderTypes type;
   std::string name;
   srcml_ns ns;
-  boost::optional<std::string> content;
+  std::optional<std::string> content;
   std::list<srcml_attr> properties;
-  boost::optional<std::shared_ptr<srcml_node>> parent;
+  std::optional<std::shared_ptr<srcml_node>> parent;
 
   bool is_empty;
   bool free;
@@ -95,8 +95,8 @@ public:
   srcml_node(const xmlNode & node, bool is_archive);
 
   srcml_node(xmlReaderTypes type = XML_READER_TYPE_ELEMENT, const std::string & name = std::string(), const srcml_ns & ns = srcml_ns(),
-    const boost::optional<std::string> & content = boost::optional<std::string>(), const std::list<srcml_attr> & properties = std::list<srcml_attr>(),
-    const boost::optional<std::shared_ptr<srcml_node>> & parent = boost::optional<std::shared_ptr<srcml_node>>(), bool is_empty = false);
+    const std::optional<std::string> & content = std::optional<std::string>(), const std::list<srcml_attr> & properties = std::list<srcml_attr>(),
+    const std::optional<std::shared_ptr<srcml_node>> & parent = std::optional<std::shared_ptr<srcml_node>>(), bool is_empty = false);
 
   srcml_node(const srcml_node & node);
 

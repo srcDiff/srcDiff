@@ -145,17 +145,17 @@ void srcdiff_input_source_git::consume() {
 
 }
 
-const char * srcdiff_input_source_git::get_language(const boost::optional<std::string> & path_original, const boost::optional<std::string> & path_modified) {
+const char * srcdiff_input_source_git::get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified) {
 
-  boost::optional<std::string> path = path_original;
+  std::optional<std::string> path = path_original;
   if(!path || path->empty()) path = path_modified;
 
   return srcml_archive_check_extension(options.archive, path->c_str());
 
 }
 
-void srcdiff_input_source_git::process_file(const boost::optional<std::string> & path_original,
-                                            const boost::optional<std::string> & path_modified) {
+void srcdiff_input_source_git::process_file(const std::optional<std::string> & path_original,
+                                            const std::optional<std::string> & path_modified) {
 
   const char * language_string = get_language(path_original, path_modified);
 
@@ -185,8 +185,8 @@ void srcdiff_input_source_git::process_file(const boost::optional<std::string> &
 
 }
 
-void srcdiff_input_source_git::process_directory(const boost::optional<std::string> & directory_original,
-                                                 const boost::optional<std::string> & directory_modified) {
+void srcdiff_input_source_git::process_directory(const std::optional<std::string> & directory_original,
+                                                 const std::optional<std::string> & directory_modified) {
 
 #ifndef _MSC_BUILD
 
@@ -285,8 +285,8 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     int comparison = strcoll(namelist_original[i]->d_name, namelist_modified[j]->d_name);
 
 
-    boost::optional<std::string> file_path_original;
-    boost::optional<std::string> file_path_modified;
+    std::optional<std::string> file_path_original;
+    std::optional<std::string> file_path_modified;
     if(comparison <= 0) ++i, file_path_original = path_original;
     if(comparison >= 0) ++j, file_path_modified = path_modified;
 
@@ -313,7 +313,7 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-    file(path_original, boost::optional<std::string>());
+    file(path_original, std::optional<std::string>());
 
   }
 
@@ -335,7 +335,7 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     }
 
     // translate the file listed in the input file using the directory and filename extracted from the path
-   file(boost::optional<std::string>(), path_modified);
+   file(std::optional<std::string>(), path_modified);
 
   }
 
@@ -375,8 +375,8 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     // is this a common, inserted, or deleted directory?
     int comparison = strcoll(namelist_original[i]->d_name, namelist_modified[j]->d_name);
 
-    boost::optional<std::string> directory_path_one;
-    boost::optional<std::string> directory_path_two;
+    std::optional<std::string> directory_path_one;
+    std::optional<std::string> directory_path_two;
     if(comparison <= 0) ++i, directory_path_one = path_original;
     if(comparison >= 0) ++j, directory_path_two = path_modified;
 
@@ -403,7 +403,7 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     }
 
     // process this directory
-    directory(path_original, boost::optional<std::string>());
+    directory(path_original, std::optional<std::string>());
 
   }
 
@@ -425,7 +425,7 @@ void srcdiff_input_source_git::process_directory(const boost::optional<std::stri
     }
 
     // process this directory
-    directory(boost::optional<std::string>(), path_modified);
+    directory(std::optional<std::string>(), path_modified);
 
   }
 
@@ -481,7 +481,7 @@ void srcdiff_input_source_git::process_files_from() {
       std::string path_original = line.substr(0, sep_pos);
       std::string path_modified = line.substr(sep_pos + 1);
 
-      boost::optional<std::string> path = path_original;
+      std::optional<std::string> path = path_original;
       std::string path_full = original_clone_path.native() + PATH_SEPARATOR + *path;
       if(*path == "") {
 

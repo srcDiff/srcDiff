@@ -6,8 +6,8 @@ text_summary::text_summary(bool output_verb) : output_verb(output_verb) {}
 
 summary_output_stream & text_summary::specifier(summary_output_stream & out, const std::multimap<srcdiff_type, std::string> & specifiers) const {
 
-    boost::optional<std::string> accessor_deleted;
-    boost::optional<std::string> accessor_inserted;
+    std::optional<std::string> accessor_deleted;
+    std::optional<std::string> accessor_inserted;
 
     for(std::map<srcdiff_type, std::string>::const_iterator citr = specifiers.lower_bound(SRCDIFF_DELETE); citr != specifiers.upper_bound(SRCDIFF_DELETE); ++citr) {
         if(is_access_specifier(citr->second)) {

@@ -20,8 +20,8 @@ srcdiff_input_source::srcdiff_input_source(const srcdiff_options & options) : op
 
 }
 
-void srcdiff_input_source::file(const boost::optional<std::string> & path_original,
-                                const boost::optional<std::string> & path_modified) {
+void srcdiff_input_source::file(const std::optional<std::string> & path_original,
+                                const std::optional<std::string> & path_modified) {
 
   if(show_input) {
 
@@ -45,8 +45,8 @@ void srcdiff_input_source::file(const boost::optional<std::string> & path_origin
 
 }
 
-void srcdiff_input_source::directory(const boost::optional<std::string> & directory_original,
-                                     const boost::optional<std::string> & directory_modified) {
+void srcdiff_input_source::directory(const std::optional<std::string> & directory_original,
+                                     const std::optional<std::string> & directory_modified) {
 
   show_input = !is_option(options.flags, OPTION_QUIET);
 

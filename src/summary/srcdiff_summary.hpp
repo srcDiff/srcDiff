@@ -100,7 +100,7 @@ private:
 public:
 
     srcdiff_summary();
-    srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str);
+    srcdiff_summary(const std::string & output_filename, const std::optional<std::string> & summary_type_str);
     ~srcdiff_summary();
 
     void perform_summary(const std::string & srcdiff, const std::string & xml_encoding);

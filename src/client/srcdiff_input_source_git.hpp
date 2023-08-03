@@ -28,12 +28,12 @@ public:
 
   virtual void consume();
 
-  virtual const char * get_language(const boost::optional<std::string> & path_original, const boost::optional<std::string> & path_modified);
+  virtual const char * get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified);
 
-  virtual void process_file(const boost::optional<std::string> & path_original,
-                            const boost::optional<std::string> & path_modified);
-  virtual void process_directory(const boost::optional<std::string> & directory_original,
-                                 const boost::optional<std::string> & directory_modified);
+  virtual void process_file(const std::optional<std::string> & path_original,
+                            const std::optional<std::string> & path_modified);
+  virtual void process_directory(const std::optional<std::string> & directory_original,
+                                 const std::optional<std::string> & directory_modified);
   virtual void process_files_from();
 
 };

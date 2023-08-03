@@ -125,7 +125,7 @@ int is_block_type(const construct & structure) {
   return -1;
 }
 
-bool has_internal_structure(const construct & structure, const boost::optional<std::string> & type) {
+bool has_internal_structure(const construct & structure, const std::optional<std::string> & type) {
 
   if(!type) return false;
 
@@ -413,9 +413,9 @@ static bool is_decl_stmt_from_expr(const srcml_nodes & nodes, int pos) {
 }
 
 bool check_nest_name(const construct & set_original,
-                     boost::optional<std::shared_ptr<srcml_node>> parent_original,
+                     std::optional<std::shared_ptr<srcml_node>> parent_original,
                      const construct & set_modified,
-                     boost::optional<std::shared_ptr<srcml_node>> parent_modified) {
+                     std::optional<std::shared_ptr<srcml_node>> parent_modified) {
 
   int original_pos = set_original.start_position();
   int modified_pos = set_modified.start_position();
@@ -521,9 +521,9 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
                  , int & operation) {
 
   int nest_count_original = 0;
-  boost::optional<int> pos_original;
-  boost::optional<int> similarity_original;
-  boost::optional<int> difference_original;
+  std::optional<int> pos_original;
+  std::optional<int> similarity_original;
+  std::optional<int> difference_original;
   int is_name_nest_original = 0;
   for(int i = start_original; i < end_original; ++i) {
 
@@ -564,12 +564,12 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
               continue;
             }
 
-            boost::optional<std::shared_ptr<srcml_node>> parent_original = set.at(match).root_term()->parent;
+            std::optional<std::shared_ptr<srcml_node>> parent_original = set.at(match).root_term()->parent;
             while((*parent_original)->name == "name") {
               parent_original = (*parent_original)->parent;
             }
 
-            boost::optional<std::shared_ptr<srcml_node>> parent_modified = construct_list_modified.at(j).root_term()->parent;
+            std::optional<std::shared_ptr<srcml_node>> parent_modified = construct_list_modified.at(j).root_term()->parent;
             while((*parent_modified)->name == "name") {
               parent_modified = (*parent_modified)->parent;
             }
@@ -599,15 +599,15 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
 
   if(nest_count_original > 1 && is_name_nest_original > 1) {
     nest_count_original = 0;
-    pos_original = boost::optional<int>();
-    similarity_original = boost::optional<int>();
-    difference_original = boost::optional<int>();
+    pos_original = std::optional<int>();
+    similarity_original = std::optional<int>();
+    difference_original = std::optional<int>();
   }
 
   int nest_count_modified = 0;
-  boost::optional<int> pos_modified;
-  boost::optional<int> similarity_modified;
-  boost::optional<int> difference_modified;
+  std::optional<int> pos_modified;
+  std::optional<int> similarity_modified;
+  std::optional<int> difference_modified;
   int is_name_nest_modified = 0;
   for(int i = start_modified; i < end_modified; ++i) {
 
@@ -648,12 +648,12 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
               continue;
             }
 
-            boost::optional<std::shared_ptr<srcml_node>> parent_original = construct_list_original.at(j).root_term()->parent;
+            std::optional<std::shared_ptr<srcml_node>> parent_original = construct_list_original.at(j).root_term()->parent;
             while(parent_original && (*parent_original)->name == "name") {
               parent_original = (*parent_original)->parent;
             }
 
-            boost::optional<std::shared_ptr<srcml_node>> parent_modified = set.at(match).root_term()->parent;
+            std::optional<std::shared_ptr<srcml_node>> parent_modified = set.at(match).root_term()->parent;
             while(parent_modified && (*parent_modified)->name == "name") {
               parent_modified = (*parent_modified)->parent;
             }
@@ -683,9 +683,9 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
 
   if(nest_count_modified > 1 && is_name_nest_modified > 1) {
     nest_count_modified = 0;
-    pos_modified = boost::optional<int>();
-    similarity_modified = boost::optional<int>();
-    difference_modified = boost::optional<int>();
+    pos_modified = std::optional<int>();
+    similarity_modified = std::optional<int>();
+    difference_modified = std::optional<int>();
   }
 
   if(nest_count_original == 0 && nest_count_modified == 0) return true;
@@ -763,12 +763,12 @@ bool srcdiff_nested::check_nestable_predicate(const construct::construct_list & 
       if(!construct_list_inner.at(pos_inner).root_term()->parent || !match.root_term()->parent)
         return true;
 
-      boost::optional<std::shared_ptr<srcml_node>> parent_outer = match.root_term()->parent;
+      std::optional<std::shared_ptr<srcml_node>> parent_outer = match.root_term()->parent;
       while((*parent_outer)->name == "name") {
         parent_outer = (*parent_outer)->parent;
       }
 
-      boost::optional<std::shared_ptr<srcml_node>> parent_inner = construct_list_inner.at(pos_inner).root_term()->parent;
+      std::optional<std::shared_ptr<srcml_node>> parent_inner = construct_list_inner.at(pos_inner).root_term()->parent;
       while((*parent_inner)->name == "name") {
         parent_inner = (*parent_inner)->parent;
       }

@@ -75,7 +75,7 @@ std::shared_ptr<srcml_node> split_text(const char * characters_start,
   std::shared_ptr<srcml_node> text = std::make_shared<srcml_node>();
   text->type = XML_READER_TYPE_TEXT;
   text->name = std::string("text");
-  text->content = boost::optional<std::string>();
+  text->content = std::optional<std::string>();
 
   if(characters_start != characters_end) {
 

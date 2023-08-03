@@ -2,7 +2,7 @@
 class no_file_exception {};
 
 template<class T>
-srcdiff_input<T>::srcdiff_input(srcml_archive * archive, const boost::optional<std::string> & input_path, const char * language_string, const OPTION_TYPE & options, const T & input)
+srcdiff_input<T>::srcdiff_input(srcml_archive * archive, const std::optional<std::string> & input_path, const char * language_string, const OPTION_TYPE & options, const T & input)
 	: archive(archive), input_path(input_path), language_string(language_string), options(options), input(input) {}
 
 template<class T>

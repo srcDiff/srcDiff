@@ -1476,11 +1476,11 @@ summary_output_stream & text_summary_verbose::conditional(summary_output_stream 
     const bool condition_modified = conditional_profile->is_condition_modified();
     const bool body_modified = conditional_profile->is_body_modified();
 
-    boost::optional<srcdiff_type> else_operation;
+    std::optional<srcdiff_type> else_operation;
     if(profile->type_name == "if") else_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->else_operation();
     const bool else_modified = bool(else_operation) && *else_operation == SRCDIFF_COMMON;
 
-    boost::optional<srcdiff_type> elseif_operation;
+    std::optional<srcdiff_type> elseif_operation;
     if(profile->type_name == "if") elseif_operation = reinterpret_cast<const std::shared_ptr<if_profile_t> &>(profile)->elseif_operation();;
     const bool elseif_modified = bool(elseif_operation) && *elseif_operation == SRCDIFF_COMMON;
 

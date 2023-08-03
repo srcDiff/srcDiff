@@ -112,8 +112,8 @@ void versioned_string::append(const char * characters, size_t len, enum srcdiff_
 
 void versioned_string::clear() {
 
-	string_original = boost::optional<std::string>();
-	string_modified = boost::optional<std::string>();
+	string_original = std::optional<std::string>();
+	string_modified = std::optional<std::string>();
 
 }
 

@@ -31,7 +31,7 @@ class decl_stmt_profile_t : public profile_t {
             return name;
         }
 
-        virtual void set_name(const std::shared_ptr<identifier_profile_t> & name, const boost::optional<versioned_string> & parent) {
+        virtual void set_name(const std::shared_ptr<identifier_profile_t> & name, const std::optional<versioned_string> & parent) {
 
             if(*parent == "decl") this->name = name->name;
 

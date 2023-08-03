@@ -154,8 +154,8 @@ end_ns_def:
 
 }
 
-srcml_node::srcml_node(xmlReaderTypes type, const std::string & name,  const srcml_ns & ns, const boost::optional<std::string> & content,
-const std::list<srcml_attr> & properties, const boost::optional<std::shared_ptr<srcml_node>> & parent, bool is_empty)
+srcml_node::srcml_node(xmlReaderTypes type, const std::string & name,  const srcml_ns & ns, const std::optional<std::string> & content,
+const std::list<srcml_attr> & properties, const std::optional<std::shared_ptr<srcml_node>> & parent, bool is_empty)
   : type(type), name(name), ns(ns), content(content), properties(properties), parent(parent),
     is_empty(is_empty), free(false), move(0), is_simple(true), is_temporary(false) {}
 

@@ -1118,7 +1118,7 @@ void summary_list::decl_stmt(const std::shared_ptr<profile_t> & profile) {
     identifier_set_difference(body_profile);
 
     size_t number_parts_report = 0;
-    boost::optional<versioned_string> identifier_rename;
+    std::optional<versioned_string> identifier_rename;
     if(decl_stmt_profile->operation == SRCDIFF_COMMON) {
 
         if(decl_stmt_profile->specifiers.size() != 0) {

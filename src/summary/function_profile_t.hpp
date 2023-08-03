@@ -50,7 +50,7 @@ class function_profile_t : public profile_t {
             return name;
         }
 
-        virtual void set_name(const std::shared_ptr<identifier_profile_t> & name, const boost::optional<versioned_string> & parent) {
+        virtual void set_name(const std::shared_ptr<identifier_profile_t> & name, const std::optional<versioned_string> & parent) {
 
             if(is_function_type(*parent)) this->name = name->name;
 

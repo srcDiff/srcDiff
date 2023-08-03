@@ -286,7 +286,7 @@ srcdiff_summary::srcdiff_summary()
       condition_count(0), collected_condition(), left_hand_side(), collect_lhs(), collect_rhs(), raw_statements(),
       signature_depth(0), signature_profile() {}
 
-srcdiff_summary::srcdiff_summary(const std::string & output_filename, const boost::optional<std::string> & summary_type_str) 
+srcdiff_summary::srcdiff_summary(const std::string & output_filename, const std::optional<std::string> & summary_type_str) 
     : srcdiff_summary() {
 
   if(output_filename != "-") {

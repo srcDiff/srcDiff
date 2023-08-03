@@ -24,7 +24,7 @@
 #include <srcdiff_output.hpp>
 #include <srcml_nodes.hpp>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <iostream>
 #include <memory>
@@ -248,7 +248,7 @@ public:
         return node_list;
     }
 
-    boost::optional<std::size_t> hash() const {
+    std::optional<std::size_t> hash() const {
         if(!hash_value) hash_value = std::hash<construct>()(*this);
         return hash_value;
     }
@@ -271,9 +271,9 @@ protected:
     const srcml_nodes & node_list;
 
     std::vector<int> terms;
-    mutable boost::optional<std::size_t> hash_value;
+    mutable std::optional<std::size_t> hash_value;
 
-    mutable boost::optional<construct_list> child_constructs;
+    mutable std::optional<construct_list> child_constructs;
 
 };
 

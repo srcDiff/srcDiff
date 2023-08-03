@@ -15,7 +15,7 @@
 
 #include <string>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'
@@ -33,7 +33,7 @@ protected:
   int directory_length_original;
   int directory_length_modified;
 
-  boost::optional<std::string> unit_version;
+  std::optional<std::string> unit_version;
 
 private:
 
@@ -49,18 +49,18 @@ public:
   virtual ~srcdiff_input_source() {}
 
   virtual void consume() = 0;
-  virtual const char * get_language(const boost::optional<std::string> & path_original, const boost::optional<std::string> & path_modified) = 0;
+  virtual const char * get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified) = 0;
 
-  virtual void file(const boost::optional<std::string> & path_original,
-                    const boost::optional<std::string> & path_modified);
-  virtual void directory(const boost::optional<std::string> & directory_original,
-                         const boost::optional<std::string> & directory_modified);
+  virtual void file(const std::optional<std::string> & path_original,
+                    const std::optional<std::string> & path_modified);
+  virtual void directory(const std::optional<std::string> & directory_original,
+                         const std::optional<std::string> & directory_modified);
   virtual void files_from();
 
-  virtual void process_file(const boost::optional<std::string> & path_original,
-                            const boost::optional<std::string> & path_modified) = 0;
-  virtual void process_directory(const boost::optional<std::string> & directory_original,
-                                 const boost::optional<std::string> & directory_modified) = 0;
+  virtual void process_file(const std::optional<std::string> & path_original,
+                            const std::optional<std::string> & path_modified) = 0;
+  virtual void process_directory(const std::optional<std::string> & directory_original,
+                                 const std::optional<std::string> & directory_modified) = 0;
   virtual void process_files_from() = 0;
 
 };
