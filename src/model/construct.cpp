@@ -245,16 +245,18 @@ const std::string & construct::root_term_name() const {
     return term_name(0);
 }
 
-const std::shared_ptr<srcdiff_measure> & construct::text_similarity(const construct & modified) const {
-    std::map<int, std::shared_ptr<srcdiff_measure>>::const_iterator citr = text_similarities.find(modified.start_position());
-    if(citr != text_similarities.end()) return citr->second;
+const std::shared_ptr<srcdiff_measure> & construct::measure(const construct & modified) const {
+    std::map<int, std::shared_ptr<srcdiff_measure>>::const_iterator citr = measures.find(modified.start_position());
+    if(citr != measures.end()) return citr->second;
 
     std::shared_ptr<srcdiff_measure> similarity = std::make_shared<srcdiff_text_measure>(*this, modified);
-    citr = text_similarities.insert(citr, std::pair(modified.start_position(), similarity));
+    similarity->compute();
+
+    citr = measures.insert(citr, std::pair(modified.start_position(), similarity));
     return citr->second;
 }
 
-bool construct::is_similar(const srcdiff_measure & measure, const construct & modified) const {
+bool construct::is_similar(const construct & modified) const {
 
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
@@ -344,6 +346,8 @@ bool construct::is_similar(const srcdiff_measure & measure, const construct & mo
     }
 
   }
+
+  const srcdiff_measure & measure = *this->measure(modified);
 
   int min_size = measure.min_length();
   int max_size = measure.max_length();

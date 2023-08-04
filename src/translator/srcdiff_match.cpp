@@ -155,8 +155,7 @@ offset_pair * srcdiff_match::match_differences() {
     for(int j = 0; j < olength; ++j) {
 
       /** loop O(nd) */
-      srcdiff_text_measure measure(construct_list_original.at(j), construct_list_modified.at(i));
-      measure.compute();
+      const srcdiff_measure & measure = *construct_list_original.at(j).measure(construct_list_modified.at(i));
       int similarity = measure.similarity();
 
       //unsigned long long max_similarity = (unsigned long long)-1;
@@ -1381,7 +1380,7 @@ bool reject_match_same(const srcdiff_measure & measure,
 
   }
 
-  bool is_reject = !set_original.is_similar(measure, set_modified);
+  bool is_reject = !set_original.is_similar(set_modified);
   return is_reject;
 
 }
@@ -1499,10 +1498,9 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
     if(expr_original.size() && expr_modified.size()) {
 
-      srcdiff_text_measure expr_measure(expr_original, expr_modified);
-      expr_measure.compute();
+      const srcdiff_measure & expr_measure = *expr_original.measure(expr_modified);
 
-      bool is_expr_reject = !expr_original.is_similar(expr_measure, expr_modified);
+      bool is_expr_reject = !expr_original.is_similar(expr_modified);
 
       int min_size = expr_measure.min_length();
       int max_size = expr_measure.max_length();
@@ -1513,7 +1511,7 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
   }
 
-  bool is_reject = !set_original.is_similar(measure, set_modified);
+  bool is_reject = !set_original.is_similar(set_modified);
   return is_reject;
 
 }
