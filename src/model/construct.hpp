@@ -107,7 +107,7 @@ protected:
 
     mutable std::optional<construct_list> child_constructs;
 
-    mutable std::map<int, std::shared_ptr<srcdiff_measure>> measures;
+    mutable std::unordered_map<int, std::shared_ptr<srcdiff_measure>> measures;
 
 };
 

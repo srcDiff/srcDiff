@@ -246,7 +246,7 @@ const std::string & construct::root_term_name() const {
 }
 
 const std::shared_ptr<srcdiff_measure> & construct::measure(const construct & modified) const {
-    std::map<int, std::shared_ptr<srcdiff_measure>>::const_iterator citr = measures.find(modified.start_position());
+    std::unordered_map<int, std::shared_ptr<srcdiff_measure>>::const_iterator citr = measures.find(modified.start_position());
     if(citr != measures.end()) return citr->second;
 
     std::shared_ptr<srcdiff_measure> similarity = std::make_shared<srcdiff_text_measure>(*this, modified);
