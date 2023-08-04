@@ -3,6 +3,8 @@
 
 #include <srcdiff_measure.hpp>
 
+#include <construct.hpp>
+
 class srcdiff_text_measure : public srcdiff_measure {
 
 protected:

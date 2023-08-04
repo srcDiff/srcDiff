@@ -1381,7 +1381,7 @@ bool reject_match_same(const srcdiff_measure & measure,
 
   }
 
-  bool is_reject = srcdiff_match::reject_similarity(measure, set_original, set_modified);
+  bool is_reject = !set_original.is_similar(measure, set_modified);
   return is_reject;
 
 }
@@ -1502,7 +1502,7 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
       srcdiff_text_measure expr_measure(expr_original, expr_modified);
       expr_measure.compute();
 
-      bool is_expr_reject = srcdiff_match::reject_similarity(expr_measure, expr_original, expr_modified);
+      bool is_expr_reject = !expr_original.is_similar(expr_measure, expr_modified);
 
       int min_size = expr_measure.min_length();
       int max_size = expr_measure.max_length();
@@ -1513,7 +1513,7 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
   }
 
-  bool is_reject = srcdiff_match::reject_similarity(measure, set_original, set_modified);
+  bool is_reject = !set_original.is_similar(measure, set_modified);
   return is_reject;
 
 }
@@ -1541,127 +1541,6 @@ bool srcdiff_match::reject_match(const srcdiff_measure & measure,
   }
 
 }
-
-bool srcdiff_match::reject_similarity(const srcdiff_measure & measure,
-                                      const construct & set_original,
-                                      const construct & set_modified) {
-
-  const std::string & original_tag = set_original.root_term_name();
-  const std::string & modified_tag = set_modified.root_term_name();
-
-  if(set_original.size() == 1 && set_modified.size() == 1) {
-    return original_tag != modified_tag;
-  }
-
-  if(set_original.size() == 1 || set_modified.size() == 1) {
-
-    /** @todo need to handle this some time */
-    return true;
-
-  }
-
-  srcdiff_syntax_measure syntax_measure(set_original, set_modified);
-  syntax_measure.compute();
-
-  int min_child_length = syntax_measure.min_length();
-  int max_child_length = syntax_measure.max_length();
-
-  if(min_child_length > 1) { 
-
-    if(2 * syntax_measure.similarity() >= min_child_length && syntax_measure.difference() <= min_child_length)
-      return false;
-
-  }
-
-  construct::construct_list child_construct_list_original = construct::get_descendent_constructs(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position());
-  construct::construct_list child_construct_list_modified = construct::get_descendent_constructs(set_modified.nodes(), set_modified.get_terms().at(1), set_modified.end_position());    
-
-  // check block of first child of if_stmt (old if behavior)
-  if(original_tag == "if_stmt" && !child_construct_list_original.empty()) {
-
-    std::string tag = child_construct_list_original.at(0).root_term_name();
-    if(tag == "else" || tag == "if") {
-      construct::construct_list temp = construct::get_descendent_constructs(set_original.nodes(), child_construct_list_original.at(0).get_terms().at(1), child_construct_list_original.back().end_position());
-      child_construct_list_original = temp;
-    }
-
-  }
-
-  // check block of first child of if_stmt (old if behavior)
-  if(modified_tag == "if_stmt" && !child_construct_list_modified.empty()) {
-
-    std::string tag =  child_construct_list_modified.at(0).root_term_name();
-    if(tag == "else" || tag == "if") {
-      construct::construct_list temp = construct::get_descendent_constructs(set_modified.nodes(), child_construct_list_modified.at(0).get_terms().at(1), child_construct_list_modified.back().end_position());
-      child_construct_list_modified = temp;
-    }
-
-  }
-
-  if(!child_construct_list_original.empty() && !child_construct_list_modified.empty()
-    && child_construct_list_original.back().root_term_name() == "block" && child_construct_list_modified.back().root_term_name() == "block") {
-
-    /// Why a copy?
-    construct original_set = child_construct_list_original.back();
-    construct modified_set = child_construct_list_modified.back();
-
-    // block children actually in block_content
-    construct::construct_list original_temp = construct::get_descendent_constructs(set_original.nodes(), child_construct_list_original.back().get_terms().at(1), child_construct_list_original.back().end_position());
-    for(const construct & set : original_temp) {
-      if(set.root_term_name() == "block_content") {
-        original_set = set;
-      }
-    }
-
-    // block children actually in block_content
-    construct::construct_list modified_temp = construct::get_descendent_constructs(set_modified.nodes(), child_construct_list_modified.back().get_terms().at(1), child_construct_list_modified.back().end_position());
-    for(const construct & set : modified_temp) {
-      if(set.root_term_name() == "block_content") {
-        modified_set = set;
-      }
-    }
-
-    srcdiff_syntax_measure syntax_measure(original_set, modified_set);
-    syntax_measure.compute();
-
-    int min_child_length = syntax_measure.min_length();
-    int max_child_length = syntax_measure.max_length();
-    if(min_child_length > 1) { 
-      if(2 * syntax_measure.similarity() >= min_child_length && syntax_measure.difference() <= min_child_length)
-        return false;
-
-    }
-
-  }
-
-  int min_size = measure.min_length();
-  int max_size = measure.max_length();
-
-#if DEBUG_SIMILARITY
-  std::cerr << "Similarity: " << measure.similarity() << '\n';
-  std::cerr << "Difference: " << measure.difference() << '\n';
-  std::cerr << "Original Difference: " << measure.original_difference() << '\n';
-  std::cerr << "Modified Difference: " << measure.modified_difference() << '\n';
-  std::cerr << "Min Size: "   << min_size   << '\n';
-  std::cerr << "Max Size: "   << max_size   << '\n';
-#endif
-
-  /** @todo consider making this configurable.  That is, allow user to specify file or have default file to read from */
-  if(measure.difference() != 0 && measure.similarity() == 0) return true;
-
-  if(min_size == measure.similarity() && measure.difference() < 2 * min_size) return false;
-  if(min_size < 30 && measure.difference() > 1.25 * min_size)       return true;
-  if(min_size >= 30 && measure.original_difference() > 0.25 * measure.original_length()
-    && measure.modified_difference() > 0.25 * measure.modified_length()) return true;
-  if(measure.difference() > max_size)                               return true;
-
-  if(min_size <= 2)                return 2  * measure.similarity() <     min_size;
-  else if(min_size <= 3)           return 3  * measure.similarity() < 2 * min_size;
-  else if(min_size <= 30)          return 10 * measure.similarity() < 7 * min_size;
-  else                             return 2  * measure.similarity() <     min_size;
-
-}
-
 
 bool srcdiff_match::reject_similarity_match_only(const construct & set_original,
                                                  const construct & set_modified) {

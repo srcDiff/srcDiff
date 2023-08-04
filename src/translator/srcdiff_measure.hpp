@@ -1,8 +1,10 @@
 #ifndef INCLUDED_SRCDIFF_MEASURE_HPP
 #define INCLUDED_SRCDIFF_MEASURE_HPP
 
-#include <construct.hpp>
+
 #include <shortest_edit_script.hpp>
+
+class construct;
 
 class srcdiff_measure {
 

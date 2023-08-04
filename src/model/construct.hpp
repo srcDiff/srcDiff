@@ -25,6 +25,8 @@
 #include <srcml_nodes.hpp>
 #include <construct_hash.hpp>
 
+#include <srcdiff_measure.hpp>
+
 #include <optional>
 #include <memory>
 
@@ -89,6 +91,10 @@ public:
     const std::string & root_term_name() const;
 
     std::optional<std::size_t> hash() const;
+
+
+    // Differencing Rules
+    bool is_similar(const srcdiff_measure & measure, const construct & modified) const;
 
 protected:
     std::shared_ptr<srcdiff_output> out;

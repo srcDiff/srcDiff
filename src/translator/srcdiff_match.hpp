@@ -57,9 +57,6 @@ public:
   static bool reject_match(const srcdiff_measure & measure,
                            const construct & set_original,
                            const construct & set_modified);
-  static bool reject_similarity(const srcdiff_measure & measure,
-                                const construct & set_original,
-                                const construct & set_modified);
 
   static bool reject_similarity_match_only(const construct & set_original,
                                            const construct & set_modified);

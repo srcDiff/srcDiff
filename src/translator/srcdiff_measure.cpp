@@ -1,5 +1,7 @@
 #include <srcdiff_measure.hpp>
+
 #include <srcdiff_constants.hpp>
+#include <construct.hpp>
 
 #include <algorithm>
 #include <cassert>
