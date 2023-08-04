@@ -21,6 +21,7 @@
 #include <construct.hpp>
 
 #include <srcml_nodes.hpp>
+#include <srcdiff_text_measure.hpp>
 #include <srcdiff_syntax_measure.hpp>
 #include <srcdiff_match.hpp>
 
@@ -242,6 +243,15 @@ const std::string & construct::term_name(std::size_t pos) const {
 }
 const std::string & construct::root_term_name() const {
     return term_name(0);
+}
+
+const std::shared_ptr<srcdiff_measure> & construct::text_similarity(const construct & modified) const {
+    std::map<int, std::shared_ptr<srcdiff_measure>>::const_iterator citr = text_similarities.find(modified.start_position());
+    if(citr != text_similarities.end()) return citr->second;
+
+    std::shared_ptr<srcdiff_measure> similarity = std::make_shared<srcdiff_text_measure>(*this, modified);
+    citr = text_similarities.insert(citr, std::pair(modified.start_position(), similarity));
+    return citr->second;
 }
 
 bool construct::is_similar(const srcdiff_measure & measure, const construct & modified) const {

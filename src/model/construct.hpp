@@ -94,6 +94,7 @@ public:
 
 
     // Differencing Rules
+    const std::shared_ptr<srcdiff_measure> & text_similarity(const construct & modified) const;
     bool is_similar(const srcdiff_measure & measure, const construct & modified) const;
 
 protected:
@@ -105,6 +106,8 @@ protected:
     mutable std::optional<std::size_t> hash_value;
 
     mutable std::optional<construct_list> child_constructs;
+
+    mutable std::map<int, std::shared_ptr<srcdiff_measure>> text_similarities;
 
 };
 
