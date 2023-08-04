@@ -273,8 +273,9 @@ bool construct::is_similar(const srcdiff_measure & measure, const construct & mo
 
   }
 
-  construct::construct_list child_construct_list_original = construct::get_descendent_constructs(nodes(), get_terms().at(1), end_position());
-  construct::construct_list child_construct_list_modified = construct::get_descendent_constructs(modified.nodes(), modified.get_terms().at(1), modified.end_position());    
+  /// @todo remove copy
+  construct::construct_list child_construct_list_original = children();
+  construct::construct_list child_construct_list_modified = modified.children();
 
   // check block of first child of if_stmt (old if behavior)
   if(original_tag == "if_stmt" && !child_construct_list_original.empty()) {
