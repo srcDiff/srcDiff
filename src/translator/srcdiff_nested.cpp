@@ -355,8 +355,10 @@ bool is_better_nest(const construct & node_set_outer,
 }
 
 bool srcdiff_nested::is_better_nested(const construct::construct_list & construct_list_original, int start_pos_original,
-                                      const construct::construct_list & construct_list_modified, int start_pos_modified,
-                                      const srcdiff_measure & measure) {
+                                      const construct::construct_list & construct_list_modified, int start_pos_modified) {
+
+  const srcdiff_measure & measure = *construct_list_original.at(start_pos_original)
+                            .measure(construct_list_modified.at(start_pos_modified));
 
   for(int pos = start_pos_original; pos < construct_list_original.size(); ++pos) {
 
@@ -506,7 +508,7 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
 
   } else {
 
-    return srcdiff_match::reject_match(measure, set_original, set_modified);
+    return srcdiff_match::reject_match(set_original, set_modified);
 
   }
 

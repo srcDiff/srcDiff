@@ -52,8 +52,7 @@ public:
                                const construct & structure_two);
 
   static bool is_better_nested(const construct::construct_list & construct_list_original, int start_pos_original,
-                               const construct::construct_list & construct_list_modified, int start_pos_modified,
-                               const srcdiff_measure & measure);
+                               const construct::construct_list & construct_list_modified, int start_pos_modified);
 
   static bool reject_match_nested(const srcdiff_measure & measure,
                                   const construct & set_original,

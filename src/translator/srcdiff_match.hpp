@@ -33,11 +33,9 @@ class srcdiff_match {
 
 public:
   typedef std::function<bool (const construct::construct_list & sets_original, int start_pos_original,
-                              const construct::construct_list & sets_modified, int start_pos_modified,
-                              const srcdiff_measure & measure)> is_match_func;
+                              const construct::construct_list & sets_modified, int start_pos_modified)> is_match_func;
   static bool is_match_default(const construct::construct_list & sets_original, int start_pos_original,
-                               const construct::construct_list & sets_modified, int start_pos_modified,
-                               const srcdiff_measure & measure);
+                               const construct::construct_list & sets_modified, int start_pos_modified);
 
 protected:
 
@@ -54,12 +52,9 @@ public:
                 const is_match_func & is_match = is_match_default);
   offset_pair * match_differences();
 
-  static bool reject_match(const srcdiff_measure & measure,
-                           const construct & set_original,
-                           const construct & set_modified);
+  static bool reject_match(const construct & set_original, const construct & set_modified);
 
-  static bool reject_similarity_match_only(const construct & set_original,
-                                           const construct & set_modified);
+  static bool reject_similarity_match_only(const construct & set_original, const construct & set_modified);
 
 
   static bool is_interchangeable_match(const construct & original_set, const construct & modified_set);

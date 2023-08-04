@@ -25,21 +25,19 @@ struct difference {
 };
 
 bool srcdiff_match::is_match_default(const construct::construct_list & sets_original, int start_pos_original,
-                                     const construct::construct_list & sets_modified, int start_pos_modified,
-                                     const srcdiff_measure & measure) {
+                                     const construct::construct_list & sets_modified, int start_pos_modified) {
 
+  const srcdiff_measure & measure = *sets_original.at(start_pos_original).measure(sets_modified.at(start_pos_modified));
   if(measure.similarity() == MAX_INT) return false;
 
   if(reject_similarity_match_only(sets_original.at(start_pos_original),
-                                   sets_modified.at(start_pos_modified))
-    && reject_match(measure,
-                  sets_original.at(start_pos_original),
-                  sets_modified.at(start_pos_modified)))
+                                  sets_modified.at(start_pos_modified))
+    && reject_match(sets_original.at(start_pos_original),
+                    sets_modified.at(start_pos_modified)))
     return false;
 
   if(srcdiff_nested::is_better_nested(sets_original, start_pos_original,
-                                      sets_modified, start_pos_modified,
-                                      measure))
+                                      sets_modified, start_pos_modified))
     return false;
 
   return true;
@@ -164,7 +162,7 @@ offset_pair * srcdiff_match::match_differences() {
 
       // check if unmatched
       /** loop text O(nd) + syntax O(nd) + best match is O(nd) times number of matches */
-      if(!is_match(construct_list_original, j, construct_list_modified, i, measure)) {
+      if(!is_match(construct_list_original, j, construct_list_modified, i)) {
 
         similarity = 0;
         unmatched = 2;
@@ -1195,9 +1193,7 @@ bool srcdiff_match::is_interchangeable_match(const construct & original_set, con
 }
 
 /** loop O(n) + O(nd) syntax child/grandparent, O(check_nestable)  */
-bool reject_match_same(const srcdiff_measure & measure,
-                       const construct & set_original,
-                       const construct & set_modified) {
+bool reject_match_same(const construct & set_original, const construct & set_modified) {
 
   int original_pos = set_original.start_position();
   int modified_pos = set_modified.start_position();
@@ -1225,6 +1221,8 @@ bool reject_match_same(const srcdiff_measure & measure,
     || original_tag == "block_content"
     )
     return false;
+
+  const srcdiff_measure & measure = *set_original.measure(set_modified);
 
   if(original_tag == "name" && set_original.term(0)->is_simple && set_modified.term(0)->is_simple) return false;
   if(original_tag == "name" && set_original.term(0)->is_simple != set_modified.term(0)->is_simple) return true;
@@ -1385,9 +1383,7 @@ bool reject_match_same(const srcdiff_measure & measure,
 
 }
 
-bool reject_match_interchangeable(const srcdiff_measure & measure,
-                                  const construct & set_original,
-                                  const construct & set_modified) {
+bool reject_match_interchangeable(const construct & set_original, const construct & set_modified) {
 
   int original_pos = set_original.start_position();
   int modified_pos = set_modified.start_position();
@@ -1516,8 +1512,7 @@ bool reject_match_interchangeable(const srcdiff_measure & measure,
 
 }
 
-bool srcdiff_match::reject_match(const srcdiff_measure & measure,
-                                 const construct & set_original,
+bool srcdiff_match::reject_match(const construct & set_original,
                                  const construct & set_modified) {
 
   /** if different prefix should not reach here, however, may want to add that here */
@@ -1531,9 +1526,9 @@ bool srcdiff_match::reject_match(const srcdiff_measure & measure,
   const std::string & modified_uri = set_modified.term(0)->ns.href;
 
   if(original_tag == modified_tag && original_uri == modified_uri) {
-    return reject_match_same(measure, set_original, set_modified);
+    return reject_match_same(set_original, set_modified);
   } else if(is_interchangeable_match(set_original, set_modified)) {
-    return reject_match_interchangeable(measure, set_original, set_modified);
+    return reject_match_interchangeable(set_original, set_modified);
   } else {
     return true;
   }
