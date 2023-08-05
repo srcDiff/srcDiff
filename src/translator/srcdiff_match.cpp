@@ -30,10 +30,8 @@ bool srcdiff_match::is_match_default(const construct::construct_list & sets_orig
   const srcdiff_measure & measure = *sets_original.at(start_pos_original).measure(sets_modified.at(start_pos_modified));
   if(measure.similarity() == MAX_INT) return false;
 
-  if(reject_similarity_match_only(sets_original.at(start_pos_original),
-                                  sets_modified.at(start_pos_modified))
-    && reject_match(sets_original.at(start_pos_original),
-                    sets_modified.at(start_pos_modified)))
+  if(!sets_original.at(start_pos_original).is_match_similar(sets_modified.at(start_pos_modified))
+    && reject_match(sets_original.at(start_pos_original), sets_modified.at(start_pos_modified)))
     return false;
 
   if(srcdiff_nested::is_better_nested(sets_original, start_pos_original,
@@ -1126,23 +1124,5 @@ bool srcdiff_match::reject_match(const construct & set_original,
   } else {
     return true;
   }
-
-}
-
-bool srcdiff_match::reject_similarity_match_only(const construct & set_original,
-                                                 const construct & set_modified) {
-
-  int original_pos = set_original.start_position();
-  int modified_pos = set_modified.start_position();
-
-  if(*set_original.term(0) != *set_modified.term(0)) return true;
-
-  srcdiff_text_measure complete_measure(set_original, set_modified, false);
-  complete_measure.compute();
-  int min_size = complete_measure.min_length();
-
-  if(min_size == 0) return true;
-
-  return min_size != complete_measure.similarity();
 
 }

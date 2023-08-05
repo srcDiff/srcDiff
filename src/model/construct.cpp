@@ -383,6 +383,23 @@ bool construct::is_similar(const construct & modified) const {
 
 }
 
+bool construct::is_match_similar(const construct & modified) const {
+
+  int original_pos = start_position();
+  int modified_pos = modified.start_position();
+
+  if(*term(0) != *modified.term(0)) return false;
+
+  srcdiff_text_measure complete_measure(*this, modified, false);
+  complete_measure.compute();
+  int min_size = complete_measure.min_length();
+
+  if(min_size == 0) return false;
+
+  return min_size == complete_measure.similarity();
+
+}
+
 bool construct::is_matchable(const construct & modified) const {
 
   int original_pos = start_position();
