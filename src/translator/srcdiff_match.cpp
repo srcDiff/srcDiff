@@ -1191,10 +1191,6 @@ bool srcdiff_match::is_interchangeable_match(const construct & original_set, con
 
 }
 
-bool reject_match_same(const construct & set_original, const construct & set_modified) {
-  return !set_original.is_match(set_modified);
-}
-
 bool reject_match_interchangeable(const construct & set_original, const construct & set_modified) {
 
   int original_pos = set_original.start_position();
@@ -1338,7 +1334,7 @@ bool srcdiff_match::reject_match(const construct & set_original,
   const std::string & modified_uri = set_modified.term(0)->ns.href;
 
   if(original_tag == modified_tag && original_uri == modified_uri) {
-    return reject_match_same(set_original, set_modified);
+    return !set_original.is_match(set_modified);
   } else if(is_interchangeable_match(set_original, set_modified)) {
     return reject_match_interchangeable(set_original, set_modified);
   } else {
