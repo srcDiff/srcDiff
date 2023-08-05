@@ -24,6 +24,8 @@
 #include <srcdiff_text_measure.hpp>
 #include <srcdiff_syntax_measure.hpp>
 
+#include <convertable_constructs.hpp>
+
 //temp, probably
 #include <srcdiff_match.hpp>
 #include <srcdiff_match_internal.hpp>
@@ -569,3 +571,171 @@ bool construct::is_match(const construct & modified) const {
   return is_similar(modified);
 
 }
+
+
+bool construct::is_tag_convertable(const construct & modified) const {
+
+  const std::string & original_tag = root_term_name();
+  const std::string & modified_tag = modified.root_term_name();
+
+  const std::string & original_uri = root_term()->ns.href;
+  const std::string & modified_uri = modified.root_term()->ns.href;
+
+  bool original_has_type_attribute = bool(find_attribute(root_term(), "type"));
+  bool modified_has_type_attribute = bool(find_attribute(root_term(), "type"));
+
+  if(original_uri != modified_uri) return false;
+
+  if(original_tag == "if" && original_uri != SRCML_SRC_NAMESPACE_HREF) return false;
+  if(modified_tag == "if" && modified_uri != SRCML_SRC_NAMESPACE_HREF) return false;
+
+  if(original_tag == "if" && !original_has_type_attribute) return false;
+  if(original_tag == "if" && !modified_has_type_attribute) return false;
+
+  for(size_t list_pos = 0; convertable_table[list_pos].name; ++list_pos) {
+
+    if(convertable_table[list_pos].name == original_tag) {
+
+      for(size_t pos = 0; convertable_table[list_pos].list[pos]; ++pos) {
+
+        if(convertable_table[list_pos].list[pos] == modified_tag)
+          return true;
+
+      }
+
+    }
+
+  }
+
+  return false;
+
+}
+
+bool construct::is_convertable(const construct & modified) const {
+
+  int original_pos = start_position();
+  int modified_pos = modified.start_position();
+
+  const std::string & original_tag = root_term_name();
+  const std::string & modified_tag = modified.root_term_name();
+
+  const std::string & original_uri = term(0)->ns.href;
+  const std::string & modified_uri = modified.term(0)->ns.href;
+
+  std::string original_name;
+  if(original_tag == "class" || original_tag == "struct" || original_tag == "union" || original_tag == "enum") {
+
+      original_name = get_class_type_name(nodes(), original_pos);
+
+  }
+
+  std::string modified_name;
+  if(modified_tag == "class" || modified_tag == "struct" || modified_tag == "union" || modified_tag == "enum") {
+
+      modified_name = get_class_type_name(nodes(), original_pos);
+    
+  }
+
+  if(original_name != "" && original_name == modified_name) return true;
+
+  std::string original_condition;
+
+  if(original_tag == "if_stmt") {
+    /** todo play with getting and checking a match with all conditions */
+    construct first_original = get_first_child(*this);
+    if(is_child_if(first_original)) {
+      original_condition = get_condition(nodes(), original_pos);
+    }
+  }
+
+  if(original_tag == "while" || original_tag == "for" || original_tag == "foreach") {
+
+    original_condition = get_condition(nodes(), original_pos);
+
+  }
+
+  std::string modified_condition;
+ 
+  if(modified_tag == "if_stmt") {
+    construct first_modified = get_first_child(modified);
+    if(is_child_if(first_modified)) {
+      modified_condition = get_condition(modified.nodes(), modified_pos);
+    }
+  }
+
+  if(modified_tag == "while" || modified_tag == "for" || modified_tag == "foreach") {
+
+    modified_condition = get_condition(modified.nodes(), modified_pos);
+
+  }
+
+  if(original_condition != "" && original_condition == modified_condition) return true;
+
+
+  if(  (original_tag == "expr_stmt" || original_tag == "decl_stmt" || original_tag == "return")
+    && (modified_tag == "expr_stmt" || modified_tag == "decl_stmt" || modified_tag == "return")) {
+
+    construct expr_original(nodes());
+    construct expr_modified(modified.nodes());
+    if(original_tag == "decl_stmt" || modified_tag == "decl_stmt") {
+
+      if(original_tag == "decl_stmt") {
+
+        expr_modified = get_first_expr_child(modified.nodes(), modified_pos);
+
+        if(!expr_modified.empty()) {
+
+          construct::construct_list sets = construct::get_descendent_constructs(nodes(), get_terms().at(1), end_position(), srcdiff_nested::is_match,
+                                                                                &expr_modified.term(0));
+          int match = srcdiff_nested::best_match(sets, expr_modified);
+
+          if(match < sets.size()) {
+            expr_original = sets.at(match);
+          }
+
+        }
+
+      } else {
+
+        expr_original = get_first_expr_child(nodes(), original_pos);
+
+        if(!expr_original.empty()) {
+
+          construct::construct_list sets = construct::get_descendent_constructs(modified.nodes(), modified.get_terms().at(1), modified.end_position(), srcdiff_nested::is_match,
+                                    &expr_original.term(0));
+          int match = srcdiff_nested::best_match(sets, expr_original);
+
+          if(match < sets.size()) {
+            expr_modified = sets.at(match);
+          }
+
+        }
+
+      }
+
+    } else {
+
+      expr_original = get_first_expr_child(nodes(), original_pos);
+      expr_modified = get_first_expr_child(modified.nodes(), modified_pos);
+
+    }
+
+    if(expr_original.size() && expr_modified.size()) {
+
+      const srcdiff_measure & expr_measure = *expr_original.measure(expr_modified);
+
+      bool is_expr_reject = !expr_original.is_similar(expr_modified);
+
+      int min_size = expr_measure.min_length();
+      int max_size = expr_measure.max_length();
+
+      if(!is_expr_reject && 2 * expr_measure.similarity() > max_size && 2 * expr_measure.difference() < max_size) return true;
+
+    }
+
+  }
+
+  return is_similar(modified);
+
+}
+

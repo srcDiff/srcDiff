@@ -27,5 +27,6 @@ bool if_block_equal(const construct & set_original, const construct & set_modifi
 std::string get_case_expr(const srcml_nodes & nodes, int start_pos);
 bool for_control_matches(const construct & set_original, const construct & set_modified);
 bool is_single_name_expr(const srcml_nodes & nodes, int start_pos);
+construct get_first_expr_child(const srcml_nodes & nodes, int start_pos);
 
 #endif

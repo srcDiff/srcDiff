@@ -56,9 +56,6 @@ public:
 
   static bool reject_similarity_match_only(const construct & set_original, const construct & set_modified);
 
-
-  static bool is_interchangeable_match(const construct & original_set, const construct & modified_set);
-
 };
 
 std::optional<std::string> find_attribute(const std::shared_ptr<srcml_node> & node, const char * attr_name);

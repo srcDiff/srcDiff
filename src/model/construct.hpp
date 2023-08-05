@@ -98,6 +98,9 @@ public:
     bool is_similar(const construct & modified) const;
     bool is_match(const construct & modified) const;
 
+    bool is_tag_convertable(const construct & modified) const;
+    bool is_convertable(const construct & modified) const;
+
 protected:
     std::shared_ptr<srcdiff_output> out;
 

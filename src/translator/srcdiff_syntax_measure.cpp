@@ -46,7 +46,7 @@ void srcdiff_syntax_measure::compute() {
   if((xmlReaderTypes)set_original.term(0)->type != XML_READER_TYPE_ELEMENT
      || (xmlReaderTypes)set_modified.term(0)->type != XML_READER_TYPE_ELEMENT
      || (*set_original.term(0) != *set_modified.term(0)
-        && !srcdiff_match::is_interchangeable_match(set_original, set_modified)
+        && !set_original.is_tag_convertable(set_modified)
         && (set_original.term(0)->name != "block" || set_modified.term(0)->name != "block"))) {
 
     a_similarity = 0;
