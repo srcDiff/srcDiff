@@ -98,6 +98,8 @@ public:
     bool is_similar(const construct & modified) const;
     bool is_match_similar(const construct & modified) const;
 
+    bool can_refine_difference(const construct & modified) const;
+
     bool is_matchable(const construct & modified) const;
 
     bool is_tag_convertable(const construct & modified) const;

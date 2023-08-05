@@ -52,8 +52,6 @@ public:
                 const is_match_func & is_match = is_match_default);
   offset_pair * match_differences();
 
-  static bool reject_match(const construct & set_original, const construct & set_modified);
-
 };
 
 std::optional<std::string> find_attribute(const std::shared_ptr<srcml_node> & node, const char * attr_name);

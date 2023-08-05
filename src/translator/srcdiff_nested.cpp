@@ -508,7 +508,7 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
 
   } else {
 
-    return srcdiff_match::reject_match(set_original, set_modified);
+    return !set_original.can_refine_difference(set_modified);
 
   }
 

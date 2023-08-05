@@ -31,7 +31,7 @@ bool srcdiff_match::is_match_default(const construct::construct_list & sets_orig
   if(measure.similarity() == MAX_INT) return false;
 
   if(!sets_original.at(start_pos_original).is_match_similar(sets_modified.at(start_pos_modified))
-    && reject_match(sets_original.at(start_pos_original), sets_modified.at(start_pos_modified)))
+    && !sets_original.at(start_pos_original).can_refine_difference(sets_modified.at(start_pos_modified)))
     return false;
 
   if(srcdiff_nested::is_better_nested(sets_original, start_pos_original,
@@ -1101,28 +1101,5 @@ construct get_first_expr_child(const srcml_nodes & nodes, int start_pos) {
   }
 
   return construct(nodes, expr_pos);
-
-}
-
-bool srcdiff_match::reject_match(const construct & set_original,
-                                 const construct & set_modified) {
-
-  /** if different prefix should not reach here, however, may want to add that here */
-  int original_pos = set_original.start_position();
-  int modified_pos = set_modified.start_position();
-
-  const std::string & original_tag = set_original.root_term_name();
-  const std::string & modified_tag = set_modified.root_term_name();
-
-  const std::string & original_uri = set_original.term(0)->ns.href;
-  const std::string & modified_uri = set_modified.term(0)->ns.href;
-
-  if(original_tag == modified_tag && original_uri == modified_uri) {
-    return !set_original.is_matchable(set_modified);
-  } else if(set_original.is_tag_convertable(set_modified)) {
-    return !set_original.is_convertable(set_modified);
-  } else {
-    return true;
-  }
 
 }

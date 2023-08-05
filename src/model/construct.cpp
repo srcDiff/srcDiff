@@ -400,6 +400,28 @@ bool construct::is_match_similar(const construct & modified) const {
 
 }
 
+bool construct::can_refine_difference(const construct & modified) const {
+
+  /** if different prefix should not reach here, however, may want to add that here */
+  int original_pos = start_position();
+  int modified_pos = modified.start_position();
+
+  const std::string & original_tag = root_term_name();
+  const std::string & modified_tag = modified.root_term_name();
+
+  const std::string & original_uri = term(0)->ns.href;
+  const std::string & modified_uri = modified.term(0)->ns.href;
+
+  if(original_tag == modified_tag && original_uri == modified_uri) {
+    return is_matchable(modified);
+  } else if(is_tag_convertable(modified)) {
+    return is_convertable(modified);
+  } else {
+    return false;
+  }
+
+}
+
 bool construct::is_matchable(const construct & modified) const {
 
   int original_pos = start_position();
