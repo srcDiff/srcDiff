@@ -383,7 +383,7 @@ bool construct::is_similar(const construct & modified) const {
 
 }
 
-bool construct::is_match(const construct & modified) const {
+bool construct::is_matchable(const construct & modified) const {
 
   int original_pos = start_position();
   int modified_pos = modified.start_position();

@@ -1120,7 +1120,7 @@ bool srcdiff_match::reject_match(const construct & set_original,
   const std::string & modified_uri = set_modified.term(0)->ns.href;
 
   if(original_tag == modified_tag && original_uri == modified_uri) {
-    return !set_original.is_match(set_modified);
+    return !set_original.is_matchable(set_modified);
   } else if(set_original.is_tag_convertable(set_modified)) {
     return !set_original.is_convertable(set_modified);
   } else {

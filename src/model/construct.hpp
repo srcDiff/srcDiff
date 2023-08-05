@@ -96,7 +96,7 @@ public:
     // Differencing Rules
     const std::shared_ptr<srcdiff_measure> & measure(const construct & modified) const;
     bool is_similar(const construct & modified) const;
-    bool is_match(const construct & modified) const;
+    bool is_matchable(const construct & modified) const;
 
     bool is_tag_convertable(const construct & modified) const;
     bool is_convertable(const construct & modified) const;
