@@ -23,7 +23,11 @@
 #include <srcml_nodes.hpp>
 #include <srcdiff_text_measure.hpp>
 #include <srcdiff_syntax_measure.hpp>
+
+//temp, probably
 #include <srcdiff_match.hpp>
+#include <srcdiff_match_internal.hpp>
+#include <srcdiff_nested.hpp>
 
 #include <iostream>
 
@@ -374,5 +378,194 @@ bool construct::is_similar(const construct & modified) const {
   else if(min_size <= 3)           return 3  * measure.similarity() >= 2 * min_size;
   else if(min_size <= 30)          return 10 * measure.similarity() >= 7 * min_size;
   else                             return 2  * measure.similarity() >=     min_size;
+
+}
+
+bool construct::is_match(const construct & modified) const {
+
+  int original_pos = start_position();
+  int modified_pos = modified.start_position();
+
+  const std::string & original_tag = root_term_name();
+  const std::string & modified_tag = modified.root_term_name();
+
+  const std::string & original_uri = term(0)->ns.href;
+  const std::string & modified_uri = modified.term(0)->ns.href;
+
+  if(original_tag != modified_tag) return false;
+
+  if(original_tag == "type" || original_tag == "then" || original_tag == "condition" || original_tag == "control" || original_tag == "init"
+    || original_tag == "default" || original_tag == "comment"
+    || original_tag == "private" || original_tag == "protected" || original_tag == "public" || original_tag == "signals"
+    || original_tag == "parameter_list" || original_tag == "krparameter_list" || original_tag == "argument_list"
+    || original_tag == "attribute_list" || original_tag == "association_list" || original_tag == "protocol_list"
+    || original_tag == "super_list" || original_tag == "member_init_list" || original_tag == "member_list"
+    || original_tag == "argument"
+    || original_tag == "range"
+    || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier"
+    || original_tag == "number" || original_tag == "file"
+
+    // consider having this used to test similarity instead of block
+    || original_tag == "block_content"
+    )
+    return true;
+
+  const srcdiff_measure & measure = *this->measure(modified);
+
+  if(original_tag == "name" && term(0)->is_simple && modified.term(0)->is_simple) return true;
+  if(original_tag == "name" && term(0)->is_simple != modified.term(0)->is_simple) return false;
+
+  if((original_tag == "expr" || original_tag == "expr_stmt") && measure.similarity() > 0 && measure.difference() <= measure.max_length()) return true;
+
+  // may need to refine to if child only single name
+  if(original_tag == "expr" && term(0)->parent && (*term(0)->parent)->name == "argument") return true;
+  if(original_tag == "expr" && modified.term(0)->parent && (*modified.term(0)->parent)->name == "argument") return true;
+  if(original_tag == "expr" && is_single_name_expr(nodes(), original_pos) && is_single_name_expr(modified.nodes(), modified_pos)) return true;
+
+  if(original_tag == "block") {
+
+    bool is_pseudo_original = bool(find_attribute(term(0), "type"));
+    bool is_pseudo_modified = bool(find_attribute(modified.term(0), "type"));
+
+    if(is_pseudo_original == is_pseudo_modified) {
+
+      return true;
+
+    } else if(measure.similarity()) {
+
+      bool is_matchable = false;
+
+      if(is_pseudo_original) {
+
+        size_t block_contents_pos = 1;
+        while(term_name(block_contents_pos) != "block_content") {
+          ++block_contents_pos;
+        }
+        ++block_contents_pos;
+
+        construct::construct_list construct_list_original = construct::get_descendent_constructs(nodes(), get_terms().at(block_contents_pos), end_position());
+        construct::construct_list construct_list_modified = construct::get_descendent_constructs(modified.nodes(), modified.get_terms().at(0), modified.end_position() + 1);
+
+        int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
+        srcdiff_nested::check_nestable(construct_list_original, 0, construct_list_original.size(), construct_list_modified, 0, 1,
+                      start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
+
+        is_matchable = (operation == SES_INSERT);
+
+      } else {
+
+        size_t block_contents_pos = 1;
+        while(modified.term_name(block_contents_pos) != "block_content") {
+          ++block_contents_pos;
+        }
+        ++block_contents_pos;
+
+        construct::construct_list construct_list_original = construct::get_descendent_constructs(nodes(), get_terms().at(0), end_position() + 1);
+        construct::construct_list construct_list_modified = construct::get_descendent_constructs(modified.nodes(), modified.get_terms().at(block_contents_pos), modified.end_position());
+
+        int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
+        srcdiff_nested::check_nestable(construct_list_original, 0, 1, construct_list_modified, 0, construct_list_modified.size(),
+                      start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
+
+        is_matchable = (operation == SES_DELETE);
+
+      }
+
+      return is_matchable;
+
+    }
+
+  }
+
+  if(original_tag == "call") {
+
+    std::vector<std::string> original_names = get_call_name(nodes(), original_pos);
+    std::vector<std::string> modified_names = get_call_name(modified.nodes(), modified_pos);
+
+    if(name_list_similarity(original_names, modified_names)) return true;
+
+  } else if(original_tag == "decl" || original_tag == "decl_stmt" || original_tag == "parameter" || original_tag == "param") {
+
+    std::string original_name = get_decl_name(nodes(), original_pos);
+    std::string modified_name = get_decl_name(modified.nodes(), modified_pos);
+
+    if(original_name == modified_name && original_name != "") return true;
+
+  } else if(original_tag == "function"    || original_tag == "function_decl"
+         || original_tag == "constructor" || original_tag == "constructor_decl"
+         || original_tag == "destructor"  || original_tag == "destructor_decl") {
+
+    std::string original_name = get_function_type_name(nodes(), original_pos);
+    std::string modified_name = get_function_type_name(modified.nodes(), modified_pos);
+
+    if(original_name == modified_name) return true;
+
+  } else if(original_tag == "if_stmt") {
+
+    construct first_original = get_first_child(*this);
+    construct first_modified = get_first_child(modified);
+
+    if(is_child_if(first_original) && is_child_if(first_modified)) {
+
+      /** todo play with getting and checking a match with all conditions */
+      std::string original_condition = get_condition(nodes(), original_pos);
+      std::string modified_condition = get_condition(modified.nodes(), modified_pos);
+
+      bool original_has_block = conditional_has_block(first_original);
+      bool modified_has_block = conditional_has_block(first_modified);
+
+      bool original_has_else = if_stmt_has_else(*this);
+      bool modified_has_else = if_stmt_has_else(modified);
+
+      if(if_block_equal(first_original, first_modified)
+        || (original_condition == modified_condition
+          && ( original_has_block == modified_has_block 
+            || original_has_else == modified_has_else 
+            || (original_has_block && !modified_has_else) 
+            || (modified_has_block && !original_has_else)))) {
+        return true;
+      }
+    }
+
+  } else if(original_tag == "if" && original_uri == SRCML_SRC_NAMESPACE_HREF) {
+
+    if(get_condition(nodes(), original_pos) == get_condition(modified.nodes(), modified_pos)) {
+      return true;
+    }
+
+    if(if_block_equal(*this, modified)) {
+     return true;
+    }
+
+  } else if(original_tag == "while" || original_tag == "switch" || original_tag == "do") {
+
+    std::string original_condition = get_condition(nodes(), original_pos);
+    std::string modified_condition = get_condition(modified.nodes(), modified_pos);
+
+    if(original_condition == modified_condition) return true;
+
+  } else if(original_tag == "for" || original_tag == "foreach") {
+
+    if(for_control_matches(*this, modified)) {
+      return true;
+    }
+
+  } else if(original_tag == "case") { 
+
+    std::string original_expr = get_case_expr(nodes(), original_pos);
+    std::string modified_expr = get_case_expr(modified.nodes(), modified_pos);
+
+    if(original_expr == modified_expr) return true;
+
+  } else if(original_tag == "class" || original_tag == "struct" || original_tag == "union" || original_tag == "enum") {
+
+    std::string original_name = get_class_type_name(nodes(), original_pos);
+    std::string modified_name = get_class_type_name(modified.nodes(), modified_pos);
+
+    if(original_name == modified_name && original_name != "") return true;
+
+  }
+
+  return is_similar(modified);
 
 }
