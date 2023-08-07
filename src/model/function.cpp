@@ -1,5 +1,5 @@
 /**
- * @file function.hpp
+ * @file function.cpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,19 +18,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_FUNCTION_HPP
-#define INCLUDED_FUNCTION_HPP
+#include <function.hpp>
 
-#include <construct.hpp>
+//temp, probably
+#include <srcdiff_match_internal.hpp>
 
-class function : public construct {
+bool function::is_matchable_impl(const construct & modified) const {
 
-public:
+    std::string original_name = get_function_type_name(nodes(), start_position());
+    std::string modified_name = get_function_type_name(modified.nodes(), modified.start_position());
 
-    function(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : construct(node_list, start, out) {}
-    virtual bool is_matchable_impl(const construct & modified) const;
+    if(original_name == modified_name) return true;
 
-};
-
-
-#endif
+    return false;
+}

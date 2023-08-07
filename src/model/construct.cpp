@@ -435,6 +435,7 @@ bool construct::is_matchable(const construct & modified) const {
   const std::string & modified_uri = modified.term(0)->ns.href;
 
   if(original_tag != modified_tag) return false;
+  if(is_matchable_impl(modified)) return true;
 
   if(original_tag == "type" || original_tag == "then" || original_tag == "condition" || original_tag == "control" || original_tag == "init"
     || original_tag == "default" || original_tag == "comment"
@@ -532,15 +533,6 @@ bool construct::is_matchable(const construct & modified) const {
     std::string modified_name = get_decl_name(modified.nodes(), modified_pos);
 
     if(original_name == modified_name && original_name != "") return true;
-
-  } else if(original_tag == "function"    || original_tag == "function_decl"
-         || original_tag == "constructor" || original_tag == "constructor_decl"
-         || original_tag == "destructor"  || original_tag == "destructor_decl") {
-
-    std::string original_name = get_function_type_name(nodes(), original_pos);
-    std::string modified_name = get_function_type_name(modified.nodes(), modified_pos);
-
-    if(original_name == modified_name) return true;
 
   } else if(original_tag == "if_stmt") {
 
@@ -649,6 +641,9 @@ bool construct::is_tag_convertable(const construct & modified) const {
 
   return false;
 
+}
+bool construct::is_matchable_impl(const construct & modified) const {
+    return false;
 }
 
 bool construct::is_convertable(const construct & modified) const {
