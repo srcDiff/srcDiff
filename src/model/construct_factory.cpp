@@ -19,18 +19,28 @@
  */
 
 #include <construct_factory.hpp>
+
 #include <construct.hpp>
+#include <function.hpp>
 
 #include <unordered_map>
+#include <string_view>
 
-typedef std::unordered_map<std::string, 
-                   std::function<std::shared_ptr<construct>(const srcml_nodes & node_list,
-                                                            int & start,
-                                                            std::shared_ptr<srcdiff_output> out)
-                                >
-                          > factory_map_type;
+typedef std::function<std::shared_ptr<construct>(const srcml_nodes & node_list,
+                                                 int & start,
+                                                 std::shared_ptr<srcdiff_output> out)
+                     > factory_function;
+typedef std::unordered_map<std::string_view, factory_function> factory_map_type;
+
+factory_function default_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<construct>(node_list, start, out); };
+factory_function function_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<function>(node_list, start, out); };
+
 factory_map_type factory_map = {
-  {"construct", [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<construct>(node_list, start, out); } }
+  // default
+  {"construct", default_factory },
+
+  // function-type
+  {"function", function_factory },
 
 };
 
