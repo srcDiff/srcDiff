@@ -1,0 +1,51 @@
+/**
+ * @file construct_factory.cpp
+ *
+ * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
+ *
+ * srcDiff is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * srcDiff is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with the srcML Toolkit; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+
+#include <construct_factory.hpp>
+#include <construct.hpp>
+
+#include <unordered_map>
+
+typedef std::unordered_map<std::string, 
+                   std::function<std::shared_ptr<construct>(const srcml_nodes & node_list,
+                                                            int & start,
+                                                            std::shared_ptr<srcdiff_output> out)
+                                >
+                          > factory_map_type;
+factory_map_type factory_map = {
+  {"construct", [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<construct>(node_list, start, out); } }
+
+};
+
+std::shared_ptr<construct> create_construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) {
+
+  std::shared_ptr<const srcml_node> node = node_list[start];
+  std::string tag_name;
+  if(node->ns.prefix) {
+    tag_name = *node->ns.prefix + ":";
+  }
+  tag_name += node->name;
+
+  factory_map_type::const_iterator citr = factory_map.find(tag_name);
+  if(citr == factory_map.end()) tag_name = "construct";
+
+  return factory_map[tag_name](node_list, start, out);
+}
+

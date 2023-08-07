@@ -21,6 +21,7 @@
 #include <construct.hpp>
 
 #include <srcml_nodes.hpp>
+#include <construct_factory.hpp>
 #include <srcdiff_text_measure.hpp>
 #include <srcdiff_syntax_measure.hpp>
 
@@ -59,7 +60,7 @@ construct::construct_list construct::get_descendent_constructs(const srcml_nodes
 
             // text is separate node if not surrounded by a tag in range
             if((xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_TEXT || (xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_ELEMENT) {
-                descendent_constructs.push_back(std::make_shared<construct>(node_list, pos, out));
+                descendent_constructs.push_back(create_construct(node_list, pos, out));
             } else {
                 return descendent_constructs;
             }
