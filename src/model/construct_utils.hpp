@@ -27,6 +27,8 @@ class construct;
 #include <string>
 #include <memory>
 
+#include <srcml_nodes.hpp>
+
 namespace std {
 
   template<>
@@ -47,5 +49,9 @@ namespace std {
 
 }
 
+void top_level_name_seek(const srcml_nodes & nodes, int & start_pos);
+void skip_tag(const srcml_nodes & nodes, int & start_pos);
+std::string get_name(const srcml_nodes & nodes, int name_start_pos);
+std::string extract_name(const srcml_nodes & nodes, int start_pos);
 
 #endif

@@ -25,8 +25,8 @@
 
 bool function::is_matchable_impl(const construct & modified) const {
 
-    std::string original_name = get_function_type_name(nodes(), start_position());
-    std::string modified_name = get_function_type_name(modified.nodes(), modified.start_position());
+    std::string original_name = extract_name(nodes(), start_position());
+    std::string modified_name = extract_name(modified.nodes(), modified.start_position());
 
     if(original_name == modified_name) return true;
 
