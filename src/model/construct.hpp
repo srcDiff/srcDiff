@@ -93,6 +93,8 @@ public:
     std::size_t hash() const;
 
 
+    virtual std::shared_ptr<construct> name() const;
+
     // Differencing Rules
     const std::shared_ptr<srcdiff_measure> & measure(const construct & modified) const;
     bool is_similar(const construct & modified) const;
