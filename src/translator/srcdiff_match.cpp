@@ -884,7 +884,7 @@ bool conditional_has_block(const construct & set) {
  *          
  */
 
-std::shared_ptr<construct> get_first_child(construct & set) {
+std::shared_ptr<construct> get_first_child(const construct & set) {
 
   construct::construct_list sets = construct::get_descendent_constructs(set.nodes(), set.get_terms().at(1), set.end_position());
   return sets.at(0);
