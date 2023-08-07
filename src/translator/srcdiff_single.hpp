@@ -29,8 +29,8 @@ protected:
 
 	std::shared_ptr<srcdiff_output> out;
 
-	const construct & original_construct;
-	const construct & modified_construct;
+	const std::shared_ptr<construct> & original_construct;
+	const std::shared_ptr<construct> & modified_construct;
 
 private:
 
@@ -39,7 +39,7 @@ private:
 
 public:
 
-	srcdiff_single(std::shared_ptr<srcdiff_output> out, const construct & original_construct, const construct & modified_construct);
+	srcdiff_single(std::shared_ptr<srcdiff_output> out, const std::shared_ptr<construct> & original_construct, const std::shared_ptr<construct> & modified_construct);
 
 	virtual void output();
 

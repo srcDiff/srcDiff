@@ -1,10 +1,10 @@
 #include <srcdiff_shortest_edit_script.hpp>
 
-int srcdiff_shortest_edit_script::compute_edit_script(const construct & original, const construct & modified) {
+int srcdiff_shortest_edit_script::compute_edit_script(const std::shared_ptr<construct> & original, const std::shared_ptr<construct> & modified) {
   compare = node_compare;
   accessor = construct_node_index;
 
-  return compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
+  return compute((const void *)&original, original->size(), (const void *)&modified, modified->size());
 }
 
 int srcdiff_shortest_edit_script::compute_edit_script(const construct::construct_list & original, const construct::construct_list & modified) {
@@ -32,7 +32,7 @@ int srcdiff_shortest_edit_script::compute_edit_script(const std::vector<std::str
 
 // diff node accessor function
 const void * srcdiff_shortest_edit_script::construct_node_index(int index, const void* data, const void * context) {
-  construct * element = (construct *)data;
+  const std::shared_ptr<construct>& element = *(const std::shared_ptr<construct> *)data;
   return &element->term(index);
 }
 
@@ -55,10 +55,10 @@ const void * srcdiff_shortest_edit_script::construct_list_index(int index, const
 
 int srcdiff_shortest_edit_script::construct_compare(const void * e1, const void * e2, const void * context) {
 
-  const construct & element_1 = *(const construct *)e1;
-  const construct & element_2 = *(const construct *)e2;
+  const std::shared_ptr<construct> & element_1 = *(const std::shared_ptr<construct> *)e1;
+  const std::shared_ptr<construct> & element_2 = *(const std::shared_ptr<construct> *)e2;
   
-  if(element_1 == element_2) return 0;
+  if(*element_1 == *element_2) return 0;
   return 1;
 }
 

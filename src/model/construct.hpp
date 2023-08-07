@@ -23,7 +23,7 @@
 
 #include <srcdiff_output.hpp>
 #include <srcml_nodes.hpp>
-#include <construct_hash.hpp>
+#include <construct_utils.hpp>
 
 #include <srcdiff_measure.hpp>
 
@@ -34,7 +34,7 @@ class construct {
 
 public:
 
-    typedef std::vector<construct> construct_list;
+    typedef std::vector<std::shared_ptr<construct>> construct_list;
     typedef std::function<bool (int & node_pos, const srcml_nodes & node_list, const void * context)> construct_filter;
 
     static bool is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context);
@@ -90,7 +90,7 @@ public:
     const std::string & term_name(std::size_t pos) const;
     const std::string & root_term_name() const;
 
-    std::optional<std::size_t> hash() const;
+    std::size_t hash() const;
 
 
     // Differencing Rules

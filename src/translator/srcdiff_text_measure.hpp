@@ -11,8 +11,8 @@ protected:
 
 private:
 
-    construct set_original_text;
-    construct set_modified_text;
+    std::shared_ptr<construct> set_original_text;
+    std::shared_ptr<construct> set_modified_text;
     bool important_only;
     bool text_collected;
 

@@ -18,9 +18,9 @@ typedef std::vector<move_info> move_infos;
 srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation)
   : srcdiff_output(out), position(position), operation(operation) {}
 
-bool srcdiff_move::is_move(const construct & set) {
+bool srcdiff_move::is_move(const std::shared_ptr<construct> & set) {
 
-  return set.term(0)->move;
+  return set->term(0)->move;
 
 }
 
@@ -31,10 +31,10 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
   std::map<std::string, move_infos > constructs;
 
-  typedef std::unordered_multiset<construct>::iterator lookup_iterator;
-  std::unordered_multiset<construct> node_set_lookup_table;
+  typedef std::unordered_multiset<std::shared_ptr<construct>>::iterator lookup_iterator;
+  std::unordered_multiset<std::shared_ptr<construct>> node_set_lookup_table;
 
-  std::vector<const construct *> delete_sets;
+  std::vector<const std::shared_ptr<construct>> delete_sets;
 
   for(edit_t * edits = edit_script; edits; edits = edits->next) {
 
@@ -47,7 +47,7 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
         for(int i = 0; i < edits->length; ++i) {
 
-          if(construct_list_modified.at(edits->offset_sequence_two + i).term(0)->is_text()) {
+          if(construct_list_modified.at(edits->offset_sequence_two + i)->term(0)->is_text()) {
             continue;
           }
           node_set_lookup_table.insert(construct_list_modified.at(edits->offset_sequence_two + i));
@@ -60,10 +60,10 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
         for(int i = 0; i < edits->length; ++i) {
 
-          if(construct_list_original.at(edits->offset_sequence_one + i).term(0)->is_text()) {
+          if(construct_list_original.at(edits->offset_sequence_one + i)->term(0)->is_text()) {
             continue;
           }
-          delete_sets.push_back(&construct_list_original.at(edits->offset_sequence_one + i));
+          delete_sets.push_back(construct_list_original.at(edits->offset_sequence_one + i));
 
         }
 
@@ -73,9 +73,9 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
   }
 
-  for(const construct * set : delete_sets) {
+  for(const std::shared_ptr<construct> set : delete_sets) {
 
-    std::pair<lookup_iterator, lookup_iterator> range = node_set_lookup_table.equal_range(*set);
+    std::pair<lookup_iterator, lookup_iterator> range = node_set_lookup_table.equal_range(set);
 
     for(lookup_iterator pos = std::get<0>(range); pos != std::get<1>(range); ++pos) {
 
@@ -83,7 +83,7 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
         continue;
       }
 
-      if(!(*set == *pos)) {
+      if(!(*set == **pos)) {
         continue;
       }
 
@@ -91,24 +91,24 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
       std::shared_ptr<srcml_node> start_node_one = std::make_shared<srcml_node>(*set->term(0));
       start_node_one->move = move_id;
 
-      std::shared_ptr<srcml_node> start_node_two = std::make_shared<srcml_node>(*pos->term(0));
+      std::shared_ptr<srcml_node> start_node_two = std::make_shared<srcml_node>(*(*pos)->term(0));
       start_node_two->move = move_id;
 
       // breaks const
       // Not sure if I can use terms here. Also, probably should fix the break const thing
       ((srcml_nodes &)set->nodes()).at(set->start_position()) = start_node_one;
-      ((srcml_nodes &)pos->nodes()).at(pos->start_position()) = start_node_two;
+      ((srcml_nodes &)(*pos)->nodes()).at((*pos)->start_position()) = start_node_two;
 
       if(!start_node_one->is_empty) {
 
         std::shared_ptr<srcml_node> end_node_one = std::make_shared<srcml_node>(*set->last_term());
         end_node_one->move = move_id;
 
-        std::shared_ptr<srcml_node> end_node_two = std::make_shared<srcml_node>(*pos->last_term());
+        std::shared_ptr<srcml_node> end_node_two = std::make_shared<srcml_node>(*(*pos)->last_term());
         end_node_two->move = move_id;
 
         ((srcml_nodes &)set->nodes()).at(set->end_position()) = end_node_one;
-        ((srcml_nodes &)pos->nodes()).at(pos->end_position()) = end_node_two;
+        ((srcml_nodes &)(*pos)->nodes()).at((*pos)->end_position()) = end_node_two;
 
       }
 

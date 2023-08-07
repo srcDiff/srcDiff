@@ -27,11 +27,11 @@ struct difference {
 bool srcdiff_match::is_match_default(const construct::construct_list & sets_original, int start_pos_original,
                                      const construct::construct_list & sets_modified, int start_pos_modified) {
 
-  const srcdiff_measure & measure = *sets_original.at(start_pos_original).measure(sets_modified.at(start_pos_modified));
+  const srcdiff_measure & measure = *sets_original.at(start_pos_original)->measure(*sets_modified.at(start_pos_modified));
   if(measure.similarity() == MAX_INT) return false;
 
-  if(!sets_original.at(start_pos_original).is_match_similar(sets_modified.at(start_pos_modified))
-    && !sets_original.at(start_pos_original).can_refine_difference(sets_modified.at(start_pos_modified)))
+  if(!sets_original.at(start_pos_original)->is_match_similar(*sets_modified.at(start_pos_modified))
+    && !sets_original.at(start_pos_original)->can_refine_difference(*sets_modified.at(start_pos_modified)))
     return false;
 
   if(srcdiff_nested::is_better_nested(sets_original, start_pos_original,
@@ -151,7 +151,7 @@ offset_pair * srcdiff_match::match_differences() {
     for(int j = 0; j < olength; ++j) {
 
       /** loop O(nd) */
-      const srcdiff_measure & measure = *construct_list_original.at(j).measure(construct_list_modified.at(i));
+      const srcdiff_measure & measure = *construct_list_original.at(j)->measure(*construct_list_modified.at(i));
       int similarity = measure.similarity();
 
       //unsigned long long max_similarity = (unsigned long long)-1;
@@ -704,7 +704,7 @@ std::string get_for_condition(const srcml_nodes & nodes, int start_pos) {
 
   construct::construct::construct_list::const_iterator citr;
   for(citr = control_sets.begin(); citr != control_sets.end(); ++citr) {
-    if(citr->root_term_name() == "condition") {
+    if((*citr)->root_term_name() == "condition") {
       break;
     }
   }
@@ -712,9 +712,9 @@ std::string get_for_condition(const srcml_nodes & nodes, int start_pos) {
   if(citr == control_sets.end()) return "";
 
   std::string condition = "";
-  for(std::size_t pos = 0; pos < citr->size(); ++pos) {
-    if(citr->term(pos)->is_text()) {
-      condition += citr->term(pos)->content ? *citr->term(pos)->content : "";
+  for(std::size_t pos = 0; pos < (*citr)->size(); ++pos) {
+    if((*citr)->term(pos)->is_text()) {
+      condition += (*citr)->term(pos)->content ? *(*citr)->term(pos)->content : "";
     }
   }
 
@@ -861,7 +861,7 @@ bool conditional_has_block(const construct & set) {
 
   for(construct::construct::construct_list::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
 
-    if(itr->root_term_name() == "block" && !bool(find_attribute(itr->term(0), "type"))) {
+    if((*itr)->root_term_name() == "block" && !bool(find_attribute((*itr)->term(0), "type"))) {
       return true;
     } 
 
@@ -884,7 +884,7 @@ bool conditional_has_block(const construct & set) {
  *          
  */
 
-construct get_first_child(const construct & set) {
+std::shared_ptr<construct> get_first_child(construct & set) {
 
   construct::construct_list sets = construct::get_descendent_constructs(set.nodes(), set.get_terms().at(1), set.end_position());
   return sets.at(0);
@@ -905,9 +905,9 @@ bool if_stmt_has_else(const construct & set) {
 
   construct::construct_list sets = construct::get_descendent_constructs(set.nodes(), set.get_terms().at(1), set.end_position());
   for(construct::construct::construct_list::iterator itr = sets.begin(); itr != sets.end(); ++itr) {
-    if(itr->root_term_name() == "else" 
-      || ( itr->root_term_name() == "if" 
-        && bool(find_attribute(itr->term(0), "type")))) {
+    if((*itr)->root_term_name() == "else" 
+      || ((*itr)->root_term_name() == "if" 
+        && bool(find_attribute((*itr)->term(0), "type")))) {
       return true;
 
     }
@@ -927,7 +927,7 @@ bool if_block_equal(const construct & set_original, const construct & set_modifi
   construct::construct::construct_list::iterator block_original;
   for(block_original = construct_list_original.begin(); block_original != construct_list_original.end(); ++block_original) {
 
-    if(block_original->root_term_name() == "block") {
+    if((*block_original)->root_term_name() == "block") {
 
       break;
 
@@ -940,7 +940,7 @@ bool if_block_equal(const construct & set_original, const construct & set_modifi
   construct::construct::construct_list::iterator block_modified;
   for(block_modified = construct_list_modified.begin(); block_modified != construct_list_modified.end(); ++block_modified) {
 
-    if(block_modified->root_term_name() == "block") {
+    if((*block_modified)->root_term_name() == "block") {
 
       break;
 
@@ -950,7 +950,7 @@ bool if_block_equal(const construct & set_original, const construct & set_modifi
 
   if(block_modified == construct_list_modified.end()) return false;
 
-  bool block_is_equal = *block_original == *block_modified;
+  bool block_is_equal = **block_original == **block_modified;
 
   return block_is_equal;
 
@@ -976,20 +976,20 @@ bool for_control_matches(const construct & set_original, const construct & set_m
 
   construct::construct_list::size_type control_pos_original;
   for(control_pos_original = 0; control_pos_original < construct_list_original.size(); ++control_pos_original) {
-    if(construct_list_original.at(control_pos_original).root_term_name() == "control") {
+    if(construct_list_original.at(control_pos_original)->root_term_name() == "control") {
       break;
     }
   }
 
   construct::construct_list::size_type control_pos_modified;
   for(control_pos_modified = 0; control_pos_modified < construct_list_modified.size(); ++control_pos_modified) {
-    if(construct_list_modified.at(control_pos_modified).root_term_name() == "control") {
+    if(construct_list_modified.at(control_pos_modified)->root_term_name() == "control") {
       break;
     }
   }
 
   bool matches = control_pos_original != construct_list_original.size() && control_pos_modified != construct_list_modified.size() 
-    && construct_list_original.at(control_pos_original) == construct_list_modified.at(control_pos_modified);
+    && *construct_list_original.at(control_pos_original) == *construct_list_modified.at(control_pos_modified);
 
   return matches;
 
@@ -998,8 +998,7 @@ bool for_control_matches(const construct & set_original, const construct & set_m
 /** loop O(n) */
 std::string get_case_expr(const srcml_nodes & nodes, int start_pos) {
 
-  if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT
-    || nodes.at(start_pos)->name != "case") return "";
+  if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT || nodes.at(start_pos)->name != "case") return "";
 
   // skip case tag and case text
   int expr_pos = start_pos + 1;
@@ -1087,7 +1086,7 @@ bool is_single_name_expr(const srcml_nodes & nodes, int start_pos) {
 }
 
 /** loop O(n) */
-construct get_first_expr_child(const srcml_nodes & nodes, int start_pos) {
+std::shared_ptr<construct> get_first_expr_child(const srcml_nodes & nodes, int start_pos) {
 
   int expr_pos = start_pos;
 
@@ -1097,9 +1096,9 @@ construct get_first_expr_child(const srcml_nodes & nodes, int start_pos) {
   }
 
   if(nodes.at(expr_pos)->type == XML_READER_TYPE_END_ELEMENT && nodes.at(expr_pos)->name == nodes.at(start_pos)->name) {
-    return construct(nodes);
+    return std::make_shared<construct>(nodes);
   }
 
-  return construct(nodes, expr_pos);
+  return std::make_shared<construct>(nodes, expr_pos);
 
 }

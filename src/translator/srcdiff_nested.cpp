@@ -109,47 +109,47 @@ const nest_info nesting[] = {
 
 };
 
-int is_block_type(const construct & structure) {
+int is_block_type(const std::shared_ptr<construct> & structure) {
 
-  if((xmlReaderTypes)structure.root_term()->type != XML_READER_TYPE_ELEMENT)
+  if((xmlReaderTypes)structure->root_term()->type != XML_READER_TYPE_ELEMENT)
     return -1;
 
-  if(structure.root_term()->ns.href != SRCML_SRC_NAMESPACE_HREF)
+  if(structure->root_term()->ns.href != SRCML_SRC_NAMESPACE_HREF)
     return -1;
 
   for(int i = 0; nesting[i].type; ++i)
-    if(structure.root_term_name() == nesting[i].type)
+    if(structure->root_term_name() == nesting[i].type)
       return i;
 
   return -1;
 }
 
-bool has_internal_structure(const construct & structure, const std::optional<std::string> & type) {
+bool has_internal_structure(const std::shared_ptr<construct> & structure, const std::optional<std::string> & type) {
 
   if(!type) return false;
 
-  for(unsigned int i = 1; i < structure.size(); ++i) {
-    if((xmlReaderTypes)structure.term(i)->type == XML_READER_TYPE_ELEMENT
-              && structure.term(i)->name == type)
+  for(unsigned int i = 1; i < structure->size(); ++i) {
+    if((xmlReaderTypes)structure->term(i)->type == XML_READER_TYPE_ELEMENT
+              && structure->term(i)->name == type)
       return true;
   }
 
   return false;
 }
 
-bool is_nest_type(const construct & structure,
-                  const construct & structure_other,
+bool is_nest_type(const std::shared_ptr<construct> & structure,
+                  const std::shared_ptr<construct> & structure_other,
                   int type_index) {
 
-  if((xmlReaderTypes)structure.root_term()->type != XML_READER_TYPE_ELEMENT)
+  if((xmlReaderTypes)structure->root_term()->type != XML_READER_TYPE_ELEMENT)
     return false;
 
-    if(structure.root_term()->ns.href != SRCML_SRC_NAMESPACE_HREF)
+    if(structure->root_term()->ns.href != SRCML_SRC_NAMESPACE_HREF)
     return true;
 
   for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i) {
-    if(structure.root_term_name() == nesting[type_index].possible_nest_items[i]
-       && has_internal_structure(structure_other, structure.root_term_name()))
+    if(structure->root_term_name() == nesting[type_index].possible_nest_items[i]
+       && has_internal_structure(structure_other, structure->root_term_name()))
       return true;
   }
 
@@ -172,22 +172,22 @@ bool srcdiff_nested::is_match(int & node_pos, const srcml_nodes & nodes, const v
  *
  * Search sets to find best match for match
  */
-int srcdiff_nested::best_match(const construct::construct_list & sets, const construct & match) {
+int srcdiff_nested::best_match(const construct::construct_list & sets, const std::shared_ptr<construct> & match) {
 
   int match_pos = sets.size();
   int match_similarity = -1;
 
   for(unsigned int i = 0; i < sets.size(); ++i) {
 
-    if(sets.at(i).size() > match.size() && (sets.at(i).size()) > (4 * match.size())) {
+    if(sets.at(i)->size() > match->size() && (sets.at(i)->size()) > (4 * match->size())) {
       continue;
     }
 
-    if(match.size() > sets.at(i).size() && (match.size()) > (4 * sets.at(i).size())) {
+    if(match->size() > sets.at(i)->size() && (match->size()) > (4 * sets.at(i)->size())) {
       continue;
     }
 
-    srcdiff_text_measure measure(sets.at(i), match);
+    srcdiff_text_measure measure(*sets.at(i), *match);
     measure.compute();
     if(measure.similarity() > match_similarity) {
 
@@ -202,8 +202,8 @@ int srcdiff_nested::best_match(const construct::construct_list & sets, const con
 
 }
 
-bool is_nestable_internal(const construct & structure_one,
-                          const construct & structure_two) {
+bool is_nestable_internal(const std::shared_ptr<construct> & structure_one,
+                          const std::shared_ptr<construct> & structure_two) {
 
   int block = is_block_type(structure_two);
 
@@ -211,8 +211,8 @@ bool is_nestable_internal(const construct & structure_one,
     return false;
 
   /** Only can nest a block into another block if it's parent is a block */
-  bool is_block = structure_one.root_term_name() == "block" && structure_two.root_term_name() == "block";
-  bool parent_is_block = structure_one.root_term()->parent && (*structure_one.root_term()->parent)->name == "block";
+  bool is_block = structure_one->root_term_name() == "block" && structure_two->root_term_name() == "block";
+  bool parent_is_block = structure_one->root_term()->parent && (*structure_one->root_term()->parent)->name == "block";
   if(is_block && !parent_is_block) return false;
 
   if(is_nest_type(structure_one, structure_two, block)) {
@@ -224,23 +224,23 @@ bool is_nestable_internal(const construct & structure_one,
   return false;
 }
 
-bool srcdiff_nested::is_same_nestable(const construct & structure_one,
-                                      const construct & structure_two) {
+bool srcdiff_nested::is_same_nestable(const std::shared_ptr<construct> & structure_one,
+                                      const std::shared_ptr<construct> & structure_two) {
 
   if(!is_nestable_internal(structure_one, structure_two))
     return false;
 
-  construct::construct_list set = construct::get_descendent_constructs(structure_two.nodes(), structure_two.get_terms().at(1), structure_two.end_position(), srcdiff_nested::is_match, &structure_one.root_term());
+  construct::construct_list set = construct::get_descendent_constructs(structure_two->nodes(), structure_two->get_terms().at(1), structure_two->end_position(), srcdiff_nested::is_match, &structure_one->root_term());
 
   unsigned int match = best_match(set, structure_one);
 
   if(match >= set.size())
     return false;
 
-  srcdiff_text_measure match_measure(structure_one, set.at(match));
+  srcdiff_text_measure match_measure(*structure_one, *set.at(match));
   match_measure.compute();
 
-  srcdiff_text_measure measure(structure_one, structure_two);
+  srcdiff_text_measure measure(*structure_one, *structure_two);
   measure.compute();
 
   double min_size = measure.min_length();
@@ -252,30 +252,30 @@ bool srcdiff_nested::is_same_nestable(const construct & structure_one,
 
 }
 
-bool srcdiff_nested::is_nestable(const construct & structure_one,
-                                 const construct & structure_two) {
+bool srcdiff_nested::is_nestable(const std::shared_ptr<construct> & structure_one,
+                                 const std::shared_ptr<construct> & structure_two) {
 
-  if(*structure_one.root_term() == *structure_two.root_term())
+  if(*structure_one->root_term() == *structure_two->root_term())
     return is_same_nestable(structure_one, structure_two);
   else
     return is_nestable_internal(structure_one, structure_two);
 
 }
 
-bool is_better_nest_no_recursion(const construct & node_set_outer,
-                                 const construct & node_set_inner,
+bool is_better_nest_no_recursion(const std::shared_ptr<construct> & node_set_outer,
+                                 const std::shared_ptr<construct> & node_set_inner,
                                  const srcdiff_measure & measure) {
 
     if(srcdiff_nested::is_nestable(node_set_inner, node_set_outer)) {
 
-      construct::construct_list set = construct::get_descendent_constructs(node_set_outer.nodes(), node_set_outer.get_terms().at(1), node_set_outer.end_position(), srcdiff_nested::is_match,
-                                &node_set_inner.root_term());
+      construct::construct_list set = construct::get_descendent_constructs(node_set_outer->nodes(), node_set_outer->get_terms().at(1), node_set_outer->end_position(), srcdiff_nested::is_match,
+                                &node_set_inner->root_term());
 
       int match = srcdiff_nested::best_match(set, node_set_inner);
 
       if(match < set.size()) {
 
-        srcdiff_text_measure match_measure(set.at(match), node_set_inner);
+        srcdiff_text_measure match_measure(*set.at(match), *node_set_inner);
         match_measure.compute();
 
         double min_size = measure.min_length();
@@ -294,13 +294,13 @@ bool is_better_nest_no_recursion(const construct & node_set_outer,
 
 }
 
-bool has_compound_inner(const construct & node_set_outer) {
+bool has_compound_inner(const std::shared_ptr<construct> & node_set_outer) {
 
-  if(node_set_outer.root_term()->is_simple) return false;
+  if(node_set_outer->root_term()->is_simple) return false;
 
-  for(unsigned int i = 1; i < node_set_outer.size(); ++i) {
-    if((xmlReaderTypes)node_set_outer.term(i)->type == XML_READER_TYPE_ELEMENT
-      && node_set_outer.term(i)->name == "name" && !node_set_outer.term(i)->is_simple)
+  for(unsigned int i = 1; i < node_set_outer->size(); ++i) {
+    if((xmlReaderTypes)node_set_outer->term(i)->type == XML_READER_TYPE_ELEMENT
+      && node_set_outer->term(i)->name == "name" && !node_set_outer->term(i)->is_simple)
       return true;
   }
 
@@ -308,26 +308,26 @@ bool has_compound_inner(const construct & node_set_outer) {
 
 }
 
-bool is_better_nest(const construct & node_set_outer,
-                    const construct & node_set_inner,
+bool is_better_nest(const std::shared_ptr<construct> & node_set_outer,
+                    const std::shared_ptr<construct> & node_set_inner,
                     const srcdiff_measure & measure) {
 
   // do not nest compound name in simple or anything into something that is not compound
-  if(node_set_outer.root_term_name() == "name" && node_set_inner.root_term_name() == "name"
-    &&    (node_set_outer.root_term()->is_simple
-      || (!node_set_inner.root_term()->is_simple && !has_compound_inner(node_set_outer)))) return false;
+  if(node_set_outer->root_term_name() == "name" && node_set_inner->root_term_name() == "name"
+    &&    (node_set_outer->root_term()->is_simple
+      || (!node_set_inner->root_term()->is_simple && !has_compound_inner(node_set_outer)))) return false;
 
   // parents and children same do not nest.
   if(srcdiff_nested::is_nestable(node_set_inner, node_set_outer)) {
 
-    construct::construct_list set = construct::get_descendent_constructs(node_set_outer.nodes(), node_set_outer.get_terms().at(1), node_set_outer.end_position(), srcdiff_nested::is_match
-                                                           , &node_set_inner.root_term());
+    construct::construct_list set = construct::get_descendent_constructs(node_set_outer->nodes(), node_set_outer->get_terms().at(1), node_set_outer->end_position(), srcdiff_nested::is_match
+                                                           , &node_set_inner->root_term());
 
     int match = srcdiff_nested::best_match(set, node_set_inner);
 
     if(match < set.size()) {
 
-      srcdiff_text_measure match_measure(set.at(match), node_set_inner);
+      srcdiff_text_measure match_measure(*set.at(match), *node_set_inner);
       match_measure.compute();
 
       double min_size = measure.min_length();
@@ -358,7 +358,7 @@ bool srcdiff_nested::is_better_nested(const construct::construct_list & construc
                                       const construct::construct_list & construct_list_modified, int start_pos_modified) {
 
   const srcdiff_measure & measure = *construct_list_original.at(start_pos_original)
-                            .measure(construct_list_modified.at(start_pos_modified));
+                            ->measure(*construct_list_modified.at(start_pos_modified));
 
   for(int pos = start_pos_original; pos < construct_list_original.size(); ++pos) {
 
@@ -413,16 +413,16 @@ static bool is_decl_stmt_from_expr(const srcml_nodes & nodes, int pos) {
 
 }
 
-bool check_nest_name(const construct & set_original,
+bool check_nest_name(const std::shared_ptr<construct> & set_original,
                      std::optional<std::shared_ptr<srcml_node>> parent_original,
-                     const construct & set_modified,
+                     const std::shared_ptr<construct> & set_modified,
                      std::optional<std::shared_ptr<srcml_node>> parent_modified) {
 
-  int original_pos = set_original.start_position();
-  int modified_pos = set_modified.start_position();
+  int original_pos = set_original->start_position();
+  int modified_pos = set_modified->start_position();
 
-  if(set_original.root_term_name() == "text") return false;
-  if(set_modified.root_term_name() == "text") return false;
+  if(set_original->root_term_name() == "text") return false;
+  if(set_modified->root_term_name() == "text") return false;
 
   bool is_call_name_original = parent_original && (*parent_original)->name == "call";
   bool is_expr_name_original = parent_original && (*parent_original)->name == "expr";
@@ -443,11 +443,11 @@ bool check_nest_name(const construct & set_original,
 
   if(is_call_name_original && is_expr_name_modified) {
 
-    int simple_name_pos = set_original.start_position();
-    if(set_original.nodes().at(simple_name_pos)->name == "name") {
+    int simple_name_pos = set_original->start_position();
+    if(set_original->nodes().at(simple_name_pos)->name == "name") {
 
-      construct inner_set(set_original.nodes(), simple_name_pos);
-      srcdiff_text_measure measure(inner_set, set_modified);
+      std::shared_ptr<construct> inner_set = std::make_shared<construct>(set_original->nodes(), simple_name_pos);
+      srcdiff_text_measure measure(*inner_set, *set_modified);
       int count = measure.number_match_beginning();
       return 2 * count >= measure.max_length();
 
@@ -457,11 +457,11 @@ bool check_nest_name(const construct & set_original,
 
   if(is_call_name_modified && is_expr_name_original) {
 
-    int simple_name_pos = set_modified.start_position();
-    if(set_modified.nodes().at(simple_name_pos)->name == "name") {
+    int simple_name_pos = set_modified->start_position();
+    if(set_modified->nodes().at(simple_name_pos)->name == "name") {
 
-      construct inner_set(set_modified.nodes(), simple_name_pos);
-      srcdiff_text_measure measure(set_original, inner_set);
+      std::shared_ptr<construct> inner_set = std::make_shared<construct>(set_modified->nodes(), simple_name_pos);
+      srcdiff_text_measure measure(*set_original, *inner_set);
       int count = measure.number_match_beginning();
       return 2 * count >= measure.max_length();
 
@@ -474,27 +474,27 @@ bool check_nest_name(const construct & set_original,
 }
 
 bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
-                                         const construct & set_original,
-                                         const construct & set_modified) {
+                                         const std::shared_ptr<construct> & set_original,
+                                         const std::shared_ptr<construct> & set_modified) {
 
-  int original_pos = set_original.start_position();
-  int modified_pos = set_modified.start_position();
+  int original_pos = set_original->start_position();
+  int modified_pos = set_modified->start_position();
 
-  const std::string & original_tag = set_original.root_term_name();
-  const std::string & modified_tag = set_modified.root_term_name();
+  const std::string & original_tag = set_original->root_term_name();
+  const std::string & modified_tag = set_modified->root_term_name();
 
-  const std::string & original_uri = set_original.root_term()->ns.href;
-  const std::string & modified_uri = set_modified.root_term()->ns.href;
+  const std::string & original_uri = set_original->root_term()->ns.href;
+  const std::string & modified_uri = set_modified->root_term()->ns.href;
 
-  if(original_tag != modified_tag && !set_original.is_tag_convertable(set_modified)) return true;
+  if(original_tag != modified_tag && !set_original->is_tag_convertable(*set_modified)) return true;
 
   // if interchanging decl_stmt always nest expr into init or argument
-  if(original_tag == "expr" && (is_decl_stmt_from_expr(set_original.nodes(), original_pos) || is_decl_stmt_from_expr(set_modified.nodes(), modified_pos))) return false;
+  if(original_tag == "expr" && (is_decl_stmt_from_expr(set_original->nodes(), original_pos) || is_decl_stmt_from_expr(set_modified->nodes(), modified_pos))) return false;
 
   if(original_tag == "name"
-    && set_original.root_term()->is_simple != set_modified.root_term()->is_simple
-    && !check_nest_name(set_original, set_original.root_term()->parent,
-                       set_modified, set_modified.root_term()->parent))
+    && set_original->root_term()->is_simple != set_modified->root_term()->is_simple
+    && !check_nest_name(set_original, set_original->root_term()->parent,
+                       set_modified, set_modified->root_term()->parent))
     return true;
 
   if(original_tag == "then" || original_tag == "block" || original_tag == "block_content"
@@ -503,12 +503,12 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
     || original_tag == "expr" || original_tag == "expr_stmt" || original_tag == "name"
     || original_tag == "number" || original_tag == "file") {
 
-    bool is_reject = !set_original.is_similar(set_modified);
+    bool is_reject = !set_original->is_similar(*set_modified);
     return is_reject;
 
   } else {
 
-    return !set_original.can_refine_difference(set_modified);
+    return !set_original->can_refine_difference(*set_modified);
 
   }
 
@@ -526,22 +526,22 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
   int is_name_nest_original = 0;
   for(int i = start_original; i < end_original; ++i) {
 
-    if(construct_list_original.at(i).root_term()->move) continue;
+    if(construct_list_original.at(i)->root_term()->move) continue;
 
     for(int j = start_modified; j < end_modified; ++j) {
 
-      if(construct_list_modified.at(j).root_term()->move) continue;
+      if(construct_list_modified.at(j)->root_term()->move) continue;
 
       if(srcdiff_nested::is_nestable(construct_list_modified.at(j), construct_list_original.at(i))) {
 
-        construct::construct_list set = construct::get_descendent_constructs(construct_list_original.back().nodes(), construct_list_original.at(i).get_terms().at(1), construct_list_original.at(i).end_position(), srcdiff_nested::is_match
-                                                             , &construct_list_modified.at(j).root_term());
+        construct::construct_list set = construct::get_descendent_constructs(construct_list_original.back()->nodes(), construct_list_original.at(i)->get_terms().at(1), construct_list_original.at(i)->end_position(), srcdiff_nested::is_match
+                                                             , &construct_list_modified.at(j)->root_term());
 
         int match = srcdiff_nested::best_match(set, construct_list_modified.at(j));
 
         if(match >= set.size()) continue;
 
-        srcdiff_text_measure measure(set.at(match), construct_list_modified.at(j));
+        srcdiff_text_measure measure(*set.at(match), *construct_list_modified.at(j));
         measure.compute();
 
         if(srcdiff_nested::reject_match_nested(measure,
@@ -550,25 +550,25 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
           continue;
         }
 
-        if(construct_list_modified.at(j).root_term_name() == "name"
-          && construct_list_modified.at(j).root_term()->parent && (*construct_list_modified.at(j).root_term()->parent)->name == "expr"
-          && construct_list_original.at(i).root_term()->parent && (*construct_list_original.at(i).root_term()->parent)->name == "expr"
+        if(construct_list_modified.at(j)->root_term_name() == "name"
+          && construct_list_modified.at(j)->root_term()->parent && (*construct_list_modified.at(j)->root_term()->parent)->name == "expr"
+          && construct_list_original.at(i)->root_term()->parent && (*construct_list_original.at(i)->root_term()->parent)->name == "expr"
           && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1)) {
           ++is_name_nest_original;
         }
 
-        if(construct_list_modified.at(j).root_term_name() == "name") {
+        if(construct_list_modified.at(j)->root_term_name() == "name") {
 
-            if(!construct_list_modified.at(j).root_term()->parent || !set.at(match).root_term()->parent) {
+            if(!construct_list_modified.at(j)->root_term()->parent || !set.at(match)->root_term()->parent) {
               continue;
             }
 
-            std::optional<std::shared_ptr<srcml_node>> parent_original = set.at(match).root_term()->parent;
+            std::optional<std::shared_ptr<srcml_node>> parent_original = set.at(match)->root_term()->parent;
             while((*parent_original)->name == "name") {
               parent_original = (*parent_original)->parent;
             }
 
-            std::optional<std::shared_ptr<srcml_node>> parent_modified = construct_list_modified.at(j).root_term()->parent;
+            std::optional<std::shared_ptr<srcml_node>> parent_modified = construct_list_modified.at(j)->root_term()->parent;
             while((*parent_modified)->name == "name") {
               parent_modified = (*parent_modified)->parent;
             }
@@ -610,22 +610,22 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
   int is_name_nest_modified = 0;
   for(int i = start_modified; i < end_modified; ++i) {
 
-    if(construct_list_modified.at(i).root_term()->move) continue;
+    if(construct_list_modified.at(i)->root_term()->move) continue;
 
     for(int j = start_original; j < end_original; ++j) {
 
-      if(construct_list_original.at(j).root_term()->move) continue;
+      if(construct_list_original.at(j)->root_term()->move) continue;
 
       if(srcdiff_nested::is_nestable(construct_list_original.at(j), construct_list_modified.at(i))) {
 
-        construct::construct_list set = construct::get_descendent_constructs(construct_list_modified.back().nodes(), construct_list_modified.at(i).get_terms().at(1), construct_list_modified.at(i).end_position(), srcdiff_nested::is_match
-                                                             , &construct_list_original.at(j).root_term());
+        construct::construct_list set = construct::get_descendent_constructs(construct_list_modified.back()->nodes(), construct_list_modified.at(i)->get_terms().at(1), construct_list_modified.at(i)->end_position(), srcdiff_nested::is_match
+                                                             , &construct_list_original.at(j)->root_term());
 
         int match = srcdiff_nested::best_match(set, construct_list_original.at(j));
 
         if(match >= set.size()) continue;
 
-        srcdiff_text_measure measure(construct_list_original.at(j), set.at(match));
+        srcdiff_text_measure measure(*construct_list_original.at(j), *set.at(match));
         measure.compute();
 
         if(srcdiff_nested::reject_match_nested(measure,
@@ -634,25 +634,25 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
           continue;
         }
 
-        if(construct_list_original.at(j).root_term_name() == "name"
-          && construct_list_original.at(j).root_term()->parent && (*construct_list_original.at(j).root_term()->parent)->name == "expr"
-          && construct_list_modified.at(i).root_term()->parent && (*construct_list_modified.at(i).root_term()->parent)->name == "expr"
+        if(construct_list_original.at(j)->root_term_name() == "name"
+          && construct_list_original.at(j)->root_term()->parent && (*construct_list_original.at(j)->root_term()->parent)->name == "expr"
+          && construct_list_modified.at(i)->root_term()->parent && (*construct_list_modified.at(i)->root_term()->parent)->name == "expr"
           && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1)) {
             ++is_name_nest_modified;
           }
 
-        if(construct_list_original.at(j).root_term_name() == "name") {
+        if(construct_list_original.at(j)->root_term_name() == "name") {
 
-            if(!construct_list_original.at(j).root_term()->parent || !set.at(match).root_term()->parent) {
+            if(!construct_list_original.at(j)->root_term()->parent || !set.at(match)->root_term()->parent) {
               continue;
             }
 
-            std::optional<std::shared_ptr<srcml_node>> parent_original = construct_list_original.at(j).root_term()->parent;
+            std::optional<std::shared_ptr<srcml_node>> parent_original = construct_list_original.at(j)->root_term()->parent;
             while(parent_original && (*parent_original)->name == "name") {
               parent_original = (*parent_original)->parent;
             }
 
-            std::optional<std::shared_ptr<srcml_node>> parent_modified = set.at(match).root_term()->parent;
+            std::optional<std::shared_ptr<srcml_node>> parent_modified = set.at(match)->root_term()->parent;
             while(parent_modified && (*parent_modified)->name == "name") {
               parent_modified = (*parent_modified)->parent;
             }
@@ -721,22 +721,22 @@ bool srcdiff_nested::check_nestable_predicate(const construct::construct_list & 
                                               const construct::construct_list & construct_list_inner,
                                               int pos_inner, int start_inner, int end_inner) {
 
-  if(construct_list_inner.at(pos_inner).root_term()->move) return true;
+  if(construct_list_inner.at(pos_inner)->root_term()->move) return true;
 
   if(!is_nestable(construct_list_inner.at(pos_inner), construct_list_outer.at(pos_outer)))
     return true;
 
-  construct::construct_list set = construct::get_descendent_constructs(construct_list_outer.back().nodes(), construct_list_outer.at(pos_outer).get_terms().at(1),
-                            construct_list_outer.at(pos_outer).end_position(), is_match,
-                            &construct_list_inner.at(pos_inner).root_term());
+  construct::construct_list set = construct::get_descendent_constructs(construct_list_outer.back()->nodes(), construct_list_outer.at(pos_outer)->get_terms().at(1),
+                            construct_list_outer.at(pos_outer)->end_position(), is_match,
+                            &construct_list_inner.at(pos_inner)->root_term());
 
   int match_pos = best_match(set, construct_list_inner.at(pos_inner));
 
   if(match_pos >= set.size()) return true;
 
-  const construct & match = set.at(match_pos);
+  const std::shared_ptr<construct> & match = set.at(match_pos);
 
-  srcdiff_text_measure measure(match, construct_list_inner.at(pos_inner));
+  srcdiff_text_measure measure(*match, *construct_list_inner.at(pos_inner));
   measure.compute();
 
   if(reject_match_nested(measure, match, construct_list_inner.at(pos_inner)))
@@ -751,23 +751,23 @@ bool srcdiff_nested::check_nestable_predicate(const construct::construct_list & 
   if(pos_inner + 1 < end_inner && is_better_nest(construct_list_inner.at(pos_inner + 1), construct_list_outer.at(pos_outer), measure))
     return true;
 
-  if(construct_list_inner.at(pos_inner).root_term_name() == "name"
-    && construct_list_inner.at(pos_inner).root_term()->parent && (*construct_list_inner.at(pos_inner).root_term()->parent)->name == "expr"
-    && construct_list_outer.at(pos_outer).root_term()->parent && (*construct_list_outer.at(pos_outer).root_term()->parent)->name == "expr"
+  if(construct_list_inner.at(pos_inner)->root_term_name() == "name"
+    && construct_list_inner.at(pos_inner)->root_term()->parent && (*construct_list_inner.at(pos_inner)->root_term()->parent)->name == "expr"
+    && construct_list_outer.at(pos_outer)->root_term()->parent && (*construct_list_outer.at(pos_outer)->root_term()->parent)->name == "expr"
     && ((end_outer - start_outer) > 1 || (end_inner - start_inner) > 1))
     return true;
 
-  if(construct_list_inner.at(pos_inner).root_term_name() == "name") {
+  if(construct_list_inner.at(pos_inner)->root_term_name() == "name") {
 
-      if(!construct_list_inner.at(pos_inner).root_term()->parent || !match.root_term()->parent)
+      if(!construct_list_inner.at(pos_inner)->root_term()->parent || !match->root_term()->parent)
         return true;
 
-      std::optional<std::shared_ptr<srcml_node>> parent_outer = match.root_term()->parent;
+      std::optional<std::shared_ptr<srcml_node>> parent_outer = match->root_term()->parent;
       while((*parent_outer)->name == "name") {
         parent_outer = (*parent_outer)->parent;
       }
 
-      std::optional<std::shared_ptr<srcml_node>> parent_inner = construct_list_inner.at(pos_inner).root_term()->parent;
+      std::optional<std::shared_ptr<srcml_node>> parent_inner = construct_list_inner.at(pos_inner)->root_term()->parent;
       while((*parent_inner)->name == "name") {
         parent_inner = (*parent_inner)->parent;
       }
@@ -819,7 +819,7 @@ void srcdiff_nested::check_nestable(const construct::construct_list & construct_
 
   for(int i = start_original; i < end_original; ++i) {
 
-    if(construct_list_original.at(i).root_term()->move) continue;
+    if(construct_list_original.at(i)->root_term()->move) continue;
 
     for(int j = start_modified; j < end_modified; ++j) {
 
@@ -853,7 +853,7 @@ void srcdiff_nested::check_nestable(const construct::construct_list & construct_
 
   for(int i = start_modified; i < end_modified; ++i) {
 
-    if(construct_list_modified.at(i).root_term()->move) continue;
+    if(construct_list_modified.at(i)->root_term()->move) continue;
 
     for(int j = start_original; j < end_original; ++j) {
 
@@ -919,39 +919,39 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
                   int end_inner,
                   int operation) {
 
-  size_t start_pos = construct_list_outer.at(start_outer).get_terms().at(1);
-  size_t end_pos = construct_list_outer.at(end_outer - 1).end_position();
+  size_t start_pos = construct_list_outer.at(start_outer)->get_terms().at(1);
+  size_t end_pos = construct_list_outer.at(end_outer - 1)->end_position();
 
-  const std::string & structure_outer = construct_list_outer.at(start_outer).root_term_name();
+  const std::string & structure_outer = construct_list_outer.at(start_outer)->root_term_name();
   if(structure_outer == "block_content") {
     // do not skip whitespace
-    start_pos = construct_list_outer.at(start_outer).start_position() + 1;
+    start_pos = construct_list_outer.at(start_outer)->start_position() + 1;
 
-  } else if(structure_outer == "if" && !bool(find_attribute(construct_list_outer.at(start_outer).root_term(), "type"))) {
+  } else if(structure_outer == "if" && !bool(find_attribute(construct_list_outer.at(start_outer)->root_term(), "type"))) {
 
-    advance_to_child(construct_list_outer.back().nodes(), start_pos, XML_READER_TYPE_ELEMENT, "block");
+    advance_to_child(construct_list_outer.back()->nodes(), start_pos, XML_READER_TYPE_ELEMENT, "block");
 
   } else if(structure_outer == "while") {
 
-    advance_to_child(construct_list_outer.back().nodes(), start_pos, XML_READER_TYPE_END_ELEMENT, "condition");
+    advance_to_child(construct_list_outer.back()->nodes(), start_pos, XML_READER_TYPE_END_ELEMENT, "condition");
     ++start_pos;
 
   } else if(structure_outer == "for") {
 
-    advance_to_child(construct_list_outer.back().nodes(), start_pos, XML_READER_TYPE_END_ELEMENT, "control");
+    advance_to_child(construct_list_outer.back()->nodes(), start_pos, XML_READER_TYPE_END_ELEMENT, "control");
     ++start_pos;
 
   } else if(is_class_type(structure_outer)) {
 
-    advance_to_child(construct_list_outer.back().nodes(), start_pos, XML_READER_TYPE_ELEMENT, "block");
+    advance_to_child(construct_list_outer.back()->nodes(), start_pos, XML_READER_TYPE_ELEMENT, "block");
     ++start_pos;
 
     end_pos = start_pos - 1;
-    advance_to_child(construct_list_outer.back().nodes(), end_pos, XML_READER_TYPE_END_ELEMENT, "block");
+    advance_to_child(construct_list_outer.back()->nodes(), end_pos, XML_READER_TYPE_END_ELEMENT, "block");
 
   }
 
-  construct::construct_list set = construct::get_descendent_constructs(construct_list_outer.back().nodes(),
+  construct::construct_list set = construct::get_descendent_constructs(construct_list_outer.back()->nodes(),
                             start_pos, end_pos);
 
   construct::construct_list nest_set;
@@ -992,10 +992,10 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
   }
 
   if(operation == SES_DELETE) {
-    srcdiff_change::output_change(out, construct_list_outer.at(end_outer - 1).end_position() + 1, out->last_output_modified());
+    srcdiff_change::output_change(out, construct_list_outer.at(end_outer - 1)->end_position() + 1, out->last_output_modified());
   }
   else {
-    srcdiff_change::output_change(out, out->last_output_original(), construct_list_outer.at(end_outer - 1).end_position() + 1);
+    srcdiff_change::output_change(out, out->last_output_original(), construct_list_outer.at(end_outer - 1)->end_position() + 1);
   }
 
 }

@@ -240,17 +240,17 @@ edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
             std::size_t original_set_pos = delete_edit->offset_sequence_one + i;
             std::size_t modified_set_pos = insert_edit->offset_sequence_two + j;
 
-            const construct & set_original = sets_original.at(original_set_pos);
-            const construct & set_modified = sets_modified.at(modified_set_pos);
+            const std::shared_ptr<construct> & set_original = sets_original.at(original_set_pos);
+            const std::shared_ptr<construct> & set_modified = sets_modified.at(modified_set_pos);
 
-            int original_pos = set_original.start_position();
-            int modified_pos = set_modified.start_position();
+            int original_pos = set_original->start_position();
+            int modified_pos = set_modified->start_position();
 
-            const std::string & original_tag = set_original.term(0)->name;
-            const std::string & modified_tag = set_modified.term(0)->name;
+            const std::string & original_tag = set_original->term(0)->name;
+            const std::string & modified_tag = set_modified->term(0)->name;
 
-            const std::string & original_uri = set_original.term(0)->ns.href;
-            const std::string & modified_uri = set_modified.term(0)->ns.href;
+            const std::string & original_uri = set_original->term(0)->ns.href;
+            const std::string & modified_uri = set_modified->term(0)->ns.href;
 
             if(set_original != set_modified) {
                 continue;
@@ -304,23 +304,23 @@ std::shared_ptr<srcdiff_text_measure> srcdiff_edit_correction::edit2measure(int 
     std::size_t original_set_pos = original_offset;
     std::size_t modified_set_pos = modified_offset;
 
-    const construct & set_original = sets_original.at(original_set_pos);
-    const construct & set_modified = sets_modified.at(modified_set_pos);
+    const std::shared_ptr<construct> & set_original = sets_original.at(original_set_pos);
+    const std::shared_ptr<construct> & set_modified = sets_modified.at(modified_set_pos);
 
-    int original_pos = set_original.start_position();
-    int modified_pos = set_modified.start_position();
+    int original_pos = set_original->start_position();
+    int modified_pos = set_modified->start_position();
 
-    const std::string & original_tag = set_original.term(0)->name;
-    const std::string & modified_tag = set_modified.term(0)->name;
+    const std::string & original_tag = set_original->term(0)->name;
+    const std::string & modified_tag = set_modified->term(0)->name;
 
-    const std::string & original_uri = set_original.term(0)->ns.href;
-    const std::string & modified_uri = set_modified.term(0)->ns.href;
+    const std::string & original_uri = set_original->term(0)->ns.href;
+    const std::string & modified_uri = set_modified->term(0)->ns.href;
 
     if(!(original_tag == modified_tag && original_uri == modified_uri)
-        && !set_original.is_tag_convertable(set_modified))
+        && !set_original->is_tag_convertable(*set_modified))
         return std::shared_ptr<srcdiff_text_measure>();
 
-    std::shared_ptr<srcdiff_text_measure> measure = std::make_shared<srcdiff_text_measure>(set_original, set_modified);
+    std::shared_ptr<srcdiff_text_measure> measure = std::make_shared<srcdiff_text_measure>(*set_original, *set_modified);
     measure->compute();
 
     return measure;
@@ -462,9 +462,9 @@ void srcdiff_edit_correction::correct() {
 
         std::size_t common_pos = delete_edit->offset_sequence_one + original_offset;
 
-        const construct & common_set = sets_original.at(common_pos);
-        construct common_set_text(common_set.nodes());
-        srcdiff_text_measure::collect_text_element(common_set, common_set_text);
+        const std::shared_ptr<construct> & common_set = sets_original.at(common_pos);
+        std::shared_ptr<construct> common_set_text(std::make_shared<construct>(common_set->nodes()));
+        srcdiff_text_measure::collect_text_element(*common_set, *common_set_text);
 
         std::vector<std::size_t> original_similarities(delete_edit->length);
         std::vector<std::size_t> modified_similarities(insert_edit->length);
@@ -497,22 +497,22 @@ void srcdiff_edit_correction::correct() {
                 std::size_t original_set_pos = delete_edit->offset_sequence_one + i;
                 std::size_t modified_set_pos = insert_edit->offset_sequence_two + j;
 
-                const construct & set_original = sets_original.at(original_set_pos);
-                const construct & set_modified = sets_modified.at(modified_set_pos);
+                const std::shared_ptr<construct> & set_original = sets_original.at(original_set_pos);
+                const std::shared_ptr<construct> & set_modified = sets_modified.at(modified_set_pos);
 
-                if(set_original.size() >= 3 * set_modified.size()) {
+                if(set_original->size() >= 3 * set_modified->size()) {
                     continue;
                 }
 
-                if(set_modified.size() >= 3 * set_original.size()) {
+                if(set_modified->size() >= 3 * set_original->size()) {
                     continue;
                 }
 
-                if(set_original.size() < 3 * common_set.size()) {
+                if(set_original->size() < 3 * common_set->size()) {
                     continue;
                 }
 
-                if(set_modified.size() < 3 * common_set.size()) {
+                if(set_modified->size() < 3 * common_set->size()) {
                     continue;
                 }
 
@@ -525,7 +525,7 @@ void srcdiff_edit_correction::correct() {
                        && 2 * measure->min_length() >= measure->max_length());
 
                 if(is_similar
-                    && 3 * common_set_text.size() <= measure->similarity()) {
+                    && 3 * common_set_text->size() <= measure->similarity()) {
 
                     if(before) {
                         before->next = delete_edit;

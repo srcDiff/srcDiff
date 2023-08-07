@@ -59,7 +59,7 @@ construct::construct_list construct::get_descendent_constructs(const srcml_nodes
 
             // text is separate node if not surrounded by a tag in range
             if((xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_TEXT || (xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_ELEMENT) {
-                descendent_constructs.emplace_back(node_list, pos, out);
+                descendent_constructs.push_back(std::make_shared<construct>(node_list, pos, out));
             } else {
                 return descendent_constructs;
             }
@@ -235,9 +235,9 @@ const srcml_nodes & construct::nodes() const {
     return node_list;
 }
 
-std::optional<std::size_t> construct::hash() const {
+std::size_t construct::hash() const {
     if(!hash_value) hash_value = std::hash<construct>()(*this);
-    return hash_value;
+    return *hash_value;
 }
 
 const std::shared_ptr<srcml_node> & construct::root_term() const {
@@ -298,9 +298,9 @@ bool construct::is_similar(const construct & modified) const {
   // check block of first child of if_stmt (old if behavior)
   if(original_tag == "if_stmt" && !child_construct_list_original.empty()) {
 
-    std::string tag = child_construct_list_original.at(0).root_term_name();
+    std::string tag = child_construct_list_original.at(0)->root_term_name();
     if(tag == "else" || tag == "if") {
-      construct::construct_list temp = construct::get_descendent_constructs(nodes(), child_construct_list_original.at(0).get_terms().at(1), child_construct_list_original.back().end_position());
+      construct::construct_list temp = construct::get_descendent_constructs(nodes(), child_construct_list_original.at(0)->get_terms().at(1), child_construct_list_original.back()->end_position());
       child_construct_list_original = temp;
     }
 
@@ -309,38 +309,38 @@ bool construct::is_similar(const construct & modified) const {
   // check block of first child of if_stmt (old if behavior)
   if(modified_tag == "if_stmt" && !child_construct_list_modified.empty()) {
 
-    std::string tag =  child_construct_list_modified.at(0).root_term_name();
+    std::string tag =  child_construct_list_modified.at(0)->root_term_name();
     if(tag == "else" || tag == "if") {
-      construct::construct_list temp = construct::get_descendent_constructs(modified.nodes(), child_construct_list_modified.at(0).get_terms().at(1), child_construct_list_modified.back().end_position());
+      construct::construct_list temp = construct::get_descendent_constructs(modified.nodes(), child_construct_list_modified.at(0)->get_terms().at(1), child_construct_list_modified.back()->end_position());
       child_construct_list_modified = temp;
     }
 
   }
 
   if(!child_construct_list_original.empty() && !child_construct_list_modified.empty()
-    && child_construct_list_original.back().root_term_name() == "block" && child_construct_list_modified.back().root_term_name() == "block") {
+    && child_construct_list_original.back()->root_term_name() == "block" && child_construct_list_modified.back()->root_term_name() == "block") {
 
     /// Why a copy?
-    construct original_set = child_construct_list_original.back();
-    construct modified_set = child_construct_list_modified.back();
+    std::shared_ptr<construct> original_set = child_construct_list_original.back();
+    std::shared_ptr<construct> modified_set = child_construct_list_modified.back();
 
     // block children actually in block_content
-    construct::construct_list original_temp = construct::get_descendent_constructs(nodes(), child_construct_list_original.back().get_terms().at(1), child_construct_list_original.back().end_position());
-    for(const construct & set : original_temp) {
-      if(set.root_term_name() == "block_content") {
+    construct::construct_list original_temp = construct::get_descendent_constructs(nodes(), child_construct_list_original.back()->get_terms().at(1), child_construct_list_original.back()->end_position());
+    for(const std::shared_ptr<construct> & set : original_temp) {
+      if(set->root_term_name() == "block_content") {
         original_set = set;
       }
     }
 
     // block children actually in block_content
-    construct::construct_list modified_temp = construct::get_descendent_constructs(modified.nodes(), child_construct_list_modified.back().get_terms().at(1), child_construct_list_modified.back().end_position());
-    for(const construct & set : modified_temp) {
-      if(set.root_term_name() == "block_content") {
+    construct::construct_list modified_temp = construct::get_descendent_constructs(modified.nodes(), child_construct_list_modified.back()->get_terms().at(1), child_construct_list_modified.back()->end_position());
+    for(const std::shared_ptr<construct> & set : modified_temp) {
+      if(set->root_term_name() == "block_content") {
         modified_set = set;
       }
     }
 
-    srcdiff_syntax_measure syntax_measure(original_set, modified_set);
+    srcdiff_syntax_measure syntax_measure(*original_set, *modified_set);
     syntax_measure.compute();
 
     int min_child_length = syntax_measure.min_length();
@@ -543,22 +543,22 @@ bool construct::is_matchable(const construct & modified) const {
 
   } else if(original_tag == "if_stmt") {
 
-    construct first_original = get_first_child(*this);
-    construct first_modified = get_first_child(modified);
+    std::shared_ptr<construct> first_original = get_first_child(*this);
+    std::shared_ptr<construct> first_modified = get_first_child(modified);
 
-    if(is_child_if(first_original) && is_child_if(first_modified)) {
+    if(is_child_if(*first_original) && is_child_if(*first_modified)) {
 
       /** todo play with getting and checking a match with all conditions */
       std::string original_condition = get_condition(nodes(), original_pos);
       std::string modified_condition = get_condition(modified.nodes(), modified_pos);
 
-      bool original_has_block = conditional_has_block(first_original);
-      bool modified_has_block = conditional_has_block(first_modified);
+      bool original_has_block = conditional_has_block(*first_original);
+      bool modified_has_block = conditional_has_block(*first_modified);
 
       bool original_has_else = if_stmt_has_else(*this);
       bool modified_has_else = if_stmt_has_else(modified);
 
-      if(if_block_equal(first_original, first_modified)
+      if(if_block_equal(*first_original, *first_modified)
         || (original_condition == modified_condition
           && ( original_has_block == modified_has_block 
             || original_has_else == modified_has_else 
@@ -681,8 +681,8 @@ bool construct::is_convertable(const construct & modified) const {
 
   if(original_tag == "if_stmt") {
     /** todo play with getting and checking a match with all conditions */
-    construct first_original = get_first_child(*this);
-    if(is_child_if(first_original)) {
+    std::shared_ptr<construct> first_original = get_first_child(*this);
+    if(is_child_if(*first_original)) {
       original_condition = get_condition(nodes(), original_pos);
     }
   }
@@ -696,8 +696,8 @@ bool construct::is_convertable(const construct & modified) const {
   std::string modified_condition;
  
   if(modified_tag == "if_stmt") {
-    construct first_modified = get_first_child(modified);
-    if(is_child_if(first_modified)) {
+    std::shared_ptr<construct> first_modified = get_first_child(modified);
+    if(is_child_if(*first_modified)) {
       modified_condition = get_condition(modified.nodes(), modified_pos);
     }
   }
@@ -714,18 +714,18 @@ bool construct::is_convertable(const construct & modified) const {
   if(  (original_tag == "expr_stmt" || original_tag == "decl_stmt" || original_tag == "return")
     && (modified_tag == "expr_stmt" || modified_tag == "decl_stmt" || modified_tag == "return")) {
 
-    construct expr_original(nodes());
-    construct expr_modified(modified.nodes());
+    std::shared_ptr<construct> expr_original(std::make_shared<construct>(nodes()));
+    std::shared_ptr<construct> expr_modified(std::make_shared<construct>(modified.nodes()));
     if(original_tag == "decl_stmt" || modified_tag == "decl_stmt") {
 
       if(original_tag == "decl_stmt") {
 
         expr_modified = get_first_expr_child(modified.nodes(), modified_pos);
 
-        if(!expr_modified.empty()) {
+        if(!expr_modified->empty()) {
 
           construct::construct_list sets = construct::get_descendent_constructs(nodes(), get_terms().at(1), end_position(), srcdiff_nested::is_match,
-                                                                                &expr_modified.term(0));
+                                                                                &expr_modified->term(0));
           int match = srcdiff_nested::best_match(sets, expr_modified);
 
           if(match < sets.size()) {
@@ -738,10 +738,10 @@ bool construct::is_convertable(const construct & modified) const {
 
         expr_original = get_first_expr_child(nodes(), original_pos);
 
-        if(!expr_original.empty()) {
+        if(!expr_original->empty()) {
 
           construct::construct_list sets = construct::get_descendent_constructs(modified.nodes(), modified.get_terms().at(1), modified.end_position(), srcdiff_nested::is_match,
-                                    &expr_original.term(0));
+                                    &expr_original->term(0));
           int match = srcdiff_nested::best_match(sets, expr_original);
 
           if(match < sets.size()) {
@@ -759,11 +759,11 @@ bool construct::is_convertable(const construct & modified) const {
 
     }
 
-    if(expr_original.size() && expr_modified.size()) {
+    if(expr_original->size() && expr_modified->size()) {
 
-      const srcdiff_measure & expr_measure = *expr_original.measure(expr_modified);
+      const srcdiff_measure & expr_measure = *expr_original->measure(*expr_modified);
 
-      bool is_expr_reject = !expr_original.is_similar(expr_modified);
+      bool is_expr_reject = !expr_original->is_similar(*expr_modified);
 
       int min_size = expr_measure.min_length();
       int max_size = expr_measure.max_length();

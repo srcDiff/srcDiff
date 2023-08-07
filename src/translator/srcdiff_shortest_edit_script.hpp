@@ -13,7 +13,7 @@ class srcdiff_shortest_edit_script : public shortest_edit_script_t {
 public:
 	srcdiff_shortest_edit_script() : shortest_edit_script_t(nullptr, nullptr, nullptr) {}
 
-	int compute_edit_script(const construct & original, const construct & modified);
+	int compute_edit_script(const std::shared_ptr<construct> & original, const std::shared_ptr<construct> & modified);
 	int compute_edit_script(const construct::construct_list & original, const construct::construct_list & modified);
 	int compute_edit_script(const std::string & original, const std::string & modified);
 	int compute_edit_script(const std::vector<std::string> & original, const std::vector<std::string> & modified);

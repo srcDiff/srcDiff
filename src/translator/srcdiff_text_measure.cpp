@@ -11,8 +11,8 @@
 
 srcdiff_text_measure::srcdiff_text_measure(const construct & set_original, const construct & set_modified, bool important_only) 
   : srcdiff_measure(set_original, set_modified),
-    set_original_text(set_original.nodes()),
-    set_modified_text(set_modified.nodes()),
+    set_original_text(std::make_shared<construct>(set_original.nodes())),
+    set_modified_text(std::make_shared<construct>(set_modified.nodes())),
     important_only(important_only),
     text_collected(false) {}
 
@@ -25,18 +25,18 @@ void srcdiff_text_measure::collect_text() {
 
   for(unsigned int i = 0; i < olength; ++i) {
     if(set_original.term(i)->is_text() && !set_original.term(i)->is_white_space()) {
-      set_original_text.get_terms().push_back(set_original.get_terms().at(i));
+      set_original_text->get_terms().push_back(set_original.get_terms().at(i));
     }
   }
 
   for(unsigned int i = 0; i < nlength; ++i) {
     if(set_modified.term(i)->is_text() && !set_modified.term(i)->is_white_space()) {
-      set_modified_text.get_terms().push_back(set_modified.get_terms().at(i));
+      set_modified_text->get_terms().push_back(set_modified.get_terms().at(i));
     }
   }
 
-  original_len = set_original_text.size();
-  modified_len = set_modified_text.size();
+  original_len = set_original_text->size();
+  modified_len = set_modified_text->size();
 
 }
 
@@ -94,11 +94,11 @@ void srcdiff_text_measure::collect_important_text() {
 
   text_collected = true;
 
-  collect_text_element(set_original, set_original_text);
-  collect_text_element(set_modified, set_modified_text);
+  collect_text_element(set_original, *set_original_text);
+  collect_text_element(set_modified, *set_modified_text);
 
-  original_len = set_original_text.size();
-  modified_len = set_modified_text.size();
+  original_len = set_original_text->size();
+  modified_len = set_modified_text->size();
 
 }
 
@@ -179,8 +179,8 @@ int srcdiff_text_measure::number_match_beginning() {
       computed = true;
 
       int count = 0;
-      while(count < set_original_text.size() & count < set_modified_text.size()
-        && *set_original_text.term(count) == *set_modified_text.term(count)) {
+      while(count < set_original_text->size() & count < set_modified_text->size()
+        && *set_original_text->term(count) == *set_modified_text->term(count)) {
         ++count;
       }
 

@@ -24,7 +24,7 @@ static bool check_nestable_predicate(const construct::construct_list & construct
 public:
 
   static bool is_match(int & node_pos, const srcml_nodes & nodes, const void * context);
-  static int best_match(const construct::construct_list & set, const construct & match);
+  static int best_match(const construct::construct_list & set, const std::shared_ptr<construct> & match);
   
   srcdiff_nested(const srcdiff_many & diff, int start_original, int end_original, int start_modified, int end_modified, int operation);
 
@@ -44,19 +44,19 @@ public:
                  , int & start_nest_original, int & end_nest_original, int & start_nest_modified, int & end_nest_modified
                  , int & operation);
 
-  static bool is_nestable(const construct & structure_one,
-                          const construct & structure_two);
+  static bool is_nestable(const std::shared_ptr<construct> & structure_one,
+                          const std::shared_ptr<construct> & structure_two);
 
 
-  static bool is_same_nestable(const construct & structure_one,
-                               const construct & structure_two);
+  static bool is_same_nestable(const std::shared_ptr<construct> & structure_one,
+                               const std::shared_ptr<construct> & structure_two);
 
   static bool is_better_nested(const construct::construct_list & construct_list_original, int start_pos_original,
                                const construct::construct_list & construct_list_modified, int start_pos_modified);
 
   static bool reject_match_nested(const srcdiff_measure & measure,
-                                  const construct & set_original,
-                                  const construct & set_modified);
+                                  const std::shared_ptr<construct> & set_original,
+                                  const std::shared_ptr<construct> & set_modified);
 
 };
 
