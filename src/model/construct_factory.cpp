@@ -40,7 +40,13 @@ factory_map_type factory_map = {
   {"construct", default_factory },
 
   // function-type
-  {"function", function_factory },
+  {"function",         function_factory },
+  {"function_decl",    function_factory },
+  {"constructor",      function_factory },
+  {"constructor_decl", function_factory },
+  {"destructor",       function_factory },
+  {"destructor_decl",  function_factory },
+
 
 };
 
