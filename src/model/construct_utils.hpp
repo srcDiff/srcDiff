@@ -18,8 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_CONSTUCT_UTILS_HPP
-#define INCLUDED_CONSTUCT_UTILS_HPP
+#ifndef INCLUDED_CONSTRUCT_UTILS_HPP
+#define INCLUDED_CONSTRUCT_UTILS_HPP
 
 class construct;
 
