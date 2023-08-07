@@ -18,18 +18,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <function.hpp>
+#include <name.hpp>
 
 //temp, probably
 #include <srcdiff_match_internal.hpp>
 
-bool function::is_matchable_impl(const construct & modified) const {
+bool name::is_matchable_impl(const construct & modified) const {
 
-    /// @todo maybe expand children instead and grab name construct and compare?
-    std::string original_name = extract_name(nodes(), start_position());
-    std::string modified_name = extract_name(modified.nodes(), modified.start_position());
-
-    if(original_name == modified_name) return true;
+    if(term(0)->is_simple && modified.term(0)->is_simple) return true;
 
     return false;
 }

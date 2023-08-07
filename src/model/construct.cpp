@@ -455,9 +455,6 @@ bool construct::is_matchable(const construct & modified) const {
 
   const srcdiff_measure & measure = *this->measure(modified);
 
-  if(original_tag == "name" && term(0)->is_simple && modified.term(0)->is_simple) return true;
-  if(original_tag == "name" && term(0)->is_simple != modified.term(0)->is_simple) return false;
-
   if((original_tag == "expr" || original_tag == "expr_stmt") && measure.similarity() > 0 && measure.difference() <= measure.max_length()) return true;
 
   // may need to refine to if child only single name

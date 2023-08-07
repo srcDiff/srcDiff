@@ -1,5 +1,5 @@
 /**
- * @file function.cpp
+ * @file name.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,18 +18,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <function.hpp>
+#ifndef INCLUDED_NAME_HPP
+#define INCLUDED_NAME_HPP
 
-//temp, probably
-#include <srcdiff_match_internal.hpp>
+#include <construct.hpp>
 
-bool function::is_matchable_impl(const construct & modified) const {
+class name : public construct {
 
-    /// @todo maybe expand children instead and grab name construct and compare?
-    std::string original_name = extract_name(nodes(), start_position());
-    std::string modified_name = extract_name(modified.nodes(), modified.start_position());
+public:
 
-    if(original_name == modified_name) return true;
+    name(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : construct(node_list, start, out) {}
+    virtual bool is_matchable_impl(const construct & modified) const;
 
-    return false;
-}
+};
+
+
+#endif
