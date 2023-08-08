@@ -1,5 +1,5 @@
 /**
- * @file class_t.cpp
+ * @file class.cpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -19,3 +19,12 @@
  */
 
 #include <class.hpp>
+
+bool class_t::is_convertable_impl(const construct & modified) const {
+
+    std::string original_name = name() ? name()->to_string() : "";
+    std::string modified_name = modified.name() ? modified.name()->to_string() : "";
+
+    if(original_name != "" && original_name == modified_name) return true;
+    return false;
+}

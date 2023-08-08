@@ -1,5 +1,5 @@
 /**
- * @file class_t.hpp
+ * @file class.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -28,7 +28,7 @@ class class_t : public named_construct {
 public:
 
     class_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : named_construct(node_list, start, out) {}
-
+    virtual bool is_convertable_impl(const construct & modified) const;
 };
 
 

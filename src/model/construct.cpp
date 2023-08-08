@@ -663,21 +663,7 @@ bool construct::is_convertable(const construct & modified) const {
   const std::string & original_uri = term(0)->ns.href;
   const std::string & modified_uri = modified.term(0)->ns.href;
 
-  std::string original_name;
-  if(original_tag == "class" || original_tag == "struct" || original_tag == "union" || original_tag == "enum") {
-
-      original_name = get_class_type_name(nodes(), original_pos);
-
-  }
-
-  std::string modified_name;
-  if(modified_tag == "class" || modified_tag == "struct" || modified_tag == "union" || modified_tag == "enum") {
-
-      modified_name = get_class_type_name(nodes(), original_pos);
-    
-  }
-
-  if(original_name != "" && original_name == modified_name) return true;
+  if(is_convertable_impl(modified)) return true;
 
   std::string original_condition;
 
@@ -780,3 +766,6 @@ bool construct::is_convertable(const construct & modified) const {
 
 }
 
+bool construct::is_convertable_impl(const construct & modified) const {
+    return false;
+}

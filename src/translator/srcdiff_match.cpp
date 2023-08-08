@@ -635,35 +635,6 @@ std::string get_condition(const srcml_nodes & nodes, int start_pos) {
 }
 
 /**
- * get_class_type_name
- * @param nodes list of srcml nodes
- * @param start_pos position of starting tag to begin at
- *
- * @pre start_pos must be the location of a starting class,
- *      struct, or union tag.
- *
- * Extracts the name of a class, struct, or union
- *
- * loop 0(n)
- * 
- * @returns class, struct, or union name
- *          or empty string if name cannot be found
- *
- */
-
-std::string get_class_type_name(const srcml_nodes & nodes, int start_pos) {
-
-  if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT
-    || (nodes.at(start_pos)->name != "class" && nodes.at(start_pos)->name != "class_decl"
-      && nodes.at(start_pos)->name != "struct" && nodes.at(start_pos)->name != "struct_decl"
-      && nodes.at(start_pos)->name != "union" && nodes.at(start_pos)->name != "union_decl"
-      && nodes.at(start_pos)->name != "enum" && nodes.at(start_pos)->name != "enum_decl")) return "";
-
-  return extract_name(nodes, start_pos);
-
-}
-
-/**
  * conditional_has_block
  * @param node_set
  *

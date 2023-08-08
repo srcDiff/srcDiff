@@ -106,7 +106,8 @@ public:
     virtual bool is_matchable_impl(const construct & modified) const;
 
     bool is_tag_convertable(const construct & modified) const;
-    virtual bool is_convertable(const construct & modified) const;
+    bool is_convertable(const construct & modified) const;
+    virtual bool is_convertable_impl(const construct & modified) const;
 
 protected:
     std::shared_ptr<srcdiff_output> out;
