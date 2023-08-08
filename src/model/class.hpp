@@ -21,14 +21,13 @@
 #ifndef INCLUDED_CLASS_HPP
 #define INCLUDED_CLASS_HPP
 
-#include <construct.hpp>
+#include <named_construct.hpp>
 
-class class_t : public construct {
+class class_t : public named_construct {
 
 public:
 
-    class_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : construct(node_list, start, out) {}
-    virtual bool is_matchable_impl(const construct & modified) const;
+    class_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : named_construct(node_list, start, out) {}
 
 };
 

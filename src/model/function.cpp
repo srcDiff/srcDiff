@@ -19,33 +19,3 @@
  */
 
 #include <function.hpp>
-
-#include <name.hpp>
-
-//temp, probably
-#include <srcdiff_match_internal.hpp>
-
-bool function::is_matchable_impl(const construct & modified) const {
-
-    const construct_list & original_children = children();
-    std::string original_name;
-    for(std::shared_ptr<const construct> child : original_children) {
-        if(typeid(*child) == typeid(name)) {
-            original_name = child->to_string();
-            break;
-        }
-    }
-
-    const construct_list & modified_children = modified.children();
-    std::string modified_name;
-    for(std::shared_ptr<const construct> child : modified_children) {
-        if(typeid(*child) == typeid(name)) {
-            modified_name = child->to_string();
-            break;
-        }
-    }
-
-    if(original_name == modified_name) return true;
-
-    return false;
-}

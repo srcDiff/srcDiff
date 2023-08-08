@@ -264,6 +264,10 @@ const std::string & construct::root_term_name() const {
     return term_name(0);
 }
 
+std::shared_ptr<const construct> construct::name() const {
+    return std::shared_ptr<const construct>();
+}
+
 const std::shared_ptr<srcdiff_measure> & construct::measure(const construct & modified) const {
     std::unordered_map<int, std::shared_ptr<srcdiff_measure>>::const_iterator citr = measures.find(modified.start_position());
     if(citr != measures.end()) return citr->second;
