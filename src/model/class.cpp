@@ -1,5 +1,5 @@
 /**
- * @file function.cpp
+ * @file class_t.cpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,15 +18,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <function.hpp>
+#include <class.hpp>
 
 #include <name.hpp>
 
 //temp, probably
 #include <srcdiff_match_internal.hpp>
 
-bool function::is_matchable_impl(const construct & modified) const {
+bool class_t::is_matchable_impl(const construct & modified) const {
 
+    /// @todo, maybe move to construct as find child
     const construct_list & original_children = children();
     std::string original_name;
     for(std::shared_ptr<const construct> child : original_children) {

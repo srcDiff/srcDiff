@@ -600,13 +600,6 @@ bool construct::is_matchable(const construct & modified) const {
 
     if(original_expr == modified_expr) return true;
 
-  } else if(original_tag == "class" || original_tag == "struct" || original_tag == "union" || original_tag == "enum") {
-
-    std::string original_name = get_class_type_name(nodes(), original_pos);
-    std::string modified_name = get_class_type_name(modified.nodes(), modified_pos);
-
-    if(original_name == modified_name && original_name != "") return true;
-
   }
 
   return is_similar(modified);
