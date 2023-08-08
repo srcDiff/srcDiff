@@ -91,9 +91,7 @@ public:
     const std::string & root_term_name() const;
 
     std::size_t hash() const;
-
-
-    virtual std::shared_ptr<construct> name() const;
+    std::string to_string(bool skip_whitespace = false) const;
 
     // Differencing Rules
     const std::shared_ptr<srcdiff_measure> & measure(const construct & modified) const;

@@ -241,6 +241,18 @@ std::size_t construct::hash() const {
     return *hash_value;
 }
 
+std::string construct::to_string(bool skip_whitespace) const {
+
+    std::string str;
+    for(int pos = start_position(); pos < end_position(); ++pos) {
+        std::shared_ptr<const srcml_node> node = node_list[pos];
+        if(skip_whitespace && node->is_white_space()) continue;
+        if(!node->content) continue;
+        str += *node->content;
+    }
+    return str;
+}
+
 const std::shared_ptr<srcml_node> & construct::root_term() const {
     return term(0);
 }
@@ -250,11 +262,6 @@ const std::string & construct::term_name(std::size_t pos) const {
 }
 const std::string & construct::root_term_name() const {
     return term_name(0);
-}
-
-
-std::shared_ptr<construct> name() const {
-    return std::shared_ptr<construct>();
 }
 
 const std::shared_ptr<srcdiff_measure> & construct::measure(const construct & modified) const {
