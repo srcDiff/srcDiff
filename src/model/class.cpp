@@ -22,6 +22,9 @@
 
 const std::unordered_set<std::string> class_t::class_convertable = { "class", "struct", "union", "enum" };
 
+// match rule is in named_construct
+
+// convertable rule
 bool class_t::is_tag_convertable(const construct & modified) const {
     return class_convertable.find(modified.root_term_name()) != class_convertable.end();
 }
