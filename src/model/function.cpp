@@ -40,7 +40,7 @@ bool function::is_matchable_impl(const construct & modified) const {
     const construct_list & modified_children = modified.children();
     std::string modified_name;
     for(std::shared_ptr<const construct> child : modified_children) {
-        if(typeid(child) == typeid(name)) {
+        if(typeid(*child) == typeid(name)) {
             modified_name = child->to_string();
             break;
         }
