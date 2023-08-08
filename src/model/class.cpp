@@ -20,6 +20,12 @@
 
 #include <class.hpp>
 
+const std::unordered_set<std::string> class_t::class_convertable = { "class", "struct", "union", "enum" };
+
+bool class_t::is_tag_convertable(const construct & modified) const {
+    return class_convertable.find(modified.root_term_name()) != class_convertable.end();
+}
+
 bool class_t::is_convertable_impl(const construct & modified) const {
 
     std::string original_name = name() ? name()->to_string() : "";

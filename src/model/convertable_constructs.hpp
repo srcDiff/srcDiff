@@ -29,18 +29,12 @@ struct convertable_list {
 
 };
 
-static const char * const class_interchange[]     = { "class", "struct", "union", "enum", 0 };
 static const char * const access_interchange[]    = { "public", "protected", "private",   0 };
 static const char * const if_stmt_interchange[]   = { "if_stmt", "while", "for", "foreach",    0 };
 static const char * const else_interchange[]      = { "else", "if",                   0 };
 static const char * const expr_stmt_interchange[] = { "expr_stmt", "decl_stmt", "return", 0 };
 static const char * const cast_interchange[]      = { "cast", 0 };
 static const convertable_list convertable_table[] = {
-
-  { "class",     class_interchange },
-  { "struct",    class_interchange },
-  { "union",     class_interchange },
-  { "enum",      class_interchange },
 
   { "public",    access_interchange },
   { "protected", access_interchange },
