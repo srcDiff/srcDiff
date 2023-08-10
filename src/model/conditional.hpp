@@ -1,5 +1,5 @@
 /**
- * @file if_stmt.hpp
+ * @file conditional.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,27 +18,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_IF_STMT_HPP
-#define INCLUDED_IF_STMT_HPP
+#ifndef INCLUDED_CONDITIONAL_HPP
+#define INCLUDED_CONDITIONAL_HPP
 
-#include <conditional.hpp>
+#include <construct.hpp>
 
-class if_stmt : public conditional {
+#include <unordered_set>
+
+class conditional : public construct {
 
 public:
 
-    if_stmt(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : conditional(node_list, start, out), if_child(), else_child(), condition_child() {}
-    std::shared_ptr<const construct> find_if() const;
-    std::shared_ptr<const construct> find_else() const;
-    virtual std::shared_ptr<const construct> condition() const;
+    conditional(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+        : construct(node_list, start, out) {}
 
-    virtual bool is_matchable_impl(const construct & modified) const;
-
+    virtual bool is_tag_convertable(const construct & modified) const;
+    virtual bool is_convertable_impl(const construct & modified) const;
 protected:
-    mutable std::optional<std::shared_ptr<const construct>> if_child;
-    mutable std::optional<std::shared_ptr<const construct>> else_child;
-    mutable std::optional<std::shared_ptr<const construct>> condition_child;
+    static const std::unordered_set<std::string>conditional_convertable;
 };
 
 

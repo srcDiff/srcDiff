@@ -1,5 +1,5 @@
 /**
- * @file if_stmt.hpp
+ * @file conditional.cpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,28 +18,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_IF_STMT_HPP
-#define INCLUDED_IF_STMT_HPP
-
 #include <conditional.hpp>
 
-class if_stmt : public conditional {
+const std::unordered_set<std::string> conditional::conditional_convertable = { "if_stmt", "while", "for", "foreach" };
 
-public:
+// match rule is in child classes
 
-    if_stmt(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : conditional(node_list, start, out), if_child(), else_child(), condition_child() {}
-    std::shared_ptr<const construct> find_if() const;
-    std::shared_ptr<const construct> find_else() const;
-    virtual std::shared_ptr<const construct> condition() const;
+// convertable rule
+bool conditional::is_tag_convertable(const construct & modified) const {
+    return conditional_convertable.find(modified.root_term_name()) != conditional_convertable.end();
+}
 
-    virtual bool is_matchable_impl(const construct & modified) const;
-
-protected:
-    mutable std::optional<std::shared_ptr<const construct>> if_child;
-    mutable std::optional<std::shared_ptr<const construct>> else_child;
-    mutable std::optional<std::shared_ptr<const construct>> condition_child;
-};
-
-
-#endif
+bool conditional::is_convertable_impl(const construct & modified) const {
+    return condition()->to_string() == modified.condition()->to_string();
+}
