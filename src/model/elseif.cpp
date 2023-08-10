@@ -1,5 +1,5 @@
 /**
- * @file if.hpp
+ * @file if.cpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,29 +18,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_IF_HPP
-#define INCLUDED_IF_HPP
-
-#include <construct.hpp>
-
-class if_t : public construct {
-
-public:
-
-    if_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), condition_child(), block_child() {}
-    virtual std::shared_ptr<const construct> condition() const;
-
-    bool has_real_block() const;
-    virtual std::shared_ptr<const construct> block() const;
-
-    bool is_block_matchable(const construct & modified) const;
-    virtual bool is_matchable_impl(const construct & modified) const;
-
-protected:
-    mutable std::optional<std::shared_ptr<const construct>> condition_child;
-    mutable std::optional<std::shared_ptr<const construct>> block_child;
-};
+#include <elseif.hpp>
 
 
-#endif
+std::shared_ptr<const construct> elseif::find_if() const {
+   if(if_child) return *if_child;
+
+    if_child = std::shared_ptr<const construct>();
+    for(construct_list::const_reverse_iterator ritr = children().rbegin(); ritr != children().rend(); ++ritr) {
+        std::shared_ptr<const construct> child = *ritr;
+        if(child->root_term_name() == "if") {
+            if_child = child;
+            break;
+        }
+    }
+
+    return *if_child; 
+}
+
+std::shared_ptr<const construct> elseif::condition() const {
+    return find_if()->condition();
+}
+
+std::shared_ptr<const construct> elseif::block() const {
+    return static_cast<const if_t &>(*find_if()).block();
+}

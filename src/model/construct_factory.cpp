@@ -27,7 +27,10 @@
 
 #include <if_stmt.hpp>
 #include <if.hpp>
+#include <elseif.hpp>
 #include <condition.hpp>
+
+#include <srcdiff_match.hpp>
 
 #include <unordered_map>
 #include <string_view>
@@ -45,6 +48,7 @@ factory_function name_factory     = [](const srcml_nodes & node_list, int & star
 
 factory_function if_stmt_factory   = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<if_stmt>(node_list, start, out); };
 factory_function if_factory        = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<if_t>(node_list, start, out); };
+factory_function elseif_factory    = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<elseif>(node_list, start, out); };
 factory_function condition_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<condition>(node_list, start, out); };
 
 
@@ -71,6 +75,7 @@ factory_map_type factory_map = {
   // conditionals
   {"if_stmt",   if_stmt_factory },
   {"if",        if_factory },
+  {"elseif",    elseif_factory },
   {"condition", condition_factory },
 
 };
@@ -83,6 +88,10 @@ std::shared_ptr<construct> create_construct(const srcml_nodes & node_list, int &
     tag_name = *node->ns.prefix + ":";
   }
   tag_name += node->name;
+
+  if(tag_name == "if" && bool(find_attribute(node, "type"))) {
+    tag_name = "elseif";
+  }
 
   factory_map_type::const_iterator citr = factory_map.find(tag_name);
   if(citr == factory_map.end()) tag_name = "construct";

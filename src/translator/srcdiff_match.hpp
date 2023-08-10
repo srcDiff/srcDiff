@@ -54,6 +54,6 @@ public:
 
 };
 
-std::optional<std::string> find_attribute(const std::shared_ptr<srcml_node> & node, const char * attr_name);
+std::optional<std::string> find_attribute(const std::shared_ptr<const srcml_node> & node, const char * attr_name);
 
 #endif

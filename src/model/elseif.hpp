@@ -1,5 +1,5 @@
 /**
- * @file if.hpp
+ * @file elseif.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,28 +18,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_IF_HPP
-#define INCLUDED_IF_HPP
+#ifndef INCLUDED_ELSEIF_HPP
+#define INCLUDED_ELSEIF_HPP
 
-#include <construct.hpp>
+#include <if.hpp>
 
-class if_t : public construct {
+class elseif : public if_t {
 
 public:
 
-    if_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), condition_child(), block_child() {}
+    elseif(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+        : if_t(node_list, start, out), if_child() {}
+
+    std::shared_ptr<const construct> find_if() const;
+
     virtual std::shared_ptr<const construct> condition() const;
-
-    bool has_real_block() const;
-    virtual std::shared_ptr<const construct> block() const;
-
-    bool is_block_matchable(const construct & modified) const;
-    virtual bool is_matchable_impl(const construct & modified) const;
+    std::shared_ptr<const construct> block() const;
 
 protected:
-    mutable std::optional<std::shared_ptr<const construct>> condition_child;
-    mutable std::optional<std::shared_ptr<const construct>> block_child;
+    mutable std::optional<std::shared_ptr<const construct>> if_child;
 };
 
 
