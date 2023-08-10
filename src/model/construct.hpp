@@ -90,10 +90,13 @@ public:
     const std::string & term_name(std::size_t pos) const;
     const std::string & root_term_name() const;
 
-    virtual std::shared_ptr<const construct> name() const;
 
     std::size_t hash() const;
-    std::string to_string(bool skip_whitespace = false) const;
+    virtual std::string to_string(bool skip_whitespace = false) const;
+
+    // Differencing Rule Helper Methods
+    virtual std::shared_ptr<const construct> name() const;
+    virtual std::shared_ptr<const construct> condition() const;
 
     // Differencing Rules
     const std::shared_ptr<srcdiff_measure> & measure(const construct & modified) const;

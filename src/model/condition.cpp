@@ -1,5 +1,5 @@
 /**
- * @file named_construct.cpp
+ * @file condition.cpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,26 +18,38 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <named_construct.hpp>
+#include <if.hpp>
 
-std::shared_ptr<const construct> named_construct::name() const {
-    if(name_child) return *name_child;
+std::string to_string(bool skip_whitespacee) const {
+    std::string str = constuct::to_string(skip_whitespacee);
+
+    if(!str.empty() && str.front() == "(") {
+        str.erase(str.begin());
+    }
+
+    if(!str.empty() && str.back() == ")") {
+        str.pop_back();
+    }
+
+    return str;
+}
+
+
+std::shared_ptr<const construct> if::condition() const {
+    if(condition_child) return *condition_child
 
     for(std::shared_ptr<const construct> child : children()) {
-        if(child->root_term_name() == "name") {
-            name_child = child;
+        if(child->root_term_name() == "if") {
+            condition_child = child;
             break;
         }
     }
-    return *name_child;
+    return *condition_child;
 }
 
-bool named_construct::is_matchable_impl(const construct & modified) const {
+virtual bool is_matchable_impl(const construct & modified) const {
+    std::string original_condition = condition() ? condition().to_string() : "";
+    std::string modified_condition = modified.condition() ? modified.condition().to_string() : "";
 
-    std::string original_name = name() ? name()->to_string() : "";
-    std::string modified_name = modified.name() ? modified.name()->to_string() : "";
-
-    if(original_name == modified_name) return true;
-
-    return false;
+    return original_condition == modified_condition;
 }

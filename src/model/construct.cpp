@@ -268,6 +268,10 @@ std::shared_ptr<const construct> construct::name() const {
     return std::shared_ptr<const construct>();
 }
 
+std::shared_ptr<const construct> construct::condition() const {
+    return std::shared_ptr<const construct>();
+}
+
 const std::shared_ptr<srcdiff_measure> & construct::measure(const construct & modified) const {
     std::unordered_map<int, std::shared_ptr<srcdiff_measure>>::const_iterator citr = measures.find(modified.start_position());
     if(citr != measures.end()) return citr->second;
@@ -546,33 +550,6 @@ bool construct::is_matchable(const construct & modified) const {
     std::string modified_name = get_decl_name(modified.nodes(), modified_pos);
 
     if(original_name == modified_name && original_name != "") return true;
-
-  } else if(original_tag == "if_stmt") {
-
-    std::shared_ptr<construct> first_original = get_first_child(*this);
-    std::shared_ptr<construct> first_modified = get_first_child(modified);
-
-    if(is_child_if(*first_original) && is_child_if(*first_modified)) {
-
-      /** todo play with getting and checking a match with all conditions */
-      std::string original_condition = get_condition(nodes(), original_pos);
-      std::string modified_condition = get_condition(modified.nodes(), modified_pos);
-
-      bool original_has_block = conditional_has_block(*first_original);
-      bool modified_has_block = conditional_has_block(*first_modified);
-
-      bool original_has_else = if_stmt_has_else(*this);
-      bool modified_has_else = if_stmt_has_else(modified);
-
-      if(if_block_equal(*first_original, *first_modified)
-        || (original_condition == modified_condition
-          && ( original_has_block == modified_has_block 
-            || original_has_else == modified_has_else 
-            || (original_has_block && !modified_has_else) 
-            || (modified_has_block && !original_has_else)))) {
-        return true;
-      }
-    }
 
   } else if(original_tag == "if" && original_uri == SRCML_SRC_NAMESPACE_HREF) {
 

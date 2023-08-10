@@ -1,5 +1,5 @@
 /**
- * @file named_construct.hpp
+ * @file if.cpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,24 +18,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_NAMED_CONSTRUCT_HPP
-#define INCLUDED_NAMED_CONSTRUCT_HPP
+#include <if.hpp>
 
-#include <construct.hpp>
+std::shared_ptr<const construct> if::condition() const {
+    if(condition_child) return *condition_child
 
-class named_construct : public construct {
+    for(std::shared_ptr<const construct> child : children()) {
+        if(child->root_term_name() == "if") {
+            condition_child = child;
+            break;
+        }
+    }
+    return *condition_child;
+}
 
-public:
+virtual bool is_matchable_impl(const construct & modified) const {
+    std::string original_condition = condition() ? condition().to_string() : "";
+    std::string modified_condition = modified.condition() ? modified.condition().to_string() : "";
 
-    named_construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), name_child() {} 
-
-    virtual std::shared_ptr<const construct> name() const;
-    virtual bool is_matchable_impl(const construct & modified) const;
-
-protected:
-    mutable std::optional<std::shared_ptr<const construct>> name_child;
-};
-
-
-#endif
+    return original_condition == modified_condition;
+}
