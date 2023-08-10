@@ -37,8 +37,7 @@ virtual bool is_matchable_impl(const construct & modified) const {
 
     if(original_children.empty() || modified_children.empty()) return false;
 
-    std::shared_ptr<const construct> original_condition = condition();
-    std::shared_ptr<const construct> original_condition = modified.condition();
+    bool condition_machable = condition() && modified.condition() && condition->is_matchable_impl(modified.condition());
 
     return false;
 }

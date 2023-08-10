@@ -32,9 +32,33 @@ std::shared_ptr<const construct> if::condition() const {
     return *condition_child;
 }
 
+std::shared_ptr<const construct> block() const {
+    if(block_child) return *block_child
+
+    for(constructor_list::const_reverse_iterator ritr = children().rbegin(); ritr != children().rend(); ++ritr) {
+        std::shared_ptr<const construct> child = *ritr;
+        if(child->root_term_name() == "block") {
+            block_child = child;
+            break;
+        }
+    }
+    return *block_child;
+}
+
+bool is_block_matchable(const construct & modified) const {
+    std::shared_ptr<const construct> original_block = block();
+    std::shared_ptr<const construct> modified_block = modified.block();
+
+    if(!original_block || !modified_block) return false;
+    return *original_block == *modified_block;
+
+}
+
+
+
 virtual bool is_matchable_impl(const construct & modified) const {
     std::string original_condition = condition() ? condition().to_string() : "";
     std::string modified_condition = modified.condition() ? modified.condition().to_string() : "";
 
-    return original_condition == modified_condition;
+    return original_condition == modified_condition && is_block_matchable(modified);
 }
