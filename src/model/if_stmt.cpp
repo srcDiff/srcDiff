@@ -20,54 +20,64 @@
 
 #include <if_stmt.hpp>
 
-std::shared_ptr<const construct> if_stmt::condition() const {
-    if(condition_child) return *condition_child
+#include <if.hpp>
 
-    const construct_list & children = children();
-    if(!children.empty() && children.front().root_term_name() == "if") {
-        condition_child = childlren.front()->condition();
+#include <srcdiff_match.hpp>
+
+std::shared_ptr<const construct> if_stmt::find_if() const {
+   if(if_child) return *if_child;
+
+    const construct_list & childs = children();
+    if(!childs.empty() && childs.front()->root_term_name() == "if") {
+        if_child = childs.front();
+    }
+
+    return *if_child; 
+}
+
+std::shared_ptr<const construct> if_stmt::find_else() const {
+   if(else_child) return *else_child;
+
+    for(construct_list::const_reverse_iterator ritr = children().rbegin(); ritr != children().rend(); ++ritr) {
+        std::shared_ptr<const construct> child = *ritr;
+        if(child->root_term_name() == "else" 
+            || (child->root_term_name() == "if" && bool(find_attribute(child->term(0), "type")))) {
+            else_child = child;
+            break;
+        }
+    }
+    return *else_child;
+}
+
+
+
+std::shared_ptr<const construct> if_stmt::condition() const {
+    if(condition_child) return *condition_child;
+
+    if(find_if()) {
+        condition_child = find_if()->condition();
     }
 
     return *condition_child;
 }
 
-virtual bool is_matchable_impl(const construct & modified) const {
-    const construct_list & original_children = children();
-    const construct_list & modified_children = modified.children();
+bool if_stmt::is_matchable_impl(const construct & modified) const {
 
-    if(original_children.empty() || modified_children.empty()) return false;
+    const if_stmt & modified_stmt = (const if_stmt &)modified;
+    if(!find_if() || !modified_stmt.find_if()) return false;
 
-    bool condition_machable = condition() && modified.condition() && condition->is_matchable_impl(modified.condition());
+    bool original_has_block = bool(static_cast<const if_t &>(*find_if()).block());
+    bool modified_has_block = bool(static_cast<const if_t &>(*modified_stmt.find_if()).block());
 
-    return false;
+    if(static_cast<const if_t &>(*find_if()).is_block_matchable(*modified_stmt.find_if())) return true;
+
+    bool condition_matchable = condition() && modified_stmt.condition() && condition()->is_matchable_impl(*modified_stmt.condition());
+    bool original_has_else = bool(find_else());
+    bool modified_has_else = bool(modified_stmt.find_else());
+
+    return condition_matchable 
+        &&    (original_has_block == modified_has_block 
+            || original_has_else == modified_has_else 
+            || original_has_block && !modified_has_else 
+            || modified_has_block && !original_has_else);
 }
-
-
-// else if(original_tag == "if_stmt") {
-
-//     std::shared_ptr<construct> first_original = get_first_child(*this);
-//     std::shared_ptr<construct> first_modified = get_first_child(modified);
-
-//     if(is_child_if(*first_original) && is_child_if(*first_modified)) {
-
-//       /** todo play with getting and checking a match with all conditions */
-//       std::string original_condition = get_condition(nodes(), original_pos);
-//       std::string modified_condition = get_condition(modified.nodes(), modified_pos);
-
-//       bool original_has_block = conditional_has_block(*first_original);
-//       bool modified_has_block = conditional_has_block(*first_modified);
-
-//       bool original_has_else = if_stmt_has_else(*this);
-//       bool modified_has_else = if_stmt_has_else(modified);
-
-//       if(if_block_equal(*first_original, *first_modified)
-//         || (original_condition == modified_condition
-//           && ( original_has_block == modified_has_block 
-//             || original_has_else == modified_has_else 
-//             || (original_has_block && !modified_has_else) 
-//             || (modified_has_block && !original_has_else)))) {
-//         return true;
-//       }
-//     }
-
-//   } 

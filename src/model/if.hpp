@@ -35,8 +35,8 @@ public:
     virtual bool is_matchable_impl(const construct & modified) const;
 
 protected:
-    mutable std::optional<std::shared_ptr<construct>> condition_child;
-    mutable std::optional<std::shared_ptr<construct>> block_child;
+    mutable std::optional<std::shared_ptr<const construct>> condition_child;
+    mutable std::optional<std::shared_ptr<const construct>> block_child;
 };
 
 

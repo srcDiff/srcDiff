@@ -20,8 +20,8 @@
 
 #include <if.hpp>
 
-std::shared_ptr<const construct> if::condition() const {
-    if(condition_child) return *condition_child
+std::shared_ptr<const construct> if_t::condition() const {
+    if(condition_child) return *condition_child;
 
     for(std::shared_ptr<const construct> child : children()) {
         if(child->root_term_name() == "if") {
@@ -32,10 +32,10 @@ std::shared_ptr<const construct> if::condition() const {
     return *condition_child;
 }
 
-std::shared_ptr<const construct> block() const {
-    if(block_child) return *block_child
+std::shared_ptr<const construct> if_t::block() const {
+    if(block_child) return *block_child;
 
-    for(constructor_list::const_reverse_iterator ritr = children().rbegin(); ritr != children().rend(); ++ritr) {
+    for(construct_list::const_reverse_iterator ritr = children().rbegin(); ritr != children().rend(); ++ritr) {
         std::shared_ptr<const construct> child = *ritr;
         if(child->root_term_name() == "block") {
             block_child = child;
@@ -45,9 +45,9 @@ std::shared_ptr<const construct> block() const {
     return *block_child;
 }
 
-bool is_block_matchable(const construct & modified) const {
+bool if_t::is_block_matchable(const construct & modified) const {
     std::shared_ptr<const construct> original_block = block();
-    std::shared_ptr<const construct> modified_block = modified.block();
+    std::shared_ptr<const construct> modified_block = static_cast<const if_t &>(modified).block();
 
     if(!original_block || !modified_block) return false;
     return *original_block == *modified_block;
@@ -56,9 +56,11 @@ bool is_block_matchable(const construct & modified) const {
 
 
 
-virtual bool is_matchable_impl(const construct & modified) const {
-    std::string original_condition = condition() ? condition().to_string() : "";
-    std::string modified_condition = modified.condition() ? modified.condition().to_string() : "";
+bool if_t::is_matchable_impl(const construct & modified) const {
+    std::string original_condition = condition() ? condition()->to_string() : "";
+    std::string modified_condition = modified.condition() ? modified.condition()->to_string() : "";
 
-    return original_condition == modified_condition && is_block_matchable(modified);
+    if(original_condition == modified_condition) return true;
+
+    return is_block_matchable(modified);
 }

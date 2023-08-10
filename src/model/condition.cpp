@@ -18,38 +18,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <if.hpp>
+#include <condition.hpp>
 
-std::string to_string(bool skip_whitespacee) const {
-    std::string str = constuct::to_string(skip_whitespacee);
+std::string condition::to_string(bool skip_whitespacee) const {
+    std::string str = construct::to_string(skip_whitespacee);
 
-    if(!str.empty() && str.front() == "(") {
+    if(!str.empty() && str.front() == '(') {
         str.erase(str.begin());
     }
 
-    if(!str.empty() && str.back() == ")") {
+    if(!str.empty() && str.back() == ')') {
         str.pop_back();
     }
 
     return str;
 }
 
-
-std::shared_ptr<const construct> if::condition() const {
-    if(condition_child) return *condition_child
-
-    for(std::shared_ptr<const construct> child : children()) {
-        if(child->root_term_name() == "if") {
-            condition_child = child;
-            break;
-        }
-    }
-    return *condition_child;
-}
-
-virtual bool is_matchable_impl(const construct & modified) const {
-    std::string original_condition = condition() ? condition().to_string() : "";
-    std::string modified_condition = modified.condition() ? modified.condition().to_string() : "";
+bool condition::is_matchable_impl(const construct & modified) const {
+    std::string original_condition = to_string();
+    std::string modified_condition = modified.to_string();
 
     return original_condition == modified_condition;
 }

@@ -29,10 +29,14 @@ public:
 
     if_stmt(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
         : construct(node_list, start, out), condition_child() {}
+    std::shared_ptr<const construct> find_if() const;
+    std::shared_ptr<const construct> find_else() const;
     virtual std::shared_ptr<const construct> condition() const;
     virtual bool is_matchable_impl(const construct & modified) const;
 protected:
-    mutable std::optional<std::shared_ptr<construct>> condition_child;
+    mutable std::optional<std::shared_ptr<const construct>> if_child;
+    mutable std::optional<std::shared_ptr<const construct>> else_child;
+    mutable std::optional<std::shared_ptr<const construct>> condition_child;
 };
 
 

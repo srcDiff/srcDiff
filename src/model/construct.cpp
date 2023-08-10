@@ -551,16 +551,6 @@ bool construct::is_matchable(const construct & modified) const {
 
     if(original_name == modified_name && original_name != "") return true;
 
-  } else if(original_tag == "if" && original_uri == SRCML_SRC_NAMESPACE_HREF) {
-
-    if(get_condition(nodes(), original_pos) == get_condition(modified.nodes(), modified_pos)) {
-      return true;
-    }
-
-    if(if_block_equal(*this, modified)) {
-     return true;
-    }
-
   } else if(original_tag == "while" || original_tag == "switch" || original_tag == "do") {
 
     std::string original_condition = get_condition(nodes(), original_pos);

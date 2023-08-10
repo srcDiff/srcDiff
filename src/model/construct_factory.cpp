@@ -25,6 +25,10 @@
 #include <function.hpp>
 #include <name.hpp>
 
+#include <if_stmt.hpp>
+#include <if.hpp>
+#include <condition.hpp>
+
 #include <unordered_map>
 #include <string_view>
 
@@ -38,6 +42,10 @@ factory_function default_factory  = [](const srcml_nodes & node_list, int & star
 factory_function class_factory    = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<class_t>(node_list, start, out); };
 factory_function function_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<function>(node_list, start, out); };
 factory_function name_factory     = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<name>(node_list, start, out); };
+
+factory_function if_stmt_factory   = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<if_stmt>(node_list, start, out); };
+factory_function if_factory        = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<if_t>(node_list, start, out); };
+factory_function condition_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<condition>(node_list, start, out); };
 
 
 factory_map_type factory_map = {
@@ -60,6 +68,10 @@ factory_map_type factory_map = {
   {"destructor",       function_factory },
   {"destructor_decl",  function_factory },
 
+  // conditionals
+  {"if_stmt",   if_stmt_factory },
+  {"if",        if_factory },
+  {"condition", condition_factory },
 
 };
 

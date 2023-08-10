@@ -18,16 +18,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_IF_T_HPP
-#define INCLUDED_IF_T_HPP
+#ifndef INCLUDED_CONDITION_HPP
+#define INCLUDED_CONDITION_HPP
 
 #include <construct.hpp>
 
-class if_t : public construct {
+class condition : public construct {
 
 public:
 
-    if_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : construct(node_list, start, out) {}
+    condition(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : construct(node_list, start, out) {}
     std::string to_string(bool skip_whitespace = false) const;
     virtual bool is_matchable_impl(const construct & modified) const;
 
