@@ -30,7 +30,10 @@ public:
     if_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
         : construct(node_list, start, out), condition_child(), block_child() {}
     virtual std::shared_ptr<const construct> condition() const;
+
+    bool has_real_block() const;
     std::shared_ptr<const construct> block() const;
+
     bool is_block_matchable(const construct & modified) const;
     virtual bool is_matchable_impl(const construct & modified) const;
 

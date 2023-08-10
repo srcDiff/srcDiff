@@ -70,8 +70,8 @@ bool if_stmt::is_matchable_impl(const construct & modified) const {
     const if_stmt & modified_stmt = (const if_stmt &)modified;
     if(!find_if() || !modified_stmt.find_if()) return false;
 
-    bool original_has_block = bool(static_cast<const if_t &>(*find_if()).block());
-    bool modified_has_block = bool(static_cast<const if_t &>(*modified_stmt.find_if()).block());
+    bool original_has_block = bool(static_cast<const if_t &>(*find_if()).has_real_block());
+    bool modified_has_block = bool(static_cast<const if_t &>(*modified_stmt.find_if()).has_real_block());
 
     if(static_cast<const if_t &>(*find_if()).is_block_matchable(*modified_stmt.find_if())) return true;
 

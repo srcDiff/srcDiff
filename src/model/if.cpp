@@ -20,6 +20,8 @@
 
 #include <if.hpp>
 
+#include <srcdiff_match.hpp>
+
 std::shared_ptr<const construct> if_t::condition() const {
     if(condition_child) return *condition_child;
 
@@ -31,6 +33,10 @@ std::shared_ptr<const construct> if_t::condition() const {
         }
     }
     return *condition_child;
+}
+
+bool if_t::has_real_block() const {
+    return bool(block()) && !bool(find_attribute(block()->root_term(), "type"));
 }
 
 std::shared_ptr<const construct> if_t::block() const {
