@@ -414,7 +414,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         end_node->is_temporary = true;
         nodes.push_back(end_node);
       } else if(node->name == "if" && !node->properties.empty()) {
-          is_elseif = true;
+          // is_elseif = true;
       }
 
       if(node->type == XML_READER_TYPE_ELEMENT && !node->is_empty_tag()) {

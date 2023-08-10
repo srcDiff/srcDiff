@@ -24,7 +24,7 @@ std::shared_ptr<const construct> if_t::condition() const {
     if(condition_child) return *condition_child;
 
     for(std::shared_ptr<const construct> child : children()) {
-        if(child->root_term_name() == "if") {
+        if(child->root_term_name() == "condition") {
             condition_child = child;
             break;
         }

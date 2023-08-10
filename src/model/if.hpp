@@ -28,7 +28,7 @@ class if_t : public construct {
 public:
 
     if_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), condition_child() {}
+        : construct(node_list, start, out), condition_child(), block_child() {}
     virtual std::shared_ptr<const construct> condition() const;
     std::shared_ptr<const construct> block() const;
     bool is_block_matchable(const construct & modified) const;
