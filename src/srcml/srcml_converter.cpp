@@ -382,6 +382,15 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
         }
 
+        // temp if for elseif, insert start tag
+        if(is_elseif && *text->content == "if") {
+          is_elseif = false;
+          std::shared_ptr<srcml_node> if_node = std::make_shared<srcml_node>(*element_stack.back());
+          if_node->properties = std::list<srcml_node::srcml_attr>();
+          if_node->parent = element_stack.back();
+          if_node->is_temporary = true;
+          nodes.push_back(if_node);
+        }
         nodes.push_back(text);
 
       }
@@ -395,6 +404,17 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
       if(node->type == XML_READER_TYPE_ELEMENT) {
         node->parent = element_stack.back();
+      }
+
+
+      // insert end if temp element for elseif and detect elseif
+      if(node->type == XML_READER_TYPE_END_ELEMENT
+        && element_stack.back()->name == "if" && !element_stack.back()->properties.empty()) {
+        std::shared_ptr<srcml_node> end_node = std::make_shared<srcml_node>(*node);
+        end_node->is_temporary = true;
+        nodes.push_back(end_node);
+      } else if(node->name == "if" && !node->properties.empty()) {
+          is_elseif = true;
       }
 
       if(node->type == XML_READER_TYPE_ELEMENT && !node->is_empty_tag()) {
