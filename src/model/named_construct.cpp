@@ -23,6 +23,7 @@
 std::shared_ptr<const construct> named_construct::name() const {
     if(name_child) return *name_child;
 
+    name_child = std::shared_ptr<const construct>();
     for(std::shared_ptr<const construct> child : children()) {
         if(child->root_term_name() == "name") {
             name_child = child;

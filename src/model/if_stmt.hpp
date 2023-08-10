@@ -21,14 +21,14 @@
 #ifndef INCLUDED_IF_STMT_HPP
 #define INCLUDED_IF_STMT_HPP
 
-#include <conditional.hpp>
+#include <construct.hpp>
 
-class if_stmt : public conditional {
+class if_stmt : public construct {
 
 public:
 
     if_stmt(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : conditional(node_list, start, out), if_child(), else_child(), condition_child() {}
+        : construct(node_list, start, out), if_child(), else_child(), condition_child() {}
     std::shared_ptr<const construct> find_if() const;
     std::shared_ptr<const construct> find_else() const;
     virtual std::shared_ptr<const construct> condition() const;

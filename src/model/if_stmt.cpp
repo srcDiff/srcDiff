@@ -30,6 +30,8 @@ std::shared_ptr<const construct> if_stmt::find_if() const {
     const construct_list & childs = children();
     if(!childs.empty() && childs.front()->root_term_name() == "if") {
         if_child = childs.front();
+    } else {
+        if_child = std::shared_ptr<const construct>();
     }
 
     return *if_child; 
@@ -38,14 +40,16 @@ std::shared_ptr<const construct> if_stmt::find_if() const {
 std::shared_ptr<const construct> if_stmt::find_else() const {
    if(else_child) return *else_child;
 
+    else_child = std::shared_ptr<const construct>();
     for(construct_list::const_reverse_iterator ritr = children().rbegin(); ritr != children().rend(); ++ritr) {
         std::shared_ptr<const construct> child = *ritr;
         if(child->root_term_name() == "else" 
-            || (child->root_term_name() == "if" && bool(find_attribute(child->term(0), "type")))) {
+            || (child->root_term_name() == "if" && bool(find_attribute(child->root_term(), "type")))) {
             else_child = child;
             break;
         }
     }
+
     return *else_child;
 }
 
