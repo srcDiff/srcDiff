@@ -503,24 +503,6 @@ std::string get_decl_name(const srcml_nodes & nodes, int start_pos) {
 
 }
 
-/**
- * get_first_child
- * @param set set of srcml nodes
- *
- * @pre The first node of the given node set should contain an opening if node tag
- *
- * Extracts the node set of the first child of the given parent node set
- *
- * @returns child node set
- *          
- */
-
-std::shared_ptr<construct> get_first_child(const construct & set) {
-
-  construct::construct_list sets = construct::get_descendent_constructs(set.nodes(), set.get_terms().at(1), set.end_position());
-  return sets.at(0);
-}
-
 /** loop O(n) */
 std::string get_case_expr(const srcml_nodes & nodes, int start_pos) {
 
