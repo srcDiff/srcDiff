@@ -45,11 +45,14 @@ bool conditional::is_matchable_impl(const construct & modified) const {
 }
 
 // convertable rule
-// bool conditional::is_tag_convertable(const construct & modified) const {
-//    return conditional_convertable.find(modified.root_term_name()) != conditional_convertable.end();
-// }
+bool conditional::is_tag_convertable(const construct & modified) const {
+   return conditional_convertable.find(modified.root_term_name()) != conditional_convertable.end();
+}
 
-// bool conditional::is_convertable_impl(const construct & modified) const {
-//     return condition()->to_string() == modified.condition()->to_string();
-// }
+bool conditional::is_convertable_impl(const construct & modified) const {
+    std::string original_condition = condition() ? condition()->to_string() : "";
+    std::string modified_condition = modified.condition() ? modified.condition()->to_string() : "";
+
+    return original_condition == modified_condition;
+}
 

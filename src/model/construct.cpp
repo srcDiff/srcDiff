@@ -573,17 +573,6 @@ bool construct::is_tag_convertable(const construct & modified) const {
   const std::string & original_uri = root_term()->ns.href;
   const std::string & modified_uri = modified.root_term()->ns.href;
 
-  bool original_has_type_attribute = bool(find_attribute(root_term(), "type"));
-  bool modified_has_type_attribute = bool(find_attribute(root_term(), "type"));
-
-  if(original_uri != modified_uri) return false;
-
-  if(original_tag == "if" && original_uri != SRCML_SRC_NAMESPACE_HREF) return false;
-  if(modified_tag == "if" && modified_uri != SRCML_SRC_NAMESPACE_HREF) return false;
-
-  if(original_tag == "if" && !original_has_type_attribute) return false;
-  if(original_tag == "if" && !modified_has_type_attribute) return false;
-
   for(size_t list_pos = 0; convertable_table[list_pos].name; ++list_pos) {
 
     if(convertable_table[list_pos].name == original_tag) {
@@ -618,40 +607,6 @@ bool construct::is_convertable(const construct & modified) const {
   const std::string & modified_uri = modified.term(0)->ns.href;
 
   if(is_convertable_impl(modified)) return true;
-
-  std::string original_condition;
-
-  if(original_tag == "if_stmt") {
-    /** todo play with getting and checking a match with all conditions */
-    std::shared_ptr<construct> first_original = get_first_child(*this);
-    if(is_child_if(*first_original)) {
-      original_condition = get_condition(nodes(), original_pos);
-    }
-  }
-
-  if(original_tag == "while" || original_tag == "for" || original_tag == "foreach") {
-
-    original_condition = get_condition(nodes(), original_pos);
-
-  }
-
-  std::string modified_condition;
- 
-  if(modified_tag == "if_stmt") {
-    std::shared_ptr<construct> first_modified = get_first_child(modified);
-    if(is_child_if(*first_modified)) {
-      modified_condition = get_condition(modified.nodes(), modified_pos);
-    }
-  }
-
-  if(modified_tag == "while" || modified_tag == "for" || modified_tag == "foreach") {
-
-    modified_condition = get_condition(modified.nodes(), modified_pos);
-
-  }
-
-  if(original_condition != "" && original_condition == modified_condition) return true;
-
 
   if(  (original_tag == "expr_stmt" || original_tag == "decl_stmt" || original_tag == "return")
     && (modified_tag == "expr_stmt" || modified_tag == "decl_stmt" || modified_tag == "return")) {

@@ -58,9 +58,7 @@ std::shared_ptr<const construct> if_stmt::find_else() const {
 std::shared_ptr<const construct> if_stmt::condition() const {
     if(condition_child) return *condition_child;
 
-    if(find_if()) {
-        condition_child = find_if()->condition();
-    }
+    condition_child = find_if()->condition();
 
     return *condition_child;
 }

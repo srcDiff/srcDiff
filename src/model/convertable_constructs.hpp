@@ -30,8 +30,6 @@ struct convertable_list {
 };
 
 static const char * const access_interchange[]    = { "public", "protected", "private",   0 };
-static const char * const if_stmt_interchange[]   = { "if_stmt", "while", "for", "foreach",    0 };
-static const char * const else_interchange[]      = { "else", "if",                   0 };
 static const char * const expr_stmt_interchange[] = { "expr_stmt", "decl_stmt", "return", 0 };
 static const char * const cast_interchange[]      = { "cast", 0 };
 static const convertable_list convertable_table[] = {
@@ -39,15 +37,6 @@ static const convertable_list convertable_table[] = {
   { "public",    access_interchange },
   { "protected", access_interchange },
   { "private",   access_interchange },
-
-  { "if_stmt",   if_stmt_interchange },
-  { "while",     if_stmt_interchange },
-  { "for",       if_stmt_interchange },
-  { "foreach",   if_stmt_interchange },
-  
-  // need to fix
-  { "else",      else_interchange },
-  { "if",    else_interchange },
 
   {"expr_stmt", expr_stmt_interchange },
   {"decl_stmt", expr_stmt_interchange },

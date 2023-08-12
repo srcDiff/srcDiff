@@ -31,6 +31,7 @@
 #include <if_stmt.hpp>
 #include <if.hpp>
 #include <elseif.hpp>
+#include <else.hpp>
 
 #include <for.hpp>
 
@@ -56,6 +57,7 @@ factory_function condition_factory = [](const srcml_nodes & node_list, int & sta
 factory_function if_stmt_factory   = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<if_stmt>(node_list, start, out); };
 factory_function if_factory        = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<if_t>(node_list, start, out); };
 factory_function elseif_factory    = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<elseif>(node_list, start, out); };
+factory_function else_factory      = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<else_t>(node_list, start, out); };
 
 factory_function for_factory   = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<for_t>(node_list, start, out); };
 
@@ -85,9 +87,10 @@ factory_map_type factory_map = {
   {"do",        conditional_factory },
   {"condition", condition_factory },
 
-  {"if_stmt",   if_stmt_factory },
-  {"if",        if_factory },
-  {"elseif",    elseif_factory },
+  {"if_stmt", if_stmt_factory },
+  {"if",      if_factory },
+  {"elseif",  elseif_factory },
+  {"else",    else_factory },
 
   {"for",     for_factory },
   {"foreach", for_factory },

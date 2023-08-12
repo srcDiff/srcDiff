@@ -20,7 +20,6 @@
 
 #include <elseif.hpp>
 
-
 std::shared_ptr<const construct> elseif::find_if() const {
    if(if_child) return *if_child;
 

@@ -1,5 +1,5 @@
 /**
- * @file if.hpp
+ * @file clause.cpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,27 +18,17 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_IF_HPP
-#define INCLUDED_IF_HPP
-
 #include <clause.hpp>
 
-class if_t : public clause {
+#include <if.hpp>
 
-public:
+const std::unordered_set<std::string> clause::clause_convertable = { "if", "else" };
 
-    if_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : clause(node_list, start, out), block_child() {}
+bool clause::is_tag_convertable(const construct & modified) const {
+   if(clause_convertable.find(modified.root_term_name()) == clause_convertable.end()) return false;
 
-    bool has_real_block() const;
-    virtual std::shared_ptr<const construct> block() const;
+   if(typeid(*this) == typeid(if_t)) return false;
+   if(typeid(modified) == typeid(if_t)) return false;
+   return true;
 
-    bool is_block_matchable(const construct & modified) const;
-    virtual bool is_matchable_impl(const construct & modified) const;
-
-protected:
-    mutable std::optional<std::shared_ptr<const construct>> block_child;
-};
-
-
-#endif
+}

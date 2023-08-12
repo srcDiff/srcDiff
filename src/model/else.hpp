@@ -1,5 +1,5 @@
 /**
- * @file if.hpp
+ * @file else.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,26 +18,22 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_IF_HPP
-#define INCLUDED_IF_HPP
+#ifndef INCLUDED_ELSE_HPP
+#define INCLUDED_ELSE_HPP
 
 #include <clause.hpp>
 
-class if_t : public clause {
+#include <unordered_set>
+
+class else_t : public clause {
 
 public:
 
-    if_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : clause(node_list, start, out), block_child() {}
-
-    bool has_real_block() const;
-    virtual std::shared_ptr<const construct> block() const;
-
-    bool is_block_matchable(const construct & modified) const;
-    virtual bool is_matchable_impl(const construct & modified) const;
+    else_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+        : clause(node_list, start, out) {}
+    std::shared_ptr<const construct> condition() const;
 
 protected:
-    mutable std::optional<std::shared_ptr<const construct>> block_child;
 };
 
 
