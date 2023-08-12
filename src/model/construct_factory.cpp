@@ -81,9 +81,9 @@ factory_map_type factory_map = {
   {"if",        if_factory },
   {"elseif",    elseif_factory },
 
-  {"while",  conditional_factory },
-  {"switch", conditional_factory },
-  {"do",     conditional_factory },
+  {"while",     conditional_factory },
+  {"switch",    conditional_factory },
+  {"do",        conditional_factory },
   {"condition", condition_factory },
 
 };

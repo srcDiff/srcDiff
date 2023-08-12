@@ -551,13 +551,6 @@ bool construct::is_matchable(const construct & modified) const {
 
     if(original_name == modified_name && original_name != "") return true;
 
-  } else if(original_tag == "while" || original_tag == "switch" || original_tag == "do") {
-
-    std::string original_condition = get_condition(nodes(), original_pos);
-    std::string modified_condition = get_condition(modified.nodes(), modified_pos);
-
-    if(original_condition == modified_condition) return true;
-
   } else if(original_tag == "for" || original_tag == "foreach") {
 
     if(for_control_matches(*this, modified)) {

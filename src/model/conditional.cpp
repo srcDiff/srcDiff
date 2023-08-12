@@ -24,7 +24,7 @@ const std::unordered_set<std::string> conditional::conditional_convertable = { "
 
 // if match rule is in child class
 
-std::shared_ptr<const construct> while_t::condition() const {
+std::shared_ptr<const construct> conditional::condition() const {
     if(condition_child) return *condition_child;
 
     condition_child = std::shared_ptr<const construct>();
@@ -37,7 +37,7 @@ std::shared_ptr<const construct> while_t::condition() const {
     return *condition_child;
 }
 
-bool while_t::is_matchable_impl(const construct & modified) const {
+bool conditional::is_matchable_impl(const construct & modified) const {
     std::string original_condition = condition() ? condition()->to_string() : "";
     std::string modified_condition = modified.condition() ? modified.condition()->to_string() : "";
 
@@ -45,11 +45,11 @@ bool while_t::is_matchable_impl(const construct & modified) const {
 }
 
 // convertable rule
-bool conditional::is_tag_convertable(const construct & modified) const {
-    return conditional_convertable.find(modified.root_term_name()) != conditional_convertable.end();
-}
+// bool conditional::is_tag_convertable(const construct & modified) const {
+//    return conditional_convertable.find(modified.root_term_name()) != conditional_convertable.end();
+// }
 
-bool conditional::is_convertable_impl(const construct & modified) const {
-    return condition()->to_string() == modified.condition()->to_string();
-}
+// bool conditional::is_convertable_impl(const construct & modified) const {
+//     return condition()->to_string() == modified.condition()->to_string();
+// }
 

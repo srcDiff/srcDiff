@@ -28,8 +28,7 @@ class if_t : public conditional {
 public:
 
     if_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), condition_child(), block_child() {}
-    virtual std::shared_ptr<const construct> condition() const;
+        : conditional(node_list, start, out), block_child() {}
 
     bool has_real_block() const;
     virtual std::shared_ptr<const construct> block() const;

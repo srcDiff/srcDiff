@@ -33,8 +33,9 @@ public:
         : construct(node_list, start, out), condition_child() {}
 
     virtual std::shared_ptr<const construct> condition() const;
-    virtual bool is_tag_convertable(const construct & modified) const;
-    virtual bool is_convertable_impl(const construct & modified) const;
+    virtual bool is_matchable_impl(const construct & modified) const;
+    // virtual bool is_tag_convertable(const construct & modified) const;
+    // virtual bool is_convertable_impl(const construct & modified) const;
 protected:
     mutable std::optional<std::shared_ptr<const construct>> condition_child;
 
