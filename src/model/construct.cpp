@@ -551,12 +551,6 @@ bool construct::is_matchable(const construct & modified) const {
 
     if(original_name == modified_name && original_name != "") return true;
 
-  } else if(original_tag == "for" || original_tag == "foreach") {
-
-    if(for_control_matches(*this, modified)) {
-      return true;
-    }
-
   } else if(original_tag == "case") { 
 
     std::string original_expr = get_case_expr(nodes(), original_pos);
