@@ -21,9 +21,9 @@
 #ifndef INCLUDED_IF_HPP
 #define INCLUDED_IF_HPP
 
-#include <construct.hpp>
+#include <conditional.hpp>
 
-class if_t : public construct {
+class if_t : public conditional {
 
 public:
 
@@ -38,7 +38,6 @@ public:
     virtual bool is_matchable_impl(const construct & modified) const;
 
 protected:
-    mutable std::optional<std::shared_ptr<const construct>> condition_child;
     mutable std::optional<std::shared_ptr<const construct>> block_child;
 };
 

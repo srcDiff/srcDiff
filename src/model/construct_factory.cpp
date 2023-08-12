@@ -46,10 +46,14 @@ factory_function class_factory    = [](const srcml_nodes & node_list, int & star
 factory_function function_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<function>(node_list, start, out); };
 factory_function name_factory     = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<name>(node_list, start, out); };
 
+factory_function conditional_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<conditional>(node_list, start, out); };
+factory_function condition_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<condition>(node_list, start, out); };
+
 factory_function if_stmt_factory   = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<if_stmt>(node_list, start, out); };
 factory_function if_factory        = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<if_t>(node_list, start, out); };
 factory_function elseif_factory    = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<elseif>(node_list, start, out); };
-factory_function condition_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<condition>(node_list, start, out); };
+
+
 
 
 factory_map_type factory_map = {
@@ -76,6 +80,10 @@ factory_map_type factory_map = {
   {"if_stmt",   if_stmt_factory },
   {"if",        if_factory },
   {"elseif",    elseif_factory },
+
+  {"while",  conditional_factory },
+  {"switch", conditional_factory },
+  {"do",     conditional_factory },
   {"condition", condition_factory },
 
 };

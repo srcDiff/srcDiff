@@ -22,7 +22,27 @@
 
 const std::unordered_set<std::string> conditional::conditional_convertable = { "if_stmt", "while", "for", "foreach" };
 
-// match rule is in child classes
+// if match rule is in child class
+
+std::shared_ptr<const construct> while_t::condition() const {
+    if(condition_child) return *condition_child;
+
+    condition_child = std::shared_ptr<const construct>();
+    for(std::shared_ptr<const construct> child : children()) {
+        if(child->root_term_name() == "condition") {
+            condition_child = child;
+            break;
+        }
+    }
+    return *condition_child;
+}
+
+bool while_t::is_matchable_impl(const construct & modified) const {
+    std::string original_condition = condition() ? condition()->to_string() : "";
+    std::string modified_condition = modified.condition() ? modified.condition()->to_string() : "";
+
+    return original_condition == modified_condition;
+}
 
 // convertable rule
 bool conditional::is_tag_convertable(const construct & modified) const {
@@ -32,3 +52,4 @@ bool conditional::is_tag_convertable(const construct & modified) const {
 bool conditional::is_convertable_impl(const construct & modified) const {
     return condition()->to_string() == modified.condition()->to_string();
 }
+

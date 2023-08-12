@@ -30,11 +30,14 @@ class conditional : public construct {
 public:
 
     conditional(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out) {}
+        : construct(node_list, start, out), condition_child() {}
 
+    virtual std::shared_ptr<const construct> condition() const;
     virtual bool is_tag_convertable(const construct & modified) const;
     virtual bool is_convertable_impl(const construct & modified) const;
 protected:
+    mutable std::optional<std::shared_ptr<const construct>> condition_child;
+
     static const std::unordered_set<std::string>conditional_convertable;
 };
 
