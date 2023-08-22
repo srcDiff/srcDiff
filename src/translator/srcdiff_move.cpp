@@ -34,7 +34,7 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
   typedef std::unordered_multiset<std::shared_ptr<construct>>::iterator lookup_iterator;
   std::unordered_multiset<std::shared_ptr<construct>> node_set_lookup_table;
 
-  std::vector<const std::shared_ptr<construct>> delete_sets;
+  std::vector<std::shared_ptr<construct>> delete_sets;
 
   for(edit_t * edits = edit_script; edits; edits = edits->next) {
 
