@@ -7,6 +7,7 @@
 
 #include <map>
 #include <memory>
+#include <algorithm>
 
 template<typename T>
 class change_entity_map {

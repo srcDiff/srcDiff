@@ -26,7 +26,7 @@ void advance_to_child(const srcml_nodes & nodes,
       break;
     }
 
-    if(!nodes.at(start_pos)->is_empty && nodes.at(start_pos)->type == START_TAG_TYPE) {
+    if(!nodes.at(start_pos)->is_empty() && nodes.at(start_pos)->type == START_TAG_TYPE) {
         ++depth;
     }
 

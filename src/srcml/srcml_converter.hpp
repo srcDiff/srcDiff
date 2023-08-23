@@ -5,7 +5,6 @@
 #include <srcdiff_options.hpp>
 
 #include <srcml.h>
-
 #include <vector>
 #include <map>
 #include <mutex>

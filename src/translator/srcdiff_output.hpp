@@ -129,7 +129,7 @@ public:
   std::shared_ptr<srcml_node> diff_ws_start;
   std::shared_ptr<srcml_node> diff_ws_end;
 
-  std::shared_ptr<srcml_node::srcml_ns> diff;
+  std::shared_ptr<srcml_node::srcml_namespace> diff;
 
   std::shared_ptr<srcml_node> unit_tag;
 

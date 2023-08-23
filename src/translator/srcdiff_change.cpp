@@ -13,7 +13,7 @@
 #include <string>
 
 const std::string replace("replace");
-const srcml_node::srcml_attr diff_type(DIFF_TYPE, replace);
+const srcml_node::srcml_attribute diff_type(DIFF_TYPE, srcml_node::SRC_NAMESPACE, replace);
 
 srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_original, unsigned int end_modified)
 : srcdiff_output(out), end_original(end_original), end_modified(end_modified) {}
@@ -61,8 +61,8 @@ void srcdiff_change::output() {
   if(end_original > begin_original && end_modified > begin_modified) {
 
     // set attribute to change
-    diff_original_start->properties.push_back(diff_type);
-    diff_modified_start->properties.push_back(diff_type);
+    diff_original_start->set_attributes(srcml_node::srcml_attribute_map(diff_type.get_name(), diff_type));
+    diff_modified_start->set_attributes(diff_type.get_attributes());
     is_replace = true;
 
     if(is_delay_type(SES_DELETE)) {
@@ -109,7 +109,7 @@ void srcdiff_change::output() {
 
       }
 
-      if(rbuf_original->nodes.at(i)->is_white_space()) {
+      if(rbuf_original->nodes.at(i)->is_whitespace()) {
 
         rbuf_original->last_output = i;
         srcdiff_whitespace whitespace(*this);
@@ -174,7 +174,7 @@ void srcdiff_change::output() {
 
       }
 
-      if(rbuf_modified->nodes.at(i)->is_white_space()) {
+      if(rbuf_modified->nodes.at(i)->is_whitespace()) {
 
         rbuf_modified->last_output = i;
         srcdiff_whitespace whitespace(*this);
