@@ -27,13 +27,7 @@ const std::unordered_set<std::string> conditional::conditional_convertable = { "
 std::shared_ptr<const construct> conditional::condition() const {
     if(condition_child) return *condition_child;
 
-    condition_child = std::shared_ptr<const construct>();
-    for(std::shared_ptr<const construct> child : children()) {
-        if(child->root_term_name() == "condition") {
-            condition_child = child;
-            break;
-        }
-    }
+    condition_child = find_child("condition");
     return *condition_child;
 }
 

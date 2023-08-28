@@ -29,14 +29,7 @@ bool if_t::has_real_block() const {
 std::shared_ptr<const construct> if_t::block() const {
     if(block_child) return *block_child;
 
-    block_child = std::shared_ptr<const construct>();
-    for(construct_list::const_reverse_iterator ritr = children().rbegin(); ritr != children().rend(); ++ritr) {
-        std::shared_ptr<const construct> child = *ritr;
-        if(child->root_term_name() == "block") {
-            block_child = child;
-            break;
-        }
-    }
+    block_child = find_child("block");
     return *block_child;
 }
 
