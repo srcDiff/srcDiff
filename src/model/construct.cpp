@@ -264,6 +264,17 @@ const std::string & construct::root_term_name() const {
     return term_name(0);
 }
 
+std::shared_ptr<const construct> construct::find_child(const std::string & name) const {
+    std::shared_ptr<const construct> found_child;
+    for(std::shared_ptr<const construct> child : children()) {
+        if(child->root_term_name() == name) {
+            found_child = child;
+            break;
+        }
+    }
+    return found_child;
+}
+
 std::shared_ptr<const construct> construct::name() const {
     return std::shared_ptr<const construct>();
 }
@@ -550,13 +561,6 @@ bool construct::is_matchable(const construct & modified) const {
     std::string modified_name = get_decl_name(modified.nodes(), modified_pos);
 
     if(original_name == modified_name && original_name != "") return true;
-
-  } else if(original_tag == "case") { 
-
-    std::string original_expr = get_case_expr(nodes(), original_pos);
-    std::string modified_expr = get_case_expr(modified.nodes(), modified_pos);
-
-    if(original_expr == modified_expr) return true;
 
   }
 

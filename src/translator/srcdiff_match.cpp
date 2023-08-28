@@ -504,56 +504,6 @@ std::string get_decl_name(const srcml_nodes & nodes, int start_pos) {
 }
 
 /** loop O(n) */
-std::string get_case_expr(const srcml_nodes & nodes, int start_pos) {
-
-  if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT || nodes.at(start_pos)->name != "case") return "";
-
-  // skip case tag and case text
-  int expr_pos = start_pos + 1;
-
-  if((nodes.at(expr_pos)->is_text() && nodes.at(expr_pos)->content && nodes.at(expr_pos)->content->find(':') != std::string::npos)
-     || (nodes.at(expr_pos)->type == XML_READER_TYPE_END_ELEMENT && nodes.at(expr_pos)->name == "case")) return "";
-
-  while((nodes.at(expr_pos)->type != XML_READER_TYPE_ELEMENT || nodes.at(expr_pos)->name != "expr")
-    && !(nodes.at(expr_pos)->is_text() && nodes.at(expr_pos)->content && nodes.at(expr_pos)->content->find(':') != std::string::npos)
-    && !(nodes.at(expr_pos)->type == XML_READER_TYPE_END_ELEMENT && nodes.at(expr_pos)->name == "case")) {
-    ++expr_pos;
-  }
-
-  if((nodes.at(expr_pos)->is_text() && nodes.at(expr_pos)->content && nodes.at(expr_pos)->content->find(':') != std::string::npos)
-    || (nodes.at(expr_pos)->type == XML_READER_TYPE_END_ELEMENT && nodes.at(expr_pos)->name == "case")) return "";
-
-  std::string case_expr = "";
-
-  int open_expr_count = 1;
-  ++expr_pos;
-
-  while(open_expr_count) {
-
-    if(nodes.at(expr_pos)->name == "expr") {
-
-      if(nodes.at(expr_pos)->type == XML_READER_TYPE_ELEMENT) {
-        ++open_expr_count;
-      }
-      else if(nodes.at(expr_pos)->type == XML_READER_TYPE_END_ELEMENT) {
-        --open_expr_count;
-      }
-
-    } else if(nodes.at(expr_pos)->is_text() && !nodes.at(expr_pos)->is_white_space()) {
-
-      case_expr += nodes.at(expr_pos)->content ? *nodes.at(expr_pos)->content : "";
-
-    }
-
-    ++expr_pos;
-
-  }
-
-  return case_expr;
-
-}
-
-/** loop O(n) */
 bool is_single_name_expr(const srcml_nodes & nodes, int start_pos) {
 
   if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT

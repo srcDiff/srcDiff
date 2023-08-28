@@ -94,6 +94,8 @@ public:
     std::size_t hash() const;
     virtual std::string to_string(bool skip_whitespace = false) const;
 
+    std::shared_ptr<const construct> find_child(const std::string & name) const;
+
     // Differencing Rule Helper Methods
     virtual std::shared_ptr<const construct> name() const;
     virtual std::shared_ptr<const construct> condition() const;
