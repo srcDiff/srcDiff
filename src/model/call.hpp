@@ -21,21 +21,18 @@
 #ifndef INCLUDED_CALL_HPP
 #define INCLUDED_CALL_HPP
 
-#include <construct.hpp>
+#include <named_construct.hpp>
 
 #include <vector>
 
-class call : public construct {
+class call : public named_construct {
 
 public:
 
-    call(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : construct(node_list, start, out) {}
+    call(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : named_construct(node_list, start, out) {}
     virtual bool is_matchable_impl(const construct & modified) const;
 
 private:
-    void collect_names();
-private:
-    mutable std::vector<std::string> names;
 };
 
 

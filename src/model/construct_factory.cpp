@@ -36,6 +36,7 @@
 #include <for.hpp>
 
 #include <case.hpp>
+#include <call.hpp>
 
 #include <srcdiff_match.hpp>
 
@@ -64,6 +65,8 @@ factory_function else_factory      = [](const srcml_nodes & node_list, int & sta
 factory_function for_factory   = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<for_t>(node_list, start, out); };
 
 factory_function case_factory   = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<case_t>(node_list, start, out); };
+factory_function call_factory   = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<call>(node_list, start, out); };
+
 
 factory_map_type factory_map = {
   // default
@@ -100,6 +103,7 @@ factory_map_type factory_map = {
   {"foreach", for_factory },
 
   {"case", case_factory },
+  {"call", call_factory },
 
 };
 

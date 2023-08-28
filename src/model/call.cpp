@@ -20,57 +20,14 @@
 
 #include <call.hpp>
 
-void call::collect_names() {
-    if(names.size()) return;
-
-    std::shared_ptr<const construct> call_name = find_child("name");
-    for(std::shared_ptr<const construct> child : call_name.children()) {
-        if(child.is_text() && !child->is_white_space()) {
-            names.push_back(*child->content);
-        } else if(child.root_term_name("name")) {
-            names.push_back(child->to_string());
-        }
-    }
-}
+#include <srcdiff_text_measure.hpp>
 
 bool call::is_matchable_impl(const construct & modified) const {
-    collect_names();
-    const construct & modified_call = static_cast<const construct &>(modified);
-    modified_call.collect_names();
+    std::shared_ptr<const construct> original_name = name();
+    std::shared_ptr<const construct> modified_name = static_cast<const named_construct &>(modified).name();
 
-    srcdiff_shortest_edit_script ses;
-    ses.compute_edit_script(names, modified_call.names);
+    srcdiff_text_measure text_measure(*original_name, *modified_name, false);
+    text_measure.compute();
 
-    edit_t * edits = ses.script();
-
-    int similarity = 0;
-
-    int delete_similarity = 0;
-    int insert_similarity = 0;
-    for(; edits; edits = edits->next) {
-
-    switch(edits->operation) {
-
-      case SES_DELETE :
-
-        delete_similarity += edits->length;
-        break;
-
-      case SES_INSERT :
-
-        insert_similarity += edits->length;
-        break;
-
-      }
-
-    }
-
-    delete_similarity = name_list_original.size() - delete_similarity;
-    insert_similarity = name_list_modified.size() - insert_similarity;
-
-    similarity = std::min(delete_similarity, insert_similarity);
-
-    if(similarity < 0) similarity = 0;
-
-    return false;
+    return bool(text_measure.similarity());
 }
