@@ -546,15 +546,6 @@ bool construct::is_matchable(const construct & modified) const {
 
     }
 
-  }
-
-  if(original_tag == "call") {
-
-    std::vector<std::string> original_names = get_call_name(nodes(), original_pos);
-    std::vector<std::string> modified_names = get_call_name(modified.nodes(), modified_pos);
-
-    if(name_list_similarity(original_names, modified_names)) return true;
-
   } else if(original_tag == "decl" || original_tag == "decl_stmt" || original_tag == "parameter" || original_tag == "param") {
 
     std::string original_name = get_decl_name(nodes(), original_pos);
