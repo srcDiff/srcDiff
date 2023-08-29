@@ -23,8 +23,6 @@
 
 #include <named_construct.hpp>
 
-#include <vector>
-
 class call : public named_construct {
 
 public:
