@@ -1,5 +1,5 @@
 /**
- * @file name.cpp
+ * @file expr_construct.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,20 +18,25 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <name.hpp>
+#ifndef INCLUDED_EXPR_CONSTRUCT_HPP
+#define INCLUDED_EXPR_CONSTRUCT_HPP
 
-std::string name_t::simple_name() const {
-    if(root_term()->is_simple) return to_string();
+#include <construct.hpp>
 
-    const construct_list childs = children();
-    if(childs.empty() || childs[0]->root_term_name() != "name") return "";
+#include <expr.hpp>
 
-    return childs[0]->to_string();
-}
+class expr_construct : public construct {
 
-bool name_t::is_matchable_impl(const construct & modified) const {
+public:
 
-    if(root_term()->is_simple && modified.root_term()->is_simple) return true;
+    expr_construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+        : construct(node_list, start, out), expr_child() {} 
 
-    return false;
-}
+    virtual std::shared_ptr<const expr_t> expr() const;
+
+protected:
+    mutable std::optional<std::shared_ptr<const expr_t>> expr_child;
+};
+
+
+#endif

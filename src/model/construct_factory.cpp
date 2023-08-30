@@ -40,6 +40,11 @@
 
 #include <identifier_decl.hpp>
 
+#include <expr.hpp>
+#include <expr_construct.hpp>
+#include <expr_stmt.hpp>
+#include <decl_stmt.hpp>
+
 #include <srcdiff_match.hpp>
 
 #include <unordered_map>
@@ -71,6 +76,10 @@ factory_function call_factory      = [](const srcml_nodes & node_list, int & sta
 
 factory_function identifier_decl_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<identifier_decl>(node_list, start, out); };
 
+factory_function expr_factory           = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<expr_t>(node_list, start, out); };
+factory_function expr_construct_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<expr_construct>(node_list, start, out); };
+factory_function expr_stmt_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<expr_stmt>(node_list, start, out); };
+factory_function decl_stmt_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<decl_stmt>(node_list, start, out); };
 
 factory_map_type factory_map = {
   // default
@@ -114,6 +123,10 @@ factory_map_type factory_map = {
   {"parameter", identifier_decl_factory },
   {"param",     identifier_decl_factory },
 
+  {"expr",      expr_factory },
+  {"expr_stmt", expr_stmt_factory },
+  {"return",    expr_construct_factory },
+  {"decl_stmt", decl_stmt_factory },
 
 };
 

@@ -1,5 +1,5 @@
 /**
- * @file name.cpp
+ * @file decl_stmt.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,20 +18,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <name.hpp>
+#ifndef INCLUDED_DECL_STMT_HPP
+#define INCLUDED_DECL_STMT_HPP
 
-std::string name_t::simple_name() const {
-    if(root_term()->is_simple) return to_string();
+#include <expr_construct.hpp>
 
-    const construct_list childs = children();
-    if(childs.empty() || childs[0]->root_term_name() != "name") return "";
+class decl_stmt : public expr_construct {
 
-    return childs[0]->to_string();
-}
+public:
 
-bool name_t::is_matchable_impl(const construct & modified) const {
+    decl_stmt(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : expr_construct(node_list, start, out) {}
+    virtual std::shared_ptr<const expr_t> expr() const;
+};
 
-    if(root_term()->is_simple && modified.root_term()->is_simple) return true;
 
-    return false;
-}
+#endif
