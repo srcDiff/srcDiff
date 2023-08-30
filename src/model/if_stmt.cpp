@@ -64,19 +64,19 @@ std::shared_ptr<const construct> if_stmt::condition() const {
     return *condition_child;
 }
 
-bool if_stmt::is_matchable_impl(const construct & modified) const {
+bool if_stmt::is_matchable_impl(const construct & modified_construct) const {
 
-    const if_stmt & modified_stmt = (const if_stmt &)modified;
-    if(!find_if() || !modified_stmt.find_if()) return false;
+    const if_stmt & modified = (const if_stmt &)modified_construct;
+    if(!find_if() || !modified.find_if()) return false;
 
     bool original_has_block = bool(static_cast<const if_t &>(*find_if()).has_real_block());
-    bool modified_has_block = bool(static_cast<const if_t &>(*modified_stmt.find_if()).has_real_block());
+    bool modified_has_block = bool(static_cast<const if_t &>(*modified.find_if()).has_real_block());
 
-    if(static_cast<const if_t &>(*find_if()).is_block_matchable(*modified_stmt.find_if())) return true;
+    if(static_cast<const if_t &>(*find_if()).is_block_matchable(*modified.find_if())) return true;
 
-    bool condition_matchable = condition() && modified_stmt.condition() && condition()->is_matchable_impl(*modified_stmt.condition());
+    bool condition_matchable = condition() && modified.condition() && condition()->is_matchable_impl(*modified.condition());
     bool original_has_else = bool(find_else());
-    bool modified_has_else = bool(modified_stmt.find_else());
+    bool modified_has_else = bool(modified.find_else());
 
     return condition_matchable 
         &&    (original_has_block == modified_has_block 

@@ -31,12 +31,12 @@ std::shared_ptr<const construct> conditional::condition() const {
     return *condition_child;
 }
 
-bool conditional::is_matchable_impl(const construct & modified) const {
+bool conditional::is_matchable_impl(const construct & modified_construct) const {
 
-    const conditional & modified_conditional = static_cast<const conditional &>(modified);
+    const conditional & modified = static_cast<const conditional &>(modified_construct);
 
     std::string original_condition = condition() ? condition()->to_string() : "";
-    std::string modified_condition = modified_conditional.condition() ? modified_conditional.condition()->to_string() : "";
+    std::string modified_condition = modified.condition() ? modified.condition()->to_string() : "";
 
     return original_condition == modified_condition;
 }
@@ -46,12 +46,12 @@ bool conditional::is_tag_convertable(const construct & modified) const {
    return conditional_convertable.find(modified.root_term_name()) != conditional_convertable.end();
 }
 
-bool conditional::is_convertable_impl(const construct & modified) const {
+bool conditional::is_convertable_impl(const construct & modified_construct) const {
 
-    const conditional & modified_conditional = static_cast<const conditional &>(modified);
+    const conditional & modified = static_cast<const conditional &>(modified_construct);
 
     std::string original_condition = condition() ? condition()->to_string() : "";
-    std::string modified_condition = modified_conditional.condition() ? modified_conditional.condition()->to_string() : "";
+    std::string modified_condition = modified.condition() ? modified.condition()->to_string() : "";
 
     return original_condition == modified_condition;
 }
