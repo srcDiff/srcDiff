@@ -426,10 +426,6 @@ bool construct::is_match_similar(const construct & modified) const {
 
 bool construct::can_refine_difference(const construct & modified) const {
 
-  /** if different prefix should not reach here, however, may want to add that here */
-  int original_pos = start_position();
-  int modified_pos = modified.start_position();
-
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
 
