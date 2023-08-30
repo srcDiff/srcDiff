@@ -96,10 +96,6 @@ public:
 
     std::shared_ptr<const construct> find_child(const std::string & name) const;
 
-    // Differencing Rule Helper Methods
-    virtual std::shared_ptr<const construct> name() const;
-    virtual std::shared_ptr<const construct> condition() const;
-
     // Differencing Rules
     const std::shared_ptr<srcdiff_measure> & measure(const construct & modified) const;
     bool is_similar(const construct & modified) const;

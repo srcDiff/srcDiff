@@ -1,5 +1,5 @@
 /**
- * @file function.hpp
+ * @file identifier_decl.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,17 +18,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_FUNCTION_HPP
-#define INCLUDED_FUNCTION_HPP
+#ifndef INCLUDED_IDENTIFIER_DECL_HPP
+#define INCLUDED_IDENTIFIER_DECL_HPP
 
 #include <named_construct.hpp>
 
-class function : public named_construct {
+class identifier_decl : public named_construct {
 
 public:
 
-    function(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : named_construct(node_list, start, out) {}
+    identifier_decl(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : named_construct(node_list, start, out) {}
+    virtual std::shared_ptr<const name_t> name() const;
+    virtual bool is_matchable_impl(const construct & modified) const;
 
+private:
+    
 };
 
 

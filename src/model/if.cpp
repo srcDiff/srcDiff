@@ -45,8 +45,11 @@ bool if_t::is_block_matchable(const construct & modified) const {
 
 
 bool if_t::is_matchable_impl(const construct & modified) const {
+
+    const if_t & modified_if = static_cast<const if_t &>(modified);
+
     std::string original_condition = condition() ? condition()->to_string() : "";
-    std::string modified_condition = modified.condition() ? modified.condition()->to_string() : "";
+    std::string modified_condition = modified_if.condition() ? modified_if.condition()->to_string() : "";
 
     if(original_condition == modified_condition) return true;
 

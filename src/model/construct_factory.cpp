@@ -21,8 +21,8 @@
 #include <construct_factory.hpp>
 
 #include <construct.hpp>
+#include <named_construct.hpp>
 #include <class.hpp>
-#include <function.hpp>
 #include <name.hpp>
 
 #include <conditional.hpp>
@@ -38,6 +38,8 @@
 #include <case.hpp>
 #include <call.hpp>
 
+#include <identifier_decl.hpp>
+
 #include <srcdiff_match.hpp>
 
 #include <unordered_map>
@@ -51,21 +53,23 @@ typedef std::unordered_map<std::string_view, factory_function> factory_map_type;
 
 factory_function default_factory  = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<construct>(node_list, start, out); };
 factory_function class_factory    = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<class_t>(node_list, start, out); };
-factory_function function_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<function>(node_list, start, out); };
-factory_function name_factory     = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<name>(node_list, start, out); };
+factory_function named_factory    = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<named_construct>(node_list, start, out); };
+factory_function name_factory     = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<name_t>(node_list, start, out); };
 
 factory_function conditional_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<conditional>(node_list, start, out); };
-factory_function condition_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<condition>(node_list, start, out); };
+factory_function condition_factory   = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<condition>(node_list, start, out); };
 
 factory_function if_stmt_factory   = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<if_stmt>(node_list, start, out); };
 factory_function if_factory        = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<if_t>(node_list, start, out); };
 factory_function elseif_factory    = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<elseif>(node_list, start, out); };
 factory_function else_factory      = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<else_t>(node_list, start, out); };
 
-factory_function for_factory   = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<for_t>(node_list, start, out); };
+factory_function for_factory       = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<for_t>(node_list, start, out); };
 
-factory_function case_factory   = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<case_t>(node_list, start, out); };
-factory_function call_factory   = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<call>(node_list, start, out); };
+factory_function case_factory      = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<case_t>(node_list, start, out); };
+factory_function call_factory      = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<call>(node_list, start, out); };
+
+factory_function identifier_decl_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<identifier_decl>(node_list, start, out); };
 
 
 factory_map_type factory_map = {
@@ -81,12 +85,12 @@ factory_map_type factory_map = {
   {"enum",   class_factory },
 
   // function-type
-  {"function",         function_factory },
-  {"function_decl",    function_factory },
-  {"constructor",      function_factory },
-  {"constructor_decl", function_factory },
-  {"destructor",       function_factory },
-  {"destructor_decl",  function_factory },
+  {"function",         named_factory },
+  {"function_decl",    named_factory },
+  {"constructor",      named_factory },
+  {"constructor_decl", named_factory },
+  {"destructor",       named_factory },
+  {"destructor_decl",  named_factory },
 
   // conditionals
   {"while",     conditional_factory },
@@ -104,6 +108,12 @@ factory_map_type factory_map = {
 
   {"case", case_factory },
   {"call", call_factory },
+
+  {"decl",      named_factory },
+  {"decl_stmt", identifier_decl_factory },
+  {"parameter", identifier_decl_factory },
+  {"param",     identifier_decl_factory },
+
 
 };
 

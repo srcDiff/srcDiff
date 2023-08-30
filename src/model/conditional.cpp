@@ -32,8 +32,11 @@ std::shared_ptr<const construct> conditional::condition() const {
 }
 
 bool conditional::is_matchable_impl(const construct & modified) const {
+
+    const conditional & modified_conditional = static_cast<const conditional &>(modified);
+
     std::string original_condition = condition() ? condition()->to_string() : "";
-    std::string modified_condition = modified.condition() ? modified.condition()->to_string() : "";
+    std::string modified_condition = modified_conditional.condition() ? modified_conditional.condition()->to_string() : "";
 
     return original_condition == modified_condition;
 }
@@ -44,8 +47,11 @@ bool conditional::is_tag_convertable(const construct & modified) const {
 }
 
 bool conditional::is_convertable_impl(const construct & modified) const {
+
+    const conditional & modified_conditional = static_cast<const conditional &>(modified);
+
     std::string original_condition = condition() ? condition()->to_string() : "";
-    std::string modified_condition = modified.condition() ? modified.condition()->to_string() : "";
+    std::string modified_condition = modified_conditional.condition() ? modified_conditional.condition()->to_string() : "";
 
     return original_condition == modified_condition;
 }

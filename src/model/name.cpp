@@ -20,9 +20,18 @@
 
 #include <name.hpp>
 
-bool name::is_matchable_impl(const construct & modified) const {
+std::string name_t::simple_name() const {
+    if(root_term()->is_simple) return to_string();
 
-    if(term(0)->is_simple && modified.term(0)->is_simple) return true;
+    const construct_list childs = children();
+    if(childs.empty() || childs[0]->root_term_name() != "name") return "";
+
+    return childs[0]->to_string();
+}
+
+bool name_t::is_matchable_impl(const construct & modified) const {
+
+    if(root_term()->is_simple && modified.root_term()->is_simple) return true;
 
     return false;
 }

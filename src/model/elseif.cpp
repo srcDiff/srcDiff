@@ -20,10 +20,10 @@
 
 #include <elseif.hpp>
 
-std::shared_ptr<const construct> elseif::find_if() const {
+std::shared_ptr<const if_t> elseif::find_if() const {
    if(if_child) return *if_child;
 
-    if_child = find_child("if");
+    if_child = std::static_pointer_cast<const if_t>(find_child("if"));
     return *if_child; 
 }
 

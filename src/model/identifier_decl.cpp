@@ -1,5 +1,5 @@
 /**
- * @file named_construct.cpp
+ * @file identifier_decl.cpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,23 +18,27 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <named_construct.hpp>
+#include <identifier_decl.hpp>
 
-std::shared_ptr<const name_t> named_construct::name() const {
+#include <srcdiff_text_measure.hpp>
+
+std::shared_ptr<const name_t> identifier_decl::name() const {
     if(name_child) return *name_child;
 
-    name_child = std::static_pointer_cast<const name_t>(find_child("name"));
+    name_child = std::shared_ptr<const name_t>();
+    std::shared_ptr<const construct> decl_child = find_child("decl");
+    if(decl_child) {
+        name_child = static_cast<const named_construct &>(*decl_child).name();
+    }
+
     return *name_child;
 }
 
-bool named_construct::is_matchable_impl(const construct & modified_construct) const {
+bool identifier_decl::is_matchable_impl(const construct & modified) const {
+    std::shared_ptr<const name_t> original_name = name();
+    std::shared_ptr<const name_t> modified_name = static_cast<const named_construct &>(modified).name();
 
-    const named_construct & modified = static_cast<const named_construct &>(modified_construct);
+    if(!original_name || !modified_name) return false;
 
-    std::string original_name = name() ? name()->to_string() : "";
-    std::string modified_name = modified.name() ? modified.name()->to_string() : "";
-
-    if(original_name == modified_name) return true;
-
-    return false;
+    return original_name->to_string() == modified_name->to_string();
 }

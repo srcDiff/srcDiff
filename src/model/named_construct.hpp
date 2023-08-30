@@ -23,6 +23,8 @@
 
 #include <construct.hpp>
 
+#include <name.hpp>
+
 class named_construct : public construct {
 
 public:
@@ -30,11 +32,11 @@ public:
     named_construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
         : construct(node_list, start, out), name_child() {} 
 
-    virtual std::shared_ptr<const construct> name() const;
+    virtual std::shared_ptr<const name_t> name() const;
     virtual bool is_matchable_impl(const construct & modified) const;
 
 protected:
-    mutable std::optional<std::shared_ptr<const construct>> name_child;
+    mutable std::optional<std::shared_ptr<const name_t>> name_child;
 };
 
 

@@ -275,14 +275,6 @@ std::shared_ptr<const construct> construct::find_child(const std::string & name)
     return found_child;
 }
 
-std::shared_ptr<const construct> construct::name() const {
-    return std::shared_ptr<const construct>();
-}
-
-std::shared_ptr<const construct> construct::condition() const {
-    return std::shared_ptr<const construct>();
-}
-
 const std::shared_ptr<srcdiff_measure> & construct::measure(const construct & modified) const {
     std::unordered_map<int, std::shared_ptr<srcdiff_measure>>::const_iterator citr = measures.find(modified.start_position());
     if(citr != measures.end()) return citr->second;
@@ -545,13 +537,6 @@ bool construct::is_matchable(const construct & modified) const {
       return is_matchable;
 
     }
-
-  } else if(original_tag == "decl" || original_tag == "decl_stmt" || original_tag == "parameter" || original_tag == "param") {
-
-    std::string original_name = get_decl_name(nodes(), original_pos);
-    std::string modified_name = get_decl_name(modified.nodes(), modified_pos);
-
-    if(original_name == modified_name && original_name != "") return true;
 
   }
 

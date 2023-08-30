@@ -30,13 +30,13 @@ public:
     elseif(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
         : if_t(node_list, start, out), if_child() {}
 
-    std::shared_ptr<const construct> find_if() const;
+    std::shared_ptr<const if_t> find_if() const;
 
     virtual std::shared_ptr<const construct> condition() const;
     std::shared_ptr<const construct> block() const;
 
 protected:
-    mutable std::optional<std::shared_ptr<const construct>> if_child;
+    mutable std::optional<std::shared_ptr<const if_t>> if_child;
 };
 
 
