@@ -359,39 +359,6 @@ bool is_single_call_expr(const srcml_nodes & nodes, int start_pos) {
  
 }
 
-/**
- * get_decl_name
- * @param nodes list of srcml nodes
- * @param start_pos position of starting tag to begin at
- *
- * @pre start_pos must be the location of a starting decl_stmt,
- *      parameter, param, or decl tag
- *
- * Extracts the name from a declaration
- *
- * loop O(n)
- * 
- * @returns declaration's name
- *          or empty string when not found
- *
- */
-
-std::string get_decl_name(const srcml_nodes & nodes, int start_pos) {
-
-  if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT
-    || (nodes.at(start_pos)->name != "decl_stmt"
-      && nodes.at(start_pos)->name != "parameter"
-      && nodes.at(start_pos)->name != "param"
-      && nodes.at(start_pos)->name != "decl")) return "";
-
-  if(nodes.at(start_pos)->name != "decl") {
-    ++start_pos;
-  }
-
-  return extract_name(nodes, start_pos);
-
-}
-
 /** loop O(n) */
 bool is_single_name_expr(const srcml_nodes & nodes, int start_pos) {
 
