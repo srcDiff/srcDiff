@@ -126,7 +126,6 @@ factory_map_type factory_map = {
   {"expr",      expr_factory },
   {"expr_stmt", expr_stmt_factory },
   {"return",    expr_construct_factory },
-  {"decl_stmt", decl_stmt_factory },
 
 };
 
