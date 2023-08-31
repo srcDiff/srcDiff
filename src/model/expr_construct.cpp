@@ -20,9 +20,20 @@
 
 #include <expr_construct.hpp>
 
+#include <unordered_set>
+#include <string>
+
 std::shared_ptr<const expr_t> expr_construct::expr() const {
     if(expr_child) return *expr_child;
 
     expr_child = std::static_pointer_cast<const expr_t>(find_child("expr"));
     return *expr_child;
+}
+
+bool expr_construct::is_tag_convertable(const construct & modified) const {
+    static const std::unordered_set<std::string> expr_convertable = { "expr_stmt", "return", "decl_stmt" };
+    return expr_convertable.find(modified.root_term_name()) != expr_convertable.end();    
+}
+bool expr_construct::is_convertable_impl(const construct & modified) const {
+    return false;
 }

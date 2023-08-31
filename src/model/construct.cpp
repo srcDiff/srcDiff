@@ -32,6 +32,7 @@
 #include <srcdiff_match_internal.hpp>
 #include <srcdiff_nested.hpp>
 
+#include <algorithm>
 #include <iostream>
 
 bool construct::is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context) {
@@ -287,6 +288,29 @@ std::shared_ptr<const construct> construct::find_child(const std::string & name)
 construct::construct_list construct::find_descendents(const srcml_node & element) const {
     return get_descendent_constructs(node_list, start_position() + 1, end_position(), construct::is_match, &element, out);
 }
+
+std::shared_ptr<const construct> construct::find_best_descendent(const srcml_node & element) const {
+    construct::construct_list descendents = find_descendents(element);
+
+    std::shared_ptr<const construct> best_descendent;
+    for(std::shared_ptr<const construct> descendent : descendents) {
+
+        size_t max_size = std::max(descendent->terms.size(), terms.size());
+        size_t min_size = std::min(descendent->terms.size(), terms.size());
+
+        if(max_size > (4 * min_size)) {
+          continue;
+        }
+
+        if(!best_descendent || measure(*descendent)->similarity() > measure(*best_descendent)->similarity()) {
+            best_descendent = descendent;
+        }
+
+    }
+
+    return best_descendent;
+}
+
 
 const std::shared_ptr<srcdiff_measure> & construct::measure(const construct & modified) const {
     std::unordered_map<int, std::shared_ptr<srcdiff_measure>>::const_iterator citr = measures.find(modified.start_position());

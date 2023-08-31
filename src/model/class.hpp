@@ -23,9 +23,6 @@
 
 #include <named_construct.hpp>
 
-#include <unordered_set>
-#include <string>
-
 class class_t : public named_construct {
 
 public:
@@ -34,7 +31,6 @@ public:
     virtual bool is_tag_convertable(const construct & modified) const;
     virtual bool is_convertable_impl(const construct & modified) const;
 private:
-    static const std::unordered_set<std::string> class_convertable;
 
 };
 
