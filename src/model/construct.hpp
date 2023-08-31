@@ -96,8 +96,8 @@ public:
     virtual std::string to_string(bool skip_whitespace = false) const;
 
     std::shared_ptr<const construct> find_child(const std::string & name) const;
-    construct_list find_descendents(const srcml_node & element) const;
-    std::shared_ptr<const construct> find_best_descendent(const srcml_node & element) const;
+    construct_list find_descendents(std::shared_ptr<srcml_node> element) const;
+    std::shared_ptr<const construct> find_best_descendent(std::shared_ptr<const construct> match_construct) const;
 
     // Differencing Rules
     const std::shared_ptr<srcdiff_measure> & measure(const construct & modified) const;

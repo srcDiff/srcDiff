@@ -24,7 +24,7 @@
 
 bool call::is_matchable_impl(const construct & modified) const {
     std::shared_ptr<const construct> original_name = name();
-    std::shared_ptr<const construct> modified_name = static_cast<const named_construct &>(modified).name();
+    std::shared_ptr<const construct> modified_name = dynamic_cast<const named_construct &>(modified).name();
 
     srcdiff_text_measure text_measure(*original_name, *modified_name, false);
     text_measure.compute();

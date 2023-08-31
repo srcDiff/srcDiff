@@ -398,21 +398,3 @@ bool is_single_name_expr(const srcml_nodes & nodes, int start_pos) {
   return nodes.at(start_pos)->type == XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name == "expr";
 
 }
-
-/** loop O(n) */
-std::shared_ptr<construct> get_first_expr_child(const srcml_nodes & nodes, int start_pos) {
-
-  int expr_pos = start_pos;
-
-  while((nodes.at(expr_pos)->type != XML_READER_TYPE_ELEMENT || nodes.at(expr_pos)->name != "expr")
-    && !(nodes.at(expr_pos)->type == XML_READER_TYPE_END_ELEMENT && nodes.at(expr_pos)->name == nodes.at(start_pos)->name)) {
-    ++expr_pos;
-  }
-
-  if(nodes.at(expr_pos)->type == XML_READER_TYPE_END_ELEMENT && nodes.at(expr_pos)->name == nodes.at(start_pos)->name) {
-    return std::make_shared<construct>(nodes);
-  }
-
-  return std::make_shared<construct>(nodes, expr_pos);
-
-}

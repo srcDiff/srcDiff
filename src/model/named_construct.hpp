@@ -25,7 +25,7 @@
 
 #include <name.hpp>
 
-class named_construct : public construct {
+class named_construct : virtual public construct {
 
 public:
 

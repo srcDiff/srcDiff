@@ -29,7 +29,7 @@ std::shared_ptr<const name_t> named_construct::name() const {
 
 bool named_construct::is_matchable_impl(const construct & modified_construct) const {
 
-    const named_construct & modified = static_cast<const named_construct &>(modified_construct);
+    const named_construct & modified = dynamic_cast<const named_construct &>(modified_construct);
 
     std::string original_name = name() ? name()->to_string() : "";
     std::string modified_name = modified.name() ? modified.name()->to_string() : "";

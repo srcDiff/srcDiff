@@ -26,9 +26,7 @@
 class expr_stmt : public expr_construct {
 
 public:
-
-    expr_stmt(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : expr_construct(node_list, start, out) {}
-
+    expr_stmt(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : construct(node_list, start, out), expr_construct(node_list, start, out) {}
 };
 
 

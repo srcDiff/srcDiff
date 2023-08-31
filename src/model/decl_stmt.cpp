@@ -1,5 +1,5 @@
 /**
- * @file class.hpp
+ * @file decl_stmt.cpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,22 +18,12 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_CLASS_HPP
-#define INCLUDED_CLASS_HPP
+#include <decl_stmt.hpp>
 
-#include <named_construct.hpp>
+std::shared_ptr<const expr_t> decl_stmt::expr(const expr_construct & that) const {
 
-class class_t : public named_construct {
+	std::shared_ptr<const expr_t> match_expression = that.expr(*this);
 
-public:
-
-    class_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), named_construct(node_list, start, out) {}
-    virtual bool is_tag_convertable(const construct & modified) const;
-    virtual bool is_convertable_impl(const construct & modified) const;
-private:
-
-};
-
-
-#endif
+	if(!match_expression) return std::shared_ptr<const expr_t>();
+	return std::static_pointer_cast<const expr_t>(find_best_descendent(match_expression));
+}

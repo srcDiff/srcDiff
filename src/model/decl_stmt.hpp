@@ -1,5 +1,5 @@
 /**
- * @file class.hpp
+ * @file decl_stmt.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,21 +18,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_CLASS_HPP
-#define INCLUDED_CLASS_HPP
+#ifndef INCLUDED_DECL_STMT_HPP
+#define INCLUDED_DECL_STMT_HPP
 
-#include <named_construct.hpp>
+#include <identifier_decl.hpp>
+#include <expr_construct.hpp>
 
-class class_t : public named_construct {
+class decl_stmt : public identifier_decl, public expr_construct {
 
 public:
+    decl_stmt(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+        : construct(node_list, start, out), identifier_decl(node_list, start, out), expr_construct(node_list, start, out) {}
 
-    class_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), named_construct(node_list, start, out) {}
-    virtual bool is_tag_convertable(const construct & modified) const;
-    virtual bool is_convertable_impl(const construct & modified) const;
-private:
-
+    virtual std::shared_ptr<const expr_t> expr(const expr_construct & that) const;
 };
 
 

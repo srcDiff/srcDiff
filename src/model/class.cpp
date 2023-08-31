@@ -33,7 +33,7 @@ bool class_t::is_tag_convertable(const construct & modified) const {
 
 bool class_t::is_convertable_impl(const construct & modified_construct) const {
 
-    const class_t & modified = static_cast<const class_t &>(modified_construct);
+    const class_t & modified = dynamic_cast<const class_t &>(modified_construct);
 
     std::string original_name = name() ? name()->to_string() : "";
     std::string modified_name = modified.name() ? modified.name()->to_string() : "";

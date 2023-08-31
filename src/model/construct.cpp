@@ -285,24 +285,24 @@ std::shared_ptr<const construct> construct::find_child(const std::string & name)
     return found_child;
 }
 
-construct::construct_list construct::find_descendents(const srcml_node & element) const {
+construct::construct_list construct::find_descendents(std::shared_ptr<srcml_node> element) const {
     return get_descendent_constructs(node_list, start_position() + 1, end_position(), construct::is_match, &element, out);
 }
 
-std::shared_ptr<const construct> construct::find_best_descendent(const srcml_node & element) const {
-    construct::construct_list descendents = find_descendents(element);
+std::shared_ptr<const construct> construct::find_best_descendent(std::shared_ptr<const construct> match_construct) const {
+    construct::construct_list descendents = find_descendents(match_construct->term(0));
 
     std::shared_ptr<const construct> best_descendent;
     for(std::shared_ptr<const construct> descendent : descendents) {
 
-        size_t max_size = std::max(descendent->terms.size(), terms.size());
-        size_t min_size = std::min(descendent->terms.size(), terms.size());
+        size_t max_size = std::max(descendent->terms.size(), match_construct->terms.size());
+        size_t min_size = std::min(descendent->terms.size(), match_construct->terms.size());
 
         if(max_size > (4 * min_size)) {
           continue;
         }
 
-        if(!best_descendent || measure(*descendent)->similarity() > measure(*best_descendent)->similarity()) {
+        if(!best_descendent || match_construct->measure(*descendent)->similarity() > match_construct->measure(*best_descendent)->similarity()) {
             best_descendent = descendent;
         }
 
@@ -609,83 +609,8 @@ bool construct::is_matchable_impl(const construct & modified) const {
 }
 
 bool construct::is_convertable(const construct & modified) const {
-
-  int original_pos = start_position();
-  int modified_pos = modified.start_position();
-
-  const std::string & original_tag = root_term_name();
-  const std::string & modified_tag = modified.root_term_name();
-
-  const std::string & original_uri = term(0)->ns.href;
-  const std::string & modified_uri = modified.term(0)->ns.href;
-
   if(is_convertable_impl(modified)) return true;
-
-  if(  (original_tag == "expr_stmt" || original_tag == "decl_stmt" || original_tag == "return")
-    && (modified_tag == "expr_stmt" || modified_tag == "decl_stmt" || modified_tag == "return")) {
-
-    std::shared_ptr<construct> expr_original(std::make_shared<construct>(nodes()));
-    std::shared_ptr<construct> expr_modified(std::make_shared<construct>(modified.nodes()));
-    if(original_tag == "decl_stmt" || modified_tag == "decl_stmt") {
-
-      if(original_tag == "decl_stmt") {
-
-        expr_modified = get_first_expr_child(modified.nodes(), modified_pos);
-
-        if(!expr_modified->empty()) {
-
-          construct::construct_list sets = construct::get_descendent_constructs(nodes(), get_terms().at(1), end_position(), construct::is_match,
-                                                                                &expr_modified->term(0));
-          int match = srcdiff_nested::best_match(sets, expr_modified);
-
-          if(match < sets.size()) {
-            expr_original = sets.at(match);
-          }
-
-        }
-
-      } else {
-
-        expr_original = get_first_expr_child(nodes(), original_pos);
-
-        if(!expr_original->empty()) {
-
-          construct::construct_list sets = construct::get_descendent_constructs(modified.nodes(), modified.get_terms().at(1), modified.end_position(), construct::is_match,
-                                    &expr_original->term(0));
-          int match = srcdiff_nested::best_match(sets, expr_original);
-
-          if(match < sets.size()) {
-            expr_modified = sets.at(match);
-          }
-
-        }
-
-      }
-
-    } else {
-
-      expr_original = get_first_expr_child(nodes(), original_pos);
-      expr_modified = get_first_expr_child(modified.nodes(), modified_pos);
-
-    }
-
-    if(expr_original->size() && expr_modified->size()) {
-
-      const srcdiff_measure & expr_measure = *expr_original->measure(*expr_modified);
-
-      bool is_expr_reject = !expr_original->is_similar(*expr_modified);
-
-      int min_size = expr_measure.min_length();
-      int max_size = expr_measure.max_length();
-
-      if(!is_expr_reject && 2 * expr_measure.similarity() > max_size && 2 * expr_measure.difference() < max_size) return true;
-
-    }
-
-  }
-
   return is_similar(modified);
-
 }
 
 bool construct::is_convertable_impl(const construct & modified) const {

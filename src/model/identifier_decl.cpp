@@ -28,7 +28,7 @@ std::shared_ptr<const name_t> identifier_decl::name() const {
     name_child = std::shared_ptr<const name_t>();
     std::shared_ptr<const construct> decl_child = find_child("decl");
     if(decl_child) {
-        name_child = static_cast<const named_construct &>(*decl_child).name();
+        name_child = dynamic_cast<const named_construct &>(*decl_child).name();
     }
 
     return *name_child;
@@ -36,7 +36,7 @@ std::shared_ptr<const name_t> identifier_decl::name() const {
 
 bool identifier_decl::is_matchable_impl(const construct & modified) const {
     std::shared_ptr<const name_t> original_name = name();
-    std::shared_ptr<const name_t> modified_name = static_cast<const named_construct &>(modified).name();
+    std::shared_ptr<const name_t> modified_name = dynamic_cast<const named_construct &>(modified).name();
 
     if(!original_name || !modified_name) return false;
 
