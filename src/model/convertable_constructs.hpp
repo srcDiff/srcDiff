@@ -38,10 +38,6 @@ static const convertable_list convertable_table[] = {
   { "protected", access_interchange },
   { "private",   access_interchange },
 
-  {"expr_stmt", expr_stmt_interchange },
-  {"decl_stmt", expr_stmt_interchange },
-  {"return"   , expr_stmt_interchange },
-
   {"cast", cast_interchange },
 
   { 0, 0 }
