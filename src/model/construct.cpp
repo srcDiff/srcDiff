@@ -43,6 +43,15 @@ bool construct::is_non_white_space(int & node_pos, const srcml_nodes & node_list
 
 }
 
+bool construct::is_match(int & node_pos, const srcml_nodes & nodes, const void * context) {
+
+  const std::shared_ptr<srcml_node> & node = nodes[node_pos];
+  const std::shared_ptr<srcml_node> & context_node = *(const std::shared_ptr<srcml_node> *)context;
+
+  return (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && *node == *context_node;
+
+}
+
 /// @todo make member.  Requires modifiying a lot of methods in other classes.
 // name does not quite match because not a member yet.
 construct::construct_list construct::get_descendent_constructs(const srcml_nodes & node_list, 
@@ -273,6 +282,10 @@ std::shared_ptr<const construct> construct::find_child(const std::string & name)
         }
     }
     return found_child;
+}
+
+construct::construct_list construct::find_descendents(const srcml_node & element) const {
+    return get_descendent_constructs(node_list, start_position() + 1, end_position(), construct::is_match, &element, out);
 }
 
 const std::shared_ptr<srcdiff_measure> & construct::measure(const construct & modified) const {
@@ -597,7 +610,7 @@ bool construct::is_convertable(const construct & modified) const {
 
         if(!expr_modified->empty()) {
 
-          construct::construct_list sets = construct::get_descendent_constructs(nodes(), get_terms().at(1), end_position(), srcdiff_nested::is_match,
+          construct::construct_list sets = construct::get_descendent_constructs(nodes(), get_terms().at(1), end_position(), construct::is_match,
                                                                                 &expr_modified->term(0));
           int match = srcdiff_nested::best_match(sets, expr_modified);
 
@@ -613,7 +626,7 @@ bool construct::is_convertable(const construct & modified) const {
 
         if(!expr_original->empty()) {
 
-          construct::construct_list sets = construct::get_descendent_constructs(modified.nodes(), modified.get_terms().at(1), modified.end_position(), srcdiff_nested::is_match,
+          construct::construct_list sets = construct::get_descendent_constructs(modified.nodes(), modified.get_terms().at(1), modified.end_position(), construct::is_match,
                                     &expr_original->term(0));
           int match = srcdiff_nested::best_match(sets, expr_original);
 

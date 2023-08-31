@@ -38,6 +38,7 @@ public:
     typedef std::function<bool (int & node_pos, const srcml_nodes & node_list, const void * context)> construct_filter;
 
     static bool is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context);
+    static bool is_match(int & node_pos, const srcml_nodes & nodes, const void * context);
 
     /// @todo make member.  Requires modifiying a lot of methods in other classes.
     // name does not quite match because not a member yet.
@@ -95,6 +96,7 @@ public:
     virtual std::string to_string(bool skip_whitespace = false) const;
 
     std::shared_ptr<const construct> find_child(const std::string & name) const;
+    construct_list find_descendents(const srcml_node & element) const;
 
     // Differencing Rules
     const std::shared_ptr<srcdiff_measure> & measure(const construct & modified) const;
