@@ -46,6 +46,8 @@
 
 #include <decl_stmt.hpp>
 
+#include <cast.hpp>
+
 #include <srcdiff_match.hpp>
 
 #include <unordered_map>
@@ -82,6 +84,9 @@ factory_function expr_construct_factory = [](const srcml_nodes & node_list, int 
 factory_function expr_stmt_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<expr_stmt>(node_list, start, out); };
 
 factory_function decl_stmt_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<decl_stmt>(node_list, start, out); };
+
+factory_function cast_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<cast>(node_list, start, out); };
+
 
 factory_map_type factory_map = {
   // default
@@ -129,6 +134,8 @@ factory_map_type factory_map = {
   {"return",    expr_construct_factory },
 
   {"decl_stmt", decl_stmt_factory },
+
+  {"cast", cast_factory },
 
 };
 

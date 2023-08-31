@@ -1,5 +1,5 @@
 /**
- * @file convertable_constructs.hpp
+ * @file cast.cpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,26 +18,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_CONVERTABLE_CONSTRUCTS_HPP
-#define INCLUDED_CONVERTABLE_CONSTRUCTS_HPP
+#include <cast.hpp>
 
+#include <unordered_set>
+#include <string>
 
-struct convertable_list {
+// match rule is in named_construct
 
-  const char * const name;
-  const char * const * list;
-
-};
-
-static const char * const access_interchange[]    = { "public", "protected", "private",   0 };
-static const convertable_list convertable_table[] = {
-
-  { "public",    access_interchange },
-  { "protected", access_interchange },
-  { "private",   access_interchange },
-
-  { 0, 0 }
-
-};
-
-#endif
+// convertable rule
+bool cast::is_tag_convertable(const construct & modified) const {
+    return modified.root_term_name() == "cast";
+}
