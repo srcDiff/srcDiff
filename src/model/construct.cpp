@@ -25,8 +25,6 @@
 #include <srcdiff_text_measure.hpp>
 #include <srcdiff_syntax_measure.hpp>
 
-#include <convertable_constructs.hpp>
-
 //temp, probably
 #include <srcdiff_match.hpp>
 #include <srcdiff_match_internal.hpp>
@@ -579,31 +577,9 @@ bool construct::is_matchable(const construct & modified) const {
 
 
 bool construct::is_tag_convertable(const construct & modified) const {
-
-  const std::string & original_tag = root_term_name();
-  const std::string & modified_tag = modified.root_term_name();
-
-  const std::string & original_uri = root_term()->ns.href;
-  const std::string & modified_uri = modified.root_term()->ns.href;
-
-  for(size_t list_pos = 0; convertable_table[list_pos].name; ++list_pos) {
-
-    if(convertable_table[list_pos].name == original_tag) {
-
-      for(size_t pos = 0; convertable_table[list_pos].list[pos]; ++pos) {
-
-        if(convertable_table[list_pos].list[pos] == modified_tag)
-          return true;
-
-      }
-
-    }
-
-  }
-
   return false;
-
 }
+
 bool construct::is_matchable_impl(const construct & modified) const {
     return false;
 }

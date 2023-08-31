@@ -1,5 +1,5 @@
 /**
- * @file convertable_constructs.hpp
+ * @file access_region.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,26 +18,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_CONVERTABLE_CONSTRUCTS_HPP
-#define INCLUDED_CONVERTABLE_CONSTRUCTS_HPP
+#ifndef INCLUDED_ACCESS_REGION_HPP
+#define INCLUDED_ACCESS_REGION_HPP
 
+#include <named_construct.hpp>
 
-struct convertable_list {
+class access_region : public construct {
 
-  const char * const name;
-  const char * const * list;
+public:
 
-};
-
-static const char * const access_interchange[]    = { "public", "protected", "private",   0 };
-static const convertable_list convertable_table[] = {
-
-  { "public",    access_interchange },
-  { "protected", access_interchange },
-  { "private",   access_interchange },
-
-  { 0, 0 }
+    access_region(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+        : construct(node_list, start, out) {}
+    virtual bool is_tag_convertable(const construct & modified) const;
+private:
 
 };
+
 
 #endif

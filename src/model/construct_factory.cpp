@@ -48,6 +48,8 @@
 
 #include <cast.hpp>
 
+#include <access_region.hpp>
+
 #include <srcdiff_match.hpp>
 
 #include <unordered_map>
@@ -87,6 +89,7 @@ factory_function decl_stmt_factory = [](const srcml_nodes & node_list, int & sta
 
 factory_function cast_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<cast>(node_list, start, out); };
 
+factory_function access_region_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<access_region>(node_list, start, out); };
 
 factory_map_type factory_map = {
   // default
@@ -136,6 +139,10 @@ factory_map_type factory_map = {
   {"decl_stmt", decl_stmt_factory },
 
   {"cast", cast_factory },
+
+  {"public", access_region_factory },
+  {"private", access_region_factory },
+  {"protected", access_region_factory },
 
 };
 
