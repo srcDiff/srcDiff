@@ -488,8 +488,9 @@ bool construct::is_matchable(const construct & modified) const {
   const std::string & original_uri = term(0)->ns.href;
   const std::string & modified_uri = modified.term(0)->ns.href;
 
+  if(original_uri != modified_uri) return false;
   if(original_tag != modified_tag) return false;
-  if(is_matchable_impl(modified)) return true;
+  if(is_matchable_impl(modified))  return true;
 
   if(original_tag == "type" || original_tag == "then" || original_tag == "condition" || original_tag == "control" || original_tag == "init"
     || original_tag == "default" || original_tag == "comment"

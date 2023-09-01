@@ -1,5 +1,5 @@
 /**
- * @file access_region.hpp
+ * @file always_matched_construct.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,20 +18,23 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_ACCESS_REGION_HPP
-#define INCLUDED_ACCESS_REGION_HPP
+#ifndef INCLUDED_ALWAYS_MATCHED_CONSTRUCT_HPP
+#define INCLUDED_ALWAYS_MATCHED_CONSTRUCT_HPP
 
-#include <always_matched_construct.hpp>
+#include <named_construct.hpp>
 
-class access_region : public always_matched_construct {
+#include <string>
+
+class always_matched_construct : public construct {
 
 public:
 
-    access_region(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : always_matched_construct(node_list, start, out) {}
-    virtual bool is_tag_convertable(const construct & modified) const;
-private:
+    always_matched_construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+        : construct(node_list, start, out) {}
+    static bool is_always_match(const std::string & construct_name);
+    virtual bool is_matchable_impl(const construct & modified) const;
 
+private:
 };
 
 

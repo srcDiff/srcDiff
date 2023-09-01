@@ -50,6 +50,8 @@
 
 #include <access_region.hpp>
 
+#include <always_matched_construct.hpp>
+
 #include <srcdiff_match.hpp>
 
 #include <unordered_map>
@@ -91,9 +93,9 @@ factory_function cast_factory = [](const srcml_nodes & node_list, int & start, s
 
 factory_function access_region_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<access_region>(node_list, start, out); };
 
+factory_function always_match_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<always_matched_construct>(node_list, start, out); };
+
 factory_map_type factory_map = {
-  // default
-  {"construct", default_factory },
 
   {"name", name_factory },
 
@@ -144,6 +146,8 @@ factory_map_type factory_map = {
   {"private", access_region_factory },
   {"protected", access_region_factory },
 
+  {"always_match", always_match_factory },
+
 };
 
 std::shared_ptr<construct> create_construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) {
@@ -157,11 +161,13 @@ std::shared_ptr<construct> create_construct(const srcml_nodes & node_list, int &
 
   if(tag_name == "if" && bool(find_attribute(node, "type"))) {
     tag_name = "elseif";
+  } else if(always_matched_construct::is_always_match(tag_name)) {
+    tag_name = "always_match";
   }
 
   factory_map_type::const_iterator citr = factory_map.find(tag_name);
-  if(citr == factory_map.end()) tag_name = "construct";
+  if(citr != factory_map.end()) return citr->second(node_list, start, out);
 
-  return factory_map[tag_name](node_list, start, out);
+  return default_factory(node_list, start, out);
 }
 
