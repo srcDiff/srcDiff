@@ -52,6 +52,8 @@
 
 #include <always_matched_construct.hpp>
 
+#include <block.hpp>
+
 #include <srcdiff_match.hpp>
 
 #include <unordered_map>
@@ -94,6 +96,8 @@ factory_function cast_factory = [](const srcml_nodes & node_list, int & start, s
 factory_function access_region_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<access_region>(node_list, start, out); };
 
 factory_function always_match_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<always_matched_construct>(node_list, start, out); };
+
+factory_function block_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<block>(node_list, start, out); };
 
 factory_map_type factory_map = {
 
@@ -147,6 +151,8 @@ factory_map_type factory_map = {
   {"protected", access_region_factory },
 
   {"always_match", always_match_factory },
+
+  {"block", block_factory },
 
 };
 

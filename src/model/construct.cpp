@@ -478,9 +478,6 @@ bool construct::can_refine_difference(const construct & modified) const {
 
 bool construct::is_matchable(const construct & modified) const {
 
-  int original_pos = start_position();
-  int modified_pos = modified.start_position();
-
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
 
@@ -490,63 +487,6 @@ bool construct::is_matchable(const construct & modified) const {
   if(original_uri != modified_uri) return false;
   if(original_tag != modified_tag) return false;
   if(is_matchable_impl(modified))  return true;
-
-  const srcdiff_measure & measure = *this->measure(modified);
-
-  if(original_tag == "block") {
-
-    bool is_pseudo_original = bool(find_attribute(term(0), "type"));
-    bool is_pseudo_modified = bool(find_attribute(modified.term(0), "type"));
-
-    if(is_pseudo_original == is_pseudo_modified) {
-
-      return true;
-
-    } else if(measure.similarity()) {
-
-      bool is_matchable = false;
-
-      if(is_pseudo_original) {
-
-        size_t block_contents_pos = 1;
-        while(term_name(block_contents_pos) != "block_content") {
-          ++block_contents_pos;
-        }
-        ++block_contents_pos;
-
-        construct::construct_list construct_list_original = construct::get_descendent_constructs(nodes(), get_terms().at(block_contents_pos), end_position());
-        construct::construct_list construct_list_modified = construct::get_descendent_constructs(modified.nodes(), modified.get_terms().at(0), modified.end_position() + 1);
-
-        int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
-        srcdiff_nested::check_nestable(construct_list_original, 0, construct_list_original.size(), construct_list_modified, 0, 1,
-                      start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
-
-        is_matchable = (operation == SES_INSERT);
-
-      } else {
-
-        size_t block_contents_pos = 1;
-        while(modified.term_name(block_contents_pos) != "block_content") {
-          ++block_contents_pos;
-        }
-        ++block_contents_pos;
-
-        construct::construct_list construct_list_original = construct::get_descendent_constructs(nodes(), get_terms().at(0), end_position() + 1);
-        construct::construct_list construct_list_modified = construct::get_descendent_constructs(modified.nodes(), modified.get_terms().at(block_contents_pos), modified.end_position());
-
-        int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
-        srcdiff_nested::check_nestable(construct_list_original, 0, 1, construct_list_modified, 0, construct_list_modified.size(),
-                      start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
-
-        is_matchable = (operation == SES_DELETE);
-
-      }
-
-      return is_matchable;
-
-    }
-
-  }
 
   return is_similar(modified);
 

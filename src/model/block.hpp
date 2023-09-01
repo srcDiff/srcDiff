@@ -36,5 +36,4 @@ private:
     mutable std::optional<std::shared_ptr<const construct>> block_content_child;
 };
 
-
 #endif
