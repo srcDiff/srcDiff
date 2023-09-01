@@ -22,6 +22,13 @@
 
 #include <srcdiff_match.hpp>
 
+std::shared_ptr<const construct> block::block_content() const {
+    if(block_content_child) return *block_content_child;
+
+    block_content_child = find_child("block_content");
+    return *block_content_child;
+}
+
 bool block::is_matchable_impl(const construct & modified) const {
     bool is_pseudo_original = bool(find_attribute(term(0), "type"));
     bool is_pseudo_modified = bool(find_attribute(modified.term(0), "type"));
