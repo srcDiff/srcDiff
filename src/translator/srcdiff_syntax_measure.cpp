@@ -1,13 +1,13 @@
 #include <srcdiff_syntax_measure.hpp>
 
-#include <srcdiff_compare.hpp>
+#include <srcdiff_shortest_edit_script.hpp>
 #include <srcdiff_constants.hpp>
 #include <srcdiff_match.hpp>
 #include <srcdiff_diff.hpp>
 
 #include <algorithm>
 
-srcdiff_syntax_measure::srcdiff_syntax_measure(const node_set & set_original, const node_set & set_modified) 
+srcdiff_syntax_measure::srcdiff_syntax_measure(const construct & set_original, const construct & set_modified) 
   : srcdiff_measure(set_original, set_modified) {}
 
 
@@ -43,13 +43,11 @@ void srcdiff_syntax_measure::compute() {
 
   computed = true;
   
-  diff_nodes dnodes = { set_original.nodes(), set_modified.nodes() };
-
-  if((xmlReaderTypes)set_original.nodes().at(set_original.at(0))->type != XML_READER_TYPE_ELEMENT
-     || (xmlReaderTypes)set_modified.nodes().at(set_modified.at(0))->type != XML_READER_TYPE_ELEMENT
-     || (srcdiff_compare::node_compare(set_original.nodes().at(set_original.at(0)), set_modified.nodes().at(set_modified.at(0))) != 0
-        && !srcdiff_match::is_interchangeable_match(set_original, set_modified)
-        && (set_original.nodes().at(set_original.at(0))->name != "block" || set_modified.nodes().at(set_modified.at(0))->name != "block"))) {
+  if((xmlReaderTypes)set_original.term(0)->type != XML_READER_TYPE_ELEMENT
+     || (xmlReaderTypes)set_modified.term(0)->type != XML_READER_TYPE_ELEMENT
+     || (*set_original.term(0) != *set_modified.term(0)
+        && !set_original.is_tag_convertable(set_modified)
+        && (set_original.term(0)->name != "block" || set_modified.term(0)->name != "block"))) {
 
     a_similarity = 0;
     a_original_difference = MAX_INT;
@@ -60,13 +58,13 @@ void srcdiff_syntax_measure::compute() {
   }
 
   // collect subset of nodes
-  node_sets next_node_sets_original = set_original.size() > 1 ? node_sets(set_original.nodes(), set_original.at(1), set_original.back(), is_significant) : node_sets(set_original.nodes());
-  node_sets next_node_sets_modified = set_modified.size() > 1 ? node_sets(set_modified.nodes(), set_modified.at(1), set_modified.back(), is_significant) : node_sets(set_modified.nodes());
-  original_len = next_node_sets_original.size();
-  modified_len = next_node_sets_modified.size();
+  construct::construct_list next_construct_list_original = set_original.size() > 1 ? construct::get_descendent_constructs(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position(), is_significant) : construct::construct_list();
+  construct::construct_list next_construct_list_modified = set_modified.size() > 1 ? construct::get_descendent_constructs(set_modified.nodes(), set_modified.get_terms().at(1), set_modified.end_position(), is_significant) : construct::construct_list();
+  original_len = next_construct_list_original.size();
+  modified_len = next_construct_list_modified.size();
 
-  shortest_edit_script_t ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_array_index, &dnodes);
-  ses.compute<node_sets>(next_node_sets_original, next_node_sets_modified, false);
+  srcdiff_shortest_edit_script ses;
+  ses.compute_edit_script(next_construct_list_original, next_construct_list_modified);
   process_edit_script(ses.script());
 
 }

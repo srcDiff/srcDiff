@@ -11,7 +11,7 @@ private:
 
 public:
 
-	srcdiff_comment(srcdiff_output & out, const node_sets & node_sets_original, const node_sets & node_sets_modified);
+	srcdiff_comment(std::shared_ptr<srcdiff_output> out, const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified);
 	virtual void output();
 
 };

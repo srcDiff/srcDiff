@@ -6,7 +6,7 @@
 #include <string>
 #include <iostream>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 class versioned_string {
 
@@ -14,8 +14,8 @@ class versioned_string {
 
 		static const std::string empty_str;
 
-		boost::optional<std::string> string_original;
-		boost::optional<std::string> string_modified;
+		std::optional<std::string> string_original;
+		std::optional<std::string> string_modified;
 
 		char separator;
 

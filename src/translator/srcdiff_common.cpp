@@ -1,7 +1,6 @@
 #include <srcdiff_common.hpp>
 
 #include <srcdiff_whitespace.hpp>
-#include <srcdiff_compare.hpp>
 
 #include <string>
 
@@ -25,7 +24,7 @@ void srcdiff_common::markup_common() {
   int i, j;
   for(i = begin_original, j = begin_modified; i < oend && j < nend; ++i, ++j) {
 
-    if(srcdiff_compare::node_compare(rbuf_original->nodes.at(i), rbuf_modified->nodes.at(j)) == 0) {
+    if(*rbuf_original->nodes.at(i) == *rbuf_modified->nodes.at(j)) {
 
       output_node(rbuf_original->nodes.at(i), rbuf_modified->nodes.at(j), SES_COMMON);
         
@@ -44,7 +43,7 @@ void srcdiff_common::markup_common() {
       int opivot = olength - 1;
       int npivot = nlength - 1;
 
-      for(; opivot > i && npivot > j && srcdiff_compare::node_compare(rbuf_original->nodes.at(opivot), rbuf_modified->nodes.at(npivot)) == 0; --opivot, --npivot)
+      for(; opivot > i && npivot > j && *rbuf_original->nodes.at(opivot) == *rbuf_modified->nodes.at(npivot); --opivot, --npivot)
         ;
 
       if(opivot < i || npivot < j) {
@@ -52,7 +51,7 @@ void srcdiff_common::markup_common() {
         opivot = olength;
         npivot = nlength;
 
-      } else if(srcdiff_compare::node_compare(rbuf_original->nodes.at(opivot), rbuf_modified->nodes.at(npivot)) != 0) {
+      } else if(*rbuf_original->nodes.at(opivot) != *rbuf_modified->nodes.at(npivot)) {
 
         ++opivot;
         ++npivot;

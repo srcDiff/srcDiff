@@ -2,30 +2,12 @@
 
 #include <view.hpp>
 
-static int compare_char(const void * item_one, const void * item_two, const void * context) {
-
-  const char * char1 = (const char *)item_one;
-  const char * char2 = (const char *)item_two;
-
-  return (*char1) != (*char2);
-
-}
-
-static const void * access_char(int index, const void * structure, const void * context) {
-
-  const char * str = (const char *)structure;
-  return &str[index];
-
-}
-
 character_diff::character_diff(const versioned_string & str)
-    : ses(compare_char, access_char, nullptr),
+    : ses(),
       str(str) {}
 
 void character_diff::compute() {
-
-    ses.compute<std::string>(str.original(), str.modified(), false);
-
+    ses.compute_edit_script(str.original(), str.modified());
 }
 
 void character_diff::output(view_t & view, const std::string & type) {

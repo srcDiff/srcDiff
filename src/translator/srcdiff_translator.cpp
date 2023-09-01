@@ -29,22 +29,22 @@ srcdiff_translator::srcdiff_translator(const std::string & srcdiff_filename,
                                        const OPTION_TYPE & flags,
                                        const METHOD_TYPE & method,
                                        srcml_archive * archive,
-                                       const boost::optional<std::string> & unit_filename,
+                                       const std::optional<std::string> & unit_filename,
                                        const srcdiff_options::view_options_t & view_options,
-                                       const boost::optional<std::string> & summary_type_str)
-  : archive(archive), flags(flags), output(archive,
+                                       const std::optional<std::string> & summary_type_str)
+  : archive(archive), flags(flags), output(std::make_shared<srcdiff_output>(archive,
                                            srcdiff_filename,
                                            flags,
                                            method,
                                            view_options,
-                                           summary_type_str),
+                                           summary_type_str)),
     unit_filename(unit_filename) {}
 
 
 // destructor
 srcdiff_translator::~srcdiff_translator() {
 
-  output.close();
+  output->close();
 
 }
 

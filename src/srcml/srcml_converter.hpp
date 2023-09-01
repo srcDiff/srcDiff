@@ -40,10 +40,10 @@ public:
 
   struct srcml_burst_config {
 
-    const boost::optional<std::string> & output_path;
+    const std::optional<std::string> & output_path;
     const std::string & language;
-    const boost::optional<std::string> & unit_filename;
-    const boost::optional<std::string> & unit_version;
+    const std::optional<std::string> & unit_filename;
+    const std::optional<std::string> & unit_version;
 
   };
 

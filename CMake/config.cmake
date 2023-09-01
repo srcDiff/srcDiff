@@ -131,7 +131,7 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
 
     set(GCC_WARNINGS "-Wno-long-long -Wall -Wextra -pedantic -Wempty-body -Wignored-qualifiers -Wsign-compare -Wtype-limits -Wuninitialized -Wno-pragmas -Wno-variadic-macros")
     # Adding global compiler definitions.                                                                                      
-    set(CMAKE_CXX_FLAGS "${USE_FPIC} -std=c++1y ${GCC_WARNINGS}")
+    set(CMAKE_CXX_FLAGS "${USE_FPIC} -std=c++17 ${GCC_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -DSTATIC_GLOBALS")
     set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG --coverage -fprofile-arcs")
 
@@ -143,7 +143,7 @@ elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}"
 
     # Configuring the Clang compiler
     #set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32 -Wno-unknown-pragmas -Wno-int-to-void-pointer-cast")
-    set(CMAKE_CXX_FLAGS "-fPIC -std=c++1y -fvisibility=default ${CLANG_WARNINGS}")
+    set(CMAKE_CXX_FLAGS "-fPIC -std=c++17 -fvisibility=default ${CLANG_WARNINGS}")
     set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -DSTATIC_GLOBALS")
     set(CMAKE_CXX_FLAGS_DEBUG   "-O0 -g -DDEBUG")
 

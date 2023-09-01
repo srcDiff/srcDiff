@@ -1,11 +1,13 @@
 #include <srcdiff_measure.hpp>
+
 #include <srcdiff_constants.hpp>
+#include <construct.hpp>
 
 #include <algorithm>
 #include <cassert>
 
-srcdiff_measure::srcdiff_measure(const node_set & set_original,
-                                 const node_set & set_modified) 
+srcdiff_measure::srcdiff_measure(const construct & set_original,
+                                 const construct & set_modified) 
   : set_original(set_original),
     set_modified(set_modified),
     computed(false),

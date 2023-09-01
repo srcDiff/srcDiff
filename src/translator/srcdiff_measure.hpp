@@ -1,14 +1,16 @@
 #ifndef INCLUDED_SRCDIFF_MEASURE_HPP
 #define INCLUDED_SRCDIFF_MEASURE_HPP
 
-#include <node_set.hpp>
+
 #include <shortest_edit_script.hpp>
+
+class construct;
 
 class srcdiff_measure {
 
 protected:
-	const node_set & set_original;
-	const node_set & set_modified;
+	const construct & set_original;
+	const construct & set_modified;
 
 	bool computed;
 
@@ -22,7 +24,7 @@ protected:
 
 public:
 
-	srcdiff_measure(const node_set & set_original, const node_set & set_modified);
+	srcdiff_measure(const construct & set_original, const construct & set_modified);
 
 	int similarity()          const;
 	int difference()          const;

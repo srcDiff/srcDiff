@@ -7,16 +7,15 @@
 #include <srcdiff_common.hpp>
 #include <srcdiff_move.hpp>
 #include <srcdiff_measure.hpp>
-#include <srcdiff_compare.hpp>
+#include <srcdiff_shortest_edit_script.hpp>
 #include <srcdiff_match.hpp>
-#include <shortest_edit_script.hpp>
 #include <srcdiff_edit_correction.hpp>
 
 #include <cstring>
 #include <methods.hpp>
 
-srcdiff_diff::srcdiff_diff(srcdiff_output & out, const node_sets & node_sets_original, const node_sets & node_sets_modified) 
-  : out(out), node_sets_original(node_sets_original), node_sets_modified(node_sets_modified) {}
+srcdiff_diff::srcdiff_diff(std::shared_ptr<srcdiff_output> out, const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified) 
+  : out(out), construct_list_original(construct_list_original), construct_list_modified(construct_list_modified) {}
 
 /*
 
@@ -31,15 +30,13 @@ srcdiff_diff::srcdiff_diff(srcdiff_output & out, const node_sets & node_sets_ori
 */
 void srcdiff_diff::output() {
 
-  diff_nodes dnodes = { node_sets_original.nodes(), node_sets_modified.nodes() };
-
-  shortest_edit_script_t ses(srcdiff_compare::node_set_syntax_compare, srcdiff_compare::node_set_array_index, &dnodes);
+  srcdiff_shortest_edit_script ses;
 
   /** O(CND) */
-  int distance = ses.compute<node_sets>(node_sets_original, node_sets_modified, false);
-  if(ses.is_approximate()) out.approximate(true);
+  int distance = ses.compute_edit_script(construct_list_original, construct_list_modified);
+  if(ses.is_approximate()) out->approximate(true);
 
-  srcdiff_edit_correction corrector(node_sets_original, node_sets_modified, ses);
+  srcdiff_edit_correction corrector(construct_list_original, construct_list_modified, ses);
   corrector.correct();
 
   edit_t * edit_script = ses.script();
@@ -51,38 +48,34 @@ void srcdiff_diff::output() {
   }
 
   /** O(CD^2) */
-  srcdiff_move::mark_moves(out.nodes_original(),
-                           node_sets_original,
-                           out.nodes_modified(),
-                           node_sets_modified,
-                           edit_script);
+  srcdiff_move::mark_moves(construct_list_original, construct_list_modified, edit_script);
 
   int last_diff_original = 0;
   int last_diff_modified = 0;
-  int diff_end_original = out.last_output_original();
-  int diff_end_modified = out.last_output_modified();
+  int diff_end_original = out->last_output_original();
+  int diff_end_modified = out->last_output_modified();
 
   edit_t * edits = edit_script;
   for (; edits; edits = edits->next) {
 
     // determine ending position to output
-    diff_end_original = out.last_output_original();
-    diff_end_modified = out.last_output_modified();
+    diff_end_original = out->last_output_original();
+    diff_end_modified = out->last_output_modified();
 
     if(edits->operation == SES_DELETE && last_diff_original < edits->offset_sequence_one) {
 
-      diff_end_original = node_sets_original.at(edits->offset_sequence_one - 1).back() + 1;
-      diff_end_modified = node_sets_modified.at(edits->offset_sequence_two - 1).back() + 1;
+      diff_end_original = construct_list_original.at(edits->offset_sequence_one - 1)->end_position() + 1;
+      diff_end_modified = construct_list_modified.at(edits->offset_sequence_two - 1)->end_position() + 1;
 
     } else if(edits->operation == SES_INSERT && last_diff_modified < edits->offset_sequence_two) {
 
-      diff_end_original = node_sets_original.at(edits->offset_sequence_one - 1).back() + 1;
-      diff_end_modified = node_sets_modified.at(edits->offset_sequence_two - 1).back() + 1;
+      diff_end_original = construct_list_original.at(edits->offset_sequence_one - 1)->end_position() + 1;
+      diff_end_modified = construct_list_modified.at(edits->offset_sequence_two - 1)->end_position() + 1;
 
     }
 
     // output area in common
-    output_common(diff_end_original, diff_end_modified);
+    srcdiff_common::output_common(out, diff_end_original, diff_end_modified);
 
     // detect and change
     edit_t * edit_next = edits->next;
@@ -103,24 +96,29 @@ void srcdiff_diff::output() {
       // handle pure delete or insert
       switch (edits->operation) {
 
-        case SES_COMMON:
+        case SES_COMMON: {
 
-          if((xmlReaderTypes)out.nodes_original().at(node_sets_original.at(edits->offset_sequence_one).at(0))->type != XML_READER_TYPE_TEXT) {
+          if((xmlReaderTypes)construct_list_original.at(edits->offset_sequence_one)->term(0)->type != XML_READER_TYPE_TEXT) {
 
-            srcdiff_single diff(*this, edits->offset_sequence_one, edits->offset_sequence_two);
+            srcdiff_single diff(out,
+                                construct_list_original.at(edits->offset_sequence_one),
+                                construct_list_modified.at(edits->offset_sequence_two));
             diff.output();
 
           } else {
 
             // common text nodes
-            output_common(node_sets_original.at(edits->offset_sequence_one).back() + 1,
-                          node_sets_modified.at(edits->offset_sequence_two).back() + 1);
+            srcdiff_common::output_common(out, construct_list_original.at(edits->offset_sequence_one)->end_position() + 1,
+                          construct_list_modified.at(edits->offset_sequence_two)->end_position() + 1);
 
           }
 
-        case SES_INSERT:
+          break;
+        }
 
-          output_pure(0, node_sets_modified.at(edits->offset_sequence_two + edits->length - 1).back() + 1);
+        case SES_INSERT: {
+
+          output_pure(0, construct_list_modified.at(edits->offset_sequence_two + edits->length - 1)->end_position() + 1);
 
 
           // update for common
@@ -128,16 +126,19 @@ void srcdiff_diff::output() {
           last_diff_modified = edits->offset_sequence_two + edits->length;
 
           break;
+        }
 
-        case SES_DELETE:
+        case SES_DELETE: {
 
-          output_pure(node_sets_original.at(edits->offset_sequence_one + edits->length - 1).back() + 1, 0);
+          output_pure(construct_list_original.at(edits->offset_sequence_one + edits->length - 1)->end_position() + 1, 0);
 
           // update for common
           last_diff_original = edits->offset_sequence_one + edits->length;
           last_diff_modified = edits->offset_sequence_two;
 
           break;
+        }
+
       }
       
     }
@@ -145,52 +146,32 @@ void srcdiff_diff::output() {
   }
 
   // determine ending position to output
-  diff_end_original = out.last_output_original();
-  diff_end_modified = out.last_output_modified();
-  if(last_diff_original < (signed)node_sets_original.size()) {
+  diff_end_original = out->last_output_original();
+  diff_end_modified = out->last_output_modified();
+  if(last_diff_original < (signed)construct_list_original.size()) {
 
-    diff_end_original = node_sets_original.back().back() + 1;
-    diff_end_modified = node_sets_modified.back().back() + 1;
+    diff_end_original = construct_list_original.back()->end_position() + 1;
+    diff_end_modified = construct_list_modified.back()->end_position() + 1;
 
   }
 
   // output area in common
-  output_common(diff_end_original, diff_end_modified);
-
-}
-
-void srcdiff_diff::output_common(int end_original, int end_modified) {
-
-  srcdiff_common common(out, end_original, end_modified);
-  common.output();
+  srcdiff_common::output_common(out, diff_end_original, diff_end_modified);
 
 }
 
 void srcdiff_diff::output_pure(int end_original, int end_modified) {
 
-  srcdiff_change pure(out, end_original, end_modified);
+  srcdiff_change pure(*out, end_original, end_modified);
   pure.output_whitespace_prefix();
   pure.output();
 
 }
 
-void srcdiff_diff::output_change(int end_original, int end_modified) {
-
-  srcdiff_change change(out, end_original, end_modified);
-  change.output();
-
-}
-
-void srcdiff_diff::output_whitespace() {
-
-  srcdiff_whitespace whitespace(out);
-  whitespace.output_all();
-
-}
 
 void srcdiff_diff::output_change_whitespace(int end_original, int end_modified) {
 
-  srcdiff_change change(out, end_original, end_modified);
+  srcdiff_change change(*out, end_original, end_modified);
   change.output_whitespace_prefix();
   change.output();
 
@@ -201,22 +182,22 @@ void srcdiff_diff::output_replace_inner_whitespace(int start_original, int end_o
                                                    int common_offset) {
 
 
-  srcdiff_change change(out, end_original - 1, end_modified - 1);
+  srcdiff_change change(*out, end_original - 1, end_modified - 1);
   change.output_whitespace_all();
 
-  out.output_node(out.diff_common_start, SES_COMMON);
+  out->output_node(out->diff_common_start, SES_COMMON);
   for(int i = 0; i < common_offset; ++i) {
 
-    out.output_node(out.nodes_original().at(start_original + i), SES_COMMON);
-    ++out.last_output_original();
-    ++out.last_output_modified();
+    out->output_node(out->nodes_original().at(start_original + i), SES_COMMON);
+    ++out->last_output_original();
+    ++out->last_output_modified();
 
   }
 
   change.output_whitespace_prefix();
   change.output();
 
-  output_common(end_original, end_modified);
-  out.output_node(out.diff_common_end, SES_COMMON);
+  srcdiff_common::output_common(out, end_original, end_modified);
+  out->output_node(out->diff_common_end, SES_COMMON);
 
 }

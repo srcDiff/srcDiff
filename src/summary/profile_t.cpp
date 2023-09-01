@@ -104,11 +104,11 @@ const void * profile_t::get_member(const std::string & type) {
 
 void profile_t::set_name(const std::shared_ptr<identifier_profile_t> & name) {
 
-    set_name(name, boost::optional<versioned_string>());
+    set_name(name, std::optional<versioned_string>());
 
 }
 
-void profile_t::set_name(const std::shared_ptr<identifier_profile_t> & name UNUSED, const boost::optional<versioned_string> & parent UNUSED) {}
+void profile_t::set_name(const std::shared_ptr<identifier_profile_t> & name UNUSED, const std::optional<versioned_string> & parent UNUSED) {}
 
 void profile_t::add_child_change(const std::shared_ptr<profile_t> & profile, const versioned_string & parent UNUSED) {
 

@@ -35,7 +35,7 @@ class class_profile_t : public profile_t {
             return nullptr;
         }
 
-        virtual void set_name(const std::shared_ptr<identifier_profile_t> & name, const boost::optional<versioned_string> & parent) {
+        virtual void set_name(const std::shared_ptr<identifier_profile_t> & name, const std::optional<versioned_string> & parent) {
 
             const std::string type_name = parent->is_common() ? std::string(*parent) : parent->original();
 

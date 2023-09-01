@@ -149,7 +149,7 @@ void conflicting_options(const boost::program_options::variables_map & var_map,
 template<std::string srcdiff_options::*field>
 void option_field(const std::string & arg) { options.*field = arg; }
 
-template<boost::optional<std::string> srcdiff_options::*field>
+template<std::optional<std::string> srcdiff_options::*field>
 void option_field(const std::string & arg) { options.*field = arg; }
 
 template<>
@@ -405,7 +405,7 @@ void option_field(const int & arg) { options.view_options.*field = arg; }
 template<std::string srcdiff_options::view_options_t::*field>
 void option_field(const std::string & arg) { options.view_options.*field = arg; }
 
-template<boost::optional<std::string> srcdiff_options::view_options_t::*field>
+template<std::optional<std::string> srcdiff_options::view_options_t::*field>
 void option_field(const std::string & arg) { options.view_options.*field = arg; }
 
 template<boost::any srcdiff_options::view_options_t::*field>

@@ -3,7 +3,7 @@
 
 #include <srcdiff_output.hpp>
 
-#include <node_sets.hpp>
+#include <construct.hpp>
 #include <shortest_edit_script.h>
 
 class srcdiff_move : public srcdiff_output {
@@ -19,12 +19,10 @@ public:
 
 	srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation);
 
-	static bool is_move(const node_set & set);
+	static bool is_move(const std::shared_ptr<construct> & set);
 
-	static void mark_moves(srcml_nodes & nodes_original,
-                           const node_sets & node_sets_original,
-                           srcml_nodes & nodes_modified,
-                           const node_sets & node_sets_modified,
+	static void mark_moves(const construct::construct_list & construct_list_original,
+                           const construct::construct_list & construct_list_modified,
                            edit_t * edit_script);
 
 	virtual void output();

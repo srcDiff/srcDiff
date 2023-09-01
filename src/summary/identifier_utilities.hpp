@@ -19,9 +19,9 @@ private:
     std::vector<std::string> original_identifiers;
     std::vector<std::string> modified_identifiers;
 
-    boost::optional<versioned_string> trimmed_;
-    boost::optional<versioned_string> diffed_;
-    boost::optional<std::vector<std::pair<std::string, srcdiff_type>>> list_;
+    std::optional<versioned_string> trimmed_;
+    std::optional<versioned_string> diffed_;
+    std::optional<std::vector<std::pair<std::string, srcdiff_type>>> list_;
 
     bool is_complex;
 

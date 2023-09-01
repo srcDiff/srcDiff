@@ -16,7 +16,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
                                const OPTION_TYPE & flags,
                                const METHOD_TYPE & method,
                                const srcdiff_options::view_options_t & view_options,
-                               const boost::optional<std::string> & summary_type_str)
+                               const std::optional<std::string> & summary_type_str)
  : output_srcdiff(false), archive(archive), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcml_node::srcml_ns>()) {
@@ -166,7 +166,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
 
  }
 
- void srcdiff_output::start_unit(const std::string & language_string, const boost::optional<std::string> & unit_filename, const boost::optional<std::string> & unit_version) {
+ void srcdiff_output::start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version) {
 
   wstate->unit = srcml_unit_create(archive);
 

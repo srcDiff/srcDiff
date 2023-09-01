@@ -44,6 +44,10 @@
 
 srcml_node::srcml_ns::srcml_ns(const srcml_ns & ns) : href(ns.href), prefix(ns.prefix) {}
 
+bool srcml_node::srcml_ns::operator==(const srcml_ns & ns) const {
+  return href == ns.href && prefix == ns.prefix;
+}
+
 bool srcml_node::srcml_attr::operator==(const srcml_attr & attr) const {
 
   if(name != attr.name) return false;
@@ -150,8 +154,8 @@ end_ns_def:
 
 }
 
-srcml_node::srcml_node(xmlReaderTypes type, const std::string & name,  const srcml_ns & ns, const boost::optional<std::string> & content,
-const std::list<srcml_attr> & properties, const boost::optional<std::shared_ptr<srcml_node>> & parent, bool is_empty)
+srcml_node::srcml_node(xmlReaderTypes type, const std::string & name,  const srcml_ns & ns, const std::optional<std::string> & content,
+const std::list<srcml_attr> & properties, const std::optional<std::shared_ptr<srcml_node>> & parent, bool is_empty)
   : type(type), name(name), ns(ns), content(content), properties(properties), parent(parent),
     is_empty(is_empty), free(false), move(0), is_simple(true), is_temporary(false) {}
 
@@ -172,8 +176,15 @@ bool srcml_node::operator==(const srcml_node & node) const {
 
   return type == node.type
     && name == node.name
+    && is_empty == node.is_empty
+    && ns == node.ns
+    && properties == node.properties
     && ((type != XML_READER_TYPE_TEXT && type != XML_READER_TYPE_SIGNIFICANT_WHITESPACE)
       || (content == node.content && (!content || *content == *node.content)));
+}
+
+bool srcml_node::operator!=(const srcml_node & node) const {
+  return !operator==(node);
 }
 
 std::ostream & operator<<(std::ostream & out, const srcml_node & that) {

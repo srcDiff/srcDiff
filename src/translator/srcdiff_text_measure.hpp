@@ -3,27 +3,29 @@
 
 #include <srcdiff_measure.hpp>
 
+#include <construct.hpp>
+
 class srcdiff_text_measure : public srcdiff_measure {
 
 protected:
 
 private:
 
-    node_set set_original_text;
-    node_set set_modified_text;
+    std::shared_ptr<construct> set_original_text;
+    std::shared_ptr<construct> set_modified_text;
     bool important_only;
     bool text_collected;
 
-    void unigrams(node_set & collected_set_original,
-                  node_set & collected_set_modified);
+    void unigrams(construct & collected_set_original,
+                  construct & collected_set_modified);
 
 public:
 
-	srcdiff_text_measure(const node_set & set_original,
-                       const node_set & set_modified,
+	srcdiff_text_measure(const construct & set_original,
+                       const construct & set_modified,
                        bool important_only = true);
 
-    static void collect_text_node_set(const node_set & set, node_set & set_text);
+    static void collect_text_element(const construct & set, construct & set_text);
     void collect_text();
     void collect_important_text();
 

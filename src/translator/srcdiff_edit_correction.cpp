@@ -1,15 +1,14 @@
 #include <srcdiff_edit_correction.hpp>
 
 #include <srcdiff_match.hpp>
-#include <srcdiff_compare.hpp>
 #include <list>
 #include <algorithm>
 
 #include <iostream>
 
-srcdiff_edit_correction::srcdiff_edit_correction(const node_sets & sets_original,
-                                                 const node_sets & sets_modified,
-                                                 shortest_edit_script_t & ses) 
+srcdiff_edit_correction::srcdiff_edit_correction(const construct::construct_list & sets_original,
+                                                 const construct::construct_list & sets_modified,
+                                                 srcdiff_shortest_edit_script & ses) 
     : sets_original(sets_original),
       sets_modified(sets_modified),
       ses(ses) {}
@@ -234,8 +233,6 @@ edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
     edit_t * delete_edit = change_edit;
     edit_t * insert_edit = change_edit->next;
 
-    diff_nodes diff = { sets_original.nodes(), sets_modified.nodes() };
-
     for(int i = 0; i < delete_edit->length; ++i) {
 
         for(int j = 0; j < insert_edit->length; ++j) {
@@ -243,19 +240,19 @@ edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
             std::size_t original_set_pos = delete_edit->offset_sequence_one + i;
             std::size_t modified_set_pos = insert_edit->offset_sequence_two + j;
 
-            const node_set & set_original = sets_original.at(original_set_pos);
-            const node_set & set_modified = sets_modified.at(modified_set_pos);
+            const std::shared_ptr<construct> & set_original = sets_original.at(original_set_pos);
+            const std::shared_ptr<construct> & set_modified = sets_modified.at(modified_set_pos);
 
-            int original_pos = set_original.at(0);
-            int modified_pos = set_modified.at(0);
+            int original_pos = set_original->start_position();
+            int modified_pos = set_modified->start_position();
 
-            const std::string & original_tag = set_original.nodes().at(original_pos)->name;
-            const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
+            const std::string & original_tag = set_original->term(0)->name;
+            const std::string & modified_tag = set_modified->term(0)->name;
 
-            const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
-            const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
+            const std::string & original_uri = set_original->term(0)->ns.href;
+            const std::string & modified_uri = set_modified->term(0)->ns.href;
 
-            if(srcdiff_compare::node_set_syntax_compare(&set_original, &set_modified, &diff) != 0) {
+            if(*set_original != *set_modified) {
                 continue;
             }
 
@@ -307,23 +304,23 @@ std::shared_ptr<srcdiff_text_measure> srcdiff_edit_correction::edit2measure(int 
     std::size_t original_set_pos = original_offset;
     std::size_t modified_set_pos = modified_offset;
 
-    const node_set & set_original = sets_original.at(original_set_pos);
-    const node_set & set_modified = sets_modified.at(modified_set_pos);
+    const std::shared_ptr<construct> & set_original = sets_original.at(original_set_pos);
+    const std::shared_ptr<construct> & set_modified = sets_modified.at(modified_set_pos);
 
-    int original_pos = set_original.at(0);
-    int modified_pos = set_modified.at(0);
+    int original_pos = set_original->start_position();
+    int modified_pos = set_modified->start_position();
 
-    const std::string & original_tag = set_original.nodes().at(original_pos)->name;
-    const std::string & modified_tag = set_modified.nodes().at(modified_pos)->name;
+    const std::string & original_tag = set_original->term(0)->name;
+    const std::string & modified_tag = set_modified->term(0)->name;
 
-    const std::string & original_uri = set_original.nodes().at(original_pos)->ns.href;
-    const std::string & modified_uri = set_modified.nodes().at(modified_pos)->ns.href;
+    const std::string & original_uri = set_original->term(0)->ns.href;
+    const std::string & modified_uri = set_modified->term(0)->ns.href;
 
     if(!(original_tag == modified_tag && original_uri == modified_uri)
-        && !srcdiff_match::is_interchangeable_match(set_original, set_modified))
+        && !set_original->is_tag_convertable(*set_modified))
         return std::shared_ptr<srcdiff_text_measure>();
 
-    std::shared_ptr<srcdiff_text_measure> measure = std::make_shared<srcdiff_text_measure>(set_original, set_modified);
+    std::shared_ptr<srcdiff_text_measure> measure = std::make_shared<srcdiff_text_measure>(*set_original, *set_modified);
     measure->compute();
 
     return measure;
@@ -465,9 +462,9 @@ void srcdiff_edit_correction::correct() {
 
         std::size_t common_pos = delete_edit->offset_sequence_one + original_offset;
 
-        const node_set & common_set = sets_original.at(common_pos);
-        node_set common_set_text(sets_original.nodes());
-        srcdiff_text_measure::collect_text_node_set(common_set, common_set_text);
+        const std::shared_ptr<construct> & common_set = sets_original.at(common_pos);
+        std::shared_ptr<construct> common_set_text(std::make_shared<construct>(common_set->nodes()));
+        srcdiff_text_measure::collect_text_element(*common_set, *common_set_text);
 
         std::vector<std::size_t> original_similarities(delete_edit->length);
         std::vector<std::size_t> modified_similarities(insert_edit->length);
@@ -500,22 +497,22 @@ void srcdiff_edit_correction::correct() {
                 std::size_t original_set_pos = delete_edit->offset_sequence_one + i;
                 std::size_t modified_set_pos = insert_edit->offset_sequence_two + j;
 
-                const node_set & set_original = sets_original.at(original_set_pos);
-                const node_set & set_modified = sets_modified.at(modified_set_pos);
+                const std::shared_ptr<construct> & set_original = sets_original.at(original_set_pos);
+                const std::shared_ptr<construct> & set_modified = sets_modified.at(modified_set_pos);
 
-                if(set_original.size() >= 3 * set_modified.size()) {
+                if(set_original->size() >= 3 * set_modified->size()) {
                     continue;
                 }
 
-                if(set_modified.size() >= 3 * set_original.size()) {
+                if(set_modified->size() >= 3 * set_original->size()) {
                     continue;
                 }
 
-                if(set_original.size() < 3 * common_set.size()) {
+                if(set_original->size() < 3 * common_set->size()) {
                     continue;
                 }
 
-                if(set_modified.size() < 3 * common_set.size()) {
+                if(set_modified->size() < 3 * common_set->size()) {
                     continue;
                 }
 
@@ -528,7 +525,7 @@ void srcdiff_edit_correction::correct() {
                        && 2 * measure->min_length() >= measure->max_length());
 
                 if(is_similar
-                    && 3 * common_set_text.size() <= measure->similarity()) {
+                    && 3 * common_set_text->size() <= measure->similarity()) {
 
                     if(before) {
                         before->next = delete_edit;

@@ -4,7 +4,7 @@
 #include <methods.hpp>
 #include <srcml.h>
 
-#include <boost/optional.hpp>
+#include <optional>
 #include <boost/any.hpp>
 
 #include <string>
@@ -108,8 +108,8 @@ struct srcdiff_options
 
   std::vector<std::pair<std::string, std::string>> input_pairs;
   std::string srcdiff_filename;
-  boost::optional<std::string> files_from_name;
-  boost::optional<std::string> unit_filename;
+  std::optional<std::string> files_from_name;
+  std::optional<std::string> unit_filename;
 
   OPTION_TYPE flags;
   METHOD_TYPE methods;
@@ -119,23 +119,23 @@ struct srcdiff_options
     std::string theme;
     boost::any unified_view_context;
     int side_by_side_tab_size;
-    boost::optional<std::string> srcdiff_filename;
+    std::optional<std::string> srcdiff_filename;
   } view_options;
 
-  boost::optional<std::string> summary_type_str;
+  std::optional<std::string> summary_type_str;
 
 #if SVN
-  boost::optional<std::string> svn_url;
+  std::optional<std::string> svn_url;
   svn_revnum_t revision_one;
   svn_revnum_t revision_two;
 #endif
   
 #if GIT
-  boost::optional<std::string> git_url;
+  std::optional<std::string> git_url;
   std::string git_revision_one;
   std::string git_revision_two;
-  boost::optional<std::string> original_repository;
-  boost::optional<std::string> modified_repository;
+  std::optional<std::string> original_repository;
+  std::optional<std::string> modified_repository;
 #endif
 
 };

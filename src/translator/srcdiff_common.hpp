@@ -12,10 +12,15 @@ protected:
 
 private:
 
-	static const boost::optional<std::string> whitespace;
+	static const std::optional<std::string> whitespace;
 	virtual void markup_common();
 
 public:
+
+	static void output_common(std::shared_ptr<srcdiff_output> out, int end_original, int end_modified) {
+ 		srcdiff_common common(*out, end_original, end_modified);
+		common.output();
+	}
 
 	srcdiff_common(const srcdiff_output & out, unsigned int end_original, unsigned int end_modified);
 

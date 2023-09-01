@@ -19,7 +19,7 @@
 #include <srcdiff_constants.hpp>
 
 #include <boost/any.hpp>
-#include <boost/optional.hpp>
+#include <optional>
 
 #include <vector>
 #include <memory>
@@ -102,7 +102,7 @@ protected:
 
   bool output_srcdiff;
   srcml_archive * archive;
-  const OPTION_TYPE & flags;
+  OPTION_TYPE flags;
 
   std::shared_ptr<reader_state> rbuf_original;
   std::shared_ptr<reader_state> rbuf_modified;
@@ -145,16 +145,17 @@ private:
 
 public:
 
+  srcdiff_output() {}
   srcdiff_output(srcml_archive * archive,
                  const std::string & srcdiff_filename,
                  const OPTION_TYPE & flags,
                  const METHOD_TYPE & method,
                  const srcdiff_options::view_options_t & view_options,
-                 const boost::optional<std::string> & summary_type_str);
+                 const std::optional<std::string> & summary_type_str);
   virtual ~srcdiff_output();
 
   virtual void initialize(int is_original, int is_modified);
-  virtual void start_unit(const std::string & language_string, const boost::optional<std::string> & unit_filename, const boost::optional<std::string> & unit_version);
+  virtual void start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version);
 
   template<class T>
   void finish(line_diff_range<T> & line_diff_range);

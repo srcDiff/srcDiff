@@ -10,7 +10,7 @@
 #include <vector>
 #include <memory>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 template<class T>
 class srcdiff_input {
@@ -18,7 +18,7 @@ class srcdiff_input {
 protected:
 
 	srcml_archive * archive;
-	const boost::optional<std::string> input_path;
+	const std::optional<std::string> input_path;
 	const OPTION_TYPE & options;
 	const char * language_string;
 	const T & input;
@@ -27,7 +27,7 @@ private:
 
 public:
 
-	srcdiff_input(srcml_archive * archive, const boost::optional<std::string> & input_path, const char * language_string, const OPTION_TYPE & options, const T & input);
+	srcdiff_input(srcml_archive * archive, const std::optional<std::string> & input_path, const char * language_string, const OPTION_TYPE & options, const T & input);
 	~srcdiff_input();
 
 	void operator()(int stream_source, srcml_nodes & nodes, int & is_input, const srcml_converter::srcml_burst_config & burst_config) const;
