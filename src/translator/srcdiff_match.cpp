@@ -5,8 +5,6 @@
 #include <srcdiff_syntax_measure.hpp>
 #include <srcdiff_shortest_edit_script.hpp>
 #include <srcdiff_constants.hpp>
-#include <srcdiff_match_internal.hpp>
-
 
 #include <list>
 
@@ -297,45 +295,5 @@ std::optional<std::string> find_attribute(const std::shared_ptr<const srcml_node
   }
 
   return std::optional<std::string>();
-
-}
-
-/** loop O(n) */
-bool is_single_name_expr(const srcml_nodes & nodes, int start_pos) {
-
-  if(nodes.at(start_pos)->type != XML_READER_TYPE_ELEMENT
-    || (nodes.at(start_pos)->name != "expr_stmt" && nodes.at(start_pos)->name != "expr")) return false;
-
-  if(nodes.at(start_pos)->type == XML_READER_TYPE_ELEMENT && nodes.at(start_pos)->name == "expr_stmt") {
-    ++start_pos;
-  }
-
-  if(nodes.at(start_pos)->type == XML_READER_TYPE_ELEMENT && nodes.at(start_pos)->name == "expr") {
-    ++start_pos;
-  }
-
-  if(nodes.at(start_pos)->name != "name") return false;
-
-  int open_name_count = 1;
-  ++start_pos;
-
-  while(open_name_count) {
-
-    if(nodes.at(start_pos)->name == "name") {
-
-      if(nodes.at(start_pos)->type == XML_READER_TYPE_ELEMENT) {
-        ++open_name_count;
-      }
-      else if(nodes.at(start_pos)->type == XML_READER_TYPE_END_ELEMENT) {
-        --open_name_count;
-      }
-
-    }
-
-    ++start_pos;
-
-  }
-
-  return nodes.at(start_pos)->type == XML_READER_TYPE_END_ELEMENT && nodes.at(start_pos)->name == "expr";
 
 }

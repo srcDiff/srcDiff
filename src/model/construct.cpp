@@ -27,7 +27,6 @@
 
 //temp, probably
 #include <srcdiff_match.hpp>
-#include <srcdiff_match_internal.hpp>
 #include <srcdiff_nested.hpp>
 
 #include <algorithm>
