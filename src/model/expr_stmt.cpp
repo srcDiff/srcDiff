@@ -19,3 +19,8 @@
  */
 
 #include <expr_stmt.hpp>
+
+bool expr_stmt::is_matchable_impl(const construct & modified) const {
+	const srcdiff_measure & expr_stmt_measure = *measure(modified);
+	return expr_stmt_measure.similarity() > 0 && expr_stmt_measure.difference() <= expr_stmt_measure.max_length();
+}
