@@ -20,8 +20,6 @@
 
 #include <conditional.hpp>
 
-const std::unordered_set<std::string> conditional::conditional_convertable = { "if_stmt", "while", "for", "foreach" };
-
 // if match rule is in child class
 
 std::shared_ptr<const construct> conditional::condition() const {
@@ -43,6 +41,7 @@ bool conditional::is_matchable_impl(const construct & modified_construct) const 
 
 // convertable rule
 bool conditional::is_tag_convertable(const construct & modified) const {
+   static const std::unordered_set<std::string> conditional_convertable = { "if_stmt", "while", "for", "foreach" };
    return conditional_convertable.find(modified.root_term_name()) != conditional_convertable.end();
 }
 

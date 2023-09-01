@@ -492,22 +492,6 @@ bool construct::is_matchable(const construct & modified) const {
   if(original_tag != modified_tag) return false;
   if(is_matchable_impl(modified))  return true;
 
-  if(original_tag == "type" || original_tag == "then" || original_tag == "condition" || original_tag == "control" || original_tag == "init"
-    || original_tag == "default" || original_tag == "comment"
-    || original_tag == "private" || original_tag == "protected" || original_tag == "public" || original_tag == "signals"
-    || original_tag == "parameter_list" || original_tag == "krparameter_list" || original_tag == "argument_list"
-    || original_tag == "attribute_list" || original_tag == "association_list" || original_tag == "protocol_list"
-    || original_tag == "super_list" || original_tag == "member_init_list" || original_tag == "member_list"
-    || original_tag == "argument"
-    || original_tag == "range"
-    || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier"
-    || original_tag == "number" || original_tag == "file"
-
-    // consider having this used to test similarity instead of block
-    || original_tag == "block_content"
-    )
-    return true;
-
   const srcdiff_measure & measure = *this->measure(modified);
 
   if((original_tag == "expr" || original_tag == "expr_stmt") && measure.similarity() > 0 && measure.difference() <= measure.max_length()) return true;

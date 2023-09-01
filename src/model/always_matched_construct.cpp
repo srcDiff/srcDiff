@@ -37,5 +37,5 @@ bool always_matched_construct::is_always_match(const std::string & construct_nam
 
 
 bool always_matched_construct::is_matchable_impl(const construct & modified) const {
-    return false;
+    return true;
 }

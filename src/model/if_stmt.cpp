@@ -74,7 +74,7 @@ bool if_stmt::is_matchable_impl(const construct & modified_construct) const {
 
     if(static_cast<const if_t &>(*find_if()).is_block_matchable(*modified.find_if())) return true;
 
-    bool condition_matchable = condition() && modified.condition() && condition()->is_matchable_impl(*modified.condition());
+    bool condition_matchable = condition() && modified.condition() && condition()->to_string() == modified.condition()->to_string();
     bool original_has_else = bool(find_else());
     bool modified_has_else = bool(modified.find_else());
 
