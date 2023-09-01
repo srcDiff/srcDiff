@@ -19,3 +19,9 @@
  */
 
 #include <expr.hpp>
+
+bool expr_t::is_matchable_impl(const construct & modified) const {
+	if((*root_term()->parent)->name == "argument") return true;
+	if((*modified.root_term()->parent)->name == "argument") return true;
+	return children().size() == 1 && children()[0]->root_term_name() == "name";
+}

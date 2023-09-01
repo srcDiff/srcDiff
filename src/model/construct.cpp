@@ -496,11 +496,6 @@ bool construct::is_matchable(const construct & modified) const {
 
   if((original_tag == "expr" || original_tag == "expr_stmt") && measure.similarity() > 0 && measure.difference() <= measure.max_length()) return true;
 
-  // may need to refine to if child only single name
-  if(original_tag == "expr" && term(0)->parent && (*term(0)->parent)->name == "argument") return true;
-  if(original_tag == "expr" && modified.term(0)->parent && (*modified.term(0)->parent)->name == "argument") return true;
-  if(original_tag == "expr" && is_single_name_expr(nodes(), original_pos) && is_single_name_expr(modified.nodes(), modified_pos)) return true;
-
   if(original_tag == "block") {
 
     bool is_pseudo_original = bool(find_attribute(term(0), "type"));
