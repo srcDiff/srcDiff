@@ -321,6 +321,33 @@ const std::shared_ptr<srcdiff_measure> & construct::measure(const construct & mo
 }
 
 bool construct::is_similar(const construct & modified) const {
+    return is_text_similar(modified) || is_syntax_similar(modified);
+}
+
+bool construct::is_text_similar(const construct & modified) const {
+
+ const srcdiff_measure & measure = *this->measure(modified);
+
+  int min_size = measure.min_length();
+  int max_size = measure.max_length();
+
+  /** @todo consider making this configurable.  That is, allow user to specify file or have default file to read from */
+  if(measure.difference() != 0 && measure.similarity() == 0) return false;
+
+  if(min_size == measure.similarity() && measure.difference() < 2 * min_size) return true;
+  if(min_size < 30 && measure.difference() > 1.25 * min_size)                 return false;
+  if(min_size >= 30 
+    && measure.original_difference() > 0.25 * measure.original_length()
+    && measure.modified_difference() > 0.25 * measure.modified_length())      return false;
+  if(measure.difference() > max_size)                                         return false;
+
+  if(min_size <= 2)  return 2  * measure.similarity() >=     min_size;
+  if(min_size <= 3)  return 3  * measure.similarity() >= 2 * min_size;
+  if(min_size <= 30) return 10 * measure.similarity() >= 7 * min_size;
+  return 2  * measure.similarity() >=     min_size;
+}
+
+bool construct::is_syntax_similar(const construct & modified) const {
 
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
@@ -411,35 +438,9 @@ bool construct::is_similar(const construct & modified) const {
 
   }
 
-  const srcdiff_measure & measure = *this->measure(modified);
-
-  int min_size = measure.min_length();
-  int max_size = measure.max_length();
-
-#if DEBUG_SIMILARITY
-  std::cerr << "Similarity: " << measure.similarity() << '\n';
-  std::cerr << "Difference: " << measure.difference() << '\n';
-  std::cerr << "Original Difference: " << measure.original_difference() << '\n';
-  std::cerr << "Modified Difference: " << measure.modified_difference() << '\n';
-  std::cerr << "Min Size: "   << min_size   << '\n';
-  std::cerr << "Max Size: "   << max_size   << '\n';
-#endif
-
-  /** @todo consider making this configurable.  That is, allow user to specify file or have default file to read from */
-  if(measure.difference() != 0 && measure.similarity() == 0) return false;
-
-  if(min_size == measure.similarity() && measure.difference() < 2 * min_size) return true;
-  if(min_size < 30 && measure.difference() > 1.25 * min_size)       return false;
-  if(min_size >= 30 && measure.original_difference() > 0.25 * measure.original_length()
-    && measure.modified_difference() > 0.25 * measure.modified_length()) return false;
-  if(measure.difference() > max_size)                               return false;
-
-  if(min_size <= 2)                return 2  * measure.similarity() >=     min_size;
-  else if(min_size <= 3)           return 3  * measure.similarity() >= 2 * min_size;
-  else if(min_size <= 30)          return 10 * measure.similarity() >= 7 * min_size;
-  else                             return 2  * measure.similarity() >=     min_size;
-
+  return false;
 }
+
 
 bool construct::is_match_similar(const construct & modified) const {
 
