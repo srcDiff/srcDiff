@@ -26,13 +26,6 @@ bool if_t::has_real_block() const {
     return bool(block()) && !bool(find_attribute(block()->root_term(), "type"));
 }
 
-std::shared_ptr<const construct> if_t::block() const {
-    if(block_child) return *block_child;
-
-    block_child = find_child("block");
-    return *block_child;
-}
-
 bool if_t::is_block_matchable(const construct & modified) const {
     std::shared_ptr<const construct> original_block = block();
     std::shared_ptr<const construct> modified_block = static_cast<const if_t &>(modified).block();
@@ -41,8 +34,6 @@ bool if_t::is_block_matchable(const construct & modified) const {
     return *original_block == *modified_block;
 
 }
-
-
 
 bool if_t::is_matchable_impl(const construct & modified_if) const {
 

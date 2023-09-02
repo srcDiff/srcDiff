@@ -30,11 +30,12 @@ class clause : public conditional {
 public:
 
     clause(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : conditional(node_list, start, out) {}
+        : conditional(node_list, start, out), block_child() {}
+    virtual std::shared_ptr<const construct> block() const;
     virtual bool is_tag_convertable(const construct & modified) const;
 
 protected:
-    static const std::unordered_set<std::string> clause_convertable;
+    mutable std::optional<std::shared_ptr<const construct>> block_child;
 };
 
 
