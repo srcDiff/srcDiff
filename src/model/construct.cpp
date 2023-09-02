@@ -374,69 +374,8 @@ bool construct::is_syntax_similar(const construct & modified) const {
       return true;
   }
 
-  /// @todo remove copy
-  construct::construct_list child_construct_list_original = children();
-  construct::construct_list child_construct_list_modified = modified.children();
-
-  // check block of first child of if_stmt (old if behavior)
-  if(original_tag == "if_stmt" && !child_construct_list_original.empty()) {
-
-    std::string tag = child_construct_list_original.at(0)->root_term_name();
-    if(tag == "else" || tag == "if") {
-      construct::construct_list temp = construct::get_descendent_constructs(nodes(), child_construct_list_original.at(0)->get_terms().at(1), child_construct_list_original.back()->end_position());
-      child_construct_list_original = temp;
-    }
-
-  }
-
-  // check block of first child of if_stmt (old if behavior)
-  if(modified_tag == "if_stmt" && !child_construct_list_modified.empty()) {
-
-    std::string tag =  child_construct_list_modified.at(0)->root_term_name();
-    if(tag == "else" || tag == "if") {
-      construct::construct_list temp = construct::get_descendent_constructs(modified.nodes(), child_construct_list_modified.at(0)->get_terms().at(1), child_construct_list_modified.back()->end_position());
-      child_construct_list_modified = temp;
-    }
-
-  }
-
-  if(!child_construct_list_original.empty() && !child_construct_list_modified.empty()
-    && child_construct_list_original.back()->root_term_name() == "block" && child_construct_list_modified.back()->root_term_name() == "block") {
-
-    /// Why a copy?
-    std::shared_ptr<construct> original_set = child_construct_list_original.back();
-    std::shared_ptr<construct> modified_set = child_construct_list_modified.back();
-
-    // block children actually in block_content
-    construct::construct_list original_temp = construct::get_descendent_constructs(nodes(), child_construct_list_original.back()->get_terms().at(1), child_construct_list_original.back()->end_position());
-    for(const std::shared_ptr<construct> & set : original_temp) {
-      if(set->root_term_name() == "block_content") {
-        original_set = set;
-      }
-    }
-
-    // block children actually in block_content
-    construct::construct_list modified_temp = construct::get_descendent_constructs(modified.nodes(), child_construct_list_modified.back()->get_terms().at(1), child_construct_list_modified.back()->end_position());
-    for(const std::shared_ptr<construct> & set : modified_temp) {
-      if(set->root_term_name() == "block_content") {
-        modified_set = set;
-      }
-    }
-
-    srcdiff_syntax_measure syntax_measure(*original_set, *modified_set);
-    syntax_measure.compute();
-
-    int min_child_length = syntax_measure.min_length();
-    int max_child_length = syntax_measure.max_length();
-    if(min_child_length > 1) { 
-      if(2 * syntax_measure.similarity() >= min_child_length && syntax_measure.difference() <= min_child_length)
-        return true;
-
-    }
-
-  }
-
-  return false;
+  if(original_tag != modified_tag) return false;
+  return is_syntax_similar_impl(modified);
 }
 
 bool construct::is_syntax_similar_impl(const construct & modified) const {

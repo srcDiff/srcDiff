@@ -31,6 +31,8 @@ public:
         : construct(node_list, start, out), block_content_child() {}
 
     std::shared_ptr<const construct> block_content() const;
+
+    bool is_syntax_similar_impl(const construct & modified) const;
     virtual bool is_matchable_impl(const construct & modified) const;
 private:
     mutable std::optional<std::shared_ptr<const construct>> block_content_child;

@@ -28,16 +28,13 @@ class if_t : public clause {
 public:
 
     if_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : clause(node_list, start, out), block_child() {}
+        : clause(node_list, start, out) {}
 
     bool has_real_block() const;
-    virtual std::shared_ptr<const construct> block() const;
-
     bool is_block_matchable(const construct & modified) const;
     virtual bool is_matchable_impl(const construct & modified) const;
 
 protected:
-    mutable std::optional<std::shared_ptr<const construct>> block_child;
 };
 
 

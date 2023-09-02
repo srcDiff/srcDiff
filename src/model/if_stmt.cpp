@@ -22,6 +22,7 @@
 
 #include <if.hpp>
 #include <else.hpp>
+#include <clause.hpp>
 
 #include <srcdiff_match.hpp>
 
@@ -60,8 +61,15 @@ std::shared_ptr<const construct> if_stmt::condition() const {
     if(condition_child) return *condition_child;
 
     condition_child = find_if()->condition();
-
     return *condition_child;
+}
+
+
+bool if_stmt::is_syntax_similar_impl(const construct & modified_clause) const {
+    const if_stmt & modified = static_cast<const if_stmt &>(modified_clause);
+    std::shared_ptr<const construct> original_block = std::static_pointer_cast<const clause>(children().front())->block();
+    std::shared_ptr<const construct> modified_block = std::static_pointer_cast<const clause>(modified.children().front())->block();
+    return original_block->is_syntax_similar_impl(*modified_block);
 }
 
 bool if_stmt::is_matchable_impl(const construct & modified_construct) const {
