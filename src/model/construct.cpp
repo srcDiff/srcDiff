@@ -370,10 +370,8 @@ bool construct::is_syntax_similar(const construct & modified) const {
   int max_child_length = syntax_measure.max_length();
 
   if(min_child_length > 1) { 
-
     if(2 * syntax_measure.similarity() >= min_child_length && syntax_measure.difference() <= min_child_length)
       return true;
-
   }
 
   /// @todo remove copy
@@ -441,22 +439,8 @@ bool construct::is_syntax_similar(const construct & modified) const {
   return false;
 }
 
-
-bool construct::is_match_similar(const construct & modified) const {
-
-  int original_pos = start_position();
-  int modified_pos = modified.start_position();
-
-  if(*term(0) != *modified.term(0)) return false;
-
-  srcdiff_text_measure complete_measure(*this, modified, false);
-  complete_measure.compute();
-  int min_size = complete_measure.min_length();
-
-  if(min_size == 0) return false;
-
-  return min_size == complete_measure.similarity();
-
+bool construct::is_syntax_similar_impl(const construct & modified) const {
+    return false;
 }
 
 bool construct::can_refine_difference(const construct & modified) const {
@@ -493,13 +477,30 @@ bool construct::is_matchable(const construct & modified) const {
 
 }
 
+bool construct::is_matchable_impl(const construct & modified) const {
+    return false;
+}
+
+bool construct::is_match_similar(const construct & modified) const {
+
+  int original_pos = start_position();
+  int modified_pos = modified.start_position();
+
+  if(*term(0) != *modified.term(0)) return false;
+
+  srcdiff_text_measure complete_measure(*this, modified, false);
+  complete_measure.compute();
+  int min_size = complete_measure.min_length();
+
+  if(min_size == 0) return false;
+
+  return min_size == complete_measure.similarity();
+
+}
+
 
 bool construct::is_tag_convertable(const construct & modified) const {
   return false;
-}
-
-bool construct::is_matchable_impl(const construct & modified) const {
-    return false;
 }
 
 bool construct::is_convertable(const construct & modified) const {

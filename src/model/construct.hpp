@@ -102,14 +102,15 @@ public:
     // Differencing Rules
     const std::shared_ptr<srcdiff_measure> & measure(const construct & modified) const;
     bool is_similar(const construct & modified) const;
-    virtual bool is_text_similar(const construct & modified) const;
-    virtual bool is_syntax_similar(const construct & modified) const;
-    bool is_match_similar(const construct & modified) const;
+    bool is_text_similar(const construct & modified) const;
+    bool is_syntax_similar(const construct & modified) const;
+    virtual bool is_syntax_similar_impl(const construct & modified) const;
 
     bool can_refine_difference(const construct & modified) const;
 
     bool is_matchable(const construct & modified) const;
     virtual bool is_matchable_impl(const construct & modified) const;
+    bool is_match_similar(const construct & modified) const;
 
     virtual bool is_tag_convertable(const construct & modified) const;
     bool is_convertable(const construct & modified) const;
