@@ -101,8 +101,8 @@ std::shared_ptr<construct> create_construct(const srcml_nodes & node_list, int &
 
   std::shared_ptr<const srcml_node> node = node_list[start];
   std::string tag_name;
-  if(node->ns.prefix) {
-    tag_name = *node->ns.prefix + ":";
+  if(node->ns->get_prefix()) {
+    tag_name = *node->ns->get_prefix() + ":";
   }
   tag_name += node->name;
 

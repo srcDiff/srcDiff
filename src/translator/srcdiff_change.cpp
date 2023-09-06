@@ -61,11 +61,13 @@ void srcdiff_change::output() {
   if(end_original > begin_original && end_modified > begin_modified) {
 
     // set attribute to change
-    diff_original_start->set_attributes(srcml_node::srcml_attribute_map(diff_type.get_name(), diff_type));
-    diff_modified_start->set_attributes(diff_type.get_attributes());
+    // @todo: modify this to use a different constructor
+    diff_original_start->set_attributes({{diff_type.get_name(), diff_type}});
+    diff_modified_start->set_attributes({{diff_type.get_name(), diff_type}});
     is_replace = true;
 
     if(is_delay_type(SES_DELETE)) {
+    
       output_node(diff_original_end, SES_DELETE, true);
     }
 
@@ -87,14 +89,15 @@ void srcdiff_change::output() {
       if(rbuf_original->nodes.at(i)->move) {
 
         if(is_replace) {
-          diff_original_start->properties.clear();
+          diff_original_start->attributes.clear();
+        
         }
 
         srcdiff_move move(*this, i, SES_DELETE);
         move.output();
 
         if(is_replace) {
-          diff_original_start->properties.push_back(diff_type);
+          diff_original_start->set_attributes({{diff_type.get_name(), diff_type}});
         }
 
         continue;
@@ -126,13 +129,16 @@ void srcdiff_change::output() {
     // output diff tag end
     if(!first) {
       output_node(diff_original_end, SES_DELETE, is_replace);
+    
     }
 
     if(wstate->output_diff.back()->operation == SES_DELETE) {
       output_node(diff_original_end, SES_DELETE);
+    
     }
 
     rbuf_original->last_output = end_original;
+  
 
   }
 
@@ -152,14 +158,16 @@ void srcdiff_change::output() {
       if(rbuf_modified->nodes.at(i)->move) {
 
         if(is_replace) {
-          diff_modified_start->properties.clear();
+          diff_modified_start->attributes.clear();
+        
         }
 
         srcdiff_move move(*this, i, SES_INSERT);
+      
         move.output();
 
         if(is_replace) {
-          diff_modified_start->properties.push_back(diff_type);
+          diff_modified_start->set_attributes({{diff_type.get_name(), diff_type}});
         }
 
         continue;
@@ -180,28 +188,33 @@ void srcdiff_change::output() {
         srcdiff_whitespace whitespace(*this);
         whitespace.output_all(SES_INSERT);
         i = rbuf_modified->last_output - 1;
+      
         continue;
 
       }
 
       output_node(rbuf_modified->nodes.at(i), SES_INSERT);
+    
 
     }
 
     // output diff tag end
     if(!first) {
       output_node(diff_modified_end, SES_INSERT, is_replace);
+    
     }
     
     if(wstate->output_diff.back()->operation == SES_INSERT) {
       output_node(diff_modified_end, SES_INSERT);
+    
     }
 
     rbuf_modified->last_output = end_modified;
+  
 
   }
 
-  diff_original_start->properties.clear();
-  diff_modified_start->properties.clear();
+  diff_original_start->attributes.clear();
+  diff_modified_start->attributes.clear();
 
 }

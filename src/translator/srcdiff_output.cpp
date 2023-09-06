@@ -19,7 +19,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
                                const std::optional<std::string> & summary_type_str)
  : output_srcdiff(false), archive(archive), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
-   diff(std::make_shared<srcml_node::srcml_ns>()) {
+   diff(std::make_shared<srcml_node::srcml_namespace>()) {
 
   if(is_option(flags, OPTION_VISUALIZE)) {
 
@@ -83,20 +83,19 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
     wstate->filename = ".";
   }
 
-  diff->prefix = srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
-  diff->href   = SRCDIFF_DEFAULT_NAMESPACE_HREF;
+  diff->set_prefix(srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()));
+  diff->set_uri(SRCDIFF_DEFAULT_NAMESPACE_HREF);
 
-  unit_tag            = std::make_shared<srcml_node>(XML_READER_TYPE_ELEMENT, std::string("unit"), srcml_node::srcml_ns());
-
-  diff_common_start   = std::make_shared<srcml_node>(XML_READER_TYPE_ELEMENT, DIFF_SES_COMMON, *diff.get());
-  diff_common_end     = std::make_shared<srcml_node>(XML_READER_TYPE_END_ELEMENT, DIFF_SES_COMMON, *diff.get());
-  diff_original_start = std::make_shared<srcml_node>(XML_READER_TYPE_ELEMENT, DIFF_ORIGINAL, *diff.get());
-  diff_original_end   = std::make_shared<srcml_node>(XML_READER_TYPE_END_ELEMENT, DIFF_ORIGINAL, *diff.get());
-  diff_modified_start = std::make_shared<srcml_node>(XML_READER_TYPE_ELEMENT, DIFF_MODIFIED, *diff.get());
-  diff_modified_end   = std::make_shared<srcml_node>(XML_READER_TYPE_END_ELEMENT, DIFF_MODIFIED, *diff.get());
-
-  diff_ws_start = std::make_shared<srcml_node>(XML_READER_TYPE_ELEMENT, DIFF_WHITESPACE, *diff.get());
-  diff_ws_end   = std::make_shared<srcml_node>(XML_READER_TYPE_END_ELEMENT, DIFF_WHITESPACE, *diff.get());
+  unit_tag            = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, std::string("unit"));
+  diff_common_start   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_SES_COMMON);
+  diff_common_end     = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_SES_COMMON);
+  diff_original_start = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_ORIGINAL);
+  diff_original_end   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_ORIGINAL);
+  diff_modified_start = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_MODIFIED);
+  diff_modified_end   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_MODIFIED);
+  
+  diff_ws_start = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_WHITESPACE);
+  diff_ws_end   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_WHITESPACE);
 
  }
 
@@ -284,7 +283,7 @@ bool srcdiff_output::is_delay_type(int operation) {
 void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcml_node> & node, int operation) {
 
   // Skip empty node
-  if(node->is_empty || node->is_text())
+  if(node->is_empty() || node->is_text())
     return;
 
   if(open_diffs.back()->operation != operation) {
@@ -295,10 +294,10 @@ void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, con
     open_diffs.push_back(modified_diff);
   }
 
-  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
+  if(node->get_type() == srcml_node::srcml_node_type::START) {
 
     open_diffs.back()->open_tags.push_back(node);
-  } else if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
+  } else if(node->get_type() == srcml_node::srcml_node_type::END) {
 
     if(open_diffs.size() == 1 && open_diffs.back()->open_tags.size() == 1)
       return;
@@ -346,34 +345,34 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & original_no
                                  const std::shared_ptr<srcml_node> & modified_node,
                                  int operation, bool force_output) {
 
-  if(operation == SES_COMMON && original_node->is_temporary != modified_node->is_temporary) {
+  if(operation == SES_COMMON && original_node->is_temporary() != modified_node->is_temporary()) {
 
-    if((xmlReaderTypes)original_node->type == XML_READER_TYPE_END_ELEMENT) {
+    if(original_node->get_type() == srcml_node::srcml_node_type::END) {
       output_node(diff_common_end, SES_COMMON);
     }
 
-    if(original_node->is_temporary) {
+    if(original_node->is_temporary()) {
 
-      if((xmlReaderTypes)modified_node->type == XML_READER_TYPE_ELEMENT) {
+      if(modified_node->get_type() == srcml_node::srcml_node_type::START) {
         output_node(diff_modified_start, SES_INSERT);
       }
       output_node(modified_node, SES_INSERT, force_output);
-      if((xmlReaderTypes)modified_node->type == XML_READER_TYPE_END_ELEMENT) {
+      if(modified_node->get_type() == srcml_node::srcml_node_type::END) {
         output_node(diff_modified_end, SES_INSERT);
       }
 
     } else {
 
-      if((xmlReaderTypes)original_node->type == XML_READER_TYPE_ELEMENT) {
+      if(original_node->get_type() == srcml_node::srcml_node_type::START) {
         output_node(diff_original_start, SES_DELETE);
       }
       output_node(original_node, SES_DELETE, force_output);
-      if((xmlReaderTypes)original_node->type == XML_READER_TYPE_END_ELEMENT) {
+      if(original_node->get_type() == srcml_node::srcml_node_type::END) {
         output_node(diff_original_end, SES_DELETE);
       }
 
     }
-    if((xmlReaderTypes)original_node->type == XML_READER_TYPE_ELEMENT) {
+    if(original_node->get_type() == srcml_node::srcml_node_type::START) {
       output_node(diff_common_start, SES_COMMON);
     }
   } else {
@@ -424,9 +423,9 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
 
   }
 
-  if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT) {
+  if(node->get_type() == srcml_node::srcml_node_type::END) {
 
-    if((xmlReaderTypes)node->type == XML_READER_TYPE_END_ELEMENT && wstate->output_diff.back()->open_tags.back()->name != node->name)
+    if(node->get_type() == srcml_node::srcml_node_type::END && wstate->output_diff.back()->open_tags.back()->name != node->name)
       return;
 
     // check if ending a SES_DELETE/SES_INSERT/SES_COMMON tag. if so delay.
@@ -448,7 +447,7 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
 
   }
 
-  if((xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT) {
+  if(node->get_type() == srcml_node::srcml_node_type::START) {
 
     int current_operation = wstate->output_diff.back()->operation;
     int size = wstate->output_diff.back()->open_tags.size();
@@ -473,8 +472,10 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
 void srcdiff_output::output_text_as_node(const std::string & text, int operation) {
 
   if(text.size() == 0) return;
+  std::shared_ptr<srcml_node> node = std::make_shared<srcml_node>(srcml_node::srcml_node_type::TEXT, std::string("text"));
+  node->set_content(text);
 
-  output_node(std::make_shared<srcml_node>(XML_READER_TYPE_TEXT, "text", srcml_node::srcml_ns(), text), operation);
+  output_node(node, operation);
 
 }
 
@@ -514,43 +515,38 @@ void srcdiff_output::output_node(const srcml_node & node) {
 // output current XML node in reader
 void srcdiff_output::output_node_inner(const srcml_node & node) {
 
-  if(node.is_temporary) return;
+  if(node.is_temporary()) return;
 
-  bool isemptyelement = false;
+  switch (node.get_type()) {
+  case srcml_node::srcml_node_type::START:
 
-  switch (node.type) {
-  case XML_READER_TYPE_ELEMENT:
-
+    
     // start the element
-    srcml_write_start_element(wstate->unit, node.ns.prefix ? node.ns.prefix->c_str() : 0, node.name.c_str(), node.ns.href.c_str());
+    srcml_write_start_element(wstate->unit, node.ns->get_prefix() ? node.ns->get_uri().c_str() : 0, node.name.c_str(), node.ns->get_uri().c_str());
 
     // copy all the attributes
     {
-      const std::list<srcml_node::srcml_attr> & attributes = node.properties;
-      for(const srcml_node::srcml_attr attr : attributes) {
 
-        srcml_write_attribute(wstate->unit, 0, attr.name.c_str(), 0, attr.value ? attr.value->c_str() : 0);
+      for(const srcml_node::srcml_attribute_map_pair attr : node.get_attributes()) {
+
+        srcml_write_attribute(wstate->unit, 0, attr.second.get_name().c_str(), 0, attr.second.get_value() ? attr.second.get_value()->c_str() : 0);
 
       }
 
     }
 
     // end now if this is an empty element
-    if (node.is_empty) {
+    if (node.is_empty()) {
       srcml_write_end_element(wstate->unit);
     }
 
     break;
 
-  case XML_READER_TYPE_END_ELEMENT:
+  case srcml_node::srcml_node_type::END:
     srcml_write_end_element(wstate->unit);
     break;
 
-  case XML_READER_TYPE_COMMENT:
-    break;
-
-  case XML_READER_TYPE_TEXT:
-  case XML_READER_TYPE_SIGNIFICANT_WHITESPACE:
+  case srcml_node::srcml_node_type::TEXT:
 
     // output the UTF-8 buffer escaping the characters.  Note that the output encoding
     // is handled by libxml

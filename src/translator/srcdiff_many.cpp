@@ -93,6 +93,7 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
          output_replace_inner_whitespace(construct_list_original.at(start_original)->start_position(), finish_original,
                                          construct_list_modified.at(start_modified)->start_position(), finish_modified,
                                          1);
+       
           }
 
        if(construct_list_original.at(start_original)->term(0)->name == "return"
@@ -100,6 +101,7 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
           output_replace_inner_whitespace(construct_list_original.at(start_original)->start_position(), finish_original,
                                           construct_list_modified.at(start_modified)->start_position(), finish_modified,
                                           2);
+        
           }
 
        if(construct_list_original.at(start_original)->term(0)->name == "throw"
@@ -107,6 +109,7 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
           output_replace_inner_whitespace(construct_list_original.at(start_original)->start_position(), finish_original,
                                           construct_list_modified.at(start_modified)->start_position(), finish_modified,
                                           2);
+        
           }
 
     }
@@ -243,11 +246,12 @@ void srcdiff_many::output() {
 
     if(original_moved.at(i).first == SES_COMMON && modified_moved.at(j).first == SES_COMMON) {
  
-      if((xmlReaderTypes)construct_list_original.at(edits->offset_sequence_one + i)->term(0)->type != XML_READER_TYPE_TEXT) {
+      if(construct_list_original.at(edits->offset_sequence_one + i)->term(0)->get_type() != srcml_node::srcml_node_type::TEXT) {
 
         srcdiff_single diff(out,
                             construct_list_original.at(edits->offset_sequence_one + i), 
                             construct_list_modified.at(edit_next->offset_sequence_two + j));
+        
         diff.output();
 
       } else {

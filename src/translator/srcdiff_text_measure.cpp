@@ -24,13 +24,13 @@ void srcdiff_text_measure::collect_text() {
   unsigned int nlength = set_modified.size();
 
   for(unsigned int i = 0; i < olength; ++i) {
-    if(set_original.term(i)->is_text() && !set_original.term(i)->is_white_space()) {
+    if(set_original.term(i)->is_text() && !set_original.term(i)->is_whitespace()) {
       set_original_text->get_terms().push_back(set_original.get_terms().at(i));
     }
   }
 
   for(unsigned int i = 0; i < nlength; ++i) {
-    if(set_modified.term(i)->is_text() && !set_modified.term(i)->is_white_space()) {
+    if(set_modified.term(i)->is_text() && !set_modified.term(i)->is_whitespace()) {
       set_modified_text->get_terms().push_back(set_modified.get_terms().at(i));
     }
   }
@@ -54,7 +54,7 @@ void srcdiff_text_measure::collect_text_element(const construct & set, construct
       if((set.get_terms().at(i) + 1) < set.nodes().size() && set.nodes().at(set.get_terms().at(i) + 1)->is_text()
         && (*set.nodes().at(set.get_terms().at(i) + 1)->content == "::")) continue;
 
-      while(set.term(i)->type != XML_READER_TYPE_END_ELEMENT) {
+      while(set.term(i)->get_type() != srcml_node::srcml_node_type::END) {
         ++i;
       }
 
@@ -62,7 +62,7 @@ void srcdiff_text_measure::collect_text_element(const construct & set, construct
 
     const std::shared_ptr<srcml_node> & node = set.term(i);
 
-    bool is_text = node->is_text() && !node->is_white_space() && node->content;
+    bool is_text = node->is_text() && !node->is_whitespace() && node->content;
     bool is_operator = node->parent && (*node->parent)->name == "operator";
 
     if(is_operator && is_text
@@ -142,8 +142,8 @@ void srcdiff_text_measure::compute() {
 
   computed = true;
 
-  if((xmlReaderTypes)set_original.term(0)->type != XML_READER_TYPE_ELEMENT
-     || (xmlReaderTypes)set_modified.term(0)->type != XML_READER_TYPE_ELEMENT
+  if(set_original.term(0)->get_type() != srcml_node::srcml_node_type::START
+     || set_modified.term(0)->get_type() != srcml_node::srcml_node_type::START
      || (*set_original.term(0) != *set_modified.term(0)
         && !set_original.is_tag_convertable(set_modified)
         && (set_original.term(0)->name != "block" || set_modified.term(0)->name != "block"))) {

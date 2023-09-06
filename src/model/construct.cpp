@@ -39,7 +39,7 @@ bool construct::is_non_white_space(int & node_pos, const srcml_nodes & node_list
     const std::shared_ptr<srcml_node> & node = node_list[node_pos];
 
     // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
-    return (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT || ((xmlReaderTypes)node->type == XML_READER_TYPE_TEXT && node->content && !node->is_white_space());
+    return node->get_type() == srcml_node::srcml_node_type::START || (node->get_type() == srcml_node::srcml_node_type::TEXT && node->get_content() && !node->is_whitespace());
 
 }
 
@@ -59,7 +59,7 @@ construct::construct_list construct::get_descendent_constructs(const srcml_nodes
         if(filter(pos, node_list, context)) {
 
             // text is separate node if not surrounded by a tag in range
-            if((xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_TEXT || (xmlReaderTypes)node_list.at(pos)->type == XML_READER_TYPE_ELEMENT) {
+            if(node_list.at(pos)->get_type() == srcml_node::srcml_node_type::TEXT || node_list.at(pos)->get_type() == srcml_node::srcml_node_type::START) {
                 descendent_constructs.push_back(create_construct(node_list, pos, out));
             } else {
                 return descendent_constructs;
@@ -81,11 +81,11 @@ construct::construct(const construct & that) : out(that.out), node_list(that.nod
 
 construct::construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : out(out), node_list(node_list), hash_value() {
 
-  if((xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_TEXT && (xmlReaderTypes)node_list.at(start)->type != XML_READER_TYPE_ELEMENT) return;
+  if(node_list.at(start)->get_type() != srcml_node::srcml_node_type::TEXT && node_list.at(start)->get_type() != srcml_node::srcml_node_type::START) return;
 
   terms.push_back(start);
 
-  if(node_list.at(start)->is_empty || (xmlReaderTypes)node_list.at(start)->type == XML_READER_TYPE_TEXT) return;
+  if(node_list.at(start)->is_empty() || node_list.at(start)->get_type() == srcml_node::srcml_node_type::TEXT) return;
 
   ++start;
 
@@ -94,23 +94,22 @@ construct::construct(const srcml_nodes & node_list, int & start, std::shared_ptr
   for(; is_open; ++start) {
 
     // skip whitespace
-    if(node_list.at(start)->is_white_space()) {
+    if(node_list.at(start)->is_whitespace()) {
       continue;
     }
 
     terms.push_back(start);
 
     // opening tags
-    if((xmlReaderTypes)node_list.at(start)->type == XML_READER_TYPE_ELEMENT
-       && !(node_list.at(start)->is_empty)) {
+    if(node_list.at(start)->get_type() == srcml_node::srcml_node_type::START
+       && !(node_list.at(start)->is_empty())) {
       ++is_open;
     }
 
     // closing tags
-    else if((xmlReaderTypes)node_list.at(start)->type == XML_READER_TYPE_END_ELEMENT) {
+    else if(node_list.at(start)->get_type() == srcml_node::srcml_node_type::END) {
       --is_open;
     }
-
   }
 
   --start;
@@ -246,7 +245,7 @@ std::string construct::to_string(bool skip_whitespace) const {
     std::string str;
     for(int pos = start_position(); pos < end_position(); ++pos) {
         std::shared_ptr<const srcml_node> node = node_list[pos];
-        if(skip_whitespace && node->is_white_space()) continue;
+        if(skip_whitespace && node->is_whitespace()) continue;
         if(!node->content) continue;
         str += *node->content;
     }
@@ -430,8 +429,8 @@ bool construct::can_refine_difference(const construct & modified) const {
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
 
-  const std::string & original_uri = term(0)->ns.href;
-  const std::string & modified_uri = modified.term(0)->ns.href;
+  const std::string & original_uri = term(0)->ns->get_uri();
+  const std::string & modified_uri = modified.term(0)->ns->get_uri();
 
   if(original_tag == modified_tag && original_uri == modified_uri) {
     return is_matchable(modified);
@@ -451,8 +450,8 @@ bool construct::is_matchable(const construct & modified) const {
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
 
-  const std::string & original_uri = term(0)->ns.href;
-  const std::string & modified_uri = modified.term(0)->ns.href;
+  const std::string & original_uri = term(0)->ns->get_uri();
+  const std::string & modified_uri = modified.term(0)->ns->get_uri();
 
   if(original_tag != modified_tag) return false;
   if(is_matchable_impl(modified)) return true;
@@ -570,8 +569,8 @@ bool construct::is_tag_convertable(const construct & modified) const {
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
 
-  const std::string & original_uri = root_term()->ns.href;
-  const std::string & modified_uri = modified.root_term()->ns.href;
+  const std::string & original_uri = root_term()->ns->get_uri();
+  const std::string & modified_uri = modified.root_term()->ns->get_uri();
 
   for(size_t list_pos = 0; convertable_table[list_pos].name; ++list_pos) {
 
@@ -603,8 +602,8 @@ bool construct::is_convertable(const construct & modified) const {
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
 
-  const std::string & original_uri = term(0)->ns.href;
-  const std::string & modified_uri = modified.term(0)->ns.href;
+  const std::string & original_uri = term(0)->ns->get_uri();
+  const std::string & modified_uri = modified.term(0)->ns->get_uri();
 
   if(is_convertable_impl(modified)) return true;
 

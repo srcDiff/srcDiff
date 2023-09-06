@@ -60,6 +60,14 @@ srcml_node::srcml_namespace::srcml_namespace(xmlNsPtr ns)
 srcml_node::srcml_namespace::srcml_namespace(const srcml_namespace & ns) 
   : uri(ns.uri), prefix(ns.prefix) {}
 
+std::string srcml_node::srcml_namespace::get_uri() const {
+  return uri;
+}
+
+std::optional<std::string> srcml_node::srcml_namespace::get_prefix() const {
+  return prefix;
+}
+
 srcml_node::srcml_attribute::srcml_attribute(xmlAttrPtr attribute)
   : name((const char *)attribute->name),
     value(attribute->children && attribute->children->content ? 
@@ -84,13 +92,21 @@ bool srcml_node::srcml_attribute::operator!=(const srcml_attribute & that) const
   return !this->operator==(that);
 }
 
+void srcml_node::srcml_namespace::set_uri(std::string input) {
+  uri = input;
+}
+
+void srcml_node::srcml_namespace::set_prefix(std::optional<std::string> input) {
+  prefix = input;
+}
+
 srcml_node::srcml_node_type xml_type2srcml_type(xmlElementType type) {
   static std::unordered_map<unsigned int, srcml_node::srcml_node_type> type_map = {
 
     { XML_READER_TYPE_ELEMENT, srcml_node::srcml_node_type::START },
     { XML_READER_TYPE_END_ELEMENT, srcml_node::srcml_node_type::END },
     { XML_READER_TYPE_TEXT, srcml_node::srcml_node_type::TEXT },
-    { XML_READER_TYPE_SIGNIFICANT_WHITESPACE, srcml_node::srcml_node_type::TEXT },
+    { XML_READER_TYPE_SIGNIFICANT_WHITESPACE, srcml_node::srcml_node_type::WS },
 
   };
 
@@ -125,11 +141,11 @@ std::shared_ptr<srcml_node::srcml_namespace> srcml_node::get_namespace(xmlNsPtr 
 
 srcml_node::srcml_node()
   : type(srcml_node_type::OTHER), name(), ns(SRC_NAMESPACE), content(),
-    ns_definition(), attributes(), empty(false), user_data(), extra(0) {}
+    ns_definition(), parent(), attributes(), temporary(false), empty(false), simple(true), move(0), user_data(), extra(0) {}
 
 srcml_node::srcml_node(const xmlNode & node, xmlElementType xml_type) 
   : type(xml_type2srcml_type(xml_type)), name(), ns(), content(),
-    ns_definition(), attributes(), empty(node.extra), user_data(), extra(node.extra) {
+    ns_definition(), parent(), attributes(), temporary(false), empty(node.extra), simple(true), move(0), user_data(), extra(node.extra) {
 
   name = std::string((const char *)node.name);
 
@@ -153,12 +169,16 @@ srcml_node::srcml_node(const xmlNode & node, xmlElementType xml_type)
 
 }
 
-srcml_node::srcml_node(const std::string & text)
-  : type(srcml_node_type::TEXT), name("text"), ns(SRC_NAMESPACE), content(text), ns_definition(), attributes(), empty(false), extra(0) {}
+srcml_node::srcml_node(const std::string & text) : type(srcml_node_type::TEXT), name("text"), 
+  ns(SRC_NAMESPACE), content(text), ns_definition(), parent(), attributes(), temporary(false), empty(false), simple(true), move(0), user_data(), extra(0) {}
 
 srcml_node::srcml_node(const srcml_node & node) : type(node.type), name(node.name), ns(node.ns),
-  content(node.content), ns_definition(node.ns_definition), attributes(node.attributes), empty(node.empty),
-  user_data(node.user_data) {}
+  content(node.content), ns_definition(node.ns_definition), parent(node.parent), attributes(node.attributes), temporary(node.temporary), empty(node.empty), simple(node.simple), 
+  move(node.move), user_data(node.user_data) {}
+
+srcml_node::srcml_node(srcml_node::srcml_node_type type, const std::string & name) 
+  : type(type), name(name), ns(SRC_NAMESPACE), content(), ns_definition(), parent(), attributes(), temporary(false), empty(false), simple(false), move(0), user_data(), 
+  extra(0) {}
 
 srcml_node::~srcml_node() {}
 
@@ -230,12 +250,86 @@ bool srcml_node::is_whitespace() const {
   return is_text() && std::isspace((*content)[0]);
 }
 
+bool srcml_node::is_temporary() const {
+  return temporary;
+}
+
+bool srcml_node::is_simple() const {
+  return simple;
+}
+
+bool srcml_node::is_new_line() const {
+  return is_text() && (*content)[0] == '\n';
+}
+
+bool srcml_node::is_open_tag() const {
+  return type == srcml_node_type::START;
+}
+
 void srcml_node::set_attributes(const srcml_attribute_map & input) {
-  attributes = input;
+  for (srcml_node::srcml_attribute_map_citr it = input.begin(); it != input.end(); ++it) {
+    attributes.emplace(it->first, it->second);
+  }
+}
+
+void srcml_node::set_type(srcml_node_type input) {
+  type = input;
 }
 
 void srcml_node::set_empty(bool input) {
   empty = input;
+}
+
+void srcml_node::set_temporary(bool input) {
+  temporary = input;
+}
+
+void srcml_node::set_parent(std::shared_ptr<srcml_node> input) {
+  parent = input;
+}
+
+void srcml_node::set_simple(bool input) {
+  simple = input;
+}
+
+void srcml_node::set_content(std::optional<std::string> input) {
+  content = input;
+}
+
+void srcml_node::set_name(std::string input) {
+  name = input;
+}
+
+void srcml_node::set_move(int input) {
+  move = input;
+}
+
+std::string srcml_node::srcml_attribute::get_name() const {
+  return name;
+}
+
+std::optional<std::string> srcml_node::srcml_attribute::get_value() const {
+  return value;
+}
+
+const srcml_node::srcml_attribute_map & srcml_node::get_attributes() const {
+  return attributes;
+} 
+
+srcml_node::srcml_node_type srcml_node::get_type() const {
+  return type;
+}
+
+std::string srcml_node::get_name() const {
+  return name;
+}
+
+std::optional<std::string> srcml_node::get_content() const {
+  return content;
+}
+
+int srcml_node::get_move() const {
+  return move;
 }
 
 std::ostream & operator<<(std::ostream & out, const srcml_node & node) {

@@ -28,15 +28,15 @@ void srcdiff_common::markup_common() {
 
       output_node(rbuf_original->nodes.at(i), rbuf_modified->nodes.at(j), SES_COMMON);
         
-    } else if(rbuf_original->nodes.at(i)->is_white_space() && rbuf_modified->nodes.at(j)->is_white_space()) {
+    } else if(rbuf_original->nodes.at(i)->is_whitespace() && rbuf_modified->nodes.at(j)->is_whitespace()) {
       
       int olength = i;
       int nlength = j;
 
-      for(; olength < oend && rbuf_original->nodes.at(olength)->is_white_space(); ++olength)
+      for(; olength < oend && rbuf_original->nodes.at(olength)->is_whitespace(); ++olength)
         ;
 
-      for(; nlength < nend && rbuf_modified->nodes.at(nlength)->is_white_space(); ++nlength)
+      for(; nlength < nend && rbuf_modified->nodes.at(nlength)->is_whitespace(); ++nlength)
         ;
 
 
@@ -97,12 +97,12 @@ void srcdiff_common::markup_common() {
 
         j = nlength - 1;
 
-    } else if(rbuf_original->nodes.at(i)->is_white_space()) {
+    } else if(rbuf_original->nodes.at(i)->is_whitespace()) {
 
       output_node(diff_original_start, SES_DELETE);
         output_node(diff_ws_start, SES_DELETE);
 
-      for(; i < oend && rbuf_original->nodes.at(i)->is_white_space(); ++i) {
+      for(; i < oend && rbuf_original->nodes.at(i)->is_whitespace(); ++i) {
         output_node(rbuf_original->nodes.at(i), SES_DELETE);
       }
 
@@ -113,13 +113,13 @@ void srcdiff_common::markup_common() {
       --i;
       --j;
 
-    } else if(rbuf_modified->nodes.at(j)->is_white_space()) {
+    } else if(rbuf_modified->nodes.at(j)->is_whitespace()) {
 
       output_node(diff_modified_start, SES_INSERT);
       output_node(diff_ws_start, SES_INSERT);
 
 
-      for(; j < nend && rbuf_modified->nodes.at(j)->is_white_space(); ++j) {
+      for(; j < nend && rbuf_modified->nodes.at(j)->is_whitespace(); ++j) {
         output_node(rbuf_modified->nodes.at(j), SES_INSERT);
       }
 
@@ -301,8 +301,8 @@ void srcdiff_common::markup_common() {
   rbuf_original->last_output = oend > (signed)rbuf_original->last_output ? oend : rbuf_original->last_output;
   rbuf_modified->last_output = nend > (signed)rbuf_modified->last_output ? nend : rbuf_modified->last_output;
 
-  diff_original_start->properties.clear();
-  diff_modified_start->properties.clear();
+  diff_original_start->attributes.clear();
+  diff_modified_start->attributes.clear();
 
 }
 
@@ -332,7 +332,7 @@ void srcdiff_common::output() {
 
   // output common tag if needed
   if(rbuf_original->last_output >= oend || rbuf_modified->last_output >= nend
-     || rbuf_original->nodes.at(rbuf_original->last_output)->is_temporary == rbuf_modified->nodes.at(rbuf_modified->last_output)->is_temporary) {
+     || rbuf_original->nodes.at(rbuf_original->last_output)->is_temporary() == rbuf_modified->nodes.at(rbuf_modified->last_output)->is_temporary()) {
     output_node(diff_common_start, SES_COMMON);
   }
 
@@ -344,7 +344,7 @@ void srcdiff_common::output() {
 
   // output common tag if needed
   if(rbuf_original->last_output >= oend || rbuf_modified->last_output >= nend
-     || rbuf_original->nodes.at(rbuf_original->last_output)->is_temporary == rbuf_modified->nodes.at(rbuf_modified->last_output)->is_temporary) {
+     || rbuf_original->nodes.at(rbuf_original->last_output)->is_temporary() == rbuf_modified->nodes.at(rbuf_modified->last_output)->is_temporary()) {
     output_node(diff_common_end, SES_COMMON);
   }
 

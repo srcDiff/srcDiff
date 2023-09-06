@@ -22,7 +22,7 @@
 
 bool name::is_matchable_impl(const construct & modified) const {
 
-    if(term(0)->is_simple && modified.term(0)->is_simple) return true;
+    if(term(0)->is_simple() && modified.term(0)->is_simple()) return true;
 
     return false;
 }

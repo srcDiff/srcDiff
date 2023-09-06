@@ -1,12 +1,12 @@
 #include <srcml_nodes.hpp>
 #include <iostream>
 
-static xmlReaderTypes START_TAG_TYPE = XML_READER_TYPE_ELEMENT;
-static xmlReaderTypes END_TAG_TYPE = XML_READER_TYPE_END_ELEMENT;
+//static xmlReaderTypes START_TAG_TYPE = XML_READER_TYPE_ELEMENT;
+//static xmlReaderTypes END_TAG_TYPE = XML_READER_TYPE_END_ELEMENT;
 
 void advance_to_child(const srcml_nodes & nodes,
                       size_t & pos,
-                      xmlReaderTypes type,
+                      srcml_node::srcml_node_type type,
                       const std::string & name) {
 
   srcml_nodes::size_type size = nodes.size();
@@ -16,17 +16,17 @@ void advance_to_child(const srcml_nodes & nodes,
 
   while(start_pos < size) {
 
-    if(nodes.at(start_pos)->type == END_TAG_TYPE) {
+    if(nodes.at(start_pos)->get_type() == srcml_node::srcml_node_type::END) {
       --depth;
     }
 
-    if(nodes.at(start_pos)->type == type
+    if(nodes.at(start_pos)->get_type() == type
       && nodes.at(start_pos)->name == name
        && depth == 0) {
       break;
     }
 
-    if(!nodes.at(start_pos)->is_empty() && nodes.at(start_pos)->type == START_TAG_TYPE) {
+    if(!nodes.at(start_pos)->is_empty() && nodes.at(start_pos)->get_type() == srcml_node::srcml_node_type::START) {
         ++depth;
     }
 
