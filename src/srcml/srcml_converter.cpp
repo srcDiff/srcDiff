@@ -70,7 +70,7 @@ std::shared_ptr<srcml_node> split_text(const char * characters_start,
                                        const char * characters_end,
                                        const std::shared_ptr<srcml_node> & parent) {
 
-  std::shared_ptr<srcml_node> text = std::make_shared<srcml_node>(srcml_node::srcml_node_type::OTHER, std::string("text"));
+  std::shared_ptr<srcml_node> text = std::make_shared<srcml_node>(srcml_node::srcml_node_type::TEXT, "text");
 
   if(characters_start != characters_end) {
 
@@ -79,7 +79,7 @@ std::shared_ptr<srcml_node> split_text(const char * characters_start,
 
   }
 
-  text->set_empty(false);
+  text->set_empty(true);
   text->set_parent(parent);
   text->set_move(0);
   
