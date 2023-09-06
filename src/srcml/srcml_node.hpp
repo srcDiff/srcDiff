@@ -69,6 +69,7 @@ public:
 
   static std::shared_ptr<srcml_namespace> SRC_NAMESPACE;
   static std::shared_ptr<srcml_namespace> CPP_NAMESPACE;
+  static std::shared_ptr<srcml_namespace> DIFF_NAMESPACE;
   static std::unordered_map<std::string, std::shared_ptr<srcml_namespace>> namespaces;
   
   class srcml_attribute {
@@ -129,7 +130,7 @@ public:
   srcml_node(const xmlNode & node, xmlElementType xml_type);
   srcml_node(const std::string & text);
   srcml_node(const srcml_node & node);
-  srcml_node(srcml_node_type type, const std::string & name);
+  srcml_node(srcml_node_type type, const std::string & name, const std::shared_ptr<srcml_namespace> & ns = SRC_NAMESPACE);
 
   ~srcml_node();
 

@@ -42,7 +42,10 @@ std::shared_ptr<srcml_node::srcml_namespace> srcml_node::SRC_NAMESPACE
   = std::make_shared<srcml_node::srcml_namespace>("http://www.srcML.org/srcML/src");
 
 std::shared_ptr<srcml_node::srcml_namespace> srcml_node::CPP_NAMESPACE
-  = std::make_shared<srcml_node::srcml_namespace>("http://www.srcML.org/srcML/cpp", std::string("cpp"));
+  = std::make_shared<srcml_node::srcml_namespace>("http://www.srcML.org/srcML/cpp", "cpp");
+
+std::shared_ptr<srcml_node::srcml_namespace> srcml_node::DIFF_NAMESPACE 
+  = std::make_shared<srcml_node::srcml_namespace>("http://www.srcML.org/srcDiff", "diff");
 
 std::unordered_map<std::string, std::shared_ptr<srcml_node::srcml_namespace>> srcml_node::namespaces = {};
 
@@ -125,6 +128,7 @@ std::shared_ptr<srcml_node::srcml_namespace> srcml_node::get_namespace(xmlNsPtr 
   if(init_namespace) {
       namespaces.emplace(std::make_pair("http://www.srcML.org/srcML/src", SRC_NAMESPACE));
       namespaces.emplace(std::make_pair("http://www.srcML.org/srcML/cpp", CPP_NAMESPACE));
+      namespaces.emplace(std::make_pair("http://www.srcML.org/srcDiff",   DIFF_NAMESPACE));
       init_namespace = false;
   }
 
@@ -176,8 +180,8 @@ srcml_node::srcml_node(const srcml_node & node) : type(node.type), name(node.nam
   content(node.content), ns_definition(node.ns_definition), parent(node.parent), attributes(node.attributes), temporary(node.temporary), empty(node.empty), simple(node.simple), 
   move(node.move), user_data(node.user_data) {}
 
-srcml_node::srcml_node(srcml_node::srcml_node_type type, const std::string & name) 
-  : type(type), name(name), ns(SRC_NAMESPACE), content(), ns_definition(), parent(), attributes(), temporary(false), empty(false), simple(false), move(0), user_data(), 
+srcml_node::srcml_node(srcml_node::srcml_node_type type, const std::string & name, const std::shared_ptr<srcml_namespace> & ns) 
+  : type(type), name(name), ns(ns), content(), ns_definition(), parent(), attributes(), temporary(false), empty(false), simple(false), move(0), user_data(), 
   extra(0) {}
 
 srcml_node::~srcml_node() {}

@@ -87,15 +87,15 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
   diff->set_uri(SRCDIFF_DEFAULT_NAMESPACE_HREF);
 
   unit_tag            = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, std::string("unit"));
-  diff_common_start   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_SES_COMMON);
-  diff_common_end     = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_SES_COMMON);
-  diff_original_start = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_ORIGINAL);
-  diff_original_end   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_ORIGINAL);
-  diff_modified_start = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_MODIFIED);
-  diff_modified_end   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_MODIFIED);
+  diff_common_start   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_SES_COMMON, srcml_node::DIFF_NAMESPACE);
+  diff_common_end     = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_SES_COMMON, srcml_node::DIFF_NAMESPACE);
+  diff_original_start = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_ORIGINAL, srcml_node::DIFF_NAMESPACE);
+  diff_original_end   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_ORIGINAL, srcml_node::DIFF_NAMESPACE);
+  diff_modified_start = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_MODIFIED, srcml_node::DIFF_NAMESPACE);
+  diff_modified_end   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_MODIFIED, srcml_node::DIFF_NAMESPACE);
   
-  diff_ws_start = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_WHITESPACE);
-  diff_ws_end   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_WHITESPACE);
+  diff_ws_start = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_WHITESPACE, srcml_node::DIFF_NAMESPACE);
+  diff_ws_end   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_WHITESPACE, srcml_node::DIFF_NAMESPACE);
 
  }
 
@@ -522,7 +522,7 @@ void srcdiff_output::output_node_inner(const srcml_node & node) {
 
     
     // start the element
-    srcml_write_start_element(wstate->unit, node.ns->get_prefix() ? node.ns->get_uri().c_str() : 0, node.name.c_str(), node.ns->get_uri().c_str());
+    srcml_write_start_element(wstate->unit, node.ns->get_prefix() ? node.ns->get_prefix()->c_str() : 0, node.name.c_str(), node.ns->get_uri().c_str());
 
     // copy all the attributes
     {
