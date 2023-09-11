@@ -137,7 +137,7 @@ void srcdiff_move::output() {
 
   int id = rbuf->nodes.at(position)->get_move();
 
-  start_node->set_attributes({{std::to_string(id), move}});
+  start_node->attributes.emplace(std::to_string(id), srcml_node::srcml_attribute(move, srcml_node::DIFF_NAMESPACE, std::to_string(id)));
 
   output_node(start_node, operation, true);
 
