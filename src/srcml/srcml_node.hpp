@@ -33,6 +33,7 @@
 #include <memory>
 #include <optional>
 #include <any>
+#include <functional>
 
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
@@ -101,10 +102,10 @@ public:
 
   enum srcml_node_type : unsigned int  { OTHER = 0, START = 1, END = 2, TEXT = 3, WS = 4 };
 
-  typedef std::map<std::string, srcml_attribute> srcml_attribute_map;
+  typedef std::map<std::string, srcml_attribute, std::greater<std::string>> srcml_attribute_map;
   typedef std::pair<std::string, srcml_attribute> srcml_attribute_map_pair;
-  typedef std::map<std::string, srcml_attribute>::const_iterator srcml_attribute_map_citr;
-  typedef std::map<std::string, srcml_attribute>::iterator srcml_attribute_map_itr;
+  typedef std::map<std::string, srcml_attribute, std::greater<std::string>>::const_iterator srcml_attribute_map_citr;
+  typedef std::map<std::string, srcml_attribute, std::greater<std::string>>::iterator srcml_attribute_map_itr;
 
   srcml_node_type type;
   std::string name;
