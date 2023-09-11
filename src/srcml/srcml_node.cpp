@@ -87,6 +87,12 @@ std::string srcml_node::srcml_attribute::full_name() const {
   return name;
 }
 
+std::ostream & operator<<(std::ostream & out, const  srcml_node::srcml_attribute & that) {
+  out << that.full_name();
+  if(that.value) out << "=" << *that.value;
+  return out;
+}
+
 bool srcml_node::srcml_attribute::operator==(const srcml_attribute & that) const {
   return ns == that.ns && name == that.name && value == that.value;
 }
@@ -312,7 +318,7 @@ void srcml_node::set_move(int input) {
   move = input;
 }
 
-std::string srcml_node::srcml_attribute::get_name() const {
+const std::string & srcml_node::srcml_attribute::get_name() const {
   return name;
 }
 

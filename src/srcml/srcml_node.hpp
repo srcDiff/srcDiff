@@ -89,10 +89,11 @@ public:
     std::string full_name() const;
     void set_name(std::string input);
     void set_value(std::optional<std::string> input);
-    std::string get_name() const;
+    const std::string & get_name() const;
     std::optional<std::string> get_value() const;
 
 
+    friend std::ostream & operator<<(std::ostream & out, const srcml_attribute & that);
     bool operator==(const srcml_attribute & that) const;
     bool operator!=(const srcml_attribute & that) const;
 

@@ -240,8 +240,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
       bool is_string_literal 
         = element_stack.back()->name == "literal"
          && !element_stack.back()->attributes.empty()
-         && element_stack.back()->attributes.at(0).get_name() == "type"
-         && (*element_stack.back()->attributes.at(0).get_value()) == "string";
+         && *element_stack.back()->get_attribute_value("type") == "string";
 
       // cycle through characters
       while((*characters) != 0) {
