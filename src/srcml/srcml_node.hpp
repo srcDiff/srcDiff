@@ -134,6 +134,8 @@ public:
 
   ~srcml_node();
 
+  void clear_attributes();
+
   void set_attributes(const srcml_attribute_map & input);
   void set_type(srcml_node_type input);
   void set_empty(bool input);

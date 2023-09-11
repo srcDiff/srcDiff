@@ -136,7 +136,6 @@ void srcdiff_move::output() {
   }
 
   int id = rbuf->nodes.at(position)->get_move();
-  std::cerr << id << '\n';
 
   start_node->set_attributes({{std::to_string(id), move}});
 

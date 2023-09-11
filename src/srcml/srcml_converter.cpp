@@ -380,6 +380,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         if(is_elseif && *text->content == "if") {
           is_elseif = false;
           std::shared_ptr<srcml_node> if_node = std::make_shared<srcml_node>(*element_stack.back());
+          if_node->clear_attributes();
           if_node->set_temporary(true);
           nodes.push_back(if_node);
         }

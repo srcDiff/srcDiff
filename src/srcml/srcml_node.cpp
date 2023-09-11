@@ -270,6 +270,10 @@ bool srcml_node::is_open_tag() const {
   return type == srcml_node_type::START;
 }
 
+void srcml_node::clear_attributes() {
+  attributes.clear();
+}
+
 void srcml_node::set_attributes(const srcml_attribute_map & input) {
   for (srcml_node::srcml_attribute_map_citr it = input.begin(); it != input.end(); ++it) {
     attributes.emplace(it->first, it->second);
