@@ -71,7 +71,7 @@ void top_level_name_seek(const srcml_nodes & nodes, int & start_pos) {
     const std::string & start_tag = nodes.at(start_pos)->get_name();
     int name_start_pos = start_pos + 1;
 
-    while(nodes.at(name_start_pos)->get_type() != srcml_node::srcml_node_type::END || nodes.at(name_start_pos)->get_name() != "name") {
+    while(nodes.at(name_start_pos)->get_type() != srcml_node::srcml_node_type::START || nodes.at(name_start_pos)->get_name() != "name") {
 
       if(nodes.at(name_start_pos)->get_type() == srcml_node::srcml_node_type::END && nodes.at(name_start_pos)->get_name() == start_tag)
         return;
