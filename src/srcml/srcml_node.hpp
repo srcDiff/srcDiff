@@ -31,8 +31,8 @@
 #include <map>
 #include <unordered_map>
 #include <memory>
-
-#include <boost/any.hpp>
+#include <optional>
+#include <any>
 
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
@@ -119,7 +119,7 @@ public:
   bool simple;
 
   int move;
-  boost::any user_data;
+  std::any user_data;
 
   unsigned short extra;
 
