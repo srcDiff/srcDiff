@@ -32,7 +32,7 @@
 #include <list>
 
 const std::string convert("convert");
-const srcml_node::srcml_attribute diff_convert_type(convert);
+const srcml_node::srcml_attribute diff_convert_type("type", srcml_node::DIFF_NAMESPACE, convert);
 
 srcdiff_single::srcdiff_single(std::shared_ptr<srcdiff_output> out, const std::shared_ptr<construct> & original_construct, const std::shared_ptr<construct> & modified_construct) 
   : out(out), original_construct(original_construct), modified_construct(modified_construct) {}
@@ -207,7 +207,7 @@ void srcdiff_single::output_recursive_interchangeable() {
   }
 
   // output deleted nodes
-  //out->diff_original_start->attributes.emplace(diff_convert_type);
+  out->diff_original_start->attributes.emplace("type", diff_convert_type);
   out->output_node(out->diff_original_start, SES_DELETE, true);
   out->diff_original_start->attributes.clear();
 
@@ -217,7 +217,7 @@ void srcdiff_single::output_recursive_interchangeable() {
   }
 
   // output inserted nodes
-  //out->diff_modified_start->attributes.emplace(diff_convert_type);
+  out->diff_modified_start->attributes.emplace("type", diff_convert_type);
   out->output_node(out->diff_modified_start, SES_INSERT, true);
   out->diff_modified_start->attributes.clear();
 
