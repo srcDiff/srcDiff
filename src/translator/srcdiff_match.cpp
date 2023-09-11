@@ -286,20 +286,8 @@ offset_pair * srcdiff_match::match_differences() {
 
 std::optional<std::string> find_attribute(const std::shared_ptr<const srcml_node> & node, const char * attr_name) {
 
-  std::list<srcml_node::srcml_attribute> attrs = {};
-
-  for (srcml_node::srcml_attribute_map_citr it = node->get_attributes().begin(); it != node->get_attributes().end(); ++it) {
-    attrs.push_back(it->second);
-  }
-
-  std::list<srcml_node::srcml_attribute>::size_type pos = 0;
-  for (const srcml_node::srcml_attribute & attr : attrs) {
-
-    if(attr.get_name() == attr_name)
-      return attr.get_value();
-
-  }
-
+  srcml_node::srcml_attribute_map_citr citr = node->get_attributes().find(attr_name);
+  if(citr != node->get_attributes().end()) return *citr->second.get_value();
   return std::optional<std::string>();
 
 }
