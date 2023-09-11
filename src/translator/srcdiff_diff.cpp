@@ -84,7 +84,7 @@ void srcdiff_diff::output() {
       // many to many handling
       /** loop O(RD^2) */
       srcdiff_many diff(*this, edits);
-            diff.output();
+      diff.output();
 
       // update for common
       last_diff_original = edits->offset_sequence_one + edits->length;

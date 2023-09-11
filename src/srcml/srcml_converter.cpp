@@ -274,7 +274,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
           while((*characters) != 0 && is_comment_separate(*characters)) {
             ++characters;
-	  }
+	        }
 
           text = split_text(characters_start, characters, element_stack.back());
 
@@ -283,7 +283,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
           while((*characters) != 0 && is_cpp_file_separate(*characters)) {
             ++characters;
-	  }
+	        }
 
           text = split_text(characters_start, characters, element_stack.back());
 
@@ -324,7 +324,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
                 size_t pos = 0;
                 while(pos < 2 && *characters >= '0' && *characters <= '7') {
                   ++pos, ++characters;
-		}
+		          }
 
                 --characters;
 
@@ -334,7 +334,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
                 size_t pos = 0;
                 while(pos < 4 && isxdigit(*characters)) {
                   ++pos, ++characters;
-		}
+	             	}
 
                 --characters;
 
@@ -344,7 +344,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
                 size_t pos = 0;
                 while(pos < 8 && isxdigit(*characters)) {
                   ++pos, ++characters;
-		}
+	             	}
 
                 --characters;
 
