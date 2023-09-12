@@ -283,9 +283,7 @@ void srcml_node::clear_attributes() {
 }
 
 void srcml_node::set_attributes(const srcml_attribute_map & input) {
-  for (srcml_node::srcml_attribute_map_citr it = input.begin(); it != input.end(); ++it) {
-    attributes.emplace(it->first, it->second);
-  }
+  attributes = input;
 }
 
 void srcml_node::set_type(srcml_node_type input) {
@@ -322,6 +320,10 @@ void srcml_node::set_move(int input) {
 
 const std::string & srcml_node::srcml_attribute::get_name() const {
   return name;
+}
+
+std::shared_ptr<srcml_node::srcml_namespace> srcml_node::srcml_attribute::get_ns() const {
+  return ns;
 }
 
 std::optional<std::string> srcml_node::srcml_attribute::get_value() const {

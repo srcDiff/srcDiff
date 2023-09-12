@@ -91,6 +91,7 @@ public:
     void set_name(std::string input);
     void set_value(std::optional<std::string> input);
     const std::string & get_name() const;
+    std::shared_ptr<srcml_namespace> get_ns() const;
     std::optional<std::string> get_value() const;
 
 
