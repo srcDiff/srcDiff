@@ -227,40 +227,18 @@ void srcdiff_common::markup_common() {
     } else {
 
 #if DEBUG
-      if(rbuf_original->nodes.at(i)->is_text()) {
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_original->nodes.at(i)->content->c_str());
-      }
-      else {
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_original->nodes.at(i)->name.c_str());
-      }
-      if(rbuf_modified->nodes.at(j)->is_text()) {
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_modified->nodes.at(j)->content->c_str());
-      }
-      else {
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_modified->nodes.at(j)->name.c_str());
-      }
-
       std::cerr << "Original:\n";
       for(int pos = begin_original; pos < oend; ++pos) {
-        if(rbuf_original->nodes.at(pos)->is_text()) {
-          std::cerr << *rbuf_original->nodes.at(pos)->content;
-        } else {
-          std::cerr << rbuf_original->nodes.at(pos)->name;
-        }
+        std::cerr << *rbuf_original->nodes.at(pos) << '\n';
       }
       std::cerr << '\n';
 
       std::cerr << "Modified:\n";
       for(int pos = begin_modified; pos < nend; ++pos) {
-        if(rbuf_modified->nodes.at(pos)->is_text()) {
-          std::cerr << *rbuf_modified->nodes.at(pos)->content;
-        } else {
-          std::cerr << rbuf_modified->nodes.at(pos)->name;
-        }
+        std::cerr << *rbuf_modified->nodes.at(pos) << '\n';
       }
       std::cerr << '\n';
 #endif
-
 
       // should never reach this state  This usually occurs when the two lines are not actually the same i.e. more than just whitespace
       fprintf(stderr, "Fatal Error Occurred\n");

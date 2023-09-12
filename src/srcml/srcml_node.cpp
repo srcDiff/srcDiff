@@ -164,6 +164,8 @@ srcml_node::srcml_node(const xmlNode & node, xmlElementType xml_type)
 
   ns = get_namespace(node.ns);
 
+  if(type != srcml_node_type::START) return;
+
   xmlNsPtr node_ns = node.nsDef;
   while(node_ns) {
     ns_definition.emplace_back(get_namespace(node_ns));
