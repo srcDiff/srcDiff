@@ -129,7 +129,7 @@ public:
   std::shared_ptr<srcml_node> diff_ws_start;
   std::shared_ptr<srcml_node> diff_ws_end;
 
-  std::shared_ptr<srcml_node::srcml_ns> diff;
+  std::shared_ptr<srcml_node::srcml_namespace> diff;
 
   std::shared_ptr<srcml_node> unit_tag;
 
@@ -191,7 +191,7 @@ public:
 template<class T>
 void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
-  static const std::shared_ptr<srcml_node> flush = std::make_shared<srcml_node>(XML_READER_TYPE_TEXT, std::string("text"));
+  static const std::shared_ptr<srcml_node> flush = std::make_shared<srcml_node>(srcml_node::srcml_node_type::TEXT, "text");
   output_node(flush, SES_COMMON);
 
   if(wstate->approximate) {

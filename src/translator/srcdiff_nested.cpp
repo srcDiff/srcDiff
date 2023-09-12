@@ -111,10 +111,10 @@ const nest_info nesting[] = {
 
 int is_block_type(const std::shared_ptr<construct> & structure) {
 
-  if((xmlReaderTypes)structure->root_term()->type != XML_READER_TYPE_ELEMENT)
+  if(structure->root_term()->get_type() != srcml_node::srcml_node_type::START)
     return -1;
 
-  if(structure->root_term()->ns.href != SRCML_SRC_NAMESPACE_HREF)
+  if(structure->root_term()->ns->get_uri() != SRCML_SRC_NAMESPACE_HREF)
     return -1;
 
   for(int i = 0; nesting[i].type; ++i)
@@ -129,8 +129,8 @@ bool has_internal_structure(const std::shared_ptr<construct> & structure, const 
   if(!type) return false;
 
   for(unsigned int i = 1; i < structure->size(); ++i) {
-    if((xmlReaderTypes)structure->term(i)->type == XML_READER_TYPE_ELEMENT
-              && structure->term(i)->name == type)
+    if(structure->term(i)->get_type() == srcml_node::srcml_node_type::START
+              && structure->term(i)->get_name() == type)
       return true;
   }
 
@@ -141,10 +141,10 @@ bool is_nest_type(const std::shared_ptr<construct> & structure,
                   const std::shared_ptr<construct> & structure_other,
                   int type_index) {
 
-  if((xmlReaderTypes)structure->root_term()->type != XML_READER_TYPE_ELEMENT)
+  if(structure->root_term()->get_type() != srcml_node::srcml_node_type::START)
     return false;
 
-    if(structure->root_term()->ns.href != SRCML_SRC_NAMESPACE_HREF)
+    if(structure->root_term()->ns->get_uri() != SRCML_SRC_NAMESPACE_HREF)
     return true;
 
   for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i) {
@@ -287,11 +287,11 @@ bool is_better_nest_no_recursion(const std::shared_ptr<construct> & node_set_out
 
 bool has_compound_inner(const std::shared_ptr<construct> & node_set_outer) {
 
-  if(node_set_outer->root_term()->is_simple) return false;
+  if(node_set_outer->root_term()->is_simple()) return false;
 
   for(unsigned int i = 1; i < node_set_outer->size(); ++i) {
-    if((xmlReaderTypes)node_set_outer->term(i)->type == XML_READER_TYPE_ELEMENT
-      && node_set_outer->term(i)->name == "name" && !node_set_outer->term(i)->is_simple)
+    if(node_set_outer->term(i)->get_type() == srcml_node::srcml_node_type::START
+      && node_set_outer->term(i)->name == "name" && !node_set_outer->term(i)->is_simple())
       return true;
   }
 
@@ -305,8 +305,8 @@ bool is_better_nest(const std::shared_ptr<construct> & node_set_outer,
 
   // do not nest compound name in simple or anything into something that is not compound
   if(node_set_outer->root_term_name() == "name" && node_set_inner->root_term_name() == "name"
-    &&    (node_set_outer->root_term()->is_simple
-      || (!node_set_inner->root_term()->is_simple && !has_compound_inner(node_set_outer)))) return false;
+    &&    (node_set_outer->root_term()->is_simple()
+      || (!node_set_inner->root_term()->is_simple() && !has_compound_inner(node_set_outer)))) return false;
 
   // parents and children same do not nest.
   if(srcdiff_nested::is_nestable(node_set_inner, node_set_outer)) {
@@ -474,8 +474,8 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
   const std::string & original_tag = set_original->root_term_name();
   const std::string & modified_tag = set_modified->root_term_name();
 
-  const std::string & original_uri = set_original->root_term()->ns.href;
-  const std::string & modified_uri = set_modified->root_term()->ns.href;
+  const std::string & original_uri = set_original->root_term()->ns->get_uri();
+  const std::string & modified_uri = set_modified->root_term()->ns->get_uri();
 
   if(original_tag != modified_tag && !set_original->is_tag_convertable(*set_modified)) return true;
 
@@ -483,7 +483,7 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
   if(original_tag == "expr" && (is_decl_stmt_from_expr(set_original->nodes(), original_pos) || is_decl_stmt_from_expr(set_modified->nodes(), modified_pos))) return false;
 
   if(original_tag == "name"
-    && set_original->root_term()->is_simple != set_modified->root_term()->is_simple
+    && set_original->root_term()->is_simple() != set_modified->root_term()->is_simple()
     && !check_nest_name(set_original, set_original->root_term()->parent,
                        set_modified, set_modified->root_term()->parent))
     return true;
@@ -920,25 +920,25 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
 
   } else if(structure_outer == "if" && !bool(find_attribute(construct_list_outer.at(start_outer)->root_term(), "type"))) {
 
-    advance_to_child(construct_list_outer.back()->nodes(), start_pos, XML_READER_TYPE_ELEMENT, "block");
+    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcml_node::srcml_node_type::START, "block");
 
   } else if(structure_outer == "while") {
 
-    advance_to_child(construct_list_outer.back()->nodes(), start_pos, XML_READER_TYPE_END_ELEMENT, "condition");
+    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcml_node::srcml_node_type::END, "condition");
     ++start_pos;
 
   } else if(structure_outer == "for") {
 
-    advance_to_child(construct_list_outer.back()->nodes(), start_pos, XML_READER_TYPE_END_ELEMENT, "control");
+    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcml_node::srcml_node_type::END, "control");
     ++start_pos;
 
   } else if(is_class_type(structure_outer)) {
 
-    advance_to_child(construct_list_outer.back()->nodes(), start_pos, XML_READER_TYPE_ELEMENT, "block");
+    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcml_node::srcml_node_type::START, "block");
     ++start_pos;
 
     end_pos = start_pos - 1;
-    advance_to_child(construct_list_outer.back()->nodes(), end_pos, XML_READER_TYPE_END_ELEMENT, "block");
+    advance_to_child(construct_list_outer.back()->nodes(), end_pos, srcml_node::srcml_node_type::END, "block");
 
   }
 

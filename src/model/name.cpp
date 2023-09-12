@@ -21,7 +21,7 @@
 #include <name.hpp>
 
 std::string name_t::simple_name() const {
-    if(root_term()->is_simple) return to_string();
+    if(root_term()->is_simple()) return to_string();
 
     const construct_list childs = children();
     if(childs.empty() || childs[0]->root_term_name() != "name") return "";
@@ -31,7 +31,7 @@ std::string name_t::simple_name() const {
 
 bool name_t::is_matchable_impl(const construct & modified) const {
 
-    if(root_term()->is_simple && modified.root_term()->is_simple) return true;
+    if(root_term()->is_simple() && modified.root_term()->is_simple()) return true;
 
     return false;
 }

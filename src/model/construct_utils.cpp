@@ -29,7 +29,7 @@ namespace std {
     for(std::size_t pos = 0, size = element.size(); pos < size; ++pos) {
 
         const shared_ptr<srcml_node> & term = element.term(pos);
-        const string & hash_item = term->is_text() ? *term->content : term->name;
+        const string & hash_item = term->is_text() ? *term->content : term->get_name();
         for(size_t hash_pos = 0, hash_size = hash_item.size(); hash_pos < hash_size; ++hash_pos) {
             result = (result * 16777619) ^ hash_item[hash_pos];
         }

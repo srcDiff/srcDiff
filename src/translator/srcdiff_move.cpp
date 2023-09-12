@@ -36,7 +36,7 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
   std::vector<std::shared_ptr<construct>> delete_sets;
 
-  for(edit_t * edits = edit_script; edits; edits = edits->next) {
+  for(edit_t * edits = edit_script; edits != nullptr; edits = edits->next) {
 
     switch(edits->operation) {
 
@@ -99,7 +99,7 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
       ((srcml_nodes &)set->nodes()).at(set->start_position()) = start_node_one;
       ((srcml_nodes &)(*pos)->nodes()).at((*pos)->start_position()) = start_node_two;
 
-      if(!start_node_one->is_empty) {
+      if(!start_node_one->is_empty()) {
 
         std::shared_ptr<srcml_node> end_node_one = std::make_shared<srcml_node>(*set->last_term());
         end_node_one->move = move_id;
@@ -135,32 +135,32 @@ void srcdiff_move::output() {
 
   }
 
-  int id = rbuf->nodes.at(position)->move;
+  int id = rbuf->nodes.at(position)->get_move();
 
-  start_node->properties.emplace_back(move, std::to_string(id));
+  start_node->attributes.emplace(std::to_string(id), srcml_node::srcml_attribute(move, srcml_node::DIFF_NAMESPACE, std::to_string(id)));
 
   output_node(start_node, operation, true);
 
   output_node(rbuf->nodes.at(position), operation);
 
-  if(!rbuf->nodes.at(position)->is_empty) {
+  if(!rbuf->nodes.at(position)->is_empty()) {
 
     ++position;
 
-    for(; rbuf->nodes.at(position)->move != id; ++position) {
+    for(; rbuf->nodes.at(position)->move != id ; ++position) {
 
-      if(rbuf->nodes.at(position)->is_white_space()) {
+      if(rbuf->nodes.at(position)->is_whitespace()) {
 
         rbuf->last_output = position;
         srcdiff_whitespace whitespace(*this);
         whitespace.output_all(operation);
         position = rbuf->last_output - 1;
+
         continue;
 
       }
 
       output_node(rbuf->nodes.at(position), operation);
-
     }
 
     output_node(rbuf->nodes.at(position), operation);
@@ -169,6 +169,6 @@ void srcdiff_move::output() {
 
   output_node(end_node, operation, true);
 
-  start_node->properties.clear();
+  start_node->attributes.clear();
 
 }

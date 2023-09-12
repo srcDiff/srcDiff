@@ -32,51 +32,51 @@
 #include <list>
 
 const std::string convert("convert");
-const srcml_node::srcml_attr diff_convert_type(DIFF_TYPE, convert);
+const srcml_node::srcml_attribute diff_convert_type("type", srcml_node::DIFF_NAMESPACE, convert);
 
 srcdiff_single::srcdiff_single(std::shared_ptr<srcdiff_output> out, const std::shared_ptr<construct> & original_construct, const std::shared_ptr<construct> & modified_construct) 
   : out(out), original_construct(original_construct), modified_construct(modified_construct) {}
 
-static std::list<srcml_node::srcml_attr> merge_properties(const std::list<srcml_node::srcml_attr> & properties_original, const std::list<srcml_node::srcml_attr> & properties_modified) {
+static srcml_node::srcml_attribute_map merge_attributes(const srcml_node::srcml_attribute_map & attributes_original, const srcml_node::srcml_attribute_map & attributes_modified) {
 
-  std::list<srcml_node::srcml_attr> attributes;
+  srcml_node::srcml_attribute_map attributes;
 
-  auto citr_original = properties_original.begin();
-  auto citr_modified = properties_modified.begin();
+  srcml_node::srcml_attribute_map_citr citr_original = attributes_original.begin();
+  srcml_node::srcml_attribute_map_citr citr_modified = attributes_modified.begin();
 
-  while(citr_original != properties_original.end() && citr_modified != properties_modified.end()) {
+  while(citr_original != attributes_original.end() && citr_modified != attributes_modified.end()) {
 
-    if(citr_original->name == citr_modified->name) {
+    if(citr_original->first == citr_modified->first) {
 
-      if(*citr_original->value == citr_modified->value) {
-        attributes.emplace_back(citr_original->name, *citr_original->value);
+      if(citr_original->second.get_value() == citr_modified->second.get_value()) {
+        attributes.emplace(citr_original->first, citr_original->second);
       }
       else {
-        attributes.emplace_back(citr_original->name, *citr_original->value + std::string("|") +*citr_modified->value);
+        attributes.emplace(citr_original->first, srcml_node::srcml_attribute(citr_original->second.get_name(), citr_original->second.get_ns(), *citr_original->second.get_value() + std::string("|") + *citr_modified->second.get_value()));
       }
 
-      ++citr_original;
+      ++citr_original;  
       ++citr_modified;
 
     } else {
 
       ++citr_modified;
 
-      bool is_end = citr_modified == properties_modified.end();
+      bool is_end = citr_modified == attributes_modified.end();
       std::string name;
-      if(!is_end) name = citr_modified->name;
+      if(!is_end) name = citr_modified->second.get_name();
 
       --citr_modified;
 
-      if(!is_end && citr_original->name == name) {
+      if(!is_end && citr_original->second.get_name() == name) {
 
-        attributes.emplace_back(citr_modified->name, std::string("|") + *citr_modified->value);
+        attributes.emplace(citr_modified->second.get_name(), srcml_node::srcml_attribute(citr_modified->second.get_name(), citr_modified->second.get_ns(), std::string("|") + *citr_modified->second.get_value()));
 
         ++citr_modified;
 
       } else {
 
-        attributes.emplace_back(citr_original->name, *citr_original->value + std::string("|"));
+        attributes.emplace(citr_original->second.get_name(), srcml_node::srcml_attribute(citr_original->second.get_name(), citr_original->second.get_ns(), *citr_original->second.get_value() + std::string("|")));
 
         ++citr_original;
 
@@ -86,17 +86,17 @@ static std::list<srcml_node::srcml_attr> merge_properties(const std::list<srcml_
 
   }
 
-  while(citr_original != properties_original.end()) {
+  while(citr_original != attributes_original.end()) {
 
-      attributes.emplace_back(citr_original->name, *citr_original->value + std::string("|"));
+      attributes.emplace(citr_original->first, srcml_node::srcml_attribute(citr_original->second.get_name(), citr_original->second.get_ns(), *citr_original->second.get_value() + std::string("|")));
 
       ++citr_original;
 
   }
 
-  while(citr_modified != properties_modified.end()) {
+  while(citr_modified != attributes_modified.end()) {
 
-      attributes.emplace_back(citr_modified->name, std::string("|") + *citr_modified->value);
+      attributes.emplace(citr_modified->first, srcml_node::srcml_attribute(citr_modified->second.get_name(), citr_modified->second.get_ns(), std::string("|") + *citr_modified->second.get_value()));
 
       ++citr_modified;
 
@@ -111,7 +111,7 @@ void srcdiff_single::output_recursive_same() {
   srcdiff_whitespace whitespace(*out);
   whitespace.output_all();
 
-  if(original_construct->root_term()->is_temporary == modified_construct->root_term()->is_temporary) {
+  if(original_construct->root_term()->is_temporary() == modified_construct->root_term()->is_temporary()) {
     out->output_node(out->diff_common_start, SES_COMMON);
   }
 
@@ -122,9 +122,9 @@ void srcdiff_single::output_recursive_same() {
   } else {
 
     std::shared_ptr<srcml_node> merged_node = std::make_shared<srcml_node>(*original_construct->root_term());
-    merged_node->is_empty = original_construct->root_term()->is_empty && modified_construct->root_term()->is_empty;
-    merged_node->properties = merge_properties(original_construct->root_term()->properties,
-                                              modified_construct->root_term()->properties);
+    merged_node->set_empty(original_construct->root_term()->is_empty() && modified_construct->root_term()->is_empty());
+    merged_node->set_attributes(merge_attributes(original_construct->root_term()->get_attributes(),
+                                                 modified_construct->root_term()->get_attributes()));
     out->output_node(merged_node, SES_COMMON);
 
   }
@@ -147,11 +147,11 @@ void srcdiff_single::output_recursive_same() {
 
       // collect subset of nodes
       construct::construct_list children_original;
-      if(!original_construct->root_term()->is_empty)
+      if(!original_construct->root_term()->is_empty())
         children_original = original_construct->children();
 
       construct::construct_list children_modified;
-      if(!modified_construct->root_term()->is_empty)
+      if(!modified_construct->root_term()->is_empty())
         children_modified =  modified_construct->children();
 
       srcdiff_diff diff(out, children_original, children_modified);
@@ -161,7 +161,7 @@ void srcdiff_single::output_recursive_same() {
 
   srcdiff_common::output_common(out, original_construct->end_position() + 1, modified_construct->end_position() + 1);
 
-  if(original_construct->root_term()->is_temporary == modified_construct->root_term()->is_temporary) {
+  if(original_construct->root_term()->is_temporary() == modified_construct->root_term()->is_temporary()) {
     out->output_node(out->diff_common_end, SES_COMMON);
   }
 
@@ -196,9 +196,9 @@ void srcdiff_single::output_recursive_interchangeable() {
   // get keyword if present
   const std::shared_ptr<srcml_node> & keyword_node_original = original_construct->term(original_collect_start_pos);
   const std::shared_ptr<srcml_node> & keyword_node_modified = modified_construct->term(modified_collect_start_pos);
-  bool is_keyword  = keyword_node_original->is_text() && !keyword_node_original->is_white_space();
+  bool is_keyword  = keyword_node_original->is_text() && !keyword_node_original->is_whitespace();
   bool is_keywords = is_keyword
-                     && keyword_node_modified->is_text() && !keyword_node_modified->is_white_space();
+                     && keyword_node_modified->is_text() && !keyword_node_modified->is_whitespace();
   bool is_same_keyword = is_keywords && *keyword_node_original == *keyword_node_modified;
 
 
@@ -207,9 +207,9 @@ void srcdiff_single::output_recursive_interchangeable() {
   }
 
   // output deleted nodes
-  out->diff_original_start->properties.push_back(diff_convert_type);
+  out->diff_original_start->attributes.emplace("type", diff_convert_type);
   out->output_node(out->diff_original_start, SES_DELETE, true);
-  out->diff_original_start->properties.clear();
+  out->diff_original_start->attributes.clear();
 
   for(int output_pos = 0; output_pos < original_collect_start_pos; ++output_pos) {
     out->output_node(original_construct->term(output_pos), SES_DELETE);
@@ -217,9 +217,9 @@ void srcdiff_single::output_recursive_interchangeable() {
   }
 
   // output inserted nodes
-  out->diff_modified_start->properties.push_back(diff_convert_type);
+  out->diff_modified_start->attributes.emplace("type", diff_convert_type);
   out->output_node(out->diff_modified_start, SES_INSERT, true);
-  out->diff_modified_start->properties.clear();
+  out->diff_modified_start->attributes.clear();
 
   if(is_keywords && !is_same_keyword){
     ++modified_collect_start_pos;
@@ -266,7 +266,7 @@ void srcdiff_single::output() {
   const std::shared_ptr<srcml_node> & start_node_modified = modified_construct->root_term();
 
   if(start_node_original->name == start_node_modified->name
-    && start_node_original->ns.href == start_node_modified->ns.href) {
+    && start_node_original->ns->get_uri() == start_node_modified->ns->get_uri()) {
     output_recursive_same();
   } else {
     output_recursive_interchangeable();

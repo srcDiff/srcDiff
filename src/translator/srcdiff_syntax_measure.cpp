@@ -18,7 +18,7 @@ static bool is_significant(int & node_pos, const srcml_nodes & nodes, const void
   if(node->name == "argument_list") {
 
     int pos = node_pos + 1;
-    while(pos < nodes.size() && (nodes[pos]->type == XML_READER_TYPE_ELEMENT || nodes[pos]->name != "argument_list")) {
+    while(pos < nodes.size() && (nodes[pos]->get_type() == srcml_node::srcml_node_type::START || nodes[pos]->name != "argument_list")) {
 
       if(!nodes[pos]->is_text()) return true;
 
@@ -32,7 +32,7 @@ static bool is_significant(int & node_pos, const srcml_nodes & nodes, const void
 
   }
 
-  return !node->is_text() && (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT
+  return !node->is_text() && node->get_type() == srcml_node::srcml_node_type::START
     && node->name != "operator" && node->name != "literal" && node->name != "modifier";
 
 }
@@ -43,8 +43,8 @@ void srcdiff_syntax_measure::compute() {
 
   computed = true;
   
-  if((xmlReaderTypes)set_original.term(0)->type != XML_READER_TYPE_ELEMENT
-     || (xmlReaderTypes)set_modified.term(0)->type != XML_READER_TYPE_ELEMENT
+  if(set_original.term(0)->get_type() != srcml_node::srcml_node_type::START
+     || set_modified.term(0)->get_type() != srcml_node::srcml_node_type::START
      || (*set_original.term(0) != *set_modified.term(0)
         && !set_original.is_tag_convertable(set_modified)
         && (set_original.term(0)->name != "block" || set_modified.term(0)->name != "block"))) {

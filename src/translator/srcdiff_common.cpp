@@ -28,15 +28,15 @@ void srcdiff_common::markup_common() {
 
       output_node(rbuf_original->nodes.at(i), rbuf_modified->nodes.at(j), SES_COMMON);
         
-    } else if(rbuf_original->nodes.at(i)->is_white_space() && rbuf_modified->nodes.at(j)->is_white_space()) {
+    } else if(rbuf_original->nodes.at(i)->is_whitespace() && rbuf_modified->nodes.at(j)->is_whitespace()) {
       
       int olength = i;
       int nlength = j;
 
-      for(; olength < oend && rbuf_original->nodes.at(olength)->is_white_space(); ++olength)
+      for(; olength < oend && rbuf_original->nodes.at(olength)->is_whitespace(); ++olength)
         ;
 
-      for(; nlength < nend && rbuf_modified->nodes.at(nlength)->is_white_space(); ++nlength)
+      for(; nlength < nend && rbuf_modified->nodes.at(nlength)->is_whitespace(); ++nlength)
         ;
 
 
@@ -97,12 +97,12 @@ void srcdiff_common::markup_common() {
 
         j = nlength - 1;
 
-    } else if(rbuf_original->nodes.at(i)->is_white_space()) {
+    } else if(rbuf_original->nodes.at(i)->is_whitespace()) {
 
       output_node(diff_original_start, SES_DELETE);
         output_node(diff_ws_start, SES_DELETE);
 
-      for(; i < oend && rbuf_original->nodes.at(i)->is_white_space(); ++i) {
+      for(; i < oend && rbuf_original->nodes.at(i)->is_whitespace(); ++i) {
         output_node(rbuf_original->nodes.at(i), SES_DELETE);
       }
 
@@ -113,13 +113,13 @@ void srcdiff_common::markup_common() {
       --i;
       --j;
 
-    } else if(rbuf_modified->nodes.at(j)->is_white_space()) {
+    } else if(rbuf_modified->nodes.at(j)->is_whitespace()) {
 
       output_node(diff_modified_start, SES_INSERT);
       output_node(diff_ws_start, SES_INSERT);
 
 
-      for(; j < nend && rbuf_modified->nodes.at(j)->is_white_space(); ++j) {
+      for(; j < nend && rbuf_modified->nodes.at(j)->is_whitespace(); ++j) {
         output_node(rbuf_modified->nodes.at(j), SES_INSERT);
       }
 
@@ -227,40 +227,18 @@ void srcdiff_common::markup_common() {
     } else {
 
 #if DEBUG
-      if(rbuf_original->nodes.at(i)->is_text()) {
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_original->nodes.at(i)->content->c_str());
-      }
-      else {
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_original->nodes.at(i)->name.c_str());
-      }
-      if(rbuf_modified->nodes.at(j)->is_text()) {
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_modified->nodes.at(j)->content->c_str());
-      }
-      else {
-        fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, rbuf_modified->nodes.at(j)->name.c_str());
-      }
-
       std::cerr << "Original:\n";
       for(int pos = begin_original; pos < oend; ++pos) {
-        if(rbuf_original->nodes.at(pos)->is_text()) {
-          std::cerr << *rbuf_original->nodes.at(pos)->content;
-        } else {
-          std::cerr << rbuf_original->nodes.at(pos)->name;
-        }
+        std::cerr << *rbuf_original->nodes.at(pos) << '\n';
       }
       std::cerr << '\n';
 
       std::cerr << "Modified:\n";
       for(int pos = begin_modified; pos < nend; ++pos) {
-        if(rbuf_modified->nodes.at(pos)->is_text()) {
-          std::cerr << *rbuf_modified->nodes.at(pos)->content;
-        } else {
-          std::cerr << rbuf_modified->nodes.at(pos)->name;
-        }
+        std::cerr << *rbuf_modified->nodes.at(pos) << '\n';
       }
       std::cerr << '\n';
 #endif
-
 
       // should never reach this state  This usually occurs when the two lines are not actually the same i.e. more than just whitespace
       fprintf(stderr, "Fatal Error Occurred\n");
@@ -301,8 +279,8 @@ void srcdiff_common::markup_common() {
   rbuf_original->last_output = oend > (signed)rbuf_original->last_output ? oend : rbuf_original->last_output;
   rbuf_modified->last_output = nend > (signed)rbuf_modified->last_output ? nend : rbuf_modified->last_output;
 
-  diff_original_start->properties.clear();
-  diff_modified_start->properties.clear();
+  diff_original_start->attributes.clear();
+  diff_modified_start->attributes.clear();
 
 }
 
@@ -332,7 +310,7 @@ void srcdiff_common::output() {
 
   // output common tag if needed
   if(rbuf_original->last_output >= oend || rbuf_modified->last_output >= nend
-     || rbuf_original->nodes.at(rbuf_original->last_output)->is_temporary == rbuf_modified->nodes.at(rbuf_modified->last_output)->is_temporary) {
+     || rbuf_original->nodes.at(rbuf_original->last_output)->is_temporary() == rbuf_modified->nodes.at(rbuf_modified->last_output)->is_temporary()) {
     output_node(diff_common_start, SES_COMMON);
   }
 
@@ -344,7 +322,7 @@ void srcdiff_common::output() {
 
   // output common tag if needed
   if(rbuf_original->last_output >= oend || rbuf_modified->last_output >= nend
-     || rbuf_original->nodes.at(rbuf_original->last_output)->is_temporary == rbuf_modified->nodes.at(rbuf_modified->last_output)->is_temporary) {
+     || rbuf_original->nodes.at(rbuf_original->last_output)->is_temporary() == rbuf_modified->nodes.at(rbuf_modified->last_output)->is_temporary()) {
     output_node(diff_common_end, SES_COMMON);
   }
 

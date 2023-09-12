@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include <optional>
+#include <cassert>
 
 class versioned_string {
 

@@ -98,7 +98,7 @@ void srcdiff_diff::output() {
 
         case SES_COMMON: {
 
-          if((xmlReaderTypes)construct_list_original.at(edits->offset_sequence_one)->term(0)->type != XML_READER_TYPE_TEXT) {
+          if(construct_list_original.at(edits->offset_sequence_one)->term(0)->get_type() != srcml_node::srcml_node_type::TEXT) {
 
             srcdiff_single diff(out,
                                 construct_list_original.at(edits->offset_sequence_one),
@@ -172,8 +172,11 @@ void srcdiff_diff::output_pure(int end_original, int end_modified) {
 void srcdiff_diff::output_change_whitespace(int end_original, int end_modified) {
 
   srcdiff_change change(*out, end_original, end_modified);
+  
   change.output_whitespace_prefix();
+  
   change.output();
+  
 
 }
 
