@@ -1,5 +1,5 @@
 /**
- * @file class.hpp
+ * @file call.cpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,22 +18,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_CLASS_HPP
-#define INCLUDED_CLASS_HPP
+#include <call.hpp>
 
-#include <named_construct.hpp>
+#include <srcdiff_text_measure.hpp>
 
-class class_t : public named_construct {
+bool call::is_matchable_impl(const construct & modified) const {
+    std::shared_ptr<const construct> original_name = name();
+    std::shared_ptr<const construct> modified_name = dynamic_cast<const named_construct &>(modified).name();
 
-public:
+    srcdiff_text_measure text_measure(*original_name, *modified_name, false);
+    text_measure.compute();
 
-    class_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), named_construct(node_list, start, out) {}
-    virtual bool is_tag_convertable(const construct & modified) const;
-    virtual bool is_convertable_impl(const construct & modified) const;
-private:
-
-};
-
-
-#endif
+    return bool(text_measure.similarity());
+}

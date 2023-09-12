@@ -156,15 +156,6 @@ bool is_nest_type(const std::shared_ptr<construct> & structure,
   return false;
 }
 
-bool srcdiff_nested::is_match(int & node_pos, const srcml_nodes & nodes, const void * context) {
-
-  const std::shared_ptr<srcml_node> & node = nodes[node_pos];
-  const std::shared_ptr<srcml_node> & context_node = *(const std::shared_ptr<srcml_node> *)context;
-
-  return node->get_type() == srcml_node::srcml_node_type::START && *node == *context_node;
-
-}
-
 /**
  * best_match
  * @param sets - node set to search for match
@@ -230,7 +221,7 @@ bool srcdiff_nested::is_same_nestable(const std::shared_ptr<construct> & structu
   if(!is_nestable_internal(structure_one, structure_two))
     return false;
 
-  construct::construct_list set = construct::get_descendent_constructs(structure_two->nodes(), structure_two->get_terms().at(1), structure_two->end_position(), srcdiff_nested::is_match, &structure_one->root_term());
+  construct::construct_list set = construct::get_descendent_constructs(structure_two->nodes(), structure_two->get_terms().at(1), structure_two->end_position(), construct::is_match, &structure_one->root_term());
 
   unsigned int match = best_match(set, structure_one);
 
@@ -268,7 +259,7 @@ bool is_better_nest_no_recursion(const std::shared_ptr<construct> & node_set_out
 
     if(srcdiff_nested::is_nestable(node_set_inner, node_set_outer)) {
 
-      construct::construct_list set = construct::get_descendent_constructs(node_set_outer->nodes(), node_set_outer->get_terms().at(1), node_set_outer->end_position(), srcdiff_nested::is_match,
+      construct::construct_list set = construct::get_descendent_constructs(node_set_outer->nodes(), node_set_outer->get_terms().at(1), node_set_outer->end_position(), construct::is_match,
                                 &node_set_inner->root_term());
 
       int match = srcdiff_nested::best_match(set, node_set_inner);
@@ -320,7 +311,7 @@ bool is_better_nest(const std::shared_ptr<construct> & node_set_outer,
   // parents and children same do not nest.
   if(srcdiff_nested::is_nestable(node_set_inner, node_set_outer)) {
 
-    construct::construct_list set = construct::get_descendent_constructs(node_set_outer->nodes(), node_set_outer->get_terms().at(1), node_set_outer->end_position(), srcdiff_nested::is_match
+    construct::construct_list set = construct::get_descendent_constructs(node_set_outer->nodes(), node_set_outer->get_terms().at(1), node_set_outer->end_position(), construct::is_match
                                                            , &node_set_inner->root_term());
 
     int match = srcdiff_nested::best_match(set, node_set_inner);
@@ -534,7 +525,7 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
 
       if(srcdiff_nested::is_nestable(construct_list_modified.at(j), construct_list_original.at(i))) {
 
-        construct::construct_list set = construct::get_descendent_constructs(construct_list_original.back()->nodes(), construct_list_original.at(i)->get_terms().at(1), construct_list_original.at(i)->end_position(), srcdiff_nested::is_match
+        construct::construct_list set = construct::get_descendent_constructs(construct_list_original.back()->nodes(), construct_list_original.at(i)->get_terms().at(1), construct_list_original.at(i)->end_position(), construct::is_match
                                                              , &construct_list_modified.at(j)->root_term());
 
         int match = srcdiff_nested::best_match(set, construct_list_modified.at(j));
@@ -618,7 +609,7 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
 
       if(srcdiff_nested::is_nestable(construct_list_original.at(j), construct_list_modified.at(i))) {
 
-        construct::construct_list set = construct::get_descendent_constructs(construct_list_modified.back()->nodes(), construct_list_modified.at(i)->get_terms().at(1), construct_list_modified.at(i)->end_position(), srcdiff_nested::is_match
+        construct::construct_list set = construct::get_descendent_constructs(construct_list_modified.back()->nodes(), construct_list_modified.at(i)->get_terms().at(1), construct_list_modified.at(i)->end_position(), construct::is_match
                                                              , &construct_list_original.at(j)->root_term());
 
         int match = srcdiff_nested::best_match(set, construct_list_original.at(j));
@@ -727,7 +718,7 @@ bool srcdiff_nested::check_nestable_predicate(const construct::construct_list & 
     return true;
 
   construct::construct_list set = construct::get_descendent_constructs(construct_list_outer.back()->nodes(), construct_list_outer.at(pos_outer)->get_terms().at(1),
-                            construct_list_outer.at(pos_outer)->end_position(), is_match,
+                            construct_list_outer.at(pos_outer)->end_position(), construct::is_match,
                             &construct_list_inner.at(pos_inner)->root_term());
 
   int match_pos = best_match(set, construct_list_inner.at(pos_inner));

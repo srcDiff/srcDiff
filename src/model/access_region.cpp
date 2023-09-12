@@ -1,5 +1,5 @@
 /**
- * @file class.hpp
+ * @file access_region.cpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,22 +18,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_CLASS_HPP
-#define INCLUDED_CLASS_HPP
+#include <access_region.hpp>
 
-#include <named_construct.hpp>
+#include <unordered_set>
+#include <string>
 
-class class_t : public named_construct {
+// match rule is in named_construct
 
-public:
-
-    class_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), named_construct(node_list, start, out) {}
-    virtual bool is_tag_convertable(const construct & modified) const;
-    virtual bool is_convertable_impl(const construct & modified) const;
-private:
-
-};
-
-
-#endif
+// convertable rule
+bool access_region::is_tag_convertable(const construct & modified) const {
+    static const std::unordered_set<std::string> access_convertable = { "public", "private", "protected" };
+    return access_convertable.find(modified.root_term_name()) != access_convertable.end();
+}

@@ -20,18 +20,10 @@
 
 #include <elseif.hpp>
 
-std::shared_ptr<const construct> elseif::find_if() const {
+std::shared_ptr<const if_t> elseif::find_if() const {
    if(if_child) return *if_child;
 
-    if_child = std::shared_ptr<const construct>();
-    for(construct_list::const_reverse_iterator ritr = children().rbegin(); ritr != children().rend(); ++ritr) {
-        std::shared_ptr<const construct> child = *ritr;
-        if(child->root_term_name() == "if") {
-            if_child = child;
-            break;
-        }
-    }
-
+    if_child = std::static_pointer_cast<const if_t>(find_child("if"));
     return *if_child; 
 }
 

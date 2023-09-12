@@ -1,5 +1,5 @@
 /**
- * @file class.hpp
+ * @file case.cpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,22 +18,21 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_CLASS_HPP
-#define INCLUDED_CLASS_HPP
+#include <case.hpp>
 
-#include <named_construct.hpp>
+std::shared_ptr<const construct> case_t::expr() const {
+    if(expr_child) return *expr_child;
 
-class class_t : public named_construct {
-
-public:
-
-    class_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), named_construct(node_list, start, out) {}
-    virtual bool is_tag_convertable(const construct & modified) const;
-    virtual bool is_convertable_impl(const construct & modified) const;
-private:
-
-};
+    expr_child = find_child("expr");
+    return *expr_child;
+}
 
 
-#endif
+bool case_t::is_matchable_impl(const construct & modified) const {
+
+    std::shared_ptr<const construct> original_expr = expr();
+    std::shared_ptr<const construct> modified_expr = static_cast<const case_t &>(modified).expr();
+
+    if(!original_expr && !modified_expr) return true;
+    return original_expr && modified_expr && original_expr->to_string() == modified_expr->to_string();
+}

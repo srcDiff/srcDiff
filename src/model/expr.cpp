@@ -1,5 +1,5 @@
 /**
- * @file class.hpp
+ * @file expr.cpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,22 +18,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_CLASS_HPP
-#define INCLUDED_CLASS_HPP
+#include <expr.hpp>
 
-#include <named_construct.hpp>
+bool expr_t::is_matchable_impl(const construct & modified) const {
+	const srcdiff_measure & expr_measure = *measure(modified);
+	if(expr_measure.similarity() > 0 && expr_measure.difference() <= expr_measure.max_length()) return true;
 
-class class_t : public named_construct {
+	if((*root_term()->parent)->name == "argument") return true;
+	if((*modified.root_term()->parent)->name == "argument") return true;
 
-public:
-
-    class_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), named_construct(node_list, start, out) {}
-    virtual bool is_tag_convertable(const construct & modified) const;
-    virtual bool is_convertable_impl(const construct & modified) const;
-private:
-
-};
-
-
-#endif
+	return children().size() == 1 && children()[0]->root_term_name() == "name";
+}

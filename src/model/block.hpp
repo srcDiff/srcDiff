@@ -1,5 +1,5 @@
 /**
- * @file class.hpp
+ * @file block.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,22 +18,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_CLASS_HPP
-#define INCLUDED_CLASS_HPP
+#ifndef INCLUDED_BLOCK_HPP
+#define INCLUDED_BLOCK_HPP
 
-#include <named_construct.hpp>
+#include <construct.hpp>
 
-class class_t : public named_construct {
+class block : public construct {
 
 public:
 
-    class_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), named_construct(node_list, start, out) {}
-    virtual bool is_tag_convertable(const construct & modified) const;
-    virtual bool is_convertable_impl(const construct & modified) const;
+    block(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+        : construct(node_list, start, out), block_content_child() {}
+
+    std::shared_ptr<const construct> block_content() const;
+
+    bool is_syntax_similar_impl(const construct & modified) const;
+    virtual bool is_matchable_impl(const construct & modified) const;
 private:
-
+    mutable std::optional<std::shared_ptr<const construct>> block_content_child;
 };
-
 
 #endif

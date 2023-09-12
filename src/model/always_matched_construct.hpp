@@ -1,5 +1,5 @@
 /**
- * @file convertable_constructs.hpp
+ * @file always_matched_construct.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,34 +18,24 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_CONVERTABLE_CONSTRUCTS_HPP
-#define INCLUDED_CONVERTABLE_CONSTRUCTS_HPP
+#ifndef INCLUDED_ALWAYS_MATCHED_CONSTRUCT_HPP
+#define INCLUDED_ALWAYS_MATCHED_CONSTRUCT_HPP
 
+#include <named_construct.hpp>
 
-struct convertable_list {
+#include <string>
 
-  const char * const name;
-  const char * const * list;
+class always_matched_construct : public construct {
 
+public:
+
+    always_matched_construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+        : construct(node_list, start, out) {}
+    static bool is_always_match(const std::string & construct_name);
+    virtual bool is_matchable_impl(const construct & modified) const;
+
+private:
 };
 
-static const char * const access_interchange[]    = { "public", "protected", "private",   0 };
-static const char * const expr_stmt_interchange[] = { "expr_stmt", "decl_stmt", "return", 0 };
-static const char * const cast_interchange[]      = { "cast", 0 };
-static const convertable_list convertable_table[] = {
-
-  { "public",    access_interchange },
-  { "protected", access_interchange },
-  { "private",   access_interchange },
-
-  {"expr_stmt", expr_stmt_interchange },
-  {"decl_stmt", expr_stmt_interchange },
-  {"return"   , expr_stmt_interchange },
-
-  {"cast", cast_interchange },
-
-  { 0, 0 }
-
-};
 
 #endif

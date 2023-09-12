@@ -25,13 +25,11 @@
 #include <srcdiff_text_measure.hpp>
 #include <srcdiff_syntax_measure.hpp>
 
-#include <convertable_constructs.hpp>
-
 //temp, probably
 #include <srcdiff_match.hpp>
-#include <srcdiff_match_internal.hpp>
 #include <srcdiff_nested.hpp>
 
+#include <algorithm>
 #include <iostream>
 
 bool construct::is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context) {
@@ -40,6 +38,15 @@ bool construct::is_non_white_space(int & node_pos, const srcml_nodes & node_list
 
     // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
     return node->get_type() == srcml_node::srcml_node_type::START || (node->get_type() == srcml_node::srcml_node_type::TEXT && node->get_content() && !node->is_whitespace());
+
+}
+
+bool construct::is_match(int & node_pos, const srcml_nodes & nodes, const void * context) {
+
+  const std::shared_ptr<srcml_node> & node = nodes[node_pos];
+  const std::shared_ptr<srcml_node> & context_node = *(const std::shared_ptr<srcml_node> *)context;
+
+  return (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && *node == *context_node;
 
 }
 
@@ -263,13 +270,43 @@ const std::string & construct::root_term_name() const {
     return term_name(0);
 }
 
-std::shared_ptr<const construct> construct::name() const {
-    return std::shared_ptr<const construct>();
+std::shared_ptr<const construct> construct::find_child(const std::string & name) const {
+    std::shared_ptr<const construct> found_child;
+    for(std::shared_ptr<const construct> child : children()) {
+        if(child->root_term_name() == name) {
+            found_child = child;
+            break;
+        }
+    }
+    return found_child;
 }
 
-std::shared_ptr<const construct> construct::condition() const {
-    return std::shared_ptr<const construct>();
+construct::construct_list construct::find_descendents(std::shared_ptr<srcml_node> element) const {
+    return get_descendent_constructs(node_list, start_position() + 1, end_position(), construct::is_match, &element, out);
 }
+
+std::shared_ptr<const construct> construct::find_best_descendent(std::shared_ptr<const construct> match_construct) const {
+    construct::construct_list descendents = find_descendents(match_construct->term(0));
+
+    std::shared_ptr<const construct> best_descendent;
+    for(std::shared_ptr<const construct> descendent : descendents) {
+
+        size_t max_size = std::max(descendent->terms.size(), match_construct->terms.size());
+        size_t min_size = std::min(descendent->terms.size(), match_construct->terms.size());
+
+        if(max_size > (4 * min_size)) {
+          continue;
+        }
+
+        if(!best_descendent || match_construct->measure(*descendent)->similarity() > match_construct->measure(*best_descendent)->similarity()) {
+            best_descendent = descendent;
+        }
+
+    }
+
+    return best_descendent;
+}
+
 
 const std::shared_ptr<srcdiff_measure> & construct::measure(const construct & modified) const {
     std::unordered_map<int, std::shared_ptr<srcdiff_measure>>::const_iterator citr = measures.find(modified.start_position());
@@ -283,6 +320,33 @@ const std::shared_ptr<srcdiff_measure> & construct::measure(const construct & mo
 }
 
 bool construct::is_similar(const construct & modified) const {
+    return is_text_similar(modified) || is_syntax_similar(modified);
+}
+
+bool construct::is_text_similar(const construct & modified) const {
+
+ const srcdiff_measure & measure = *this->measure(modified);
+
+  int min_size = measure.min_length();
+  int max_size = measure.max_length();
+
+  /** @todo consider making this configurable.  That is, allow user to specify file or have default file to read from */
+  if(measure.difference() != 0 && measure.similarity() == 0) return false;
+
+  if(min_size == measure.similarity() && measure.difference() < 2 * min_size) return true;
+  if(min_size < 30 && measure.difference() > 1.25 * min_size)                 return false;
+  if(min_size >= 30 
+    && measure.original_difference() > 0.25 * measure.original_length()
+    && measure.modified_difference() > 0.25 * measure.modified_length())      return false;
+  if(measure.difference() > max_size)                                         return false;
+
+  if(min_size <= 2)  return 2  * measure.similarity() >=     min_size;
+  if(min_size <= 3)  return 3  * measure.similarity() >= 2 * min_size;
+  if(min_size <= 30) return 10 * measure.similarity() >= 7 * min_size;
+  return 2  * measure.similarity() >=     min_size;
+}
+
+bool construct::is_syntax_similar(const construct & modified) const {
 
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
@@ -305,126 +369,19 @@ bool construct::is_similar(const construct & modified) const {
   int max_child_length = syntax_measure.max_length();
 
   if(min_child_length > 1) { 
-
     if(2 * syntax_measure.similarity() >= min_child_length && syntax_measure.difference() <= min_child_length)
       return true;
-
   }
 
-  /// @todo remove copy
-  construct::construct_list child_construct_list_original = children();
-  construct::construct_list child_construct_list_modified = modified.children();
-
-  // check block of first child of if_stmt (old if behavior)
-  if(original_tag == "if_stmt" && !child_construct_list_original.empty()) {
-
-    std::string tag = child_construct_list_original.at(0)->root_term_name();
-    if(tag == "else" || tag == "if") {
-      construct::construct_list temp = construct::get_descendent_constructs(nodes(), child_construct_list_original.at(0)->get_terms().at(1), child_construct_list_original.back()->end_position());
-      child_construct_list_original = temp;
-    }
-
-  }
-
-  // check block of first child of if_stmt (old if behavior)
-  if(modified_tag == "if_stmt" && !child_construct_list_modified.empty()) {
-
-    std::string tag =  child_construct_list_modified.at(0)->root_term_name();
-    if(tag == "else" || tag == "if") {
-      construct::construct_list temp = construct::get_descendent_constructs(modified.nodes(), child_construct_list_modified.at(0)->get_terms().at(1), child_construct_list_modified.back()->end_position());
-      child_construct_list_modified = temp;
-    }
-
-  }
-
-  if(!child_construct_list_original.empty() && !child_construct_list_modified.empty()
-    && child_construct_list_original.back()->root_term_name() == "block" && child_construct_list_modified.back()->root_term_name() == "block") {
-
-    /// Why a copy?
-    std::shared_ptr<construct> original_set = child_construct_list_original.back();
-    std::shared_ptr<construct> modified_set = child_construct_list_modified.back();
-
-    // block children actually in block_content
-    construct::construct_list original_temp = construct::get_descendent_constructs(nodes(), child_construct_list_original.back()->get_terms().at(1), child_construct_list_original.back()->end_position());
-    for(const std::shared_ptr<construct> & set : original_temp) {
-      if(set->root_term_name() == "block_content") {
-        original_set = set;
-      }
-    }
-
-    // block children actually in block_content
-    construct::construct_list modified_temp = construct::get_descendent_constructs(modified.nodes(), child_construct_list_modified.back()->get_terms().at(1), child_construct_list_modified.back()->end_position());
-    for(const std::shared_ptr<construct> & set : modified_temp) {
-      if(set->root_term_name() == "block_content") {
-        modified_set = set;
-      }
-    }
-
-    srcdiff_syntax_measure syntax_measure(*original_set, *modified_set);
-    syntax_measure.compute();
-
-    int min_child_length = syntax_measure.min_length();
-    int max_child_length = syntax_measure.max_length();
-    if(min_child_length > 1) { 
-      if(2 * syntax_measure.similarity() >= min_child_length && syntax_measure.difference() <= min_child_length)
-        return true;
-
-    }
-
-  }
-
-  const srcdiff_measure & measure = *this->measure(modified);
-
-  int min_size = measure.min_length();
-  int max_size = measure.max_length();
-
-#if DEBUG_SIMILARITY
-  std::cerr << "Similarity: " << measure.similarity() << '\n';
-  std::cerr << "Difference: " << measure.difference() << '\n';
-  std::cerr << "Original Difference: " << measure.original_difference() << '\n';
-  std::cerr << "Modified Difference: " << measure.modified_difference() << '\n';
-  std::cerr << "Min Size: "   << min_size   << '\n';
-  std::cerr << "Max Size: "   << max_size   << '\n';
-#endif
-
-  /** @todo consider making this configurable.  That is, allow user to specify file or have default file to read from */
-  if(measure.difference() != 0 && measure.similarity() == 0) return false;
-
-  if(min_size == measure.similarity() && measure.difference() < 2 * min_size) return true;
-  if(min_size < 30 && measure.difference() > 1.25 * min_size)       return false;
-  if(min_size >= 30 && measure.original_difference() > 0.25 * measure.original_length()
-    && measure.modified_difference() > 0.25 * measure.modified_length()) return false;
-  if(measure.difference() > max_size)                               return false;
-
-  if(min_size <= 2)                return 2  * measure.similarity() >=     min_size;
-  else if(min_size <= 3)           return 3  * measure.similarity() >= 2 * min_size;
-  else if(min_size <= 30)          return 10 * measure.similarity() >= 7 * min_size;
-  else                             return 2  * measure.similarity() >=     min_size;
-
+  if(original_tag != modified_tag) return false;
+  return is_syntax_similar_impl(modified);
 }
 
-bool construct::is_match_similar(const construct & modified) const {
-
-  int original_pos = start_position();
-  int modified_pos = modified.start_position();
-
-  if(*term(0) != *modified.term(0)) return false;
-
-  srcdiff_text_measure complete_measure(*this, modified, false);
-  complete_measure.compute();
-  int min_size = complete_measure.min_length();
-
-  if(min_size == 0) return false;
-
-  return min_size == complete_measure.similarity();
-
+bool construct::is_syntax_similar_impl(const construct & modified) const {
+    return false;
 }
 
 bool construct::can_refine_difference(const construct & modified) const {
-
-  /** if different prefix should not reach here, however, may want to add that here */
-  int original_pos = start_position();
-  int modified_pos = modified.start_position();
 
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
@@ -444,234 +401,51 @@ bool construct::can_refine_difference(const construct & modified) const {
 
 bool construct::is_matchable(const construct & modified) const {
 
-  int original_pos = start_position();
-  int modified_pos = modified.start_position();
-
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
 
   const std::string & original_uri = term(0)->ns->get_uri();
   const std::string & modified_uri = modified.term(0)->ns->get_uri();
 
+  if(original_uri != modified_uri) return false;
   if(original_tag != modified_tag) return false;
-  if(is_matchable_impl(modified)) return true;
-
-  if(original_tag == "type" || original_tag == "then" || original_tag == "condition" || original_tag == "control" || original_tag == "init"
-    || original_tag == "default" || original_tag == "comment"
-    || original_tag == "private" || original_tag == "protected" || original_tag == "public" || original_tag == "signals"
-    || original_tag == "parameter_list" || original_tag == "krparameter_list" || original_tag == "argument_list"
-    || original_tag == "attribute_list" || original_tag == "association_list" || original_tag == "protocol_list"
-    || original_tag == "super_list" || original_tag == "member_init_list" || original_tag == "member_list"
-    || original_tag == "argument"
-    || original_tag == "range"
-    || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier"
-    || original_tag == "number" || original_tag == "file"
-
-    // consider having this used to test similarity instead of block
-    || original_tag == "block_content"
-    )
-    return true;
-
-  const srcdiff_measure & measure = *this->measure(modified);
-
-  if((original_tag == "expr" || original_tag == "expr_stmt") && measure.similarity() > 0 && measure.difference() <= measure.max_length()) return true;
-
-  // may need to refine to if child only single name
-  if(original_tag == "expr" && term(0)->parent && (*term(0)->parent)->name == "argument") return true;
-  if(original_tag == "expr" && modified.term(0)->parent && (*modified.term(0)->parent)->name == "argument") return true;
-  if(original_tag == "expr" && is_single_name_expr(nodes(), original_pos) && is_single_name_expr(modified.nodes(), modified_pos)) return true;
-
-  if(original_tag == "block") {
-
-    bool is_pseudo_original = bool(find_attribute(term(0), "type"));
-    bool is_pseudo_modified = bool(find_attribute(modified.term(0), "type"));
-
-    if(is_pseudo_original == is_pseudo_modified) {
-
-      return true;
-
-    } else if(measure.similarity()) {
-
-      bool is_matchable = false;
-
-      if(is_pseudo_original) {
-
-        size_t block_contents_pos = 1;
-        while(term_name(block_contents_pos) != "block_content") {
-          ++block_contents_pos;
-        }
-        ++block_contents_pos;
-
-        construct::construct_list construct_list_original = construct::get_descendent_constructs(nodes(), get_terms().at(block_contents_pos), end_position());
-        construct::construct_list construct_list_modified = construct::get_descendent_constructs(modified.nodes(), modified.get_terms().at(0), modified.end_position() + 1);
-
-        int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
-        srcdiff_nested::check_nestable(construct_list_original, 0, construct_list_original.size(), construct_list_modified, 0, 1,
-                      start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
-
-        is_matchable = (operation == SES_INSERT);
-
-      } else {
-
-        size_t block_contents_pos = 1;
-        while(modified.term_name(block_contents_pos) != "block_content") {
-          ++block_contents_pos;
-        }
-        ++block_contents_pos;
-
-        construct::construct_list construct_list_original = construct::get_descendent_constructs(nodes(), get_terms().at(0), end_position() + 1);
-        construct::construct_list construct_list_modified = construct::get_descendent_constructs(modified.nodes(), modified.get_terms().at(block_contents_pos), modified.end_position());
-
-        int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
-        srcdiff_nested::check_nestable(construct_list_original, 0, 1, construct_list_modified, 0, construct_list_modified.size(),
-                      start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
-
-        is_matchable = (operation == SES_DELETE);
-
-      }
-
-      return is_matchable;
-
-    }
-
-  }
-
-  if(original_tag == "call") {
-
-    std::vector<std::string> original_names = get_call_name(nodes(), original_pos);
-    std::vector<std::string> modified_names = get_call_name(modified.nodes(), modified_pos);
-
-    if(name_list_similarity(original_names, modified_names)) return true;
-
-  } else if(original_tag == "decl" || original_tag == "decl_stmt" || original_tag == "parameter" || original_tag == "param") {
-
-    std::string original_name = get_decl_name(nodes(), original_pos);
-    std::string modified_name = get_decl_name(modified.nodes(), modified_pos);
-
-    if(original_name == modified_name && original_name != "") return true;
-
-  } else if(original_tag == "case") { 
-
-    std::string original_expr = get_case_expr(nodes(), original_pos);
-    std::string modified_expr = get_case_expr(modified.nodes(), modified_pos);
-
-    if(original_expr == modified_expr) return true;
-
-  }
+  if(is_matchable_impl(modified))  return true;
 
   return is_similar(modified);
+
+}
+
+bool construct::is_matchable_impl(const construct & modified) const {
+    return false;
+}
+
+bool construct::is_match_similar(const construct & modified) const {
+
+  int original_pos = start_position();
+  int modified_pos = modified.start_position();
+
+  if(*term(0) != *modified.term(0)) return false;
+
+  srcdiff_text_measure complete_measure(*this, modified, false);
+  complete_measure.compute();
+  int min_size = complete_measure.min_length();
+
+  if(min_size == 0) return false;
+
+  return min_size == complete_measure.similarity();
 
 }
 
 
 bool construct::is_tag_convertable(const construct & modified) const {
 
-  const std::string & original_tag = root_term_name();
-  const std::string & modified_tag = modified.root_term_name();
-
-  const std::string & original_uri = root_term()->ns->get_uri();
-  const std::string & modified_uri = modified.root_term()->ns->get_uri();
-
-  for(size_t list_pos = 0; convertable_table[list_pos].name; ++list_pos) {
-
-    if(convertable_table[list_pos].name == original_tag) {
-
-      for(size_t pos = 0; convertable_table[list_pos].list[pos]; ++pos) {
-
-        if(convertable_table[list_pos].list[pos] == modified_tag)
-          return true;
-
-      }
-
-    }
-
-  }
-
   return false;
-
-}
-bool construct::is_matchable_impl(const construct & modified) const {
-    return false;
 }
 
 bool construct::is_convertable(const construct & modified) const {
 
-  int original_pos = start_position();
-  int modified_pos = modified.start_position();
-
-  const std::string & original_tag = root_term_name();
-  const std::string & modified_tag = modified.root_term_name();
-
-  const std::string & original_uri = term(0)->ns->get_uri();
-  const std::string & modified_uri = modified.term(0)->ns->get_uri();
-
   if(is_convertable_impl(modified)) return true;
-
-  if(  (original_tag == "expr_stmt" || original_tag == "decl_stmt" || original_tag == "return")
-    && (modified_tag == "expr_stmt" || modified_tag == "decl_stmt" || modified_tag == "return")) {
-
-    std::shared_ptr<construct> expr_original(std::make_shared<construct>(nodes()));
-    std::shared_ptr<construct> expr_modified(std::make_shared<construct>(modified.nodes()));
-    if(original_tag == "decl_stmt" || modified_tag == "decl_stmt") {
-
-      if(original_tag == "decl_stmt") {
-
-        expr_modified = get_first_expr_child(modified.nodes(), modified_pos);
-
-        if(!expr_modified->empty()) {
-
-          construct::construct_list sets = construct::get_descendent_constructs(nodes(), get_terms().at(1), end_position(), srcdiff_nested::is_match,
-                                                                                &expr_modified->term(0));
-          int match = srcdiff_nested::best_match(sets, expr_modified);
-
-          if(match < sets.size()) {
-            expr_original = sets.at(match);
-          }
-
-        }
-
-      } else {
-
-        expr_original = get_first_expr_child(nodes(), original_pos);
-
-        if(!expr_original->empty()) {
-
-          construct::construct_list sets = construct::get_descendent_constructs(modified.nodes(), modified.get_terms().at(1), modified.end_position(), srcdiff_nested::is_match,
-                                    &expr_original->term(0));
-          int match = srcdiff_nested::best_match(sets, expr_original);
-
-          if(match < sets.size()) {
-            expr_modified = sets.at(match);
-          }
-
-        }
-
-      }
-
-    } else {
-
-      expr_original = get_first_expr_child(nodes(), original_pos);
-      expr_modified = get_first_expr_child(modified.nodes(), modified_pos);
-
-    }
-
-    if(expr_original->size() && expr_modified->size()) {
-
-      const srcdiff_measure & expr_measure = *expr_original->measure(*expr_modified);
-
-      bool is_expr_reject = !expr_original->is_similar(*expr_modified);
-
-      int min_size = expr_measure.min_length();
-      int max_size = expr_measure.max_length();
-
-      if(!is_expr_reject && 2 * expr_measure.similarity() > max_size && 2 * expr_measure.difference() < max_size) return true;
-
-    }
-
-  }
-
   return is_similar(modified);
-
 }
 
 bool construct::is_convertable_impl(const construct & modified) const {

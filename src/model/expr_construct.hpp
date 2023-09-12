@@ -1,5 +1,5 @@
 /**
- * @file class.hpp
+ * @file expr_construct.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,21 +18,26 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_CLASS_HPP
-#define INCLUDED_CLASS_HPP
+#ifndef INCLUDED_EXPR_CONSTRUCT_HPP
+#define INCLUDED_EXPR_CONSTRUCT_HPP
 
-#include <named_construct.hpp>
+#include <construct.hpp>
 
-class class_t : public named_construct {
+#include <expr.hpp>
+
+class expr_construct : virtual public construct {
 
 public:
 
-    class_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), named_construct(node_list, start, out) {}
+    expr_construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+        : construct(node_list, start, out), expr_child() {} 
+
+    virtual std::shared_ptr<const expr_t> expr(const expr_construct & that) const;
+
     virtual bool is_tag_convertable(const construct & modified) const;
     virtual bool is_convertable_impl(const construct & modified) const;
-private:
-
+protected:
+    mutable std::optional<std::shared_ptr<const expr_t>> expr_child;
 };
 
 

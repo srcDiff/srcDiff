@@ -1,5 +1,5 @@
 /**
- * @file function.cpp
+ * @file expr.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,6 +18,19 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#include <function.hpp>
+#ifndef INCLUDED_EXPR_HPP
+#define INCLUDED_EXPR_HPP
 
-// match rule is in named_construct
+#include <construct.hpp>
+
+class expr_t : public construct {
+
+public:
+
+    expr_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : construct(node_list, start, out) {}
+    virtual bool is_matchable_impl(const construct & modified) const;
+
+};
+
+
+#endif

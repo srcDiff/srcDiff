@@ -26,20 +26,6 @@ bool if_t::has_real_block() const {
     return bool(block()) && !bool(find_attribute(block()->root_term(), "type"));
 }
 
-std::shared_ptr<const construct> if_t::block() const {
-    if(block_child) return *block_child;
-
-    block_child = std::shared_ptr<const construct>();
-    for(construct_list::const_reverse_iterator ritr = children().rbegin(); ritr != children().rend(); ++ritr) {
-        std::shared_ptr<const construct> child = *ritr;
-        if(child->root_term_name() == "block") {
-            block_child = child;
-            break;
-        }
-    }
-    return *block_child;
-}
-
 bool if_t::is_block_matchable(const construct & modified) const {
     std::shared_ptr<const construct> original_block = block();
     std::shared_ptr<const construct> modified_block = static_cast<const if_t &>(modified).block();
@@ -49,9 +35,10 @@ bool if_t::is_block_matchable(const construct & modified) const {
 
 }
 
+bool if_t::is_matchable_impl(const construct & modified_if) const {
 
+    const if_t & modified = static_cast<const if_t &>(modified_if);
 
-bool if_t::is_matchable_impl(const construct & modified) const {
     std::string original_condition = condition() ? condition()->to_string() : "";
     std::string modified_condition = modified.condition() ? modified.condition()->to_string() : "";
 

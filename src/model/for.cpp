@@ -23,13 +23,7 @@
 std::shared_ptr<const construct> for_t::control() const {
     if(control_child) return *control_child;
 
-    control_child = std::shared_ptr<const construct>();
-    for(std::shared_ptr<const construct> child : children()) {
-        if(child->root_term_name() == "control") {
-            control_child = child;
-            break;
-        }
-    }
+    control_child = find_child("control");
     return *control_child;
 }
 

@@ -23,7 +23,6 @@ static bool check_nestable_predicate(const construct::construct_list & construct
                                      const construct::construct_list & construct_list_inner, int pos_inner, int start_inner, int end_inner);
 public:
 
-  static bool is_match(int & node_pos, const srcml_nodes & nodes, const void * context);
   static int best_match(const construct::construct_list & set, const std::shared_ptr<construct> & match);
   
   srcdiff_nested(const srcdiff_many & diff, int start_original, int end_original, int start_modified, int end_modified, int operation);

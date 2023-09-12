@@ -1,5 +1,5 @@
 /**
- * @file function.hpp
+ * @file expr_stmt.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,17 +18,16 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_FUNCTION_HPP
-#define INCLUDED_FUNCTION_HPP
+#ifndef INCLUDED_EXPR_STMT_HPP
+#define INCLUDED_EXPR_STMT_HPP
 
-#include <named_construct.hpp>
+#include <expr_construct.hpp>
 
-class function : public named_construct {
+class expr_stmt : public expr_construct {
 
 public:
-
-    function(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : named_construct(node_list, start, out) {}
-
+    expr_stmt(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : construct(node_list, start, out), expr_construct(node_list, start, out) {}
+    virtual bool is_matchable_impl(const construct & modified) const;
 };
 
 

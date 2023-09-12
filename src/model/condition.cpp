@@ -33,10 +33,3 @@ std::string condition::to_string(bool skip_whitespacee) const {
 
     return str;
 }
-
-bool condition::is_matchable_impl(const construct & modified) const {
-    std::string original_condition = to_string();
-    std::string modified_condition = modified.to_string();
-
-    return original_condition == modified_condition;
-}

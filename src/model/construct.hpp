@@ -38,6 +38,7 @@ public:
     typedef std::function<bool (int & node_pos, const srcml_nodes & node_list, const void * context)> construct_filter;
 
     static bool is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context);
+    static bool is_match(int & node_pos, const srcml_nodes & nodes, const void * context);
 
     /// @todo make member.  Requires modifiying a lot of methods in other classes.
     // name does not quite match because not a member yet.
@@ -94,19 +95,22 @@ public:
     std::size_t hash() const;
     virtual std::string to_string(bool skip_whitespace = false) const;
 
-    // Differencing Rule Helper Methods
-    virtual std::shared_ptr<const construct> name() const;
-    virtual std::shared_ptr<const construct> condition() const;
+    std::shared_ptr<const construct> find_child(const std::string & name) const;
+    construct_list find_descendents(std::shared_ptr<srcml_node> element) const;
+    std::shared_ptr<const construct> find_best_descendent(std::shared_ptr<const construct> match_construct) const;
 
     // Differencing Rules
     const std::shared_ptr<srcdiff_measure> & measure(const construct & modified) const;
     bool is_similar(const construct & modified) const;
-    bool is_match_similar(const construct & modified) const;
+    bool is_text_similar(const construct & modified) const;
+    bool is_syntax_similar(const construct & modified) const;
+    virtual bool is_syntax_similar_impl(const construct & modified) const;
 
     bool can_refine_difference(const construct & modified) const;
 
     bool is_matchable(const construct & modified) const;
     virtual bool is_matchable_impl(const construct & modified) const;
+    bool is_match_similar(const construct & modified) const;
 
     virtual bool is_tag_convertable(const construct & modified) const;
     bool is_convertable(const construct & modified) const;
