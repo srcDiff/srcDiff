@@ -41,18 +41,18 @@ static srcml_node::srcml_attribute_map merge_attributes(const srcml_node::srcml_
 
   srcml_node::srcml_attribute_map attributes;
 
-  auto citr_original = attributes_original.begin();
-  auto citr_modified = attributes_modified.begin();
+  srcml_node::srcml_attribute_map_citr citr_original = attributes_original.begin();
+  srcml_node::srcml_attribute_map_citr citr_modified = attributes_modified.begin();
 
   while(citr_original != attributes_original.end() && citr_modified != attributes_modified.end()) {
 
     if(citr_original->first == citr_modified->first) {
 
-      if(citr_original->second == citr_modified->second) {
+      if(citr_original->second.get_value() == citr_modified->second.get_value()) {
         attributes.emplace(citr_original->first, citr_original->second);
       }
       else {
-        attributes.emplace(citr_original->first, citr_original->second.get_value().value() + std::string("|") + citr_modified->second.get_value().value());
+        attributes.emplace(citr_original->first, *citr_original->second.get_value() + std::string("|") + *citr_modified->second.get_value());
       }
 
       ++citr_original;  
@@ -70,13 +70,13 @@ static srcml_node::srcml_attribute_map merge_attributes(const srcml_node::srcml_
 
       if(!is_end && citr_original->second.get_name() == name) {
 
-        attributes.emplace(citr_modified->second.get_name(), std::string("|") + citr_modified->second.get_value().value());
+        attributes.emplace(citr_modified->second.get_name(), std::string("|") + *citr_modified->second.get_value());
 
         ++citr_modified;
 
       } else {
 
-        attributes.emplace(citr_original->second.get_name(), citr_original->second.get_value().value()  + std::string("|"));
+        attributes.emplace(citr_original->second.get_name(), *citr_original->second.get_value() + std::string("|"));
 
         ++citr_original;
 
@@ -88,7 +88,7 @@ static srcml_node::srcml_attribute_map merge_attributes(const srcml_node::srcml_
 
   while(citr_original != attributes_original.end()) {
 
-      attributes.emplace(citr_original->first, citr_original->second.get_value().value() + std::string("|"));
+      attributes.emplace(citr_original->first, *citr_original->second.get_value() + std::string("|"));
 
       ++citr_original;
 
@@ -96,7 +96,7 @@ static srcml_node::srcml_attribute_map merge_attributes(const srcml_node::srcml_
 
   while(citr_modified != attributes_modified.end()) {
 
-      attributes.emplace(citr_modified->first, std::string("|") + citr_modified->second.get_value().value());
+      attributes.emplace(citr_modified->first, std::string("|") + *citr_modified->second.get_value());
 
       ++citr_modified;
 

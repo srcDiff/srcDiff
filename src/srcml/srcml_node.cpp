@@ -232,7 +232,7 @@ std::string * srcml_node::get_attribute_value(const std::string & attribute) {
 }
 
 bool srcml_node::operator==(const srcml_node & node) const {
-  return type == node.type && name == node.name && content == node.content;
+  return type == node.type && name == node.name && content == node.content && attributes == node.attributes;
 }
 
 bool srcml_node::operator!=(const srcml_node & node) const {
