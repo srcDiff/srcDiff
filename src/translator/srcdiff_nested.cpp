@@ -114,7 +114,7 @@ int is_block_type(const std::shared_ptr<construct> & structure) {
   if(structure->root_term()->get_type() != srcml_node::srcml_node_type::START)
     return -1;
 
-  if(structure->root_term()->ns->get_uri() != SRCML_SRC_NAMESPACE_HREF)
+  if(structure->root_term()->get_namespace()->get_uri() != SRCML_SRC_NAMESPACE_HREF)
     return -1;
 
   for(int i = 0; nesting[i].type; ++i)
@@ -144,7 +144,7 @@ bool is_nest_type(const std::shared_ptr<construct> & structure,
   if(structure->root_term()->get_type() != srcml_node::srcml_node_type::START)
     return false;
 
-    if(structure->root_term()->ns->get_uri() != SRCML_SRC_NAMESPACE_HREF)
+    if(structure->root_term()->get_namespace()->get_uri() != SRCML_SRC_NAMESPACE_HREF)
     return true;
 
   for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i) {
@@ -203,7 +203,7 @@ bool is_nestable_internal(const std::shared_ptr<construct> & structure_one,
 
   /** Only can nest a block into another block if it's parent is a block */
   bool is_block = structure_one->root_term_name() == "block" && structure_two->root_term_name() == "block";
-  bool parent_is_block = structure_one->root_term()->parent && (*structure_one->root_term()->parent)->name == "block";
+  bool parent_is_block = structure_one->root_term()->get_parent() && (*structure_one->root_term()->get_parent())->get_name() == "block";
   if(is_block && !parent_is_block) return false;
 
   if(is_nest_type(structure_one, structure_two, block)) {
@@ -291,7 +291,7 @@ bool has_compound_inner(const std::shared_ptr<construct> & node_set_outer) {
 
   for(unsigned int i = 1; i < node_set_outer->size(); ++i) {
     if(node_set_outer->term(i)->get_type() == srcml_node::srcml_node_type::START
-      && node_set_outer->term(i)->name == "name" && !node_set_outer->term(i)->is_simple())
+      && node_set_outer->term(i)->get_name() == "name" && !node_set_outer->term(i)->is_simple())
       return true;
   }
 
@@ -385,18 +385,18 @@ bool srcdiff_nested::is_better_nested(const construct::construct_list & construc
 
 static bool is_decl_stmt_from_expr(const srcml_nodes & nodes, int pos) {
 
-  if((*nodes.at(pos)->parent)->name == "init") {
+  if((*nodes.at(pos)->get_parent())->get_name() == "init") {
 
-    return bool((*nodes.at(pos)->parent)->parent) && bool((*(*nodes.at(pos)->parent)->parent)->parent)
-            && (*(*(*nodes.at(pos)->parent)->parent)->parent)->name == "decl_stmt";
+    return bool((*nodes.at(pos)->get_parent())->get_parent()) && bool((*(*nodes.at(pos)->get_parent())->get_parent())->get_parent())
+            && (*(*(*nodes.at(pos)->get_parent())->get_parent())->get_parent())->get_name() == "decl_stmt";
 
   }
 
-  if((*nodes.at(pos)->parent)->name == "argument") {
+  if((*nodes.at(pos)->get_parent())->get_name() == "argument") {
 
-    return bool((*nodes.at(pos)->parent)->parent) && bool((*(*nodes.at(pos)->parent)->parent)->parent)
-            && bool((*(*(*nodes.at(pos)->parent)->parent)->parent)->parent)
-            && (*(*(*(*nodes.at(pos)->parent)->parent)->parent)->parent)->name == "decl_stmt";
+    return bool((*nodes.at(pos)->get_parent())->get_parent()) && bool((*(*nodes.at(pos)->get_parent())->get_parent())->get_parent())
+            && bool((*(*(*nodes.at(pos)->get_parent())->get_parent())->get_parent())->get_parent())
+            && (*(*(*(*nodes.at(pos)->get_parent())->get_parent())->get_parent())->get_parent())->get_name() == "decl_stmt";
 
   }
 
@@ -415,17 +415,17 @@ bool check_nest_name(const std::shared_ptr<construct> & set_original,
   if(set_original->root_term_name() == "text") return false;
   if(set_modified->root_term_name() == "text") return false;
 
-  bool is_call_name_original = parent_original && (*parent_original)->name == "call";
-  bool is_expr_name_original = parent_original && (*parent_original)->name == "expr";
+  bool is_call_name_original = parent_original && (*parent_original)->get_name() == "call";
+  bool is_expr_name_original = parent_original && (*parent_original)->get_name() == "expr";
   // java does not have an expr in generics
-  bool is_argument_name_original = parent_original && (*parent_original)->name == "argument";
-  bool is_type_name_original = parent_original && (*parent_original)->name == "type";
+  bool is_argument_name_original = parent_original && (*parent_original)->get_name() == "argument";
+  bool is_type_name_original = parent_original && (*parent_original)->get_name() == "type";
 
-  bool is_call_name_modified = parent_modified && (*parent_modified)->name == "call";
-  bool is_expr_name_modified = parent_modified && (*parent_modified)->name == "expr";
+  bool is_call_name_modified = parent_modified && (*parent_modified)->get_name() == "call";
+  bool is_expr_name_modified = parent_modified && (*parent_modified)->get_name() == "expr";
   // java does not have an expr in generics
-  bool is_argument_name_modified = parent_modified && (*parent_modified)->name == "argument";
-  bool is_type_name_modified = parent_modified && (*parent_modified)->name == "type";
+  bool is_argument_name_modified = parent_modified && (*parent_modified)->get_name() == "argument";
+  bool is_type_name_modified = parent_modified && (*parent_modified)->get_name() == "type";
 
   if(is_type_name_original && (is_expr_name_modified || is_argument_name_modified))
     return true;
@@ -435,7 +435,7 @@ bool check_nest_name(const std::shared_ptr<construct> & set_original,
   if(is_call_name_original && is_expr_name_modified) {
 
     int simple_name_pos = set_original->start_position();
-    if(set_original->nodes().at(simple_name_pos)->name == "name") {
+    if(set_original->nodes().at(simple_name_pos)->get_name() == "name") {
 
       std::shared_ptr<construct> inner_set = std::make_shared<construct>(set_original->nodes(), simple_name_pos);
       srcdiff_text_measure measure(*inner_set, *set_modified);
@@ -449,7 +449,7 @@ bool check_nest_name(const std::shared_ptr<construct> & set_original,
   if(is_call_name_modified && is_expr_name_original) {
 
     int simple_name_pos = set_modified->start_position();
-    if(set_modified->nodes().at(simple_name_pos)->name == "name") {
+    if(set_modified->nodes().at(simple_name_pos)->get_name() == "name") {
 
       std::shared_ptr<construct> inner_set = std::make_shared<construct>(set_modified->nodes(), simple_name_pos);
       srcdiff_text_measure measure(*set_original, *inner_set);
@@ -474,8 +474,8 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
   const std::string & original_tag = set_original->root_term_name();
   const std::string & modified_tag = set_modified->root_term_name();
 
-  const std::string & original_uri = set_original->root_term()->ns->get_uri();
-  const std::string & modified_uri = set_modified->root_term()->ns->get_uri();
+  const std::string & original_uri = set_original->root_term()->get_namespace()->get_uri();
+  const std::string & modified_uri = set_modified->root_term()->get_namespace()->get_uri();
 
   if(original_tag != modified_tag && !set_original->is_tag_convertable(*set_modified)) return true;
 
@@ -484,8 +484,8 @@ bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
 
   if(original_tag == "name"
     && set_original->root_term()->is_simple() != set_modified->root_term()->is_simple()
-    && !check_nest_name(set_original, set_original->root_term()->parent,
-                       set_modified, set_modified->root_term()->parent))
+    && !check_nest_name(set_original, set_original->root_term()->get_parent(),
+                       set_modified, set_modified->root_term()->get_parent()))
     return true;
 
   if(original_tag == "then" || original_tag == "block" || original_tag == "block_content"
@@ -517,11 +517,11 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
   int is_name_nest_original = 0;
   for(int i = start_original; i < end_original; ++i) {
 
-    if(construct_list_original.at(i)->root_term()->move) continue;
+    if(construct_list_original.at(i)->root_term()->get_move()) continue;
 
     for(int j = start_modified; j < end_modified; ++j) {
 
-      if(construct_list_modified.at(j)->root_term()->move) continue;
+      if(construct_list_modified.at(j)->root_term()->get_move()) continue;
 
       if(srcdiff_nested::is_nestable(construct_list_modified.at(j), construct_list_original.at(i))) {
 
@@ -542,29 +542,29 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
         }
 
         if(construct_list_modified.at(j)->root_term_name() == "name"
-          && construct_list_modified.at(j)->root_term()->parent && (*construct_list_modified.at(j)->root_term()->parent)->name == "expr"
-          && construct_list_original.at(i)->root_term()->parent && (*construct_list_original.at(i)->root_term()->parent)->name == "expr"
+          && construct_list_modified.at(j)->root_term()->get_parent() && (*construct_list_modified.at(j)->root_term()->get_parent())->get_name() == "expr"
+          && construct_list_original.at(i)->root_term()->get_parent() && (*construct_list_original.at(i)->root_term()->get_parent())->get_name() == "expr"
           && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1)) {
           ++is_name_nest_original;
         }
 
         if(construct_list_modified.at(j)->root_term_name() == "name") {
 
-            if(!construct_list_modified.at(j)->root_term()->parent || !set.at(match)->root_term()->parent) {
+            if(!construct_list_modified.at(j)->root_term()->get_parent() || !set.at(match)->root_term()->get_parent()) {
               continue;
             }
 
-            std::optional<std::shared_ptr<srcml_node>> parent_original = set.at(match)->root_term()->parent;
-            while((*parent_original)->name == "name") {
-              parent_original = (*parent_original)->parent;
+            std::optional<std::shared_ptr<srcml_node>> parent_original = set.at(match)->root_term()->get_parent();
+            while((*parent_original)->get_name() == "name") {
+              parent_original = (*parent_original)->get_parent();
             }
 
-            std::optional<std::shared_ptr<srcml_node>> parent_modified = construct_list_modified.at(j)->root_term()->parent;
-            while((*parent_modified)->name == "name") {
-              parent_modified = (*parent_modified)->parent;
+            std::optional<std::shared_ptr<srcml_node>> parent_modified = construct_list_modified.at(j)->root_term()->get_parent();
+            while((*parent_modified)->get_name() == "name") {
+              parent_modified = (*parent_modified)->get_parent();
             }
 
-            if((*parent_original)->name != (*parent_modified)->name
+            if((*parent_original)->get_name() != (*parent_modified)->get_name()
               && !check_nest_name(set.at(match), parent_original,
                                   construct_list_modified.at(j), parent_modified)) {
               continue;
@@ -601,11 +601,11 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
   int is_name_nest_modified = 0;
   for(int i = start_modified; i < end_modified; ++i) {
 
-    if(construct_list_modified.at(i)->root_term()->move) continue;
+    if(construct_list_modified.at(i)->root_term()->get_move()) continue;
 
     for(int j = start_original; j < end_original; ++j) {
 
-      if(construct_list_original.at(j)->root_term()->move) continue;
+      if(construct_list_original.at(j)->root_term()->get_move()) continue;
 
       if(srcdiff_nested::is_nestable(construct_list_original.at(j), construct_list_modified.at(i))) {
 
@@ -626,29 +626,29 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
         }
 
         if(construct_list_original.at(j)->root_term_name() == "name"
-          && construct_list_original.at(j)->root_term()->parent && (*construct_list_original.at(j)->root_term()->parent)->name == "expr"
-          && construct_list_modified.at(i)->root_term()->parent && (*construct_list_modified.at(i)->root_term()->parent)->name == "expr"
+          && construct_list_original.at(j)->root_term()->get_parent() && (*construct_list_original.at(j)->root_term()->get_parent())->get_name() == "expr"
+          && construct_list_modified.at(i)->root_term()->get_parent() && (*construct_list_modified.at(i)->root_term()->get_parent())->get_name() == "expr"
           && ((end_original - start_original) > 1 || (end_modified - start_modified) > 1)) {
             ++is_name_nest_modified;
           }
 
         if(construct_list_original.at(j)->root_term_name() == "name") {
 
-            if(!construct_list_original.at(j)->root_term()->parent || !set.at(match)->root_term()->parent) {
+            if(!construct_list_original.at(j)->root_term()->get_parent() || !set.at(match)->root_term()->get_parent()) {
               continue;
             }
 
-            std::optional<std::shared_ptr<srcml_node>> parent_original = construct_list_original.at(j)->root_term()->parent;
-            while(parent_original && (*parent_original)->name == "name") {
-              parent_original = (*parent_original)->parent;
+            std::optional<std::shared_ptr<srcml_node>> parent_original = construct_list_original.at(j)->root_term()->get_parent();
+            while(parent_original && (*parent_original)->get_name() == "name") {
+              parent_original = (*parent_original)->get_parent();
             }
 
-            std::optional<std::shared_ptr<srcml_node>> parent_modified = set.at(match)->root_term()->parent;
-            while(parent_modified && (*parent_modified)->name == "name") {
-              parent_modified = (*parent_modified)->parent;
+            std::optional<std::shared_ptr<srcml_node>> parent_modified = set.at(match)->root_term()->get_parent();
+            while(parent_modified && (*parent_modified)->get_name() == "name") {
+              parent_modified = (*parent_modified)->get_parent();
             }
 
-            if((*parent_original)->name != (*parent_modified)->name
+            if((*parent_original)->get_name() != (*parent_modified)->get_name()
               && !check_nest_name(construct_list_original.at(j), parent_original,
                                   set.at(match), parent_modified)) {
               continue;
@@ -712,7 +712,7 @@ bool srcdiff_nested::check_nestable_predicate(const construct::construct_list & 
                                               const construct::construct_list & construct_list_inner,
                                               int pos_inner, int start_inner, int end_inner) {
 
-  if(construct_list_inner.at(pos_inner)->root_term()->move) return true;
+  if(construct_list_inner.at(pos_inner)->root_term()->get_move()) return true;
 
   if(!is_nestable(construct_list_inner.at(pos_inner), construct_list_outer.at(pos_outer)))
     return true;
@@ -743,27 +743,27 @@ bool srcdiff_nested::check_nestable_predicate(const construct::construct_list & 
     return true;
 
   if(construct_list_inner.at(pos_inner)->root_term_name() == "name"
-    && construct_list_inner.at(pos_inner)->root_term()->parent && (*construct_list_inner.at(pos_inner)->root_term()->parent)->name == "expr"
-    && construct_list_outer.at(pos_outer)->root_term()->parent && (*construct_list_outer.at(pos_outer)->root_term()->parent)->name == "expr"
+    && construct_list_inner.at(pos_inner)->root_term()->get_parent() && (*construct_list_inner.at(pos_inner)->root_term()->get_parent())->get_name() == "expr"
+    && construct_list_outer.at(pos_outer)->root_term()->get_parent() && (*construct_list_outer.at(pos_outer)->root_term()->get_parent())->get_name() == "expr"
     && ((end_outer - start_outer) > 1 || (end_inner - start_inner) > 1))
     return true;
 
   if(construct_list_inner.at(pos_inner)->root_term_name() == "name") {
 
-      if(!construct_list_inner.at(pos_inner)->root_term()->parent || !match->root_term()->parent)
+      if(!construct_list_inner.at(pos_inner)->root_term()->get_parent() || !match->root_term()->get_parent())
         return true;
 
-      std::optional<std::shared_ptr<srcml_node>> parent_outer = match->root_term()->parent;
-      while((*parent_outer)->name == "name") {
-        parent_outer = (*parent_outer)->parent;
+      std::optional<std::shared_ptr<srcml_node>> parent_outer = match->root_term()->get_parent();
+      while((*parent_outer)->get_name() == "name") {
+        parent_outer = (*parent_outer)->get_parent();
       }
 
-      std::optional<std::shared_ptr<srcml_node>> parent_inner = construct_list_inner.at(pos_inner)->root_term()->parent;
-      while((*parent_inner)->name == "name") {
-        parent_inner = (*parent_inner)->parent;
+      std::optional<std::shared_ptr<srcml_node>> parent_inner = construct_list_inner.at(pos_inner)->root_term()->get_parent();
+      while((*parent_inner)->get_name() == "name") {
+        parent_inner = (*parent_inner)->get_parent();
       }
 
-      if((*parent_outer)->name != (*parent_inner)->name
+      if((*parent_outer)->get_name() != (*parent_inner)->get_name()
         && !check_nest_name(match, parent_outer,
                             construct_list_inner.at(pos_inner), parent_inner))
         return true;
@@ -810,7 +810,7 @@ void srcdiff_nested::check_nestable(const construct::construct_list & construct_
 
   for(int i = start_original; i < end_original; ++i) {
 
-    if(construct_list_original.at(i)->root_term()->move) continue;
+    if(construct_list_original.at(i)->root_term()->get_move()) continue;
 
     for(int j = start_modified; j < end_modified; ++j) {
 
@@ -844,7 +844,7 @@ void srcdiff_nested::check_nestable(const construct::construct_list & construct_
 
   for(int i = start_modified; i < end_modified; ++i) {
 
-    if(construct_list_modified.at(i)->root_term()->move) continue;
+    if(construct_list_modified.at(i)->root_term()->get_move()) continue;
 
     for(int j = start_original; j < end_original; ++j) {
 

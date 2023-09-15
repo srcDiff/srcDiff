@@ -46,7 +46,7 @@ bool construct::is_match(int & node_pos, const srcml_nodes & nodes, const void *
   const std::shared_ptr<srcml_node> & node = nodes[node_pos];
   const std::shared_ptr<srcml_node> & context_node = *(const std::shared_ptr<srcml_node> *)context;
 
-  return (xmlReaderTypes)node->type == XML_READER_TYPE_ELEMENT && *node == *context_node;
+  return (xmlReaderTypes)node->get_type() == XML_READER_TYPE_ELEMENT && *node == *context_node;
 
 }
 
@@ -144,12 +144,12 @@ bool construct::operator==(const construct & that) const {
 
         std::string text1 = "";
         for(; i < size() && term(i)->is_text(); ++i) {
-          text1 += term(i)->content ? *term(i)->content : "";
+          text1 += term(i)->get_content() ? *term(i)->get_content() : "";
         }
 
         std::string text2 = "";
         for(; j < that.size() && that.term(j)->is_text(); ++j) {
-          text2 += that.term(j)->content ? *that.term(j)->content : "";
+          text2 += that.term(j)->get_content() ? *that.term(j)->get_content() : "";
         }
 
         if(text1 != text2) return false;
@@ -253,8 +253,8 @@ std::string construct::to_string(bool skip_whitespace) const {
     for(int pos = start_position(); pos < end_position(); ++pos) {
         std::shared_ptr<const srcml_node> node = node_list[pos];
         if(skip_whitespace && node->is_whitespace()) continue;
-        if(!node->content) continue;
-        str += *node->content;
+        if(!node->get_content()) continue;
+        str += *node->get_content();
     }
     return str;
 }
@@ -264,7 +264,7 @@ const std::shared_ptr<srcml_node> & construct::root_term() const {
 }
 
 const std::string & construct::term_name(std::size_t pos) const {
-    return term(pos)->name;
+    return term(pos)->get_name();
 }
 const std::string & construct::root_term_name() const {
     return term_name(0);
@@ -386,8 +386,8 @@ bool construct::can_refine_difference(const construct & modified) const {
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
 
-  const std::string & original_uri = term(0)->ns->get_uri();
-  const std::string & modified_uri = modified.term(0)->ns->get_uri();
+  const std::string & original_uri = term(0)->get_namespace()->get_uri();
+  const std::string & modified_uri = modified.term(0)->get_namespace()->get_uri();
 
   if(original_tag == modified_tag && original_uri == modified_uri) {
     return is_matchable(modified);
@@ -404,8 +404,8 @@ bool construct::is_matchable(const construct & modified) const {
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
 
-  const std::string & original_uri = term(0)->ns->get_uri();
-  const std::string & modified_uri = modified.term(0)->ns->get_uri();
+  const std::string & original_uri = term(0)->get_namespace()->get_uri();
+  const std::string & modified_uri = modified.term(0)->get_namespace()->get_uri();
 
   if(original_uri != modified_uri) return false;
   if(original_tag != modified_tag) return false;

@@ -25,7 +25,7 @@
 #define INCLUDED_SRCML_NODE_HPP
 
 #include <srcml.h>
-
+#include <srcml_namespace.hpp>
 #include <string>
 #include <list>
 #include <map>
@@ -42,39 +42,7 @@ class srcml_node {
 
 public:
 
-  /*
-  @todo: extract srcml_namespace and srcml_attribute into separate files
-  introduce private members and accessors
-  */
-  class srcml_namespace {
-
-
-
-  public:
-
-    std::string uri;
-    std::optional<std::string> prefix;
-
-    srcml_namespace(const std::string & uri = std::string(),
-                    const std::optional<std::string> & prefix = std::optional<std::string>());
-    srcml_namespace(const srcml_namespace & ns);
-    srcml_namespace(xmlNsPtr ns);
-
-    std::string get_uri() const;
-    std::optional<std::string> get_prefix() const;
-
-    void set_uri(std::string input);
-    void set_prefix(std::optional<std::string> input);
-
-  };
-
-  static std::shared_ptr<srcml_namespace> SRC_NAMESPACE;
-  static std::shared_ptr<srcml_namespace> CPP_NAMESPACE;
-  static std::shared_ptr<srcml_namespace> DIFF_NAMESPACE;
-  static std::unordered_map<std::string, std::shared_ptr<srcml_namespace>> namespaces;
-  
   class srcml_attribute {
-
 
   public:
     
@@ -108,27 +76,6 @@ public:
   typedef std::map<std::string, srcml_attribute, std::greater<std::string>>::const_iterator srcml_attribute_map_citr;
   typedef std::map<std::string, srcml_attribute, std::greater<std::string>>::iterator srcml_attribute_map_itr;
 
-  srcml_node_type type;
-  std::string name;
-  std::shared_ptr<srcml_namespace> ns;
-  std::optional<std::string> content;
-  std::list<std::shared_ptr<srcml_namespace>> ns_definition;
-  std::optional<std::shared_ptr<srcml_node>> parent;
-  srcml_attribute_map attributes;
-
-  bool temporary;
-  bool empty;
-  bool simple;
-
-  int move;
-  std::any user_data;
-
-  unsigned short extra;
-
-  static std::shared_ptr<srcml_namespace> get_namespace(xmlNsPtr ns);
-
-public:
-
   srcml_node();
   srcml_node(const xmlNode & node, xmlElementType xml_type);
   srcml_node(const std::string & text);
@@ -140,6 +87,7 @@ public:
   void clear_attributes();
 
   void set_attributes(const srcml_attribute_map & input);
+  void emplace_attribute(const std::string & type, const srcml_attribute & attr);
   void set_type(srcml_node_type input);
   void set_empty(bool input);
   void set_temporary(bool input);
@@ -151,9 +99,11 @@ public:
 
   const srcml_attribute_map & get_attributes() const;
   srcml_node_type get_type() const;
-  std::string get_name() const;
-  std::optional<std::string> get_content() const;
+  const std::string & get_name() const;
+  const std::optional<std::string> & get_content() const;
   int get_move() const;
+  std::optional<std::shared_ptr<srcml_node>> get_parent() const;
+  std::shared_ptr<srcml_namespace> get_namespace() const;
 
   std::string full_name() const;
   const srcml_node::srcml_attribute * get_attribute(const std::string & attribute) const;
@@ -176,6 +126,25 @@ public:
 
 
   friend std::ostream & operator<<(std::ostream & out, const srcml_node & node);
+
+private: 
+
+  srcml_node_type type;
+  std::string name;
+  std::shared_ptr<srcml_namespace> ns;
+  std::optional<std::string> content;
+  std::list<std::shared_ptr<srcml_namespace>> ns_definition;
+  std::optional<std::shared_ptr<srcml_node>> parent;
+  srcml_attribute_map attributes;
+
+  bool temporary;
+  bool empty;
+  bool simple;
+
+  int move;
+  std::any user_data;
+
+  unsigned short extra;
 
 };
 

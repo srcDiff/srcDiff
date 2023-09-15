@@ -135,12 +135,12 @@ void srcdiff_common::markup_common() {
       // collect all adjacent text nodes character arrays and input difference
       std::string text_original = "";
       for(; i < oend && rbuf_original->nodes.at(i)->is_text(); ++i) {
-        text_original += rbuf_original->nodes.at(i)->content ? *rbuf_original->nodes.at(i)->content : "";
+        text_original += rbuf_original->nodes.at(i)->get_content() ? *rbuf_original->nodes.at(i)->get_content() : "";
       }
 
       std::string text_modified = "";
       for(; j < nend && rbuf_modified->nodes.at(j)->is_text(); ++j) {
-        text_modified += rbuf_modified->nodes.at(j)->content ? *rbuf_modified->nodes.at(j)->content : "";
+        text_modified += rbuf_modified->nodes.at(j)->get_content() ? *rbuf_modified->nodes.at(j)->get_content() : "";
       }
 
       --i;
@@ -279,8 +279,8 @@ void srcdiff_common::markup_common() {
   rbuf_original->last_output = oend > (signed)rbuf_original->last_output ? oend : rbuf_original->last_output;
   rbuf_modified->last_output = nend > (signed)rbuf_modified->last_output ? nend : rbuf_modified->last_output;
 
-  diff_original_start->attributes.clear();
-  diff_modified_start->attributes.clear();
+  diff_original_start->clear_attributes();
+  diff_modified_start->clear_attributes();
 
 }
 

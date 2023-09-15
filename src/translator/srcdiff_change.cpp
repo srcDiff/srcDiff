@@ -13,7 +13,7 @@
 #include <string>
 
 const std::string replace("replace");
-const srcml_node::srcml_attribute diff_type(DIFF_TYPE, srcml_node::SRC_NAMESPACE, replace);
+const srcml_node::srcml_attribute diff_type(DIFF_TYPE, SRC_NAMESPACE, replace);
 
 srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_original, unsigned int end_modified)
 : srcdiff_output(out), end_original(end_original), end_modified(end_modified) {}
@@ -86,10 +86,10 @@ void srcdiff_change::output() {
 
       }
 
-      if(rbuf_original->nodes.at(i)->move) {
+      if(rbuf_original->nodes.at(i)->get_move()) {
 
         if(is_replace) {
-          diff_original_start->attributes.clear();
+          diff_original_start->clear_attributes();
         
         }
 
@@ -155,10 +155,10 @@ void srcdiff_change::output() {
 
       }
 
-      if(rbuf_modified->nodes.at(i)->move) {
+      if(rbuf_modified->nodes.at(i)->get_move()) {
 
         if(is_replace) {
-          diff_modified_start->attributes.clear();
+          diff_modified_start->clear_attributes();
         
         }
 
@@ -214,7 +214,7 @@ void srcdiff_change::output() {
 
   }
 
-  diff_original_start->attributes.clear();
-  diff_modified_start->attributes.clear();
+  diff_original_start->clear_attributes();
+  diff_modified_start->clear_attributes();
 
 }

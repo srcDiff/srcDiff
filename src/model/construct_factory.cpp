@@ -160,14 +160,14 @@ std::shared_ptr<construct> create_construct(const srcml_nodes & node_list, int &
 
   std::shared_ptr<const srcml_node> node = node_list[start];
   std::string tag_name;
-  if(node->ns->get_prefix()) {
-    tag_name = *node->ns->get_prefix() + ":";
+  if(node->get_namespace()->get_prefix()) {
+    tag_name = *node->get_namespace()->get_prefix() + ":";
   }
-  tag_name += node->name;
+  tag_name += node->get_name();
 
   if(tag_name == "if" && bool(find_attribute(node, "type"))) {
     tag_name = "elseif";
-  } else if(always_matched_construct::is_always_match(node->name)) {
+  } else if(always_matched_construct::is_always_match(node->get_name())) {
     tag_name = "always_match";
   }
 

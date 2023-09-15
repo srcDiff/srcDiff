@@ -1,5 +1,5 @@
 #include <srcdiff_move.hpp>
-
+#include <srcml_namespace.hpp>
 #include <srcdiff_diff.hpp>
 #include <srcdiff_measure.hpp>
 #include <srcdiff_whitespace.hpp>
@@ -20,7 +20,7 @@ srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, 
 
 bool srcdiff_move::is_move(const std::shared_ptr<construct> & set) {
 
-  return set->term(0)->move;
+  return set->term(0)->get_move();
 
 }
 
@@ -89,10 +89,10 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
       ++move_id;
       std::shared_ptr<srcml_node> start_node_one = std::make_shared<srcml_node>(*set->term(0));
-      start_node_one->move = move_id;
+      start_node_one->set_move(move_id);
 
       std::shared_ptr<srcml_node> start_node_two = std::make_shared<srcml_node>(*(*pos)->term(0));
-      start_node_two->move = move_id;
+      start_node_two->set_move(move_id);
 
       // breaks const
       // Not sure if I can use terms here. Also, probably should fix the break const thing
@@ -102,10 +102,10 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
       if(!start_node_one->is_empty()) {
 
         std::shared_ptr<srcml_node> end_node_one = std::make_shared<srcml_node>(*set->last_term());
-        end_node_one->move = move_id;
+        end_node_one->set_move(move_id);
 
         std::shared_ptr<srcml_node> end_node_two = std::make_shared<srcml_node>(*(*pos)->last_term());
-        end_node_two->move = move_id;
+        end_node_two->set_move(move_id);
 
         ((srcml_nodes &)set->nodes()).at(set->end_position()) = end_node_one;
         ((srcml_nodes &)(*pos)->nodes()).at((*pos)->end_position()) = end_node_two;
@@ -137,7 +137,7 @@ void srcdiff_move::output() {
 
   int id = rbuf->nodes.at(position)->get_move();
 
-  start_node->attributes.emplace(std::to_string(id), srcml_node::srcml_attribute(move, srcml_node::DIFF_NAMESPACE, std::to_string(id)));
+  start_node->emplace_attribute(std::to_string(id), srcml_node::srcml_attribute(move, DIFF_NAMESPACE, std::to_string(id)));
 
   output_node(start_node, operation, true);
 
@@ -147,7 +147,7 @@ void srcdiff_move::output() {
 
     ++position;
 
-    for(; rbuf->nodes.at(position)->move != id ; ++position) {
+    for(; rbuf->nodes.at(position)->get_move() != id ; ++position) {
 
       if(rbuf->nodes.at(position)->is_whitespace()) {
 
@@ -169,6 +169,6 @@ void srcdiff_move::output() {
 
   output_node(end_node, operation, true);
 
-  start_node->attributes.clear();
+  start_node->clear_attributes();
 
 }

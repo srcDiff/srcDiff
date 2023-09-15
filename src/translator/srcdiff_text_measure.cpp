@@ -46,13 +46,13 @@ void srcdiff_text_measure::collect_text_element(const construct & set, construct
 
   for(unsigned int i = 0; i < length; ++i) {
 
-    if(set.term(i)->name == "operator"
-      || set.term(i)->name == "modifier") {
+    if(set.term(i)->get_name() == "operator"
+      || set.term(i)->get_name() == "modifier") {
 
-      if(set.term(i)->parent && (*set.term(i)->parent)->name != "name") continue;
+      if(set.term(i)->get_parent() && (*set.term(i)->get_parent())->get_name() != "name") continue;
 
       if((set.get_terms().at(i) + 1) < set.nodes().size() && set.nodes().at(set.get_terms().at(i) + 1)->is_text()
-        && (*set.nodes().at(set.get_terms().at(i) + 1)->content == "::")) continue;
+        && (*set.nodes().at(set.get_terms().at(i) + 1)->get_content() == "::")) continue;
 
       while(set.term(i)->get_type() != srcml_node::srcml_node_type::END) {
         ++i;
@@ -62,27 +62,27 @@ void srcdiff_text_measure::collect_text_element(const construct & set, construct
 
     const std::shared_ptr<srcml_node> & node = set.term(i);
 
-    bool is_text = node->is_text() && !node->is_whitespace() && node->content;
-    bool is_operator = node->parent && (*node->parent)->name == "operator";
+    bool is_text = node->is_text() && !node->is_whitespace() && node->get_content();
+    bool is_operator = node->get_parent() && (*node->get_parent())->get_name() == "operator";
 
     if(is_operator && is_text
-        && (*node->content == "."
-          || *node->content == "->"
-          || *node->content == ".*"
-          || *node->content == "->*"))
+        && (*node->get_content() == "."
+          || *node->get_content() == "->"
+          || *node->get_content() == ".*"
+          || *node->get_content() == "->*"))
         continue;
 
     if(is_text 
       && (is_operator
-        ||   (*node->content != "("
-          && *node->content != ")"
-          && *node->content != "{"
-          && *node->content != "}"
-          && *node->content != "["
-          && *node->content != "]"
-          && *node->content != ":"
-          && *node->content != ";"
-          && *node->content != ",")))
+        ||   (*node->get_content() != "("
+          && *node->get_content() != ")"
+          && *node->get_content() != "{"
+          && *node->get_content() != "}"
+          && *node->get_content() != "["
+          && *node->get_content() != "]"
+          && *node->get_content() != ":"
+          && *node->get_content() != ";"
+          && *node->get_content() != ",")))
       set_text.get_terms().push_back(set.get_terms().at(i));
 
   }
@@ -146,7 +146,7 @@ void srcdiff_text_measure::compute() {
      || set_modified.term(0)->get_type() != srcml_node::srcml_node_type::START
      || (*set_original.term(0) != *set_modified.term(0)
         && !set_original.is_tag_convertable(set_modified)
-        && (set_original.term(0)->name != "block" || set_modified.term(0)->name != "block"))) {
+        && (set_original.term(0)->get_name() != "block" || set_modified.term(0)->get_name() != "block"))) {
 
     a_similarity = MAX_INT;
     a_original_difference = MAX_INT;

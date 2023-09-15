@@ -246,11 +246,11 @@ edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
             int original_pos = set_original->start_position();
             int modified_pos = set_modified->start_position();
 
-            const std::string & original_tag = set_original->term(0)->name;
-            const std::string & modified_tag = set_modified->term(0)->name;
+            const std::string & original_tag = set_original->term(0)->get_name();
+            const std::string & modified_tag = set_modified->term(0)->get_name();
 
-            const std::string & original_uri = set_original->term(0)->ns->get_uri();
-            const std::string & modified_uri = set_modified->term(0)->ns->get_uri();
+            const std::string & original_uri = set_original->term(0)->get_namespace()->get_uri();
+            const std::string & modified_uri = set_modified->term(0)->get_namespace()->get_uri();
 
             if(*set_original != *set_modified) {
                 continue;
@@ -310,11 +310,11 @@ std::shared_ptr<srcdiff_text_measure> srcdiff_edit_correction::edit2measure(int 
     int original_pos = set_original->start_position();
     int modified_pos = set_modified->start_position();
 
-    const std::string & original_tag = set_original->term(0)->name;
-    const std::string & modified_tag = set_modified->term(0)->name;
+    const std::string & original_tag = set_original->term(0)->get_name();
+    const std::string & modified_tag = set_modified->term(0)->get_name();
 
-    const std::string & original_uri = set_original->term(0)->ns->get_uri();
-    const std::string & modified_uri = set_modified->term(0)->ns->get_uri();
+    const std::string & original_uri = set_original->term(0)->get_namespace()->get_uri();
+    const std::string & modified_uri = set_modified->term(0)->get_namespace()->get_uri();
 
     if(!(original_tag == modified_tag && original_uri == modified_uri)
         && !set_original->is_tag_convertable(*set_modified))

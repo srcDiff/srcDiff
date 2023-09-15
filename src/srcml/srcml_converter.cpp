@@ -74,8 +74,7 @@ std::shared_ptr<srcml_node> split_text(const char * characters_start,
 
   if(characters_start != characters_end) {
 
-    text->content = std::string();
-    text->content->append((const char *)characters_start, characters_end  - characters_start);
+    text->set_content(std::string().append((const char *)characters_start, characters_end  - characters_start));
 
   }
 
@@ -238,8 +237,8 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
       const char * characters = (const char *)xmlTextReaderConstValue(reader);
 
       bool is_string_literal 
-        = element_stack.back()->name == "literal"
-         && !element_stack.back()->attributes.empty()
+        = element_stack.back()->get_name() == "literal"
+         && !element_stack.back()->get_attributes().empty()
          && *element_stack.back()->get_attribute_value("type") == "string";
 
       // cycle through characters
@@ -268,7 +267,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
             text = split_text(characters_start, characters, element_stack.back());
 
-        } else if(element_stack.back()->name == "comment"
+        } else if(element_stack.back()->get_name() == "comment"
                   && is_comment_separate(*characters)) {
 
           while((*characters) != 0 && is_comment_separate(*characters)) {
@@ -277,7 +276,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
           text = split_text(characters_start, characters, element_stack.back());
 
-        } else if(element_stack.back()->name == "file"
+        } else if(element_stack.back()->get_name() == "file"
                   && is_cpp_file_separate(*characters)) {
 
           while((*characters) != 0 && is_cpp_file_separate(*characters)) {
@@ -359,8 +358,8 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
         } else {
 
-          bool in_comment = element_stack.back()->name == "comment";
-          bool in_cpp_file = element_stack.back()->name == "file";
+          bool in_comment = element_stack.back()->get_name() == "comment";
+          bool in_cpp_file = element_stack.back()->get_name() == "file";
 
           while((*characters) != 0 
                 && !isspace(*characters)
@@ -376,7 +375,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         }
 
         // temp if for elseif, insert start tag
-        if(is_elseif && *text->content == "if") {
+        if(is_elseif && *text->get_content() == "if") {
           is_elseif = false;
           std::shared_ptr<srcml_node> if_node = std::make_shared<srcml_node>(*element_stack.back());
           if_node->clear_attributes();
@@ -396,18 +395,18 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
       
       if(node->get_type() == srcml_node::srcml_node_type::START) {
-        node->parent = element_stack.back();
+        node->set_parent(element_stack.back());
       }
       
 
 
       // insert end if temp element for elseif and detect elseif
       if(node->get_type() == srcml_node::srcml_node_type::END
-        && element_stack.back()->name == "if" && !element_stack.back()->attributes.empty()) {
+        && element_stack.back()->get_name() == "if" && !element_stack.back()->get_attributes().empty()) {
         std::shared_ptr<srcml_node> end_node = std::make_shared<srcml_node>(*node);
         end_node->set_temporary(true);
         nodes.push_back(end_node);
-      } else if(node->name == "if" && !node->attributes.empty()) {
+      } else if(node->get_name() == "if" && !node->get_attributes().empty()) {
           is_elseif = true;
       }
 
@@ -418,11 +417,11 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         element_stack.pop_back();
       }
 
-      if(node->name == "unit") return nodes;
+      if(node->get_name() == "unit") return nodes;
 
       
-      if(node->get_type() == srcml_node::srcml_node_type::START && (*node->parent)->is_simple()) {
-        (*node->parent)->set_simple(false);
+      if(node->get_type() == srcml_node::srcml_node_type::START && (*node->get_parent())->is_simple()) {
+        (*node->get_parent())->set_simple(false);
       }
       
       

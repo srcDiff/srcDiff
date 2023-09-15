@@ -19,7 +19,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
                                const std::optional<std::string> & summary_type_str)
  : output_srcdiff(false), archive(archive), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
-   diff(std::make_shared<srcml_node::srcml_namespace>()) {
+   diff(std::make_shared<srcml_namespace>()) {
 
   if(is_option(flags, OPTION_VISUALIZE)) {
 
@@ -87,15 +87,15 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
   diff->set_uri(SRCDIFF_DEFAULT_NAMESPACE_HREF);
 
   unit_tag            = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, std::string("unit"));
-  diff_common_start   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_SES_COMMON, srcml_node::DIFF_NAMESPACE);
-  diff_common_end     = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_SES_COMMON, srcml_node::DIFF_NAMESPACE);
-  diff_original_start = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_ORIGINAL, srcml_node::DIFF_NAMESPACE);
-  diff_original_end   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_ORIGINAL, srcml_node::DIFF_NAMESPACE);
-  diff_modified_start = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_MODIFIED, srcml_node::DIFF_NAMESPACE);
-  diff_modified_end   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_MODIFIED, srcml_node::DIFF_NAMESPACE);
+  diff_common_start   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_SES_COMMON, DIFF_NAMESPACE);
+  diff_common_end     = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_SES_COMMON, DIFF_NAMESPACE);
+  diff_original_start = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_ORIGINAL, DIFF_NAMESPACE);
+  diff_original_end   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_ORIGINAL, DIFF_NAMESPACE);
+  diff_modified_start = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_MODIFIED, DIFF_NAMESPACE);
+  diff_modified_end   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_MODIFIED, DIFF_NAMESPACE);
   
-  diff_ws_start = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_WHITESPACE, srcml_node::DIFF_NAMESPACE);
-  diff_ws_end   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_WHITESPACE, srcml_node::DIFF_NAMESPACE);
+  diff_ws_start = std::make_shared<srcml_node>(srcml_node::srcml_node_type::START, DIFF_WHITESPACE, DIFF_NAMESPACE);
+  diff_ws_end   = std::make_shared<srcml_node>(srcml_node::srcml_node_type::END, DIFF_WHITESPACE, DIFF_NAMESPACE);
 
  }
 
@@ -387,11 +387,11 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
   // check if delaying SES_DELETE/SES_INSERT/SES_COMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)
      && ((delay_operation == SES_DELETE 
-          && wstate->output_diff.back()->open_tags.back()->name == diff_original_end->name)
+          && wstate->output_diff.back()->open_tags.back()->get_name() == diff_original_end->get_name())
          || (delay_operation == SES_INSERT 
-             && wstate->output_diff.back()->open_tags.back()->name == diff_modified_end->name)
+             && wstate->output_diff.back()->open_tags.back()->get_name() == diff_modified_end->get_name())
          || (delay_operation == SES_COMMON 
-             && wstate->output_diff.back()->open_tags.back()->name == diff_common_end->name))) {
+             && wstate->output_diff.back()->open_tags.back()->get_name() == diff_common_end->get_name()))) {
 
     if(delay_operation == SES_DELETE) {
 
@@ -425,7 +425,7 @@ void srcdiff_output::output_node(const std::shared_ptr<srcml_node> & node, int o
 
   if(node->get_type() == srcml_node::srcml_node_type::END) {
 
-    if(node->get_type() == srcml_node::srcml_node_type::END && wstate->output_diff.back()->open_tags.back()->name != node->name)
+    if(node->get_type() == srcml_node::srcml_node_type::END && wstate->output_diff.back()->open_tags.back()->get_name() != node->get_name())
       return;
 
     // check if ending a SES_DELETE/SES_INSERT/SES_COMMON tag. if so delay.
@@ -522,7 +522,7 @@ void srcdiff_output::output_node_inner(const srcml_node & node) {
 
     
     // start the element
-    srcml_write_start_element(wstate->unit, node.ns->get_prefix() ? node.ns->get_prefix()->c_str() : 0, node.name.c_str(), node.ns->get_uri().c_str());
+    srcml_write_start_element(wstate->unit, node.get_namespace()->get_prefix() ? node.get_namespace()->get_prefix()->c_str() : 0, node.get_name().c_str(), node.get_namespace()->get_uri().c_str());
 
     // copy all the attributes
     {
@@ -550,7 +550,7 @@ void srcdiff_output::output_node_inner(const srcml_node & node) {
 
     // output the UTF-8 buffer escaping the characters.  Note that the output encoding
     // is handled by libxml
-    srcml_write_string(wstate->unit, node.content ? node.content->c_str() : 0);
+    srcml_write_string(wstate->unit, node.get_content() ? node.get_content()->c_str() : 0);
 
     break;
 
