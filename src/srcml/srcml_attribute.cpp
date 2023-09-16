@@ -58,6 +58,6 @@ std::shared_ptr<srcml_namespace> srcml_attribute::get_ns() const {
   return ns;
 }
 
-std::optional<std::string> srcml_attribute::get_value() const {
+const std::optional<std::string> & srcml_attribute::get_value() const {
   return value;
 }

@@ -124,19 +124,12 @@ srcml_attribute * srcml_node::get_attribute(const std::string & attribute) {
 
 }
 
-const std::string * srcml_node::get_attribute_value(const std::string & attribute) const {
+const std::optional<std::string> & srcml_node::get_attribute_value(const std::string & attribute) const {
 
   srcml_node::srcml_attribute_map_citr attribute_itr = attributes.find(attribute);
-  if(attribute_itr == attributes.end() || !attribute_itr->second.get_value()) return nullptr;
-  return &*attribute_itr->second.get_value();
+  assert(attribute_itr != attributes.end());
 
-}
-
-std::string * srcml_node::get_attribute_value(const std::string & attribute) {
-
-  srcml_node::srcml_attribute_map_itr attribute_itr = attributes.find(attribute);
-  if(attribute_itr == attributes.end() || !attribute_itr->second.get_value()) return nullptr;
-  return &*attribute_itr->second.get_value();
+  return attribute_itr->second.get_value();
 
 }
 

@@ -82,8 +82,7 @@ public:
   std::string full_name() const;
   const srcml_attribute * get_attribute(const std::string & attribute) const;
   srcml_attribute * get_attribute(const std::string & attribute);
-  const std::string * get_attribute_value(const std::string & attribute) const;
-  std::string * get_attribute_value(const std::string & attribute);
+  const std::optional<std::string> & get_attribute_value(const std::string & attribute) const;
 
   bool operator==(const srcml_node & node) const;
   bool operator!=(const srcml_node & node) const;
