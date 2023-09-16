@@ -88,24 +88,24 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
     if(start_original == end_original && start_original >= 0 && end_original < (signed)construct_list_original.size()
       && start_modified == end_modified && start_modified >= 0 && end_modified < (signed)construct_list_modified.size()) {
 
-      if(is_identifier(construct_list_original.at(start_original)->term(0)->name)
-         && is_identifier(construct_list_modified.at(start_modified)->term(0)->name)) {
+      if(is_identifier(construct_list_original.at(start_original)->term(0)->get_name())
+         && is_identifier(construct_list_modified.at(start_modified)->term(0)->get_name())) {
          output_replace_inner_whitespace(construct_list_original.at(start_original)->start_position(), finish_original,
                                          construct_list_modified.at(start_modified)->start_position(), finish_modified,
                                          1);
        
           }
 
-       if(construct_list_original.at(start_original)->term(0)->name == "return"
-          && construct_list_modified.at(start_modified)->term(0)->name == "return") {
+       if(construct_list_original.at(start_original)->term(0)->get_name() == "return"
+          && construct_list_modified.at(start_modified)->term(0)->get_name() == "return") {
           output_replace_inner_whitespace(construct_list_original.at(start_original)->start_position(), finish_original,
                                           construct_list_modified.at(start_modified)->start_position(), finish_modified,
                                           2);
         
           }
 
-       if(construct_list_original.at(start_original)->term(0)->name == "throw"
-          && construct_list_modified.at(start_modified)->term(0)->name == "throw") {
+       if(construct_list_original.at(start_original)->term(0)->get_name() == "throw"
+          && construct_list_modified.at(start_modified)->term(0)->get_name() == "throw") {
           output_replace_inner_whitespace(construct_list_original.at(start_original)->start_position(), finish_original,
                                           construct_list_modified.at(start_modified)->start_position(), finish_modified,
                                           2);
@@ -136,7 +136,7 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
     unsigned int index = edits->offset_sequence_one + i;
 
-    if(construct_list_original.at(index)->term(0)->move) {
+    if(construct_list_original.at(index)->term(0)->get_move()) {
 
       original_moved.push_back(int_pair(MOVE, 0));
 
@@ -158,7 +158,7 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
     unsigned int index = edit_next->offset_sequence_two + i;
 
-    if(construct_list_modified.at(index)->term(0)->move) {
+    if(construct_list_modified.at(index)->term(0)->get_move()) {
 
       modified_moved.push_back(int_pair(MOVE, 0));
 

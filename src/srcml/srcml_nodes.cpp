@@ -21,7 +21,7 @@ void advance_to_child(const srcml_nodes & nodes,
     }
 
     if(nodes.at(start_pos)->get_type() == type
-      && nodes.at(start_pos)->name == name
+      && nodes.at(start_pos)->get_name() == name
        && depth == 0) {
       break;
     }

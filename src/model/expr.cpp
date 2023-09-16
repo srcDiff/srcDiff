@@ -24,8 +24,8 @@ bool expr_t::is_matchable_impl(const construct & modified) const {
 	const srcdiff_measure & expr_measure = *measure(modified);
 	if(expr_measure.similarity() > 0 && expr_measure.difference() <= expr_measure.max_length()) return true;
 
-	if((*root_term()->parent)->name == "argument") return true;
-	if((*modified.root_term()->parent)->name == "argument") return true;
+	if((*root_term()->get_parent())->get_name() == "argument") return true;
+	if((*modified.root_term()->get_parent())->get_name() == "argument") return true;
 
 	return children().size() == 1 && children()[0]->root_term_name() == "name";
 }

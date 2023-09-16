@@ -32,7 +32,7 @@
 #include <list>
 
 const std::string convert("convert");
-const srcml_node::srcml_attribute diff_convert_type("type", srcml_node::DIFF_NAMESPACE, convert);
+const srcml_attribute diff_convert_type("type", DIFF_NAMESPACE, convert);
 
 srcdiff_single::srcdiff_single(std::shared_ptr<srcdiff_output> out, const std::shared_ptr<construct> & original_construct, const std::shared_ptr<construct> & modified_construct) 
   : out(out), original_construct(original_construct), modified_construct(modified_construct) {}
@@ -52,7 +52,7 @@ static srcml_node::srcml_attribute_map merge_attributes(const srcml_node::srcml_
         attributes.emplace(citr_original->first, citr_original->second);
       }
       else {
-        attributes.emplace(citr_original->first, srcml_node::srcml_attribute(citr_original->second.get_name(), citr_original->second.get_ns(), *citr_original->second.get_value() + std::string("|") + *citr_modified->second.get_value()));
+        attributes.emplace(citr_original->first, srcml_attribute(citr_original->second.get_name(), citr_original->second.get_ns(), *citr_original->second.get_value() + std::string("|") + *citr_modified->second.get_value()));
       }
 
       ++citr_original;  
@@ -70,13 +70,13 @@ static srcml_node::srcml_attribute_map merge_attributes(const srcml_node::srcml_
 
       if(!is_end && citr_original->second.get_name() == name) {
 
-        attributes.emplace(citr_modified->second.get_name(), srcml_node::srcml_attribute(citr_modified->second.get_name(), citr_modified->second.get_ns(), std::string("|") + *citr_modified->second.get_value()));
+        attributes.emplace(citr_modified->second.get_name(), srcml_attribute(citr_modified->second.get_name(), citr_modified->second.get_ns(), std::string("|") + *citr_modified->second.get_value()));
 
         ++citr_modified;
 
       } else {
 
-        attributes.emplace(citr_original->second.get_name(), srcml_node::srcml_attribute(citr_original->second.get_name(), citr_original->second.get_ns(), *citr_original->second.get_value() + std::string("|")));
+        attributes.emplace(citr_original->second.get_name(), srcml_attribute(citr_original->second.get_name(), citr_original->second.get_ns(), *citr_original->second.get_value() + std::string("|")));
 
         ++citr_original;
 
@@ -88,7 +88,7 @@ static srcml_node::srcml_attribute_map merge_attributes(const srcml_node::srcml_
 
   while(citr_original != attributes_original.end()) {
 
-      attributes.emplace(citr_original->first, srcml_node::srcml_attribute(citr_original->second.get_name(), citr_original->second.get_ns(), *citr_original->second.get_value() + std::string("|")));
+      attributes.emplace(citr_original->first, srcml_attribute(citr_original->second.get_name(), citr_original->second.get_ns(), *citr_original->second.get_value() + std::string("|")));
 
       ++citr_original;
 
@@ -96,7 +96,7 @@ static srcml_node::srcml_attribute_map merge_attributes(const srcml_node::srcml_
 
   while(citr_modified != attributes_modified.end()) {
 
-      attributes.emplace(citr_modified->first, srcml_node::srcml_attribute(citr_modified->second.get_name(), citr_modified->second.get_ns(), std::string("|") + *citr_modified->second.get_value()));
+      attributes.emplace(citr_modified->first, srcml_attribute(citr_modified->second.get_name(), citr_modified->second.get_ns(), std::string("|") + *citr_modified->second.get_value()));
 
       ++citr_modified;
 
@@ -133,7 +133,7 @@ void srcdiff_single::output_recursive_same() {
   ++out->last_output_modified();
 
   // diff comments differently then source-code
-  if(original_construct->root_term()->name == "comment") {
+  if(original_construct->root_term()->get_name() == "comment") {
 
     // collect subset of nodes
     construct::construct_list children_original = original_construct->children();
@@ -176,18 +176,18 @@ void srcdiff_single::output_recursive_interchangeable() {
   const std::shared_ptr<srcml_node> & modified_start_node = modified_construct->root_term();
 
   int original_collect_start_pos = 1;
-  if(original_start_node->name == "if_stmt") {
+  if(original_start_node->get_name() == "if_stmt") {
     // must have if, if interchange passed
-    while(original_construct->term(original_collect_start_pos)->name != "if") {
+    while(original_construct->term(original_collect_start_pos)->get_name() != "if") {
       ++original_collect_start_pos;
     }
     ++original_collect_start_pos;
   }
 
   int modified_collect_start_pos = 1;
-  if(modified_start_node->name == "if_stmt") {
+  if(modified_start_node->get_name() == "if_stmt") {
     // must have if, if interchange passed
-    while(modified_construct->term(modified_collect_start_pos)->name != "if") {
+    while(modified_construct->term(modified_collect_start_pos)->get_name() != "if") {
       ++modified_collect_start_pos;
     }
     ++modified_collect_start_pos;
@@ -207,9 +207,9 @@ void srcdiff_single::output_recursive_interchangeable() {
   }
 
   // output deleted nodes
-  out->diff_original_start->attributes.emplace("type", diff_convert_type);
+  out->diff_original_start->emplace_attribute("type", diff_convert_type);
   out->output_node(out->diff_original_start, SES_DELETE, true);
-  out->diff_original_start->attributes.clear();
+  out->diff_original_start->clear_attributes();
 
   for(int output_pos = 0; output_pos < original_collect_start_pos; ++output_pos) {
     out->output_node(original_construct->term(output_pos), SES_DELETE);
@@ -217,9 +217,9 @@ void srcdiff_single::output_recursive_interchangeable() {
   }
 
   // output inserted nodes
-  out->diff_modified_start->attributes.emplace("type", diff_convert_type);
+  out->diff_modified_start->emplace_attribute("type", diff_convert_type);
   out->output_node(out->diff_modified_start, SES_INSERT, true);
-  out->diff_modified_start->attributes.clear();
+  out->diff_modified_start->clear_attributes();
 
   if(is_keywords && !is_same_keyword){
     ++modified_collect_start_pos;
@@ -265,8 +265,8 @@ void srcdiff_single::output() {
   const std::shared_ptr<srcml_node> & start_node_original = original_construct->root_term();
   const std::shared_ptr<srcml_node> & start_node_modified = modified_construct->root_term();
 
-  if(start_node_original->name == start_node_modified->name
-    && start_node_original->ns->get_uri() == start_node_modified->ns->get_uri()) {
+  if(start_node_original->get_name() == start_node_modified->get_name()
+    && start_node_original->get_namespace()->get_uri() == start_node_modified->get_namespace()->get_uri()) {
     output_recursive_same();
   } else {
     output_recursive_interchangeable();

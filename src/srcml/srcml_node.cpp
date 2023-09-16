@@ -38,77 +38,6 @@
 #include <mingw32.hpp>
 #endif
 
-std::shared_ptr<srcml_node::srcml_namespace> srcml_node::SRC_NAMESPACE 
-  = std::make_shared<srcml_node::srcml_namespace>("http://www.srcML.org/srcML/src");
-
-std::shared_ptr<srcml_node::srcml_namespace> srcml_node::CPP_NAMESPACE
-  = std::make_shared<srcml_node::srcml_namespace>("http://www.srcML.org/srcML/cpp", "cpp");
-
-std::shared_ptr<srcml_node::srcml_namespace> srcml_node::DIFF_NAMESPACE 
-  = std::make_shared<srcml_node::srcml_namespace>("http://www.srcML.org/srcDiff", "diff");
-
-std::unordered_map<std::string, std::shared_ptr<srcml_node::srcml_namespace>> srcml_node::namespaces = {};
-
-srcml_node::srcml_namespace::srcml_namespace(const std::string & uri, const std::optional<std::string> & prefix) : uri(uri), prefix(prefix) {}
-
-srcml_node::srcml_namespace::srcml_namespace(xmlNsPtr ns) 
-  : uri(), prefix() {
-
-    if(!ns) return;
-
-    if(ns->href)   uri = std::string((const char *)ns->href);
-    if(ns->prefix) prefix = std::string((const char *)ns->prefix);
-}
-
-srcml_node::srcml_namespace::srcml_namespace(const srcml_namespace & ns) 
-  : uri(ns.uri), prefix(ns.prefix) {}
-
-std::string srcml_node::srcml_namespace::get_uri() const {
-  return uri;
-}
-
-std::optional<std::string> srcml_node::srcml_namespace::get_prefix() const {
-  return prefix;
-}
-
-srcml_node::srcml_attribute::srcml_attribute(xmlAttrPtr attribute)
-  : name((const char *)attribute->name),
-    value(attribute->children && attribute->children->content ? 
-          std::string((const char *)attribute->children->content) : std::optional<std::string>()),
-    ns(get_namespace(attribute->ns)) {}
-
-srcml_node::srcml_attribute::srcml_attribute(
-    const std::string & name,
-    std::shared_ptr<srcml_namespace> ns,
-    std::optional<std::string> value) : name(name), ns(ns), value(value) {}
-
-std::string srcml_node::srcml_attribute::full_name() const {
-  if(ns && ns->prefix) return *ns->prefix + ":" + name;
-  return name;
-}
-
-std::ostream & operator<<(std::ostream & out, const  srcml_node::srcml_attribute & that) {
-  out << that.full_name();
-  if(that.value) out << "=" << *that.value;
-  return out;
-}
-
-bool srcml_node::srcml_attribute::operator==(const srcml_attribute & that) const {
-  return ns == that.ns && name == that.name && value == that.value;
-}
-
-bool srcml_node::srcml_attribute::operator!=(const srcml_attribute & that) const {
-  return !this->operator==(that);
-}
-
-void srcml_node::srcml_namespace::set_uri(std::string input) {
-  uri = input;
-}
-
-void srcml_node::srcml_namespace::set_prefix(std::optional<std::string> input) {
-  prefix = input;
-}
-
 srcml_node::srcml_node_type xml_type2srcml_type(xmlElementType type) {
   static std::unordered_map<unsigned int, srcml_node::srcml_node_type> type_map = {
 
@@ -127,28 +56,6 @@ srcml_node::srcml_node_type xml_type2srcml_type(xmlElementType type) {
 
 }
 
-std::shared_ptr<srcml_node::srcml_namespace> srcml_node::get_namespace(xmlNsPtr ns) {
-
-  static bool init_namespace = true;
-
-  if(init_namespace) {
-      namespaces.emplace(std::make_pair("http://www.srcML.org/srcML/src", SRC_NAMESPACE));
-      namespaces.emplace(std::make_pair("http://www.srcML.org/srcML/cpp", CPP_NAMESPACE));
-      namespaces.emplace(std::make_pair("http://www.srcML.org/srcDiff",   DIFF_NAMESPACE));
-      init_namespace = false;
-  }
-
-  if(!ns) return SRC_NAMESPACE;
-
-  typedef std::unordered_map<std::string, std::shared_ptr<srcml_namespace>>::const_iterator namespaces_citr;
-  namespaces_citr citr = namespaces.find((const char *)ns->href);
-  if(citr != namespaces.end()) return citr->second;
-
-  namespaces_citr added_citr = namespaces.emplace(std::make_pair((const char *)ns->href, std::make_shared<srcml_namespace>(ns))).first;
-  return added_citr->second;
-}
-
-
 srcml_node::srcml_node()
   : type(srcml_node_type::OTHER), name(), ns(SRC_NAMESPACE), content(),
     ns_definition(), parent(), attributes(), temporary(false), empty(false), simple(true), move(0), user_data(), extra(0) {}
@@ -162,13 +69,13 @@ srcml_node::srcml_node(const xmlNode & node, xmlElementType xml_type)
   if(node.content)
     content = std::string((const char *)node.content);
 
-  ns = get_namespace(node.ns);
+  ns = srcml_namespace::get_namespace(node.ns);
 
   if(type != srcml_node_type::START) return;
 
   xmlNsPtr node_ns = node.nsDef;
   while(node_ns) {
-    ns_definition.emplace_back(get_namespace(node_ns));
+    ns_definition.emplace_back(srcml_namespace::get_namespace(node_ns));
     node_ns = node_ns->next;
   }
 
@@ -196,12 +103,12 @@ srcml_node::~srcml_node() {}
 
 std::string srcml_node::full_name() const {
 
-  if(ns->prefix) return *ns->prefix + ":" + name;
+  if(ns->get_prefix()) return *ns->get_prefix() + ":" + name;
 
   return name;
 } 
 
-const srcml_node::srcml_attribute * srcml_node::get_attribute(const std::string & attribute) const {
+const srcml_attribute * srcml_node::get_attribute(const std::string & attribute) const {
 
   srcml_node::srcml_attribute_map_citr attribute_itr = attributes.find(attribute);
   if(attribute_itr == attributes.end()) return nullptr;
@@ -209,7 +116,7 @@ const srcml_node::srcml_attribute * srcml_node::get_attribute(const std::string 
 
 }
 
-srcml_node::srcml_attribute * srcml_node::get_attribute(const std::string & attribute) {
+srcml_attribute * srcml_node::get_attribute(const std::string & attribute) {
 
   srcml_node::srcml_attribute_map_itr attribute_itr = attributes.find(attribute);
   if(attribute_itr == attributes.end()) return nullptr;
@@ -217,19 +124,12 @@ srcml_node::srcml_attribute * srcml_node::get_attribute(const std::string & attr
 
 }
 
-const std::string * srcml_node::get_attribute_value(const std::string & attribute) const {
+const std::optional<std::string> & srcml_node::get_attribute_value(const std::string & attribute) const {
 
   srcml_node::srcml_attribute_map_citr attribute_itr = attributes.find(attribute);
-  if(attribute_itr == attributes.end() || !attribute_itr->second.value) return nullptr;
-  return &*attribute_itr->second.value;
+  assert(attribute_itr != attributes.end());
 
-}
-
-std::string * srcml_node::get_attribute_value(const std::string & attribute) {
-
-  srcml_node::srcml_attribute_map_itr attribute_itr = attributes.find(attribute);
-  if(attribute_itr == attributes.end() || !attribute_itr->second.value) return nullptr;
-  return &*attribute_itr->second.value;
+  return attribute_itr->second.get_value();
 
 }
 
@@ -286,6 +186,10 @@ void srcml_node::set_attributes(const srcml_attribute_map & input) {
   attributes = input;
 }
 
+void srcml_node::emplace_attribute(const std::string & name, const srcml_attribute & attr) {
+  attributes.emplace(name, attr);
+}
+
 void srcml_node::set_type(srcml_node_type input) {
   type = input;
 }
@@ -318,36 +222,32 @@ void srcml_node::set_move(int input) {
   move = input;
 }
 
-const std::string & srcml_node::srcml_attribute::get_name() const {
-  return name;
-}
-
-std::shared_ptr<srcml_node::srcml_namespace> srcml_node::srcml_attribute::get_ns() const {
-  return ns;
-}
-
-std::optional<std::string> srcml_node::srcml_attribute::get_value() const {
-  return value;
-}
-
 const srcml_node::srcml_attribute_map & srcml_node::get_attributes() const {
   return attributes;
-} 
+}
 
 srcml_node::srcml_node_type srcml_node::get_type() const {
   return type;
 }
 
-std::string srcml_node::get_name() const {
+const std::string & srcml_node::get_name() const {
   return name;
 }
 
-std::optional<std::string> srcml_node::get_content() const {
+const std::optional<std::string> & srcml_node::get_content() const {
   return content;
 }
 
 int srcml_node::get_move() const {
   return move;
+}
+
+std::optional<std::shared_ptr<srcml_node>> srcml_node::get_parent() const {
+  return parent;
+}
+
+std::shared_ptr<srcml_namespace> srcml_node::get_namespace() const {
+  return ns;
 }
 
 std::ostream & operator<<(std::ostream & out, const srcml_node & node) {
@@ -362,7 +262,7 @@ std::ostream & operator<<(std::ostream & out, const srcml_node & node) {
   }
 
   for(const srcml_node::srcml_attribute_map_pair & attribute_pair : node.attributes) {
-    out << ' ' << attribute_pair.first << '=' << *attribute_pair.second.value;
+    out << ' ' << attribute_pair.first << '=' << *attribute_pair.second.get_value();
   }
 
   if(!node.is_text()) {
