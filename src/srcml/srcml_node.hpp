@@ -26,6 +26,7 @@
 
 #include <srcml.h>
 #include <srcml_namespace.hpp>
+#include <srcml_attribute.hpp>
 #include <string>
 #include <list>
 #include <map>
@@ -41,33 +42,6 @@
 class srcml_node {
 
 public:
-
-  class srcml_attribute {
-
-  public:
-    
-    std::string name;
-    std::optional<std::string> value;
-    std::shared_ptr<srcml_namespace> ns;
-
-    srcml_attribute(xmlAttrPtr attribute);
-    srcml_attribute(const std::string & name = std::string(),
-                    std::shared_ptr<srcml_namespace> ns = SRC_NAMESPACE,
-                    std::optional<std::string> value = std::optional<std::string>());
-
-    std::string full_name() const;
-    void set_name(std::string input);
-    void set_value(std::optional<std::string> input);
-    const std::string & get_name() const;
-    std::shared_ptr<srcml_namespace> get_ns() const;
-    std::optional<std::string> get_value() const;
-
-
-    friend std::ostream & operator<<(std::ostream & out, const srcml_attribute & that);
-    bool operator==(const srcml_attribute & that) const;
-    bool operator!=(const srcml_attribute & that) const;
-
-  };
 
   enum srcml_node_type : unsigned int  { OTHER = 0, START = 1, END = 2, TEXT = 3, WS = 4 };
 
@@ -106,8 +80,8 @@ public:
   std::shared_ptr<srcml_namespace> get_namespace() const;
 
   std::string full_name() const;
-  const srcml_node::srcml_attribute * get_attribute(const std::string & attribute) const;
-  srcml_node::srcml_attribute * get_attribute(const std::string & attribute);
+  const srcml_attribute * get_attribute(const std::string & attribute) const;
+  srcml_attribute * get_attribute(const std::string & attribute);
   const std::string * get_attribute_value(const std::string & attribute) const;
   std::string * get_attribute_value(const std::string & attribute);
 

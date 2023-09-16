@@ -13,7 +13,7 @@
 #include <string>
 
 const std::string replace("replace");
-const srcml_node::srcml_attribute diff_type(DIFF_TYPE, SRC_NAMESPACE, replace);
+const srcml_attribute diff_type(DIFF_TYPE, SRC_NAMESPACE, replace);
 
 srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_original, unsigned int end_modified)
 : srcdiff_output(out), end_original(end_original), end_modified(end_modified) {}

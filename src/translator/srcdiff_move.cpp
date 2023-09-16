@@ -1,5 +1,4 @@
 #include <srcdiff_move.hpp>
-#include <srcml_namespace.hpp>
 #include <srcdiff_diff.hpp>
 #include <srcdiff_measure.hpp>
 #include <srcdiff_whitespace.hpp>
@@ -137,7 +136,7 @@ void srcdiff_move::output() {
 
   int id = rbuf->nodes.at(position)->get_move();
 
-  start_node->emplace_attribute(std::to_string(id), srcml_node::srcml_attribute(move, DIFF_NAMESPACE, std::to_string(id)));
+  start_node->emplace_attribute(std::to_string(id), srcml_attribute(move, DIFF_NAMESPACE, std::to_string(id)));
 
   output_node(start_node, operation, true);
 

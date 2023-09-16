@@ -38,37 +38,6 @@
 #include <mingw32.hpp>
 #endif
 
-srcml_node::srcml_attribute::srcml_attribute(xmlAttrPtr attribute)
-  : name((const char *)attribute->name),
-    value(attribute->children && attribute->children->content ? 
-          std::string((const char *)attribute->children->content) : std::optional<std::string>()),
-    ns(srcml_namespace::get_namespace(attribute->ns)) {}
-
-srcml_node::srcml_attribute::srcml_attribute(
-    const std::string & name,
-    std::shared_ptr<srcml_namespace> ns,
-    std::optional<std::string> value) : name(name), ns(ns), value(value) {}
-
-std::string srcml_node::srcml_attribute::full_name() const {
-  if(ns && ns->get_prefix()) return *ns->get_prefix() + ":" + name;
-  return name;
-}
-
-std::ostream & operator<<(std::ostream & out, const  srcml_node::srcml_attribute & that) {
-  out << that.full_name();
-  if(that.value) out << "=" << *that.value;
-  return out;
-}
-
-bool srcml_node::srcml_attribute::operator==(const srcml_attribute & that) const {
-  return ns == that.ns && name == that.name && value == that.value;
-}
-
-bool srcml_node::srcml_attribute::operator!=(const srcml_attribute & that) const {
-  return !this->operator==(that);
-}
-
-
 srcml_node::srcml_node_type xml_type2srcml_type(xmlElementType type) {
   static std::unordered_map<unsigned int, srcml_node::srcml_node_type> type_map = {
 
@@ -139,7 +108,7 @@ std::string srcml_node::full_name() const {
   return name;
 } 
 
-const srcml_node::srcml_attribute * srcml_node::get_attribute(const std::string & attribute) const {
+const srcml_attribute * srcml_node::get_attribute(const std::string & attribute) const {
 
   srcml_node::srcml_attribute_map_citr attribute_itr = attributes.find(attribute);
   if(attribute_itr == attributes.end()) return nullptr;
@@ -147,7 +116,7 @@ const srcml_node::srcml_attribute * srcml_node::get_attribute(const std::string 
 
 }
 
-srcml_node::srcml_attribute * srcml_node::get_attribute(const std::string & attribute) {
+srcml_attribute * srcml_node::get_attribute(const std::string & attribute) {
 
   srcml_node::srcml_attribute_map_itr attribute_itr = attributes.find(attribute);
   if(attribute_itr == attributes.end()) return nullptr;
@@ -158,16 +127,16 @@ srcml_node::srcml_attribute * srcml_node::get_attribute(const std::string & attr
 const std::string * srcml_node::get_attribute_value(const std::string & attribute) const {
 
   srcml_node::srcml_attribute_map_citr attribute_itr = attributes.find(attribute);
-  if(attribute_itr == attributes.end() || !attribute_itr->second.value) return nullptr;
-  return &*attribute_itr->second.value;
+  if(attribute_itr == attributes.end() || !attribute_itr->second.get_value()) return nullptr;
+  return &*attribute_itr->second.get_value();
 
 }
 
 std::string * srcml_node::get_attribute_value(const std::string & attribute) {
 
   srcml_node::srcml_attribute_map_itr attribute_itr = attributes.find(attribute);
-  if(attribute_itr == attributes.end() || !attribute_itr->second.value) return nullptr;
-  return &*attribute_itr->second.value;
+  if(attribute_itr == attributes.end() || !attribute_itr->second.get_value()) return nullptr;
+  return &*attribute_itr->second.get_value();
 
 }
 
@@ -224,7 +193,7 @@ void srcml_node::set_attributes(const srcml_attribute_map & input) {
   attributes = input;
 }
 
-void srcml_node::emplace_attribute(const std::string & name, const srcml_node::srcml_attribute & attr) {
+void srcml_node::emplace_attribute(const std::string & name, const srcml_attribute & attr) {
   attributes.emplace(name, attr);
 }
 
@@ -258,18 +227,6 @@ void srcml_node::set_name(std::string input) {
 
 void srcml_node::set_move(int input) {
   move = input;
-}
-
-const std::string & srcml_node::srcml_attribute::get_name() const {
-  return name;
-}
-
-std::shared_ptr<srcml_namespace> srcml_node::srcml_attribute::get_ns() const {
-  return ns;
-}
-
-std::optional<std::string> srcml_node::srcml_attribute::get_value() const {
-  return value;
 }
 
 const srcml_node::srcml_attribute_map & srcml_node::get_attributes() const {
@@ -312,7 +269,7 @@ std::ostream & operator<<(std::ostream & out, const srcml_node & node) {
   }
 
   for(const srcml_node::srcml_attribute_map_pair & attribute_pair : node.attributes) {
-    out << ' ' << attribute_pair.first << '=' << *attribute_pair.second.value;
+    out << ' ' << attribute_pair.first << '=' << *attribute_pair.second.get_value();
   }
 
   if(!node.is_text()) {
