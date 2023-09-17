@@ -73,13 +73,13 @@ public:
 
     bool empty() const;
 
-    const std::shared_ptr<srcml_node> & term(std::size_t pos) const;
+    const std::shared_ptr<srcML::node> & term(std::size_t pos) const;
 
     const std::vector<int> & get_terms() const;
     // @todo possibly remove this
     std::vector<int> & get_terms();
 
-    const std::shared_ptr<srcml_node> & last_term() const;
+    const std::shared_ptr<srcML::node> & last_term() const;
 
     /// position info of element
     std::size_t start_position() const;
@@ -87,7 +87,7 @@ public:
 
 
     const srcml_nodes & nodes() const;
-    const std::shared_ptr<srcml_node> & root_term() const;
+    const std::shared_ptr<srcML::node> & root_term() const;
     const std::string & term_name(std::size_t pos) const;
     const std::string & root_term_name() const;
 
@@ -96,7 +96,7 @@ public:
     virtual std::string to_string(bool skip_whitespace = false) const;
 
     std::shared_ptr<const construct> find_child(const std::string & name) const;
-    construct_list find_descendents(std::shared_ptr<srcml_node> element) const;
+    construct_list find_descendents(std::shared_ptr<srcML::node> element) const;
     std::shared_ptr<const construct> find_best_descendent(std::shared_ptr<const construct> match_construct) const;
 
     // Differencing Rules

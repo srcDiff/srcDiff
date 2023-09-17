@@ -54,13 +54,13 @@ void srcdiff_text_measure::collect_text_element(const construct & set, construct
       if((set.get_terms().at(i) + 1) < set.nodes().size() && set.nodes().at(set.get_terms().at(i) + 1)->is_text()
         && (*set.nodes().at(set.get_terms().at(i) + 1)->get_content() == "::")) continue;
 
-      while(set.term(i)->get_type() != srcml_node::srcml_node_type::END) {
+      while(set.term(i)->get_type() != srcML::node::node_type::END) {
         ++i;
       }
 
     }
 
-    const std::shared_ptr<srcml_node> & node = set.term(i);
+    const std::shared_ptr<srcML::node> & node = set.term(i);
 
     bool is_text = node->is_text() && !node->is_whitespace() && node->get_content();
     bool is_operator = node->get_parent() && (*node->get_parent())->get_name() == "operator";
@@ -142,8 +142,8 @@ void srcdiff_text_measure::compute() {
 
   computed = true;
 
-  if(set_original.term(0)->get_type() != srcml_node::srcml_node_type::START
-     || set_modified.term(0)->get_type() != srcml_node::srcml_node_type::START
+  if(set_original.term(0)->get_type() != srcML::node::node_type::START
+     || set_modified.term(0)->get_type() != srcML::node::node_type::START
      || (*set_original.term(0) != *set_modified.term(0)
         && !set_original.is_tag_convertable(set_modified)
         && (set_original.term(0)->get_name() != "block" || set_modified.term(0)->get_name() != "block"))) {

@@ -87,10 +87,10 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
       }
 
       ++move_id;
-      std::shared_ptr<srcml_node> start_node_one = std::make_shared<srcml_node>(*set->term(0));
+      std::shared_ptr<srcML::node> start_node_one = std::make_shared<srcML::node>(*set->term(0));
       start_node_one->set_move(move_id);
 
-      std::shared_ptr<srcml_node> start_node_two = std::make_shared<srcml_node>(*(*pos)->term(0));
+      std::shared_ptr<srcML::node> start_node_two = std::make_shared<srcML::node>(*(*pos)->term(0));
       start_node_two->set_move(move_id);
 
       // breaks const
@@ -100,10 +100,10 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
       if(!start_node_one->is_empty()) {
 
-        std::shared_ptr<srcml_node> end_node_one = std::make_shared<srcml_node>(*set->last_term());
+        std::shared_ptr<srcML::node> end_node_one = std::make_shared<srcML::node>(*set->last_term());
         end_node_one->set_move(move_id);
 
-        std::shared_ptr<srcml_node> end_node_two = std::make_shared<srcml_node>(*(*pos)->last_term());
+        std::shared_ptr<srcML::node> end_node_two = std::make_shared<srcML::node>(*(*pos)->last_term());
         end_node_two->set_move(move_id);
 
         ((srcml_nodes &)set->nodes()).at(set->end_position()) = end_node_one;
@@ -123,8 +123,8 @@ void srcdiff_move::output() {
 
   // store current diff if is any
   std::shared_ptr<reader_state> rbuf = rbuf_original;
-  std::shared_ptr<srcml_node> start_node = diff_original_start;
-  std::shared_ptr<srcml_node> end_node = diff_original_end;
+  std::shared_ptr<srcML::node> start_node = diff_original_start;
+  std::shared_ptr<srcML::node> end_node = diff_original_end;
 
   if(operation == SES_INSERT) {
 

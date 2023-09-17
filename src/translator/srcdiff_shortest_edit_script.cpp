@@ -37,11 +37,11 @@ const void * srcdiff_shortest_edit_script::construct_node_index(int index, const
 }
 
 int srcdiff_shortest_edit_script::node_compare(const void * node_one, const void * node_two, const void * context) {
-  return node_compare(*(const std::shared_ptr<srcml_node> *)node_one, *(const std::shared_ptr<srcml_node>*)node_two);
+  return node_compare(*(const std::shared_ptr<srcML::node> *)node_one, *(const std::shared_ptr<srcML::node>*)node_two);
 }
 
 // srcdiff_shortest_edit_script::diff node comparison function
-int srcdiff_shortest_edit_script::node_compare(const std::shared_ptr<srcml_node> & node_one, const std::shared_ptr<srcml_node> & node_two) {
+int srcdiff_shortest_edit_script::node_compare(const std::shared_ptr<srcML::node> & node_one, const std::shared_ptr<srcML::node> & node_two) {
   if(*node_one == *node_two) return 0;
   return 1;
 }

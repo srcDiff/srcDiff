@@ -6,7 +6,7 @@
 
 void advance_to_child(const srcml_nodes & nodes,
                       size_t & pos,
-                      srcml_node::srcml_node_type type,
+                      srcML::node::node_type type,
                       const std::string & name) {
 
   srcml_nodes::size_type size = nodes.size();
@@ -16,7 +16,7 @@ void advance_to_child(const srcml_nodes & nodes,
 
   while(start_pos < size) {
 
-    if(nodes.at(start_pos)->get_type() == srcml_node::srcml_node_type::END) {
+    if(nodes.at(start_pos)->get_type() == srcML::node::node_type::END) {
       --depth;
     }
 
@@ -26,7 +26,7 @@ void advance_to_child(const srcml_nodes & nodes,
       break;
     }
 
-    if(!nodes.at(start_pos)->is_empty() && nodes.at(start_pos)->get_type() == srcml_node::srcml_node_type::START) {
+    if(!nodes.at(start_pos)->is_empty() && nodes.at(start_pos)->get_type() == srcML::node::node_type::START) {
         ++depth;
     }
 

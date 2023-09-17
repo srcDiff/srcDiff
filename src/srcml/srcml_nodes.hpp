@@ -1,16 +1,16 @@
 #ifndef INCLUDED_SRCML_NODES_HPP
 #define INCLUDED_SRCML_NODES_HPP
 
-#include <srcml_node.hpp>
+#include <node.hpp>
 
 #include <vector>
 #include <memory>
 
-typedef std::vector<std::shared_ptr<srcml_node>> srcml_nodes;
+typedef std::vector<std::shared_ptr<srcML::node>> srcml_nodes;
 
 void advance_to_child(const srcml_nodes & nodes,
                       size_t & pos,
-                      srcml_node::srcml_node_type type,
+                      srcML::node::node_type type,
                       const std::string & name);
 
 #endif

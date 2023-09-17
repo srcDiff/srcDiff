@@ -120,29 +120,29 @@ protected:
 public:
 
   // diff nodes
-  std::shared_ptr<srcml_node> diff_common_start;
-  std::shared_ptr<srcml_node> diff_common_end;
-  std::shared_ptr<srcml_node> diff_original_start;
-  std::shared_ptr<srcml_node> diff_original_end;
-  std::shared_ptr<srcml_node> diff_modified_start;
-  std::shared_ptr<srcml_node> diff_modified_end;
+  std::shared_ptr<srcML::node> diff_common_start;
+  std::shared_ptr<srcML::node> diff_common_end;
+  std::shared_ptr<srcML::node> diff_original_start;
+  std::shared_ptr<srcML::node> diff_original_end;
+  std::shared_ptr<srcML::node> diff_modified_start;
+  std::shared_ptr<srcML::node> diff_modified_end;
 
-  std::shared_ptr<srcml_node> diff_ws_start;
-  std::shared_ptr<srcml_node> diff_ws_end;
+  std::shared_ptr<srcML::node> diff_ws_start;
+  std::shared_ptr<srcML::node> diff_ws_end;
 
   std::shared_ptr<srcml_namespace> diff;
 
-  std::shared_ptr<srcml_node> unit_tag;
+  std::shared_ptr<srcML::node> unit_tag;
 
   static bool delay;
   static int delay_operation;
 
 private:
 
-  static void update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcml_node> & node, int operation);
-  void update_diff_stacks(const std::shared_ptr<srcml_node> & node, int operation);
-  void output_node(const srcml_node & node);
-  void output_node_inner(const srcml_node & node);
+  static void update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcML::node> & node, int operation);
+  void update_diff_stacks(const std::shared_ptr<srcML::node> & node, int operation);
+  void output_node(const srcML::node & node);
+  void output_node_inner(const srcML::node & node);
 
 public:
 
@@ -180,10 +180,10 @@ public:
 
   virtual bool is_delay_type(int operation);
 
-  virtual void output_node(const std::shared_ptr<srcml_node> & original_node, 
-                           const std::shared_ptr<srcml_node> & modified_node,
+  virtual void output_node(const std::shared_ptr<srcML::node> & original_node, 
+                           const std::shared_ptr<srcML::node> & modified_node,
                            int operation, bool force_output = false);
-  virtual void output_node(const std::shared_ptr<srcml_node> & node, int operation, bool force_output = false);
+  virtual void output_node(const std::shared_ptr<srcML::node> & node, int operation, bool force_output = false);
   virtual void output_text_as_node(const std::string & text, int operation);
   virtual void output_char(char character, int operation);
 
@@ -192,7 +192,7 @@ public:
 template<class T>
 void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
-  static const std::shared_ptr<srcml_node> flush = std::make_shared<srcml_node>(srcml_node::srcml_node_type::TEXT, "text");
+  static const std::shared_ptr<srcML::node> flush = std::make_shared<srcML::node>(srcML::node::node_type::TEXT, "text");
   output_node(flush, SES_COMMON);
 
   if(wstate->approximate) {

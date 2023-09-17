@@ -246,7 +246,7 @@ void srcdiff_many::output() {
 
     if(original_moved.at(i).first == SES_COMMON && modified_moved.at(j).first == SES_COMMON) {
  
-      if(construct_list_original.at(edits->offset_sequence_one + i)->term(0)->get_type() != srcml_node::srcml_node_type::TEXT) {
+      if(construct_list_original.at(edits->offset_sequence_one + i)->term(0)->get_type() != srcML::node::node_type::TEXT) {
 
         srcdiff_single diff(out,
                             construct_list_original.at(edits->offset_sequence_one + i), 

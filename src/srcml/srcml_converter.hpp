@@ -26,14 +26,14 @@ protected:
 
   static std::mutex mutex;
 
-  static std::map<std::string, std::shared_ptr<srcml_node>> start_tags;
-  static std::map<std::string, std::shared_ptr<srcml_node>> end_tags;
+  static std::map<std::string, std::shared_ptr<srcML::node>> start_tags;
+  static std::map<std::string, std::shared_ptr<srcML::node>> end_tags;
 
 private:
 
 	srcml_nodes collect_nodes(xmlTextReaderPtr reader) const;
 
-	static std::shared_ptr<srcml_node> get_current_node(xmlTextReaderPtr reader, bool is_archive);
+	static std::shared_ptr<srcML::node> get_current_node(xmlTextReaderPtr reader, bool is_archive);
 
 public:
 

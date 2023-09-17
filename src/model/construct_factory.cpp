@@ -158,7 +158,7 @@ factory_map_type factory_map = {
 
 std::shared_ptr<construct> create_construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) {
 
-  std::shared_ptr<const srcml_node> node = node_list[start];
+  std::shared_ptr<const srcML::node> node = node_list[start];
   std::string tag_name;
   if(node->get_namespace()->get_prefix()) {
     tag_name = *node->get_namespace()->get_prefix() + ":";

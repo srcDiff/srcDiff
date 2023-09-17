@@ -37,12 +37,12 @@ const srcml_attribute diff_convert_type("type", DIFF_NAMESPACE, convert);
 srcdiff_single::srcdiff_single(std::shared_ptr<srcdiff_output> out, const std::shared_ptr<construct> & original_construct, const std::shared_ptr<construct> & modified_construct) 
   : out(out), original_construct(original_construct), modified_construct(modified_construct) {}
 
-static srcml_node::srcml_attribute_map merge_attributes(const srcml_node::srcml_attribute_map & attributes_original, const srcml_node::srcml_attribute_map & attributes_modified) {
+static srcML::node::srcml_attribute_map merge_attributes(const srcML::node::srcml_attribute_map & attributes_original, const srcML::node::srcml_attribute_map & attributes_modified) {
 
-  srcml_node::srcml_attribute_map attributes;
+  srcML::node::srcml_attribute_map attributes;
 
-  srcml_node::srcml_attribute_map_citr citr_original = attributes_original.begin();
-  srcml_node::srcml_attribute_map_citr citr_modified = attributes_modified.begin();
+  srcML::node::srcml_attribute_map_citr citr_original = attributes_original.begin();
+  srcML::node::srcml_attribute_map_citr citr_modified = attributes_modified.begin();
 
   while(citr_original != attributes_original.end() && citr_modified != attributes_modified.end()) {
 
@@ -121,7 +121,7 @@ void srcdiff_single::output_recursive_same() {
 
   } else {
 
-    std::shared_ptr<srcml_node> merged_node = std::make_shared<srcml_node>(*original_construct->root_term());
+    std::shared_ptr<srcML::node> merged_node = std::make_shared<srcML::node>(*original_construct->root_term());
     merged_node->set_empty(original_construct->root_term()->is_empty() && modified_construct->root_term()->is_empty());
     merged_node->set_attributes(merge_attributes(original_construct->root_term()->get_attributes(),
                                                  modified_construct->root_term()->get_attributes()));
@@ -172,8 +172,8 @@ void srcdiff_single::output_recursive_interchangeable() {
   srcdiff_whitespace whitespace(*out);
   whitespace.output_all();
 
-  const std::shared_ptr<srcml_node> & original_start_node = original_construct->root_term();
-  const std::shared_ptr<srcml_node> & modified_start_node = modified_construct->root_term();
+  const std::shared_ptr<srcML::node> & original_start_node = original_construct->root_term();
+  const std::shared_ptr<srcML::node> & modified_start_node = modified_construct->root_term();
 
   int original_collect_start_pos = 1;
   if(original_start_node->get_name() == "if_stmt") {
@@ -194,8 +194,8 @@ void srcdiff_single::output_recursive_interchangeable() {
   }
 
   // get keyword if present
-  const std::shared_ptr<srcml_node> & keyword_node_original = original_construct->term(original_collect_start_pos);
-  const std::shared_ptr<srcml_node> & keyword_node_modified = modified_construct->term(modified_collect_start_pos);
+  const std::shared_ptr<srcML::node> & keyword_node_original = original_construct->term(original_collect_start_pos);
+  const std::shared_ptr<srcML::node> & keyword_node_modified = modified_construct->term(modified_collect_start_pos);
   bool is_keyword  = keyword_node_original->is_text() && !keyword_node_original->is_whitespace();
   bool is_keywords = is_keyword
                      && keyword_node_modified->is_text() && !keyword_node_modified->is_whitespace();
@@ -262,8 +262,8 @@ void srcdiff_single::output_recursive_interchangeable() {
 
 void srcdiff_single::output() {
 
-  const std::shared_ptr<srcml_node> & start_node_original = original_construct->root_term();
-  const std::shared_ptr<srcml_node> & start_node_modified = modified_construct->root_term();
+  const std::shared_ptr<srcML::node> & start_node_original = original_construct->root_term();
+  const std::shared_ptr<srcML::node> & start_node_modified = modified_construct->root_term();
 
   if(start_node_original->get_name() == start_node_modified->get_name()
     && start_node_original->get_namespace()->get_uri() == start_node_modified->get_namespace()->get_uri()) {
