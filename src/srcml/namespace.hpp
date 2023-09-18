@@ -51,17 +51,17 @@ namespace srcML {
 
         static std::shared_ptr<name_space> get_namespace(xmlNsPtr ns);
 
+        static std::shared_ptr<name_space> SRC_NAMESPACE;
+        static std::shared_ptr<name_space> CPP_NAMESPACE;
+        static std::shared_ptr<name_space> DIFF_NAMESPACE;
+        static std::unordered_map<std::string, std::shared_ptr<name_space>> namespaces;
+
     private:
     
         std::string uri;
         std::optional<std::string> prefix;
 
     };
-
-    static std::shared_ptr<name_space> SRC_NAMESPACE = std::make_shared<name_space>("http://www.srcML.org/srcML/src");
-    static std::shared_ptr<name_space> CPP_NAMESPACE = std::make_shared<name_space>("http://www.srcML.org/srcML/cpp", "cpp");
-    static std::shared_ptr<name_space> DIFF_NAMESPACE = std::make_shared<name_space>("http://www.srcML.org/srcDiff", "diff");
-    static std::unordered_map<std::string, std::shared_ptr<name_space>> namespaces = {};
   
 }
 #endif

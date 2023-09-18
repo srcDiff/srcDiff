@@ -26,7 +26,7 @@
 
 #include <srcml.h>
 #include <namespace.hpp>
-#include <srcml_attribute.hpp>
+#include <attribute.hpp>
 #include <string>
 #include <list>
 #include <map>
@@ -47,23 +47,23 @@ namespace srcML {
 
     enum node_type : unsigned int  { OTHER = 0, START = 1, END = 2, TEXT = 3, WS = 4 };
 
-    typedef std::map<std::string, srcml_attribute, std::greater<std::string>> srcml_attribute_map;
-    typedef std::pair<std::string, srcml_attribute> srcml_attribute_map_pair;
-    typedef std::map<std::string, srcml_attribute, std::greater<std::string>>::const_iterator srcml_attribute_map_citr;
-    typedef std::map<std::string, srcml_attribute, std::greater<std::string>>::iterator srcml_attribute_map_itr;
+    typedef std::map<std::string, attribute, std::greater<std::string>> srcml_attribute_map;
+    typedef std::pair<std::string, attribute> srcml_attribute_map_pair;
+    typedef std::map<std::string, attribute, std::greater<std::string>>::const_iterator srcml_attribute_map_citr;
+    typedef std::map<std::string, attribute, std::greater<std::string>>::iterator srcml_attribute_map_itr;
 
     node();
     node(const xmlNode & node, xmlElementType xml_type);
     node(const std::string & text);
     node(const node & node);
-    node(node_type type, const std::string & name, const std::shared_ptr<srcML::name_space> & ns = SRC_NAMESPACE);
+    node(node_type type, const std::string & name, const std::shared_ptr<name_space> & ns = name_space::SRC_NAMESPACE);
 
     ~node();
 
     void clear_attributes();
 
     void set_attributes(const srcml_attribute_map & input);
-    void emplace_attribute(const std::string & type, const srcml_attribute & attr);
+    void emplace_attribute(const std::string & type, const attribute & attr);
     void set_type(node_type input);
     void set_empty(bool input);
     void set_temporary(bool input);
@@ -79,11 +79,11 @@ namespace srcML {
     const std::optional<std::string> & get_content() const;
     int get_move() const;
     std::optional<std::shared_ptr<node>> get_parent() const;
-    std::shared_ptr<srcML::name_space> get_namespace() const;
+    std::shared_ptr<name_space> get_namespace() const;
 
     std::string full_name() const;
-    const srcml_attribute * get_attribute(const std::string & attribute) const;
-    srcml_attribute * get_attribute(const std::string & attribute);
+    const attribute * get_attribute(const std::string & attribute) const;
+    attribute * get_attribute(const std::string & attribute);
     const std::optional<std::string> & get_attribute_value(const std::string & attribute) const;
 
     bool operator==(const node & node) const;
@@ -106,9 +106,9 @@ namespace srcML {
 
     node_type type;
     std::string name;
-    std::shared_ptr<srcML::name_space> ns;
+    std::shared_ptr<name_space> ns;
     std::optional<std::string> content;
-    std::list<std::shared_ptr<srcML::name_space>> ns_definition;
+    std::list<std::shared_ptr<name_space>> ns_definition;
     std::optional<std::shared_ptr<node>> parent;
     srcml_attribute_map attributes;
 

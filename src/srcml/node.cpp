@@ -57,7 +57,7 @@ srcML::node::node_type xml_type2srcml_type(xmlElementType type) {
 }
 
 srcML::node::node()
-  : type(srcML::node::node_type::OTHER), name(), ns(SRC_NAMESPACE), content(),
+  : type(srcML::node::node_type::OTHER), name(), ns(srcML::name_space::SRC_NAMESPACE), content(),
     ns_definition(), parent(), attributes(), temporary(false), empty(false), simple(true), move(0), user_data(), extra(0) {}
 
 srcML::node::node(const xmlNode & node, xmlElementType xml_type) 
@@ -81,7 +81,7 @@ srcML::node::node(const xmlNode & node, xmlElementType xml_type)
 
   xmlAttrPtr attribute = node.properties;
   while (attribute) {
-    srcml_attribute new_attribute = srcml_attribute(attribute);
+    srcML::attribute new_attribute = srcML::attribute(attribute);
     attributes.emplace(std::make_pair(new_attribute.full_name(), new_attribute));
     attribute = attribute->next;
   }
@@ -89,7 +89,7 @@ srcML::node::node(const xmlNode & node, xmlElementType xml_type)
 }
 
 srcML::node::node(const std::string & text) : type(srcML::node::node_type::TEXT), name("text"), 
-  ns(SRC_NAMESPACE), content(text), ns_definition(), parent(), attributes(), temporary(false), empty(false), simple(true), move(0), user_data(), extra(0) {}
+  ns(srcML::name_space::SRC_NAMESPACE), content(text), ns_definition(), parent(), attributes(), temporary(false), empty(false), simple(true), move(0), user_data(), extra(0) {}
 
 srcML::node::node(const srcML::node & node) : type(node.type), name(node.name), ns(node.ns),
   content(node.content), ns_definition(node.ns_definition), parent(node.parent), attributes(node.attributes), temporary(node.temporary), empty(node.empty), simple(node.simple), 
@@ -108,7 +108,7 @@ std::string srcML::node::full_name() const {
   return name;
 } 
 
-const srcml_attribute * srcML::node::get_attribute(const std::string & attribute) const {
+const srcML::attribute * srcML::node::get_attribute(const std::string & attribute) const {
 
   srcML::node::srcml_attribute_map_citr attribute_itr = attributes.find(attribute);
   if(attribute_itr == attributes.end()) return nullptr;
@@ -116,7 +116,7 @@ const srcml_attribute * srcML::node::get_attribute(const std::string & attribute
 
 }
 
-srcml_attribute * srcML::node::get_attribute(const std::string & attribute) {
+srcML::attribute * srcML::node::get_attribute(const std::string & attribute) {
 
   srcML::node::srcml_attribute_map_itr attribute_itr = attributes.find(attribute);
   if(attribute_itr == attributes.end()) return nullptr;
@@ -182,11 +182,11 @@ void srcML::node::clear_attributes() {
   attributes.clear();
 }
 
-void srcML::node::set_attributes(const srcml_attribute_map & input) {
+void srcML::node::set_attributes(const srcML::node::srcml_attribute_map & input) {
   attributes = input;
 }
 
-void srcML::node::emplace_attribute(const std::string & name, const srcml_attribute & attr) {
+void srcML::node::emplace_attribute(const std::string & name, const srcML::attribute & attr) {
   attributes.emplace(name, attr);
 }
 
