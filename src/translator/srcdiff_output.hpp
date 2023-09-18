@@ -1,7 +1,7 @@
 #ifndef INCLUDED_SRCDIFF_OUTPUT_HPP
 #define INCLUDED_SRCDIFF_OUTPUT_HPP
 
-#include <srcml_namespace.hpp>
+#include <namespace.hpp>
 #include <srcml_nodes.hpp>
 #include <srcdiff_options.hpp>
 #include <line_diff_range.hpp>
@@ -130,7 +130,7 @@ public:
   std::shared_ptr<srcML::node> diff_ws_start;
   std::shared_ptr<srcML::node> diff_ws_end;
 
-  std::shared_ptr<srcml_namespace> diff;
+  std::shared_ptr<srcML::name_space> diff;
 
   std::shared_ptr<srcML::node> unit_tag;
 

@@ -1,5 +1,5 @@
 /**
- * @file srcml_namespace.cpp
+ * @file srcml_attribute.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -19,7 +19,7 @@
  */
 
 #include <srcml.h>
-#include <srcml_namespace.hpp>
+#include <namespace.hpp>
 #include <memory>
 #include <string>
 #include <iostream>
@@ -34,14 +34,14 @@ public:
 
     srcml_attribute(xmlAttrPtr attribute);
     srcml_attribute(const std::string & name = std::string(),
-                    std::shared_ptr<srcml_namespace> ns = SRC_NAMESPACE,
+                    std::shared_ptr<srcML::name_space> ns = srcML::SRC_NAMESPACE,
                     std::optional<std::string> value = std::optional<std::string>());
 
     std::string full_name() const;
     void set_name(std::string input);
     void set_value(std::optional<std::string> input);
     const std::string & get_name() const;
-    std::shared_ptr<srcml_namespace> get_ns() const;
+    std::shared_ptr<srcML::name_space> get_ns() const;
     const std::optional<std::string> & get_value() const;
 
 
@@ -53,6 +53,6 @@ private:
 	
     std::string name;
     std::optional<std::string> value;
-    std::shared_ptr<srcml_namespace> ns;
+    std::shared_ptr<srcML::name_space> ns;
 
   };

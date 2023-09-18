@@ -1,5 +1,5 @@
 /*
-  srcML::node.cpp
+  node.cpp
 
   Copyright (C) 2018 srcML, LLC. (www.srcML.org)
 
@@ -69,13 +69,13 @@ srcML::node::node(const xmlNode & node, xmlElementType xml_type)
   if(node.content)
     content = std::string((const char *)node.content);
 
-  ns = srcml_namespace::get_namespace(node.ns);
+  ns = srcML::name_space::get_namespace(node.ns);
 
   if(type != srcML::node::node_type::START) return;
 
   xmlNsPtr node_ns = node.nsDef;
   while(node_ns) {
-    ns_definition.emplace_back(srcml_namespace::get_namespace(node_ns));
+    ns_definition.emplace_back(srcML::name_space::get_namespace(node_ns));
     node_ns = node_ns->next;
   }
 
@@ -95,7 +95,7 @@ srcML::node::node(const srcML::node & node) : type(node.type), name(node.name), 
   content(node.content), ns_definition(node.ns_definition), parent(node.parent), attributes(node.attributes), temporary(node.temporary), empty(node.empty), simple(node.simple), 
   move(node.move), user_data(node.user_data) {}
 
-srcML::node::node(node::node_type type, const std::string & name, const std::shared_ptr<srcml_namespace> & ns) 
+srcML::node::node(node::node_type type, const std::string & name, const std::shared_ptr<srcML::name_space> & ns) 
   : type(type), name(name), ns(ns), content(), ns_definition(), parent(), attributes(), temporary(false), empty(false), simple(false), move(0), user_data(), 
   extra(0) {}
 
@@ -246,7 +246,7 @@ std::optional<std::shared_ptr<srcML::node>> srcML::node::get_parent() const {
   return parent;
 }
 
-std::shared_ptr<srcml_namespace> srcML::node::get_namespace() const {
+std::shared_ptr<srcML::name_space> srcML::node::get_namespace() const {
   return ns;
 }
 

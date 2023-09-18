@@ -25,7 +25,7 @@
 #define INCLUDED_NODE_HPP
 
 #include <srcml.h>
-#include <srcml_namespace.hpp>
+#include <namespace.hpp>
 #include <srcml_attribute.hpp>
 #include <string>
 #include <list>
@@ -56,7 +56,7 @@ namespace srcML {
     node(const xmlNode & node, xmlElementType xml_type);
     node(const std::string & text);
     node(const node & node);
-    node(node_type type, const std::string & name, const std::shared_ptr<srcml_namespace> & ns = SRC_NAMESPACE);
+    node(node_type type, const std::string & name, const std::shared_ptr<srcML::name_space> & ns = SRC_NAMESPACE);
 
     ~node();
 
@@ -79,7 +79,7 @@ namespace srcML {
     const std::optional<std::string> & get_content() const;
     int get_move() const;
     std::optional<std::shared_ptr<node>> get_parent() const;
-    std::shared_ptr<srcml_namespace> get_namespace() const;
+    std::shared_ptr<srcML::name_space> get_namespace() const;
 
     std::string full_name() const;
     const srcml_attribute * get_attribute(const std::string & attribute) const;
@@ -106,9 +106,9 @@ namespace srcML {
 
     node_type type;
     std::string name;
-    std::shared_ptr<srcml_namespace> ns;
+    std::shared_ptr<srcML::name_space> ns;
     std::optional<std::string> content;
-    std::list<std::shared_ptr<srcml_namespace>> ns_definition;
+    std::list<std::shared_ptr<srcML::name_space>> ns_definition;
     std::optional<std::shared_ptr<node>> parent;
     srcml_attribute_map attributes;
 

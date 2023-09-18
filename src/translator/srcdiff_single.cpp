@@ -32,7 +32,7 @@
 #include <list>
 
 const std::string convert("convert");
-const srcml_attribute diff_convert_type("type", DIFF_NAMESPACE, convert);
+const srcml_attribute diff_convert_type("type", srcML::DIFF_NAMESPACE, convert);
 
 srcdiff_single::srcdiff_single(std::shared_ptr<srcdiff_output> out, const std::shared_ptr<construct> & original_construct, const std::shared_ptr<construct> & modified_construct) 
   : out(out), original_construct(original_construct), modified_construct(modified_construct) {}

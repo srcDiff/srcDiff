@@ -19,7 +19,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
                                const std::optional<std::string> & summary_type_str)
  : output_srcdiff(false), archive(archive), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
-   diff(std::make_shared<srcml_namespace>()) {
+   diff(std::make_shared<srcML::name_space>()) {
 
   if(is_option(flags, OPTION_VISUALIZE)) {
 
@@ -87,15 +87,15 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
   diff->set_uri(SRCDIFF_DEFAULT_NAMESPACE_HREF);
 
   unit_tag            = std::make_shared<srcML::node>(srcML::node::node_type::START, std::string("unit"));
-  diff_common_start   = std::make_shared<srcML::node>(srcML::node::node_type::START, DIFF_SES_COMMON, DIFF_NAMESPACE);
-  diff_common_end     = std::make_shared<srcML::node>(srcML::node::node_type::END, DIFF_SES_COMMON, DIFF_NAMESPACE);
-  diff_original_start = std::make_shared<srcML::node>(srcML::node::node_type::START, DIFF_ORIGINAL, DIFF_NAMESPACE);
-  diff_original_end   = std::make_shared<srcML::node>(srcML::node::node_type::END, DIFF_ORIGINAL, DIFF_NAMESPACE);
-  diff_modified_start = std::make_shared<srcML::node>(srcML::node::node_type::START, DIFF_MODIFIED, DIFF_NAMESPACE);
-  diff_modified_end   = std::make_shared<srcML::node>(srcML::node::node_type::END, DIFF_MODIFIED, DIFF_NAMESPACE);
+  diff_common_start   = std::make_shared<srcML::node>(srcML::node::node_type::START, DIFF_SES_COMMON, srcML::DIFF_NAMESPACE);
+  diff_common_end     = std::make_shared<srcML::node>(srcML::node::node_type::END, DIFF_SES_COMMON, srcML::DIFF_NAMESPACE);
+  diff_original_start = std::make_shared<srcML::node>(srcML::node::node_type::START, DIFF_ORIGINAL, srcML::DIFF_NAMESPACE);
+  diff_original_end   = std::make_shared<srcML::node>(srcML::node::node_type::END, DIFF_ORIGINAL, srcML::DIFF_NAMESPACE);
+  diff_modified_start = std::make_shared<srcML::node>(srcML::node::node_type::START, DIFF_MODIFIED, srcML::DIFF_NAMESPACE);
+  diff_modified_end   = std::make_shared<srcML::node>(srcML::node::node_type::END, DIFF_MODIFIED, srcML::DIFF_NAMESPACE);
   
-  diff_ws_start = std::make_shared<srcML::node>(srcML::node::node_type::START, DIFF_WHITESPACE, DIFF_NAMESPACE);
-  diff_ws_end   = std::make_shared<srcML::node>(srcML::node::node_type::END, DIFF_WHITESPACE, DIFF_NAMESPACE);
+  diff_ws_start = std::make_shared<srcML::node>(srcML::node::node_type::START, DIFF_WHITESPACE, srcML::DIFF_NAMESPACE);
+  diff_ws_end   = std::make_shared<srcML::node>(srcML::node::node_type::END, DIFF_WHITESPACE, srcML::DIFF_NAMESPACE);
 
  }
 
