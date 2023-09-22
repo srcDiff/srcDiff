@@ -62,8 +62,8 @@ void srcdiff_change::output() {
 
     // set attribute to change
     // @todo: modify this to use a different constructor
-    diff_original_start->set_attributes({{diff_type.get_name(), diff_type}});
-    diff_modified_start->set_attributes({{diff_type.get_name(), diff_type}});
+    diff_original_start->emplace_attribute(diff_type.get_name(), diff_type);
+    diff_modified_start->emplace_attribute(diff_type.get_name(), diff_type);
     is_replace = true;
 
     if(is_delay_type(SES_DELETE)) {
@@ -97,7 +97,7 @@ void srcdiff_change::output() {
         move.output();
 
         if(is_replace) {
-          diff_original_start->set_attributes({{diff_type.get_name(), diff_type}});
+          diff_original_start->emplace_attribute(diff_type.get_name(), diff_type);
         }
 
         continue;
@@ -167,7 +167,7 @@ void srcdiff_change::output() {
         move.output();
 
         if(is_replace) {
-          diff_modified_start->set_attributes({{diff_type.get_name(), diff_type}});
+          diff_modified_start->emplace_attribute(diff_type.get_name(), diff_type);
         }
 
         continue;
