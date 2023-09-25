@@ -37,7 +37,7 @@ bool construct::is_non_white_space(int & node_pos, const srcml_nodes & node_list
     const std::shared_ptr<srcML::node> & node = node_list[node_pos];
 
     // node is all whitespace (NOTE: in collection process whitespace is always a separate node)
-    return node->get_type() == srcML::node::node_type::START || (node->get_type() == srcML::node::node_type::TEXT && node->get_content() && !node->is_whitespace());
+    return node->get_type() == srcML::node_type::START || (node->get_type() == srcML::node_type::TEXT && node->get_content() && !node->is_whitespace());
 
 }
 
@@ -66,7 +66,7 @@ construct::construct_list construct::get_descendent_constructs(const srcml_nodes
         if(filter(pos, node_list, context)) {
 
             // text is separate node if not surrounded by a tag in range
-            if(node_list.at(pos)->get_type() == srcML::node::node_type::TEXT || node_list.at(pos)->get_type() == srcML::node::node_type::START) {
+            if(node_list.at(pos)->get_type() == srcML::node_type::TEXT || node_list.at(pos)->get_type() == srcML::node_type::START) {
                 descendent_constructs.push_back(create_construct(node_list, pos, out));
             } else {
                 return descendent_constructs;
@@ -88,11 +88,11 @@ construct::construct(const construct & that) : out(that.out), node_list(that.nod
 
 construct::construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : out(out), node_list(node_list), hash_value() {
 
-  if(node_list.at(start)->get_type() != srcML::node::node_type::TEXT && node_list.at(start)->get_type() != srcML::node::node_type::START) return;
+  if(node_list.at(start)->get_type() != srcML::node_type::TEXT && node_list.at(start)->get_type() != srcML::node_type::START) return;
 
   terms.push_back(start);
 
-  if(node_list.at(start)->is_empty() || node_list.at(start)->get_type() == srcML::node::node_type::TEXT) return;
+  if(node_list.at(start)->is_empty() || node_list.at(start)->get_type() == srcML::node_type::TEXT) return;
 
   ++start;
 
@@ -108,13 +108,13 @@ construct::construct(const srcml_nodes & node_list, int & start, std::shared_ptr
     terms.push_back(start);
 
     // opening tags
-    if(node_list.at(start)->get_type() == srcML::node::node_type::START
+    if(node_list.at(start)->get_type() == srcML::node_type::START
        && !(node_list.at(start)->is_empty())) {
       ++is_open;
     }
 
     // closing tags
-    else if(node_list.at(start)->get_type() == srcML::node::node_type::END) {
+    else if(node_list.at(start)->get_type() == srcML::node_type::END) {
       --is_open;
     }
   }

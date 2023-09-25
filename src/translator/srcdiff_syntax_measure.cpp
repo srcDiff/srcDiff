@@ -18,7 +18,7 @@ static bool is_significant(int & node_pos, const srcml_nodes & nodes, const void
   if(node->get_name() == "argument_list") {
 
     int pos = node_pos + 1;
-    while(pos < nodes.size() && (nodes[pos]->get_type() == srcML::node::node_type::START || nodes[pos]->get_name() != "argument_list")) {
+    while(pos < nodes.size() && (nodes[pos]->get_type() == srcML::node_type::START || nodes[pos]->get_name() != "argument_list")) {
 
       if(!nodes[pos]->is_text()) return true;
 
@@ -32,7 +32,7 @@ static bool is_significant(int & node_pos, const srcml_nodes & nodes, const void
 
   }
 
-  return !node->is_text() && node->get_type() == srcML::node::node_type::START
+  return !node->is_text() && node->get_type() == srcML::node_type::START
     && node->get_name() != "operator" && node->get_name() != "literal" && node->get_name() != "modifier";
 
 }
@@ -43,8 +43,8 @@ void srcdiff_syntax_measure::compute() {
 
   computed = true;
   
-  if(set_original.term(0)->get_type() != srcML::node::node_type::START
-     || set_modified.term(0)->get_type() != srcML::node::node_type::START
+  if(set_original.term(0)->get_type() != srcML::node_type::START
+     || set_modified.term(0)->get_type() != srcML::node_type::START
      || (*set_original.term(0) != *set_modified.term(0)
         && !set_original.is_tag_convertable(set_modified)
         && (set_original.term(0)->get_name() != "block" || set_modified.term(0)->get_name() != "block"))) {

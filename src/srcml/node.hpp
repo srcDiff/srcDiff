@@ -41,16 +41,16 @@
 
 namespace srcML {
 
+    enum node_type : unsigned int  { OTHER = 0, START = 1, END = 2, TEXT = 3, WS = 4 };
+
+    typedef std::map<std::string, attribute, std::greater<std::string>> attribute_map;
+    typedef std::pair<std::string, attribute> attribute_map_pair;
+    typedef std::map<std::string, attribute, std::greater<std::string>>::const_iterator attribute_map_citr;
+    typedef std::map<std::string, attribute, std::greater<std::string>>::iterator attribute_map_itr;
+
   class node {
 
   public:
-
-    enum node_type : unsigned int  { OTHER = 0, START = 1, END = 2, TEXT = 3, WS = 4 };
-
-    typedef std::map<std::string, attribute, std::greater<std::string>> srcml_attribute_map;
-    typedef std::pair<std::string, attribute> srcml_attribute_map_pair;
-    typedef std::map<std::string, attribute, std::greater<std::string>>::const_iterator srcml_attribute_map_citr;
-    typedef std::map<std::string, attribute, std::greater<std::string>>::iterator srcml_attribute_map_itr;
 
     node();
     node(const xmlNode & node, xmlElementType xml_type);
@@ -62,7 +62,7 @@ namespace srcML {
 
     void clear_attributes();
 
-    void set_attributes(const srcml_attribute_map & input);
+    void set_attributes(const attribute_map & input);
     void emplace_attribute(const std::string & type, const attribute & attr);
     void set_type(node_type input);
     void set_empty(bool input);
@@ -73,7 +73,7 @@ namespace srcML {
     void set_content(std::optional<std::string> input);
     void set_name(std::string input);
 
-    const srcml_attribute_map & get_attributes() const;
+    const attribute_map & get_attributes() const;
     node_type get_type() const;
     const std::string & get_name() const;
     const std::optional<std::string> & get_content() const;
@@ -110,7 +110,7 @@ namespace srcML {
     std::optional<std::string> content;
     std::list<std::shared_ptr<name_space>> ns_definition;
     std::optional<std::shared_ptr<node>> parent;
-    srcml_attribute_map attributes;
+    attribute_map attributes;
 
     bool temporary;
     bool empty;

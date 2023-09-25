@@ -98,7 +98,7 @@ void srcdiff_diff::output() {
 
         case SES_COMMON: {
 
-          if(construct_list_original.at(edits->offset_sequence_one)->term(0)->get_type() != srcML::node::node_type::TEXT) {
+          if(construct_list_original.at(edits->offset_sequence_one)->term(0)->get_type() != srcML::node_type::TEXT) {
 
             srcdiff_single diff(out,
                                 construct_list_original.at(edits->offset_sequence_one),

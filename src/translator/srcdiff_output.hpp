@@ -192,7 +192,7 @@ public:
 template<class T>
 void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
-  static const std::shared_ptr<srcML::node> flush = std::make_shared<srcML::node>(srcML::node::node_type::TEXT, "text");
+  static const std::shared_ptr<srcML::node> flush = std::make_shared<srcML::node>(srcML::node_type::TEXT, "text");
   output_node(flush, SES_COMMON);
 
   if(wstate->approximate) {

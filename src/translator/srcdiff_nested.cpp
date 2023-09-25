@@ -111,7 +111,7 @@ const nest_info nesting[] = {
 
 int is_block_type(const std::shared_ptr<construct> & structure) {
 
-  if(structure->root_term()->get_type() != srcML::node::node_type::START)
+  if(structure->root_term()->get_type() != srcML::node_type::START)
     return -1;
 
   if(structure->root_term()->get_namespace()->get_uri() != SRCML_SRC_NAMESPACE_HREF)
@@ -129,7 +129,7 @@ bool has_internal_structure(const std::shared_ptr<construct> & structure, const 
   if(!type) return false;
 
   for(unsigned int i = 1; i < structure->size(); ++i) {
-    if(structure->term(i)->get_type() == srcML::node::node_type::START
+    if(structure->term(i)->get_type() == srcML::node_type::START
               && structure->term(i)->get_name() == type)
       return true;
   }
@@ -141,7 +141,7 @@ bool is_nest_type(const std::shared_ptr<construct> & structure,
                   const std::shared_ptr<construct> & structure_other,
                   int type_index) {
 
-  if(structure->root_term()->get_type() != srcML::node::node_type::START)
+  if(structure->root_term()->get_type() != srcML::node_type::START)
     return false;
 
     if(structure->root_term()->get_namespace()->get_uri() != SRCML_SRC_NAMESPACE_HREF)
@@ -290,7 +290,7 @@ bool has_compound_inner(const std::shared_ptr<construct> & node_set_outer) {
   if(node_set_outer->root_term()->is_simple()) return false;
 
   for(unsigned int i = 1; i < node_set_outer->size(); ++i) {
-    if(node_set_outer->term(i)->get_type() == srcML::node::node_type::START
+    if(node_set_outer->term(i)->get_type() == srcML::node_type::START
       && node_set_outer->term(i)->get_name() == "name" && !node_set_outer->term(i)->is_simple())
       return true;
   }
@@ -920,25 +920,25 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
 
   } else if(structure_outer == "if" && !bool(find_attribute(construct_list_outer.at(start_outer)->root_term(), "type"))) {
 
-    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcML::node::node_type::START, "block");
+    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcML::node_type::START, "block");
 
   } else if(structure_outer == "while") {
 
-    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcML::node::node_type::END, "condition");
+    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcML::node_type::END, "condition");
     ++start_pos;
 
   } else if(structure_outer == "for") {
 
-    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcML::node::node_type::END, "control");
+    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcML::node_type::END, "control");
     ++start_pos;
 
   } else if(is_class_type(structure_outer)) {
 
-    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcML::node::node_type::START, "block");
+    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcML::node_type::START, "block");
     ++start_pos;
 
     end_pos = start_pos - 1;
-    advance_to_child(construct_list_outer.back()->nodes(), end_pos, srcML::node::node_type::END, "block");
+    advance_to_child(construct_list_outer.back()->nodes(), end_pos, srcML::node_type::END, "block");
 
   }
 
