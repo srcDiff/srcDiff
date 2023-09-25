@@ -42,37 +42,37 @@ srcdiff_single::srcdiff_single(std::shared_ptr<srcdiff_output> out, const std::s
 static srcML::attribute_map merge_attributes(const srcML::attribute_map & attributes_original, const srcML::attribute_map & attributes_modified) {
 
     srcML::attribute_map same_attributes;
-    srcML::attribute_map diff_attributes;
+    srcML::attribute_map original_attributes;
+    srcML::attribute_map modified_attributes;
     srcML::attribute_map attributes;
 
-    std::function<bool(srcML::attribute_map_pair, srcML::attribute_map_pair)> comparison = [](const srcML::attribute_map_pair & a, const srcML::attribute_map_pair & b) { return a.first == b.first; };
+    std::function<bool (srcML::attribute_map_pair, srcML::attribute_map_pair)> key_compare = [](const srcML::attribute_map_pair & a, const srcML::attribute_map_pair & b) { return a.first < b.first; };
 
-    /*
     std::set_intersection(attributes_original.begin(), attributes_original.end(), 
                           attributes_modified.begin(), attributes_modified.end(), 
-                          std::inserter(same_attributes, same_attributes.end()), comparison);
-    */
-    std::set_symmetric_difference(attributes_original.begin(), attributes_original.end(), 
-                                  attributes_modified.begin(), attributes_modified.end(), 
-                                  std::inserter(diff_attributes, diff_attributes.end()), comparison);
-    /*
-    for (const srcML::attribute_map_pair & pair : same_attributes) {
-        if (attributes_original[pair.first] != attributes_modified[pair.first]) {
-            attributes.emplace(pair.first, srcML::attribute(attributes_original[pair.first].get_name(), attributes_original[pair.first].get_ns(), *attributes_original[pair.first].get_value() + "|"));
-        }
-    }
-    */
+                          std::inserter(same_attributes, same_attributes.end()), key_compare);
 
-    for (const srcML::attribute_map_pair & pair : diff_attributes) {
-        if (attributes_original[pair.first] != attributes_modified[pair.first]) {
-            if (*attributes_modified[pair.first].get_value() == *attributes_original[pair.first].get_value()) {
-                attributes.emplace(pair.first, srcML::attribute(attributes_original[pair.first].get_name(), attributes_original[pair.first].get_ns(), *attributes_original[pair.first].get_value() + "|"));
-            }
-            else {
-                attributes.emplace(pair.first, srcML::attribute(attributes_original[pair.first].get_name(), attributes_original[pair.first].get_ns(), *attributes_original[pair.first].get_value() + "|" + *attributes_modified[pair.first].get_value()));
-            }
-        }
+    std::set_difference(attributes_original.begin(), attributes_original.end(), 
+                        attributes_modified.begin(), attributes_modified.end(), 
+                        std::inserter(original_attributes, original_attributes.end()), key_compare);
+
+    std::set_difference(attributes_modified.begin(), attributes_modified.end(),
+                        attributes_original.begin(), attributes_original.end(), 
+                        std::inserter(modified_attributes, modified_attributes.end()), key_compare);
+
+    std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << same_attributes.size() << '\n';
+    std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << original_attributes.size() << '\n';
+    std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << modified_attributes.size() << '\n';
+
+    for (const srcML::attribute_map_pair & pair : same_attributes) {
     }
+
+    for (const srcML::attribute_map_pair & pair : original_attributes) {
+    }
+
+    for (const srcML::attribute_map_pair & pair : modified_attributes) {
+    }
+
 
     return attributes;
 
