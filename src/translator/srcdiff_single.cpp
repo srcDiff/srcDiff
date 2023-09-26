@@ -60,17 +60,16 @@ static srcML::attribute_map merge_attributes(const srcML::attribute_map & attrib
                         attributes_original.begin(), attributes_original.end(), 
                         std::inserter(modified_attributes, modified_attributes.end()), key_compare);
 
-    std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << same_attributes.size() << '\n';
-    std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << original_attributes.size() << '\n';
-    std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << modified_attributes.size() << '\n';
-
     for (const srcML::attribute_map_pair & pair : same_attributes) {
+        attributes.emplace(pair.first, srcML::attribute(attributes_original.at(pair.first).get_name(), attributes_original.at(pair.first).get_ns(), *attributes_original.at(pair.first).get_value() + "|" + *attributes_modified.at(pair.first).get_value()));
     }
 
     for (const srcML::attribute_map_pair & pair : original_attributes) {
+        attributes.emplace(pair.first, srcML::attribute(attributes_original.at(pair.first).get_name(), attributes_original.at(pair.first).get_ns(), *attributes_original.at(pair.first).get_value() + "|"));
     }
 
     for (const srcML::attribute_map_pair & pair : modified_attributes) {
+        attributes.emplace(pair.first, srcML::attribute(attributes_modified.at(pair.first).get_name(), attributes_modified.at(pair.first).get_ns(), "|" + *attributes_modified.at(pair.first).get_value()));
     }
 
 
