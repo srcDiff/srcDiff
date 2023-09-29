@@ -86,6 +86,9 @@ namespace srcML {
     attribute * get_attribute(const std::string & attribute);
     const std::optional<std::string> & get_attribute_value(const std::string & attribute) const;
 
+    void merge(const node & that);
+    void merge_attributes(const attribute_map & that);
+
     bool operator==(const node & node) const;
     bool operator!=(const node & node) const;
 

@@ -39,44 +39,6 @@ const srcML::attribute diff_convert_type("type", srcML::name_space::DIFF_NAMESPA
 srcdiff_single::srcdiff_single(std::shared_ptr<srcdiff_output> out, const std::shared_ptr<construct> & original_construct, const std::shared_ptr<construct> & modified_construct) 
     : out(out), original_construct(original_construct), modified_construct(modified_construct) {}
 
-static srcML::attribute_map merge_attributes(const srcML::attribute_map & attributes_original, const srcML::attribute_map & attributes_modified) {
-
-    srcML::attribute_map same_attributes;
-    srcML::attribute_map original_attributes;
-    srcML::attribute_map modified_attributes;
-    srcML::attribute_map attributes;
-
-    std::function<bool (srcML::attribute_map_pair, srcML::attribute_map_pair)> key_compare = [](const srcML::attribute_map_pair & a, const srcML::attribute_map_pair & b) { return a.first < b.first; };
-
-    std::set_intersection(attributes_original.begin(), attributes_original.end(), 
-                          attributes_modified.begin(), attributes_modified.end(), 
-                          std::inserter(same_attributes, same_attributes.end()), key_compare);
-
-    std::set_difference(attributes_original.begin(), attributes_original.end(), 
-                        attributes_modified.begin(), attributes_modified.end(), 
-                        std::inserter(original_attributes, original_attributes.end()), key_compare);
-
-    std::set_difference(attributes_modified.begin(), attributes_modified.end(),
-                        attributes_original.begin(), attributes_original.end(), 
-                        std::inserter(modified_attributes, modified_attributes.end()), key_compare);
-
-    for (const srcML::attribute_map_pair & pair : same_attributes) {
-        attributes.emplace(pair.first, srcML::attribute(attributes_original.at(pair.first).get_name(), attributes_original.at(pair.first).get_ns(), *attributes_original.at(pair.first).get_value() + "|" + *attributes_modified.at(pair.first).get_value()));
-    }
-
-    for (const srcML::attribute_map_pair & pair : original_attributes) {
-        attributes.emplace(pair.first, srcML::attribute(attributes_original.at(pair.first).get_name(), attributes_original.at(pair.first).get_ns(), *attributes_original.at(pair.first).get_value() + "|"));
-    }
-
-    for (const srcML::attribute_map_pair & pair : modified_attributes) {
-        attributes.emplace(pair.first, srcML::attribute(attributes_modified.at(pair.first).get_name(), attributes_modified.at(pair.first).get_ns(), "|" + *attributes_modified.at(pair.first).get_value()));
-    }
-
-
-    return attributes;
-
-}
-
 void srcdiff_single::output_recursive_same() {
 
     srcdiff_whitespace whitespace(*out);
@@ -93,9 +55,7 @@ void srcdiff_single::output_recursive_same() {
     } else {
 
         std::shared_ptr<srcML::node> merged_node = std::make_shared<srcML::node>(*original_construct->root_term());
-        merged_node->set_empty(original_construct->root_term()->is_empty() && modified_construct->root_term()->is_empty());
-        merged_node->set_attributes(merge_attributes(original_construct->root_term()->get_attributes(),
-                                    modified_construct->root_term()->get_attributes()));
+        merged_node->merge(*modified_construct->root_term());
         out->output_node(merged_node, SES_COMMON);
 
     }
