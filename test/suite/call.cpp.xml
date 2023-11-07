@@ -38,5 +38,8 @@
 <expr_stmt><expr><diff:delete><call><diff:common><name><name>a</name><operator>.</operator><name>b</name><operator>.</operator><name><diff:delete type="replace">c</diff:delete><diff:insert type="replace">d</diff:insert></name></name></diff:common><argument_list>()</argument_list></call></diff:delete></expr>;</expr_stmt>
 </unit>
 
+<unit language="C++" filename="call|call">
+<diff:delete type="replace" xmlns:diff="http://www.srcML.org/srcDiff"><expr_stmt><expr><call><name><name>merged_node</name><operator>-&gt;</operator><name>set_empty</name></name><argument_list>(<argument><expr><call><name><name>original_construct</name><operator>-&gt;</operator><name>root_term</name></name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name>is_empty</name><argument_list>()</argument_list></call><diff:ws xmlns:diff="http://www.srcML.org/srcDiff"> </diff:ws><operator>&amp;&amp;</operator><diff:ws xmlns:diff="http://www.srcML.org/srcDiff"> </diff:ws><call><name><name>modified_construct</name><operator>-&gt;</operator><name>root_term</name></name><argument_list>()</argument_list></call><operator>-&gt;</operator><call><name>is_empty</name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></diff:delete><diff:insert type="replace" xmlns:diff="http://www.srcML.org/srcDiff"><expr_stmt><expr><call><name><name>merged_node</name><operator>-&gt;</operator><name>merge</name></name><argument_list>(<argument><expr><operator>*</operator><call><name><name>modified_construct</name><operator>-&gt;</operator><name>root_term</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</expr_stmt></diff:insert>
+</unit>
 
 </unit>

@@ -20,6 +20,11 @@
 
 #include <expr.hpp>
 
+bool expr_t::is_single_call() const {
+	if(children().size() != 1) return false;
+	return children().front()->root_term_name() == "call";
+}
+
 bool expr_t::is_matchable_impl(const construct & modified) const {
 	const srcdiff_measure & expr_measure = *measure(modified);
 	if(expr_measure.similarity() > 0 && expr_measure.difference() <= expr_measure.max_length()) return true;
