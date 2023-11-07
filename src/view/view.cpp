@@ -583,11 +583,9 @@ void view_t::charactersRoot(const char * ch, int len) {}
 void view_t::charactersUnit(const char * ch, int len) {
 
   // Need diff on stack for this but not others so use srcml_element_stack here only
-  if(srcml_element_stack.size() > 1 && srcml_element_stack.back() == "diff:delete" 
+  if(!save_name && srcml_element_stack.size() > 1 && srcml_element_stack.back() == "diff:delete" 
     && (srcml_element_stack.at(srcml_element_stack.size() - 2) == "name"
       || srcml_element_stack.at(srcml_element_stack.size() - 2) == "operator")) {
-    
-    assert(!save_name);
 
     save_name = true;
     saved_name_type = srcml_element_stack.at(srcml_element_stack.size() - 2);
