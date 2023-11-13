@@ -450,7 +450,9 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   options.archive = srcml_archive_create();
   srcml_archive_enable_solitary_unit(options.archive);
   srcml_archive_disable_hash(options.archive);
-  srcml_archive_register_namespace(options.archive, "diff", SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
+  srcml_archive_register_namespace(options.archive,
+      SRCDIFF_DEFAULT_NAMESPACE_PREFIX.c_str(),
+      SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
 
   general.add_options()
     ("help,h", boost::program_options::bool_switch()->notifier(&option_help), "Output srcdiff help message")

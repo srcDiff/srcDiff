@@ -168,7 +168,10 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
  void srcdiff_output::start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version) {
 
   wstate->unit = srcml_unit_create(archive);
-
+  srcml_unit_register_namespace(wstate->unit,
+      srcML::name_space::DIFF_NAMESPACE->get_prefix()->c_str(),
+      srcML::name_space::DIFF_NAMESPACE->get_uri().c_str()
+  );
   srcml_unit_set_language(wstate->unit, language_string.c_str());
 
   srcml_unit_set_filename(wstate->unit, unit_filename ? unit_filename->c_str() : 0);
@@ -522,7 +525,11 @@ void srcdiff_output::output_node_inner(const srcML::node & node) {
 
     
     // start the element
-    srcml_write_start_element(wstate->unit, node.get_namespace()->get_prefix() ? node.get_namespace()->get_prefix()->c_str() : 0, node.get_name().c_str(), node.get_namespace()->get_uri().c_str());
+    srcml_write_start_element(wstate->unit,
+      node.get_namespace()->get_prefix() ? node.get_namespace()->get_prefix()->c_str() : 0,
+      node.get_name().c_str(),
+      nullptr//node.get_namespace()->get_uri().c_str()
+      );
 
     // copy all the attributes
     {
