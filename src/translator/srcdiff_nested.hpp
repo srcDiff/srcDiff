@@ -24,7 +24,12 @@ static bool check_nestable_predicate(const construct::construct_list & construct
 public:
 
   static int best_match(const construct::construct_list & set, const std::shared_ptr<construct> & match);
-  
+  static bool is_decl_stmt_from_expr(const srcml_nodes & nodes, int pos);
+  static bool check_nest_name(const construct & set_original,
+                              std::optional<std::shared_ptr<srcML::node>> parent_original,
+                              const construct & set_modified,
+                              std::optional<std::shared_ptr<srcML::node>> parent_modified);
+
   srcdiff_nested(const srcdiff_many & diff, int start_original, int end_original, int start_modified, int end_modified, int operation);
 
   void output_inner(srcdiff_whitespace & whitespace,
@@ -52,11 +57,6 @@ public:
 
   static bool is_better_nested(const construct::construct_list & construct_list_original, int start_pos_original,
                                const construct::construct_list & construct_list_modified, int start_pos_modified);
-
-  static bool reject_match_nested(const srcdiff_measure & measure,
-                                  const std::shared_ptr<construct> & set_original,
-                                  const std::shared_ptr<construct> & set_modified);
-
 };
 
 #endif

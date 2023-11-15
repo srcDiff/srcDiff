@@ -116,6 +116,8 @@ public:
     bool is_convertable(const construct & modified) const;
     virtual bool is_convertable_impl(const construct & modified) const;
 
+    virtual bool can_nest(const construct & modified) const;
+
 protected:
     std::shared_ptr<srcdiff_output> out;
 

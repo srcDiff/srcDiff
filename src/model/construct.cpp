@@ -451,3 +451,44 @@ bool construct::is_convertable(const construct & modified) const {
 bool construct::is_convertable_impl(const construct & modified) const {
     return false;
 }
+
+bool construct::can_nest(const construct & modified) const {
+
+  const srcdiff_measure & measure = *this->measure(modified);
+
+  int original_pos = start_position();
+  int modified_pos = modified.start_position();
+
+  const std::string & original_tag = root_term_name();
+  const std::string & modified_tag = modified.root_term_name();
+
+  const std::string & original_uri = root_term()->get_namespace()->get_uri();
+  const std::string & modified_uri = modified.root_term()->get_namespace()->get_uri();
+
+  if(original_tag != modified_tag && !is_tag_convertable(modified)) return false;
+
+  // if interchanging decl_stmt always nest expr into init or argument
+  if(original_tag == "expr" && (srcdiff_nested::is_decl_stmt_from_expr(nodes(), original_pos) || srcdiff_nested::is_decl_stmt_from_expr(modified.nodes(), modified_pos))) return true;
+
+  if(original_tag == "name"
+    && root_term()->is_simple() != modified.root_term()->is_simple()
+    && !srcdiff_nested::check_nest_name(*this, root_term()->get_parent(),
+                        modified, modified.root_term()->get_parent()))
+    return false;
+
+  if(original_tag == "then" || original_tag == "block" || original_tag == "block_content"
+    || original_tag == "comment"
+    || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier"
+    || original_tag == "expr" || original_tag == "expr_stmt" || original_tag == "name"
+    || original_tag == "number" || original_tag == "file") {
+
+    return is_similar(modified);
+
+  } else {
+
+    return can_refine_difference(modified);
+
+  }
+
+}
+

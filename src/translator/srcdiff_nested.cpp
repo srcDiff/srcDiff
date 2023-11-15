@@ -239,7 +239,7 @@ bool srcdiff_nested::is_same_nestable(const std::shared_ptr<construct> & structu
 
   return (match_measure.similarity() >= measure.similarity() && match_measure.difference() <= measure.difference()) 
   || (match_min_size > 50 && min_size > 50 && (match_min_size / match_measure.similarity()) < (0.9 * (min_size / measure.similarity()))
-    && !srcdiff_nested::reject_match_nested(match_measure, set.at(match), structure_one));
+    && set.at(match)->can_nest(*structure_one));
 
 }
 
@@ -274,7 +274,7 @@ bool is_better_nest_no_recursion(const std::shared_ptr<construct> & node_set_out
 
         if((match_measure.similarity() >= measure.similarity() && match_measure.difference() <= measure.difference())
          || ((nest_min_size / match_measure.similarity()) < (min_size / measure.similarity())
-            && !srcdiff_nested::reject_match_nested(match_measure, node_set_inner, node_set_outer)))
+            && node_set_inner->can_nest(*node_set_outer)))
           return true;
     
       }
@@ -332,7 +332,7 @@ bool is_better_nest(const std::shared_ptr<construct> & node_set_outer,
         // old code used node_set_outer (i.e., is it interchangeable) this seemed wrong
         // fixes test case, but it failed because interchange not implemented (passes now)
         // that interchange implemented
-          && !srcdiff_nested::reject_match_nested(match_measure, node_set_inner, set.at(match)))
+          && node_set_inner->can_nest(*set.at(match)))
        )
         // check if other way is better
         return !is_better_nest_no_recursion(node_set_inner, node_set_outer, match_measure);
@@ -383,7 +383,7 @@ bool srcdiff_nested::is_better_nested(const construct::construct_list & construc
 
 }
 
-static bool is_decl_stmt_from_expr(const srcml_nodes & nodes, int pos) {
+bool srcdiff_nested::is_decl_stmt_from_expr(const srcml_nodes & nodes, int pos) {
 
   if((*nodes.at(pos)->get_parent())->get_name() == "init") {
 
@@ -404,16 +404,16 @@ static bool is_decl_stmt_from_expr(const srcml_nodes & nodes, int pos) {
 
 }
 
-bool check_nest_name(const std::shared_ptr<construct> & set_original,
+bool srcdiff_nested::check_nest_name(const construct & set_original,
                      std::optional<std::shared_ptr<srcML::node>> parent_original,
-                     const std::shared_ptr<construct> & set_modified,
+                     const construct & set_modified,
                      std::optional<std::shared_ptr<srcML::node>> parent_modified) {
 
-  int original_pos = set_original->start_position();
-  int modified_pos = set_modified->start_position();
+  int original_pos = set_original.start_position();
+  int modified_pos = set_modified.start_position();
 
-  if(set_original->root_term_name() == "text") return false;
-  if(set_modified->root_term_name() == "text") return false;
+  if(set_original.root_term_name() == "text") return false;
+  if(set_modified.root_term_name() == "text") return false;
 
   bool is_call_name_original = parent_original && (*parent_original)->get_name() == "call";
   bool is_expr_name_original = parent_original && (*parent_original)->get_name() == "expr";
@@ -434,11 +434,11 @@ bool check_nest_name(const std::shared_ptr<construct> & set_original,
 
   if(is_call_name_original && is_expr_name_modified) {
 
-    int simple_name_pos = set_original->start_position();
-    if(set_original->nodes().at(simple_name_pos)->get_name() == "name") {
+    int simple_name_pos = set_original.start_position();
+    if(set_original.nodes().at(simple_name_pos)->get_name() == "name") {
 
-      std::shared_ptr<construct> inner_set = std::make_shared<construct>(set_original->nodes(), simple_name_pos);
-      srcdiff_text_measure measure(*inner_set, *set_modified);
+      std::shared_ptr<construct> inner_set = std::make_shared<construct>(set_original.nodes(), simple_name_pos);
+      srcdiff_text_measure measure(*inner_set, set_modified);
       int count = measure.number_match_beginning();
       return 2 * count >= measure.max_length();
 
@@ -448,11 +448,11 @@ bool check_nest_name(const std::shared_ptr<construct> & set_original,
 
   if(is_call_name_modified && is_expr_name_original) {
 
-    int simple_name_pos = set_modified->start_position();
-    if(set_modified->nodes().at(simple_name_pos)->get_name() == "name") {
+    int simple_name_pos = set_modified.start_position();
+    if(set_modified.nodes().at(simple_name_pos)->get_name() == "name") {
 
-      std::shared_ptr<construct> inner_set = std::make_shared<construct>(set_modified->nodes(), simple_name_pos);
-      srcdiff_text_measure measure(*set_original, *inner_set);
+      std::shared_ptr<construct> inner_set = std::make_shared<construct>(set_modified.nodes(), simple_name_pos);
+      srcdiff_text_measure measure(set_original, *inner_set);
       int count = measure.number_match_beginning();
       return 2 * count >= measure.max_length();
 
@@ -461,47 +461,6 @@ bool check_nest_name(const std::shared_ptr<construct> & set_original,
   }
 
   return false;
-
-}
-
-bool srcdiff_nested::reject_match_nested(const srcdiff_measure & measure,
-                                         const std::shared_ptr<construct> & set_original,
-                                         const std::shared_ptr<construct> & set_modified) {
-
-  int original_pos = set_original->start_position();
-  int modified_pos = set_modified->start_position();
-
-  const std::string & original_tag = set_original->root_term_name();
-  const std::string & modified_tag = set_modified->root_term_name();
-
-  const std::string & original_uri = set_original->root_term()->get_namespace()->get_uri();
-  const std::string & modified_uri = set_modified->root_term()->get_namespace()->get_uri();
-
-  if(original_tag != modified_tag && !set_original->is_tag_convertable(*set_modified)) return true;
-
-  // if interchanging decl_stmt always nest expr into init or argument
-  if(original_tag == "expr" && (is_decl_stmt_from_expr(set_original->nodes(), original_pos) || is_decl_stmt_from_expr(set_modified->nodes(), modified_pos))) return false;
-
-  if(original_tag == "name"
-    && set_original->root_term()->is_simple() != set_modified->root_term()->is_simple()
-    && !check_nest_name(set_original, set_original->root_term()->get_parent(),
-                       set_modified, set_modified->root_term()->get_parent()))
-    return true;
-
-  if(original_tag == "then" || original_tag == "block" || original_tag == "block_content"
-    || original_tag == "comment"
-    || original_tag == "literal" || original_tag == "operator" || original_tag == "modifier"
-    || original_tag == "expr" || original_tag == "expr_stmt" || original_tag == "name"
-    || original_tag == "number" || original_tag == "file") {
-
-    bool is_reject = !set_original->is_similar(*set_modified);
-    return is_reject;
-
-  } else {
-
-    return !set_original->can_refine_difference(*set_modified);
-
-  }
 
 }
 
@@ -535,9 +494,7 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
         srcdiff_text_measure measure(*set.at(match), *construct_list_modified.at(j));
         measure.compute();
 
-        if(srcdiff_nested::reject_match_nested(measure,
-                                               set.at(match),
-                                               construct_list_modified.at(j))) {
+        if(!set.at(match)->can_nest(*construct_list_modified.at(j))) {
           continue;
         }
 
@@ -565,8 +522,8 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
             }
 
             if((*parent_original)->get_name() != (*parent_modified)->get_name()
-              && !check_nest_name(set.at(match), parent_original,
-                                  construct_list_modified.at(j), parent_modified)) {
+              && !srcdiff_nested::check_nest_name(*set.at(match), parent_original,
+                                  *construct_list_modified.at(j), parent_modified)) {
               continue;
             }
 
@@ -619,9 +576,7 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
         srcdiff_text_measure measure(*construct_list_original.at(j), *set.at(match));
         measure.compute();
 
-        if(srcdiff_nested::reject_match_nested(measure,
-                                               construct_list_original.at(j),
-                                               set.at(match))) {
+        if(!construct_list_original.at(j)->can_nest(*set.at(match))) {
           continue;
         }
 
@@ -649,8 +604,8 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
             }
 
             if((*parent_original)->get_name() != (*parent_modified)->get_name()
-              && !check_nest_name(construct_list_original.at(j), parent_original,
-                                  set.at(match), parent_modified)) {
+              && !srcdiff_nested::check_nest_name(*construct_list_original.at(j), parent_original,
+                                  *set.at(match), parent_modified)) {
               continue;
             }
 
@@ -730,7 +685,7 @@ bool srcdiff_nested::check_nestable_predicate(const construct::construct_list & 
   srcdiff_text_measure measure(*match, *construct_list_inner.at(pos_inner));
   measure.compute();
 
-  if(reject_match_nested(measure, match, construct_list_inner.at(pos_inner)))
+  if(!match->can_nest(*construct_list_inner.at(pos_inner)))
     return true;
 
   if(is_better_nest(construct_list_inner.at(pos_inner), construct_list_outer.at(pos_outer), measure))
@@ -764,8 +719,8 @@ bool srcdiff_nested::check_nestable_predicate(const construct::construct_list & 
       }
 
       if((*parent_outer)->get_name() != (*parent_inner)->get_name()
-        && !check_nest_name(match, parent_outer,
-                            construct_list_inner.at(pos_inner), parent_inner))
+        && !srcdiff_nested::check_nest_name(*match, parent_outer,
+                            *construct_list_inner.at(pos_inner), parent_inner))
         return true;
 
   }
