@@ -116,7 +116,10 @@ public:
     bool is_convertable(const construct & modified) const;
     virtual bool is_convertable_impl(const construct & modified) const;
 
+    // can nest -> can it be placed inside
     virtual bool can_nest(const construct & modified) const;
+    // does it have a nest target that is better
+    //virtual bool is_nest(const construct & modified) const;
 
 protected:
     std::shared_ptr<srcdiff_output> out;
