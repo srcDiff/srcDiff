@@ -17,8 +17,7 @@ class theme_t;
 class keywords_t {
 
 protected:
-
-    std::unordered_map<std::string, std::string>  color_map;
+    std::unordered_map<std::string, std::string> color_map;
 
 public:
 

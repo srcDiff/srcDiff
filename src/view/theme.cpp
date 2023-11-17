@@ -34,9 +34,8 @@ theme_t::~theme_t() {
 
 void theme_t::set_langauge(const std::string & language) {
 
-    if(language == "C++")  keywords = new cpp_keywords(*this);
-    if(language == "C")    keywords = new cpp_keywords(*this);
     if(language == "Java") keywords = new java_keywords(*this);
+    else                   keywords = new cpp_keywords(*this);
 
 }
 
