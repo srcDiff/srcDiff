@@ -253,38 +253,6 @@ bool srcdiff_nested::is_nestable(const std::shared_ptr<construct> & structure_on
 
 }
 
-bool is_better_nest_no_recursion(const std::shared_ptr<construct> & node_set_outer,
-                                 const std::shared_ptr<construct> & node_set_inner,
-                                 const srcdiff_measure & measure) {
-
-    if(srcdiff_nested::is_nestable(node_set_inner, node_set_outer)) {
-
-      construct::construct_list set = construct::get_descendent_constructs(node_set_outer->nodes(), node_set_outer->get_terms().at(1), node_set_outer->end_position(), construct::is_match,
-                                &node_set_inner->root_term());
-
-      int match = srcdiff_nested::best_match(set, node_set_inner);
-
-      if(match < set.size()) {
-
-        srcdiff_text_measure match_measure(*set.at(match), *node_set_inner);
-        match_measure.compute();
-
-        double min_size = measure.min_length();
-        double nest_min_size = match_measure.min_length();
-
-        if((match_measure.similarity() >= measure.similarity() && match_measure.difference() <= measure.difference())
-         || ((nest_min_size / match_measure.similarity()) < (min_size / measure.similarity())
-            && node_set_inner->can_nest(*node_set_outer)))
-          return true;
-    
-      }
-
-    }
-
-    return false;
-
-}
-
 bool has_compound_inner(const std::shared_ptr<construct> & node_set_outer) {
 
   if(node_set_outer->root_term()->is_simple()) return false;
@@ -301,7 +269,7 @@ bool has_compound_inner(const std::shared_ptr<construct> & node_set_outer) {
 
 bool is_better_nest(const std::shared_ptr<construct> & node_set_outer,
                     const std::shared_ptr<construct> & node_set_inner,
-                    const srcdiff_measure & measure) {
+                    const srcdiff_measure & measure, bool recurse = true) {
 
   // do not nest compound name in simple or anything into something that is not compound
   if(node_set_outer->root_term_name() == "name" && node_set_inner->root_term_name() == "name"
@@ -333,9 +301,10 @@ bool is_better_nest(const std::shared_ptr<construct> & node_set_outer,
         // fixes test case, but it failed because interchange not implemented (passes now)
         // that interchange implemented
           && node_set_inner->can_nest(*set.at(match)))
-       )
+       ) {
         // check if other way is better
-        return !is_better_nest_no_recursion(node_set_inner, node_set_outer, match_measure);
+        return recurse? !is_better_nest(node_set_inner, node_set_outer, match_measure, false) : true;
+      }
 
     }
 
