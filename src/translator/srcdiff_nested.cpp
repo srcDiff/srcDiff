@@ -647,6 +647,41 @@ bool srcdiff_nested::check_nestable_predicate(const construct::construct_list & 
  *
  */
 
+std::tuple<construct::construct_list, int, int> check_nestable(const construct::construct_list_view & parent_list, const construct::construct_list_view & child_list) {
+
+  for(size_t i = 0; i < parent_list.size(); ++i) {
+
+    if(parent_list[i]->root_term()->get_move()) continue;
+
+    for(size_t j = 0; j < child_list.size(); ++j) {
+
+      // if(check_nestable_predicate(parent_list, i, 0, parent_list.size(), child_list, j, 0, child_list.size())) {
+      //   continue;
+      // }
+
+      std::tuple<construct::construct_list, int, int> nestings = std::make_tuple(construct::construct_list(), i, i + 1);
+      std::get<0>(nestings).push_back(child_list[j]);
+
+      for(int k = j + 1; k < child_list.size(); ++k) {
+
+        // if(check_nestable_predicate(parent_list, i, 0, parent_list.size(), child_list, k, 0, child_list.size())) {
+        //   continue;
+        // }
+
+        std::get<0>(nestings).push_back(child_list[k]);
+
+      }
+
+      return nestings;
+    }
+  }
+
+  return std::make_tuple(construct::construct_list(), 0, 0);
+
+}
+
+
+
 void srcdiff_nested::check_nestable(const construct::construct_list & construct_list_original, int start_original, int end_original
                  , const construct::construct_list & construct_list_modified, int start_modified, int end_modified
                  , int & start_nest_original, int & end_nest_original, int & start_nest_modified, int & end_nest_modified

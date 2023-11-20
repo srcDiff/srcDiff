@@ -49,26 +49,6 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
                                                 is_option(flags, OPTION_HTML_VIEW),
                                                 view_options.side_by_side_tab_size);
 
-  } else if(is_option(flags, OPTION_DIFFDOC_VIEW)) {
-
-    summary = std::make_shared<srcdiff_summary>();
-    view = std::make_shared<diffdoc_view>(srcdiff_filename,
-                                           view_options.syntax_highlight,
-                                           view_options.theme,
-                                           summary);
-
-    if(view_options.srcdiff_filename) {
-      output_srcdiff = true;
-      int ret_status = srcml_archive_write_open_filename(archive, view_options.srcdiff_filename->c_str());
-      if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
-    }
-
-  }  else if(is_option(flags, OPTION_SUMMARY)) {
-
-#ifndef _MSC_BUILD
-    summary = std::make_shared<srcdiff_summary>(srcdiff_filename, summary_type_str);
-#endif
-    
   } else if(!is_option(flags, OPTION_BURST)) {
       output_srcdiff = true;
       int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str());

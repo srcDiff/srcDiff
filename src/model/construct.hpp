@@ -29,12 +29,15 @@
 
 #include <optional>
 #include <memory>
+#include <span>
 
 class construct {
 
 public:
 
     typedef std::vector<std::shared_ptr<construct>> construct_list;
+    typedef std::span<std::shared_ptr<construct>> construct_list_view;
+
     typedef std::function<bool (int & node_pos, const srcml_nodes & node_list, const void * context)> construct_filter;
 
     static bool is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context);

@@ -26,9 +26,6 @@ add_subdirectory(translator)
 add_subdirectory(model)
 add_subdirectory(project)
 add_subdirectory(view)
-if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-add_subdirectory(summary)
-endif()
 add_subdirectory(srcSAX/src)
 
 if(WIN32)
@@ -46,15 +43,9 @@ set(SRCDIFF_LIBRARY_SOURCE_EXTRA CACHE INTERNAL "libsrcdiff Extra Source")
 # 
 macro(build_library LIBRARY_NAME LIBRARY_TYPE)
 
-if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> 
-    $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:project>
-    $<TARGET_OBJECTS:view> $<TARGET_OBJECTS:summary>)
-else()
-    add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> 
-    $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:project>
-    $<TARGET_OBJECTS:view>)
-endif()
+add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> 
+$<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:project>
+$<TARGET_OBJECTS:view>)
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME libsrcdiff LINK_FLAGS_DEBUG "/SAFESEH:NO")
