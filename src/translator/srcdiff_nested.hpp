@@ -20,9 +20,7 @@ protected:
 private:
 
 static bool check_nestable_predicate(construct::construct_list_view construct_list_outer,
-                                     int pos_outer, int start_outer, int end_outer,
-                                     construct::construct_list_view construct_list_inner,
-                                     int pos_inner, int start_inner, int end_inner);
+                                     construct::construct_list_view construct_list_inner);
 public:
 
   static bool is_decl_stmt_from_expr(const srcml_nodes & nodes, int pos);
