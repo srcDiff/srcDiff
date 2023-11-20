@@ -109,7 +109,7 @@ const nest_info nesting[] = {
 
 };
 
-int is_block_type(const std::shared_ptr<construct> & structure) {
+int is_block_type(std::shared_ptr<const construct> & structure) {
 
   if(structure->root_term()->get_type() != srcML::node_type::START)
     return -1;
@@ -124,7 +124,7 @@ int is_block_type(const std::shared_ptr<construct> & structure) {
   return -1;
 }
 
-bool has_internal_structure(const std::shared_ptr<construct> & structure, const std::optional<std::string> & type) {
+bool has_internal_structure(std::shared_ptr<const construct> & structure, const std::optional<std::string> & type) {
 
   if(!type) return false;
 
@@ -137,8 +137,8 @@ bool has_internal_structure(const std::shared_ptr<construct> & structure, const 
   return false;
 }
 
-bool is_nest_type(const std::shared_ptr<construct> & structure,
-                  const std::shared_ptr<construct> & structure_other,
+bool is_nest_type(std::shared_ptr<const construct> & structure,
+                  std::shared_ptr<const construct> & structure_other,
                   int type_index) {
 
   if(structure->root_term()->get_type() != srcML::node_type::START)
@@ -156,8 +156,8 @@ bool is_nest_type(const std::shared_ptr<construct> & structure,
   return false;
 }
 
-bool is_nestable_internal(const std::shared_ptr<construct> & structure_one,
-                          const std::shared_ptr<construct> & structure_two) {
+bool is_nestable_internal(std::shared_ptr<const construct> & structure_one,
+                          std::shared_ptr<const construct> & structure_two) {
 
   int block = is_block_type(structure_two);
 
@@ -178,8 +178,8 @@ bool is_nestable_internal(const std::shared_ptr<construct> & structure_one,
   return false;
 }
 
-bool srcdiff_nested::is_same_nestable(const std::shared_ptr<construct> & structure_one,
-                                      const std::shared_ptr<construct> & structure_two) {
+bool srcdiff_nested::is_same_nestable(std::shared_ptr<const construct> structure_one,
+                                      std::shared_ptr<const construct> structure_two) {
 
   if(!is_nestable_internal(structure_one, structure_two)) return false;
 
@@ -201,8 +201,8 @@ bool srcdiff_nested::is_same_nestable(const std::shared_ptr<construct> & structu
 
 }
 
-bool srcdiff_nested::is_nestable(const std::shared_ptr<construct> & structure_one,
-                                 const std::shared_ptr<construct> & structure_two) {
+bool srcdiff_nested::is_nestable(std::shared_ptr<const construct> structure_one,
+                                 std::shared_ptr<const construct> structure_two) {
 
   if(*structure_one->root_term() == *structure_two->root_term())
     return is_same_nestable(structure_one, structure_two);
@@ -211,7 +211,7 @@ bool srcdiff_nested::is_nestable(const std::shared_ptr<construct> & structure_on
 
 }
 
-bool has_compound_inner(const std::shared_ptr<construct> & node_set_outer) {
+bool has_compound_inner(std::shared_ptr<const construct> & node_set_outer) {
 
   if(node_set_outer->root_term()->is_simple()) return false;
 
@@ -225,8 +225,8 @@ bool has_compound_inner(const std::shared_ptr<construct> & node_set_outer) {
 
 }
 
-bool is_better_nest(const std::shared_ptr<construct> & node_set_outer,
-                    const std::shared_ptr<construct> & node_set_inner,
+bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
+                    std::shared_ptr<const construct> node_set_inner,
                     const srcdiff_measure & measure, bool recurse = true) {
 
   // do not nest compound name in simple or anything into something that is not compound
@@ -578,43 +578,43 @@ static bool check_nested_single_to_many(const construct::construct_list & constr
 
 }
 
-bool srcdiff_nested::check_nestable_predicate(const construct::construct_list & construct_list_outer,
+bool srcdiff_nested::check_nestable_predicate(construct::construct_list_view construct_list_outer,
                                               int pos_outer, int start_outer, int end_outer,
-                                              const construct::construct_list & construct_list_inner,
+                                              construct::construct_list_view construct_list_inner,
                                               int pos_inner, int start_inner, int end_inner) {
 
-  if(construct_list_inner.at(pos_inner)->root_term()->get_move()) return true;
+  if(construct_list_inner[pos_inner]->root_term()->get_move()) return true;
 
-  if(!is_nestable(construct_list_inner.at(pos_inner), construct_list_outer.at(pos_outer)))
+  if(!is_nestable(construct_list_inner[pos_inner], construct_list_outer[pos_outer]))
     return true;
 
-  std::shared_ptr<const construct> best_match = construct_list_outer.at(pos_outer)->find_best_descendent(construct_list_inner.at(pos_inner));
+  std::shared_ptr<const construct> best_match = construct_list_outer[pos_outer]->find_best_descendent(construct_list_inner[pos_inner]);
   if(!best_match) return true;
 
-  srcdiff_text_measure measure(*best_match, *construct_list_inner.at(pos_inner));
+  srcdiff_text_measure measure(*best_match, *construct_list_inner[pos_inner]);
   measure.compute();
 
-  if(!best_match->can_nest(*construct_list_inner.at(pos_inner)))
+  if(!best_match->can_nest(*construct_list_inner[pos_inner]))
     return true;
 
-  if(is_better_nest(construct_list_inner.at(pos_inner), construct_list_outer.at(pos_outer), measure))
+  if(is_better_nest(construct_list_inner[pos_inner], construct_list_outer[pos_outer], measure))
     return true;
 
-  if(pos_outer + 1 < end_outer && is_better_nest(construct_list_outer.at(pos_outer + 1), construct_list_inner.at(pos_inner), measure))
+  if(pos_outer + 1 < end_outer && is_better_nest(construct_list_outer[pos_outer + 1], construct_list_inner[pos_inner], measure))
     return true;
 
-  if(pos_inner + 1 < end_inner && is_better_nest(construct_list_inner.at(pos_inner + 1), construct_list_outer.at(pos_outer), measure))
+  if(pos_inner + 1 < end_inner && is_better_nest(construct_list_inner[pos_inner + 1], construct_list_outer[pos_outer], measure))
     return true;
 
-  if(construct_list_inner.at(pos_inner)->root_term_name() == "name"
-    && construct_list_inner.at(pos_inner)->root_term()->get_parent() && (*construct_list_inner.at(pos_inner)->root_term()->get_parent())->get_name() == "expr"
-    && construct_list_outer.at(pos_outer)->root_term()->get_parent() && (*construct_list_outer.at(pos_outer)->root_term()->get_parent())->get_name() == "expr"
+  if(construct_list_inner[pos_inner]->root_term_name() == "name"
+    && construct_list_inner[pos_inner]->root_term()->get_parent() && (*construct_list_inner[pos_inner]->root_term()->get_parent())->get_name() == "expr"
+    && construct_list_outer[pos_outer]->root_term()->get_parent() && (*construct_list_outer[pos_outer]->root_term()->get_parent())->get_name() == "expr"
     && ((end_outer - start_outer) > 1 || (end_inner - start_inner) > 1))
     return true;
 
-  if(construct_list_inner.at(pos_inner)->root_term_name() == "name") {
+  if(construct_list_inner[pos_inner]->root_term_name() == "name") {
 
-      if(!construct_list_inner.at(pos_inner)->root_term()->get_parent() || !best_match->root_term()->get_parent())
+      if(!construct_list_inner[pos_inner]->root_term()->get_parent() || !best_match->root_term()->get_parent())
         return true;
 
       std::optional<std::shared_ptr<srcML::node>> parent_outer = best_match->root_term()->get_parent();
@@ -622,14 +622,14 @@ bool srcdiff_nested::check_nestable_predicate(const construct::construct_list & 
         parent_outer = (*parent_outer)->get_parent();
       }
 
-      std::optional<std::shared_ptr<srcML::node>> parent_inner = construct_list_inner.at(pos_inner)->root_term()->get_parent();
+      std::optional<std::shared_ptr<srcML::node>> parent_inner = construct_list_inner[pos_inner]->root_term()->get_parent();
       while((*parent_inner)->get_name() == "name") {
         parent_inner = (*parent_inner)->get_parent();
       }
 
       if((*parent_outer)->get_name() != (*parent_inner)->get_name()
         && !srcdiff_nested::check_nest_name(*best_match, parent_outer,
-                            *construct_list_inner.at(pos_inner), parent_inner))
+                            *construct_list_inner[pos_inner], parent_inner))
         return true;
 
   }
@@ -713,9 +713,10 @@ void srcdiff_nested::check_nestable(const construct::construct_list & construct_
 
     for(int j = start_modified; j < end_modified; ++j) {
 
-      if(check_nestable_predicate(construct_list_original, i, start_original, end_original,
-                                  construct_list_modified, j, start_modified, end_modified))
+      if(check_nestable_predicate(construct::construct_list_view(&construct_list_original.at(i), end_original - i), 0, 0, end_original - i,
+                                  construct::construct_list_view(&construct_list_modified.at(j), end_modified - j), 0, 0, end_modified - j)) {
         continue;
+      }
 
       valid_nests_original.push_back(j);
 
@@ -724,10 +725,11 @@ void srcdiff_nested::check_nestable(const construct::construct_list & construct_
 
       for(int k = j + 1; k < end_modified; ++k) {
 
-        if(check_nestable_predicate(construct_list_original, i, start_original, end_original,
-                                    construct_list_modified, k, start_modified, end_modified)) {
+        if(check_nestable_predicate(construct::construct_list_view(&construct_list_original.at(i), end_original - i), 0, 0, end_original - i,
+                                    construct::construct_list_view(&construct_list_modified.at(k), end_modified - k), 0, 0, end_modified - k)) {
           continue;
         }
+
 
         valid_nests_original.push_back(k);
 
@@ -747,8 +749,8 @@ void srcdiff_nested::check_nestable(const construct::construct_list & construct_
 
     for(int j = start_original; j < end_original; ++j) {
 
-      if(check_nestable_predicate(construct_list_modified, i, start_modified, end_modified,
-                                  construct_list_original, j, start_original, end_original)) {
+      if(check_nestable_predicate(construct::construct_list_view(&construct_list_modified.at(i), end_modified - i), 0, 0, end_modified - i,
+                                  construct::construct_list_view(&construct_list_original.at(j), end_original - j), 0, 0, end_original - j)) {
         continue;
       }
 
@@ -759,8 +761,8 @@ void srcdiff_nested::check_nestable(const construct::construct_list & construct_
 
       for(int k = j + 1; k < end_original; ++k) {
       
-        if(check_nestable_predicate(construct_list_modified, i, start_modified, end_modified,
-                                    construct_list_original, k, start_original, end_original)) {
+        if(check_nestable_predicate(construct::construct_list_view(&construct_list_modified.at(i), end_modified - i), 0, 0, end_modified - i,
+                                    construct::construct_list_view(&construct_list_original.at(k), end_original - k), 0, 0, end_original - k)) {
           continue;
         }
 

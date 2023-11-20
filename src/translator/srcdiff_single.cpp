@@ -36,7 +36,7 @@
 const std::string convert("convert");
 const srcML::attribute diff_convert_type("type", srcML::name_space::DIFF_NAMESPACE, convert);
 
-srcdiff_single::srcdiff_single(std::shared_ptr<srcdiff_output> out, const std::shared_ptr<construct> & original_construct, const std::shared_ptr<construct> & modified_construct) 
+srcdiff_single::srcdiff_single(std::shared_ptr<srcdiff_output> out, std::shared_ptr<const construct> original_construct, std::shared_ptr<const construct> modified_construct) 
     : out(out), original_construct(original_construct), modified_construct(modified_construct) {}
 
 void srcdiff_single::output_recursive_same() {

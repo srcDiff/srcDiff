@@ -19,11 +19,12 @@ protected:
 
 private:
 
-static bool check_nestable_predicate(const construct::construct_list & construct_list_outer, int pos_outer, int start_outer, int end_outer,
-                                     const construct::construct_list & construct_list_inner, int pos_inner, int start_inner, int end_inner);
+static bool check_nestable_predicate(construct::construct_list_view construct_list_outer,
+                                     int pos_outer, int start_outer, int end_outer,
+                                     construct::construct_list_view construct_list_inner,
+                                     int pos_inner, int start_inner, int end_inner);
 public:
 
-  static int best_match(const construct::construct_list & set, const std::shared_ptr<construct> & match);
   static bool is_decl_stmt_from_expr(const srcml_nodes & nodes, int pos);
   static bool check_nest_name(const construct & set_original,
                               std::optional<std::shared_ptr<srcML::node>> parent_original,
@@ -48,12 +49,12 @@ public:
                  , int & start_nest_original, int & end_nest_original, int & start_nest_modified, int & end_nest_modified
                  , int & operation);
 
-  static bool is_nestable(const std::shared_ptr<construct> & structure_one,
-                          const std::shared_ptr<construct> & structure_two);
+  static bool is_nestable(std::shared_ptr<const construct> structure_one,
+                          std::shared_ptr<const construct> structure_two);
 
 
-  static bool is_same_nestable(const std::shared_ptr<construct> & structure_one,
-                               const std::shared_ptr<construct> & structure_two);
+  static bool is_same_nestable(std::shared_ptr<const construct> structure_one,
+                               std::shared_ptr<const construct> structure_two);
 
   static bool is_better_nested(const construct::construct_list & construct_list_original, int start_pos_original,
                                const construct::construct_list & construct_list_modified, int start_pos_modified);
