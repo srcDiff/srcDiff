@@ -21,6 +21,8 @@ private:
 
 static bool check_nestable_predicate(construct::construct_list_view construct_list_outer,
                                      construct::construct_list_view construct_list_inner);
+static std::tuple<std::vector<int>, int, int> check_nestable(construct::construct_list_view parent_list, construct::construct_list_view child_list);
+
 public:
 
   static bool is_decl_stmt_from_expr(const srcml_nodes & nodes, int pos);

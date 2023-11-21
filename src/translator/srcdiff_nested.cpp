@@ -645,7 +645,7 @@ bool srcdiff_nested::check_nestable_predicate(construct::construct_list_view con
  *
  */
 
-std::tuple<construct::construct_list, int, int> check_nestable(const construct::construct_list_view & parent_list, const construct::construct_list_view & child_list) {
+std::tuple<std::vector<int>, int, int> srcdiff_nested::check_nestable(construct::construct_list_view parent_list, construct::construct_list_view child_list) {
 
   for(size_t i = 0; i < parent_list.size(); ++i) {
 
@@ -653,20 +653,22 @@ std::tuple<construct::construct_list, int, int> check_nestable(const construct::
 
     for(size_t j = 0; j < child_list.size(); ++j) {
 
-      // if(check_nestable_predicate(parent_list, child_list) {
-      //   continue;
-      // }
+      if(check_nestable_predicate(construct::construct_list_view(&parent_list[i], parent_list.size() - i),
+                                  construct::construct_list_view(&child_list[j], child_list.size() - j))) {
+        continue;
+      }
 
-      std::tuple<construct::construct_list, int, int> nestings = std::make_tuple(construct::construct_list(), i, i + 1);
-      std::get<0>(nestings).push_back(child_list[j]);
+      std::tuple<std::vector<int>, int, int> nestings = std::make_tuple(std::vector<int>(), i, i + 1);
+      std::get<0>(nestings).push_back(j);
 
       for(int k = j + 1; k < child_list.size(); ++k) {
 
-        // if(check_nestable_predicate(parent_list, child_list) {
-        //   continue;
-        // }
+        if(check_nestable_predicate(construct::construct_list_view(&parent_list[i], parent_list.size() - i),
+                                    construct::construct_list_view(&child_list[k], child_list.size() - k))) {
+          continue;
+        }
 
-        std::get<0>(nestings).push_back(child_list[k]);
+        std::get<0>(nestings).push_back(k);
 
       }
 
@@ -674,11 +676,9 @@ std::tuple<construct::construct_list, int, int> check_nestable(const construct::
     }
   }
 
-  return std::make_tuple(construct::construct_list(), 0, 0);
+  return std::make_tuple(std::vector<int>(), 0, 0);
 
 }
-
-
 
 void srcdiff_nested::check_nestable(const construct::construct_list & construct_list_original, int start_original, int end_original
                  , const construct::construct_list & construct_list_modified, int start_modified, int end_modified
@@ -686,8 +686,7 @@ void srcdiff_nested::check_nestable(const construct::construct_list & construct_
                  , int & operation) {
 
   start_nest_original = start_original;  
-  end_nest_original = start_original;  
-
+  end_nest_original = start_original;
   start_nest_modified = start_modified;  
   end_nest_modified = start_modified;
 
@@ -702,80 +701,24 @@ void srcdiff_nested::check_nestable(const construct::construct_list & construct_
 
   }
 
-  std::vector<int> valid_nests_original;
-  std::vector<int> valid_nests_modified;
+  construct::construct_list_view original_view = construct::construct_list_view(&construct_list_original.at(start_original), end_original - start_original);
+  construct::construct_list_view modified_view = construct::construct_list_view(&construct_list_modified.at(start_modified), end_modified - start_modified);
 
-  for(int i = start_original; i < end_original; ++i) {
+  std::tuple<std::vector<int>, int, int> original_check = check_nestable(original_view, modified_view);
 
-    if(construct_list_original.at(i)->root_term()->get_move()) continue;
-
-    for(int j = start_modified; j < end_modified; ++j) {
-
-      if(check_nestable_predicate(construct::construct_list_view(&construct_list_original.at(i), end_original - i),
-                                  construct::construct_list_view(&construct_list_modified.at(j), end_modified - j))) {
-        continue;
-      }
-
-      valid_nests_original.push_back(j);
-
-      start_nest_original = i;
-      end_nest_original = i + 1;
-
-      for(int k = j + 1; k < end_modified; ++k) {
-
-        if(check_nestable_predicate(construct::construct_list_view(&construct_list_original.at(i), end_original - i),
-                                    construct::construct_list_view(&construct_list_modified.at(k), end_modified - k))) {
-          continue;
-        }
-
-
-        valid_nests_original.push_back(k);
-
-      }
-
-      goto end_nest_check_original;
-
-    }
-
+  const std::vector<int> & valid_nests_original = std::get<0>(original_check);
+  if(valid_nests_original.size()) {
+    start_nest_original = start_original + std::get<1>(original_check);  
+    end_nest_original  = start_original + std::get<2>(original_check); 
   }
 
-  end_nest_check_original:
+  std::tuple<std::vector<int>, int, int> modified_check = check_nestable(modified_view, original_view);
 
-  for(int i = start_modified; i < end_modified; ++i) {
-
-    if(construct_list_modified.at(i)->root_term()->get_move()) continue;
-
-    for(int j = start_original; j < end_original; ++j) {
-
-      if(check_nestable_predicate(construct::construct_list_view(&construct_list_modified.at(i), end_modified - i),
-                                  construct::construct_list_view(&construct_list_original.at(j), end_original - j))) {
-        continue;
-      }
-
-      valid_nests_modified.push_back(j);
-
-      start_nest_modified = i;
-      end_nest_modified = i + 1;
-
-      for(int k = j + 1; k < end_original; ++k) {
-      
-        if(check_nestable_predicate(construct::construct_list_view(&construct_list_modified.at(i), end_modified - i),
-                                    construct::construct_list_view(&construct_list_original.at(k), end_original - k))) {
-          continue;
-        }
-
-        valid_nests_modified.push_back(k);
-
-      }
-
-      goto end_nest_check_modified;
-
-    }
-
+  const std::vector<int> & valid_nests_modified = std::get<0>(modified_check);
+  if(valid_nests_modified.size()) {
+    start_nest_modified = start_modified + std::get<1>(modified_check);  
+    end_nest_modified  = start_modified + std::get<2>(modified_check); 
   }
-
-  end_nest_check_modified:
-
   /** @todo may need a more exact check to pick most optimal or another check 
 
     For now if only valid, less than or equal and do not cross, or cross and larger.
@@ -786,14 +729,14 @@ void srcdiff_nested::check_nestable(const construct::construct_list & construct_
    || (!(start_nest_original > valid_nests_modified.back() && valid_nests_original.front() > start_nest_modified)
       && (valid_nests_original.back() - valid_nests_original.front()) >= (valid_nests_modified.back() - valid_nests_modified.front())))) {
 
-      start_nest_modified = valid_nests_original.front();
-      end_nest_modified = valid_nests_original.back() + 1;
+      start_nest_modified = start_modified + valid_nests_original.front();
+      end_nest_modified = start_modified + valid_nests_original.back() + 1;
       operation = SES_DELETE;
 
   } else if(!valid_nests_modified.empty()) {
 
-      start_nest_original = valid_nests_modified.front();
-      end_nest_original = valid_nests_modified.back() + 1;
+      start_nest_original = start_original + valid_nests_modified.front();
+      end_nest_original = start_original + valid_nests_modified.back() + 1;
       operation = SES_INSERT;
 
   }
