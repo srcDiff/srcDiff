@@ -240,8 +240,8 @@ edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
             std::size_t original_set_pos = delete_edit->offset_sequence_one + i;
             std::size_t modified_set_pos = insert_edit->offset_sequence_two + j;
 
-            const std::shared_ptr<construct> & set_original = sets_original.at(original_set_pos);
-            const std::shared_ptr<construct> & set_modified = sets_modified.at(modified_set_pos);
+            std::shared_ptr<const construct> set_original = sets_original.at(original_set_pos);
+            std::shared_ptr<const construct> set_modified = sets_modified.at(modified_set_pos);
 
             int original_pos = set_original->start_position();
             int modified_pos = set_modified->start_position();
@@ -304,8 +304,8 @@ std::shared_ptr<srcdiff_text_measure> srcdiff_edit_correction::edit2measure(int 
     std::size_t original_set_pos = original_offset;
     std::size_t modified_set_pos = modified_offset;
 
-    const std::shared_ptr<construct> & set_original = sets_original.at(original_set_pos);
-    const std::shared_ptr<construct> & set_modified = sets_modified.at(modified_set_pos);
+    std::shared_ptr<const construct> set_original = sets_original.at(original_set_pos);
+    std::shared_ptr<const construct> set_modified = sets_modified.at(modified_set_pos);
 
     int original_pos = set_original->start_position();
     int modified_pos = set_modified->start_position();
@@ -462,7 +462,7 @@ void srcdiff_edit_correction::correct() {
 
         std::size_t common_pos = delete_edit->offset_sequence_one + original_offset;
 
-        const std::shared_ptr<construct> & common_set = sets_original.at(common_pos);
+        std::shared_ptr<const construct> common_set = sets_original.at(common_pos);
         std::shared_ptr<construct> common_set_text(std::make_shared<construct>(common_set->nodes()));
         srcdiff_text_measure::collect_text_element(*common_set, *common_set_text);
 
@@ -497,8 +497,8 @@ void srcdiff_edit_correction::correct() {
                 std::size_t original_set_pos = delete_edit->offset_sequence_one + i;
                 std::size_t modified_set_pos = insert_edit->offset_sequence_two + j;
 
-                const std::shared_ptr<construct> & set_original = sets_original.at(original_set_pos);
-                const std::shared_ptr<construct> & set_modified = sets_modified.at(modified_set_pos);
+                std::shared_ptr<const construct> set_original = sets_original.at(original_set_pos);
+                std::shared_ptr<const construct> set_modified = sets_modified.at(modified_set_pos);
 
                 if(set_original->size() >= 3 * set_modified->size()) {
                     continue;

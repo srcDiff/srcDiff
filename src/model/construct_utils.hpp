@@ -29,7 +29,7 @@ class construct;
 
 #include <srcml_nodes.hpp>
 
-namespace std {
+namespace std { 
 
   template<>
   struct hash<construct> {
@@ -37,14 +37,14 @@ namespace std {
   };
 
   template<>
-  struct hash<std::shared_ptr<construct>> {
-    size_t operator()(const std::shared_ptr<construct> & element) const;
+  struct hash<std::shared_ptr<const construct>> {
+    size_t operator()(const std::shared_ptr<const construct> & element) const;
   };
 
 
   template<>
-  struct equal_to<std::shared_ptr<construct>>{
-    bool operator()(std::shared_ptr<construct> self, std::shared_ptr<construct> that) const;
+  struct equal_to<std::shared_ptr<const construct>>{
+    bool operator()(std::shared_ptr<const construct> self, std::shared_ptr<const construct> that) const;
   };
 
 }
