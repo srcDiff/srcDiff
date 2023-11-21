@@ -165,7 +165,7 @@ std::shared_ptr<construct> create_construct(const srcml_nodes & node_list, int &
   }
   tag_name += node->get_name();
 
-  if(tag_name == "if" && bool(find_attribute(node, "type"))) {
+  if(tag_name == "if" && bool(node->get_attribute("type"))) {
     tag_name = "elseif";
   } else if(always_matched_construct::is_always_match(node->get_name())) {
     tag_name = "always_match";

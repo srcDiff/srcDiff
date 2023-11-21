@@ -760,7 +760,7 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
     // do not skip whitespace
     start_pos = construct_list_outer.at(start_outer)->start_position() + 1;
 
-  } else if(structure_outer == "if" && !bool(find_attribute(construct_list_outer.at(start_outer)->root_term(), "type"))) {
+  } else if(structure_outer == "if" && !bool(construct_list_outer.at(start_outer)->root_term()->get_attribute("type"))) {
 
     advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcML::node_type::START, "block");
 
