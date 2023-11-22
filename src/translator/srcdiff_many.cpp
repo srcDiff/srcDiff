@@ -28,10 +28,17 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
 
       do {
 
-        srcdiff_nested::check_nestable(construct_list_original, start_original, end_original + 1
-                        , construct_list_modified, start_modified, end_modified + 1
-                        , start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation);
+        construct::construct_list_view original_view = construct::construct_list_view(&construct_list_original.at(start_original), end_original - start_original + 1);
+        construct::construct_list_view modified_view = construct::construct_list_view(&construct_list_modified.at(start_modified), end_modified - start_modified + 1);
 
+        srcdiff_nested::check_nestable(original_view, modified_view,
+                                       start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation);
+
+        start_nest_original += start_original;
+        end_nest_original += start_original;
+        start_nest_modified += start_modified;
+        end_nest_modified += start_modified;
+        
         finish_original = construct_list_original.at(end_original)->end_position() + 1;
         finish_modified = construct_list_modified.at(end_modified)->end_position() + 1;
 

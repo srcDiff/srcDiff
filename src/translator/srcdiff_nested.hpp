@@ -44,10 +44,9 @@ public:
 
   virtual void output();
 
-  static void check_nestable(const construct::construct_list & construct_list_original, int start_original, int end_original
-                 , const construct::construct_list & construct_list_modified, int start_modified, int end_modified
-                 , int & start_nest_original, int & end_nest_original, int & start_nest_modified, int & end_nest_modified
-                 , int & operation);
+  static void check_nestable(construct::construct_list_view original, construct::construct_list_view modified,
+                             int & start_nest_original, int & end_nest_original, int & start_nest_modified, int & end_nest_modified,
+                             int & operation);
 
   static bool is_nestable(std::shared_ptr<const construct> structure_one,
                           std::shared_ptr<const construct> structure_two);
@@ -56,8 +55,7 @@ public:
   static bool is_same_nestable(std::shared_ptr<const construct> structure_one,
                                std::shared_ptr<const construct> structure_two);
 
-  static bool is_better_nested(const construct::construct_list & construct_list_original, int start_pos_original,
-                               const construct::construct_list & construct_list_modified, int start_pos_modified);
+  static bool is_better_nested(construct::construct_list_view original, construct::construct_list_view modified);
 };
 
 #endif

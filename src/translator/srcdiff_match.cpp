@@ -22,18 +22,14 @@ struct difference {
 
 };
 
-bool srcdiff_match::is_match_default(const construct::construct_list & sets_original, int start_pos_original,
-                                     const construct::construct_list & sets_modified, int start_pos_modified) {
-
-  const srcdiff_measure & measure = *sets_original.at(start_pos_original)->measure(*sets_modified.at(start_pos_modified));
+bool srcdiff_match::is_match_default(construct::construct_list_view original, construct::construct_list_view modified) {
+  const srcdiff_measure & measure = *original[0]->measure(*modified[0]);
   if(measure.similarity() == MAX_INT) return false;
 
-  if(!sets_original.at(start_pos_original)->is_match_similar(*sets_modified.at(start_pos_modified))
-    && !sets_original.at(start_pos_original)->can_refine_difference(*sets_modified.at(start_pos_modified)))
+  if(!original[0]->is_match_similar(*modified[0]) && !original[0]->can_refine_difference(*modified[0]))
     return false;
 
-  if(srcdiff_nested::is_better_nested(sets_original, start_pos_original,
-                                      sets_modified, start_pos_modified))
+  if(srcdiff_nested::is_better_nested(original, modified))
     return false;
 
   return true;
@@ -158,7 +154,9 @@ offset_pair * srcdiff_match::match_differences() {
 
       // check if unmatched
       /** loop text O(nd) + syntax O(nd) + best match is O(nd) times number of matches */
-      if(!is_match(construct_list_original, j, construct_list_modified, i)) {
+      construct::construct_list_view original_view = construct::construct_list_view(&construct_list_original.at(j), construct_list_original.size() - j);
+      construct::construct_list_view modified_view = construct::construct_list_view(&construct_list_modified.at(i), construct_list_modified.size() - i);
+      if(!is_match(original_view, modified_view)) {
 
         similarity = 0;
         unmatched = 2;
