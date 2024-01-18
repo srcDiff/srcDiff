@@ -24,9 +24,6 @@
 # build options
 option(BUILD_TRANSLATOR_TESTS "Build files for testing srcDiff translator" ON)
 
-find_package(LibXml2 REQUIRED)
-find_package(Iconv REQUIRED)
-
 include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR} ${LIBAPR_INCLUDE_DIR} ${LIBSVN_INCLUDE_DIR} ${LIBGIT2_INCLUDE_DIR})
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_FLAGS "${GCC_WARNINGS} -fpermissive")
