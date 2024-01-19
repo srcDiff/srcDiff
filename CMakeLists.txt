@@ -22,6 +22,10 @@
 cmake_minimum_required(VERSION 3.14)
 project(srcDiff)
 
+if(NOT WIN32)
+set(CMAKE_INSTALL_PREFIX "/usr/local")
+endif()
+
 enable_testing()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
