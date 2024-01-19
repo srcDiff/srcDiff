@@ -18,7 +18,18 @@
 #  You should have received a copy of the GNU General Public License
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+macro(add_unit_test TEST_FILE)
 
+    get_filename_component(TEST_NAME_WITH_EXTENSION ${TEST_FILE} NAME)
+    string(FIND ${TEST_NAME_WITH_EXTENSION} "." EXTENSION_BEGIN)
+    string(SUBSTRING ${TEST_NAME_WITH_EXTENSION} 0 ${EXTENSION_BEGIN} TEST_NAME)
+
+    add_executable(${TEST_NAME} ${TEST_FILE})
+    target_link_libraries(${TEST_NAME} ${ARGN} srcdiff_static)
+    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
+    set_target_properties(${TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+endmacro()
 # include sub directories
 if(BUILD_UNIT_TESTS)
     add_subdirectory(unit)
