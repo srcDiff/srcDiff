@@ -51,11 +51,15 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
 
   } else if(is_option(flags, OPTION_DIFFDOC_VIEW)) {
 
+#ifndef _MSC_BUILD
+
     summary = std::make_shared<srcdiff_summary>();
     view = std::make_shared<diffdoc_view>(srcdiff_filename,
                                            view_options.syntax_highlight,
                                            view_options.theme,
                                            summary);
+
+#endif
 
     if(view_options.srcdiff_filename) {
       output_srcdiff = true;
