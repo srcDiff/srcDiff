@@ -44,7 +44,10 @@ add_executable(srcdiff ${CLIENT_HEADERS} ${CLIENT_SOURCE} $<TARGET_OBJECTS:short
 		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:view>)
 endif()
 
-target_link_libraries(srcdiff srcdiff_static ${SRCDIFF_LIBRARIES})
+find_library(LIBSRCML_LIBRARY NAMES libsrcml.so)
+find_package(Boost COMPONENTS program_options filesystem system regex date_time REQUIRED)
+
+target_link_libraries(srcdiff srcdiff_static ${LIBSRCML_LIBRARY} xml2 ${Boost_LIBRARIES})
 
 set_target_properties(srcdiff PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
