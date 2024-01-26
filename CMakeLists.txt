@@ -38,7 +38,7 @@ if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
     find_package(LibXml2 REQUIRED)
     find_package(Iconv REQUIRED)
-    include_directories(LIBXML2_INCLUDE_DIR)
+    include_directories(${LIBXML2_INCLUDE_DIR})
     
     find_library(LIBSRCML_LIBRARY NAMES libsrcml.so)
     find_package(Boost COMPONENTS program_options filesystem system regex date_time REQUIRED)
