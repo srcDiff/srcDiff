@@ -2,6 +2,9 @@ html
 
 src/windows/deps
 
+*.vcxproj*
+*.sln
+
 # general
 *~
 \#*\#

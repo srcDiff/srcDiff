@@ -18,8 +18,8 @@
 #  You should have received a copy of the GNU General Public License
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-find_package(LibXml2 REQUIRED)
-find_package(Iconv REQUIRED)
+# find_package(LibXml2 REQUIRED)
+# find_package(Iconv REQUIRED)
 include_directories(.)
 
 file(GLOB TEST_SRC *.cpp)

@@ -18,8 +18,38 @@
 #  You should have received a copy of the GNU General Public License
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-find_package(LibXml2 REQUIRED)
-find_package(Iconv REQUIRED)
+
+set (CMAKE_CXX_STANDARD 20)
+
+if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+
+    find_package(LibXml2 REQUIRED)
+    find_package(Iconv REQUIRED)
+    include_directories(LIBXML2_INCLUDE_DIR)
+    
+    find_library(LIBSRCML_LIBRARY NAMES libsrcml.so)
+    find_package(Boost COMPONENTS program_options filesystem system regex date_time REQUIRED)
+
+else()
+    set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/src/windows/deps)
+    
+    include_directories(${WINDOWS_DEP_PATH}/include)
+    link_directories(${WINDOWS_DEP_PATH}/$(ConfigurationName)/lib)
+    set(LIBXML2_LIBRARIES libxml2.lib libiconv.lib)
+    
+    set(Boost_NO_SYSTEM_PATHS ON)
+    set(Boost_LIBRARY_DIR_RELEASE ${WINDOWS_DEP_PATH}/release/lib)
+    set(Boost_LIBRARY_DIR_DEBUG ${WINDOWS_DEP_PATH}/debug/lib)
+    set(BOOST_INCLUDE_DIR ${WINDOWS_DEP_PATH}/include)
+    set(BOOST_INCLUDEDIR ${WINDOWS_DEP_PATH}/include)
+    set(Boost_INCLUDE_DIRS ${WINDOWS_DEP_PATH}/include)
+
+    find_library(LIBSRCML_LIBRARY NAMES libsrcml PATHS "C:/Program Files/srcML/lib")
+    include_directories("C:/Program Files/srcML/include")
+
+endif()
+
+find_package(Threads REQUIRED)
 add_subdirectory(client)
 add_subdirectory(shortest_edit_script)
 add_subdirectory(srcml)
