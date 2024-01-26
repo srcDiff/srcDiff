@@ -47,7 +47,7 @@ else()
                 $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:view>)
 endif()
 
-target_link_libraries(srcdiff ${LIBSRCML_LIBRARY} ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES})
+target_link_libraries(srcdiff ${LIBSRCML_LIBRARY} ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} Threads::Threads)
 
 set_target_properties(srcdiff PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
