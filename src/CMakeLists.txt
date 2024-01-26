@@ -19,35 +19,6 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-set (CMAKE_CXX_STANDARD 20)
-
-if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-
-    find_package(LibXml2 REQUIRED)
-    find_package(Iconv REQUIRED)
-    include_directories(LIBXML2_INCLUDE_DIR)
-    
-    find_library(LIBSRCML_LIBRARY NAMES libsrcml.so)
-    find_package(Boost COMPONENTS program_options filesystem system regex date_time REQUIRED)
-
-else()
-    set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/src/windows/deps)
-    
-    include_directories(${WINDOWS_DEP_PATH}/include)
-    link_directories(${WINDOWS_DEP_PATH}/$(ConfigurationName)/lib)
-    set(LIBXML2_LIBRARIES libxml2.lib libiconv.lib)
-    
-    set(Boost_NO_SYSTEM_PATHS ON)
-    set(Boost_LIBRARY_DIR_RELEASE ${WINDOWS_DEP_PATH}/release/lib)
-    set(Boost_LIBRARY_DIR_DEBUG ${WINDOWS_DEP_PATH}/debug/lib)
-    set(BOOST_INCLUDE_DIR ${WINDOWS_DEP_PATH}/include)
-    set(BOOST_INCLUDEDIR ${WINDOWS_DEP_PATH}/include)
-    set(Boost_INCLUDE_DIRS ${WINDOWS_DEP_PATH}/include)
-
-    find_library(LIBSRCML_LIBRARY NAMES libsrcml PATHS "C:/Program Files/srcML/lib")
-    include_directories("C:/Program Files/srcML/include")
-
-endif()
 
 find_package(Threads REQUIRED)
 add_subdirectory(client)
@@ -58,12 +29,12 @@ add_subdirectory(model)
 add_subdirectory(project)
 add_subdirectory(view)
 if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-add_subdirectory(summary)
+    add_subdirectory(summary)
 endif()
 add_subdirectory(srcSAX/src)
 
 if(WIN32)
-add_subdirectory(windows)
+    add_subdirectory(windows)
 endif()
 
 set(SRCDIFF_LIBRARY_SOURCE_EXTRA CACHE INTERNAL "libsrcdiff Extra Source")
@@ -77,25 +48,24 @@ set(SRCDIFF_LIBRARY_SOURCE_EXTRA CACHE INTERNAL "libsrcdiff Extra Source")
 # 
 macro(build_library LIBRARY_NAME LIBRARY_TYPE)
 
-if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> 
-    $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:project>
-    $<TARGET_OBJECTS:view> $<TARGET_OBJECTS:summary>)
-else()
-    add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> 
-    $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:project>
-    $<TARGET_OBJECTS:view>)
-endif()
+    if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+        add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> 
+        $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:project>
+        $<TARGET_OBJECTS:view> $<TARGET_OBJECTS:summary>)
+    else()
+        add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> 
+        $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:project>
+        $<TARGET_OBJECTS:view>)
+    endif()
 
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME libsrcdiff LINK_FLAGS_DEBUG "/SAFESEH:NO")
-elseif(APPLE)
-    set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME srcdiff)
-else()
-    set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME srcdiff)
-endif()
-
-    target_link_libraries(${LIBRARY_NAME} PRIVATE srcsax_shared ${LIBSRCDIFF_LIBRARIES})
+    if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+        set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME libsrcdiff LINK_FLAGS_DEBUG "/SAFESEH:NO")
+    elseif(APPLE)
+        set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME srcdiff)
+    else()
+        set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME srcdiff)
+    endif()
+    target_link_libraries(${LIBRARY_NAME} PRIVATE srcsax_shared ${LIBSRCML_LIBRARY} ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES})
 
 endmacro()
 

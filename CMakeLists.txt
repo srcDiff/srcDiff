@@ -31,6 +31,41 @@ enable_testing()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 include(srcdiff)
 
+
+set (CMAKE_CXX_STANDARD 20)
+
+if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+
+    find_package(LibXml2 REQUIRED)
+    find_package(Iconv REQUIRED)
+    include_directories(LIBXML2_INCLUDE_DIR)
+    
+    find_library(LIBSRCML_LIBRARY NAMES libsrcml.so)
+    find_package(Boost COMPONENTS program_options filesystem system regex date_time REQUIRED)
+
+else()
+
+    # TODO: replace hardcoded dep path with vcpkg
+    set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/src/windows/deps)
+    
+    include_directories(${WINDOWS_DEP_PATH}/include)
+    link_directories(${WINDOWS_DEP_PATH}/$(ConfigurationName)/lib)
+    set(LIBXML2_LIBRARIES libxml2.lib libiconv.lib)
+    
+    set(Boost_NO_SYSTEM_PATHS ON)
+    set(Boost_LIBRARY_DIR_RELEASE ${WINDOWS_DEP_PATH}/release/lib)
+    set(Boost_LIBRARY_DIR_DEBUG ${WINDOWS_DEP_PATH}/debug/lib)
+    set(BOOST_INCLUDE_DIR ${WINDOWS_DEP_PATH}/include)
+    set(BOOST_INCLUDEDIR ${WINDOWS_DEP_PATH}/include)
+    set(Boost_INCLUDE_DIRS ${WINDOWS_DEP_PATH}/include)
+
+    find_library(LIBSRCML_LIBRARY NAMES libsrcml PATHS "C:/Program Files/srcML/lib")
+    include_directories("C:/Program Files/srcML/include")
+    message(STATUS ${LIBSRCML_LIBRARY})
+
+
+endif()
+
 # setup project includes
 include_directories(src/shortest_edit_script
 					src/translator
@@ -52,4 +87,3 @@ add_subdirectory(src)
 if(BUILD_TRANSLATOR_TESTS OR BUILD_UNIT_TESTS)
 	add_subdirectory(test)
 endif()
-
