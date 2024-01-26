@@ -26,7 +26,11 @@ option(BUILD_TRANSLATOR_TESTS "Build files for testing srcDiff translator" ON)
 
 include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR}  ${LIBGIT2_INCLUDE_DIR})
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(CMAKE_CXX_FLAGS "${GCC_WARNINGS} -fpermissive")
-set(CMAKE_C_FLAGS "${GCC_WARNINGS}")
 
-
+if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+    set(CMAKE_CXX_FLAGS "${GCC_WARNINGS} -fpermissive")
+    set(CMAKE_C_FLAGS "${GCC_WARNINGS}")
+else()
+    add_compile_definitions(WIN32)
+    set(CMAKE_CXX_FLAGS "/permissive- /EHsc -wd4068")
+endif()
