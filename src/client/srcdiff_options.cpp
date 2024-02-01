@@ -181,15 +181,6 @@ void option_field<&srcdiff_options::files_from_name>(const std::string & arg) {
 
 }
 
-template<>
-void option_field<&srcdiff_options::summary_type_str>(const std::string & arg) {
-
-  options.summary_type_str = arg;
-
-  options.flags |= OPTION_SUMMARY;
-
-}
-
 #if SVN
 template<>
 void option_field<&srcdiff_options::svn_url>(const std::string & arg) {
