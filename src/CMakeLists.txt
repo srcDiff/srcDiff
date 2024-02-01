@@ -32,9 +32,7 @@ add_subdirectory(summary)
 endif()
 add_subdirectory(srcSAX/src)
 
-if(WIN32)
-add_subdirectory(windows)
-endif()
+
 
 set(SRCDIFF_LIBRARY_SOURCE_EXTRA CACHE INTERNAL "libsrcdiff Extra Source")
 
