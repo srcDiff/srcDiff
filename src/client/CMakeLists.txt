@@ -35,14 +35,10 @@ if(NOT GIT_ENABLED)
 endif()
 
 # srcdiff
-if(WIN32)
-add_executable(srcdiff ${CLIENT_HEADERS} ${CLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
-		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:view>
-		       $<TARGET_OBJECTS:windows>)
-else()
+
 add_executable(srcdiff ${CLIENT_HEADERS} ${CLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
 		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:view>)
-endif()
+
 
 find_library(LIBSRCML_LIBRARY NAMES libsrcml.so)
 find_package(Boost COMPONENTS program_options filesystem system regex date_time REQUIRED)
