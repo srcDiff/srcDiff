@@ -143,11 +143,11 @@ enum srcml_bool_field { ARCHIVE };
 
 // compiler wants a general template function for some reason
 template<srcml_bool_field field>
-void option_srcml_field(int) {}
+void option_srcml_bool(int) {}
 
 // specialized version of the general template function above
 template<>
-void option_srcml_field<ARCHIVE>(int flagged_count) {
+void option_srcml_bool<ARCHIVE>(int flagged_count) {
 
   if(flagged_count) {
     srcml_archive_disable_solitary_unit(options.archive);
@@ -161,10 +161,10 @@ void option_srcml_field<ARCHIVE>(int flagged_count) {
 enum srcml_int_field { TABSTOP };
 
 template<srcml_int_field field>
-void option_srcml_field(const int & arg) {}
+void option_srcml_int(const int & arg) {}
 
 template<>
-void option_srcml_field<TABSTOP>(const int & arg) {
+void option_srcml_int<TABSTOP>(const int & arg) {
 
   srcml_archive_set_tabstop(options.archive, arg);
 
@@ -173,45 +173,45 @@ void option_srcml_field<TABSTOP>(const int & arg) {
 enum srcml_string_field { SRC_ENCODING, XML_ENCODING, LANGUAGE, URL, SRC_VERSION, REGISTER_EXT, XMLNS };
 
 template<srcml_string_field field>
-void option_srcml_field(const std::string & arg) {}
+void option_srcml_string(const std::string & arg) {}
 
 template<>
-void option_srcml_field<SRC_ENCODING>(const std::string & arg) {
+void option_srcml_string<SRC_ENCODING>(const std::string & arg) {
 
   srcml_archive_set_src_encoding(options.archive, arg.c_str());
 
 }
 
 template<>
-void option_srcml_field<XML_ENCODING>(const std::string & arg) {
+void option_srcml_string<XML_ENCODING>(const std::string & arg) {
 
   srcml_archive_set_xml_encoding(options.archive, arg.c_str());
 
 }
 
 template<>
-void option_srcml_field<LANGUAGE>(const std::string & arg) {
+void option_srcml_string<LANGUAGE>(const std::string & arg) {
 
   srcml_archive_set_language(options.archive, arg.c_str());
 
 }
 
 template<>
-void option_srcml_field<URL>(const std::string & arg) {
+void option_srcml_string<URL>(const std::string & arg) {
   std::cout << "setting url to "<<arg<<std::endl;
   srcml_archive_set_url(options.archive, arg.c_str());
 
 }
 
 template<>
-void option_srcml_field<SRC_VERSION>(const std::string & arg) {
+void option_srcml_string<SRC_VERSION>(const std::string & arg) {
 
   srcml_archive_set_version(options.archive, arg.c_str());
 
 }
 
 template<>
-void option_srcml_field<REGISTER_EXT>(const std::string & arg) {
+void option_srcml_string<REGISTER_EXT>(const std::string & arg) {
 
   std::string::size_type pos = arg.find('=');
   srcml_archive_register_file_extension(options.archive, arg.substr(0, pos).c_str(), arg.substr(pos + 1).c_str());
@@ -219,7 +219,7 @@ void option_srcml_field<REGISTER_EXT>(const std::string & arg) {
 }
 
 template<>
-void option_srcml_field<XMLNS>(const std::string & arg) {
+void option_srcml_string<XMLNS>(const std::string & arg) {
 
   std::string::size_type pos = arg.find('=');
   if(pos == std::string::npos) {
@@ -436,27 +436,27 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
   CLI::Option_group * srcml_group = cli.add_option_group("srcML");
 
-  srcml_group->add_flag(
+  srcml_group->add_flag_function(
     "-n,--archive",
-    option_srcml_field<ARCHIVE>,
+    option_srcml_bool<ARCHIVE>,
     "Output srcDiff as an archive"
   )->force_callback(true);
 
   srcml_group->add_option_function<std::string>(
     "-t,--src-encoding",
-    option_srcml_field<SRC_ENCODING>,
+    option_srcml_string<SRC_ENCODING>,
     "Set the input source encoding"
   )->default_val("ISO-8859-1")->force_callback(true);
 
   srcml_group->add_option_function<std::string>(
     "-x,--xml-encoding",
-    option_srcml_field<XML_ENCODING>,
+    option_srcml_string<XML_ENCODING>,
     "Set the output XML encoding"
   )->default_val("UTF-8")->force_callback(true);
 
   srcml_group->add_option_function<std::string>(
     "-l,--language",
-    option_srcml_field<LANGUAGE>,
+    option_srcml_string<LANGUAGE>,
     "Set the input source programming language"
   )->default_val("C++")->force_callback(true);
 
@@ -468,7 +468,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
   srcml_group->add_option_function<std::string>(
     "--register-ext",
-    option_srcml_field<REGISTER_EXT>,
+     option_srcml_string<REGISTER_EXT>,
     "Register a file extension/language pair to be used during parsing\n"
     "Example: --register-ext cxx=C++"
   );
@@ -476,20 +476,20 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 // TODO: these might as well require --archive?
   srcml_group->add_option_function<std::string>(
     "--url",
-    option_srcml_field<URL>,
+    option_srcml_string<URL>,
     "Set the url attribute on the root XML element of the archive"
   );
 
   srcml_group->add_option_function<std::string>(
     "-s,--src-version",
-    option_srcml_field<SRC_VERSION>,
+    option_srcml_string<SRC_VERSION>,
     "Set the version attribute on the root XML element of the archive"
   );
 
   // TODO: figure out how to get this kind of option to be recognized
   srcml_group->add_option_function<std::string>(
     "--xmlns",
-    option_srcml_field<XMLNS>,
+    option_srcml_string<XMLNS>,
     "Set the prefix associationed with a namespace or register a new one.\n"
     "Use the form --xmlns:prefix=url, or --xmlns=url to set the default prefix."
   );
@@ -502,7 +502,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
   srcml_group->add_option_function<int>(
     "--tabs",
-    option_srcml_field<TABSTOP>,
+    option_srcml_int<TABSTOP>,
     "Set the tabstop size"
   )->default_val(8)->force_callback();
 
