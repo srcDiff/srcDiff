@@ -14,7 +14,6 @@
 #include <methods.hpp>
 #include <srcdiff_constants.hpp>
 
-#include <boost/any.hpp>
 #include <optional>
 
 #include <vector>
