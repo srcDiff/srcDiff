@@ -10,7 +10,7 @@ typedef std::vector<std::shared_ptr<srcML::node>> srcml_nodes;
 
 void advance_to_child(const srcml_nodes & nodes,
                       size_t & pos,
-                      srcML::node::node_type type,
+                      srcML::node_type type,
                       const std::string & name);
 
 #endif

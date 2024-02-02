@@ -46,7 +46,7 @@ std::shared_ptr<const else_t> if_stmt::find_else() const {
     for(construct_list::const_reverse_iterator ritr = children().rbegin(); ritr != children().rend(); ++ritr) {
         std::shared_ptr<const construct> child = *ritr;
         if(child->root_term_name() == "else" 
-            || (child->root_term_name() == "if" && bool(find_attribute(child->root_term(), "type")))) {
+            || (child->root_term_name() == "if" && bool(child->root_term()->get_attribute("type")))) {
             else_child = std::static_pointer_cast<const else_t>(child);
             break;
         }

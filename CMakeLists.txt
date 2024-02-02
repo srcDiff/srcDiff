@@ -32,8 +32,6 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 include(srcdiff)
 
 
-set (CMAKE_CXX_STANDARD 20)
-
 if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
 
     find_package(LibXml2 REQUIRED)
@@ -65,6 +63,9 @@ else()
 
 
 endif()
+
+set (CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # setup project includes
 include_directories(src/shortest_edit_script

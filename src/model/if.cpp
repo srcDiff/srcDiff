@@ -23,7 +23,7 @@
 #include <srcdiff_match.hpp>
 
 bool if_t::has_real_block() const {
-    return bool(block()) && !bool(find_attribute(block()->root_term(), "type"));
+    return bool(block()) && !bool(block()->root_term()->get_attribute("type"));
 }
 
 bool if_t::is_block_matchable(const construct & modified) const {

@@ -51,8 +51,8 @@ bool block::is_syntax_similar_impl(const construct & modified_block) const {
 }
 
 bool block::is_matchable_impl(const construct & modified) const {
-    bool is_pseudo_original = bool(find_attribute(term(0), "type"));
-    bool is_pseudo_modified = bool(find_attribute(modified.term(0), "type"));
+    bool is_pseudo_original = bool(term(0)->get_attribute("type"));
+    bool is_pseudo_modified = bool(modified.term(0)->get_attribute("type"));
 
     if(is_pseudo_original == is_pseudo_modified) return true;
 

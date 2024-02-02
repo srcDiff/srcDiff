@@ -49,30 +49,6 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
                                                 is_option(flags, OPTION_HTML_VIEW),
                                                 view_options.side_by_side_tab_size);
 
-  } else if(is_option(flags, OPTION_DIFFDOC_VIEW)) {
-
-#ifndef _MSC_BUILD
-
-    summary = std::make_shared<srcdiff_summary>();
-    view = std::make_shared<diffdoc_view>(srcdiff_filename,
-                                           view_options.syntax_highlight,
-                                           view_options.theme,
-                                           summary);
-
-#endif
-
-    if(view_options.srcdiff_filename) {
-      output_srcdiff = true;
-      int ret_status = srcml_archive_write_open_filename(archive, view_options.srcdiff_filename->c_str());
-      if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
-    }
-
-  }  else if(is_option(flags, OPTION_SUMMARY)) {
-
-#ifndef _MSC_BUILD
-    summary = std::make_shared<srcdiff_summary>(srcdiff_filename, summary_type_str);
-#endif
-    
   } else if(!is_option(flags, OPTION_BURST)) {
       output_srcdiff = true;
       int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str());
@@ -90,16 +66,16 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
   diff->set_prefix(srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()));
   diff->set_uri(SRCDIFF_DEFAULT_NAMESPACE_HREF);
 
-  unit_tag            = std::make_shared<srcML::node>(srcML::node::node_type::START, std::string("unit"));
-  diff_common_start   = std::make_shared<srcML::node>(srcML::node::node_type::START, DIFF_SES_COMMON, srcML::name_space::DIFF_NAMESPACE);
-  diff_common_end     = std::make_shared<srcML::node>(srcML::node::node_type::END, DIFF_SES_COMMON, srcML::name_space::DIFF_NAMESPACE);
-  diff_original_start = std::make_shared<srcML::node>(srcML::node::node_type::START, DIFF_ORIGINAL, srcML::name_space::DIFF_NAMESPACE);
-  diff_original_end   = std::make_shared<srcML::node>(srcML::node::node_type::END, DIFF_ORIGINAL, srcML::name_space::DIFF_NAMESPACE);
-  diff_modified_start = std::make_shared<srcML::node>(srcML::node::node_type::START, DIFF_MODIFIED, srcML::name_space::DIFF_NAMESPACE);
-  diff_modified_end   = std::make_shared<srcML::node>(srcML::node::node_type::END, DIFF_MODIFIED, srcML::name_space::DIFF_NAMESPACE);
+  unit_tag            = std::make_shared<srcML::node>(srcML::node_type::START, std::string("unit"));
+  diff_common_start   = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_SES_COMMON, srcML::name_space::DIFF_NAMESPACE);
+  diff_common_end     = std::make_shared<srcML::node>(srcML::node_type::END, DIFF_SES_COMMON, srcML::name_space::DIFF_NAMESPACE);
+  diff_original_start = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_ORIGINAL, srcML::name_space::DIFF_NAMESPACE);
+  diff_original_end   = std::make_shared<srcML::node>(srcML::node_type::END, DIFF_ORIGINAL, srcML::name_space::DIFF_NAMESPACE);
+  diff_modified_start = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_MODIFIED, srcML::name_space::DIFF_NAMESPACE);
+  diff_modified_end   = std::make_shared<srcML::node>(srcML::node_type::END, DIFF_MODIFIED, srcML::name_space::DIFF_NAMESPACE);
   
-  diff_ws_start = std::make_shared<srcML::node>(srcML::node::node_type::START, DIFF_WHITESPACE, srcML::name_space::DIFF_NAMESPACE);
-  diff_ws_end   = std::make_shared<srcML::node>(srcML::node::node_type::END, DIFF_WHITESPACE, srcML::name_space::DIFF_NAMESPACE);
+  diff_ws_start = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_WHITESPACE, srcML::name_space::DIFF_NAMESPACE);
+  diff_ws_end   = std::make_shared<srcML::node>(srcML::node_type::END, DIFF_WHITESPACE, srcML::name_space::DIFF_NAMESPACE);
 
  }
 
@@ -172,7 +148,10 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
  void srcdiff_output::start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version) {
 
   wstate->unit = srcml_unit_create(archive);
-
+  srcml_unit_register_namespace(wstate->unit,
+      srcML::name_space::DIFF_NAMESPACE->get_prefix()->c_str(),
+      srcML::name_space::DIFF_NAMESPACE->get_uri().c_str()
+  );
   srcml_unit_set_language(wstate->unit, language_string.c_str());
 
   srcml_unit_set_filename(wstate->unit, unit_filename ? unit_filename->c_str() : 0);
@@ -298,10 +277,10 @@ void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, con
     open_diffs.push_back(modified_diff);
   }
 
-  if(node->get_type() == srcML::node::node_type::START) {
+  if(node->get_type() == srcML::node_type::START) {
 
     open_diffs.back()->open_tags.push_back(node);
-  } else if(node->get_type() == srcML::node::node_type::END) {
+  } else if(node->get_type() == srcML::node_type::END) {
 
     if(open_diffs.size() == 1 && open_diffs.back()->open_tags.size() == 1)
       return;
@@ -351,32 +330,32 @@ void srcdiff_output::output_node(const std::shared_ptr<srcML::node> & original_n
 
   if(operation == SES_COMMON && original_node->is_temporary() != modified_node->is_temporary()) {
 
-    if(original_node->get_type() == srcML::node::node_type::END) {
+    if(original_node->get_type() == srcML::node_type::END) {
       output_node(diff_common_end, SES_COMMON);
     }
 
     if(original_node->is_temporary()) {
 
-      if(modified_node->get_type() == srcML::node::node_type::START) {
+      if(modified_node->get_type() == srcML::node_type::START) {
         output_node(diff_modified_start, SES_INSERT);
       }
       output_node(modified_node, SES_INSERT, force_output);
-      if(modified_node->get_type() == srcML::node::node_type::END) {
+      if(modified_node->get_type() == srcML::node_type::END) {
         output_node(diff_modified_end, SES_INSERT);
       }
 
     } else {
 
-      if(original_node->get_type() == srcML::node::node_type::START) {
+      if(original_node->get_type() == srcML::node_type::START) {
         output_node(diff_original_start, SES_DELETE);
       }
       output_node(original_node, SES_DELETE, force_output);
-      if(original_node->get_type() == srcML::node::node_type::END) {
+      if(original_node->get_type() == srcML::node_type::END) {
         output_node(diff_original_end, SES_DELETE);
       }
 
     }
-    if(original_node->get_type() == srcML::node::node_type::START) {
+    if(original_node->get_type() == srcML::node_type::START) {
       output_node(diff_common_start, SES_COMMON);
     }
   } else {
@@ -427,9 +406,9 @@ void srcdiff_output::output_node(const std::shared_ptr<srcML::node> & node, int 
 
   }
 
-  if(node->get_type() == srcML::node::node_type::END) {
+  if(node->get_type() == srcML::node_type::END) {
 
-    if(node->get_type() == srcML::node::node_type::END && wstate->output_diff.back()->open_tags.back()->get_name() != node->get_name())
+    if(node->get_type() == srcML::node_type::END && wstate->output_diff.back()->open_tags.back()->get_name() != node->get_name())
       return;
 
     // check if ending a SES_DELETE/SES_INSERT/SES_COMMON tag. if so delay.
@@ -451,7 +430,7 @@ void srcdiff_output::output_node(const std::shared_ptr<srcML::node> & node, int 
 
   }
 
-  if(node->get_type() == srcML::node::node_type::START) {
+  if(node->get_type() == srcML::node_type::START) {
 
     int current_operation = wstate->output_diff.back()->operation;
     int size = wstate->output_diff.back()->open_tags.size();
@@ -476,7 +455,7 @@ void srcdiff_output::output_node(const std::shared_ptr<srcML::node> & node, int 
 void srcdiff_output::output_text_as_node(const std::string & text, int operation) {
 
   if(text.size() == 0) return;
-  std::shared_ptr<srcML::node> node = std::make_shared<srcML::node>(srcML::node::node_type::TEXT, std::string("text"));
+  std::shared_ptr<srcML::node> node = std::make_shared<srcML::node>(srcML::node_type::TEXT, std::string("text"));
   node->set_content(text);
 
   output_node(node, operation);
@@ -522,16 +501,20 @@ void srcdiff_output::output_node_inner(const srcML::node & node) {
   if(node.is_temporary()) return;
 
   switch (node.get_type()) {
-  case srcML::node::node_type::START:
+  case srcML::node_type::START:
 
     
     // start the element
-    srcml_write_start_element(wstate->unit, node.get_namespace()->get_prefix() ? node.get_namespace()->get_prefix()->c_str() : 0, node.get_name().c_str(), node.get_namespace()->get_uri().c_str());
+    srcml_write_start_element(wstate->unit,
+      node.get_namespace()->get_prefix() ? node.get_namespace()->get_prefix()->c_str() : 0,
+      node.get_name().c_str(),
+      nullptr//node.get_namespace()->get_uri().c_str()
+      );
 
     // copy all the attributes
     {
 
-      for(const srcML::node::srcml_attribute_map_pair attr : node.get_attributes()) {
+      for(const srcML::attribute_map_pair attr : node.get_attributes()) {
 
         srcml_write_attribute(wstate->unit, 0, attr.second.get_name().c_str(), 0, attr.second.get_value() ? attr.second.get_value()->c_str() : 0);
 
@@ -546,11 +529,11 @@ void srcdiff_output::output_node_inner(const srcML::node & node) {
 
     break;
 
-  case srcML::node::node_type::END:
+  case srcML::node_type::END:
     srcml_write_end_element(wstate->unit);
     break;
 
-  case srcML::node::node_type::TEXT:
+  case srcML::node_type::TEXT:
 
     // output the UTF-8 buffer escaping the characters.  Note that the output encoding
     // is handled by libxml

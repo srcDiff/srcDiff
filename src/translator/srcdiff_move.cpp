@@ -17,7 +17,7 @@ typedef std::vector<move_info> move_infos;
 srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation)
   : srcdiff_output(out), position(position), operation(operation) {}
 
-bool srcdiff_move::is_move(const std::shared_ptr<construct> & set) {
+bool srcdiff_move::is_move(std::shared_ptr<const construct> set) {
 
   return set->term(0)->get_move();
 
@@ -30,10 +30,10 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
   std::map<std::string, move_infos > constructs;
 
-  typedef std::unordered_multiset<std::shared_ptr<construct>>::iterator lookup_iterator;
-  std::unordered_multiset<std::shared_ptr<construct>> node_set_lookup_table;
+  typedef std::unordered_multiset<std::shared_ptr<const construct>>::iterator lookup_iterator;
+  std::unordered_multiset<std::shared_ptr<const construct>> node_set_lookup_table;
 
-  std::vector<std::shared_ptr<construct>> delete_sets;
+  std::vector<std::shared_ptr<const construct>> delete_sets;
 
   for(edit_t * edits = edit_script; edits != nullptr; edits = edits->next) {
 
@@ -72,7 +72,7 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
   }
 
-  for(const std::shared_ptr<construct> set : delete_sets) {
+  for(std::shared_ptr<const construct> set : delete_sets) {
 
     std::pair<lookup_iterator, lookup_iterator> range = node_set_lookup_table.equal_range(set);
 

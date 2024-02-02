@@ -29,12 +29,15 @@
 
 #include <optional>
 #include <memory>
+#include <span>
 
 class construct {
 
 public:
 
-    typedef std::vector<std::shared_ptr<construct>> construct_list;
+    typedef std::vector<std::shared_ptr<const construct>> construct_list;
+    typedef std::span<const std::shared_ptr<const construct>> construct_list_view;
+
     typedef std::function<bool (int & node_pos, const srcml_nodes & node_list, const void * context)> construct_filter;
 
     static bool is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context);
@@ -115,6 +118,11 @@ public:
     virtual bool is_tag_convertable(const construct & modified) const;
     bool is_convertable(const construct & modified) const;
     virtual bool is_convertable_impl(const construct & modified) const;
+
+    // can nest -> can it be placed inside
+    virtual bool can_nest(const construct & modified) const;
+    // does it have a nest target that is better
+    //virtual bool is_nest(const construct & modified) const;
 
 protected:
     std::shared_ptr<srcdiff_output> out;

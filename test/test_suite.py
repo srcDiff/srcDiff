@@ -91,9 +91,13 @@ def name2filestr(src_filename):
 def extract_source(srcDiff, operation):
 
 	# run the srcML extractor
-	command = [srcml_client, "--revision=" + str(operation)]
+	# temp fix because of extract-src bug
+	srcml = safe_communicate([srcml_client, "--revision=" + str(operation), '--output-srcml'], srcDiff)
+	command = [srcml_client]
+	return safe_communicate(command, srcml)
 
-	return safe_communicate(command, srcDiff)
+	#command = [srcml_client, "--revision=" + str(operation)]
+	#return safe_communicate(command, srcDiff)
 
 # switch diff order
 def switch_differences(srcML):
