@@ -5,7 +5,7 @@
 #include <srcml.h>
 
 #include <optional>
-#include <boost/any.hpp>
+#include <any>
 
 #include <string>
 #include <vector>
@@ -114,7 +114,7 @@ struct srcdiff_options
   struct view_options_t {
     std::string syntax_highlight;
     std::string theme;
-    boost::any unified_view_context;
+    std::any unified_view_context;
     int side_by_side_tab_size;
     std::optional<std::string> srcdiff_filename;
   } view_options;

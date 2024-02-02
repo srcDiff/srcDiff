@@ -37,7 +37,6 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
-#include <boost/any.hpp>
 #include <optional>
 #ifdef TIMING
 #include <boost/timer/timer.hpp>
