@@ -19,6 +19,11 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+if(DEFINED ENV{VCPKG_ROOT})
+  message(STATUS "Building with vcpkg")
+  include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+endif()
+
 cmake_minimum_required(VERSION 3.14)
 project(srcDiff)
 
@@ -31,35 +36,17 @@ enable_testing()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 include(srcdiff)
 
+find_package(LibXml2 REQUIRED)
+find_package(Iconv REQUIRED)
+include_directories(${LIBXML2_INCLUDE_DIR})
+find_package(Boost COMPONENTS filesystem system regex date_time REQUIRED)
 
 if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-
-    find_package(LibXml2 REQUIRED)
-    find_package(Iconv REQUIRED)
-    include_directories(${LIBXML2_INCLUDE_DIR})
-    
     find_library(LIBSRCML_LIBRARY NAMES libsrcml.so)
-    find_package(Boost COMPONENTS program_options filesystem system regex date_time REQUIRED)
 
-else()
-
-    # TODO: replace hardcoded dep path with vcpkg
-    set(WINDOWS_DEP_PATH ${PROJECT_SOURCE_DIR}/src/windows/deps)
-    
-    include_directories(${WINDOWS_DEP_PATH}/include)
-    link_directories(${WINDOWS_DEP_PATH}/$(ConfigurationName)/lib)
-    set(LIBXML2_LIBRARIES libxml2.lib libiconv.lib)
-    
-    set(Boost_NO_SYSTEM_PATHS ON)
-    set(Boost_LIBRARY_DIR_RELEASE ${WINDOWS_DEP_PATH}/release/lib)
-    set(Boost_LIBRARY_DIR_DEBUG ${WINDOWS_DEP_PATH}/debug/lib)
-    set(BOOST_INCLUDE_DIR ${WINDOWS_DEP_PATH}/include)
-    set(BOOST_INCLUDEDIR ${WINDOWS_DEP_PATH}/include)
-    set(Boost_INCLUDE_DIRS ${WINDOWS_DEP_PATH}/include)
-
+else()    
     find_library(LIBSRCML_LIBRARY NAMES libsrcml PATHS "C:/Program Files/srcML/lib")
     include_directories("C:/Program Files/srcML/include")
-    message(STATUS ${LIBSRCML_LIBRARY})
 
 
 endif()
