@@ -10,11 +10,6 @@
 #include <view.hpp>
 #include <unified_view.hpp>
 #include <side_by_side_view.hpp>
-#include <diffdoc_view.hpp>
-
-#ifndef _MSC_BUILD
-#include <srcdiff_summary.hpp>
-#endif
 
 #include <methods.hpp>
 #include <srcdiff_constants.hpp>
@@ -113,10 +108,6 @@ protected:
 
   std::shared_ptr<view_t> view;
 
-#ifndef _MSC_BUILD
-  std::shared_ptr<srcdiff_summary> summary;
-#endif
-
 public:
 
   // diff nodes
@@ -192,7 +183,7 @@ public:
 template<class T>
 void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
-  static const std::shared_ptr<srcML::node> flush = std::make_shared<srcML::node>(srcML::node::node_type::TEXT, "text");
+  static const std::shared_ptr<srcML::node> flush = std::make_shared<srcML::node>(srcML::node_type::TEXT, "text");
   output_node(flush, SES_COMMON);
 
   if(wstate->approximate) {
@@ -207,17 +198,10 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
     const char * xml = srcml_unit_get_srcml(wstate->unit);
     colordiff->colorize(xml, line_diff_range);
 
-  } else if(is_option(flags, OPTION_UNIFIED_VIEW | OPTION_SIDE_BY_SIDE_VIEW | OPTION_DIFFDOC_VIEW)) {
+  } else if(is_option(flags, OPTION_UNIFIED_VIEW | OPTION_SIDE_BY_SIDE_VIEW)) {
 
     const char * xml = srcml_unit_get_srcml(wstate->unit);
     view->transform(xml, "UTF-8");
-
-  } else if(is_option(flags, OPTION_SUMMARY)) {
-
-#ifndef _MSC_BUILD
-    const char * xml = srcml_unit_get_srcml(wstate->unit);
-    summary->summarize(xml, "UTF-8");
-#endif
 
   } else if(is_option(flags, OPTION_BURST)) {
 

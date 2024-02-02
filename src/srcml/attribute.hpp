@@ -39,12 +39,15 @@ namespace srcML {
                         std::shared_ptr<srcML::name_space> ns = srcML::name_space::SRC_NAMESPACE,
                         std::optional<std::string> value = std::optional<std::string>());
 
+        void merge(const attribute & that);
         std::string full_name() const;
-        void set_name(std::string input);
-        void set_value(std::optional<std::string> input);
+        void set_name(const std::string & input);
+        void set_value(const std::optional<std::string> & input);
         const std::string & get_name() const;
         std::shared_ptr<srcML::name_space> get_ns() const;
         const std::optional<std::string> & get_value() const;
+
+
 
 
         friend std::ostream & operator<<(std::ostream & out, const attribute & that);

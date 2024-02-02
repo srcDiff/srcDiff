@@ -17,6 +17,7 @@ keywords_t::keywords_t(const theme_t & theme) {
         { "do",           theme.keyword_color },
         { "else",         theme.keyword_color },
         { "for",          theme.keyword_color },
+        { "foreach",      theme.keyword_color },
         { "if",           theme.keyword_color },
         { "switch",       theme.keyword_color },
         { "while",        theme.keyword_color },
@@ -95,9 +96,6 @@ keywords_t::keywords_t(const theme_t & theme) {
 
 }
 
-
 std::string keywords_t::color(const std::string & token) const {
-
     return color_map.at(token);
-
 }

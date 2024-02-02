@@ -40,12 +40,12 @@ namespace std {
 
   }
 
-  size_t hash<std::shared_ptr<construct>>::operator()(const std::shared_ptr<construct> & element) const {
+  size_t hash<std::shared_ptr<const construct>>::operator()(const std::shared_ptr<const construct> & element) const {
     if(!element) return 0;
     else return element->hash();
   }
 
-  bool equal_to<std::shared_ptr<construct>>::operator()(std::shared_ptr<construct> self, std::shared_ptr<construct> that) const {
+  bool equal_to<std::shared_ptr<const construct>>::operator()(std::shared_ptr<const construct> self, std::shared_ptr<const construct> that) const {
     if(self == that) return true;
     if(!self || !that) return false;
     return *self == *that;
