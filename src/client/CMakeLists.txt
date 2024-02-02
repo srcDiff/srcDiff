@@ -54,7 +54,8 @@ add_executable(srcdiff ${CLIENT_HEADERS} ${CLIENT_SOURCE} $<TARGET_OBJECTS:short
 		       $<TARGET_OBJECTS:windows>)
 else()
 add_executable(srcdiff ${CLIENT_HEADERS} ${CLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
-		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:view>)
+		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:view>
+           $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:project>)
 endif()
 
 target_link_libraries(srcdiff ${LIBSRCML_LIBRARY} ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} Threads::Threads srcsax_shared CLI11::CLI11)
