@@ -34,6 +34,19 @@ if(NOT GIT_ENABLED)
 
 endif()
 
+# Fetch CLI11 from Github
+# See: https://cliutils.github.io/CLI11/book/chapters/installation.html#using-fetchcontent
+
+include(FetchContent)
+FetchContent_Declare(
+    cli11_proj
+    QUIET
+    GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
+    GIT_TAG v2.3.2
+)
+
+FetchContent_MakeAvailable(cli11_proj)
+
 # srcdiff
 if(WIN32)
 add_executable(srcdiff ${CLIENT_HEADERS} ${CLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
@@ -44,7 +57,7 @@ add_executable(srcdiff ${CLIENT_HEADERS} ${CLIENT_SOURCE} $<TARGET_OBJECTS:short
 		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:view>)
 endif()
 
-target_link_libraries(srcdiff srcdiff_static ${SRCDIFF_LIBRARIES})
+target_link_libraries(srcdiff ${LIBSRCML_LIBRARY} ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} Threads::Threads srcsax_shared CLI11::CLI11)
 
 set_target_properties(srcdiff PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
