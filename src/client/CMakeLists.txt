@@ -35,6 +35,7 @@ if(NOT GIT_ENABLED)
 endif()
 
 # srcdiff
+find_package(srcML REQUIRED)
 
 add_executable(srcdiff ${CLIENT_HEADERS} ${CLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
                        $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:view>
@@ -48,7 +49,7 @@ find_package(LibXml2 REQUIRED)
 
 
 #target_link_libraries(srcdiff PRIVATE LibXml2::LibXml2 Boost::program_options Boost::filesystem Boost::system Boost::regex)
-target_link_libraries(srcdiff PRIVATE srcsax_static LibXml2::LibXml2 ${LIBSRCML_LIBRARY} Boost::program_options)
+target_link_libraries(srcdiff PRIVATE srcsax_static srcML::LibsrcML LibXml2::LibXml2 Boost::program_options)
  
 
 set_target_properties(srcdiff PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
