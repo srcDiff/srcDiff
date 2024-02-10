@@ -22,4 +22,7 @@
 file(GLOB MODEL_HEADERS *.hpp)
 file(GLOB MODEL_SOURCE  *.cpp)
 
+find_package(srcML REQUIRED)
+
 add_library(model OBJECT ${MODEL_HEADERS} ${MODEL_SOURCE})
+target_link_libraries(model PRIVATE srcML::LibsrcML)

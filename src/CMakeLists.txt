@@ -19,11 +19,6 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-find_package(LibXml2 REQUIRED)
-find_package(Iconv REQUIRED)
-
-include_directories(LibXml2::LibXml2)
-
 add_subdirectory(client)
 add_subdirectory(shortest_edit_script)
 add_subdirectory(srcml)
@@ -33,8 +28,12 @@ add_subdirectory(project)
 add_subdirectory(view)
 add_subdirectory(srcSAX/src)
 
-
 set(SRCDIFF_LIBRARY_SOURCE_EXTRA CACHE INTERNAL "libsrcdiff Extra Source")
+
+find_package(srcML REQUIRED)
+find_package(LibXml2 REQUIRED)
+
+find_package(Boost REQUIRED COMPONENTS program_options filesystem system regex date_time)
 
 #
 # build_library
@@ -57,7 +56,7 @@ else()
     set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME srcdiff)
 endif()
 
-    target_link_libraries(${LIBRARY_NAME} PRIVATE srcsax_shared ${LIBSRCDIFF_LIBRARIES})
+    target_link_libraries(${LIBRARY_NAME} PRIVATE srcsax_shared srcML::LibsrcML LibXml2::LibXml2 Boost::program_options Boost::headers)
 
 endmacro()
 
