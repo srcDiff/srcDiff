@@ -18,6 +18,7 @@
 #  You should have received a copy of the GNU General Public License
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
 macro(add_unit_test TEST_FILE)
 
     get_filename_component(TEST_NAME_WITH_EXTENSION ${TEST_FILE} NAME)

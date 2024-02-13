@@ -30,6 +30,7 @@ add_subdirectory(srcSAX/src)
 
 set(SRCDIFF_LIBRARY_SOURCE_EXTRA CACHE INTERNAL "libsrcdiff Extra Source")
 
+#find_package(srcML CONFIG COMPONENTS PlainLinkInterface)
 find_package(srcML REQUIRED)
 find_package(LibXml2 REQUIRED)
 

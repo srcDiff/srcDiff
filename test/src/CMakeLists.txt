@@ -25,5 +25,5 @@ include_directories(.)
 file(GLOB TEST_SRC *.cpp)
 
 add_executable(switch_differences ${TEST_SRC})
-target_link_libraries(switch_differences ${LIBXML2_LIBRARIES})
+target_link_libraries(switch_differences LibXml2::LibXml2)
 set_target_properties(switch_differences PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
