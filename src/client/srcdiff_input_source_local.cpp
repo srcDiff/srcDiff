@@ -167,10 +167,7 @@ void srcdiff_input_source_local::process_file(const std::optional<std::string> &
 
   srcdiff_input<srcdiff_input_source_local> input_original(options.archive, path_original, language_string, options.flags, *this);
   srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_modified, language_string, options.flags, *this);
-  line_diff_range<srcdiff_input_source_local> line_diff_range(path_one, path_two, this);
-
-  translator->translate(input_original, input_modified, line_diff_range, language_string,
-                        unit_filename, unit_version);
+  translator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
 
 }
 

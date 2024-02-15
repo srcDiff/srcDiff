@@ -21,13 +21,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcML::name_space>()) {
 
-  if(is_option(flags, OPTION_VISUALIZE)) {
-
-    const std::string url = srcml_archive_get_url(archive) ? srcml_archive_get_url(archive) : "";
-    const std::string version = srcml_archive_get_version(archive) ? srcml_archive_get_version(archive) : "";
-    colordiff = std::make_shared<color_diff>(srcdiff_filename, url, version, flags);
-
-  } else if(is_option(flags, OPTION_UNIFIED_VIEW)) {
+  if(is_option(flags, OPTION_UNIFIED_VIEW)) {
 
      view = std::make_shared<unified_view>(srcdiff_filename,
                                            view_options.syntax_highlight,
@@ -142,6 +136,64 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
     update_diff_stack(wstate->output_diff, unit_tag, SES_COMMON);
 
   }
+
+ }
+
+void srcdiff_output::finish() {
+
+  static const std::shared_ptr<srcML::node> flush = std::make_shared<srcML::node>(srcML::node_type::TEXT, "text");
+  output_node(flush, SES_COMMON);
+
+  if(wstate->approximate) {
+    srcml_write_start_element(wstate->unit, SRCDIFF_DEFAULT_NAMESPACE_PREFIX.c_str(), "approximate", 0);
+    srcml_write_end_element(wstate->unit);
+  }
+
+  srcml_write_end_unit(wstate->unit);
+
+  if(is_option(flags, OPTION_UNIFIED_VIEW | OPTION_SIDE_BY_SIDE_VIEW)) {
+
+    const char * xml = srcml_unit_get_srcml(wstate->unit);
+    view->transform(xml, "UTF-8");
+
+  } else if(is_option(flags, OPTION_BURST)) {
+
+    srcml_archive * srcdiff_archive = srcml_archive_clone(archive);
+    srcml_archive_enable_solitary_unit(srcdiff_archive);
+    srcml_archive_disable_hash(srcdiff_archive);
+
+    std::string filename = srcml_unit_get_filename(wstate->unit);
+    std::string::size_type pos;
+    if((pos = filename.find('|')) != std::string::npos) {
+
+      if(pos == 0) {
+        filename = filename.substr(1, std::string::npos);
+      }
+      else {
+        filename = filename.substr(0, pos);
+      }
+
+    }
+
+    for(std::string::size_type pos = filename.find('/'); pos != std::string::npos; pos = filename.find('/', pos + 1)) {
+      filename.replace(pos, 1, "_");
+    }
+    filename += ".srcdiff";
+
+    filename = wstate->filename + "/" + filename;
+    srcml_archive_write_open_filename(srcdiff_archive, filename.c_str());
+
+    srcml_archive_write_unit(srcdiff_archive, wstate->unit);
+    srcml_archive_close(srcdiff_archive);
+    srcml_archive_free(srcdiff_archive);
+
+  } 
+
+  if(output_srcdiff) {
+    srcml_archive_write_unit(archive, wstate->unit);
+  }
+
+  srcml_unit_free(wstate->unit);
 
  }
 

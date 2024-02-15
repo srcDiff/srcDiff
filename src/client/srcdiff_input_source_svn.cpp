@@ -222,10 +222,7 @@ void srcdiff_input_source_svn::process_file(const std::optional<std::string> & p
   srcdiff_input<srcdiff_input_source_svn> input_original(options.archive, svn_path_original_temp, language_string, 0, *this);
   srcdiff_input<srcdiff_input_source_svn> input_modified(options.archive, svn_path_modified_temp, language_string, 0, *this);
 
-  line_diff_range<srcdiff_input_source_svn> line_diff_range(svn_path_original_temp, svn_path_modified_temp, this);
-
-  translator->translate(input_original, input_modified, line_diff_range, language_string,
-                        unit_filename, unit_version);
+  translator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
 
 }
 

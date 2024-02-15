@@ -178,10 +178,8 @@ void srcdiff_input_source_git::process_file(const std::optional<std::string> & p
 
   srcdiff_input<srcdiff_input_source_local> input_original(options.archive, path_one_full, language_string, options.flags, *this);
   srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_two_full, language_string, options.flags, *this);
-  line_diff_range<srcdiff_input_source_local> line_diff_range(path_one_full, path_two_full, this);
 
-  translator->translate(input_original, input_modified, line_diff_range, language_string,
-                        unit_filename, unit_version);
+  translator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
 
 }
 
