@@ -24,7 +24,7 @@ if(DEFINED ENV{VCPKG_ROOT})
   include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 endif()
 
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.21)
 project(srcDiff)
 
 if(NOT WIN32)
@@ -38,20 +38,18 @@ include(srcdiff)
 
 find_package(LibXml2 REQUIRED)
 find_package(Iconv REQUIRED)
-include_directories(${LIBXML2_INCLUDE_DIR})
+include_directories(${LIBXML2_INCLUDE_DIRS})
 find_package(Boost COMPONENTS filesystem system regex date_time REQUIRED)
 
-if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-    find_library(LIBSRCML_LIBRARY NAMES libsrcml.so)
-
-else()    
-    find_library(LIBSRCML_LIBRARY NAMES libsrcml PATHS "C:/Program Files/srcML/lib")
-    include_directories("C:/Program Files/srcML/include")
-
-
+if(NOT WIN32)
+    find_library(libsrcml NAMES libsrcml.so REQUIRED)
+	set(LOCAL_LIBSRCML libsrcml)
+else()
+	find_package(srcML REQUIRED)
+	set(LOCAL_LIBSRCML srcML::LibsrcML)
 endif()
 
-set (CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # setup project includes

@@ -62,8 +62,7 @@ else()
               $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:project>)
 endif()
 
-target_link_libraries(srcdiff ${LIBSRCML_LIBRARY} ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} Threads::Threads srcsax_shared CLI11::CLI11)
-
+target_link_libraries(srcdiff PRIVATE ${LOCAL_LIBSRCML} ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} Threads::Threads srcsax_shared CLI11::CLI11)
 set_target_properties(srcdiff PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 install(TARGETS srcdiff RUNTIME DESTINATION bin)

@@ -62,7 +62,7 @@ macro(build_library LIBRARY_NAME LIBRARY_TYPE LIBRARY_OUTPUT_NAME)
     else()
         set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${LIBRARY_OUTPUT_NAME})
     endif()
-    target_link_libraries(${LIBRARY_NAME} PRIVATE srcsax_shared libsrcml ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES})
+    target_link_libraries(${LIBRARY_NAME} PRIVATE srcsax_shared ${LOCAL_LIBSRCML} ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES})
 
 endmacro()
 
