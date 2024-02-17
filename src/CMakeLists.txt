@@ -34,6 +34,10 @@ if(WIN32)
     add_subdirectory(windows)
 endif()
 
+# WINDOWS_EXPORT_ALL_SYMBOLS has to be true for srcsax_shared for Clang to be
+# able to link srcdiff.exe to it
+set_target_properties(srcsax_shared PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
+
 set(SRCDIFF_LIBRARY_SOURCE_EXTRA CACHE INTERNAL "libsrcdiff Extra Source")
 
 #

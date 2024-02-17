@@ -65,4 +65,9 @@ endif()
 target_link_libraries(srcdiff PRIVATE ${LOCAL_LIBSRCML} ${LIBXML2_LIBRARIES} ${Boost_LIBRARIES} Threads::Threads srcsax_shared CLI11::CLI11)
 set_target_properties(srcdiff PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-install(TARGETS srcdiff RUNTIME DESTINATION bin)
+install(TARGETS srcdiff RUNTIME DESTINATION bin LIBRARY DESTINATION bin)
+
+add_custom_command(TARGET srcdiff POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:srcdiff> $<TARGET_RUNTIME_DLLS:srcdiff>
+  COMMAND_EXPAND_LISTS
+)
