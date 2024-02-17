@@ -1,0 +1,39 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index ba698135a..de874b6c0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -64,4 +64,4 @@ add_subdirectory(doc)
+ add_subdirectory(examples)
+ 
+ # packaging
+-add_subdirectory(package)
++# add_subdirectory(package)
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index 02ddee7f0..d855122a0 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -25,4 +25,4 @@ add_link_options("${SRCML_GLOBAL_LINK_OPTIONS}")
+     add_subdirectory(parser)
+     add_subdirectory(libsrcml)
+ # endif()
+-add_subdirectory(client)
++# add_subdirectory(client)
+diff --git a/src/libsrcml/CMakeLists.txt b/src/libsrcml/CMakeLists.txt
+index f7fd7b706..2d56ee4ff 100644
+--- a/src/libsrcml/CMakeLists.txt
++++ b/src/libsrcml/CMakeLists.txt
+@@ -180,10 +180,10 @@ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcml.h DESTINATION ${CMAKE_INSTALL_IN
+ 
+ # On Windows with vcpkg, install all the dlls that the vcpkg installed
+ # Handles this for client also
+-if(WIN32 AND DEFINED VCPKG_TARGET_TRIPLET)
+-    file(GLOB VCPKG_SRCML_DEPENDENCIES "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/*${CMAKE_SHARED_LIBRARY_SUFFIX}")
+-    install(FILES ${VCPKG_SRCML_DEPENDENCIES} DESTINATION bin COMPONENT SRCML)
+-endif()
++# if(WIN32 AND DEFINED VCPKG_TARGET_TRIPLET)
++#     file(GLOB VCPKG_SRCML_DEPENDENCIES "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin/*${CMAKE_SHARED_LIBRARY_SUFFIX}")
++#     install(FILES ${VCPKG_SRCML_DEPENDENCIES} DESTINATION bin COMPONENT SRCML)
++# endif()
+ 
+ # Run ldconfig for install (not cpack) on Ubuntu
+ # The component is for ignoring in cpack

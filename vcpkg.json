@@ -1,9 +1,10 @@
 {
   "dependencies": [
-    "libxml2",
+    "srcml",
+    "boost-date-time",
     "boost-filesystem",
-    "boost-system",
     "boost-regex",
-    "boost-date-time"
+    "boost-system",
+    "libxml2"
   ]
 }
