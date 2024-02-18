@@ -57,10 +57,7 @@ void option_input_file(const std::vector<std::string> & arg) {
     } else {
 
       if((pos + 1) >= arg.size()) {
-        // this is a little dodgy because invalid_argument is usually used for
-        // function arguments, not cli arguments, but it gets the message
-        // across...
-        throw std::invalid_argument("Odd number of input files.");
+        throw CLI::ValidationError("Odd number of input files.");
       }
       options.input_pairs.push_back(std::make_pair(arg[pos], arg[pos + 1]));
       ++pos;
@@ -78,7 +75,7 @@ void option_files_from(const std::string & filename) {
     options.files_from_name = filename;
 
     std::ifstream input_file(filename);
-    if(!input_file) throw std::string("Filename '" + filename + "' can't be opened.");
+    if(!input_file) throw CLI::FileError::Missing(filename);
 
     size_t line_count = 0;
     std::string line;
@@ -284,7 +281,7 @@ void option_parsing_method(const std::string & arg) {
     else if(method == NO_GROUP_DIFF_METHOD) options.methods &= ~METHOD_GROUP;
     else if(method == GROUP_DIFF_METHOD) options.methods |= METHOD_GROUP;
     else {
-      throw std::invalid_argument(method + " is not a valid parsing method");
+      throw CLI::ValidationError(method + " is not a valid parsing method");
     }
 
   }
@@ -575,7 +572,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     " or 'function' to see the encompassing function"
   )->default_val("3");  // note: no callback if option not present
 
-  srcdiff_group->add_option_function<int>(
+  CLI::Option * side_by_side = srcdiff_group->add_option_function<int>(
     "-y,--side-by-side",
     view_option_side_by_side_tab_size,
     "Output as colorized side-by-side diff"
@@ -624,7 +621,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "--theme",
     options.view_options.theme,
     "Select theme for syntax-hightlighting.\n"
-    "Options: default or monokai"
+    "Options: default, monokai, or filename of custom theme"
   )->default_val("default");
 
   srcdiff_group->add_option(
@@ -648,7 +645,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   }
 
   for (const auto& view_option : conditional_view_options) {
-    if (!view_option->empty()){
+    if (!view_option->empty() && (side_by_side->empty() && unified->empty())){
       std::cerr << view_option->get_name() << " requires either --unified or --side-by-side to be set!\n";
       exit(1);
     }
