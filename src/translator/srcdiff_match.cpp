@@ -22,8 +22,8 @@ struct difference {
 
 };
 
-bool srcdiff_match::is_match_default(const construct::construct_list & sets_original, int start_pos_original,
-                                     const construct::construct_list & sets_modified, int start_pos_modified) {
+bool is_match(const construct::construct_list & sets_original, int start_pos_original,
+              const construct::construct_list & sets_modified, int start_pos_modified) {
 
   const srcdiff_measure & measure = *sets_original.at(start_pos_original)->measure(*sets_modified.at(start_pos_modified));
   if(measure.similarity() == MAX_INT) return false;
@@ -41,10 +41,8 @@ bool srcdiff_match::is_match_default(const construct::construct_list & sets_orig
 }
 
 
-srcdiff_match::srcdiff_match(const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified,
-                             const is_match_func & is_match)
-  : construct_list_original(construct_list_original), construct_list_modified(construct_list_modified),
-    is_match(is_match) {}
+srcdiff_match::srcdiff_match(const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified)
+  : construct_list_original(construct_list_original), construct_list_modified(construct_list_modified) {}
 
 /** loop O(D) */
 static offset_pair * create_linked_list(int olength, int nlength, difference * differences) {
