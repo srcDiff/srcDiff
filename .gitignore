@@ -1,6 +1,7 @@
 html
 
 src/windows/deps
+build
 
 *.vcxproj*
 *.sln
@@ -12,6 +13,7 @@ src/windows/deps
 *.pyc
 .DS_Store
 bin
+.vs
 
 # cmake/ctest/cpack
 CMakeCache.txt
