@@ -1,7 +1,7 @@
 /**
  *  @file user_defined_theme.cpp
  *
- *  Specifies monokai color scheme.
+ *  Specifies user defined color scheme.
  *
  *  @author Michael John Decker <mdecker6@kent.edu>
  */
@@ -103,9 +103,8 @@ std::map<std::string, color_t> parse_user_definition_file(const std::string & th
     // values)
 
     CLI::App custom_theme("Theme options");
-    // set up one command-line-style option, which is the name of the file to
-    // parse that will contain our actual options (which we will pass to it
-    // manually)
+    // set up one command-line-style option, which is the name of the file that
+    // will contain our actual options
     custom_theme.set_config("config", "", "", true);
 
     std::map<std::string, color_t> colors;
