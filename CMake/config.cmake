@@ -27,8 +27,6 @@ option(BUILD_TRANSLATOR_TESTS "Build files for testing srcDiff translator" ON)
 set(LIBSRCML_INCLUDE_DIR /usr/local)
 
 include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR}  ${LIBGIT2_INCLUDE_DIR})
-set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-set(CMAKE_CXX_FLAGS "${GCC_WARNINGS} -fpermissive")
-set(CMAKE_C_FLAGS "${GCC_WARNINGS}")
+
 
 
