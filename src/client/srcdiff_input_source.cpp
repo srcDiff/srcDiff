@@ -30,12 +30,12 @@ void srcdiff_input_source::file(const std::optional<std::string> & path_original
     if(get_language(path_original, path_modified) == SRCML_LANGUAGE_NONE) {
 
       ++input_skipped;
-      std::cerr << "- " << (path_original ? *path_original : "") << '|' << (path_modified ? *path_modified : "") << '\n';
+      std::cout << "- " << (path_original ? *path_original : "") << '|' << (path_modified ? *path_modified : "") << '\n';
 
     } else {
 
       ++input_count;
-      std::cerr << input_count << " " << (path_original ? *path_original : "") << '|' << (path_modified ? *path_modified : "") << '\n';
+      std::cout << input_count << " " << (path_original ? *path_original : "") << '|' << (path_modified ? *path_modified : "") << '\n';
 
     }
 
@@ -54,7 +54,7 @@ void srcdiff_input_source::directory(const std::optional<std::string> & director
 
     ++input_skipped;
     ++input_total;
-    std::cerr << "- " << (directory_original ? *directory_original : "") << '|' << (directory_modified ? *directory_modified : "") << '\n';
+    std::cout << "- " << (directory_original ? *directory_original : "") << '|' << (directory_modified ? *directory_modified : "") << '\n';
 
   }
 
@@ -77,7 +77,7 @@ void srcdiff_input_source::files_from() {
 
   if(show_input) {
 
-    std::cerr << "Processing files from:  " << *options.files_from_name << '\n';
+    std::cout << "Processing files from:  " << *options.files_from_name << '\n';
 
   }
 
