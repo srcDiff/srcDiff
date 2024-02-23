@@ -7,27 +7,15 @@ vcpkg_from_github(
   PATCHES "skip-client-and-package.patch"
 )
 
-# TODO: figure out when/where to set environment variable
-# VCPKG_KEEP_ENV_VARS="PATH;JAVA_HOME". It can be set manually in the console for
-# now. for reference: https://github.com/microsoft/vcpkg/issues/10166
-
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
-  OPTIONS
-    # fix the fact that vcpkg disables FetchContent in packages' build scripts
-    # by default (https://github.com/microsoft/vcpkg/issues/28386)
-    -DFETCHCONTENT_FULLY_DISCONNECTED=OFF
 )
 
 vcpkg_cmake_install()
 vcpkg_cmake_config_fixup()
 
 # fix warning about missing license
-file(
-    INSTALL "${SOURCE_PATH}/COPYING.txt" 
-    DESTINATION "${CURRENT_PACKAGES_DIR}/share/${PORT}" 
-    RENAME copyright
-)
+vcpkg_install_copyright(FILE_LIST "${SOURCE_PATH}/COPYING.txt")
 
 # fix warnings about unexpected files
 file(REMOVE_RECURSE "${CURRENT_PACKAGES_DIR}/debug/include")
