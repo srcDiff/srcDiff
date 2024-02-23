@@ -565,13 +565,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   //   option_flag_enable<OPTION_SRCML>,
   //   "Also, output the original and modified srcML of each file when burst enabled"
   // );
-
-  srcdiff_group->add_flag(
-    "-d,--diffdoc",
-    option_flag_enable<OPTION_DIFFDOC_VIEW>,
-    "Output in diffdoc view"
-  );
-
+  
   CLI::Option * unified = srcdiff_group->add_option_function<std::string>(
     "-u,--unified",
     view_option_unified_view_context,
