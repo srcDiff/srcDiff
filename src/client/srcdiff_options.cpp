@@ -653,7 +653,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     if (arg.find(xmlns_option) == 0) {
       // if this is an xmlns argument, cut off the --xmlns= (or, if there is a
       // prefix, the --xmlns:) and pass to the option handler function
-      option_srcml_field<XMLNS>(arg.substr(xmlns_option.length() + 1));
+      option_srcml_string<XMLNS>(arg.substr(xmlns_option.length() + 1));
     } else {
       arguments.push_back(arg);
     }
