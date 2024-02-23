@@ -36,8 +36,13 @@ enable_testing()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 include(srcdiff)
 
+find_package(Threads REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(Iconv REQUIRED)
+find_package(CLI11 CONFIG REQUIRED)
+# apparently needed for vcpkg's use of cli11 as a compiled library (rather than
+# header-only):
+add_compile_definitions(CLI11_COMPILE)
 include_directories(${LIBXML2_INCLUDE_DIRS})
 find_package(Boost COMPONENTS filesystem system regex date_time REQUIRED)
 

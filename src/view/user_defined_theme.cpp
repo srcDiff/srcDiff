@@ -14,6 +14,8 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <string>
+#include <array>
 
 class color_t {
 

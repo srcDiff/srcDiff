@@ -24,5 +24,3 @@ file(GLOB VIEW_SOURCE *.cpp)
 
 # srcdiff
 add_library(view OBJECT ${VIEW_HEADERS} ${VIEW_SOURCE})
-
-target_link_libraries(view PRIVATE CLI11::CLI11)
