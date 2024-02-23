@@ -19,7 +19,7 @@ srcdiff_options options;
 #define EMAIL_ADDRESS "mdecker6@kent.edu"
 
 // width of each of the two columns of help text that CLI11 displays
-const unsigned COLUMN_WIDTH = 60;
+const unsigned COLUMN_WIDTH = 50;
 
 // Callback functions that process or respond to flags or options being set:
 
@@ -57,10 +57,7 @@ void option_input_file(const std::vector<std::string> & arg) {
     } else {
 
       if((pos + 1) >= arg.size()) {
-        // this is a little dodgy because invalid_argument is usually used for
-        // function arguments, not cli arguments, but it gets the message
-        // across...
-        throw std::invalid_argument("Odd number of input files.");
+        throw CLI::ValidationError("Odd number of input files.");
       }
       options.input_pairs.push_back(std::make_pair(arg[pos], arg[pos + 1]));
       ++pos;
@@ -78,7 +75,7 @@ void option_files_from(const std::string & filename) {
     options.files_from_name = filename;
 
     std::ifstream input_file(filename);
-    if(!input_file) throw std::string("Filename '" + filename + "' can't be opened.");
+    if(!input_file) throw CLI::FileError::Missing(filename);
 
     size_t line_count = 0;
     std::string line;
@@ -89,6 +86,12 @@ void option_files_from(const std::string & filename) {
       // skip blank lines or comment lines
       if (line[0] == '\0' || line[0] == '#') {
         continue;
+      } else if (
+        std::count_if(line.begin(), line.end(), [](char c) { return c == '|'; }) != 1) {
+        throw CLI::ValidationError(
+          "The following input line did not consist of two filenames separated by '|':\n"+
+          line
+        );
       }
 
       ++line_count;
@@ -97,6 +100,8 @@ void option_files_from(const std::string & filename) {
 
     if(line_count > 1) {
       srcml_archive_disable_solitary_unit(options.archive);
+    } else if (line_count < 1) {
+      throw CLI::ValidationError("No input file pairs could be obtained from " + filename);
     }
 
 }
@@ -214,10 +219,16 @@ template<>
 void option_srcml_string<REGISTER_EXT>(const std::string & arg) {
 
   std::string::size_type pos = arg.find('=');
-  srcml_archive_register_file_extension(options.archive, arg.substr(0, pos).c_str(), arg.substr(pos + 1).c_str());
+  srcml_archive_register_file_extension(
+    options.archive,
+    arg.substr(0, pos).c_str(),
+    arg.substr(pos + 1).c_str()
+  );
 
 }
 
+// this function is called with a processed version of the xmlns arguments
+// that look like "prefix=uri", or just "uri"
 template<>
 void option_srcml_string<XMLNS>(const std::string & arg) {
 
@@ -226,7 +237,11 @@ void option_srcml_string<XMLNS>(const std::string & arg) {
     srcml_archive_register_namespace(options.archive, "", arg.c_str());
   }
   else {
-    srcml_archive_register_namespace(options.archive, arg.substr(0, pos).c_str(), arg.substr(pos + 1, std::string::npos).c_str());
+    srcml_archive_register_namespace(
+      options.archive,
+      arg.substr(0, pos).c_str(),
+      arg.substr(pos + 1, std::string::npos).c_str()
+    );
   }
 
 }
@@ -284,36 +299,10 @@ void option_parsing_method(const std::string & arg) {
     else if(method == NO_GROUP_DIFF_METHOD) options.methods &= ~METHOD_GROUP;
     else if(method == GROUP_DIFF_METHOD) options.methods |= METHOD_GROUP;
     else {
-      throw std::invalid_argument(method + " is not a valid parsing method");
+      throw CLI::ValidationError(method + " is not a valid parsing method");
     }
 
   }
-
-}
-
-// an extra parser for boost to use on options. used on every input token. hmm.
-// TODO: figure out how to get this kind of option to be recognized
-std::pair<std::string, std::string> parse_xmlns(const std::string & arg) {
-
-  if(arg.find("xmlns:") != std::string::npos) {
-
-    std::string::size_type pos = arg.find(':');
-    std::string name, value;
-    if(pos == std::string::npos) {
-      name = arg.substr(2);
-    }
-    else {
-
-      name = arg.substr(2, pos - 2);
-      value = arg.substr(pos + 1);
-
-    }
-
-    return std::make_pair(name, value);
-
-  }
-
-  return std::make_pair(std::string(), std::string());
 
 }
 
@@ -327,11 +316,15 @@ void view_option_unified_view_context(const std::string & arg) {
 
   } catch(std::invalid_argument &) {
 
+    if (arg != "function" && arg != "all") {
+      throw CLI::ValidationError(
+        "The context for the unified view must be specified as \"all\", \"function\", or an integer number of lines."
+      );
+    }
+
     options.view_options.unified_view_context = arg;
 
   }
-
-  options.flags |= OPTION_UNIFIED_VIEW;
 
 }
 
@@ -360,9 +353,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     PROGRAM_NAME
   );
 
-  // a function that sets the "usage" string is listed in the CLI11 api
-  // documentation but apparently does not exist?
-  // cli.usage("srcdiff [options] <original_src_infile modified_src_infile>... [-o <srcDiff_outfile>]");
+  cli.usage("USAGE: srcdiff [OPTIONS] <original_src_input modified_src_input>... [-o <srcDiff_outfile>]");
   
   cli.footer("Report bugs to " EMAIL_ADDRESS "\n");
 
@@ -405,11 +396,13 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
   CLI::Option_group * input_group = cli.add_option_group("Input");
 
+  // currently, this takes priority over the positional file input argument if
+  // it is present
   input_group->add_option_function<std::string>(
     "--files-from",
     option_files_from,
     "Set the input to be a list of file pairs from the specified file.\n"
-    "Pairs are in the format: original|modified"
+    "There should be one pair per line, in the format: original|modified"
   );
 
   #if SVN
@@ -434,7 +427,10 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     );
   #endif
 
-  CLI::Option_group * srcml_group = cli.add_option_group("srcML");
+  CLI::Option_group * srcml_group = cli.add_option_group(
+    "srcML",
+    "These options control how srcML parses code into an XML AST."
+  );
 
   srcml_group->add_flag_function(
     "-n,--archive",
@@ -460,10 +456,11 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "Set the input source programming language"
   )->default_val("C++")->force_callback(true);
 
+  // Note: this will override the filename attribute on all output units
   srcml_group->add_option(
     "-f,--filename",
     options.unit_filename,
-    "Override unit filename"
+    "Specify a unit filename attribute that is different from the actual filename"
   );
 
   srcml_group->add_option_function<std::string>(
@@ -473,7 +470,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "Example: --register-ext cxx=C++"
   );
 
-// TODO: these might as well require --archive?
+// TODO: should these attributes be added to the unit(s), or require --archive?
   srcml_group->add_option_function<std::string>(
     "--url",
     option_srcml_string<URL>,
@@ -486,12 +483,15 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "Set the version attribute on the root XML element of the archive"
   );
 
-  // TODO: figure out how to get this kind of option to be recognized
+  // since the XMLNS options have a format that CLI11 doesn't know how to parse,
+  // they're actually pre-processed before the CLI11 parse function is called.
+  // So, this option is always going to be unused from CLI11's point of view,
+  // and is just added so it shows up in the help text.
   srcml_group->add_option_function<std::string>(
     "--xmlns",
-    option_srcml_string<XMLNS>,
-    "Set the prefix associationed with a namespace or register a new one.\n"
-    "Use the form --xmlns:prefix=url, or --xmlns=url to set the default prefix."
+    [](std::string){},  // no-op. should never be called
+    "Set the prefix associated with a namespace or register a new one.\n"
+    "Use the form --xmlns:prefix=url, or --xmlns=url to set the\ndefault prefix."
   );
 
   srcml_group->add_flag(
@@ -536,12 +536,16 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "Do not markup #if 0 contents (default)"
   )->force_callback();
 
-  CLI::Option_group * srcdiff_group = cli.add_option_group("srcDiff");
+  CLI::Option_group * srcdiff_group = cli.add_option_group(
+    "srcDiff",
+    "These options control how srcDiff parses code and outputs the diff."
+  );
 
   srcdiff_group->add_option_function<std::string>(
     "-m,--method",
     option_parsing_method,
-    "Set srcdiff parsing method"
+    "Specify a list of parsing methods, separated by commas.\n"
+    "The options are collect, raw, group-diff and no-group-diff"
   )->default_val("collect,group-diff");
 
   srcdiff_group->add_flag(
@@ -550,108 +554,139 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "Disable splitting strings into multiple nodes"
   );
 
-  srcdiff_group->add_flag(
-    "--burst",
-    option_flag_enable<OPTION_BURST>,
-    "Output each input file to a single srcDiff document. -o gives output directory"
-  );
-  srcdiff_group->add_flag(
-    "--srcml",
-    option_flag_enable<OPTION_SRCML>,
-    "Also, output the original and modified srcML of each file when burst enabled"
-  );
+  // TODO: remove these options, here and elsewhere in the code
 
-  srcdiff_group->add_flag(
-    "-d,--diffdoc",
-    option_flag_enable<OPTION_DIFFDOC_VIEW>,
-    "Output in diffdoc view"
-  );
+  // srcdiff_group->add_flag(
+  //   "--burst",
+  //   option_flag_enable<OPTION_BURST>,
+  //   "Output each input file to a single srcDiff document. -o gives output directory"
+  // );
+  // srcdiff_group->add_flag(
+  //   "--srcml",
+  //   option_flag_enable<OPTION_SRCML>,
+  //   "Also, output the original and modified srcML of each file when burst enabled"
+  // );
 
-  CLI::Option * unified = srcdiff_group->add_option_function<std::string>(
+  CLI::Option * unified = srcdiff_group->add_flag(
     "-u,--unified",
-    view_option_unified_view_context,
-    "Output as colorized unified diff with provided context.\n"
-    "Provide the number of lines of context, or 'all' or -1 for entire file,\n"
-    " or 'function' to see the encompassing function"
-  )->default_val("3");  // note: no callback if option not present
+    option_flag_enable<OPTION_UNIFIED_VIEW>,
+    "Output as a colorized unified diff with provided context"
+  );
 
-  srcdiff_group->add_option_function<int>(
+  // no forced callback to add the default value to the options for this one
+  CLI::Option * side_by_side = srcdiff_group->add_option_function<int>(
     "-y,--side-by-side",
     view_option_side_by_side_tab_size,
-    "Output as colorized side-by-side diff"
-  )->default_val(7)->excludes(unified);
-  // again, no forced callback
+    "Output as colorized side-by-side diff. Provide the tabstop size as\n"
+    "the argument to this option."
+  )->default_val(8)->excludes(unified);
 
-  // this holds options that need either --unified or --side-by-side to be set
-  // in order to be valid
-  std::vector<CLI::Option *> conditional_view_options;
+  CLI::Option_group * view_options = cli.add_option_group("View");
+  view_options->description(
+    "These options configure the view produced by --unified or --side-by-side."
+  );
 
-  conditional_view_options.push_back(srcdiff_group->add_flag(
+  view_options->add_option_function<std::string>(
+    "--unified-context",
+    view_option_unified_view_context,
+    "Specify the amount of context to show around an edit in the unified view.\n"
+    "Either give a number of lines, or use \"all\" or -1 to see the entire file,\n"
+    "or use \"function\" to see the encompassing function."
+  )->default_val("3")->needs(unified)->force_callback();
+
+  // TODO: document what a custom theme file should look like somewhere
+  view_options->add_option(
+    "--theme",
+    options.view_options.theme,
+    "Select theme for syntax hightlighting.\n"
+    "Options: \"default\", \"monokai\", or the filename of a custom theme."
+  )->default_val("default");
+
+  view_options->add_option(
+    "--srcdiff",
+    options.view_options.srcdiff_filename,
+    "Output srcdiff in addition to view. Supply the filename for the\n"
+    "srcDiff XML document as the argument for this option."
+  );
+
+  view_options->add_flag(
     "--html",
     option_flag_enable<OPTION_HTML_VIEW>,
-    "Output unified/side-by-side view in html"
-  ));
-
-  CLI::Option * ignore_all_space = srcdiff_group->add_flag(
-    "-W,--ignore-all-space",
-    option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>,
-    "Ignore all whitespace when outputting unified/side-by-side view"
+    "Output the unified/side-by-side view as an HTML file instead of on the terminal"
   );
-  conditional_view_options.push_back(ignore_all_space);
 
   // TODO: what is the difference between ignoring whitespace and ignoring *all*
   // whitespace?
-  conditional_view_options.push_back(srcdiff_group->add_flag(
+  CLI::Option * ignore_space = view_options->add_flag(
     "-w,--ignore-space",
     option_flag_enable<OPTION_IGNORE_WHITESPACE>,
-    "Ignore whitespace when outputting unified/side-by-side view"
-  )->excludes(ignore_all_space));
-
-  conditional_view_options.push_back(srcdiff_group->add_flag(
-    "-c,--ignore-comments",
-    option_flag_enable<OPTION_IGNORE_COMMENTS>,
-    "Ignore comments when outputting unified/side-by-side view"
-  ));
-
-  conditional_view_options.push_back(srcdiff_group->add_option(
-    "--highlight",
-    options.view_options.syntax_highlight,
-    "Syntax-hightlighting for unified/side-by-side view.\n"
-    "Options: none, partial (default), or full"
-  )->default_val("partial"));
-
-  srcdiff_group->add_option(
-    "--theme",
-    options.view_options.theme,
-    "Select theme for syntax-hightlighting.\n"
-    "Options: default or monokai"
-  )->default_val("default");
-
-  srcdiff_group->add_option(
-    "--srcdiff",
-    options.view_options.srcdiff_filename,
-    "Output srcdiff in addition to view"
+    "Ignore whitespace"
   );
 
+  view_options->add_flag(
+    "-W,--ignore-all-space",
+    option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>,
+    "Ignore all whitespace"
+  )->excludes(ignore_space);
+
+  view_options->add_flag(
+    "-c,--ignore-comments",
+    option_flag_enable<OPTION_IGNORE_COMMENTS>,
+    "Ignore comments"
+  );
+
+  view_options->add_option(
+    "--highlight",
+    options.view_options.syntax_highlight,
+    "Set the level of syntax highlighting.\n"
+    "Options: none, partial (default), or full"
+  )->default_val("partial");
+
+  // our xmlns options have a custom format and need to be parsed in advance as
+  // a special case
+
+  std::vector<std::string> arguments;
+
+  std::string xmlns_option = "--xmlns";
+  for (int i = 1; i < argc; ++i) {
+    std::string arg = argv[i];
+    if (arg.find(xmlns_option) == 0) {
+      // if this is an xmlns argument, cut off the --xmlns= (or, if there is a
+      // prefix, the --xmlns:) and pass to the option handler function
+      option_srcml_field<XMLNS>(arg.substr(xmlns_option.length() + 1));
+    } else {
+      arguments.push_back(arg);
+    }
+  }
+
+  // if you give CLI11 a vector of arguments, it expects it to be reversed 🤷
+  std::reverse(arguments.begin(), arguments.end());
   
-  // this try/catch is based on the CLI11_PARSE macro, but without status code
-  // return that assumes that the parsing takes place in main()
   try {
-    cli.parse(argc, argv);
+
+    cli.parse(arguments);
+
+    if (!options.files_from_name.has_value() && options.input_pairs.size() < 1) {
+      throw CLI::ValidationError("Input files are required.");
+    }
+
+    // CLI11 unfortunately does not have a great mechanism for requiring that
+    // exactly one out of two options is required if and only if any options
+    // from a certain set are present. see disccusion here:
+    // https://github.com/CLIUtils/CLI11/issues/88. This is a simple workaround
+    // for one case
+    for (const auto& view_option : view_options->get_options()) {
+      if (!view_option->empty() && (side_by_side->empty() && unified->empty())){
+        throw CLI::ValidationError(
+          view_option->get_name(false, true) +
+          " requires either --unified or --side-by-side to be set."
+        );
+      }
+    }
+
   } catch (const CLI::ParseError &e) {
     // parsing error
     exit(cli.exit(e));
-  } catch(const std::invalid_argument &e) {
-    // error in argument-processing callback
-    std::cerr << "INVALID ARGUMENT: " << e.what() << std::endl;
-    exit(1);
-  }
-
-  for (const auto& view_option : conditional_view_options) {
-    if (!view_option->empty()){
-      std::cerr << view_option->get_name() << " requires either --unified or --side-by-side to be set!\n";
-      exit(1);
-    }
   }
 
   // on success, we return our options object

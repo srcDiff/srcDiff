@@ -21,6 +21,19 @@
 
 
 find_package(Threads REQUIRED)
+
+# Fetch CLI11 from Github
+# See: https://cliutils.github.io/CLI11/book/chapters/installation.html#using-fetchcontent
+include(FetchContent)
+FetchContent_Declare(
+    cli11_proj
+    QUIET
+    GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
+    GIT_TAG v2.4.1
+)
+
+FetchContent_MakeAvailable(cli11_proj)
+
 add_subdirectory(client)
 add_subdirectory(shortest_edit_script)
 add_subdirectory(srcml)

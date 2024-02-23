@@ -72,7 +72,7 @@ public:
   template<class T>
   void translate(const srcdiff_input<T> & input_original,
                  const srcdiff_input<T> & input_modified,
-                 line_diff_range<T> & line_diff_range, const std::string & language,
+                 const std::string & language,
                  const std::optional<std::string> & unit_filename  = std::optional<std::string>(),
                  const std::optional<std::string> & unit_version   = std::optional<std::string>());
 
@@ -86,7 +86,6 @@ public:
 template<class T>
 void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
                                    const srcdiff_input<T> & input_modified,
-                                   line_diff_range<T> & line_diff_range,
                                    const std::string & language,
                                    const std::optional<std::string> & unit_filename,
                                    const std::optional<std::string> & unit_version) {
@@ -126,7 +125,7 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
     srcdiff_whitespace whitespace(*output);
     whitespace.output_all();
 
-    output->finish(line_diff_range);
+    output->finish();
 
   }
 

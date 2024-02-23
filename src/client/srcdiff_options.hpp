@@ -73,9 +73,6 @@ const OPTION_TYPE OPTION_UNIFIED_VIEW          = ull(1) << __COUNTER__;
 const OPTION_TYPE OPTION_SIDE_BY_SIDE_VIEW     = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_DIFFDOC_VIEW          = ull(1) << __COUNTER__;
-
-// @srcdiff
 const OPTION_TYPE OPTION_HTML_VIEW             = ull(1) << __COUNTER__;
 
 // @srcdiff
