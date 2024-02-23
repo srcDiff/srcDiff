@@ -19,7 +19,7 @@ srcdiff_options options;
 #define EMAIL_ADDRESS "mdecker6@kent.edu"
 
 // width of each of the two columns of help text that CLI11 displays
-const unsigned COLUMN_WIDTH = 60;
+const unsigned COLUMN_WIDTH = 50;
 
 // Callback functions that process or respond to flags or options being set:
 
@@ -317,14 +317,14 @@ void view_option_unified_view_context(const std::string & arg) {
   } catch(std::invalid_argument &) {
 
     if (arg != "function" && arg != "all") {
-      throw CLI::ValidationError("The context ");
+      throw CLI::ValidationError(
+        "The context for the unified view must be specified as \"all\", \"function\", or an integer number of lines."
+      );
     }
 
     options.view_options.unified_view_context = arg;
 
   }
-
-  options.flags |= OPTION_UNIFIED_VIEW;
 
 }
 
@@ -353,7 +353,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     PROGRAM_NAME
   );
 
-  cli.usage("srcdiff [OPTIONS] <original_src_input modified_src_input>... [-o <srcDiff_outfile>]");
+  cli.usage("USAGE: srcdiff [OPTIONS] <original_src_input modified_src_input>... [-o <srcDiff_outfile>]");
   
   cli.footer("Report bugs to " EMAIL_ADDRESS "\n");
 
@@ -394,14 +394,15 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "Silence messaging"
   );
 
-  CLI::Option_group * input_group = cli.add_option_group("Input", "These options are for input that doesn't come from the positional arguments.");
+  CLI::Option_group * input_group = cli.add_option_group("Input");
 
-  // TODO: figure what does/should happen if this And the positional arguments are used
+  // currently, this takes priority over the positional file input argument if
+  // it is present
   input_group->add_option_function<std::string>(
     "--files-from",
     option_files_from,
     "Set the input to be a list of file pairs from the specified file.\n"
-    "Pairs are in the format: original|modified"
+    "There should be one pair per line, in the format: original|modified"
   );
 
   #if SVN
@@ -455,14 +456,13 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "Set the input source programming language"
   )->default_val("C++")->force_callback(true);
 
-  // TODO: how does this work? what unit/units does it apply to in a multi-unit situation?
+  // Note: this will override the filename attribute on all output units
   srcml_group->add_option(
     "-f,--filename",
     options.unit_filename,
     "Specify a unit filename attribute that is different from the actual filename"
   );
 
-  // TODO: fix!
   srcml_group->add_option_function<std::string>(
     "--register-ext",
     option_srcml_field<REGISTER_EXT>,
@@ -470,7 +470,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "Example: --register-ext cxx=C++"
   );
 
-// TODO: should these be added to the unit(s), or require --archive?
+// TODO: should these attributes be added to the unit(s), or require --archive?
   srcml_group->add_option_function<std::string>(
     "--url",
     option_srcml_field<URL>,
@@ -490,8 +490,8 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   srcml_group->add_option_function<std::string>(
     "--xmlns",
     [](std::string){},  // no-op. should never be called
-    "Set the prefix associationed with a namespace or register a new one.\n"
-    "Use the form --xmlns:prefix=url, or --xmlns=url to set the default prefix."
+    "Set the prefix associated with a namespace or register a new one.\n"
+    "Use the form --xmlns:prefix=url, or --xmlns=url to set the\ndefault prefix."
   );
 
   srcml_group->add_flag(
@@ -538,13 +538,14 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
   CLI::Option_group * srcdiff_group = cli.add_option_group(
     "srcDiff",
-    "These options control how srcDiff parses code and outputs an XML diff."
+    "These options control how srcDiff parses code and outputs the diff."
   );
 
   srcdiff_group->add_option_function<std::string>(
     "-m,--method",
     option_parsing_method,
-    "Set srcdiff parsing method"
+    "Specify a list of parsing methods, separated by commas.\n"
+    "The options are collect, raw, group-diff and no-group-diff"
   )->default_val("collect,group-diff");
 
   srcdiff_group->add_flag(
@@ -565,74 +566,79 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   //   option_flag_enable<OPTION_SRCML>,
   //   "Also, output the original and modified srcML of each file when burst enabled"
   // );
-  
-  CLI::Option * unified = srcdiff_group->add_option_function<std::string>(
-    "-u,--unified",
-    view_option_unified_view_context,
-    "Output as colorized unified diff with provided context.\n"
-    "Provide the number of lines of context, or 'all' or -1 for entire file,\n"
-    " or 'function' to see the encompassing function"
-  )->default_val("3");  // note: no callback if option not present
 
+  CLI::Option * unified = srcdiff_group->add_flag(
+    "-u,--unified",
+    option_flag_enable<OPTION_UNIFIED_VIEW>,
+    "Output as a colorized unified diff with provided context"
+  );
+
+  // no forced callback to add the default value to the options for this one
   CLI::Option * side_by_side = srcdiff_group->add_option_function<int>(
     "-y,--side-by-side",
     view_option_side_by_side_tab_size,
-    "Output as colorized side-by-side diff. Provide the tabstop size."
+    "Output as colorized side-by-side diff. Provide the tabstop size as\n"
+    "the argument to this option."
   )->default_val(8)->excludes(unified);
-  // again, no forced callback
 
-    // this holds options that need either --unified or --side-by-side to be set
-  // in order to be valid
   CLI::Option_group * view_options = cli.add_option_group("View");
   view_options->description(
     "These options configure the view produced by --unified or --side-by-side."
   );
 
+  view_options->add_option_function<std::string>(
+    "--unified-context",
+    view_option_unified_view_context,
+    "Specify the amount of context to show around an edit in the unified view.\n"
+    "Either give a number of lines, or use \"all\" or -1 to see the entire file,\n"
+    "or use \"function\" to see the encompassing function."
+  )->default_val("3")->needs(unified)->force_callback();
+
   // TODO: document what a custom theme file should look like somewhere
   view_options->add_option(
     "--theme",
     options.view_options.theme,
-    "Select theme for syntax-hightlighting.\n"
+    "Select theme for syntax hightlighting.\n"
     "Options: \"default\", \"monokai\", or the filename of a custom theme."
   )->default_val("default");
 
   view_options->add_option(
     "--srcdiff",
     options.view_options.srcdiff_filename,
-    "Output srcdiff in addition to view.\n"
-    "Supply the filename for the srcDiff XML document."
+    "Output srcdiff in addition to view. Supply the filename for the\n"
+    "srcDiff XML document as the argument for this option."
   );
 
   view_options->add_flag(
     "--html",
     option_flag_enable<OPTION_HTML_VIEW>,
-    "Output unified/side-by-side view in html"
-  );
-
-  CLI::Option * ignore_all_space = view_options->add_flag(
-    "-W,--ignore-all-space",
-    option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>,
-    "Ignore all whitespace when outputting unified/side-by-side view"
+    "Output the unified/side-by-side view as an HTML file instead of on the terminal"
   );
 
   // TODO: what is the difference between ignoring whitespace and ignoring *all*
   // whitespace?
-  view_options->add_flag(
+  CLI::Option * ignore_space = view_options->add_flag(
     "-w,--ignore-space",
     option_flag_enable<OPTION_IGNORE_WHITESPACE>,
-    "Ignore whitespace when outputting unified/side-by-side view"
-  )->excludes(ignore_all_space);
+    "Ignore whitespace"
+  );
+
+  view_options->add_flag(
+    "-W,--ignore-all-space",
+    option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>,
+    "Ignore all whitespace"
+  )->excludes(ignore_space);
 
   view_options->add_flag(
     "-c,--ignore-comments",
     option_flag_enable<OPTION_IGNORE_COMMENTS>,
-    "Ignore comments when outputting unified/side-by-side view"
+    "Ignore comments"
   );
 
   view_options->add_option(
     "--highlight",
     options.view_options.syntax_highlight,
-    "Syntax-hightlighting for unified/side-by-side view.\n"
+    "Set the level of syntax highlighting.\n"
     "Options: none, partial (default), or full"
   )->default_val("partial");
 
@@ -653,11 +659,9 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     }
   }
 
-  // if you give CLI11 a vector of arguments, it expects it to be reversed
+  // if you give CLI11 a vector of arguments, it expects it to be reversed 🤷
   std::reverse(arguments.begin(), arguments.end());
   
-  // this try/catch is based on the CLI11_PARSE macro, but without status code
-  // return that assumes that the parsing takes place in main()
   try {
 
     cli.parse(arguments);
