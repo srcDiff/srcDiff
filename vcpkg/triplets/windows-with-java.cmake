@@ -3,7 +3,7 @@ set(VCPKG_TARGET_ARCHITECTURE x64)
 set(VCPKG_CRT_LINKAGE dynamic)
 set(VCPKG_LIBRARY_LINKAGE dynamic)
 
-# vcpkg builds dependencies in an isolated environment where they cannot access
-# things like the location of Java. libsrcml needs Java to build. this lets our
-# dependencies access java:
-set(VCPKG_ENV_PASSTHROUGH_UNTRACKED JAVA_HOME)
+# on windows, vcpkg builds dependencies in an isolated environment where they
+# cannot access things like the location of Java. libsrcml needs Java to build.
+# this lets our dependencies access java:
+set(VCPKG_ENV_PASSTHROUGH_UNTRACKED JAVA_HOME PATH)

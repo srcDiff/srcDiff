@@ -9,6 +9,10 @@ vcpkg_from_github(
 
 vcpkg_cmake_configure(
   SOURCE_PATH "${SOURCE_PATH}"
+  OPTIONS
+    # fix the fact that vcpkg disables FetchContent in packages' build scripts
+    # by default (https://github.com/microsoft/vcpkg/issues/28386)
+    -DFETCHCONTENT_FULLY_DISCONNECTED=OFF
 )
 
 vcpkg_cmake_install()

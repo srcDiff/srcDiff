@@ -35,6 +35,6 @@ Configure and run with CMake:
 $Env:CC = "C:\Program Files\LLVM\bin\clang.exe"
 $Env:CXX = "C:\Program Files\LLVM\bin\clang++.exe"
 
-cmake -S ./ -B ./build -G Ninja -DVCPKG_TARGET_TRIPLET="x64-windows"
+cmake -S ./ -B ./build -G Ninja -DVCPKG_TARGET_TRIPLET="windows-with-java"
 cmake --build ./build/
 ```
