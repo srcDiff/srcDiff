@@ -39,8 +39,9 @@ struct point compute_next_forward_path_snake(const void * sequence_one, int sequ
     row = forward_paths[diagonal_pos - 1].y;
   }
 
-  int save_column = column;
-  int save_row = row;
+  // these don't seem to be necessary at all
+  //int save_column = column;
+  //int save_row = row;
 
   struct point start_snake = { column, row };
 
@@ -268,7 +269,7 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
 
     struct point points[2];
     edit_distance = compute_middle_snake(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, points, compare, accessor, context);
-
+    // same thing here, what does -2 mean
     if(edit_distance == -2) { fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, "Possible Error"); exit(-2); } 
 
     if(edit_distance > 1) {

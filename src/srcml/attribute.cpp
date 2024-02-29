@@ -31,7 +31,7 @@ srcML::attribute::attribute(xmlAttrPtr attribute)
 srcML::attribute::attribute(
     const std::string & name,
     std::shared_ptr<srcML::name_space> ns,
-    std::optional<std::string> value) : name(name), ns(ns), value(value) {}
+    std::optional<std::string> value) : name(name), value(value), ns(ns) {}
 
 void srcML::attribute::merge(const srcML::attribute & that) {
     assert(this->get_name() == that.get_name());
@@ -48,9 +48,9 @@ std::string srcML::attribute::full_name() const {
     return name;
 }
 
-std::ostream & srcML::operator<<(std::ostream & out, const attribute & that) {
+std::ostream & operator<<(std::ostream & out, const srcML::attribute & that) {
     out << that.full_name();
-    if(that.value) out << "=" << *that.value;
+    if(that.get_value().has_value()) out << "=" << that.get_value().value();
     return out;
 }
 

@@ -471,11 +471,11 @@ void srcdiff_edit_correction::correct() {
 
         for(int i = 0; i < delete_edit->length; ++i) {
 
-            if(i == original_offset) continue;
+            if(i == (int)original_offset) continue;
 
             for(int j = 0; j < insert_edit->length; ++j) {
 
-                if(j == modified_offset) continue;
+                if(j == (int)modified_offset) continue;
 
                 std::shared_ptr<srcdiff_text_measure> measure 
                     = srcdiff_edit_correction::edit2measure(delete_edit->offset_sequence_one + i,
@@ -483,12 +483,12 @@ void srcdiff_edit_correction::correct() {
                 if(!measure) continue;
 
                 // does not need broken if either of these are true
-                if(i < original_offset && j < modified_offset) {
+                if(i < (int)original_offset && j < (int)modified_offset) {
                     original_similarities[i] = std::max(original_similarities[i], std::size_t(measure->similarity()));
                     modified_similarities[j] = std::max(modified_similarities[j], std::size_t(measure->similarity()));
                     continue;
                 }
-                if(i > original_offset && j > modified_offset) {
+                if(i > (int)original_offset && j > (int)modified_offset) {
                     original_similarities[i] = std::max(original_similarities[i], std::size_t(measure->similarity()));
                     modified_similarities[j] = std::max(modified_similarities[j], std::size_t(measure->similarity()));
                     continue;

@@ -85,10 +85,10 @@ public:
 
     std::string filename;
     srcml_unit * unit;
-    bool approximate;
 
     const METHOD_TYPE & method;
-
+    bool approximate;
+    
     std::vector<diff_set *> output_diff;
 
   };

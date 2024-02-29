@@ -44,7 +44,7 @@ int shortest_edit_script_hybrid_inner(const void * sequence_one, int sequence_on
 
     struct point points[2];
     edit_distance = compute_middle_snake(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, points, compare, accessor, context);
-
+    // what does -2 mean here
     if(edit_distance == -2) { fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, "Possible Error"); exit(-2); } 
 
     if(edit_distance > 1) {

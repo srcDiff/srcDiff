@@ -11,7 +11,7 @@ void advance_to_child(const srcml_nodes & nodes,
 
   srcml_nodes::size_type size = nodes.size();
 
-  int start_pos = pos;
+  size_t start_pos = pos;
   int depth = 0;
 
   while(start_pos < size) {

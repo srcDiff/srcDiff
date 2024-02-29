@@ -47,9 +47,6 @@ namespace srcML {
         std::shared_ptr<srcML::name_space> get_ns() const;
         const std::optional<std::string> & get_value() const;
 
-
-
-
         friend std::ostream & operator<<(std::ostream & out, const attribute & that);
         bool operator==(const attribute & that) const;
         bool operator!=(const attribute & that) const;
