@@ -22,7 +22,7 @@
 file(GLOB VIEW_HEADERS *.hpp)
 file(GLOB VIEW_SOURCE *.cpp)
 
-find_package(Boost REQUIRED COMPONENTS program_options filesystem system regex date_time)
+find_package(Boost REQUIRED COMPONENTS filesystem system regex date_time)
 find_package(LibXml2 REQUIRED)
 
 # srcdiff

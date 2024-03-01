@@ -40,10 +40,10 @@ set_target_properties(srcsax_shared PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS TRUE)
 set(SRCDIFF_LIBRARY_SOURCE_EXTRA CACHE INTERNAL "libsrcdiff Extra Source")
 
 #find_package(srcML CONFIG COMPONENTS PlainLinkInterface)
-find_package(srcML REQUIRED)
+# find_package(srcML REQUIRED)
 find_package(LibXml2 REQUIRED)
 
-find_package(Boost REQUIRED COMPONENTS program_options filesystem system regex date_time)
+find_package(Boost REQUIRED COMPONENTS filesystem system regex date_time)
 
 #
 # build_library

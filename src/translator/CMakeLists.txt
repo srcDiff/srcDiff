@@ -35,7 +35,7 @@ list(REMOVE_ITEM TRANSLATOR_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_input_git
 endif()
 
 find_package(LibXml2 REQUIRED)
-find_package(srcML REQUIRED)
+# find_package(srcML REQUIRED)
 
 # srcdiff
 add_library(translator OBJECT ${TRANSLATOR_HEADERS} ${TRANSLATOR_SOURCE})

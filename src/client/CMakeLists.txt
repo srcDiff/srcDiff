@@ -34,10 +34,10 @@ if(NOT GIT_ENABLED)
 
 endif()
 
-find_package(srcML REQUIRED)
+# find_package(srcML REQUIRED)
 find_package(LibXml2 REQUIRED)
 
-find_package(Boost REQUIRED COMPONENTS program_options filesystem system regex date_time)
+find_package(Boost REQUIRED COMPONENTS filesystem system regex date_time)
 
 # srcdiff
 if(WIN32)
