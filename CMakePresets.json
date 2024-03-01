@@ -60,8 +60,7 @@
       "description": "Default build options for Clang release",
       "cacheVariables": {
         "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
-        "CMAKE_BUILD_TYPE": "Release",
-        
+        "CMAKE_BUILD_TYPE": "Release" 
       }
     },
     {

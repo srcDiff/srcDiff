@@ -24,7 +24,8 @@ file(GLOB VIEW_SOURCE *.cpp)
 
 find_package(Boost REQUIRED COMPONENTS program_options filesystem system regex date_time)
 find_package(LibXml2 REQUIRED)
+find_package(srcML REQUIRED)
 
 # srcdiff
 add_library(view OBJECT ${VIEW_HEADERS} ${VIEW_SOURCE})
-target_link_libraries(view PRIVATE Boost::headers LibXml2::LibXml2)
+target_link_libraries(view PRIVATE Boost::headers LibXml2::LibXml2 srcML::LibsrcML)
