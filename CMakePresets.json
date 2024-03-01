@@ -7,6 +7,26 @@
   },
   "configurePresets": [
     {
+      "name": "windows-clang",
+      "displayName": "Windows (Clang)",
+      "description": "Default build options for Windows",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
+      "inherits": ["clang", "vcpkg"],
+      "generator": "Ninja",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "windows-with-java"
+      }
+    },
+    {
+      "name": "clang",
+      "displayName": "Clang",
+      "description": "Default options for the Clang compiler",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_C_COMPILER": "clang"
+      }
+    },
+    {
       "name": "ubuntu-release",
       "displayName": "Ubuntu Release",
       "description": "Default build options for Ubuntu release",
@@ -38,6 +58,11 @@
         "CMAKE_CXX_FLAGS": "-Wall -Wextra -pedantic"
         
       }
+    },
+    {
+      "name": "vcpkg",
+      "hidden": true,
+      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
     }
   ] 
 }

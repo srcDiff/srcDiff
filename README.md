@@ -30,11 +30,6 @@ $Env:VCPKG_ROOT = "C:/your/chosen/install/location"
 Configure and run with CMake:
 
 ```powershell
-# TODO: use CMake presets to avoiding setting the compiler and generator manually like this
-
-$Env:CC = "C:\Program Files\LLVM\bin\clang.exe"
-$Env:CXX = "C:\Program Files\LLVM\bin\clang++.exe"
-
-cmake -S ./ -B ./build -G Ninja -DVCPKG_TARGET_TRIPLET="windows-with-java"
+cmake -S ./ -B ./build --preset windows-clang
 cmake --build ./build/
 ```
