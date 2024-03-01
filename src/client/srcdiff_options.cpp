@@ -16,7 +16,7 @@ srcdiff_options options;
 
 
 #define PROGRAM_NAME "srcdiff"
-#define EMAIL_ADDRESS "mdecker6@kent.edu"
+#define EMAIL_ADDRESS "srcmldev@gmail.com"
 
 // width of each of the two columns of help text that CLI11 displays
 const unsigned COLUMN_WIDTH = 50;
@@ -536,55 +536,51 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "Do not markup #if 0 contents (default)"
   )->force_callback();
 
-  CLI::Option_group * srcdiff_group = cli.add_option_group(
-    "srcDiff",
-    "These options control how srcDiff parses code and outputs the diff."
-  );
-
-  srcdiff_group->add_option_function<std::string>(
-    "-m,--method",
-    option_parsing_method,
-    "Specify a list of parsing methods, separated by commas.\n"
-    "The options are collect, raw, group-diff and no-group-diff"
-  )->default_val("collect,group-diff");
-
-  srcdiff_group->add_flag(
-    "--disable-string-split",
-    option_flag_disable<OPTION_STRING_SPLITTING>,
-    "Disable splitting strings into multiple nodes"
-  );
-
   // TODO: remove these options, here and elsewhere in the code
+
+  // srcdiff_group->add_option_function<std::string>(
+  //   "-m,--method",
+  //   option_parsing_method,
+  //   "Specify a list of parsing methods, separated by commas.\n"
+  //   "The options are collect, raw, group-diff and no-group-diff"
+  // )->default_val("collect,group-diff");
+
+  // srcdiff_group->add_flag(
+  //   "--disable-string-split",
+  //   option_flag_disable<OPTION_STRING_SPLITTING>,
+  //   "Disable splitting strings into multiple nodes"
+  // );
 
   // srcdiff_group->add_flag(
   //   "--burst",
   //   option_flag_enable<OPTION_BURST>,
   //   "Output each input file to a single srcDiff document. -o gives output directory"
   // );
+
   // srcdiff_group->add_flag(
   //   "--srcml",
   //   option_flag_enable<OPTION_SRCML>,
   //   "Also, output the original and modified srcML of each file when burst enabled"
   // );
 
-  CLI::Option * unified = srcdiff_group->add_flag(
+  CLI::Option_group * view_options = cli.add_option_group("View");
+  view_options->description(
+    "These options configure the view produced by --unified or --side-by-side."
+  );
+
+  CLI::Option * unified = view_options->add_flag(
     "-u,--unified",
     option_flag_enable<OPTION_UNIFIED_VIEW>,
     "Output as a colorized unified diff with provided context"
   );
 
   // no forced callback to add the default value to the options for this one
-  CLI::Option * side_by_side = srcdiff_group->add_option_function<int>(
+  CLI::Option * side_by_side = view_options->add_option_function<int>(
     "-y,--side-by-side",
     view_option_side_by_side_tab_size,
     "Output as colorized side-by-side diff. Provide the tabstop size as\n"
     "the argument to this option."
   )->default_val(8)->excludes(unified);
-
-  CLI::Option_group * view_options = cli.add_option_group("View");
-  view_options->description(
-    "These options configure the view produced by --unified or --side-by-side."
-  );
 
   view_options->add_option_function<std::string>(
     "--unified-context",
@@ -592,7 +588,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "Specify the amount of context to show around an edit in the unified view.\n"
     "Either give a number of lines, or use \"all\" or -1 to see the entire file,\n"
     "or use \"function\" to see the encompassing function."
-  )->default_val("3")->needs(unified)->force_callback();
+  )->default_val("3")->force_callback();
 
   // TODO: document what a custom theme file should look like somewhere
   view_options->add_option(
@@ -676,11 +672,13 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     // https://github.com/CLIUtils/CLI11/issues/88. This is a simple workaround
     // for one case
     for (const auto& view_option : view_options->get_options()) {
-      if (!view_option->empty() && (side_by_side->empty() && unified->empty())){
-        throw CLI::ValidationError(
-          view_option->get_name(false, true) +
-          " requires either --unified or --side-by-side to be set."
-        );
+      if (view_option != unified && view_option != side_by_side) {
+        if (!view_option->empty() && (side_by_side->empty() && unified->empty())) {
+          throw CLI::ValidationError(
+            view_option->get_name(false, true) +
+            " requires either --unified or --side-by-side to be set."
+          );
+        }
       }
     }
 
