@@ -21,7 +21,6 @@
 
 if(DEFINED ENV{VCPKG_ROOT})
   message(STATUS "Building with vcpkg")
-  include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 endif()
 
 cmake_minimum_required(VERSION 3.28)
@@ -41,19 +40,14 @@ find_package(Threads REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(Iconv REQUIRED)
 find_package(CLI11 CONFIG REQUIRED)
+find_package(srcML REQUIRED)
+
 # apparently needed for vcpkg's use of cli11 as a compiled library (rather than
 # header-only):
 add_compile_definitions(CLI11_COMPILE)
+
 include_directories(${LIBXML2_INCLUDE_DIRS})
 find_package(Boost COMPONENTS filesystem system regex date_time REQUIRED)
-
-if(NOT WIN32)
-    find_library(libsrcml NAMES libsrcml.so REQUIRED)
-	set(LOCAL_LIBSRCML libsrcml)
-else()
-	find_package(srcML REQUIRED)
-	set(LOCAL_LIBSRCML srcML::LibsrcML)
-endif()
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
