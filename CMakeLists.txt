@@ -24,7 +24,8 @@ if(DEFINED ENV{VCPKG_ROOT})
   include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
 endif()
 
-cmake_minimum_required(VERSION 3.21)
+cmake_minimum_required(VERSION 3.28)
+
 project(srcDiff)
 
 if(NOT WIN32)

@@ -24,7 +24,6 @@
 # build options
 option(BUILD_TRANSLATOR_TESTS "Build files for testing srcDiff translator" ON)
 
-include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR}  ${LIBGIT2_INCLUDE_DIR})
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 if (WIN32)
@@ -41,4 +40,7 @@ if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
     endif()
 else()
     set(CMAKE_CXX_FLAGS "/permissive- /EHsc -wd4068")
+    set(LIBSRCML_INCLUDE_DIR /usr/local)
 endif()
+
+include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLUDE_DIR}  ${LIBGIT2_INCLUDE_DIR})

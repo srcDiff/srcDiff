@@ -200,10 +200,12 @@ void srcdiff_output::finish() {
  void srcdiff_output::start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version) {
 
   wstate->unit = srcml_unit_create(archive);
+  /** @todo FIX ME
   srcml_unit_register_namespace(wstate->unit,
       srcML::name_space::DIFF_NAMESPACE->get_prefix()->c_str(),
       srcML::name_space::DIFF_NAMESPACE->get_uri().c_str()
   );
+  */
   srcml_unit_set_language(wstate->unit, language_string.c_str());
 
   srcml_unit_set_filename(wstate->unit, unit_filename ? unit_filename->c_str() : 0);
