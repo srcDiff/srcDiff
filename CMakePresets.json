@@ -43,6 +43,10 @@
       }
     },
     {
+      "name": "gcc-vcpkg",
+      "inherits": ["gcc", "vcpkg"]
+    },
+    {
       "name": "gcc",
       "inherits": ["linux"],
       "displayName": "GCC",

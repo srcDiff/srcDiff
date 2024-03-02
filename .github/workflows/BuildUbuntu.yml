@@ -1,0 +1,56 @@
+---
+    name: Build for Ubuntu
+    
+    on:
+      push:
+        branches: 
+         - 'issue-264'
+    
+    jobs:
+      build:
+        runs-on: ubuntu-latest
+        steps:
+    
+          - name: Checkout repository
+            uses: actions/checkout@v3
+            with:
+              submodules: true
+    
+          - name: Get latest CMake and Ninja
+            uses: lukka/get-cmake@latest
+    
+          - name: Get vcpkg
+            uses: lukka/run-vcpkg@v11 
+            with:
+              # this path is arbitrary:
+              vcpkgDirectory: '${{ github.workspace }}/_tools/vcpkg'
+    
+          - name: Get dependencies and configure the build with CMake
+            uses: lukka/run-cmake@v10
+            with:
+              configurePreset: 'gcc-vcpkg'
+          
+          - name: Build project
+            run: cmake --build .
+          
+          - name: Check if built executable exists and is sane
+            shell: bash
+            run: |
+              cd bin
+              
+              # this is just for logging purposes:
+              ls
+              
+              # get version info output:
+              version_info=`./srcdiff -V`
+    
+              echo "Version info:"
+              echo $version_info
+    
+              # make sure the string "srcdiff" is somewhere in the version output
+              # this is case insensitive
+              srcdiff_match=`echo $version_info | grep -i "srcdiff"`
+              if [ -z "$srcdiff_match" ]; then exit 1; fi
+    
+              echo "Build succeeded!"
+    
