@@ -4,7 +4,8 @@
     on:
       push:
         branches: 
-         - 'issue-264'
+         - 'develop'
+      workflow_dispatch:
     
     jobs:
       build:
