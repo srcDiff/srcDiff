@@ -23,7 +23,7 @@ file(GLOB SRCML_HEADERS *.hpp)
 file(GLOB SRCML_SOURCE *.cpp)
 
 find_package(LibXml2 REQUIRED)
-# find_package(srcML REQUIRED)
+find_package(srcML REQUIRED)
 
 if(NOT SVN_ENABLED)
 
