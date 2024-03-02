@@ -44,7 +44,10 @@
     },
     {
       "name": "gcc-vcpkg",
-      "inherits": ["gcc", "vcpkg"]
+      "inherits": ["gcc", "vcpkg"],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-linux"
+      }
     },
     {
       "name": "gcc",
@@ -66,7 +69,9 @@
     {
       "name": "vcpkg",
       "hidden": true,
-      "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      "cacheVariables": {
+        "CMAKE_USE_VCPKG": "true"
+      }
     }
   ]
 }

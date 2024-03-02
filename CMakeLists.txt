@@ -19,8 +19,13 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-if(DEFINED ENV{VCPKG_ROOT})
+if(DEFINED CMAKE_USE_VCPKG)
   message(STATUS "Building with vcpkg")
+  if (DEFINED ENV{VCPKG_ROOT})
+  	include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+  else()
+	message(ERROR "Environment variable VCPKG_ROOT not defined!")
+  endif()
 endif()
 
 cmake_minimum_required(VERSION 3.28)
