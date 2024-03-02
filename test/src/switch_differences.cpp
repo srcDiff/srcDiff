@@ -20,12 +20,14 @@ const char * XML_DECLARATION_STANDALONE = "yes";
 
 #ifdef _MSC_BUILD
 
+#define strdup _strdup
+
 char * strndup(const char * source, size_t n) {
 
   if(source == 0) return 0;
 
   char * dup = (char *)malloc((n + 1) * sizeof(char));
-  strncpy(dup, source, n);
+  strncpy_s(dup, n+1, source, n);
   dup[n] = 0;
 
   return dup;
