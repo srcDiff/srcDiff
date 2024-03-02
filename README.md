@@ -19,12 +19,17 @@ cd vcpkg
 $Env:VCPKG_ROOT = (pwd).path
 ```
 
-#### Compile with Clang
-
-Clang can be used to compile srcDiff on a variety of platforms, and Ninja is a fast build automation tool. The easiest way to install CMake, Ninja, and Clang is with Chocolatey:
+Also, CMake is required to build srcDiff. The easiest way to install it on Windows is with [Chocolatey](https://chocolatey.org/install).
 
 ```powershell
 choco install cmake -y
+```
+
+#### Compile with Clang
+
+The recommended way to build srcDiff is with Clang, which can be used to compile srcDiff on a variety of platforms, and Ninja, which is a fast build automation tool. Ninja and Clang can also be installed with Chocolatey:
+
+```powershell
 choco install ninja -y
 choco install llvm -y
 ```
@@ -45,15 +50,9 @@ cd build/bin
 
 #### Compile with MSVC
 
-Install CMake and Visual Studio 17 (2022). CMake can be installed with Chocolatey:
+You can also build srcDiff with Microsoft's compiler and build tools. First, get Visual Studio 17 (2022) from [Microsoft's website](https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-notes).
 
-```powershell
-choco install cmake -y
-```
-
-Visual Studio must be downloaded from [Microsoft's website](https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-notes).
-
-Configure and run the build:
+Then, configure and run the build with CMake:
 
 ```powershell
 cmake -S ./ -B ./build --preset windows-msvc
