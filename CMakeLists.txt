@@ -19,7 +19,7 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-if(DEFINED CMAKE_USE_VCPKG)
+if(CMAKE_USE_VCPKG)
   message(STATUS "Building with vcpkg")
   if (DEFINED ENV{VCPKG_ROOT})
   	include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")

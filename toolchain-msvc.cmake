@@ -1,7 +1,7 @@
 ##
-#  config.cmake
+#  toolchain-msvc.cmake
 #
-#  Copyright (C) 2011-2021 SDML (www.srcML.org)
+#  Copyright (C) 2014-2023  SDML (www.srcML.org)
 #
 #  This file is part of the srcDiff translator.
 #
@@ -18,8 +18,5 @@
 #  You should have received a copy of the GNU General Public License
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-#
-#  Build configuration file
 
-# build options
-option(BUILD_TRANSLATOR_TESTS "Build files for testing srcDiff translator" ON)
+add_compile_options(/permissive- /EHsc -wd4068)

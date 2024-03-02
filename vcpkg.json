@@ -10,6 +10,5 @@
       "name": "cli11",
       "version>=": "2.4.0"
     }
-  ],
-  "builtin-baseline": "c3801cf53c614ffc54c94051d124eba097b057b1"
+  ]
 }
