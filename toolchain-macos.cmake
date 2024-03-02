@@ -4,7 +4,7 @@
 #
 # @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
 #
-# MSVC-specific tool configuration
+# MacOS-specific tool configuration
 
 
 

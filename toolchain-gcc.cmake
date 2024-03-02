@@ -4,7 +4,7 @@
 #
 # @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
 #
-# MSVC-specific tool configuration
+# GCC-specific tool configuration
 
 # Link the stdc++fs library if on gcc 7.5.0
 if(CMAKE_CXX_COMPILER_VERSION STREQUAL "7.5.0")
