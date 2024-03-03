@@ -19,6 +19,10 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+cmake_minimum_required(VERSION 3.28)
+
+project(srcDiff)
+
 if(CMAKE_USE_VCPKG)
   message(STATUS "Building with vcpkg")
   if(DEFINED ENV{VCPKG_ROOT})
@@ -28,9 +32,12 @@ if(CMAKE_USE_VCPKG)
   endif()
 endif()
 
-cmake_minimum_required(VERSION 3.28)
-
-project(srcDiff)
+# this eliminates a warning about ambiguous linker search paths on linux by
+# explicitly deactivating some legacy CMake behavior
+# https://cmake.org/cmake/help/latest/policy/CMP0003.html
+if(COMMAND cmake_policy)
+	cmake_policy(SET CMP0003 NEW)
+endif(COMMAND cmake_policy)
 
 if(NOT WIN32)
 set(CMAKE_INSTALL_PREFIX "/usr/local")
