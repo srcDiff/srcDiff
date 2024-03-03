@@ -36,8 +36,8 @@ endif()
 
 find_package(srcML REQUIRED)
 find_package(LibXml2 REQUIRED)
-find_package(Threads)
-find_package(CLI11)
+find_package(Threads REQUIRED)
+find_package(CLI11 REQUIRED)
 find_package(Boost REQUIRED COMPONENTS filesystem system regex date_time)
 
 # srcdiff

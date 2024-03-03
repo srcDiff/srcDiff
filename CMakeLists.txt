@@ -21,7 +21,7 @@
 
 if(CMAKE_USE_VCPKG)
   message(STATUS "Building with vcpkg")
-  if (DEFINED ENV{VCPKG_ROOT})
+  if(DEFINED ENV{VCPKG_ROOT})
   	include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
   else()
 	message(SEND_ERROR "Environment variable VCPKG_ROOT not defined!")
@@ -40,10 +40,6 @@ enable_testing()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 include(srcdiff)
-
-# apparently needed for vcpkg's use of cli11 as a compiled library (rather than
-# header-only):
-add_compile_definitions(CLI11_COMPILE)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
