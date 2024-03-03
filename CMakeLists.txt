@@ -24,7 +24,7 @@ if(CMAKE_USE_VCPKG)
   if (DEFINED ENV{VCPKG_ROOT})
   	include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
   else()
-	message(ERROR "Environment variable VCPKG_ROOT not defined!")
+	message(SEND_ERROR "Environment variable VCPKG_ROOT not defined!")
   endif()
 endif()
 
