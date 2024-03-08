@@ -54,4 +54,15 @@
               if [ -z "$srcdiff_match" ]; then exit 1; fi
     
               echo "Build succeeded!"
-    
+      test:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+
+          - name: CLI tests
+            shell: bash
+            run: cd ${{ github.workspace }}/test/cli && ./framework.sh
+          
+          - name: Integration tests
+            shell: bash
+            run: cd ${{ github.workspace }}/test && python3 test_suite.py
