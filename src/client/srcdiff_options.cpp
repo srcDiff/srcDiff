@@ -202,7 +202,7 @@ void option_srcml_string<LANGUAGE>(const std::string & arg) {
 }
 
 template<>
-void option_srcml_field<URL>(const std::string & arg) {
+void option_srcml_string<URL>(const std::string & arg) {
   
   srcml_archive_set_url(options.archive, arg.c_str());
 
