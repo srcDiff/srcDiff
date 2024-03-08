@@ -144,7 +144,7 @@ bool is_nest_type(std::shared_ptr<const construct> & structure,
   if(structure->root_term()->get_type() != srcML::node_type::START)
     return false;
 
-    if(structure->root_term()->get_namespace()->get_uri() != SRCML_SRC_NAMESPACE_HREF)
+  if(structure->root_term()->get_namespace()->get_uri() != SRCML_SRC_NAMESPACE_HREF)
     return true;
 
   for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i) {
@@ -275,6 +275,7 @@ bool srcdiff_nested::is_better_nested(const construct::construct_list & construc
   const srcdiff_measure & measure = *construct_list_original.at(start_pos_original)
                             ->measure(*construct_list_modified.at(start_pos_modified));
 
+  // comparison of signed vs unsigned, pos is signed while size is a size_t aka long unsigned int
   for(int pos = start_pos_original; pos < construct_list_original.size(); ++pos) {
 
     int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
@@ -333,8 +334,9 @@ bool srcdiff_nested::check_nest_name(const construct & set_original,
                      const construct & set_modified,
                      std::optional<std::shared_ptr<srcML::node>> parent_modified) {
 
-  int original_pos = set_original.start_position();
-  int modified_pos = set_modified.start_position();
+  // both are unused
+  //int original_pos = set_original.start_position();
+  //int modified_pos = set_modified.start_position();
 
   if(set_original.root_term_name() == "text") return false;
   if(set_modified.root_term_name() == "text") return false;
@@ -660,7 +662,7 @@ std::tuple<std::vector<int>, int, int> srcdiff_nested::check_nestable(construct:
 
       std::tuple<std::vector<int>, int, int> nestings = std::make_tuple(std::vector<int>(), i, i + 1);
       std::get<0>(nestings).push_back(j);
-
+      // comparison of signed vs unsigned
       for(int k = j + 1; k < child_list.size(); ++k) {
 
         if(check_nestable_predicate(construct::construct_list_view(&parent_list[i], parent_list.size() - i),

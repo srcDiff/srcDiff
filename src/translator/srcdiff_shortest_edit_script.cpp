@@ -1,5 +1,7 @@
 #include <srcdiff_shortest_edit_script.hpp>
 
+
+// all 8 of the const void * context parameters in this file are unused as of yet
 int srcdiff_shortest_edit_script::compute_edit_script(const std::shared_ptr<construct> & original, const std::shared_ptr<construct> & modified) {
   compare = node_compare;
   accessor = construct_node_index;

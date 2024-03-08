@@ -23,6 +23,7 @@
 #include <unordered_set>
 #include <string>
 
+// that is unused here
 std::shared_ptr<const expr_t> expr_construct::expr(const expr_construct & that) const {
     if(expr_child) return *expr_child;
 

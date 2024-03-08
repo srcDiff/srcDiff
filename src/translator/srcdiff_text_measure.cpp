@@ -50,7 +50,7 @@ void srcdiff_text_measure::collect_text_element(const construct & set, construct
       || set.term(i)->get_name() == "modifier") {
 
       if(set.term(i)->get_parent() && (*set.term(i)->get_parent())->get_name() != "name") continue;
-
+      // comparison of signed vs unsigned
       if((set.get_terms().at(i) + 1) < set.nodes().size() && set.nodes().at(set.get_terms().at(i) + 1)->is_text()
         && (*set.nodes().at(set.get_terms().at(i) + 1)->get_content() == "::")) continue;
 
@@ -179,6 +179,7 @@ int srcdiff_text_measure::number_match_beginning() {
       computed = true;
 
       int count = 0;
+      // both comparisons are signed vs unsigned, also what is reference operator doing here?
       while(count < set_original_text->size() & count < set_modified_text->size()
         && *set_original_text->term(count) == *set_modified_text->term(count)) {
         ++count;

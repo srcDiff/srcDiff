@@ -14,7 +14,8 @@ std::mutex srcml_converter::mutex;
 std::map<std::string, std::shared_ptr<srcML::node>> srcml_converter::start_tags;
 std::map<std::string, std::shared_ptr<srcML::node>> srcml_converter::end_tags;
 
-std::shared_ptr<srcML::node> srcml_converter::get_current_node(xmlTextReaderPtr reader) {
+// is_archive is unused
+std::shared_ptr<srcML::node> srcml_converter::get_current_node(xmlTextReaderPtr reader, bool is_archive) {
 
   xmlNode * curnode = xmlTextReaderCurrentNode(reader);
   curnode->type = (xmlElementType)xmlTextReaderNodeType(reader);
@@ -390,7 +391,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
       // text node does not need to be copied.
       mutex.lock();
-      std::shared_ptr<srcML::node> node = get_current_node(reader);
+      std::shared_ptr<srcML::node> node = get_current_node(reader, srcml_archive_get_options(archive));
       mutex.unlock();
 
       

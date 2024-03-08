@@ -32,6 +32,8 @@
 #include <algorithm>
 #include <iostream>
 
+
+// many unused parameters in this whole file, const void * context for example; placeholders for future API usage?
 bool construct::is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context) {
 
     const std::shared_ptr<srcML::node> & node = node_list[node_pos];
@@ -366,7 +368,7 @@ bool construct::is_syntax_similar(const construct & modified) const {
   syntax_measure.compute();
 
   int min_child_length = syntax_measure.min_length();
-  int max_child_length = syntax_measure.max_length();
+  //int max_child_length = syntax_measure.max_length();
 
   if(min_child_length > 1) { 
     if(2 * syntax_measure.similarity() >= min_child_length && syntax_measure.difference() <= min_child_length)
@@ -421,8 +423,8 @@ bool construct::is_matchable_impl(const construct & modified) const {
 
 bool construct::is_match_similar(const construct & modified) const {
 
-  int original_pos = start_position();
-  int modified_pos = modified.start_position();
+  //int original_pos = start_position();
+  //int modified_pos = modified.start_position();
 
   if(*term(0) != *modified.term(0)) return false;
 

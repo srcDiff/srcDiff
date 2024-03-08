@@ -87,6 +87,7 @@ public:
 
         std::string hex_string;
         in >> hex_string;
+        // throws a warning about a deprecated copy
         color = color_t(hex_string);
 
         return in;

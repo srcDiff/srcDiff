@@ -270,7 +270,7 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
     struct point points[2];
     edit_distance = compute_middle_snake(sequence_one, sequence_one_start, sequence_one_end, sequence_two, sequence_two_start, sequence_two_end, points, compare, accessor, context);
     // same thing here, what does -2 mean
-    if(edit_distance == -2) { fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, "Possible Error"); exit(-2); } 
+    if(edit_distance == -2) { /*fprintf(stderr, "HERE: %s %s %d '%s'\n", __FILE__, __FUNCTION__, __LINE__, "Possible Error");*/ exit(-2); } 
 
     if(edit_distance > 1) {
 
@@ -472,44 +472,3 @@ int merge_sequential_edits(struct edit_t ** edit_script) {
   return edit_distance;
 
 }
-
-#if 0
-int str_compare(const void * str_one, const void * str_two, const void * context) {
-
-  return strcmp((const char *)str_one, (const char *)str_two);
-
-}
-
-const void * str_accessor(int index, const void * array, const void * context) {
-
-  return (void *)((const char **)array)[index];
-
-}
-
-int main(int argc, char * argv[]) {
-
-  const char * sequence_one[] = { "a", "b", "c", "e" };
-  const char * sequence_two[] = { "a", "c", "e", "f" };
-
-  struct edit_t * edit_script;
-
-  shortest_edit_script_linear_space(sequence_one, 4, sequence_two, 4, &edit_script, str_compare, str_accessor, 0);
-
-  for(struct edit_t * current_edit = edit_script; current_edit; current_edit = current_edit->next) {
-
-fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current_edit->offset_sequence_one);
-fprintf(stderr, "HERE: %s %s %d %d\n", __FILE__, __FUNCTION__, __LINE__, current_edit->offset_sequence_two);
-    const char ** sequence = current_edit->operation == SES_DELETE ? sequence_one : sequence_two;
-    for(int i = 0; i < current_edit->length; ++i) {
-
-      fprintf(stderr, "%s: ",current_edit->operation == SES_DELETE ? "DELETE" : "INSERT");
-      fprintf(stderr, "%s\n", sequence[current_edit->operation == SES_DELETE ? current_edit->offset_sequence_one + i : current_edit->offset_sequence_two + i]);
-
-    }
-
-  }
-
-  return 0;
-
-}
-#endif

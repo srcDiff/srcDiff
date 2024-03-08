@@ -22,12 +22,15 @@ void srcdiff_edit_correction::split_change(edit_t * delete_edit, edit_t * insert
     int original_sequence_two_offset = delete_edit->offset_sequence_two;
     int original_length = delete_edit->length;
     edit_t * original_previous = delete_edit->previous;
-    edit_t * original_next = delete_edit->next;
+    // unused
+    //edit_t * original_next = delete_edit->next;
 
-    int modified_sequence_one_offset = insert_edit->offset_sequence_one;
+    // unused
+    //int modified_sequence_one_offset = insert_edit->offset_sequence_one;
     int modified_sequence_two_offset = insert_edit->offset_sequence_two;
     int modified_length = insert_edit->length;
-    edit_t * modified_previous = insert_edit->previous;
+    // unused
+    //edit_t * modified_previous = insert_edit->previous;
     edit_t * modified_next = insert_edit->next;
 
     edit_t * left_delete = nullptr, * right_delete = nullptr,
@@ -242,15 +245,17 @@ edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
 
             std::shared_ptr<const construct> set_original = sets_original.at(original_set_pos);
             std::shared_ptr<const construct> set_modified = sets_modified.at(modified_set_pos);
+            // both are unused
+            //int original_pos = set_original->start_position();
+            //int modified_pos = set_modified->start_position();
 
-            int original_pos = set_original->start_position();
-            int modified_pos = set_modified->start_position();
-
-            const std::string & original_tag = set_original->term(0)->get_name();
-            const std::string & modified_tag = set_modified->term(0)->get_name();
-
-            const std::string & original_uri = set_original->term(0)->get_namespace()->get_uri();
-            const std::string & modified_uri = set_modified->term(0)->get_namespace()->get_uri();
+            // both are unused
+            //const std::string & original_tag = set_original->term(0)->get_name();
+            //const std::string & modified_tag = set_modified->term(0)->get_name();
+            
+            // both are unused
+            //const std::string & original_uri = set_original->term(0)->get_namespace()->get_uri();
+            //const std::string & modified_uri = set_modified->term(0)->get_namespace()->get_uri();
 
             if(*set_original != *set_modified) {
                 continue;
@@ -307,6 +312,7 @@ std::shared_ptr<srcdiff_text_measure> srcdiff_edit_correction::edit2measure(int 
     std::shared_ptr<const construct> set_original = sets_original.at(original_set_pos);
     std::shared_ptr<const construct> set_modified = sets_modified.at(modified_set_pos);
 
+    // both unused
     int original_pos = set_original->start_position();
     int modified_pos = set_modified->start_position();
 
@@ -471,11 +477,11 @@ void srcdiff_edit_correction::correct() {
 
         for(int i = 0; i < delete_edit->length; ++i) {
 
-            if(i == (int)original_offset) continue;
+            if(i == original_offset) continue;
 
             for(int j = 0; j < insert_edit->length; ++j) {
 
-                if(j == (int)modified_offset) continue;
+                if(j == modified_offset) continue;
 
                 std::shared_ptr<srcdiff_text_measure> measure 
                     = srcdiff_edit_correction::edit2measure(delete_edit->offset_sequence_one + i,
@@ -483,12 +489,12 @@ void srcdiff_edit_correction::correct() {
                 if(!measure) continue;
 
                 // does not need broken if either of these are true
-                if(i < (int)original_offset && j < (int)modified_offset) {
+                if(i < original_offset && j < modified_offset) {
                     original_similarities[i] = std::max(original_similarities[i], std::size_t(measure->similarity()));
                     modified_similarities[j] = std::max(modified_similarities[j], std::size_t(measure->similarity()));
                     continue;
                 }
-                if(i > (int)original_offset && j > (int)modified_offset) {
+                if(i > original_offset && j > modified_offset) {
                     original_similarities[i] = std::max(original_similarities[i], std::size_t(measure->similarity()));
                     modified_similarities[j] = std::max(modified_similarities[j], std::size_t(measure->similarity()));
                     continue;

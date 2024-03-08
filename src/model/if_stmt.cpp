@@ -85,10 +85,10 @@ bool if_stmt::is_matchable_impl(const construct & modified_construct) const {
     bool condition_matchable = condition() && modified.condition() && condition()->to_string() == modified.condition()->to_string();
     bool original_has_else = bool(find_else());
     bool modified_has_else = bool(modified.find_else());
-
+    // parens are suggested around these statements
     return condition_matchable 
-        &&    (original_has_block == modified_has_block 
-            || original_has_else == modified_has_else 
-            || original_has_block && !modified_has_else 
-            || modified_has_block && !original_has_else);
+        &&    ((original_has_block == modified_has_block) 
+            || (original_has_else == modified_has_else) 
+            || (original_has_block && !modified_has_else) 
+            || (modified_has_block && !original_has_else));
 }

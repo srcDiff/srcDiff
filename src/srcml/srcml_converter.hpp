@@ -33,7 +33,7 @@ private:
 
 	srcml_nodes collect_nodes(xmlTextReaderPtr reader) const;
 
-	static std::shared_ptr<srcML::node> get_current_node(xmlTextReaderPtr reader);
+	static std::shared_ptr<srcML::node> get_current_node(xmlTextReaderPtr reader, bool is_archive);
 
 public:
 

@@ -8,6 +8,7 @@
 #include <cassert>
 #include <iomanip>
 
+// unsigned vs signed comparisons, unused parameters, 
 side_by_side_view::side_by_side_view(const std::string & output_filename,
                                      const std::string & syntax_highlight,
                                      const std::string & theme,

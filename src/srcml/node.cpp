@@ -159,15 +159,15 @@ void srcML::node::merge_attributes(const srcML::attribute_map & that) {
                         this->get_attributes().begin(), this->get_attributes().end(),
                         std::inserter(original_attributes, original_attributes.end()), key_compare);
 
-    for (const srcML::attribute_map_pair pair : same_attributes) {
+    for (const srcML::attribute_map_pair & pair : same_attributes) {
         attributes.at(pair.first).merge(that.at(pair.first));
     }
 
-    for (const srcML::attribute_map_pair pair : original_attributes) {
+    for (const srcML::attribute_map_pair & pair : original_attributes) {
         attributes.at(pair.first).set_value(std::optional<std::string>(*this->get_attributes().at(pair.first).get_value() + "|"));
     }
 
-    for (const srcML::attribute_map_pair pair : modified_attributes) {
+    for (const srcML::attribute_map_pair & pair : modified_attributes) {
         attributes.at(pair.first).set_value(std::optional<std::string>("|" + *that.at(pair.first).get_value()));
     }
 }
@@ -299,7 +299,7 @@ std::ostream & srcML::operator<<(std::ostream & out, const srcML::node & node) {
     out << node.get_name();
     }
 
-    for(const srcML::attribute_map_pair attribute_pair : node.get_attributes()) {
+    for(const srcML::attribute_map_pair & attribute_pair : node.get_attributes()) {
         out << ' ' << attribute_pair.first << '=' << *attribute_pair.second.get_value();
     }
 

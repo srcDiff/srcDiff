@@ -14,6 +14,7 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+// unused parameters, unsigned vs signed comparison
 const char * XML_VERSION = "1.0";
 const char * output_encoding = "UTF-8";
 const char * XML_DECLARATION_STANDALONE = "yes";

@@ -10,6 +10,8 @@
 
 #ifndef _MSC_BUILD
 
+// missing initializers for members warning thrown, reorder needed in some part
+
 // file/directory names to ignore when processing a directory
 // const/non-const versions for linux/bsd different declarations
 int srcdiff_input_source_local::dir_filter(const struct dirent* d) {

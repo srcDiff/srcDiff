@@ -9,6 +9,7 @@
 #include <fstream>
 #include <stdexcept>
 
+// unsigned vs signed comparison, catching a polymorphic type by value
 srcdiff_options options;
 
 const unsigned LINE_LENGTH = 100;

@@ -6,7 +6,7 @@
 
 #include <cstring>
 #include <cassert>
-
+// signed vs unsigned comparisons, unused parameters, future API usage again?
 unified_view::unified_view(const std::string & output_filename,
                            const std::string & syntax_highlight,
                            const std::string & theme,

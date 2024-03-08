@@ -33,7 +33,7 @@
 #include <srcml.h>
 
 #include <cstdlib>
-
+// unimplemented function, throws a warning
 void srcdiff_libxml_error(void *ctx, const char *msg, ...) {}
 
 srcdiff_input_source * next_input_source(const srcdiff_options & options);

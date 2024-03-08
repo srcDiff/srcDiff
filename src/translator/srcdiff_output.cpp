@@ -11,6 +11,7 @@
 bool srcdiff_output::delay = false;
 int srcdiff_output::delay_operation = -2;
 
+// summary_type_str is unused here
 srcdiff_output::srcdiff_output(srcml_archive * archive, 
                                const std::string & srcdiff_filename,
                                const OPTION_TYPE & flags,

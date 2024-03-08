@@ -10,7 +10,7 @@
 srcdiff_syntax_measure::srcdiff_syntax_measure(const construct & set_original, const construct & set_modified) 
   : srcdiff_measure(set_original, set_modified) {}
 
-
+// context is unused here
 static bool is_significant(int & node_pos, const srcml_nodes & nodes, const void * context) {
 
   const std::shared_ptr<srcML::node> & node = nodes[node_pos];
@@ -18,6 +18,7 @@ static bool is_significant(int & node_pos, const srcml_nodes & nodes, const void
   if(node->get_name() == "argument_list") {
 
     int pos = node_pos + 1;
+    // pos and nodes.size() are a signed vs unsigned comparison
     while(pos < nodes.size() && (nodes[pos]->get_type() == srcML::node_type::START || nodes[pos]->get_name() != "argument_list")) {
 
       if(!nodes[pos]->is_text()) return true;

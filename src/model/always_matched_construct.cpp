@@ -35,7 +35,7 @@ bool always_matched_construct::is_always_match(const std::string & construct_nam
       return always_match_constructs.find(construct_name) != always_match_constructs.end();  
 }
 
-
+// what does this function do? unimplemented functionality?
 bool always_matched_construct::is_matchable_impl(const construct & modified) const {
     return true;
 }

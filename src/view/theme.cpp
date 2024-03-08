@@ -10,7 +10,7 @@
 
 #include <cpp_keywords.hpp>
 #include <java_keywords.hpp>
-
+// is_html is unused here
 theme_t::theme_t(const std::string & highlight_level, bool is_html) : keywords(nullptr) {
 
     if(highlight_level == "full") {

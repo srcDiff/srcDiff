@@ -119,7 +119,8 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
 void srcdiff_move::output() {
 
-  static int attribute_id = 0;
+  // unused
+  //static int attribute_id = 0;
 
   // store current diff if is any
   std::shared_ptr<reader_state> rbuf = rbuf_original;

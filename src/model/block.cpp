@@ -38,8 +38,9 @@ bool block::is_syntax_similar_impl(const construct & modified_block) const {
 	srcdiff_syntax_measure syntax_measure(*block_content(), *modified.block_content());
 	syntax_measure.compute();
 
+	// max_child_length is unused
 	int min_child_length = syntax_measure.min_length();
-	int max_child_length = syntax_measure.max_length();
+	//int max_child_length = syntax_measure.max_length();
 	if(min_child_length > 1) { 
 	  if(2 * syntax_measure.similarity() >= min_child_length && syntax_measure.difference() <= min_child_length)
 	    return true;

@@ -15,7 +15,7 @@
 #include <cctype>
 #include <cassert>
 
-
+// unused parameters, future API usage?
 int view_t::UNSET  = 0;
 int view_t::COMMON = 1 << 0;
 int view_t::DELETE = 1 << 1;
