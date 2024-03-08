@@ -1,7 +1,12 @@
 #!/bin/bash
 
-run_test "-h produces expected help text" '{
-    help=$(srcdiff -h)
-    assert_contains "$help" "options"
-    echo "$help"  # for the log
-}'
+flags=("-h" "--help")
+
+for flag in "${flags[@]}"; do
+
+    run_test "$flag produces help text containing the word \"options\"" '{
+        help=$(srcdiff $flag)
+        assert_contains "$help" "options"
+    }'
+
+done

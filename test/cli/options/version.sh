@@ -1,7 +1,12 @@
 #!/bin/bash
 
-run_test "Version flag produces expected output text" '{
-    version=$(srcdiff -V)
-    assert_contains "$version" "srcdiff"
-    echo "$version"  # for the log
-}'
+flags=("-V" "--version")
+
+for flag in "${flags[@]}"; do
+
+    run_test "$flag flag produces version output containing the word \"srcdiff\"" '{
+        version=$(srcdiff $flag)
+        assert_contains "$version" "srcdiff"
+    }'
+
+done
