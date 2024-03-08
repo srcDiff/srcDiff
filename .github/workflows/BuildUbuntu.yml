@@ -8,7 +8,7 @@
       workflow_dispatch:
     
     jobs:
-      build:
+      build_and_test:
         runs-on: ubuntu-latest
         steps:
     
@@ -54,10 +54,6 @@
               if [ -z "$srcdiff_match" ]; then exit 1; fi
     
               echo "Build succeeded!"
-      test:
-        needs: build
-        runs-on: ubuntu-latest
-        steps:
 
           - name: CLI tests
             shell: bash
