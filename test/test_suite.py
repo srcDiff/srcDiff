@@ -24,8 +24,8 @@ print(FIELD_WIDTH_TEST_CASES)
 sperrorlist = []
 
 srcml_client = "srcml"
-switch_utility = "../bin/switch_differences"
-srcdiff_utility = "../bin/srcdiff"
+switch_utility = "../build/bin/switch_differences"
+srcdiff_utility = "../build/bin/srcdiff"
 
 # extracts a particular unit from a srcML file
 def safe_communicate(command, inp):
@@ -214,6 +214,10 @@ class Tee(object):
 	def write(self, data):
 		self.file.write(data)
 		self.stdout.write(data)
+	
+	def flush(self):
+		self.file.flush()
+		self.stdout.flush()
 
 Tee(error_filename)
 
@@ -484,9 +488,9 @@ else:
 	xerrorlist = []
 	for e in errorlist:
 		if str(e[0]).count(".") == 0:
-			oerrorlist.append(e);
+			oerrorlist.append(e)
 		else:
-			xerrorlist.append(e);
+			xerrorlist.append(e)
 
 	print("Errors:  " + str(error_count) + " out of " + str(total_count),)
 	if str(total_count) == "1":
