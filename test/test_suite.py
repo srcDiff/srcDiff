@@ -15,7 +15,10 @@ from datetime import datetime, time
 error_filename = "srcDiffTestReport"
 error_filename_extension = ".txt"
 
-SHELL_ROWS, SHELL_COLUMNS = subprocess.check_output(['stty', 'size']).split()
+try:
+	SHELL_ROWS, SHELL_COLUMNS = subprocess.check_output(['stty', 'size']).split()
+except subprocess.CalledProcessError:
+	SHELL_ROWS, SHELL_COLUMNS = 15, 100
 
 FIELD_WIDTH_LANGUAGE   = 12
 FIELD_WIDTH_URL        = 20
