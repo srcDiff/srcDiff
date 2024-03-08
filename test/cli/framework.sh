@@ -91,7 +91,7 @@ _run_test() {
             ([ $expect_success -eq 0 ] && [ $exit_code -eq 0 ]); then
         echo "Test failed: $description (exit code $exit_code) (see $LOG:$log_file_length)"
         ((failed++))
-        failures+="$description ($current_file) ($LOG:$log_file_length)"
+        failures+=("$description ($current_file) ($LOG:$log_file_length)")
     else
         echo "Test passed: $description (exit code $exit_code)"
         ((passed++))
@@ -128,28 +128,19 @@ assert_contains() {
         echo "SUCCESS: \`$1\` contains \`$2\`"
     fi
 }
+# assert the first argument doesn't contain the second argument as a substring.
+# case insensitive
+assert_not_contains() {
+    if [[ "${1,,}" == *"${2,,}"* ]]; then
+        echo "ERROR: \`$1\` contains \`$2\`"
+        exit 1
+    else
+        echo "SUCCESS: \`$1\` does not contain \`$2\`"
+    fi
+}
 
-# creating very simple temp files to use for diffs:
-
-original=$(mktemp --suffix .cpp)
-echo "std::cout << \"hi\";" > $original
-modified=$(mktemp --suffix .cpp)
-echo "std::cout << \"hello\";" > $modified
-
-expected_diff=$(cat <<-END
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" revision="1.0.0" language="C++" filename="$original|$modified"><expr_stmt><expr><name><name>std</name><operator>::</operator><name>cout</name></name> <operator>&lt;&lt;</operator> <literal type="string">"<diff:delete type="replace">hi</diff:delete><diff:insert type="replace">hello</diff:insert>"</literal></expr>;</expr_stmt>
-</unit>
-END
-)
-
-expected_diff_twice=$(cat <<-END
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" revision="1.0.0" language="C++" filename="$original|$modified"><expr_stmt><expr><name><name>std</name><operator>::</operator><name>cout</name></name> <operator>&lt;&lt;</operator> <literal type="string">"<diff:delete type="replace">hi</diff:delete><diff:insert type="replace">hello</diff:insert>"</literal></expr>;</expr_stmt>
-</unit><unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" revision="1.0.0" language="C++" filename="$original|$modified"><expr_stmt><expr><name><name>std</name><operator>::</operator><name>cout</name></name> <operator>&lt;&lt;</operator> <literal type="string">"<diff:delete type="replace">hi</diff:delete><diff:insert type="replace">hello</diff:insert>"</literal></expr>;</expr_stmt>
-</unit>
-END
-)
+# get useful variables storing temp code file paths and expected diffs:
+source $(dirname "$0")/constants.sh
 
 # run all tests:
 
