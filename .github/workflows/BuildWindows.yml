@@ -3,7 +3,7 @@ name: Build for Windows
 
 on:
   push:
-    branches: 
+    branches:
      - 'develop'
   workflow_dispatch:
 
@@ -59,3 +59,15 @@ jobs:
           }
 
           Write-Output "Build succeeded!"
+
+      - name: Run CLI tests
+        shell: pwsh
+        run: |
+          cd ${{ github.workspace }}/test/cli
+          bash ./framework.sh
+      
+      - uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: CLITests.log
+          path: ${{ github.workspace }}/test/cli/test_log.txt
