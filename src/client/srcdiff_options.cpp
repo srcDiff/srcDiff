@@ -203,7 +203,7 @@ void option_srcml_field<LANGUAGE>(const std::string & arg) {
 
 template<>
 void option_srcml_field<URL>(const std::string & arg) {
-  std::cout << "setting url to "<<arg<<std::endl;
+  
   srcml_archive_set_url(options.archive, arg.c_str());
 
 }
@@ -267,13 +267,6 @@ template<int op>
 void option_srcml_flag_enable(int flagged_count) {
 
   if(flagged_count > 0) srcml_archive_enable_option(options.archive, op);
-
-}
-
-template<int op>
-void option_srcml_flag_disable(int flagged_count) {
-
-  if(flagged_count > 0) srcml_archive_disable_option(options.archive, op);
 
 }
 
@@ -454,7 +447,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "-l,--language",
     option_srcml_field<LANGUAGE>,
     "Set the input source programming language"
-  )->default_val("C++")->force_callback(true);
+  )->default_val("C++");
 
   // Note: this will override the filename attribute on all output units
   srcml_group->add_option(
@@ -513,9 +506,9 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   )->force_callback();
 
   srcml_group->add_flag(
-    "--cpp-markup-else",
-    option_srcml_flag_disable<SRCML_OPTION_CPP_TEXT_ELSE>,
-    "Markup #else contents (default)"
+    "--cpp-markup-if0",
+    option_srcml_flag_enable<SRCML_OPTION_CPP_MARKUP_IF0>,
+    "Markup #if 0 contents"
   )->force_callback();
 
   srcml_group->add_flag(
@@ -524,26 +517,14 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "Do not markup #else contents"
   )->force_callback();
 
-  srcml_group->add_flag(
-    "--cpp-markup-if0",
-    option_srcml_flag_enable<SRCML_OPTION_CPP_MARKUP_IF0>,
-    "Markup #if 0 contents"
-  )->force_callback();
-
-  srcml_group->add_flag(
-    "--cpp-text-if0",
-    option_srcml_flag_disable<SRCML_OPTION_CPP_MARKUP_IF0>,
-    "Do not markup #if 0 contents (default)"
-  )->force_callback();
-
   // TODO: remove these options, here and elsewhere in the code
 
-  // srcdiff_group->add_option_function<std::string>(
-  //   "-m,--method",
-  //   option_parsing_method,
-  //   "Specify a list of parsing methods, separated by commas.\n"
-  //   "The options are collect, raw, group-diff and no-group-diff"
-  // )->default_val("collect,group-diff");
+  srcml_group->add_option_function<std::string>(
+    "-m,--method",
+    option_parsing_method,
+    "Specify a list of parsing methods, separated by commas.\n"
+    "The options are collect, raw, group-diff and no-group-diff"
+  )->default_val("collect,group-diff")->force_callback();
 
   // srcdiff_group->add_flag(
   //   "--disable-string-split",
@@ -588,13 +569,13 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "Specify the amount of context to show around an edit in the unified view.\n"
     "Either give a number of lines, or use \"all\" or -1 to see the entire file,\n"
     "or use \"function\" to see the encompassing function."
-  )->default_val("3")->force_callback();
+  )->default_val("3")->needs(unified);
 
   // TODO: document what a custom theme file should look like somewhere
   view_options->add_option(
     "--theme",
     options.view_options.theme,
-    "Select theme for syntax hightlighting.\n"
+    "Select theme for syntax highlighting.\n"
     "Options: \"default\", \"monokai\", or the filename of a custom theme."
   )->default_val("default");
 
@@ -668,7 +649,7 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
     // CLI11 unfortunately does not have a great mechanism for requiring that
     // exactly one out of two options is required if and only if any options
-    // from a certain set are present. see disccusion here:
+    // from a certain set are present. see discussion here:
     // https://github.com/CLIUtils/CLI11/issues/88. This is a simple workaround
     // for one case
     for (const auto& view_option : view_options->get_options()) {
