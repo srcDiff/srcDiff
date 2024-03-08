@@ -30,19 +30,3 @@ expected_diff_archive=$(cat <<-END
 </unit>
 END
 )
-
-if0_code=$(cat <<-END
-#if 0
-std::cout << "hello world";
-#endif
-END
-)
-
-else_code=$(cat <<-END
-#if A
-std::cout << "hello world";
-#else
-std::cout << "goodbye";
-#endif
-END
-)

@@ -22,14 +22,27 @@ for flag in "${language_flags[@]}"; do
     echo -e "int j;\n" > $modified_no_ext
 
     run_test "$flag sets the source language" '{
-        actual_diff=$(srcdiff $flag C++ $original_no_ext $modified_no_ext)
-        assert_contains "$actual_diff" "language=\"C++\""
+        actual_diff=$(srcdiff $flag C# $original_no_ext $modified_no_ext)
+        assert_contains "$actual_diff" "language=\"C#\""
     }'
 
     rm $original_no_ext
     rm $modified_no_ext
 
 done
+
+orig_java=$(mktemp --suffix .java)
+echo "public class Man {}" > $orig_java
+mod_java=$(mktemp --suffix .java)
+echo "public class Main {}" > $mod_java
+
+run_test "language is detected from file extension by default" '{
+    actual_diff=$(srcdiff $orig_java $mod_java)
+    assert_contains "$actual_diff" "language=\"Java\""
+}'
+
+rm $orig_java
+rm $mod_java
 
 filename_flags=("-f" "--filename")
 
@@ -73,9 +86,9 @@ run_test "--position adds position attributes" '{
     assert_contains "$actual_diff" "end="
 }'
 
-original_with_tab=$(mktemp)
+original_with_tab=$(mktemp --suffix .cpp)
 echo -e "\tint i = 0;" > $original_with_tab
-modified_with_tab=$(mktemp)
+modified_with_tab=$(mktemp --suffix .cpp)
 echo -e "\tint j = 0;" > $modified_with_tab
 
 run_test "--tabs defaults to 8" '{
@@ -97,3 +110,90 @@ run_test "--no-xml-decl removes the XML declaration" '{
     actual_diff=$(srcdiff --no-xml-decl $original $modified)
     assert_not_contains "$actual_diff" "<?xml"
 }'
+
+if0_code=$(cat <<-END
+#if 0
+std::cout << "hello world";
+#endif
+END
+)
+
+preprocessor_if0=$(mktemp --suffix .cpp)
+echo "$if0_code" > $preprocessor_if0
+
+if0_not_marked_up=$(cat <<-END
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" revision="1.0.0" language="C++" filename="$preprocessor_if0"><cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">0</literal></expr></cpp:if>
+std::cout &lt;&lt; "hello world";
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+END
+)
+
+if0_marked_up=$(cat <<-END
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" revision="1.0.0" language="C++" filename="$preprocessor_if0" options="CPP_MARKUP_IF0"><cpp:if>#<cpp:directive>if</cpp:directive> <expr><literal type="number">0</literal></expr></cpp:if>
+<expr_stmt><expr><name><name>std</name><operator>::</operator><name>cout</name></name> <operator>&lt;&lt;</operator> <literal type="string">"hello world"</literal></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+END
+)
+
+run_test "#if 0 sections are not marked up by default" '{
+    diff=$(srcdiff $preprocessor_if0 $preprocessor_if0)
+    assert_equal "$diff" "$if0_not_marked_up"
+}'
+
+run_test "#if 0 sections are marked up if --cpp-markup-if0 is specified" '{
+    diff=$(srcdiff --cpp-markup-if0 $preprocessor_if0 $preprocessor_if0)
+    assert_equal "$diff" "$if0_marked_up"
+}'
+
+
+else_code=$(cat <<-END
+#if A
+std::cout << "hello world";
+#else
+std::cout << "goodbye";
+#endif
+END
+)
+
+preprocessor_else=$(mktemp --suffix .cpp)
+echo "$else_code" > $preprocessor_else
+
+else_marked_up=$(cat <<-END
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" revision="1.0.0" language="C++" filename="$preprocessor_else"><cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<expr_stmt><expr><name><name>std</name><operator>::</operator><name>cout</name></name> <operator>&lt;&lt;</operator> <literal type="string">"hello world"</literal></expr>;</expr_stmt>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+<expr_stmt><expr><name><name>std</name><operator>::</operator><name>cout</name></name> <operator>&lt;&lt;</operator> <literal type="string">"goodbye"</literal></expr>;</expr_stmt>
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+END
+)
+
+else_not_marked_up=$(cat <<-END
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" revision="1.0.0" language="C++" filename="$preprocessor_else" options="CPP_TEXT_ELSE"><cpp:if>#<cpp:directive>if</cpp:directive> <expr><name>A</name></expr></cpp:if>
+<expr_stmt><expr><name><name>std</name><operator>::</operator><name>cout</name></name> <operator>&lt;&lt;</operator> <literal type="string">"hello world"</literal></expr>;</expr_stmt>
+<cpp:else>#<cpp:directive>else</cpp:directive></cpp:else>
+std::cout &lt;&lt; "goodbye";
+<cpp:endif>#<cpp:directive>endif</cpp:directive></cpp:endif>
+</unit>
+END
+)
+
+run_test "#else sections are marked up by default" '{
+    diff=$(srcdiff $preprocessor_else $preprocessor_else)
+    assert_equal "$diff" "$else_marked_up"
+}'
+
+run_test "#else sections are not marked up if --cpp-text-else is specified" '{
+    diff=$(srcdiff --cpp-text-else $preprocessor_else $preprocessor_else)
+    assert_equal "$diff" "$else_not_marked_up"
+}'
+
+
+rm $preprocessor_else
+rm $preprocessor_if0
