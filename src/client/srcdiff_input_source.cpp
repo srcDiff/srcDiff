@@ -84,3 +84,18 @@ void srcdiff_input_source::files_from() {
   process_files_from();
 
 }
+
+const char * srcdiff_input_source::get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified) {
+
+  const char * archive_language = srcml_archive_get_language(options.archive);
+  if (archive_language) {
+    return archive_language;
+  } else {
+    std::optional<std::string> path = path_original;
+    if(!path || path->empty()) path = path_modified;
+    if(!path) path = std::string();
+
+    return srcml_archive_check_extension(options.archive, path->c_str());
+  }
+
+}
