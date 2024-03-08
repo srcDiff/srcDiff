@@ -24,8 +24,8 @@ print(FIELD_WIDTH_TEST_CASES)
 sperrorlist = []
 
 srcml_client = "srcml"
-switch_utility = "../build/bin/switch_differences"
-srcdiff_utility = "../build/bin/srcdiff"
+switch_utility = "../bin/switch_differences"
+srcdiff_utility = "../bin/srcdiff"
 
 # extracts a particular unit from a srcML file
 def safe_communicate(command, inp):

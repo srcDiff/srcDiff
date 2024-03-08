@@ -2,7 +2,7 @@
 
 # make srcdiff build available:
 
-export PATH="../../build/bin:$PATH"
+export PATH="../../bin:$PATH"
 
 # if srcdiff is not found:
 if ! [ -x "$(command -v srcdiff)" ]; then
