@@ -29,7 +29,7 @@ class for_t : public conditional {
 
 public:
 
-    for_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+    for_t(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
         : conditional(node_list, start, out), control_child() {}
 
     std::shared_ptr<const construct> control() const;

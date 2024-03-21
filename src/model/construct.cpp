@@ -33,8 +33,7 @@
 #include <iostream>
 
 
-// many unused parameters in this whole file, const void * context for example; placeholders for future API usage?
-bool construct::is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context) {
+bool construct::is_non_white_space(std::size_t & node_pos, const srcml_nodes & node_list, const void * context [[maybe_unused]]) {
 
     const std::shared_ptr<srcML::node> & node = node_list[node_pos];
 
@@ -43,7 +42,7 @@ bool construct::is_non_white_space(int & node_pos, const srcml_nodes & node_list
 
 }
 
-bool construct::is_match(int & node_pos, const srcml_nodes & nodes, const void * context) {
+bool construct::is_match(std::size_t & node_pos, const srcml_nodes & nodes, const void * context [[maybe_unused]]) {
 
   const std::shared_ptr<srcML::node> & node = nodes[node_pos];
   const std::shared_ptr<srcML::node> & context_node = *(const std::shared_ptr<srcML::node> *)context;
@@ -57,12 +56,12 @@ bool construct::is_match(int & node_pos, const srcml_nodes & nodes, const void *
 construct::construct_list construct::get_descendent_constructs(const srcml_nodes & node_list, 
                                                     std::size_t start_pos, std::size_t end_pos,
                                                     construct_filter filter,
-                                                    const void * context,
+                                                    const void * context [[maybe_unused]],
                                                     std::shared_ptr<srcdiff_output> out) {
     construct::construct_list descendent_constructs;
 
     // runs on a subset of base array
-    for(int pos = start_pos; pos < end_pos; ++pos) {
+    for(std::size_t pos = start_pos; pos < end_pos; ++pos) {
 
         // skip whitespace
         if(filter(pos, node_list, context)) {
@@ -88,7 +87,7 @@ construct::construct(const construct & that) : out(that.out), node_list(that.nod
 
 }
 
-construct::construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : out(out), node_list(node_list), hash_value() {
+construct::construct(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) : out(out), node_list(node_list), hash_value() {
 
   if(node_list.at(start)->get_type() != srcML::node_type::TEXT && node_list.at(start)->get_type() != srcML::node_type::START) return;
 
@@ -252,7 +251,7 @@ std::size_t construct::hash() const {
 std::string construct::to_string(bool skip_whitespace) const {
 
     std::string str;
-    for(int pos = start_position(); pos < end_position(); ++pos) {
+    for(size_t pos = start_position(); pos < end_position(); ++pos) {
         std::shared_ptr<const srcML::node> node = node_list[pos];
         if(skip_whitespace && node->is_whitespace()) continue;
         if(!node->get_content()) continue;
@@ -379,7 +378,7 @@ bool construct::is_syntax_similar(const construct & modified) const {
   return is_syntax_similar_impl(modified);
 }
 
-bool construct::is_syntax_similar_impl(const construct & modified) const {
+bool construct::is_syntax_similar_impl(const construct & modified [[maybe_unused]]) const {
     return false;
 }
 
@@ -417,7 +416,7 @@ bool construct::is_matchable(const construct & modified) const {
 
 }
 
-bool construct::is_matchable_impl(const construct & modified) const {
+bool construct::is_matchable_impl(const construct & modified [[maybe_unused]]) const {
     return false;
 }
 
@@ -439,7 +438,7 @@ bool construct::is_match_similar(const construct & modified) const {
 }
 
 
-bool construct::is_tag_convertable(const construct & modified) const {
+bool construct::is_tag_convertable(const construct & modified [[maybe_unused]]) const {
 
   return false;
 }
@@ -450,7 +449,7 @@ bool construct::is_convertable(const construct & modified) const {
   return is_similar(modified);
 }
 
-bool construct::is_convertable_impl(const construct & modified) const {
+bool construct::is_convertable_impl(const construct & modified [[maybe_unused]]) const {
     return false;
 }
 

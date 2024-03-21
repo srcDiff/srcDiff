@@ -17,7 +17,8 @@
  * along with the srcML Toolkit; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
+#ifndef INCLUDED_SRCML_NODE_HPP
+#define INCLUDED_SRCML_NODE_HPP
 #include <srcml.h>
 #include <namespace.hpp>
 #include <memory>
@@ -41,7 +42,6 @@ namespace srcML {
 
         void merge(const attribute & that);
         std::string full_name() const;
-        void set_name(const std::string & input);
         void set_value(const std::optional<std::string> & input);
         const std::string & get_name() const;
         std::shared_ptr<srcML::name_space> get_ns() const;
@@ -59,4 +59,7 @@ namespace srcML {
 
     };
 
+    std::ostream & operator<<(std::ostream & out, const attribute & that);
 }
+
+#endif

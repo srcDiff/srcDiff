@@ -29,7 +29,7 @@ class else_t : public clause {
 
 public:
 
-    else_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+    else_t(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
         : clause(node_list, start, out) {}
     std::shared_ptr<const construct> condition() const;
 

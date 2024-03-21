@@ -43,10 +43,10 @@ namespace srcML {
 
     enum node_type : unsigned int  { OTHER = 0, START = 1, END = 2, TEXT = 3, WS = 4 };
 
-    typedef std::map<std::string, attribute, std::greater<std::string>> attribute_map;
-    typedef std::pair<std::string, attribute> attribute_map_pair;
-    typedef std::map<std::string, attribute, std::greater<std::string>>::const_iterator attribute_map_citr;
-    typedef std::map<std::string, attribute, std::greater<std::string>>::iterator attribute_map_itr;
+    typedef std::map<const std::string, attribute, std::greater<std::string>> attribute_map;
+    typedef std::pair<const std::string, attribute> attribute_map_pair;
+    typedef std::map<const std::string, attribute, std::greater<std::string>>::const_iterator attribute_map_citr;
+    typedef std::map<const std::string, attribute, std::greater<std::string>>::iterator attribute_map_itr;
 
   class node {
 
@@ -126,5 +126,7 @@ namespace srcML {
 
   };
 
+  std::ostream & operator<<(std::ostream & out, const node & node);
+  
 }
 #endif

@@ -14,7 +14,7 @@ const std::string move("move");
 typedef std::tuple<int, int> move_info;
 typedef std::vector<move_info> move_infos;
 
-srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation)
+srcdiff_move::srcdiff_move(const srcdiff_output & out, std::size_t & position, int operation)
   : srcdiff_output(out), position(position), operation(operation) {}
 
 bool srcdiff_move::is_move(std::shared_ptr<const construct> set) {
@@ -44,7 +44,7 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
       case SES_INSERT :
 
-        for(int i = 0; i < edits->length; ++i) {
+        for(std::size_t i = 0; i < edits->length; ++i) {
 
           if(construct_list_modified.at(edits->offset_sequence_two + i)->term(0)->is_text()) {
             continue;
@@ -57,7 +57,7 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
       case SES_DELETE :
 
-        for(int i = 0; i < edits->length; ++i) {
+        for(std::size_t i = 0; i < edits->length; ++i) {
 
           if(construct_list_original.at(edits->offset_sequence_one + i)->term(0)->is_text()) {
             continue;

@@ -27,7 +27,7 @@ class cast : public construct {
 
 public:
 
-    cast(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+    cast(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
         : construct(node_list, start, out) {}
     virtual bool is_tag_convertable(const construct & modified) const;
 private:

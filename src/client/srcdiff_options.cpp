@@ -118,7 +118,7 @@ void option_dependency(const boost::program_options::variables_map & var_map,
 
   } else {
 
-    for(int pos = 0; pos < independent_list.size(); ++pos) {
+    for(size_t pos = 0; pos < independent_list.size(); ++pos) {
 
       if(pos != (independent_list.size() - 1)) {
         what += " '--" + independent_list[pos] + "',";
@@ -415,9 +415,9 @@ void option_field<&srcdiff_options::view_options_t::unified_view_context>(const 
 
   try {
 
-    options.view_options.unified_view_context = (size_t)std::stoll(arg);
+    options.view_options.unified_view_context = (std::size_t)std::stoll(arg);
 
-  } catch(std::invalid_argument) {
+  } catch(std::invalid_argument&) {
 
     options.view_options.unified_view_context = arg;
 

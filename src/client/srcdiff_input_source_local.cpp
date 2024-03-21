@@ -33,7 +33,7 @@ int srcdiff_input_source_local::is_dir(struct dirent * file, const char * filena
 
   // path with current filename
   // handle directories later after all the filenames
-  struct stat instat = { 0 };
+  struct stat instat = {};
 
   int stat_status = stat(filename, &instat);
 
@@ -52,7 +52,7 @@ int srcdiff_input_source_local::is_dir(struct dirent * file, const char * filena
 
 int srcdiff_input_source_local::is_output_file(const char * filename, const struct stat & outstat) {
 
-  struct stat instat = { 0 };
+  struct stat instat = {};
 
   int stat_status = stat(filename, &instat);
 
@@ -73,7 +73,7 @@ srcdiff_input_source_local::srcdiff_input_source_local(const srcdiff_options & o
                                       options.view_options,
                                       options.summary_type_str);
 
-  outstat = { 0 };
+  outstat = { };
   stat(options.srcdiff_filename.c_str(), &outstat);
 
 }
@@ -94,10 +94,10 @@ void srcdiff_input_source_local::consume() {
 
    for(std::pair<std::string, std::string> input_pair : options.input_pairs) {
 
-      struct stat in_stat_original = { 0 };
+      struct stat in_stat_original = {};
       int stat_status_original = stat(input_pair.first.c_str(), &in_stat_original);
 
-      struct stat in_stat_modified = { 0 };
+      struct stat in_stat_modified = {};
       int stat_status_modified = stat(input_pair.second.c_str(), &in_stat_modified);
 
       if(stat_status_original == -1 && stat_status_modified == -1)

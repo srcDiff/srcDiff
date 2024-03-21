@@ -22,15 +22,10 @@ void srcdiff_edit_correction::split_change(edit_t * delete_edit, edit_t * insert
     int original_sequence_two_offset = delete_edit->offset_sequence_two;
     int original_length = delete_edit->length;
     edit_t * original_previous = delete_edit->previous;
-    // unused
-    //edit_t * original_next = delete_edit->next;
 
-    // unused
-    //int modified_sequence_one_offset = insert_edit->offset_sequence_one;
     int modified_sequence_two_offset = insert_edit->offset_sequence_two;
     int modified_length = insert_edit->length;
-    // unused
-    //edit_t * modified_previous = insert_edit->previous;
+
     edit_t * modified_next = insert_edit->next;
 
     edit_t * left_delete = nullptr, * right_delete = nullptr,
@@ -176,7 +171,6 @@ void srcdiff_edit_correction::split_change(edit_t * delete_edit, edit_t * insert
 
         right_insert->operation = SES_INSERT;
 
-        int offset_one = 0;
         if(right_delete) {
             right_insert->offset_sequence_one = right_delete->offset_sequence_one + right_delete->length;
         }
@@ -236,26 +230,15 @@ edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
     edit_t * delete_edit = change_edit;
     edit_t * insert_edit = change_edit->next;
 
-    for(int i = 0; i < delete_edit->length; ++i) {
+    for(std::size_t i = 0; i < delete_edit->length; ++i) {
 
-        for(int j = 0; j < insert_edit->length; ++j) {
+        for(std::size_t j = 0; j < insert_edit->length; ++j) {
 
             std::size_t original_set_pos = delete_edit->offset_sequence_one + i;
             std::size_t modified_set_pos = insert_edit->offset_sequence_two + j;
 
             std::shared_ptr<const construct> set_original = sets_original.at(original_set_pos);
             std::shared_ptr<const construct> set_modified = sets_modified.at(modified_set_pos);
-            // both are unused
-            //int original_pos = set_original->start_position();
-            //int modified_pos = set_modified->start_position();
-
-            // both are unused
-            //const std::string & original_tag = set_original->term(0)->get_name();
-            //const std::string & modified_tag = set_modified->term(0)->get_name();
-            
-            // both are unused
-            //const std::string & original_uri = set_original->term(0)->get_namespace()->get_uri();
-            //const std::string & modified_uri = set_modified->term(0)->get_namespace()->get_uri();
 
             if(*set_original != *set_modified) {
                 continue;
@@ -311,10 +294,6 @@ std::shared_ptr<srcdiff_text_measure> srcdiff_edit_correction::edit2measure(int 
 
     std::shared_ptr<const construct> set_original = sets_original.at(original_set_pos);
     std::shared_ptr<const construct> set_modified = sets_modified.at(modified_set_pos);
-
-    // both unused
-    int original_pos = set_original->start_position();
-    int modified_pos = set_modified->start_position();
 
     const std::string & original_tag = set_original->term(0)->get_name();
     const std::string & modified_tag = set_modified->term(0)->get_name();
@@ -475,11 +454,11 @@ void srcdiff_edit_correction::correct() {
         std::vector<std::size_t> original_similarities(delete_edit->length);
         std::vector<std::size_t> modified_similarities(insert_edit->length);
 
-        for(int i = 0; i < delete_edit->length; ++i) {
+        for(std::size_t i = 0; i < delete_edit->length; ++i) {
 
             if(i == original_offset) continue;
 
-            for(int j = 0; j < insert_edit->length; ++j) {
+            for(std::size_t j = 0; j < insert_edit->length; ++j) {
 
                 if(j == modified_offset) continue;
 
@@ -524,14 +503,14 @@ void srcdiff_edit_correction::correct() {
 
                 bool is_similar = measure->max_length() >= 8 
                     ? (10 * measure->similarity() >= 9 * measure->max_length() 
-                        && measure->similarity() > original_similarities[i]
-                        && measure->similarity() > modified_similarities[j])
+                        && std::size_t(measure->similarity()) > original_similarities[i]
+                        && std::size_t(measure->similarity()) > modified_similarities[j])
                     : (2  * measure->similarity() >= measure->max_length()
                        && measure->similarity() == measure->min_length()
                        && 2 * measure->min_length() >= measure->max_length());
 
                 if(is_similar
-                    && 3 * common_set_text->size() <= measure->similarity()) {
+                    && 3 * common_set_text->size() <= std::size_t(measure->similarity())) {
 
                     if(before) {
                         before->next = delete_edit;

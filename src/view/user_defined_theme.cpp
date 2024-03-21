@@ -31,12 +31,6 @@ public:
           blue(0xff),
           alpha(0xff) {}
 
-    color_t(const color_t & that)
-        : red(that.red),
-          green(that.green),
-          blue(that.blue),
-          alpha(that.alpha) {}
-
     color_t(const std::string hex_string) : alpha(255) {
 
         if((hex_string.size() != 6 && hex_string.size() != 8)

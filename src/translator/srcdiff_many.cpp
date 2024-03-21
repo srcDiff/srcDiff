@@ -132,7 +132,7 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
   std::vector<int> pos_original;
   construct::construct_list original_sets;
 
-  for(unsigned int i = 0; (signed)i < edits->length; ++i) {
+  for(std::size_t i = 0; i < edits->length; ++i) {
 
     unsigned int index = edits->offset_sequence_one + i;
 
@@ -154,7 +154,7 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
   std::vector<int> pos_modified;
   construct::construct_list modified_sets;
 
-  for(unsigned int i = 0; (signed)i < edit_next->length; ++i) {
+  for(std::size_t i = 0; i < edit_next->length; ++i) {
 
     unsigned int index = edit_next->offset_sequence_two + i;
 

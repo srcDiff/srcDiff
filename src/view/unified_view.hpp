@@ -3,7 +3,7 @@
 
 #include <view.hpp>
 
-#include <boost/any.hpp>
+#include <any>
 
 #include <vector>
 #include <string>
@@ -37,7 +37,7 @@ private:
   bool wait_change;
   std::vector<bool> in_function;
 
-  boost::any context_type;
+  std::any context_type;
   std::list<std::string>::size_type length;
   std::list<std::string> additional_context;
 
@@ -60,7 +60,7 @@ public:
                bool ignore_whitespace,
                bool ignore_comments,
                bool is_html,
-               boost::any context_type);
+               std::any context_type);
   virtual ~unified_view();
 
 private:

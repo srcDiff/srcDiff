@@ -30,7 +30,7 @@ class if_stmt : public conditional {
 
 public:
 
-    if_stmt(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+    if_stmt(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
         : conditional(node_list, start, out), if_child(), else_child() {}
     std::shared_ptr<const if_t> find_if() const;
     std::shared_ptr<const else_t> find_else() const;

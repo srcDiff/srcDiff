@@ -68,10 +68,10 @@ bool block::is_matchable_impl(const construct & modified) const {
 
 	if(is_pseudo_original) {
 		original_stmts = block_content()->children();
-		int start_pos = modified_block.start_position();
+		std::size_t start_pos = modified_block.start_position();
 		modified_stmts.push_back(std::make_shared<block>(modified_block.nodes(), start_pos, modified_block.out));
 	} else {
-		int start_pos = start_position();
+		std::size_t start_pos = start_position();
 		original_stmts.push_back(std::make_shared<block>(nodes(), start_pos, out));
 		modified_stmts = modified_block.block_content()->children();
 		match_operation = SES_DELETE;

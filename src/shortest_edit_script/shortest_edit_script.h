@@ -21,9 +21,9 @@ enum edit_operations { SES_COMMON, SES_DELETE, SES_INSERT };
 struct edit_t {
 
   int operation;
-  int offset_sequence_one;
-  int offset_sequence_two;
-  int length;
+  unsigned long offset_sequence_one;
+  unsigned long offset_sequence_two;
+  unsigned long length;
 
   // links
   struct edit_t * next;

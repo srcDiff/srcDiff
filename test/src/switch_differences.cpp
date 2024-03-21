@@ -183,7 +183,8 @@ const char * get_attr(xmlNodePtr node, const char * attribute) {
 
 }
 
-int main(int argc, char * argv[]) {
+// are parameters necessary here?
+int main(/*int argc, char * argv[]*/) {
 
   /*
     Create xmlreader and the xmlwriter
@@ -274,7 +275,7 @@ int main(int argc, char * argv[]) {
 
     if(output_saved) {
 
-      for(int i = 0; i < nodes.size(); ++i) {
+      for(std::size_t i = 0; i < nodes.size(); ++i) {
 
         outputNode(*nodes[i], writer, output_ns);
 

@@ -48,7 +48,7 @@ std::string srcML::attribute::full_name() const {
     return name;
 }
 
-std::ostream & operator<<(std::ostream & out, const srcML::attribute & that) {
+std::ostream & srcML::operator<<(std::ostream & out, const srcML::attribute & that) {
     out << that.full_name();
     if(that.get_value().has_value()) out << "=" << that.get_value().value();
     return out;

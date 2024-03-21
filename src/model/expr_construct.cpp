@@ -23,8 +23,7 @@
 #include <unordered_set>
 #include <string>
 
-// that is unused here
-std::shared_ptr<const expr_t> expr_construct::expr(const expr_construct & that) const {
+std::shared_ptr<const expr_t> expr_construct::expr(const expr_construct & that [[maybe_unused]]) const {
     if(expr_child) return *expr_child;
 
     expr_child = std::static_pointer_cast<const expr_t>(find_child("expr"));
