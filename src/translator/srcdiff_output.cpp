@@ -567,7 +567,7 @@ void srcdiff_output::output_node_inner(const srcML::node & node) {
     // copy all the attributes
     {
 
-      for(const srcML::attribute_map_pair & attr : node.get_attributes()) {
+      for(srcML::attribute_map_cpair attr : node.get_attributes()) {
 
         srcml_write_attribute(wstate->unit, 0, attr.second.get_name().c_str(), 0, attr.second.get_value() ? attr.second.get_value()->c_str() : 0);
 

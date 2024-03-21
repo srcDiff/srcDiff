@@ -37,7 +37,7 @@ public:
 	int min_length() const;
 
 	virtual void compute() = 0;
-
+	virtual ~srcdiff_measure() {};
 };
 
 

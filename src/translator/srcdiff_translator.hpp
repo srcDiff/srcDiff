@@ -51,7 +51,7 @@ class srcdiff_translator {
 
 private:
 
-  srcml_archive * archive;
+  srcml_archive * archive [[maybe_unused]];
 
   const OPTION_TYPE & flags;
 

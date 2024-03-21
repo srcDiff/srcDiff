@@ -58,6 +58,8 @@ public:
 
     construct(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>());
 
+    virtual ~construct() {};
+
     void swap(construct & that);
     construct & operator=(construct that);
 

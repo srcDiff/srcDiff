@@ -165,7 +165,6 @@ void outputNode(const xmlNode & node, xmlTextWriterPtr writer, bool output_ns) {
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
-const char * const UNIT_TAG = "unit";
 const char * const DIFF_PREFIX = "diff";
 const char * const DELETE_TAG = "delete";
 const char * const INSERT_TAG = "insert";

@@ -221,7 +221,7 @@ void option_field<&srcdiff_options::git_url>(const std::string & arg) {
 enum srcml_bool_field { ARCHIVE };
 
 template<srcml_bool_field field>
-void option_srcml_field(bool on) {}
+void option_srcml_field(bool on [[maybe_unused]]) {}
 
 template<>
 void option_srcml_field<ARCHIVE>(bool on) {
@@ -238,7 +238,7 @@ void option_srcml_field<ARCHIVE>(bool on) {
 enum srcml_int_field { TABSTOP };
 
 template<srcml_int_field field>
-void option_srcml_field(const int & arg) {}
+void option_srcml_field(const int & arg [[maybe_unused]]) {}
 
 template<>
 void option_srcml_field<TABSTOP>(const int & arg) {
@@ -250,7 +250,7 @@ void option_srcml_field<TABSTOP>(const int & arg) {
 enum srcml_string_field { SRC_ENCODING, XML_ENCODING, LANGUAGE, URL, SRC_VERSION, REGISTER_EXT, XMLNS };
 
 template<srcml_string_field field>
-void option_srcml_field(const std::string & arg) {}
+void option_srcml_field(const std::string & arg [[maybe_unused]]) {}
 
 template<>
 void option_srcml_field<SRC_ENCODING>(const std::string & arg) {
