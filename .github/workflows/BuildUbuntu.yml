@@ -57,7 +57,10 @@
 
           - name: CLI tests
             shell: bash
-            run: cd ${{ github.workspace }}/test/cli && ./framework.sh
+            run: |
+              cd ${{ github.workspace }}/test/cli
+              sudo chmod +x framework.sh
+              ./framework.sh ${{ github.workspace }}/bin
           
           - name: Integration tests
             shell: bash
