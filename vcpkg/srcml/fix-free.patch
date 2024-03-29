@@ -1,0 +1,15 @@
+diff --git a/src/libsrcml/srcml_unit.cpp b/src/libsrcml/srcml_unit.cpp
+index 2a362441b..92cc7933c 100644
+--- a/src/libsrcml/srcml_unit.cpp
++++ b/src/libsrcml/srcml_unit.cpp
+@@ -1278,8 +1278,8 @@ int srcml_write_end_unit(struct srcml_unit* unit) {
+     // content end is changed since the start unit tag was rewritten
+     unit->content_end += (unit->content_begin - content_begin);
+ 
+-    free(start_tag);
+-    free(srcml);
++    xmlFree(start_tag);
++    xmlFree(srcml);
+ 
+     // record the loc
+     if (!unit->src) {

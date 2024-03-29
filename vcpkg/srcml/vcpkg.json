@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
     "name": "srcml",
     "version": "1.0.1",
-    "port-version": 1,
+    "port-version": 5,
     "$comment": "these are only the dependencies for libsrcml, not for the srcML client",
     "dependencies": [
       { "name": "libxslt", "version>=": "1.1.37" },
