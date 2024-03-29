@@ -7,62 +7,34 @@
 #include <uri_stream.hpp>
 
 #include <cstring>
-
-#ifndef _MSC_BUILD
+#include <filesystem>
 
 // file/directory names to ignore when processing a directory
 // const/non-const versions for linux/bsd different declarations
-int srcdiff_input_source_local::dir_filter(const struct dirent* d) {
+// int srcdiff_input_source_local::dir_filter(std::filesystem::path d) {
 
-    return d->d_name[0] != '.';
+//     return d->d_name[0] != '.';
+// }
+
+int srcdiff_input_source_local::is_dir(std::filesystem::directory_entry d) {
+  return d.is_directory();
 }
 
-int srcdiff_input_source_local::dir_filter(struct dirent* d) {
+// bool srcdiff_input_source_local::is_output_file(const char * filename, const struct stat & outstat) {
 
-  return dir_filter((const struct dirent*)d);
-}
+//   struct stat instat = { 0 };
 
-int srcdiff_input_source_local::is_dir(struct dirent * file, const char * filename) {
+//   int stat_status = stat(filename, &instat);
 
-#ifdef _DIRENT_HAVE_D_TYPE
-  if (file && file->d_type == DT_DIR)
-    return 1;
-#endif
+//   if(stat_status)
+//     return stat_status;
 
-  // path with current filename
-  // handle directories later after all the filenames
-  struct stat instat = { 0 };
+//   if(instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev)
+//     return 1;
 
-  int stat_status = stat(filename, &instat);
+//   return 0;
 
-  if(stat_status)
-    return stat_status;
-
-#ifndef _DIRENT_HAVE_D_TYPE
-  if(S_ISDIR(instat.st_mode))
-    return 1;
-#endif
-
-  return 0;
-
-}
-#endif
-
-int srcdiff_input_source_local::is_output_file(const char * filename, const struct stat & outstat) {
-
-  struct stat instat = { 0 };
-
-  int stat_status = stat(filename, &instat);
-
-  if(stat_status)
-    return stat_status;
-
-  if(instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev)
-    return 1;
-
-  return 0;
-
-}
+// }
 
 srcdiff_input_source_local::srcdiff_input_source_local(const srcdiff_options & options) : srcdiff_input_source(options) {
 
@@ -71,8 +43,7 @@ srcdiff_input_source_local::srcdiff_input_source_local(const srcdiff_options & o
                                       options.view_options,
                                       options.summary_type_str);
 
-  outstat = { 0 };
-  stat(options.srcdiff_filename.c_str(), &outstat);
+  output_file = std::filesystem::directory_entry(options.srcdiff_filename);
 
 }
 
@@ -82,58 +53,49 @@ srcdiff_input_source_local::~srcdiff_input_source_local() {
 
 }
 
-void srcdiff_input_source_local::consume() {
+// determines whether the input path(s) exist and whether they are files or
+// directories, and then processes them
+void srcdiff_input_source_local::consume()
+{
 
-  if(options.files_from_name) {
-
+  if (options.files_from_name) {
+    
     files_from();
-
+  
   } else {
 
-   for(std::pair<std::string, std::string> input_pair : options.input_pairs) {
+    for (std::pair<std::string, std::string> input_pair : options.input_pairs) {
 
-      struct stat in_stat_original = { 0 };
-      int stat_status_original = stat(input_pair.first.c_str(), &in_stat_original);
+      std::filesystem::path original(input_pair.first);
+      std::filesystem::path modified(input_pair.second);
 
-      struct stat in_stat_modified = { 0 };
-      int stat_status_modified = stat(input_pair.second.c_str(), &in_stat_modified);
-
-      if(stat_status_original == -1 && stat_status_modified == -1)
+      if (!std::filesystem::exists(original) && !std::filesystem::exists(modified))
         throw std::string("Input sources '" + input_pair.first + "' and '" + input_pair.second + "' could not be opened");
-      else if(stat_status_original == -1)
+      else if (!std::filesystem::exists(original))
         throw std::string("Input source '" + input_pair.first + "' could not be opened");
-      else if(stat_status_modified == -1)
+      else if (!std::filesystem::exists(modified))
         throw std::string("Input source '" + input_pair.second + "' could not be opened");
 
-#ifndef _MSC_BUILD
-      if (!stat_status_original && S_ISDIR(in_stat_original.st_mode)) {
+      if (std::filesystem::is_directory(original)) {
 
         srcml_archive_enable_solitary_unit(options.archive);
 
-        if(!srcml_archive_get_url(options.archive)) {
+        if (!srcml_archive_get_url(options.archive))
+        {
 
           std::string directory_path = input_pair.first == input_pair.second ? input_pair.first : input_pair.first + '|' + input_pair.second;
           srcml_archive_set_url(options.archive, directory_path.c_str());
-
         }
 
         directory_length_original = input_pair.first.back() == '/' ? input_pair.first.size() : input_pair.first.size() + 1;
         directory_length_modified = input_pair.second.back() == '/' ? input_pair.second.size() : input_pair.second.size() + 1;
 
         directory(input_pair.first, input_pair.second);
-
       } else {
-#endif
         file(input_pair.first, input_pair.second);
-
-#ifndef _MSC_BUILD
       }
-#endif
-
-   }
-
+    }
   }
-
 }
 
 const char * srcdiff_input_source_local::get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified) {
@@ -174,231 +136,114 @@ void srcdiff_input_source_local::process_file(const std::optional<std::string> &
 void srcdiff_input_source_local::process_directory(const std::optional<std::string> & directory_original,
                                                    const std::optional<std::string> & directory_modified) {
 
-#ifndef _MSC_BUILD
+  std::filesystem::directory_entry original_entry(directory_original ? *directory_original : "");
+  std::filesystem::directory_entry modified_entry(directory_modified ? *directory_modified : "");
 
-  // collect the filenames in alphabetical order
-  struct dirent ** namelist_original;
-  struct dirent ** namelist_modified;
-
-  int n = scandir(directory_original ? directory_original->c_str() : "", &namelist_original, dir_filter, alphasort);
-  int m = scandir(directory_modified ? directory_modified->c_str() : "", &namelist_modified, dir_filter, alphasort);
-
-  // TODO:  Fix error handling.  What if one is in error?
-  if (n < 0 && m < 0) {
+  if (!original_entry.is_directory() && !modified_entry.is_directory()) {
 
     throw std::string("Directories '" + (directory_original ? *directory_original : "")
       + "' and '" + (directory_modified ? *directory_modified : "") + "' could not be opened");
 
-  } else if(n < 0) {
+  } else if(!original_entry.is_directory()) {
 
     throw std::string("Directory '" + (directory_original ? *directory_original : "") + "' could not be opened");
-
-  } else if(m < 0){
-
+  
+  } else if(!original_entry.is_directory()){
+  
     throw std::string("Directory '" + (directory_modified ? *directory_modified : "") + "' could not be opened");
-
-
+  
   }
 
-  std::string path_original;
-  int basesize_original = 0;
-
-  if(directory_original) {
-
-    // start of path from directory name
-   path_original = *directory_original;
-   if (!path_original.empty() && path_original.back() != PATH_SEPARATOR) path_original += PATH_SEPARATOR;
-   basesize_original = path_original.size();
-
+  std::vector<std::filesystem::directory_entry> original_contents;
+  for (auto e : std::filesystem::directory_iterator(original_entry)){
+    original_contents.push_back(e);
   }
-
-  std::string path_modified;
-  int basesize_modified = 0;
-
-  if(directory_modified) {
-
-    path_modified = *directory_modified;
-    if (!path_modified.empty() && path_modified.back() != PATH_SEPARATOR) path_modified += PATH_SEPARATOR;
-    basesize_modified = path_modified.size();
-
+  std::sort(original_contents.begin(), original_contents.end());
+  
+  std::vector<std::filesystem::directory_entry> modified_contents;
+  for (auto e : std::filesystem::directory_iterator(modified_entry)){
+    modified_contents.push_back(e);
   }
+  std::sort(modified_contents.begin(), modified_contents.end());
 
   // process all non-directory files
-  int i = 0;
-  int j = 0;
-  while (i < n && j < m) {
+  std::vector<std::filesystem::directory_entry>::iterator in_original = original_contents.begin();
+  std::vector<std::filesystem::directory_entry>::iterator in_modified = modified_contents.begin();
+  while (in_original != original_contents.end() || in_modified != modified_contents.end()) {
 
-    // form the full path
-    path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
-    path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
-
-    // skip directories
-    if(is_dir(namelist_original[i], path_original.c_str()) != 0) {
-      ++i;
+    // if we're not at the end of each file list, check to make sure the current
+    // entry in the file list is not a directory and is not our output file;
+    // skip the current entry otherwise
+    if(in_original != original_contents.end() &&
+        (in_original->is_directory() || *in_original == output_file)) {
+      ++in_original;
       continue;
     }
 
-    if(is_dir(namelist_modified[j], path_modified.c_str()) != 0) {
-      ++j;
+    if(in_modified != modified_contents.end() &&
+        (in_modified->is_directory() || *in_modified == output_file)) {
+      ++in_modified;
       continue;
     }
 
-    // skip over output file
-    if (is_output_file(path_original.c_str(), outstat) == 1) {
-      ++i;
-      continue;
+    // if we're not at the end of the original contents list, but: we are at the
+    // end of the modified files list, or in_original is less than the current
+    // entry in the modified files list, then in_original has no match; process
+    // it and then go to the next one in its list
+    if (in_original != original_contents.end() &&
+        (in_modified == modified_contents.end() ||
+        in_original->path().filename() < in_modified->path().filename())) {
+      file(in_original->path().string(), std::optional<std::string>());
+      ++in_original;
+    } else if(in_original == original_contents.end() || 
+        in_modified->path().filename() < in_original->path().filename()) {
+      // similarly, process in_modified if it doesn't match in_original
+      file(std::optional<std::string>(), in_modified->path().string());
+      ++in_modified;
+    } else {
+      // having dealt with the problematic cases, we can compare two matching files
+      file(in_original->path().string(), in_modified->path().string());
+      ++in_original;
+      ++in_modified;
     }
-
-    if (is_output_file(path_modified.c_str(), outstat) == 1) {
-      ++j;
-      continue;
-    }
-
-    // is this a common, inserted, or deleted file?
-    int comparison = strcoll(namelist_original[i]->d_name, namelist_modified[j]->d_name);
-
-
-    std::optional<std::string> file_path_original;
-    std::optional<std::string> file_path_modified;
-    if(comparison <= 0) ++i, file_path_original = path_original;
-    if(comparison >= 0) ++j, file_path_modified = path_modified;
-
-    // translate the file listed in the input file using the directory and filename extracted from the path
-    file(file_path_original, file_path_modified);
-
   }
 
-  // process all non-directory files that are remaining in the original version
-  for ( ; i < n; ++i) {
+  in_original = original_contents.begin();
+  in_modified = modified_contents.begin();
 
-    // form the full path
-    path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
+  while (in_original != original_contents.end() || in_modified != modified_contents.end()) {
 
-    // skip directories
-    if(is_dir(namelist_original[i], path_original.c_str()) != 0) {
+    if (in_original != original_contents.end() && !in_original->is_directory()) {
+      ++in_original;
       continue;
     }
 
-    // skip over output file
-    if (is_output_file(path_original.c_str(), outstat) != 0) {
+    if (in_modified != modified_contents.end() && !in_modified->is_directory()) {
+      ++in_modified;
       continue;
     }
 
-    // translate the file listed in the input file using the directory and filename extracted from the path
-    file(path_original, std::optional<std::string>());
-
+    // same logic as processing files
+    if (in_original != original_contents.end() &&
+        (in_modified == modified_contents.end() ||
+        in_original->path().filename() < in_modified->path().filename())) {
+      directory(in_original->path().string(), std::optional<std::string>());
+      ++in_original;
+    } else if(in_original == original_contents.end() || 
+        in_modified->path().filename() < in_original->path().filename()) {
+      directory(std::optional<std::string>(), in_modified->path().string());
+      ++in_modified;
+    } else {
+      // having dealt with the problematic cases, we can compare two matching
+      // directories
+      directory(
+        in_original->path().string(),
+        in_modified->path().string()
+      );
+      ++in_original;
+      ++in_modified;
+    }
   }
-
-  // process all non-directory files that are remaining in the modified version
-  for ( ; j < m; ++j) {
-
-    // form the full path
-    path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
-
-    // skip directories
-    if(is_dir(namelist_modified[j], path_modified.c_str()) != 0) {
-      continue;
-    }
-
-    // skip over output file
-    if (is_output_file(path_modified.c_str(), outstat) != 0) {
-      continue;
-    }
-
-    // translate the file listed in the input file using the directory and filename extracted from the path
-   file(std::optional<std::string>(), path_modified);
-
-  }
-
-  // process all directories
-  i = 0;
-  j = 0;
-  while (i < n && j < m) {
-
-    // form the full path
-    path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
-    path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
-
-    // skip non-directories
-    if(is_dir(namelist_original[i], path_original.c_str()) != 1) {
-      ++i;
-      continue;
-    }
-    if(is_dir(namelist_modified[j], path_modified.c_str()) != 1) {
-      ++j;
-      continue;
-    }
-
-    // is this a common, inserted, or deleted directory?
-    int comparison = strcoll(namelist_original[i]->d_name, namelist_modified[j]->d_name);
-
-    std::optional<std::string> directory_path_one;
-    std::optional<std::string> directory_path_two;
-    if(comparison <= 0) ++i, directory_path_one = path_original;
-    if(comparison >= 0) ++j, directory_path_two = path_modified;
-
-    // process these directories
-    directory(directory_path_one, directory_path_two);
-
-  }
-
-  // process all directories that remain in the original version
-  for ( ; i < n; ++i) {
-
-    // form the full path
-    path_original.replace(basesize_original, std::string::npos, namelist_original[i]->d_name);
-
-    // skip non-directories
-    if(is_dir(namelist_original[i], path_original.c_str()) != 1) {
-      continue;
-    }
-
-    // skip over output file
-    if (is_output_file(path_original.c_str(), outstat) == 1) {
-      continue;
-    }
-
-    // process this directory
-    directory(path_original, std::optional<std::string>());
-
-  }
-
-  // process all directories that remain in the modified version
-  for ( ; j < m; ++j) {
-
-    // form the full path
-    path_modified.replace(basesize_modified, std::string::npos, namelist_modified[j]->d_name);
-
-    // skip non-directories
-    if(is_dir(namelist_modified[j], path_modified.c_str()) != 1) {
-      continue;
-    }
-
-    // skip over output file
-    if (is_output_file(path_modified.c_str(), outstat) == 1) {
-      continue;
-    }
-
-    // process this directory
-    directory(std::optional<std::string>(), path_modified);
-
-  }
-
-  // all done with this directory
-  if (n > 0) {
-    for (int i = 0; i < n; ++i)
-      free(namelist_original[i]);
-    free(namelist_original);
-  }
-
-  if (m > 0) {
-    for (int j = 0; j < m; ++j)
-      free(namelist_modified[j]);
-    free(namelist_modified);
-  }
-
-#endif
-  
 }
 
 

@@ -1,7 +1,7 @@
 /*
-  svn_io.hpp
+  srcdiff_input_source_local.hpp
 
-  Functions for reading a file form svn
+  Functions for reading input files from the local file system
 
   Michael J. Decker
   mdecker6@kent.edu
@@ -14,23 +14,16 @@
 
 #include <fstream>
 
-#ifndef _MSC_BUILD
-#include <dirent.h>
-#endif
 #include <sys/stat.h>
+#include <filesystem>
 
 class srcdiff_input_source_local : public srcdiff_input_source {
 
 protected:
 
-  struct stat outstat;
+  std::filesystem::directory_entry output_file;
 
-#ifndef _MSC_BUILD
-  static int dir_filter(const struct dirent* d);
-  static int dir_filter(struct dirent* d);
-  static int is_dir(struct dirent * file, const char * filename);
-#endif
-  static int is_output_file(const char * filename, const struct stat & outstat);
+  static int is_dir(std::filesystem::directory_entry d);
 
 public:
 

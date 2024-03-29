@@ -1,7 +1,7 @@
 /*
-  svn_io.hpp
+  srcdiff_input_source.hpp
 
-  Functions for reading a file form svn
+  Base class for a source for input files
 
   Michael J. Decker
   mdecker6@kent.edu
