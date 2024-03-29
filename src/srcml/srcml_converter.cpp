@@ -99,7 +99,10 @@ srcml_converter::srcml_converter(srcml_archive * archive, bool split_strings, in
 
 srcml_converter::~srcml_converter() {
 
-  if(output_buffer) srcml_memory_free(output_buffer);
+  // libsrcml uses xmlBufferCreate to create this buffer, so we need to use
+  // xmlFree to free it. srcml_memory_free just calls the normal free(), which
+  // might not match how libxml2 made the allocation
+  if(output_buffer) xmlFree(output_buffer);
 
 }
 
