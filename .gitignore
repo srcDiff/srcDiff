@@ -1,7 +1,9 @@
 html
 
-src/windows/deps
 build
+
+test/cli/*log*
+test/cli/tmp
 
 *.vcxproj*
 *.sln
