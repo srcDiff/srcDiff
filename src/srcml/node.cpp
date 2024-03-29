@@ -147,7 +147,16 @@ void srcML::node::merge_attributes(const srcML::attribute_map & that) {
     srcML::attribute_map original_attributes;
     srcML::attribute_map modified_attributes;
 
-    std::function<bool (srcML::attribute_map_pair, srcML::attribute_map_pair)> key_compare = [](const srcML::attribute_map_pair & a, const srcML::attribute_map_pair & b) { return a.first < b.first; };
+    auto key_compare = [](
+        const srcML::attribute_map_pair & a,
+        const srcML::attribute_map_pair & b
+    ) {
+        // std::set_intersection and similar require their input elements to be
+        // ordered according to this comparator function, so > must be used to
+        // match how std::greater is used to order elements within the
+        // attribute_maps that are passed in
+        return a.first > b.first;
+    };
 
     std::set_intersection(this->get_attributes().begin(), this->get_attributes().end(),
                           that.begin(), that.end(),
