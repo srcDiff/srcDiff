@@ -16,9 +16,9 @@ done
 language_flags=("-l" "--language")
 
 for flag in "${language_flags[@]}"; do
-    original_no_ext=$(mktemp)
+    original_no_ext=$(localtemp "original_no_ext")
     echo -e "int i;\n" > $original_no_ext
-    modified_no_ext=$(mktemp)
+    modified_no_ext=$(localtemp "modified_no_ext")
     echo -e "int j;\n" > $modified_no_ext
 
     run_test "$flag sets the source language" '{
@@ -31,9 +31,9 @@ for flag in "${language_flags[@]}"; do
 
 done
 
-orig_java=$(mktemp --suffix .java)
+orig_java=$(localtemp "orig.java")
 echo "public class Man {}" > $orig_java
-mod_java=$(mktemp --suffix .java)
+mod_java=$(localtemp "mod.java")
 echo "public class Main {}" > $mod_java
 
 run_test "language is detected from file extension by default" '{
@@ -86,9 +86,9 @@ run_test "--position adds position attributes" '{
     assert_contains "$actual_diff" "end="
 }'
 
-original_with_tab=$(mktemp --suffix .cpp)
+original_with_tab=$(localtemp "original_with_tab.cpp")
 echo -e "\tint i = 0;" > $original_with_tab
-modified_with_tab=$(mktemp --suffix .cpp)
+modified_with_tab=$(localtemp "modified_with_tab.cpp")
 echo -e "\tint j = 0;" > $modified_with_tab
 
 run_test "--tabs defaults to 8" '{
@@ -118,7 +118,7 @@ std::cout << "hello world";
 END
 )
 
-preprocessor_if0=$(mktemp --suffix .cpp)
+preprocessor_if0=$(localtemp "if0.cpp")
 echo "$if0_code" > $preprocessor_if0
 
 if0_not_marked_up=$(cat <<-END
@@ -159,7 +159,7 @@ std::cout << "goodbye";
 END
 )
 
-preprocessor_else=$(mktemp --suffix .cpp)
+preprocessor_else=$(localtemp "else.cpp")
 echo "$else_code" > $preprocessor_else
 
 else_marked_up=$(cat <<-END

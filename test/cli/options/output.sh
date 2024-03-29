@@ -3,7 +3,7 @@
 # checks to make sure that output goes to a temp file when requested
 # $1 takes the form of the output argument to use (either -o or --output)
 check_file_output() {
-    temp_output_file=$(mktemp)
+    temp_output_file=$(localtemp "output_file")
 
     std_output=$(srcdiff $original $modified $1 $temp_output_file)
     assert_equal "$std_output" ""

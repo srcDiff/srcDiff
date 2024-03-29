@@ -1,8 +1,8 @@
 # creating very simple temp files to use for diffs:
 
-original=$(mktemp --suffix .cpp)
+original=$(localtemp "original.cpp")
 echo "std::cout << \"hi\";" > $original
-modified=$(mktemp --suffix .cpp)
+modified=$(localtemp "mod.cpp")
 echo "std::cout << \"hello\";" > $modified
 
 expected_diff=$(cat <<-END

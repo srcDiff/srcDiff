@@ -1,7 +1,7 @@
 #!/bin/bash
 
 from_file_test() {
-    local from_file="$(mktemp)"
+    local from_file=$(localtemp "from_file_single")
     echo "$original|$modified" > $from_file
     local actual_diff="$(srcdiff -q --files-from $from_file)"
     assert_equal "$actual_diff" "$expected_diff"
@@ -9,7 +9,7 @@ from_file_test() {
 }
 
 multiple_from_file_test() {
-    local from_file="$(mktemp)"
+    local from_file=$(localtemp "from_file_multiple")
     echo -e "$original|$modified\n$original|$modified" > $from_file
     local actual_diff="$(srcdiff -q --files-from $from_file)"
     assert_equal "$actual_diff" "$expected_diff_twice"

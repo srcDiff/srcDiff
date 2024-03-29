@@ -2,7 +2,11 @@
 
 # make srcdiff build available:
 
-export PATH="../../bin:$PATH"
+if [ $# -eq 1 ]
+  then
+    export PATH="$1:$PATH"
+fi
+
 
 # if srcdiff is not found:
 if ! [ -x "$(command -v srcdiff)" ]; then
@@ -20,7 +24,10 @@ if ! [ -x "$(command -v srcdiff)" ]; then
 
     else
         
-        echo "Could not find srcdiff! Exiting." > /dev/stderr;
+        echo "Could not find srcdiff!" > /dev/stderr;
+        echo "If srcdiff is not on the path, please pass its location to this" > /dev/stderr;
+        echo "script as the first argument: \"./framework.sh ../../build/bin/\"" > /dev/stderr;
+        echo "Exiting..."
         exit 1;
 
     fi
@@ -108,13 +115,15 @@ expect_failure() {
     _run_test 0 "$@"
 }
 
-# case insensitive argument equality comparison
+# argument equality comparison. normalizes newlines
 assert_equal() {
-    if [ "${1,,}" != "${2,,}" ]; then
-        echo "ERROR: \`$1\` is not equal to \`$2\`"
+    one=$(echo "$1" | sed 's/\r$//')
+    two=$(echo "$2" | sed 's/\r$//')
+    if [ "$one" != "$two" ]; then
+        echo "ERROR: \`$one\` is not equal to \`$two\`"
         exit 1
     else
-        echo "SUCCESS: \`$1\` is equal to \`$2\`"
+        echo "SUCCESS: \`$one\` is equal to \`$two\`"
     fi
 }
 
@@ -137,6 +146,16 @@ assert_not_contains() {
     else
         echo "SUCCESS: \`$1\` does not contain \`$2\`"
     fi
+}
+
+# create folder for temp files and a function for creating them. the normal
+# linux mktemp is problematic when running tests on windows - .exes in the
+# windows file system can't access files in /tmp/
+rm -rf ./tmp
+mkdir ./tmp
+
+localtemp() {
+    echo "./tmp/$1"
 }
 
 # get useful variables storing temp code file paths and expected diffs:
@@ -173,5 +192,4 @@ fi
 
 # remove temp files:
 
-rm $original
-rm $modified
+rm -rf ./tmp
