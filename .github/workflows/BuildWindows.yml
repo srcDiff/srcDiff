@@ -12,6 +12,8 @@ jobs:
     runs-on: windows-latest
     steps:
 
+      - run: git config --global core.autocrlf input
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -29,7 +31,7 @@ jobs:
       - name: Get dependencies and configure the build with CMake
         uses: lukka/run-cmake@v10
         with:
-          configurePreset: 'windows'
+          configurePreset: 'windows-msvc'
       
       - name: Build project
         run: cmake --build .
@@ -37,7 +39,7 @@ jobs:
       - name: Check if built executable exists and is sane
         shell: pwsh
         run: |
-          cd bin
+          cd bin/Debug
           
           # this is just for logging purposes:
           dir
@@ -59,14 +61,18 @@ jobs:
           }
 
           Write-Output "Build succeeded!"
+      
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
 
       - name: Run CLI tests
-        shell: pwsh
+        shell: msys2 {0}
         run: |
-          cd ${{ github.workspace }}/test/cli
-          bash ./framework.sh
+          cd '${{ github.workspace }}/test/cli'
+          ./framework.sh '${{ github.workspace }}/bin/Debug'
       
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
           name: CLITests.log
