@@ -13,7 +13,6 @@
 #include <srcdiff_constants.hpp>
 #include <shortest_edit_script.h>
 
-#include <boost/any.hpp>
 #include <optional>
 
 #include <vector>

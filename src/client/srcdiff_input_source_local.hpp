@@ -32,8 +32,6 @@ public:
 
   virtual void consume();
 
-  virtual const char * get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified);
-
   virtual void process_file(const std::optional<std::string> & path_original,
                             const std::optional<std::string> & path_modified);
   virtual void process_directory(const std::optional<std::string> & directory_original,

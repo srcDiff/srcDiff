@@ -49,7 +49,7 @@ public:
   virtual ~srcdiff_input_source() {}
 
   virtual void consume() = 0;
-  virtual const char * get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified) = 0;
+  virtual const char * get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified);
 
   virtual void file(const std::optional<std::string> & path_original,
                     const std::optional<std::string> & path_modified);

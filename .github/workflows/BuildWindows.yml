@@ -1,0 +1,79 @@
+---
+name: Build for Windows
+
+on:
+  push:
+    branches:
+     - 'develop'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+
+      - run: git config --global core.autocrlf input
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Get latest CMake and Ninja
+        uses: lukka/get-cmake@latest
+
+      - name: Get vcpkg
+        uses: lukka/run-vcpkg@v11 
+        with:
+          # this path is arbitrary:
+          vcpkgDirectory: '${{ github.workspace }}/_tools/vcpkg'
+
+      - name: Get dependencies and configure the build with CMake
+        uses: lukka/run-cmake@v10
+        with:
+          configurePreset: 'windows-msvc'
+      
+      - name: Build project
+        run: cmake --build .
+      
+      - name: Check if built executable exists and is sane
+        shell: pwsh
+        run: |
+          cd bin/Debug
+          
+          # this is just for logging purposes:
+          dir
+
+          # checking that srcdiff actually runs is especially important on
+          # windows, since everything can succesfully build but still fail to
+          # dynamically link up at runtime
+          
+          # get version info output:
+          $version_info = ./srcdiff -V
+
+          Write-Output "Version info:"
+          Write-Output $version_info
+
+          # make sure the string "srcdiff" is somewhere in the version output
+          # this is case insensitive
+          if (($version_info -match "srcdiff").Length -eq 0){
+            exit 1
+          }
+
+          Write-Output "Build succeeded!"
+      
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+
+      - name: Run CLI tests
+        shell: msys2 {0}
+        run: |
+          cd '${{ github.workspace }}/test/cli'
+          ./framework.sh '${{ github.workspace }}/bin/Debug'
+      
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: CLITests.log
+          path: ${{ github.workspace }}/test/cli/test_log.txt

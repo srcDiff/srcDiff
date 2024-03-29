@@ -1,19 +1,21 @@
 /**
  *  @file user_defined_theme.cpp
  *
- *  Specifies monokai color scheme.
+ *  Specifies user defined color scheme.
  *
  *  @author Michael John Decker <mdecker6@kent.edu>
  */
 
 #include <user_defined_theme.hpp>
 
-#include <boost/program_options.hpp>
+#include <CLI/CLI.hpp>
 
 #include <stdexcept>
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <string>
+#include <array>
 
 class color_t {
 
@@ -43,7 +45,7 @@ public:
           || !(std::isdigit(hex_string[0])
                 || (hex_string[0] >= 'a' && hex_string[0] <='f')
                 || (hex_string[0] >= 'A' && hex_string[0] <='F')))
-            throw boost::program_options::error("invalid value for color '" + hex_string + "', must be hex: e.g., xxxxxx");
+            throw CLI::ValidationError("invalid value for color '" + hex_string + "', must be hex: e.g., xxxxxx");
 
         red = std::stoi(hex_string.substr(0, 2), 0, 16);
         green = std::stoi(hex_string.substr(2, 2), 0, 16);
@@ -95,51 +97,42 @@ public:
 
 };
 
-boost::program_options::variables_map parse_user_definition_file(const std::string & theme_filename) {
+std::map<std::string, color_t> parse_user_definition_file(const std::string & theme_filename) {
 
-    std::ifstream theme_file(theme_filename.c_str());
-    if(!theme_file) {
-        throw std::string("unable to open '" + theme_filename + '\'');
+    // Using CLI11 to parse the config file instead of installing another
+    // parser. it supports TOML and INI formats (which are identical for our
+    // purposes apart from comments, since we just have strings as option
+    // values)
+
+    CLI::App custom_theme("Theme options");
+    // set up one command-line-style option, which is the name of the file that
+    // will contain our actual options
+    custom_theme.set_config("config", "", "", true);
+
+    std::map<std::string, color_t> colors;
+    
+    std::array option_names = {
+        "text-color", "line-number-color", "common-color", "delete-color", "insert-color",
+        "keyword-color", "storage-color", "type-color", "comment-color", "number-color",
+        "string-color", "function-name-color", "class-name-color", "call-name-color"
+    };
+
+    for (const auto & option_name : option_names) {
+        custom_theme.add_option<color_t>(option_name, colors[option_name]);
     }
 
-    // Declare the supported options.
-    boost::program_options::options_description desc("Theme options");
-    desc.add_options()
-        ("text-color"       ,   boost::program_options::value<color_t>(), "" )
-        ("line-number-color",   boost::program_options::value<color_t>(), "" )
+    try {
+        // pass the theme's filename as an argument to CLI11 as if it were the
+        // only thing received on the command line. this is probably not an
+        // intended way to tell CLI11 to read a config file, but it works
+        std::string args = "\""+theme_filename+"\"";
+        custom_theme.parse(args);
+    } catch (const CLI::ParseError &e) {
+        std::cerr << "Error using " << theme_filename << " as a theme. Details:" << std::endl;
+        exit(custom_theme.exit(e));
+    }
 
-        ("common-color",        boost::program_options::value<color_t>(), "" )
-        ("delete-color",        boost::program_options::value<color_t>(), "" )
-        ("insert-color",        boost::program_options::value<color_t>(), "" )
-
-        ("keyword-color",       boost::program_options::value<color_t>(), "" )
-        ("storage-color",       boost::program_options::value<color_t>(), "" )
-        ("type-color"   ,       boost::program_options::value<color_t>(), "" )
-
-        ("comment-color",       boost::program_options::value<color_t>(), "" )
-        ("number-color" ,       boost::program_options::value<color_t>(), "" )
-        ("string-color" ,       boost::program_options::value<color_t>(), "" )
-
-        ("function-name-color", boost::program_options::value<color_t>(), "" )
-        ("class-name-color"   , boost::program_options::value<color_t>(), "" )
-        ("call-name-color"    , boost::program_options::value<color_t>(), "" )
-    ;
-
-    boost::program_options::variables_map vm;
-
-try {
-
-    boost::program_options::store(boost::program_options::parse_config_file<char>(theme_file, desc), vm);
-    boost::program_options::notify(vm);
-
-  } catch(const boost::program_options::error & e) {
-
-    throw std::string("Exception: ") + e.what();
-
-  }
-
-  return vm;
-
+    return colors;
 }
 
 user_defined_theme::user_defined_theme(const std::string & highlight_level,
@@ -147,51 +140,51 @@ user_defined_theme::user_defined_theme(const std::string & highlight_level,
                                        const std::string & theme_filename)
     : theme_t(highlight_level, is_html) {
 
-    boost::program_options::variables_map vm = parse_user_definition_file(theme_filename);
+    std::map<std::string, color_t> vm = parse_user_definition_file(theme_filename);
 
     if(is_html) {
 
-        background_color  = vm["common-color"].as<color_t>().to_html();
-        text_color        = vm["text-color"].as<color_t>().to_html();
-        line_number_color = vm["line-number-color"].as<color_t>().to_html();
+        background_color  = vm["common-color"].to_html();
+        text_color        = vm["text-color"].to_html();
+        line_number_color = vm["line-number-color"].to_html();
 
-        common_color = "<span style=\"background-color: " + vm["common-color"].as<color_t>().to_html() + ";\">";
-        delete_color = "<span style=\"color: rgb(160, 160, 160); text-decoration: line-through;\"><span style=\"color: black; background-color: " + vm["delete-color"].as<color_t>().to_html() + "; font-weight: bold;\">";
-        insert_color = "<span style=\"background-color: " + vm["insert-color"].as<color_t>().to_html() + "; font-weight: bold;\">";
+        common_color = "<span style=\"background-color: " + vm["common-color"].to_html() + ";\">";
+        delete_color = "<span style=\"color: rgb(160, 160, 160); text-decoration: line-through;\"><span style=\"color: black; background-color: " + vm["delete-color"].to_html() + "; font-weight: bold;\">";
+        insert_color = "<span style=\"background-color: " + vm["insert-color"].to_html() + "; font-weight: bold;\">";
 
-        keyword_color = "<span style=\"color: " + vm["keyword-color"].as<color_t>().to_html() + ";\">";
-        storage_color = "<span style=\"color: " + vm["storage-color"].as<color_t>().to_html() + ";\">";
-        type_color    = "<span style=\"color: " + vm["type-color"].as<color_t>().to_html() + ";\">";
+        keyword_color = "<span style=\"color: " + vm["keyword-color"].to_html() + ";\">";
+        storage_color = "<span style=\"color: " + vm["storage-color"].to_html() + ";\">";
+        type_color    = "<span style=\"color: " + vm["type-color"].to_html() + ";\">";
 
-        comment_color = "<span style=\"color: " + vm["comment-color"].as<color_t>().to_html() + ";\">";
-        number_color  = "<span style=\"color: " + vm["number-color"].as<color_t>().to_html() + ";\">";
-        string_color  = "<span style=\"color: " + vm["string-color"].as<color_t>().to_html() + ";\">";
+        comment_color = "<span style=\"color: " + vm["comment-color"].to_html() + ";\">";
+        number_color  = "<span style=\"color: " + vm["number-color"].to_html() + ";\">";
+        string_color  = "<span style=\"color: " + vm["string-color"].to_html() + ";\">";
 
-        function_name_color = "<span style=\"color: " + vm["function-name-color"].as<color_t>().to_html() + ";\">";
-        class_name_color    = "<span style=\"color: " + vm["class-name-color"].as<color_t>().to_html() + ";\">";
-        call_name_color     = "<span style=\"color: " + vm["call-name-color"].as<color_t>().to_html() + ";\">";
+        function_name_color = "<span style=\"color: " + vm["function-name-color"].to_html() + ";\">";
+        class_name_color    = "<span style=\"color: " + vm["class-name-color"].to_html() + ";\">";
+        call_name_color     = "<span style=\"color: " + vm["call-name-color"].to_html() + ";\">";
 
     } else {
 
-        background_color  = "\x1b[38;5;" + vm["common-color"].as<color_t>().to_ansi() + 'm';
-        text_color        = "\x1b[38;5;" + vm["text-color"].as<color_t>().to_ansi() + 'm';
-        line_number_color = "\x1b[38;5;" + vm["line-number-color"].as<color_t>().to_ansi() + 'm';
+        background_color  = "\x1b[38;5;" + vm["common-color"].to_ansi() + 'm';
+        text_color        = "\x1b[38;5;" + vm["text-color"].to_ansi() + 'm';
+        line_number_color = "\x1b[38;5;" + vm["line-number-color"].to_ansi() + 'm';
 
-        common_color = "\x1b[0m\x1b[48;5;" + vm["common-color"].as<color_t>().to_ansi() + 'm' + text_color;
-        delete_color = "\x1b[9;48;5;" + vm["delete-color"].as<color_t>().to_ansi() + ";1m";
-        insert_color = "\x1b[48;5;" + vm["insert-color"].as<color_t>().to_ansi() + ";1m";
+        common_color = "\x1b[0m\x1b[48;5;" + vm["common-color"].to_ansi() + 'm' + text_color;
+        delete_color = "\x1b[9;48;5;" + vm["delete-color"].to_ansi() + ";1m";
+        insert_color = "\x1b[48;5;" + vm["insert-color"].to_ansi() + ";1m";
 
-        keyword_color = "\x1b[38;5;" + vm["keyword-color"].as<color_t>().to_ansi() + 'm';
-        storage_color = "\x1b[38;5;" + vm["storage-color"].as<color_t>().to_ansi() + 'm';
-        type_color    = "\x1b[38;5;" + vm["type-color"].as<color_t>().to_ansi() + 'm';
+        keyword_color = "\x1b[38;5;" + vm["keyword-color"].to_ansi() + 'm';
+        storage_color = "\x1b[38;5;" + vm["storage-color"].to_ansi() + 'm';
+        type_color    = "\x1b[38;5;" + vm["type-color"].to_ansi() + 'm';
 
-        comment_color = "\x1b[38;5;" + vm["comment-color"].as<color_t>().to_ansi() + 'm';
-        number_color  = "\x1b[38;5;" + vm["number-color"].as<color_t>().to_ansi() + 'm';
-        string_color  = "\x1b[38;5;" + vm["string-color"].as<color_t>().to_ansi() + 'm';
+        comment_color = "\x1b[38;5;" + vm["comment-color"].to_ansi() + 'm';
+        number_color  = "\x1b[38;5;" + vm["number-color"].to_ansi() + 'm';
+        string_color  = "\x1b[38;5;" + vm["string-color"].to_ansi() + 'm';
 
-        function_name_color = "\x1b[38;5;" + vm["function-name-color"].as<color_t>().to_ansi() + 'm';
-        class_name_color    = "\x1b[38;5;" + vm["class-name-color"].as<color_t>().to_ansi() + 'm';
-        call_name_color     = "\x1b[38;5;" + vm["call-name-color"].as<color_t>().to_ansi() + 'm';
+        function_name_color = "\x1b[38;5;" + vm["function-name-color"].to_ansi() + 'm';
+        class_name_color    = "\x1b[38;5;" + vm["class-name-color"].to_ansi() + 'm';
+        call_name_color     = "\x1b[38;5;" + vm["call-name-color"].to_ansi() + 'm';
 
     }
 

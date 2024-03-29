@@ -15,7 +15,10 @@ from datetime import datetime, time
 error_filename = "srcDiffTestReport"
 error_filename_extension = ".txt"
 
-SHELL_ROWS, SHELL_COLUMNS = subprocess.check_output(['stty', 'size']).split()
+try:
+	SHELL_ROWS, SHELL_COLUMNS = subprocess.check_output(['stty', 'size']).split()
+except subprocess.CalledProcessError:
+	SHELL_ROWS, SHELL_COLUMNS = 15, 100
 
 FIELD_WIDTH_LANGUAGE   = 12
 FIELD_WIDTH_URL        = 20
@@ -214,6 +217,10 @@ class Tee(object):
 	def write(self, data):
 		self.file.write(data)
 		self.stdout.write(data)
+	
+	def flush(self):
+		self.file.flush()
+		self.stdout.flush()
 
 Tee(error_filename)
 
@@ -484,9 +491,9 @@ else:
 	xerrorlist = []
 	for e in errorlist:
 		if str(e[0]).count(".") == 0:
-			oerrorlist.append(e);
+			oerrorlist.append(e)
 		else:
-			xerrorlist.append(e);
+			xerrorlist.append(e)
 
 	print("Errors:  " + str(error_count) + " out of " + str(total_count),)
 	if str(total_count) == "1":

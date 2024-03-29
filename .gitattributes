@@ -1,0 +1,3 @@
+# always expect lf line endings for xml and sh files, for test runners
+*.xml text eol=lf
+*.sh text eol=lf
