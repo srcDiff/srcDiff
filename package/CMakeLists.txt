@@ -34,7 +34,7 @@ set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/package/welcome.html)
 set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
 
 # contact
-set(CPACK_PACKAGE_CONTACT "Software Development Laboratories <srcML.org>")
+set(CPACK_PACKAGE_CONTACT "Software Development Laboratories <srcDIFF.org>")
 
 # package version
 # set as part of project()
@@ -71,7 +71,7 @@ cpack_add_component(SRCML
                     INSTALL_TYPES CLIENT DEVELOPER)
 
 cpack_add_component(DEVLIBS
-                    DISPLAY_NAME "libsrcml"
+                    DISPLAY_NAME "libsrcdiff"
                     DESCRIPTION "Include file, development libraries, i.e.., static library, and CMake configuration"
                     INSTALL_TYPES DEVELOPER)
 
