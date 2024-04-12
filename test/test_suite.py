@@ -5,6 +5,7 @@
 # Original by Michael L. Collard
 # Updated/Modified for srcdiff by Michael John Decker
 
+import json
 import sys
 import os.path
 import re
@@ -17,7 +18,7 @@ error_filename_extension = ".txt"
 
 try:
 	SHELL_ROWS, SHELL_COLUMNS = subprocess.check_output(['stty', 'size']).split()
-except subprocess.CalledProcessError:
+except (subprocess.CalledProcessError, FileNotFoundError):
 	SHELL_ROWS, SHELL_COLUMNS = 15, 100
 
 FIELD_WIDTH_LANGUAGE   = 12
@@ -26,12 +27,15 @@ FIELD_WIDTH_TEST_CASES = int(SHELL_COLUMNS) - (FIELD_WIDTH_LANGUAGE + 1) - (FIEL
 print(FIELD_WIDTH_TEST_CASES)
 sperrorlist = []
 
-srcml_client = "srcml"
-switch_utility = "../bin/switch_differences"
-srcdiff_utility = "../bin/srcdiff"
+switch_utility = "../build/bin/Debug/switch_differences"
+archive_utility = "../build/bin/Debug/archive_reader"
+srcdiff_utility = "../build/bin/Debug/srcdiff"
 
-# extracts a particular unit from a srcML file
 def safe_communicate(command, inp):
+	"""
+	runs `command` and then sends `inp` to its stdin, catching errors and
+	returning its stdout
+	"""
 
 	try :
 		return subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(inp.encode())[0].decode('utf-8')
@@ -44,8 +48,11 @@ def safe_communicate(command, inp):
 			sperrorlist.append((command, inp, errornum, strerror))
 			raise
 
-# extracts a particular unit from a srcML file
 def safe_communicate_file(command, filename):
+	"""
+	runs `command` with `filename` appended to it, sends nothing to stdin, returns
+	its stdout
+	"""
 
 	newcommand = command[:]
 	newcommand.append(filename)
@@ -60,8 +67,12 @@ def safe_communicate_file(command, filename):
 			sperrorlist.append((command, filename, errornum, strerror))
 			raise
 
-# extracts a particular unit from a srcML file
+
 def safe_communicate_two_files(command, filename_one, filename_two, url):
+	"""
+	runs `command` with two filenames appended to it, sends nothing to stdin,
+	returns its stdout. `url` is just logged if there is an error
+	"""
 
 	newcommand = command[:]
 	newcommand.append(filename_one)
@@ -78,58 +89,59 @@ def safe_communicate_two_files(command, filename_one, filename_two, url):
 			sperrorlist.append((command, url, errornum, strerror))
 			raise
 
-# extracts a particular unit from a srcML file
-def extract_unit(src, count):
+def extract_unit(file, count):
+	"""
+	extracts a particular unit, specified by `count`, from a srcML archive.
+	units are numbered starting from one
+	"""
 
-	command = [srcml_client, "--unit=" + str(count), "--output-srcml"]
+	command = [archive_utility, "--unit=" + str(count)]
 
-	return safe_communicate(command, src)
+	return safe_communicate_file(command, file)
 
 def name2filestr(src_filename):
-	file = open(src_filename).read()
-	
-	return file
+	"returns the contents of the file at `src_filename` as a string"
+	with open(src_filename) as file:
+		return file.read()
 
-# converts a srcML file back to text
-def extract_source(srcDiff, operation):
+def extract_source(file, unit, revision):
+	"gets the source for a specific revision of a unit that srcDiff outputted"
 
-	# run the srcML extractor
-	# temp fix because of extract-src bug
-	srcml = safe_communicate([srcml_client, "--revision=" + str(operation), '--output-srcml'], srcDiff)
-	command = [srcml_client]
-	return safe_communicate(command, srcml)
+	return safe_communicate_file([
+		archive_utility, "--revision=" + str(revision), "--unit=" + str(unit), "--output-src"
+	], file)
 
-	#command = [srcml_client, "--revision=" + str(operation)]
-	#return safe_communicate(command, srcDiff)
-
-# switch diff order
 def switch_differences(srcML):
+	"switch diff order"
 
-	# run the srcml processor
-	command = [switch_utility]
+	return safe_communicate([switch_utility], srcML)
 
-	return safe_communicate(command, srcML)
-
-# converts from unix to dos line endings
 def unix2dos(srctext):
+	"converts from unix to dos line endings - unix2dos must be installed (?)"
 
 	# run the srcml processor
 	command = ['unix2dos']
 
 	return safe_communicate(command, srctext)
 
-# find differences of two files
 def linediff(xml_filename1, xml_filename2):
+	"""
+	compute a simple line-based diff of two files - this is used to show where
+	srcDiff's output differed from the expected output when tested
+	"""
 
 	if xml_filename1 != xml_filename2:
 		return list(difflib.unified_diff(xml_filename1.splitlines(1), xml_filename2.splitlines(1)))
 	else:
 		return ""
 
-# find differences of two files
 def srcdiff(source_file_version_one, source_file_version_two, language, filename):
-
-	command = [globals()["srcdiff_utility"], "-f", filename]
+	"""
+	saves the two source code strings in the specified `language` to files and
+	then runs srcdiff on them, setting the filename attribute in the result to
+	`filename`, and returning srcDiff's output
+	"""
+	command = [srcdiff_utility, "-f", filename]
 
 	extension = "cpp"
 	if language == "Java":
@@ -145,74 +157,26 @@ def srcdiff(source_file_version_one, source_file_version_two, language, filename
 
 	return safe_communicate_two_files(command, "temp_file_one." + extension, "temp_file_two." + extension, url)
 
-def get_srcml_attribute(xml_file, command):
-
-	last_line = safe_communicate([srcml_client, command], xml_file)
-
-	return last_line.strip()
-
-def get_srcml_attribute_file(xml_file, command):
-
-	last_line = safe_communicate_file([srcml_client, "--quiet", command], xml_file)
-
-	return last_line.strip()
-
-# filename attribute
-def get_filename(xml_file):
-
-	return get_srcml_attribute(xml_file, "--show-filename")
-
-# xmlns attribute
-def get_full_xmlns(xml_file):
-
-	l = []
-	for a in get_srcml_attribute(xml_file, "--info").split():
-		if a[0:5] == "xmlns":
-			l.append("--" + a.replace('"', ""))
-	
-	return l
-
-# version of srcml2src
-def srcml2src_version():
-
-	last_line = safe_communicate([srcml_client, "-V"], "")
-
-	return last_line.splitlines()[0].strip()
-
-# number of nested units
-def get_nested(xml_file):
-
-	snumber = safe_communicate([srcml_client, "-n"], xml_file)
-
-	if snumber != "":
-		return int(snumber)
-	else:
-		return 0
 
 def get_character_count(count):
+	return len(str(count)) + 1
 
-	# adjust for count width
-	if count > 99:
-		character_count = 3
-	elif count > 9:
-		character_count = 2
-	else:
-		character_count = 1
-
-	# space after count
-	character_count += 1
-
-	return character_count
-
-class Tee(object):
+class Tee:
+	"""
+	Overrides `sys.stdout` so that standard output is written to `self.file` in
+	addition to working normally.
+	"""
 	def __init__(self, name):
 		self.file = open(name, "w")
 		self.stdout = sys.stdout
 		sys.stdout = self
-
-	def __del__(self):
+	
+	def close(self):
 		sys.stdout = self.stdout
 		self.file.close()
+
+	def __del__(self):
+		self.close()
 
 	def write(self, data):
 		self.file.write(data)
@@ -222,13 +186,10 @@ class Tee(object):
 		self.file.flush()
 		self.stdout.flush()
 
-Tee(error_filename)
+tee = Tee(error_filename)
 
 print("Testing:")
 print ()
-
-print(srcml2src_version())
-print()
 
 # Handle optional dos line endings
 doseol = False
@@ -236,6 +197,11 @@ if len(sys.argv) > 1 and sys.argv[1] == "--dos":
 		sys.argv.pop(0)
 		doseol = True
 
+
+# if the user specifies a test name (the url attributes on archives are
+# considered to be the test names) and/or test number and/or test language,
+# parse those from the command line so that only the corresponding tests will
+# be run
 specname = ""
 if len(sys.argv) > 1:
 	specname = sys.argv[1]
@@ -280,13 +246,6 @@ error_count = 0
 # total test cases
 total_count = 0
 
-ure = re.compile("url=\"([^\"]*)\"", re.M)
-fre = re.compile("filename=\"([^\"]*)\"", re.M)
-lre = re.compile("language=\"([^\"]*)\"", re.M)
-vre = re.compile("src-version=\"([^\"]*)\"", re.M)
-ere = re.compile("encoding=\"([^\"]*)\"", re.M)
-nre = re.compile("units=\"([^\"]*)\"", re.M)
-
 try:
 			
 	# process all files		
@@ -294,7 +253,7 @@ try:
 
 		# process all files
 		for name in files:
-			try: 
+			try:
 	
 				# only process xml files
 				if os.path.splitext(name)[1] != ".xml":
@@ -304,38 +263,24 @@ try:
 				xml_filename = os.path.join(root, name)
 			
 				# get all the info
-				info = get_srcml_attribute_file(xml_filename, "--full-info")
-				if info == None:
+				archive_info = json.loads(safe_communicate_file([archive_utility, "--info"], xml_filename))
+				if archive_info == None:
 					print("Problem with", xml_filename)
 					continue
 
-				# url of the outer unit element
-				ureinfo = ure.search(info)
-				url = ureinfo.group(1)
+				url = archive_info["url"]
 
 				# only process if url name matches or is not given
 				if specname != "" and m.match(url) == None:
 					continue
-
-				# encoding of the outer unit
-				encoding = ere.search(info).group(1)
-			
-				# version of the outer unit
-				version = ""
-				vre_result = vre.search(info)
-				if vre_result:
-					version = vre_result.group(1)
 		
 				# number of nested units
-				number = int(nre.search(info).group(1))
+				number = int(archive_info["units"])
 		
 				if specnum == 0:
 					count = 0
 				else:
 					count = specnum - 1
-
-				# read entire file into a string
-				filexml = name2filestr(xml_filename)
 
 				get_language = True				
 
@@ -351,16 +296,16 @@ try:
 
 						# save the particular nested unit
 						if number == 0:
-							unitxml = filexml
+							unitxml = name2filestr(xml_filename)
 						else:
-							unitxml = extract_unit(filexml, count)
+							unitxml = extract_unit(xml_filename, count)
 
 						if get_language:
 
 							get_language = False
 
 							# language of the entire document with a default of C++
-							language = lre.search(unitxml).group(1)
+							language = archive_info.get("language", "")
 							if len(language) == 0:
 								language = "C++"
 
@@ -376,15 +321,24 @@ try:
 						total_count = total_count + 1
 
 						# convert the unit in xml to text
-						unit_text_version_one = extract_source(unitxml, "0")
-						unit_text_version_two = extract_source(unitxml, "1")
+						unit_text_version_one = extract_source(xml_filename, count, 0)
+						unit_text_version_two = extract_source(xml_filename, count, 1)
 
 						# convert the unit in xml to text (if needed)
 						if doseol:
 								unittext = unix2dos(unittext)
+						
+						unit_info = json.loads(
+							safe_communicate_file(
+								[archive_utility, "--info", f"--unit={count}"],
+								xml_filename
+							)
+						)
 
 						# convert the text to srcML
-						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, language, get_filename(unitxml))
+						unitsrcmlraw = srcdiff(
+							unit_text_version_one, unit_text_version_two, language, unit_info["filename"]
+						)
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw
@@ -421,16 +375,27 @@ try:
 
 						# convert the unit in xml to text
 						unitxml = switch_differences(unitxml)
+						temp_xml_path = "temp.xml"
+						with open(temp_xml_path, "w+", encoding="utf-8") as temp_xml:
+							temp_xml.write(unitxml)
 
-						unit_text_version_one = extract_source(unitxml, "0")
-						unit_text_version_two = extract_source(unitxml, "1")
+						temp_source = unit_text_version_one
+						unit_text_version_one = unit_text_version_two
+						unit_text_version_two = temp_source
+
+						os.remove(temp_xml_path)
 
 						# convert the unit in xml to text (if needed)
 						if doseol:
-								unittext = unix2dos(unittext)
+							unittext = unix2dos(unittext)
 
 						# convert the text to srcML
-						unitsrcmlraw = srcdiff(unit_text_version_one, unit_text_version_two, language, get_filename(unitxml))
+						unitsrcmlraw = srcdiff(
+							unit_text_version_one,
+							unit_text_version_two,
+							language,
+							unit_info["filename"]
+						)
 
 						# additional, later stage processing
 						unitsrcml = unitsrcmlraw
@@ -441,7 +406,7 @@ try:
 						result = linediff(unitxml, unitsrcml)
 						character_count += get_character_count(test_number)
 						if character_count > FIELD_WIDTH_TEST_CASES:
-							print("\n", "".rjust(FIELD_WIDTH_LANGUAGE), "...".ljust(FIELD_WIDTH_URL),)
+							print("\n", "".rjust(FIELD_WIDTH_LANGUAGE), "...".ljust(FIELD_WIDTH_URL))
 							character_count = get_character_count(test_number)
 
 						if result != "":
@@ -534,8 +499,9 @@ else:
 		print(e[0], e[1], e[2], e[3])
 
 current_time = datetime.now()
-os.rename(error_filename, error_filename + "_" + current_time.isoformat().replace(":", "-") + error_filename_extension)
 f.close()
+tee.close()
+os.rename(error_filename, error_filename + "_" + current_time.isoformat().replace(":", "-") + error_filename_extension)
 
 if os.path.exists("temp_file_one.cpp"):
 		os.remove("temp_file_one.cpp")
@@ -545,10 +511,3 @@ if os.path.exists("temp_file_two.cpp"):
 		os.remove("temp_file_two.cpp")
 if os.path.exists("temp_file_two.java"):
 		os.remove("temp_file_two.java")
-
-
-# output tool version
-print()
-print(srcml2src_version(), srcml_client)
-
-exit
