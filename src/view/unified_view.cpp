@@ -14,7 +14,7 @@ unified_view::unified_view(const std::string & output_filename,
                            bool ignore_whitespace,
                            bool ignore_comments,
                            bool is_html,
-                           boost::any context_type)
+                           std::any context_type)
               : view_t(output_filename,
                           syntax_highlight, 
                           theme,
@@ -32,11 +32,11 @@ unified_view::unified_view(const std::string & output_filename,
 
   if(context_type.type() == typeid(size_t)) {
 
-    number_context_lines = boost::any_cast<size_t>(context_type);
+    number_context_lines = std::any_cast<size_t>(context_type);
 
   } else {
 
-    const std::string & context_type_str = boost::any_cast<std::string>(context_type);
+    const std::string & context_type_str = std::any_cast<std::string>(context_type);
     const std::string::size_type dash_pos = context_type_str.find('-');
     context_mode mode = context_string_to_id(context_type_str.substr(0, dash_pos));
 

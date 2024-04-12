@@ -6,12 +6,43 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <optional>
 
 #include <cstdio>
-#include <boost/process.hpp>
+#include <unistd.h>
 
 #include <uri_stream.hpp>
-  
+
+#ifdef _WIN32
+const char PATH_DELIMITER = ';';
+#else
+const char PATH_DELIMITER = ':';
+#endif
+
+std::optional<std::filesystem::path> search_path(const std::string & val) {
+
+    std::string path = std::getenv("PATH");
+    std::istringstream path_stream(path);
+    std::vector<std::string> paths;
+    for (std::string temp; std::getline(path_stream, temp, PATH_DELIMITER);) {
+        paths.push_back(temp);
+    }
+    for (auto & p : paths) {
+        std::string val_path = p + std::filesystem::path::preferred_separator + val;
+        if (std::filesystem::is_regular_file(val_path)) {
+            return std::optional<std::filesystem::path>(val_path);
+        }
+    }
+    return std::optional<std::filesystem::path>();
+
+}
+
+std::filesystem::path unique_path() {
+
+  return std::filesystem::temp_directory_path() / std::tmpnam(nullptr);
+
+}
+
 srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
   : srcdiff_input_source_local(options), clean_path(false) {
 
@@ -31,9 +62,9 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
 
     clean_path = true;
 
-    original_clone_path = boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native();
-    modified_clone_path = boost::filesystem::temp_directory_path().native() + boost::filesystem::unique_path().native();
-
+    original_clone_path = unique_path().native();
+    modified_clone_path = unique_path().native();
+  
     std::string clone_original_command("git clone " + quiet_flag + *options.git_url + " "
                                       + original_clone_path.native());
     FILE * clone_original_process = popen(clone_original_command.c_str(), "r");
@@ -48,8 +79,8 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
 
   }
 
-  std::string checkout_original_command(boost::process::search_path("git").native() + " -C " + original_clone_path.native() + " checkout " + quiet_flag + options.git_revision_one);
-  std::string checkout_modified_command(boost::process::search_path("git").native() + " -C " + modified_clone_path.native() + " checkout " + quiet_flag + options.git_revision_two);
+  std::string checkout_original_command(search_path("git")->native() + " -C " + original_clone_path.native() + " checkout " + quiet_flag + options.git_revision_one);
+  std::string checkout_modified_command(search_path("git")->native() + " -C " + modified_clone_path.native() + " checkout " + quiet_flag + options.git_revision_two);
   if(options.files_from_name) {
 
     std::string original_files, modified_files;
@@ -101,12 +132,13 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
 
   }
 
-  boost::process::child checkout_original_process(checkout_original_command);
-  boost::process::child checkout_modified_process(checkout_modified_command);
+  FILE* checkout_original_process = popen(checkout_original_command.c_str(), "r");
+  int checkout_original_error = pclose(checkout_original_process);
+  if (checkout_original_error) throw std::string("Unable to checkout " + options.git_revision_one);
 
-  checkout_original_process.wait();
-  checkout_modified_process.wait();
-
+  FILE* checkout_modified_process = popen(checkout_modified_command.c_str(), "r");
+  int checkout_modified_error = pclose(checkout_modified_process);
+  if (checkout_modified_error) throw std::string("Unable to checkout " + options.git_revision_two);
 }
 
 srcdiff_input_source_git::~srcdiff_input_source_git() {
