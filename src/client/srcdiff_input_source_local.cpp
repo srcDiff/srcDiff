@@ -9,32 +9,6 @@
 #include <cstring>
 #include <filesystem>
 
-// file/directory names to ignore when processing a directory
-// const/non-const versions for linux/bsd different declarations
-// int srcdiff_input_source_local::dir_filter(std::filesystem::path d) {
-
-//     return d->d_name[0] != '.';
-// }
-
-int srcdiff_input_source_local::is_dir(std::filesystem::directory_entry d) {
-  return d.is_directory();
-}
-
-// bool srcdiff_input_source_local::is_output_file(const char * filename, const struct stat & outstat) {
-
-//   struct stat instat = { 0 };
-
-//   int stat_status = stat(filename, &instat);
-
-//   if(stat_status)
-//     return stat_status;
-
-//   if(instat.st_ino == outstat.st_ino && instat.st_dev == outstat.st_dev)
-//     return 1;
-
-//   return 0;
-
-// }
 
 srcdiff_input_source_local::srcdiff_input_source_local(const srcdiff_options & options) : srcdiff_input_source(options) {
 

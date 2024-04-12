@@ -23,8 +23,6 @@ protected:
 
   std::filesystem::directory_entry output_file;
 
-  static int is_dir(std::filesystem::directory_entry d);
-
 public:
 
   srcdiff_input_source_local(const srcdiff_options & options);
