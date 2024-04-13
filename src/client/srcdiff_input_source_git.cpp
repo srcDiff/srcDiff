@@ -177,15 +177,6 @@ void srcdiff_input_source_git::consume() {
 
 }
 
-const char * srcdiff_input_source_git::get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified) {
-
-  std::optional<std::string> path = path_original;
-  if(!path || path->empty()) path = path_modified;
-
-  return srcml_archive_check_extension(options.archive, path->c_str());
-
-}
-
 void srcdiff_input_source_git::process_file(const std::optional<std::string> & path_original,
                                             const std::optional<std::string> & path_modified) {
 

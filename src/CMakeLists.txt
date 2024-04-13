@@ -19,6 +19,19 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+# Fetch CLI11 from Github
+# See: https://cliutils.github.io/CLI11/book/chapters/installation.html#using-fetchcontent
+
+include(FetchContent)
+FetchContent_Declare(
+    cli11_proj
+    QUIET
+    GIT_REPOSITORY https://github.com/CLIUtils/CLI11.git
+    GIT_TAG v2.4.1
+)
+
+FetchContent_MakeAvailable(cli11_proj)
+
 add_subdirectory(client)
 add_subdirectory(shortest_edit_script)
 add_subdirectory(srcml)

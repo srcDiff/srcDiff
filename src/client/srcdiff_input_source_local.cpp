@@ -136,16 +136,6 @@ void srcdiff_input_source_local::consume() {
 
 }
 
-const char * srcdiff_input_source_local::get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified) {
-
-  std::optional<std::string> path = path_original;
-  if(!path || path->empty()) path = path_modified;
-  if(!path) path = std::string();
-
-  return srcml_archive_check_extension(options.archive, path->c_str());
-
-}
-
 void srcdiff_input_source_local::process_file(const std::optional<std::string> & path_original,
                                               const std::optional<std::string> & path_modified) {
 

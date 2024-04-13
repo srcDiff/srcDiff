@@ -4,7 +4,6 @@
 #include <view.hpp>
 
 #include <any>
-
 #include <vector>
 #include <string>
 #include <list>

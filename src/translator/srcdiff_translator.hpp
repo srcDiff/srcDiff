@@ -39,7 +39,6 @@
 
 #include <any>
 #include <optional>
-
 #include <string>
 
 #include <srcml.h>

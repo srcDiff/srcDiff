@@ -28,4 +28,4 @@ find_package(srcML REQUIRED)
 
 # srcdiff
 add_library(view OBJECT ${VIEW_HEADERS} ${VIEW_SOURCE})
-target_link_libraries(view PRIVATE Boost::headers LibXml2::LibXml2 srcML::LibsrcML)
+target_link_libraries(view PRIVATE Boost::headers LibXml2::LibXml2 srcML::LibsrcML CLI11::CLI11)

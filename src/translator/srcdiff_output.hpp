@@ -13,7 +13,6 @@
 #include <srcdiff_constants.hpp>
 #include <shortest_edit_script.h>
 
-#include <any>
 #include <optional>
 
 #include <vector>

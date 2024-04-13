@@ -1,74 +1,48 @@
 #include <srcdiff_options.hpp>
-
 #include <srcdiff_constants.hpp>
 
-#include <boost/program_options.hpp>
 #include <libxml/parser.h>
+#include <CLI/CLI.hpp>
 
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
+#include <cstring>
 
+
+// this is the options object that will store all the cli options once they are
+// parsed. it is global so that it never goes out of scope and gets destroyed
 srcdiff_options options;
 
-const unsigned LINE_LENGTH = 100;
-
-boost::program_options::options_description general("General Options", LINE_LENGTH);
-boost::program_options::options_description input_file_op("Input file Option", LINE_LENGTH);
-boost::program_options::options_description input_ops("Input Options", LINE_LENGTH);
-boost::program_options::options_description srcml_ops("srcml Options", LINE_LENGTH);
-boost::program_options::options_description srcdiff_ops("srcdiff Options", LINE_LENGTH);
-boost::program_options::options_description all("All options");
-
-boost::program_options::positional_options_description input_file;
 
 #define PROGRAM_NAME "srcdiff"
-#define EMAIL_ADDRESS "mdecker6@kent.edu"
-const char * const SRCDIFF_HELP_HEADER =
-"Usage: " PROGRAM_NAME " [options] <original_src_infile modified_src_infile>... [-o <srcDiff_outfile>]\n\n"
+#define EMAIL_ADDRESS "srcmldev@gmail.com"
 
-"Translates C, C++, and Java source code into the XML source-code representation srcDiff.\n"
-"Multiple files are stored in a srcDiff archive.\n\n";
+// width of each of the two columns of help text that CLI11 displays
+const unsigned COLUMN_WIDTH = 50;
 
-const char * const SRCDIFF_HELP_FOOTER =
-"Report bugs to " EMAIL_ADDRESS "\n";
+// Callback functions that process or respond to flags or options being set:
 
+std::string get_version() {
 
-void option_help(const bool & on) {
+  std::stringstream out;
 
-  if(!on) return;
-
-  std::cout << SRCDIFF_HELP_HEADER;
-  std::cout << general     << '\n';
-  std::cout << input_ops   << '\n';
-  std::cout << srcml_ops   << '\n';
-  std::cout << srcdiff_ops << '\n';
-  std::cout << SRCDIFF_HELP_FOOTER;
-
-  exit(0);
-
-}
-
-void option_version(const bool & on) {
-
-  if(!on) return;
-
-  printf("%s Version 1\n", PROGRAM_NAME);
-
-  printf("Using:\n");
-  printf("libsrcml %s\n", srcml_version_string());
+  out << PROGRAM_NAME << " Version 1\n"
+    << "Using:\n"
+    << "libsrcml " << srcml_version_string() << "\n";
 
   if(atoi(xmlParserVersion) == LIBXML_VERSION) {
-    printf("libxml %d\n", LIBXML_VERSION);
-  }
-  else {
-    printf("libxml %s (Compiled %d)\n", xmlParserVersion, LIBXML_VERSION);
+    out << "libxml " << LIBXML_VERSION;
+  } else {
+    out << "libxml " << xmlParserVersion << " (Compiled " << LIBXML_VERSION << ")";
   }
 
-  exit(0);
-
+  return out.str();
 }
 
+// processes input file arguments. this accepts a vector of file names or a
+// vector where each element consists of two file names separated by a pipe,
+// e.g. "orig.cpp|mod.cpp"
 void option_input_file(const std::vector<std::string> & arg) {
 
   options.input_pairs.reserve(arg.size());
@@ -83,8 +57,7 @@ void option_input_file(const std::vector<std::string> & arg) {
     } else {
 
       if((pos + 1) >= arg.size()) {
-        std::cout << "Odd number of input files.\n";
-        exit(1);
+        throw CLI::ValidationError("Odd number of input files.");
       }
       options.input_pairs.push_back(std::make_pair(arg[pos], arg[pos + 1]));
       ++pos;
@@ -96,79 +69,29 @@ void option_input_file(const std::vector<std::string> & arg) {
 
 }
 
-void option_dependency(const boost::program_options::variables_map & var_map,
-                       const std::string & dependent,
-                       const std::vector<std::string> & independent_list) {
+// processes the --files-from cli argument
+void option_files_from(const std::string & filename) {
 
-  if(var_map[dependent].defaulted()) return;
+    options.files_from_name = filename;
 
-  for(const std::string & independent : independent_list) {
-    if(!(var_map[independent].empty())) return;
-  }
-
-  std::string what = "Option '--" + dependent + "' requires option";
-  if(independent_list.size() == 1) {
-
-    what += " '--" + independent_list[0] + '\'';
-
-  } else if(independent_list.size() == 2) {
-
-    what += " '--" + independent_list[0] + "' or '--" + independent_list[1] + '\'';
-
-  } else {
-
-    for(int pos = 0; pos < independent_list.size(); ++pos) {
-
-      if(pos != (independent_list.size() - 1)) {
-        what += " '--" + independent_list[pos] + "',";
-      }
-      else {
-        what += " or '--" + independent_list[pos] + '\'';
-      }
-
-    }
-
-  }
-
-  throw std::invalid_argument(what);
-
-}
-
-void conflicting_options(const boost::program_options::variables_map & var_map,
-                         const std::string & option_one,
-                         const std::string & option_two) {
-
-  if(var_map[option_one].defaulted() || var_map[option_one].empty()) return;
-  if(var_map[option_two].defaulted() || var_map[option_two].empty()) return;
-
-  throw std::invalid_argument("Conflicting Options: '--" + option_one
-                            + "' and '--" + option_two + "'");
-
-}
-
-template<std::string srcdiff_options::*field>
-void option_field(const std::string & arg) { options.*field = arg; }
-
-template<std::optional<std::string> srcdiff_options::*field>
-void option_field(const std::string & arg) { options.*field = arg; }
-
-template<>
-void option_field<&srcdiff_options::files_from_name>(const std::string & arg) {
-
-    options.files_from_name = arg;
-
-    std::ifstream input_file(arg.c_str());
-    if(!input_file) throw std::string("Filename '" + arg + "' can't be opened.");
+    std::ifstream input_file(filename);
+    if(!input_file) throw CLI::FileError::Missing(filename);
 
     size_t line_count = 0;
     std::string line;
     while(std::getline(input_file, line)) {
 
-      int white_length = strspn(line.c_str(), " \t\f");
+      int white_length = std::strspn(line.c_str(), " \t\f");
       line.erase(0, white_length);
       // skip blank lines or comment lines
       if (line[0] == '\0' || line[0] == '#') {
         continue;
+      } else if (
+        std::count_if(line.begin(), line.end(), [](char c) { return c == '|'; }) != 1) {
+        throw CLI::ValidationError(
+          "The following input line did not consist of two filenames separated by '|':\n"+
+          line
+        );
       }
 
       ++line_count;
@@ -177,13 +100,16 @@ void option_field<&srcdiff_options::files_from_name>(const std::string & arg) {
 
     if(line_count > 1) {
       srcml_archive_disable_solitary_unit(options.archive);
+    } else if (line_count < 1) {
+      throw CLI::ValidationError("No input file pairs could be obtained from " + filename);
     }
 
 }
 
+// processing git and svn input arguments:
+
 #if SVN
-template<>
-void option_field<&srcdiff_options::svn_url>(const std::string & arg) {
+void option_svn_url(const std::string & arg) {
 
   std::string::size_type atsign = arg.find('@');
   if(atsign == std::string::npos) {
@@ -205,8 +131,7 @@ void option_field<&srcdiff_options::svn_url>(const std::string & arg) {
 #endif
 
 #if GIT
-template<>
-void option_field<&srcdiff_options::git_url>(const std::string & arg) {
+void option_git_url(const std::string & arg) {
 
   std::string::size_type atsign = arg.find('@');
   options.git_url = arg.substr(0, atsign);
@@ -217,15 +142,19 @@ void option_field<&srcdiff_options::git_url>(const std::string & arg) {
 }
 #endif
 
+// options that are passed to the srcML archive object (options.archive):
+
 enum srcml_bool_field { ARCHIVE };
 
+// compiler wants a general template function for some reason
 template<srcml_bool_field field>
-void option_srcml_field(bool on) {}
+void option_srcml_field(int) {}
 
+// specialized version of the general template function above
 template<>
-void option_srcml_field<ARCHIVE>(bool on) {
+void option_srcml_field<ARCHIVE>(int flagged_count) {
 
-  if(on) {
+  if(flagged_count) {
     srcml_archive_disable_solitary_unit(options.archive);
   }
   else {
@@ -274,7 +203,7 @@ void option_srcml_field<LANGUAGE>(const std::string & arg) {
 
 template<>
 void option_srcml_field<URL>(const std::string & arg) {
-
+  
   srcml_archive_set_url(options.archive, arg.c_str());
 
 }
@@ -290,11 +219,16 @@ template<>
 void option_srcml_field<REGISTER_EXT>(const std::string & arg) {
 
   std::string::size_type pos = arg.find('=');
-  srcml_archive_register_file_extension(options.archive, arg.substr(0, pos).c_str(), arg.substr(pos + 1, std::string::npos).c_str());
+  srcml_archive_register_file_extension(
+    options.archive,
+    arg.substr(0, pos).c_str(),
+    arg.substr(pos + 1).c_str()
+  );
 
 }
 
-
+// this function is called with a processed version of the xmlns arguments
+// that look like "prefix=uri", or just "uri"
 template<>
 void option_srcml_field<XMLNS>(const std::string & arg) {
 
@@ -303,40 +237,41 @@ void option_srcml_field<XMLNS>(const std::string & arg) {
     srcml_archive_register_namespace(options.archive, "", arg.c_str());
   }
   else {
-    srcml_archive_register_namespace(options.archive, arg.substr(0, pos).c_str(), arg.substr(pos + 1, std::string::npos).c_str());
+    srcml_archive_register_namespace(
+      options.archive,
+      arg.substr(0, pos).c_str(),
+      arg.substr(pos + 1, std::string::npos).c_str()
+    );
   }
 
 }
 
-template<OPTION_TYPE flag>
-void option_flag_enable(bool on) {
-
-  if(on) options.flags |= flag;
-
-}
+// general template functions for srcDiff's bit-level flags
 
 template<OPTION_TYPE flag>
-void option_flag_disable(bool on) {
+void option_flag_enable(int flagged_count) {
 
-  if(on) options.flags &= ~flag;
+  if(flagged_count > 0) options.flags |= flag;
 
 }
 
+template<OPTION_TYPE flag>
+void option_flag_disable(int flagged_count) {
+
+  if(flagged_count > 0) options.flags &= ~flag;
+
+}
+
+// general template functions for srcML's bit-level flags
 template<int op>
-void option_srcml_flag_enable(bool on) {
+void option_srcml_flag_enable(int flagged_count) {
 
-  if(on) srcml_archive_enable_option(options.archive, op);
-
-}
-
-template<int op>
-void option_srcml_flag_disable(bool on) {
-
-  if(on) srcml_archive_disable_option(options.archive, op);
+  if(flagged_count > 0) srcml_archive_enable_option(options.archive, op);
 
 }
 
-void option_method(const std::string & arg) {
+// processes the argument to the srcdiff parsing method option
+void option_parsing_method(const std::string & arg) {
 
   std::vector<std::string> methods;
   std::string::size_type last_pos = 0;
@@ -357,77 +292,36 @@ void option_method(const std::string & arg) {
     else if(method == NO_GROUP_DIFF_METHOD) options.methods &= ~METHOD_GROUP;
     else if(method == GROUP_DIFF_METHOD) options.methods |= METHOD_GROUP;
     else {
-
-        fprintf(stderr, "Invalid argument to --method: '%s'\n", method.c_str());
-        exit(/*STATUS_INVALID_ARGUMENT*/1);    
+      throw CLI::ValidationError(method + " is not a valid parsing method");
     }
 
   }
 
 }
 
-std::pair<std::string, std::string> parse_xmlns(const std::string & arg) {
-
-  if(arg.find("xmlns:") != std::string::npos) {
-
-    std::string::size_type pos = arg.find(':');
-    std::string name, value;
-    if(pos == std::string::npos) {
-      name = arg.substr(2);
-    }
-    else {
-
-      name = arg.substr(2, pos - 2);
-      value = arg.substr(pos + 1);
-
-    }
-
-    return std::make_pair(name, value);
-
-  }
-
-  return std::make_pair(std::string(), std::string());
-
-}
-
-template<int srcdiff_options::view_options_t::*field>
-void option_field(const int & arg) { options.view_options.*field = arg; }
-
-template<std::string srcdiff_options::view_options_t::*field>
-void option_field(const std::string & arg) { options.view_options.*field = arg; }
-
-template<std::optional<std::string> srcdiff_options::view_options_t::*field>
-void option_field(const std::string & arg) { options.view_options.*field = arg; }
-
-template<boost::any srcdiff_options::view_options_t::*field>
-void option_field(const std::string & arg) { options.view_options.*field = arg; }
-
-template<>
-void option_field<&srcdiff_options::view_options_t::syntax_highlight>(const std::string & arg) {
-
-  options.view_options.syntax_highlight = arg;
-
-}
-
-template<>
-void option_field<&srcdiff_options::view_options_t::unified_view_context>(const std::string & arg) {
+// this is a special option in the view_options_t struct that can be a string or
+// a number via std::any
+void view_option_unified_view_context(const std::string & arg) {
 
   try {
 
     options.view_options.unified_view_context = (size_t)std::stoll(arg);
 
-  } catch(std::invalid_argument) {
+  } catch(std::invalid_argument &) {
+
+    if (arg != "function" && arg != "all") {
+      throw CLI::ValidationError(
+        "The context for the unified view must be specified as \"all\", \"function\", or an integer number of lines."
+      );
+    }
 
     options.view_options.unified_view_context = arg;
 
   }
 
-  options.flags |= OPTION_UNIFIED_VIEW;
-
 }
 
-template<>
-void option_field<&srcdiff_options::view_options_t::side_by_side_tab_size>(const int & arg) {
+void view_option_side_by_side_tab_size(const int & arg) {
 
   options.view_options.side_by_side_tab_size = arg;
 
@@ -436,6 +330,7 @@ void option_field<&srcdiff_options::view_options_t::side_by_side_tab_size>(const
 }
 
 
+// the main interface
 const srcdiff_options & process_command_line(int argc, char* argv[]) {
 
   options.archive = srcml_archive_create();
@@ -445,123 +340,335 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
       SRCDIFF_DEFAULT_NAMESPACE_PREFIX.c_str(),
       SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
 
-  general.add_options()
-    ("help,h", boost::program_options::bool_switch()->notifier(&option_help), "Output srcdiff help message")
-    ("version,V", boost::program_options::bool_switch()->notifier(&option_version), "Output srcdiff version")
-    ("output,o", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::srcdiff_filename>)->default_value("-"), "Specify output filename")
-    ("compress,z", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_COMPRESS>), "Compress the output")
-    ("verbose,v", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_VERBOSE>), "Verbose messaging")
-    ("quiet,q", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_QUIET>), "Silence messaging")
-  ;
+  CLI::App cli(
+    "Translates C, C++, and Java source code into the XML source-code representation srcDiff.\n"
+    "Multiple files are stored in a srcDiff archive.",
+    PROGRAM_NAME
+  );
 
-  input_file_op.add_options()
-    ("input", boost::program_options::value<std::vector<std::string>>()->notifier(option_input_file), "Set the input to be a list of file pairs from the provided file")
-  ;
+  cli.usage("USAGE: srcdiff [OPTIONS] <original_src_input modified_src_input>... [-o <srcDiff_outfile>]");
+  
+  cli.footer("Report bugs to " EMAIL_ADDRESS "\n");
 
-#ifndef _MSC_BUILD
-  input_ops.add_options()
-    ("files-from", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::files_from_name>), "Set the input to be a list of file pairs from the provided file.  Pairs are of the format: original|modified")
-    ("file", boost::program_options::value<std::vector<std::string>>()->notifier(option_input_file), "Specify a file pair as option. One pair of the format: original|modified.  Currently only for Git")
-#endif
+  cli.get_formatter()->column_width(COLUMN_WIDTH);
 
-#if SVN
-    ("svn", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::svn_url>), "Input from a Subversion repository. Example: --svn http://example.org@1-2")
-    ("svn-continuous", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SVN_CONTINUOUS>), "Continue from base revision: Treat revisions supplied as as range and srcdiff each version with subsequent") // this may have been where needed revision
-#endif
+  cli.add_option_function<std::vector<std::string>>(
+    "input",
+    option_input_file,
+    "Pairs of input source files, separated by spaces.\n"
+    "Example: orig1.cpp mod1.cpp orig2.cpp mod2.cpp ..."
+  );
 
-#if GIT
-    ("git", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::git_url>), "Input from a Subversion repository. Example: --git http://example.org@HASH-HASH")
-#endif
+  CLI::Option_group * general_group = cli.add_option_group("General");
 
-  ;
+  general_group->set_version_flag("-V,--version", get_version);
+  
+  general_group->add_option(
+      "-o,--output",
+      options.srcdiff_filename,
+      "Specify output filename"
+    )->default_val("-");
+  
+  general_group->add_flag(
+    "-z,--compress",
+    option_flag_enable<OPTION_COMPRESS>,
+    "Compress the output"
+  );
 
-  srcml_ops.add_options()
-    ("archive,n", boost::program_options::bool_switch()->notifier(option_srcml_field<ARCHIVE>), "Output srcDiff as an archive")
+  general_group->add_flag(
+    "-v,--verbose",
+    option_flag_enable<OPTION_VERBOSE>,
+    "Verbose messaging"
+  );
+  
+  general_group->add_flag(
+    "-q,--quiet",
+    option_flag_enable<OPTION_QUIET>,
+    "Silence messaging"
+  );
 
-#ifndef _MSC_BUILD
-    ("src-encoding,t", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_ENCODING>)->default_value("ISO-8859-1"), "Set the input source encoding")
-#endif
+  CLI::Option_group * input_group = cli.add_option_group("Input");
 
-    ("xml-encoding,x", boost::program_options::value<std::string>()->notifier(option_srcml_field<XML_ENCODING>)->default_value("UTF-8"), "Set the output XML encoding") // may want this to be encoding instead of xml-encoding
-    ("language,l", boost::program_options::value<std::string>()->notifier(option_srcml_field<LANGUAGE>)->default_value("C++"), "Set the input source programming language")
-    ("filename,f", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::unit_filename>), "Override unit filename")
-    ("register-ext", boost::program_options::value<std::string>()->notifier(option_srcml_field<REGISTER_EXT>), "Register an extension to language pair to be used during parsing")
-    ("url", boost::program_options::value<std::string>()->notifier(option_srcml_field<URL>), "Set the root url attribute")
-    ("src-version,s", boost::program_options::value<std::string>()->notifier(option_srcml_field<SRC_VERSION>), "Set the root version attribute")
-    ("xmlns", boost::program_options::value<std::string>()->notifier(option_srcml_field<XMLNS>), "Set the prefix associationed with a namespace or register a new one. of the form --xmlns:prefix=url or --xmlns=url for default prefix.")
-    ("position", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_POSITION>), "Output additional position information on the srcML elements")
+  // currently, this takes priority over the positional file input argument if
+  // it is present
+  input_group->add_option_function<std::string>(
+    "--files-from",
+    option_files_from,
+    "Set the input to be a list of file pairs from the specified file.\n"
+    "There should be one pair per line, in the format: original|modified"
+  );
 
-#ifndef _MSC_BUILD
-    ("tabs", boost::program_options::value<int>()->notifier(option_srcml_field<TABSTOP>)->default_value(8), "Set the tabstop size")
-#endif
+  #if SVN
+    input_group->add_option_function<std::string>(
+      "--svn",
+      option_svn_url,
+      "Input from a Subversion repository. Example: --svn http://example.org@1-2"
+    );
 
-    ("no-xml-decl", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_NO_XML_DECL>), "Do not output the xml declaration")
-    ("cpp-markup-else", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_CPP_TEXT_ELSE>), "Markup up #else contents (default)")
-    ("cpp-text-else", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_CPP_TEXT_ELSE>), "Do not markup #else contents")
-    ("cpp-markup-if0", boost::program_options::bool_switch()->notifier(option_srcml_flag_enable<SRCML_OPTION_CPP_MARKUP_IF0>), "Markup up #if 0 contents")
-    ("cpp-text-if0", boost::program_options::bool_switch()->notifier(option_srcml_flag_disable<SRCML_OPTION_CPP_MARKUP_IF0>), "Do not markup #if 0 contents (default)")
-  ;
+    input_group->add_flag(
+      "--svn-continuous",
+      option_flag_enable<OPTION_SVN_CONTINUOUS>,
+      "Continue from base revision: Treat revisions supplied as as range and srcdiff each version with subsequent"
+    ); // this may have been where needed revision
+  #endif
 
-  srcdiff_ops.add_options()
-    ("method,m",  boost::program_options::value<std::string>()->notifier(option_method)->default_value("collect,group-diff"), "Set srcdiff parsing method")
-    ("disable-string-split", boost::program_options::bool_switch()->notifier(option_flag_disable<OPTION_STRING_SPLITTING>), "Disable splitting strings into multiple nodes")
+  #if GIT
+    input_group->add_option_function<std::string>(
+      "--git",
+      option_git_url,
+      "Input from a Git repository. Example: --git http://example.org@HASH-HASH"
+    );
+  #endif
 
+  CLI::Option_group * srcml_group = cli.add_option_group(
+    "srcML",
+    "These options control how srcML parses code into an XML AST."
+  );
 
-    ("burst", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_BURST>), "Output each input file to a single srcDiff document.  -o gives output directory")
-    ("srcml", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_SRCML>), "Also, output the original and modified srcML of each file when burst enabled")
+  srcml_group->add_flag(
+    "-n,--archive",
+    option_srcml_field<ARCHIVE>,
+    "Output srcDiff as an archive"
+  )->force_callback(true);
 
-    ("unified,u", boost::program_options::value<std::string>()->implicit_value("3")->notifier(option_field<&srcdiff_options::view_options_t::unified_view_context>),
-        "Output as colorized unified diff with provided context. Number is lines of context, 'all' or -1 for entire file, 'function' for encompasing function (default = 3)")
-    ("side-by-side,y", boost::program_options::value<int>()->implicit_value(7)->notifier(option_field<&srcdiff_options::view_options_t::side_by_side_tab_size>),
-        "Output as colorized side-by-side diff")
-    ("diffdoc,d", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_DIFFDOC_VIEW>), "Output in diffdoc view.")
-    ("html", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_HTML_VIEW>), "Output unified/side-by-side view in html")
-    ("ignore-all-space,W", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>), "Ignore all whitespace when outputting unified/side-by-side view")
-    ("ignore-space,w", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_WHITESPACE>), "Ignore whitespace when outputting unified/side-by-side view")
-    ("ignore-comments,c", boost::program_options::bool_switch()->notifier(option_flag_enable<OPTION_IGNORE_COMMENTS>), "Ignore comments when outputting unified/side-by-side view")
-    ("highlight", boost::program_options::value<std::string>()->implicit_value("partial")->notifier(option_field<&srcdiff_options::view_options_t::syntax_highlight>)->default_value("partial"), "Syntax-hightlighting for unified/side-by-side view.  none, partial (default), or full")
-    ("theme", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::view_options_t::theme>)->default_value("default"), "Select theme for syntax-hightlighting.  default or monokai")
-    ("srcdiff", boost::program_options::value<std::string>()->notifier(option_field<&srcdiff_options::view_options_t::srcdiff_filename>), "Output srcdiff in addition to view")
+  srcml_group->add_option_function<std::string>(
+    "-t,--src-encoding",
+    option_srcml_field<SRC_ENCODING>,
+    "Set the input source encoding"
+  )->default_val("ISO-8859-1")->force_callback(true);
 
-    ("summary", boost::program_options::value<std::string>()->implicit_value("text")->notifier(option_field<&srcdiff_options::summary_type_str>), "Output a summary of the differences.  Options 'text' and/or 'table' summary.   Default 'text'  ")
+  srcml_group->add_option_function<std::string>(
+    "-x,--xml-encoding",
+    option_srcml_field<XML_ENCODING>,
+    "Set the output XML encoding"
+  )->default_val("UTF-8")->force_callback(true);
 
+  srcml_group->add_option_function<std::string>(
+    "-l,--language",
+    option_srcml_field<LANGUAGE>,
+    "Set the input source programming language"
+  )->default_val("C++");
 
-  ;
+  // Note: this will override the filename attribute on all output units
+  srcml_group->add_option(
+    "-f,--filename",
+    options.unit_filename,
+    "Specify a unit filename attribute that is different from the actual filename"
+  );
 
-  input_file.add("input", -1);
-  all.add(general).add(input_file_op).add(input_ops).add(srcml_ops).add(srcdiff_ops);
+  srcml_group->add_option_function<std::string>(
+    "--register-ext",
+    option_srcml_field<REGISTER_EXT>,
+    "Register a file extension/language pair to be used during parsing\n"
+    "Example: --register-ext cxx=C++"
+  );
 
-  boost::program_options::variables_map var_map;
+// TODO: should these attributes be added to the unit(s), or require --archive?
+  srcml_group->add_option_function<std::string>(
+    "--url",
+    option_srcml_field<URL>,
+    "Set the url attribute on the root XML element of the archive"
+  );
 
-  try {
+  srcml_group->add_option_function<std::string>(
+    "-s,--src-version",
+    option_srcml_field<SRC_VERSION>,
+    "Set the version attribute on the root XML element of the archive"
+  );
 
-    boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(all).positional(input_file).extra_parser(parse_xmlns).run(), var_map);
-    boost::program_options::notify(var_map);
+  // since the XMLNS options have a format that CLI11 doesn't know how to parse,
+  // they're actually pre-processed before the CLI11 parse function is called.
+  // So, this option is always going to be unused from CLI11's point of view,
+  // and is just added so it shows up in the help text.
+  srcml_group->add_option_function<std::string>(
+    "--xmlns",
+    [](std::string){},  // no-op. should never be called
+    "Set the prefix associated with a namespace or register a new one.\n"
+    "Use the form --xmlns:prefix=url, or --xmlns=url to set the\ndefault prefix."
+  );
 
-  } catch(const boost::program_options::error & e) {
+  srcml_group->add_flag(
+    "--position",
+    option_srcml_flag_enable<SRCML_OPTION_POSITION>,
+    "Output additional position information on the srcML elements"
+  )->force_callback();
 
-    std::cerr << "Exception: " << e.what() << '\n';
-    exit(1);
+  srcml_group->add_option_function<int>(
+    "--tabs",
+    option_srcml_field<TABSTOP>,
+    "Set the tabstop size"
+  )->default_val(8)->force_callback();
 
+  srcml_group->add_flag(
+    "--no-xml-decl",
+    option_srcml_flag_enable<SRCML_OPTION_NO_XML_DECL>,
+    "Do not output the XML declaration"
+  )->force_callback();
+
+  srcml_group->add_flag(
+    "--cpp-markup-if0",
+    option_srcml_flag_enable<SRCML_OPTION_CPP_MARKUP_IF0>,
+    "Markup #if 0 contents"
+  )->force_callback();
+
+  srcml_group->add_flag(
+    "--cpp-text-else",
+    option_srcml_flag_enable<SRCML_OPTION_CPP_TEXT_ELSE>,
+    "Do not markup #else contents"
+  )->force_callback();
+
+  // TODO: remove these options, here and elsewhere in the code
+
+  srcml_group->add_option_function<std::string>(
+    "-m,--method",
+    option_parsing_method,
+    "Specify a list of parsing methods, separated by commas.\n"
+    "The options are collect, raw, group-diff and no-group-diff"
+  )->default_val("collect,group-diff")->force_callback();
+
+  // srcdiff_group->add_flag(
+  //   "--disable-string-split",
+  //   option_flag_disable<OPTION_STRING_SPLITTING>,
+  //   "Disable splitting strings into multiple nodes"
+  // );
+
+  // srcdiff_group->add_flag(
+  //   "--burst",
+  //   option_flag_enable<OPTION_BURST>,
+  //   "Output each input file to a single srcDiff document. -o gives output directory"
+  // );
+
+  // srcdiff_group->add_flag(
+  //   "--srcml",
+  //   option_flag_enable<OPTION_SRCML>,
+  //   "Also, output the original and modified srcML of each file when burst enabled"
+  // );
+
+  CLI::Option_group * view_options = cli.add_option_group("View");
+  view_options->description(
+    "These options configure the view produced by --unified or --side-by-side."
+  );
+
+  CLI::Option * unified = view_options->add_flag(
+    "-u,--unified",
+    option_flag_enable<OPTION_UNIFIED_VIEW>,
+    "Output as a colorized unified diff with provided context"
+  );
+
+  // no forced callback to add the default value to the options for this one
+  CLI::Option * side_by_side = view_options->add_option_function<int>(
+    "-y,--side-by-side",
+    view_option_side_by_side_tab_size,
+    "Output as colorized side-by-side diff. Provide the tabstop size as\n"
+    "the argument to this option."
+  )->default_val(8)->excludes(unified);
+
+  view_options->add_option_function<std::string>(
+    "--unified-context",
+    view_option_unified_view_context,
+    "Specify the amount of context to show around an edit in the unified view.\n"
+    "Either give a number of lines, or use \"all\" or -1 to see the entire file,\n"
+    "or use \"function\" to see the encompassing function."
+  )->default_val("3")->needs(unified);
+
+  // TODO: document what a custom theme file should look like somewhere
+  view_options->add_option(
+    "--theme",
+    options.view_options.theme,
+    "Select theme for syntax highlighting.\n"
+    "Options: \"default\", \"monokai\", or the filename of a custom theme."
+  )->default_val("default");
+
+  view_options->add_option(
+    "--srcdiff",
+    options.view_options.srcdiff_filename,
+    "Output srcdiff in addition to view. Supply the filename for the\n"
+    "srcDiff XML document as the argument for this option."
+  );
+
+  view_options->add_flag(
+    "--html",
+    option_flag_enable<OPTION_HTML_VIEW>,
+    "Output the unified/side-by-side view as an HTML file instead of on the terminal"
+  );
+
+  // TODO: what is the difference between ignoring whitespace and ignoring *all*
+  // whitespace?
+  CLI::Option * ignore_space = view_options->add_flag(
+    "-w,--ignore-space",
+    option_flag_enable<OPTION_IGNORE_WHITESPACE>,
+    "Ignore whitespace"
+  );
+
+  view_options->add_flag(
+    "-W,--ignore-all-space",
+    option_flag_enable<OPTION_IGNORE_ALL_WHITESPACE>,
+    "Ignore all whitespace"
+  )->excludes(ignore_space);
+
+  view_options->add_flag(
+    "-c,--ignore-comments",
+    option_flag_enable<OPTION_IGNORE_COMMENTS>,
+    "Ignore comments"
+  );
+
+  view_options->add_option(
+    "--highlight",
+    options.view_options.syntax_highlight,
+    "Set the level of syntax highlighting.\n"
+    "Options: none, partial (default), or full"
+  )->default_val("partial");
+
+  // our xmlns options have a custom format and need to be parsed in advance as
+  // a special case
+
+  std::vector<std::string> arguments;
+
+  std::string xmlns_option = "--xmlns";
+  for (int i = 1; i < argc; ++i) {
+    std::string arg = argv[i];
+    if (arg.find(xmlns_option) == 0) {
+      // if this is an xmlns argument, cut off the --xmlns= (or, if there is a
+      // prefix, the --xmlns:) and pass to the option handler function
+      option_srcml_field<XMLNS>(arg.substr(xmlns_option.length() + 1));
+    } else {
+      arguments.push_back(arg);
+    }
   }
 
+  // if you give CLI11 a vector of arguments, it expects it to be reversed 🤷
+  std::reverse(arguments.begin(), arguments.end());
+  
   try {
 
-    option_dependency(var_map, "ignore-all-space", std::vector<std::string>{"unified", "side-by-side"});
-    option_dependency(var_map, "ignore-space", std::vector<std::string>{"unified", "side-by-side"});
-    option_dependency(var_map, "ignore-comments", std::vector<std::string>{"unified", "side-by-side"});
-    option_dependency(var_map, "html", std::vector<std::string>{"unified", "side-by-side"});
-    option_dependency(var_map, "highlight", std::vector<std::string>{"unified", "side-by-side"});
+    cli.parse(arguments);
 
-    conflicting_options(var_map, "unified", "side-by-side");
-    conflicting_options(var_map, "ignore-all-space", "ignore-space");
+    if (!options.files_from_name.has_value() && options.input_pairs.size() < 1) {
+      throw CLI::ValidationError("Input files are required.");
+    }
 
-  } catch(const std::invalid_argument & e) {
+    // CLI11 unfortunately does not have a great mechanism for requiring that
+    // exactly one out of two options is required if and only if any options
+    // from a certain set are present. see discussion here:
+    // https://github.com/CLIUtils/CLI11/issues/88. This is a simple workaround
+    // for one case
+    for (const auto& view_option : view_options->get_options()) {
+      if (view_option != unified && view_option != side_by_side) {
+        if (!view_option->empty() && (side_by_side->empty() && unified->empty())) {
+          throw CLI::ValidationError(
+            view_option->get_name(false, true) +
+            " requires either --unified or --side-by-side to be set."
+          );
+        }
+      }
+    }
 
-    std::cerr << e.what() << '\n';
-    exit(1);
-
+  } catch (const CLI::ParseError &e) {
+    // parsing error
+    exit(cli.exit(e));
   }
+
+  // on success, we return our options object
 
   return options;
 
