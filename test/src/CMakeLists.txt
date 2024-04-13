@@ -18,11 +18,12 @@
 #  You should have received a copy of the GNU General Public License
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
+find_package(LibXml2 REQUIRED)
+find_package(Iconv REQUIRED)
 include_directories(.)
 
 file(GLOB TEST_SRC *.cpp)
 
 add_executable(switch_differences ${TEST_SRC})
-target_link_libraries(switch_differences ${LIBXML2_LIBRARIES})
+target_link_libraries(switch_differences LibXml2::LibXml2)
 set_target_properties(switch_differences PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

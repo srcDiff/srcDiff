@@ -34,18 +34,19 @@ if(NOT GIT_ENABLED)
 
 endif()
 
+find_package(srcML REQUIRED)
+find_package(LibXml2 REQUIRED)
+
+find_package(Boost REQUIRED COMPONENTS program_options filesystem system regex date_time)
+
 # srcdiff
-if(WIN32)
 add_executable(srcdiff ${CLIENT_HEADERS} ${CLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
-		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:view>
-		       $<TARGET_OBJECTS:windows>)
-else()
-add_executable(srcdiff ${CLIENT_HEADERS} ${CLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
-		       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:view>)
-endif()
+                       $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:view>
+                       $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:project>
+              )
 
-target_link_libraries(srcdiff srcdiff_static ${SRCDIFF_LIBRARIES})
-
+target_link_libraries(srcdiff PRIVATE srcsax_static srcML::LibsrcML LibXml2::LibXml2 Boost::program_options Boost::headers)
+ 
 set_target_properties(srcdiff PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 install(TARGETS srcdiff RUNTIME DESTINATION bin)
