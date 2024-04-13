@@ -37,11 +37,8 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+#include <any>
 #include <optional>
-#ifdef TIMING
-#include <boost/timer/timer.hpp>
-#endif
-
 #include <string>
 
 #include <srcml.h>
@@ -103,11 +100,6 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
 
   thread_modified.join();
 
-#ifdef TIMING
-{
-    boost::timer::auto_cpu_timer t;
-#endif
-
   output->initialize(is_original, is_modified);
 
   // run on file level
@@ -128,10 +120,6 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
     output->finish();
 
   }
-
-#ifdef TIMING
-}
-#endif
 
   output->reset();
 

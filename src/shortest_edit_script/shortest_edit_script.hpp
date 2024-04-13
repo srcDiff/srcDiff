@@ -7,7 +7,7 @@
 #include <iostream>
 #include <cmath>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 class shortest_edit_script_t {
   
@@ -61,8 +61,8 @@ int shortest_edit_script_t::approximate_compute(const T & structure_one, const T
     size_t look_ahead_one = std::min(offset_one + 3, size_one);
     size_t look_ahead_two = std::min(offset_two + 3, size_two);
 
-    boost::optional<size_t> match_one;
-    boost::optional<size_t> match_two;
+    std::optional<size_t> match_one;
+    std::optional<size_t> match_two;
 
     for(int pos_one = offset_one; pos_one < look_ahead_one; ++pos_one) {
 

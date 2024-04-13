@@ -40,10 +40,10 @@ std::shared_ptr<srcml_nodes> create_nodes(const std::string & code, const std::s
 
     //Create burst_config object
 	const srcml_converter::srcml_burst_config burst_config = {
-	       	boost::optional<std::string>(),
+	       	std::optional<std::string>(),
 	       	"",
-	       	boost::optional<std::string>(),
-	       	boost::optional<std::string>()
+	       	std::optional<std::string>(),
+	       	std::optional<std::string>()
        	};
 
     //create srcml_nodes
