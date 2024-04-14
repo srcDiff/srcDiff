@@ -46,8 +46,6 @@ set(SRCDIFF_LIBRARY_SOURCE_EXTRA CACHE INTERNAL "libsrcdiff Extra Source")
 find_package(srcML REQUIRED)
 find_package(LibXml2 REQUIRED)
 
-find_package(Boost REQUIRED COMPONENTS program_options filesystem system regex date_time)
-
 #
 # build_library
 #
@@ -69,7 +67,7 @@ else()
     set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME srcdiff)
 endif()
 
-    target_link_libraries(${LIBRARY_NAME} PRIVATE srcsax_shared srcML::LibsrcML LibXml2::LibXml2 Boost::program_options Boost::headers)
+    target_link_libraries(${LIBRARY_NAME} PRIVATE srcsax_shared srcML::LibsrcML LibXml2::LibXml2)
 
 endmacro()
 
