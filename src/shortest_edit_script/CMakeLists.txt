@@ -22,7 +22,5 @@
 file(GLOB SHORTEST_EDIT_SCRIPT_HEADERS *.h *.hpp)
 file(GLOB SHORTEST_EDIT_SCRIPT_SOURCE *.c *.cpp)
 
-find_package(Boost REQUIRED COMPONENTS filesystem system regex date_time)
-
 add_library(shortest_edit_script OBJECT ${SHORTEST_EDIT_SCRIPT_HEADERS} ${SHORTEST_EDIT_SCRIPT_SOURCE})
-target_link_libraries(shortest_edit_script PRIVATE Boost::headers)
+target_link_libraries(shortest_edit_script PRIVATE)

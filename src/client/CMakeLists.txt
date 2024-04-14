@@ -38,7 +38,6 @@ find_package(srcML REQUIRED)
 find_package(LibXml2 REQUIRED)
 find_package(Threads REQUIRED)
 find_package(CLI11 REQUIRED)
-find_package(Boost REQUIRED COMPONENTS filesystem system regex date_time)
 
 # srcdiff
 if(WIN32)
@@ -55,7 +54,7 @@ else()
               $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:project>)
 endif()
 
-target_link_libraries(srcdiff PRIVATE srcML::LibsrcML LibXml2::LibXml2 Boost::headers Threads::Threads srcsax_shared CLI11::CLI11)
+target_link_libraries(srcdiff PRIVATE srcML::LibsrcML LibXml2::LibXml2 Threads::Threads srcsax_shared CLI11::CLI11)
 
 set_target_properties(srcdiff PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 

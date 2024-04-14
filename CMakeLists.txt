@@ -45,6 +45,9 @@ endif()
 
 enable_testing()
 
+option(BUILD_UNIT_TESTS "Build all unit tests" OFF)
+option(BUILD_TRANSLATOR_TESTS "Build all transltor tests" OFF)
+
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 
 set(CMAKE_CXX_STANDARD 20)
