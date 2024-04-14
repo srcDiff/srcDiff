@@ -27,9 +27,18 @@ FIELD_WIDTH_TEST_CASES = int(SHELL_COLUMNS) - (FIELD_WIDTH_LANGUAGE + 1) - (FIEL
 print(FIELD_WIDTH_TEST_CASES)
 sperrorlist = []
 
-switch_utility = "../build/bin/Debug/switch_differences"
-archive_utility = "../build/bin/Debug/archive_reader"
-srcdiff_utility = "../build/bin/Debug/srcdiff"
+if os.path.exists("../build/bin/Debug"):
+	executable_path = "../build/bin/Debug"
+elif os.path.exists("../build/bin"):
+	executable_path = "../build/bin"
+elif os.path.exists("../bin"):
+	executable_path = "../bin"
+else:
+	raise "Could not find directory for compiled executables!"
+
+switch_utility = f"{executable_path}/switch_differences"
+archive_reader = f"{executable_path}/archive_reader"
+srcdiff_utility = f"{executable_path}/srcdiff"
 
 def safe_communicate(command, inp):
 	"""
@@ -95,7 +104,7 @@ def extract_unit(file, count):
 	units are numbered starting from one
 	"""
 
-	command = [archive_utility, "--unit=" + str(count)]
+	command = [archive_reader, "--unit=" + str(count)]
 
 	return safe_communicate_file(command, file)
 
@@ -108,7 +117,7 @@ def extract_source(file, unit, revision):
 	"gets the source for a specific revision of a unit that srcDiff outputted"
 
 	return safe_communicate_file([
-		archive_utility, "--revision=" + str(revision), "--unit=" + str(unit), "--output-src"
+		archive_reader, "--revision=" + str(revision), "--unit=" + str(unit), "--output-src"
 	], file)
 
 def switch_differences(srcML):
@@ -263,7 +272,7 @@ try:
 				xml_filename = os.path.join(root, name)
 			
 				# get all the info
-				archive_info = json.loads(safe_communicate_file([archive_utility, "--info"], xml_filename))
+				archive_info = json.loads(safe_communicate_file([archive_reader, "--info"], xml_filename))
 				if archive_info == None:
 					print("Problem with", xml_filename)
 					continue
@@ -330,7 +339,7 @@ try:
 						
 						unit_info = json.loads(
 							safe_communicate_file(
-								[archive_utility, "--info", f"--unit={count}"],
+								[archive_reader, "--info", f"--unit={count}"],
 								xml_filename
 							)
 						)
