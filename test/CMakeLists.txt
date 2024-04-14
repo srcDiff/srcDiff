@@ -26,13 +26,14 @@ macro(add_unit_test TEST_FILE)
     string(SUBSTRING ${TEST_NAME_WITH_EXTENSION} 0 ${EXTENSION_BEGIN} TEST_NAME)
 
     add_executable(${TEST_NAME} ${TEST_FILE})
-    target_link_libraries(${TEST_NAME} ${ARGN} srcdiff_static)
+    target_link_libraries(${TEST_NAME} ${ARGN} srcdiff_static Boost::headers)
     add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
     set_target_properties(${TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 endmacro()
 # include sub directories
 if(BUILD_UNIT_TESTS)
+    find_package(Boost REQUIRED)
     add_subdirectory(unit)
 endif()
 
