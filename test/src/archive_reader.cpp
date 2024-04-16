@@ -6,6 +6,8 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
+#include <unordered_map>
+
 const char * INSERT_TAG = "insert";
 const char * DELETE_TAG = "delete";
 const char * COMMON_TAG = "common";
