@@ -20,10 +20,13 @@
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 find_package(LibXml2 REQUIRED)
 find_package(Iconv REQUIRED)
-include_directories(.)
+find_package(CLI11 REQUIRED)
+find_package(srcML REQUIRED)
 
-file(GLOB TEST_SRC *.cpp)
-
-add_executable(switch_differences ${TEST_SRC})
+add_executable(switch_differences switch_differences.cpp)
 target_link_libraries(switch_differences LibXml2::LibXml2)
 set_target_properties(switch_differences PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+add_executable(archive_reader archive_reader.cpp)
+target_link_libraries(archive_reader CLI11::CLI11 LibXml2::LibXml2 srcML::LibsrcML)
+set_target_properties(archive_reader PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
