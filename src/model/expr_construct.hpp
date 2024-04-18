@@ -29,7 +29,7 @@ class expr_construct : virtual public construct {
 
 public:
 
-    expr_construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+    expr_construct(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
         : construct(node_list, start, out), expr_child() {} 
 
     virtual std::shared_ptr<const expr_t> expr(const expr_construct & that) const;

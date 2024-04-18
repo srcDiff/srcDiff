@@ -27,7 +27,7 @@ class expr_t : public construct {
 
 public:
 
-    expr_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : construct(node_list, start, out) {}
+    expr_t(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) : construct(node_list, start, out) {}
     bool is_single_call() const;
     virtual bool is_matchable_impl(const construct & modified) const;
 

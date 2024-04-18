@@ -64,9 +64,9 @@ int shortest_edit_script_t::approximate_compute(const T & structure_one, const T
     std::optional<size_t> match_one;
     std::optional<size_t> match_two;
 
-    for(int pos_one = offset_one; pos_one < look_ahead_one; ++pos_one) {
+    for(std::size_t pos_one = offset_one; pos_one < look_ahead_one; ++pos_one) {
 
-      for(int pos_two = offset_two; pos_two < look_ahead_two; ++pos_two) {
+      for(std::size_t pos_two = offset_two; pos_two < look_ahead_two; ++pos_two) {
 
         const void * left = accessor(pos_one, (const void *)structure_one.data(), context);
         const void * right = accessor(pos_two, (const void *)structure_two.data(), context);

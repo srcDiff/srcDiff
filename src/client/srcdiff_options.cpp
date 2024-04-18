@@ -9,7 +9,6 @@
 #include <stdexcept>
 #include <cstring>
 
-
 // this is the options object that will store all the cli options once they are
 // parsed. it is global so that it never goes out of scope and gets destroyed
 srcdiff_options options;
@@ -305,7 +304,7 @@ void view_option_unified_view_context(const std::string & arg) {
 
   try {
 
-    options.view_options.unified_view_context = (size_t)std::stoll(arg);
+    options.view_options.unified_view_context = (std::size_t)std::stoll(arg);
 
   } catch(std::invalid_argument &) {
 
