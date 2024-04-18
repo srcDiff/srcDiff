@@ -123,7 +123,7 @@ namespace srcML {
     int move;
     std::any user_data;
 
-    unsigned short extra [[maybe_unused]];
+    unsigned short extra;
 
   };
 
