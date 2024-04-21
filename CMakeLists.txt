@@ -1,7 +1,7 @@
 ##
 #  CMakeLists.txt
 #
-#  Copyright (C) 2011-2021  SDML (www.srcML.org)
+#  Copyright (C) 2011-2024  SDML (www.srcDiff.org)
 #
 #  This file is part of the srcDiff translator.
 #
@@ -49,7 +49,7 @@ option(BUILD_UNIT_TESTS "Build all unit tests" OFF)
 option(BUILD_TRANSLATOR_TESTS "Build all transltor tests" ON)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
-
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 

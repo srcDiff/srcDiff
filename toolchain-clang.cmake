@@ -2,7 +2,7 @@
 ##
 # @file toolchain-clang.cmake
 #
-# @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2024 srcML, LLC. (www.srcDiff.org)
 #
 # Clang-specific CMake configuration
 

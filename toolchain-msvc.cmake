@@ -1,7 +1,7 @@
 ##
 #  toolchain-msvc.cmake
 #
-#  Copyright (C) 2014-2023  SDML (www.srcML.org)
+#  Copyright (C) 2014-2024  SDML (www.srcDiff.org)
 #
 #  This file is part of the srcDiff translator.
 #
