@@ -27,7 +27,7 @@ class if_t : public clause {
 
 public:
 
-    if_t(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+    if_t(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
         : clause(node_list, start, out) {}
 
     bool has_real_block() const;

@@ -28,10 +28,9 @@ void srcdiff_comment::output() {
     exit(distance);
   }
 
-  int last_diff_original = 0;
-  int last_diff_modified = 0;
-  int diff_end_original = out->last_output_original();
-  int diff_end_modified = out->last_output_modified();
+  std::size_t last_diff_original = 0;
+  std::size_t diff_end_original = out->last_output_original();
+  std::size_t diff_end_modified = out->last_output_modified();
 
   edit_t * edits = edit_script;
   for (; edits; edits = edits->next) {
@@ -75,7 +74,6 @@ void srcdiff_comment::output() {
 
       // update for common
       last_diff_original = edits->offset_sequence_one + edits->length;
-      last_diff_modified = edit_next->offset_sequence_two + edit_next->length;
       edits = edits->next;
 
     } else {
@@ -89,7 +87,6 @@ void srcdiff_comment::output() {
 
         // update for common
         last_diff_original = edits->offset_sequence_one;
-        last_diff_modified = edits->offset_sequence_two + edits->length;
 
         break;
 
@@ -99,7 +96,6 @@ void srcdiff_comment::output() {
 
         // update for common
         last_diff_original = edits->offset_sequence_one + edits->length;
-        last_diff_modified = edits->offset_sequence_two;
 
         break;
       }
@@ -110,7 +106,7 @@ void srcdiff_comment::output() {
   // determine ending position to output
   diff_end_original = out->last_output_original();
   diff_end_modified = out->last_output_modified();
-  if(last_diff_original < (signed)construct_list_original.size()) {
+  if(last_diff_original < construct_list_original.size()) {
 
     diff_end_original = construct_list_original.back()->end_position() + 1;
     diff_end_modified = construct_list_modified.back()->end_position() + 1;

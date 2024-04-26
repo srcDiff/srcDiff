@@ -27,8 +27,8 @@ void character_diff::output(view_t & view, const std::string & type) {
 
     if(is_diff_name || is_diff_operator || num_consecutive_edits == 1) {
 
-        int last_diff_original = 0;
-        int last_diff_modified = 0;
+        std::size_t last_diff_original = 0;
+        std::size_t last_diff_modified = 0;
         for(const edit_t * edits = ses.script(); edits; edits = edits->next) {
 
         if(edits->operation == SES_DELETE 
@@ -67,7 +67,7 @@ void character_diff::output(view_t & view, const std::string & type) {
 
       }
 
-      if(last_diff_original < (signed)str.original().size()) {
+      if(last_diff_original < str.original().size()) {
         view.output_characters(str.original().substr(last_diff_original), view_t::COMMON);
       }
 

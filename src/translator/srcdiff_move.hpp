@@ -10,14 +10,14 @@ class srcdiff_move : public srcdiff_output {
 
 protected:
 
-	unsigned int & position;
+	std::size_t & position;
 	int operation;
 
 private:
 
 public:
 
-	srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation);
+	srcdiff_move(const srcdiff_output & out, std::size_t & position, int operation);
 
 	static bool is_move(std::shared_ptr<const construct> set);
 

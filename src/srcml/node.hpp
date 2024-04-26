@@ -45,6 +45,7 @@ namespace srcML {
 
     typedef std::map<std::string, attribute, std::greater<std::string>> attribute_map;
     typedef std::pair<std::string, attribute> attribute_map_pair;
+    typedef std::pair<const std::string &, attribute> attribute_map_cpair;
     typedef std::map<std::string, attribute, std::greater<std::string>>::const_iterator attribute_map_citr;
     typedef std::map<std::string, attribute, std::greater<std::string>>::iterator attribute_map_itr;
 
@@ -126,5 +127,7 @@ namespace srcML {
 
   };
 
+  std::ostream & operator<<(std::ostream & out, const node & node);
+  
 }
 #endif

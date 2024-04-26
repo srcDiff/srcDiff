@@ -29,7 +29,7 @@ class always_matched_construct : public construct {
 
 public:
 
-    always_matched_construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
+    always_matched_construct(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
         : construct(node_list, start, out) {}
     static bool is_always_match(const std::string & construct_name);
     virtual bool is_matchable_impl(const construct & modified) const;

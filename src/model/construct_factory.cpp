@@ -60,44 +60,44 @@
 #include <string_view>
 
 typedef std::function<std::shared_ptr<construct>(const srcml_nodes & node_list,
-                                                 int & start,
+                                                 std::size_t & start,
                                                  std::shared_ptr<srcdiff_output> out)
                      > factory_function;
 typedef std::unordered_map<std::string_view, factory_function> factory_map_type;
 
-factory_function default_factory  = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<construct>(node_list, start, out); };
-factory_function class_factory    = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<class_t>(node_list, start, out); };
-factory_function named_factory    = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<named_construct>(node_list, start, out); };
-factory_function name_factory     = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<name_t>(node_list, start, out); };
+factory_function default_factory  = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<construct>(node_list, start, out); };
+factory_function class_factory    = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<class_t>(node_list, start, out); };
+factory_function named_factory    = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<named_construct>(node_list, start, out); };
+factory_function name_factory     = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<name_t>(node_list, start, out); };
 
-factory_function conditional_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<conditional>(node_list, start, out); };
-factory_function condition_factory   = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<condition>(node_list, start, out); };
+factory_function conditional_factory = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<conditional>(node_list, start, out); };
+factory_function condition_factory   = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<condition>(node_list, start, out); };
 
-factory_function if_stmt_factory   = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<if_stmt>(node_list, start, out); };
-factory_function if_factory        = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<if_t>(node_list, start, out); };
-factory_function elseif_factory    = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<elseif>(node_list, start, out); };
-factory_function else_factory      = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<else_t>(node_list, start, out); };
+factory_function if_stmt_factory   = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<if_stmt>(node_list, start, out); };
+factory_function if_factory        = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<if_t>(node_list, start, out); };
+factory_function elseif_factory    = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<elseif>(node_list, start, out); };
+factory_function else_factory      = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<else_t>(node_list, start, out); };
 
-factory_function for_factory       = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<for_t>(node_list, start, out); };
+factory_function for_factory       = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<for_t>(node_list, start, out); };
 
-factory_function case_factory      = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<case_t>(node_list, start, out); };
-factory_function call_factory      = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<call>(node_list, start, out); };
+factory_function case_factory      = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<case_t>(node_list, start, out); };
+factory_function call_factory      = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<call>(node_list, start, out); };
 
-factory_function identifier_decl_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<identifier_decl>(node_list, start, out); };
+factory_function identifier_decl_factory = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<identifier_decl>(node_list, start, out); };
 
-factory_function expr_factory           = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<expr_t>(node_list, start, out); };
-factory_function expr_construct_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<expr_construct>(node_list, start, out); };
-factory_function expr_stmt_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<expr_stmt>(node_list, start, out); };
+factory_function expr_factory           = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<expr_t>(node_list, start, out); };
+factory_function expr_construct_factory = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<expr_construct>(node_list, start, out); };
+factory_function expr_stmt_factory = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<expr_stmt>(node_list, start, out); };
 
-factory_function decl_stmt_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<decl_stmt>(node_list, start, out); };
+factory_function decl_stmt_factory = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<decl_stmt>(node_list, start, out); };
 
-factory_function cast_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<cast>(node_list, start, out); };
+factory_function cast_factory = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<cast>(node_list, start, out); };
 
-factory_function access_region_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<access_region>(node_list, start, out); };
+factory_function access_region_factory = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<access_region>(node_list, start, out); };
 
-factory_function always_match_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<always_matched_construct>(node_list, start, out); };
+factory_function always_match_factory = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<always_matched_construct>(node_list, start, out); };
 
-factory_function block_factory = [](const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<block>(node_list, start, out); };
+factory_function block_factory = [](const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) { return std::make_shared<block>(node_list, start, out); };
 
 factory_map_type factory_map = {
 
@@ -156,7 +156,7 @@ factory_map_type factory_map = {
 
 };
 
-std::shared_ptr<construct> create_construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) {
+std::shared_ptr<construct> create_construct(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) {
 
   std::shared_ptr<const srcML::node> node = node_list[start];
   std::string tag_name;

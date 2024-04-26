@@ -19,8 +19,8 @@ protected:
 
 	srcml_archive * archive;
 	const std::optional<std::string> input_path;
-	const OPTION_TYPE & options;
 	const char * language_string;
+	const OPTION_TYPE & options;
 	const T & input;
 
 private:

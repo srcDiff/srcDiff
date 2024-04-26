@@ -76,7 +76,7 @@ macro(build_library LIBRARY_NAME LIBRARY_TYPE LIBRARY_OUTPUT_NAME)
 endmacro()
 
 # Building static and dynamic libraries for srcDiff.
-build_library(srcdiff_static STATIC srcdiff_static)
+build_library(srcdiff_static STATIC srcdiff)
 set_target_properties(srcdiff_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 build_library(srcdiff_shared SHARED srcdiff)

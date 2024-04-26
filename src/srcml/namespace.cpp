@@ -20,6 +20,13 @@
 
 #include <namespace.hpp>
 
+#include <string>
+#include <optional>
+#include <memory>
+#include <map>
+#include <unordered_map>
+
+
 #include <srcml.h>
 
 std::shared_ptr<srcML::name_space> srcML::name_space::SRC_NAMESPACE = std::make_shared<srcML::name_space>("http://www.srcML.org/srcML/src");
