@@ -355,8 +355,8 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   cli.add_option_function<std::vector<std::string>>(
     "input",
     option_input_file,
-    "Pairs of input source files, separated by spaces.\n"
-    "Example: orig1.cpp mod1.cpp orig2.cpp mod2.cpp ..."
+    "Pairs of input source files or directories, separated by spaces.\n"
+    "Example: orig1.cpp mod1.cpp orig2.cpp mod2.cpp dir1 dir2 ..."
   );
 
   CLI::Option_group * general_group = cli.add_option_group("General");
