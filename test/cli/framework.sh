@@ -158,6 +158,11 @@ localtemp() {
     echo "./tmp/$1"
 }
 
+normalize_path() {
+    # normalize path separator by replacing windows \ with linux /
+    echo "$1" | sed 's/\\/\//'
+}
+
 # get useful variables storing temp code file paths and expected diffs:
 source $(dirname "$0")/constants.sh
 
