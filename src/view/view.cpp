@@ -15,7 +15,7 @@
 #include <cctype>
 #include <cassert>
 
-
+// unused parameters, future API usage?
 int view_t::UNSET  = 0;
 int view_t::COMMON = 1 << 0;
 int view_t::DELETE = 1 << 1;
@@ -313,11 +313,11 @@ void view_t::endDocument() {
  */
 void view_t::startRoot(const char * localname,
                           const char * prefix,
-                          const char * URI,
-                          int num_namespaces,
-                          const struct srcsax_namespace * namespaces,
-                          int num_attributes,
-                          const struct srcsax_attribute * attributes) {
+                          const char * URI [[maybe_unused]],
+                          int num_namespaces [[maybe_unused]],
+                          const struct srcsax_namespace * namespaces [[maybe_unused]],
+                          int num_attributes [[maybe_unused]],
+                          const struct srcsax_attribute * attributes [[maybe_unused]]) {
 
   if(is_archive) {
     diff_stack.push_back(view_t::COMMON);
@@ -456,7 +456,7 @@ void view_t::startElement(const char * localname,
  * SAX handler function for end of the root profile.
  * Overide for desired behavior.
  */
-void view_t::endRoot(const char * localname, const char * prefix, const char * URI) {
+void view_t::endRoot(const char * localname [[maybe_unused]], const char * prefix [[maybe_unused]], const char * URI [[maybe_unused]]) {
 
   if(is_archive) {
     diff_stack.pop_back();
@@ -570,7 +570,7 @@ void view_t::endElement(const char * localname,
  * SAX handler function for character handling at the root level.
  * Overide for desired behavior.
  */
-void view_t::charactersRoot(const char * ch, int len) {}
+void view_t::charactersRoot(const char * ch [[maybe_unused]], int len [[maybe_unused]]) {}
 
 /**
  * charactersUnit

@@ -14,7 +14,7 @@ std::mutex srcml_converter::mutex;
 std::map<std::string, std::shared_ptr<srcML::node>> srcml_converter::start_tags;
 std::map<std::string, std::shared_ptr<srcML::node>> srcml_converter::end_tags;
 
-std::shared_ptr<srcML::node> srcml_converter::get_current_node(xmlTextReaderPtr reader, bool is_archive) {
+std::shared_ptr<srcML::node> srcml_converter::get_current_node(xmlTextReaderPtr reader, bool is_archive [[maybe_unused]]) {
 
   xmlNode * curnode = xmlTextReaderCurrentNode(reader);
   curnode->type = (xmlElementType)xmlTextReaderNodeType(reader);
@@ -99,7 +99,10 @@ srcml_converter::srcml_converter(srcml_archive * archive, bool split_strings, in
 
 srcml_converter::~srcml_converter() {
 
-  if(output_buffer) srcml_memory_free(output_buffer);
+  // libsrcml uses xmlBufferCreate to create this buffer, so we need to use
+  // xmlFree to free it. srcml_memory_free just calls the normal free(), which
+  // might not match how libxml2 made the allocation
+  if(output_buffer) xmlFree(output_buffer);
 
 }
 

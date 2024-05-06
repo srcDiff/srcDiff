@@ -6,7 +6,7 @@
 
 #include <srcdiff_input_source_local.hpp>
 
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 class srcdiff_input_source_git : public srcdiff_input_source_local {
 
@@ -16,8 +16,8 @@ private:
 
   long arg_max;
 
-  boost::filesystem::path original_clone_path;
-  boost::filesystem::path modified_clone_path;
+  std::filesystem::path original_clone_path;
+  std::filesystem::path modified_clone_path;
   bool clean_path;
 
 public:
@@ -27,8 +27,6 @@ public:
   virtual ~srcdiff_input_source_git();
 
   virtual void consume();
-
-  virtual const char * get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified);
 
   virtual void process_file(const std::optional<std::string> & path_original,
                             const std::optional<std::string> & path_modified);

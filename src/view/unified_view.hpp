@@ -3,8 +3,7 @@
 
 #include <view.hpp>
 
-#include <boost/any.hpp>
-
+#include <any>
 #include <vector>
 #include <string>
 #include <list>
@@ -22,9 +21,9 @@ private:
   static const context_mode FUNCTION = 1 << 1;
   static const context_mode ALL      = 1 << 2;
 
-  context_mode modes;
-
   int last_character_operation;
+
+  context_mode modes;
 
   size_t line_number_delete;
   size_t line_number_insert;
@@ -37,7 +36,7 @@ private:
   bool wait_change;
   std::vector<bool> in_function;
 
-  boost::any context_type;
+  std::any context_type;
   std::list<std::string>::size_type length;
   std::list<std::string> additional_context;
 
@@ -60,7 +59,7 @@ public:
                bool ignore_whitespace,
                bool ignore_comments,
                bool is_html,
-               boost::any context_type);
+               std::any context_type);
   virtual ~unified_view();
 
 private:

@@ -38,10 +38,10 @@ public:
     typedef std::vector<std::shared_ptr<const construct>> construct_list;
     typedef std::span<const std::shared_ptr<const construct>> construct_list_view;
 
-    typedef std::function<bool (int & node_pos, const srcml_nodes & node_list, const void * context)> construct_filter;
+    typedef std::function<bool (std::size_t & node_pos, const srcml_nodes & node_list, const void * context)> construct_filter;
 
-    static bool is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context);
-    static bool is_match(int & node_pos, const srcml_nodes & nodes, const void * context);
+    static bool is_non_white_space(std::size_t & node_pos, const srcml_nodes & node_list, const void * context);
+    static bool is_match(std::size_t & node_pos, const srcml_nodes & nodes, const void * context);
 
     /// @todo make member.  Requires modifiying a lot of methods in other classes.
     // name does not quite match because not a member yet.
@@ -56,7 +56,9 @@ public:
 
     construct(const construct & that);
 
-    construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>());
+    construct(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>());
+
+    virtual ~construct() {};
 
     void swap(construct & that);
     construct & operator=(construct that);

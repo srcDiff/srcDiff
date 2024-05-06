@@ -144,7 +144,7 @@ bool is_nest_type(std::shared_ptr<const construct> & structure,
   if(structure->root_term()->get_type() != srcML::node_type::START)
     return false;
 
-    if(structure->root_term()->get_namespace()->get_uri() != SRCML_SRC_NAMESPACE_HREF)
+  if(structure->root_term()->get_namespace()->get_uri() != SRCML_SRC_NAMESPACE_HREF)
     return true;
 
   for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i) {
@@ -273,7 +273,7 @@ bool srcdiff_nested::is_better_nested(construct::construct_list_view original, c
 
   const srcdiff_measure & measure = *original[0]->measure(*modified[0]);
 
-  for(int pos = 0; pos < original.size(); ++pos) {
+  for(std::size_t pos = 0; pos < original.size(); ++pos) {
 
     int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
     check_nestable(original, modified,
@@ -286,7 +286,7 @@ bool srcdiff_nested::is_better_nested(construct::construct_list_view original, c
 
   }
 
-  for(int pos = 0; pos < modified.size(); ++pos) {
+  for(std::size_t pos = 0; pos < modified.size(); ++pos) {
 
     int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
     check_nestable(original, modified,
@@ -329,8 +329,6 @@ bool srcdiff_nested::check_nest_name(const construct & set_original,
                      const construct & set_modified,
                      std::optional<std::shared_ptr<srcML::node>> parent_modified) {
 
-  int original_pos = set_original.start_position();
-  int modified_pos = set_modified.start_position();
 
   if(set_original.root_term_name() == "text") return false;
   if(set_modified.root_term_name() == "text") return false;
@@ -354,7 +352,7 @@ bool srcdiff_nested::check_nest_name(const construct & set_original,
 
   if(is_call_name_original && is_expr_name_modified) {
 
-    int simple_name_pos = set_original.start_position();
+    std::size_t simple_name_pos = set_original.start_position();
     if(set_original.nodes().at(simple_name_pos)->get_name() == "name") {
 
       std::shared_ptr<construct> inner_set = std::make_shared<construct>(set_original.nodes(), simple_name_pos);
@@ -368,7 +366,7 @@ bool srcdiff_nested::check_nest_name(const construct & set_original,
 
   if(is_call_name_modified && is_expr_name_original) {
 
-    int simple_name_pos = set_modified.start_position();
+    std::size_t simple_name_pos = set_modified.start_position();
     if(set_modified.nodes().at(simple_name_pos)->get_name() == "name") {
 
       std::shared_ptr<construct> inner_set = std::make_shared<construct>(set_modified.nodes(), simple_name_pos);
@@ -642,11 +640,11 @@ bool srcdiff_nested::check_nestable_predicate(construct::construct_list_view con
 
 std::tuple<std::vector<int>, int, int> srcdiff_nested::check_nestable(construct::construct_list_view parent_list, construct::construct_list_view child_list) {
 
-  for(size_t i = 0; i < parent_list.size(); ++i) {
+  for(std::size_t i = 0; i < parent_list.size(); ++i) {
 
     if(parent_list[i]->root_term()->get_move()) continue;
 
-    for(size_t j = 0; j < child_list.size(); ++j) {
+    for(std::size_t j = 0; j < child_list.size(); ++j) {
 
       if(check_nestable_predicate(construct::construct_list_view(&parent_list[i], parent_list.size() - i),
                                   construct::construct_list_view(&child_list[j], child_list.size() - j))) {
@@ -655,8 +653,7 @@ std::tuple<std::vector<int>, int, int> srcdiff_nested::check_nestable(construct:
 
       std::tuple<std::vector<int>, int, int> nestings = std::make_tuple(std::vector<int>(), i, i + 1);
       std::get<0>(nestings).push_back(j);
-
-      for(int k = j + 1; k < child_list.size(); ++k) {
+      for(std::size_t k = j + 1; k < child_list.size(); ++k) {
 
         if(check_nestable_predicate(construct::construct_list_view(&parent_list[i], parent_list.size() - i),
                                     construct::construct_list_view(&child_list[k], child_list.size() - k))) {
@@ -743,8 +740,8 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
                   int end_inner,
                   int operation) {
 
-  size_t start_pos = construct_list_outer.at(start_outer)->get_terms().at(1);
-  size_t end_pos = construct_list_outer.at(end_outer - 1)->end_position();
+  std::size_t start_pos = construct_list_outer.at(start_outer)->get_terms().at(1);
+  std::size_t end_pos = construct_list_outer.at(end_outer - 1)->end_position();
 
   const std::string & structure_outer = construct_list_outer.at(start_outer)->root_term_name();
   if(structure_outer == "block_content") {

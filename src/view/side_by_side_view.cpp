@@ -149,7 +149,7 @@ void side_by_side_view::add_new_line() {
 void side_by_side_view::output_html() {
 
   int magnitude = 0;
-  size_t lines = line_operations.size();
+  std::size_t lines = line_operations.size();
   while(lines > 0) {
 
     lines /= 10;
@@ -162,7 +162,7 @@ void side_by_side_view::output_html() {
   (*output) << "<table><tr><th><strong>Original</strong></th></tr><tr><td><pre>";
 
   int line_number = 1;
-  for(int i = 0; i < original_lines.size(); ++i) {
+  for(std::size_t i = 0; i < original_lines.size(); ++i) {
 
     (*output) << "<span style=\"color: " + theme->line_number_color + ";\">";
     if(line_operations[i] != view_t::INSERT) {
@@ -187,7 +187,7 @@ void side_by_side_view::output_html() {
   (*output) << "<table><tr><th><strong>Modified</strong></th></tr><tr><td><pre>";
 
   line_number = 1;
-  for(int i = 0; i < modified_lines.size(); ++i) {
+  for(std::size_t i = 0; i < modified_lines.size(); ++i) {
 
     (*output) << "<span style=\"color: " + theme->line_number_color + ";\">";
     if(line_operations[i] != view_t::DELETE) {
@@ -215,11 +215,11 @@ void side_by_side_view::output_html() {
 void side_by_side_view::output_bash() {
 
     int max_width = 0;
-    for(const std::tuple<std::shared_ptr<std::ostringstream>, int, unsigned int, size_t> & line : original_lines) {
+    for(const std::tuple<std::shared_ptr<std::ostringstream>, int, unsigned int, std::size_t> & line : original_lines) {
       max_width = std::max(max_width, std::get<OPERATION>(line));
     }
 
-    for(int i = 0; i < original_lines.size(); ++i) {
+    for(std::size_t i = 0; i < original_lines.size(); ++i) {
 
       (*output) << theme->common_color << std::get<STREAM>(original_lines[i])->str();
 
@@ -251,11 +251,11 @@ void side_by_side_view::output_bash() {
 }
 
 void side_by_side_view::start_element(const std::string & local_name, 
-                                         const char * prefix, const char * URI,
-                                         int num_namespaces,
-                                         const struct srcsax_namespace * namespaces,
-                                         int num_attributes,
-                                         const struct srcsax_attribute * attributes) {
+                                         const char * prefix [[maybe_unused]], const char * URI,
+                                         int num_namespaces [[maybe_unused]],
+                                         const struct srcsax_namespace * namespaces [[maybe_unused]],
+                                         int num_attributes [[maybe_unused]],
+                                         const struct srcsax_attribute * attributes [[maybe_unused]]) {
 
   if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
@@ -285,7 +285,7 @@ void side_by_side_view::start_element(const std::string & local_name,
 
 }
 
-void side_by_side_view::end_element(const std::string & local_name, const char * prefix,
+void side_by_side_view::end_element(const std::string & local_name, const char * prefix [[maybe_unused]],
                                const char * URI) {
 
   if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
@@ -426,19 +426,19 @@ void side_by_side_view::characters(const char * ch, int len) {
 
 }
 
-void side_by_side_view::start_unit(const std::string & local_name,
-                                   const char * prefix,
-                                   const char * URI,
-                                   int num_namespaces,
-                                   const struct srcsax_namespace * namespaces,
-                                   int num_attributes,
-                                   const struct srcsax_attribute * attributes) {
+void side_by_side_view::start_unit(const std::string & local_name [[maybe_unused]],
+                                   const char * prefix [[maybe_unused]],
+                                   const char * URI [[maybe_unused]],
+                                   int num_namespaces [[maybe_unused]],
+                                   const struct srcsax_namespace * namespaces [[maybe_unused]],
+                                   int num_attributes [[maybe_unused]],
+                                   const struct srcsax_attribute * attributes [[maybe_unused]]) {
 
     add_new_line();
 
 }
 
-void side_by_side_view::end_unit(const std::string & local_name, const char * prefix, const char * URI) {
+void side_by_side_view::end_unit(const std::string & local_name [[maybe_unused]], const char * prefix [[maybe_unused]], const char * URI [[maybe_unused]]) {
 
   if((!change_ending_space_original.empty() || !change_ending_space_modified.empty())) {
 

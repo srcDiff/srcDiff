@@ -32,25 +32,13 @@ struct offset_pair {
 class srcdiff_match {
 
 public:
-  typedef std::function<bool (construct::construct_list_view original,
-                              construct::construct_list_view modified)> is_match_func;
-  static bool is_match_default(construct::construct_list_view original,
-                               construct::construct_list_view modified);
+  srcdiff_match(const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified);
+  offset_pair * match_differences();
 
 protected:
 
   const construct::construct_list & construct_list_original;
   const construct::construct_list & construct_list_modified;
-
-  const is_match_func & is_match;
-
-private:
-
-public:
-
-  srcdiff_match(const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified,
-                const is_match_func & is_match = is_match_default);
-  offset_pair * match_differences();
 
 };
 

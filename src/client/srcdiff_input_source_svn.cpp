@@ -112,11 +112,16 @@ void srcdiff_input_source_svn::consume() {
 
 const char * srcdiff_input_source_svn::get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified) {
 
-  std::optional<std::string> path = path_original;
-  if(!path || path->empty()) path = path_modified;
-  if(!path || path->empty()) path = options.svn_url->c_str();
+  const char * archive_language = srcml_archive_get_language(options.archive);
+  if (archive_language) {
+    return archive_language;
+  } else {
+    std::optional<std::string> path = path_original;
+    if(!path || path->empty()) path = path_modified;
+    if(!path || path->empty()) path = options.svn_url->c_str();
 
-  return srcml_archive_check_extension(options.archive, path->c_str());
+    return srcml_archive_check_extension(options.archive, path->c_str());
+  }
 
 }
 
@@ -222,10 +227,7 @@ void srcdiff_input_source_svn::process_file(const std::optional<std::string> & p
   srcdiff_input<srcdiff_input_source_svn> input_original(options.archive, svn_path_original_temp, language_string, 0, *this);
   srcdiff_input<srcdiff_input_source_svn> input_modified(options.archive, svn_path_modified_temp, language_string, 0, *this);
 
-  line_diff_range<srcdiff_input_source_svn> line_diff_range(svn_path_original_temp, svn_path_modified_temp, this);
-
-  translator->translate(input_original, input_modified, line_diff_range, language_string,
-                        unit_filename, unit_version);
+  translator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
 
 }
 

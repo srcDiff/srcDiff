@@ -22,8 +22,9 @@ struct difference {
 
 };
 
-bool srcdiff_match::is_match_default(construct::construct_list_view original, construct::construct_list_view modified) {
+bool is_match(construct::construct_list_view original, construct::construct_list_view modified) {
   const srcdiff_measure & measure = *original[0]->measure(*modified[0]);
+
   if(measure.similarity() == MAX_INT) return false;
 
   if(!original[0]->is_match_similar(*modified[0]) && !original[0]->can_refine_difference(*modified[0]))
@@ -37,10 +38,8 @@ bool srcdiff_match::is_match_default(construct::construct_list_view original, co
 }
 
 
-srcdiff_match::srcdiff_match(const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified,
-                             const is_match_func & is_match)
-  : construct_list_original(construct_list_original), construct_list_modified(construct_list_modified),
-    is_match(is_match) {}
+srcdiff_match::srcdiff_match(const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified)
+  : construct_list_original(construct_list_original), construct_list_modified(construct_list_modified) {}
 
 /** loop O(D) */
 static offset_pair * create_linked_list(int olength, int nlength, difference * differences) {

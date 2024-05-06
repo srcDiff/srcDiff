@@ -4,8 +4,6 @@
 #include <namespace.hpp>
 #include <srcml_nodes.hpp>
 #include <srcdiff_options.hpp>
-#include <line_diff_range.hpp>
-#include <color_diff.hpp>
 
 #include <view.hpp>
 #include <unified_view.hpp>
@@ -13,8 +11,8 @@
 
 #include <methods.hpp>
 #include <srcdiff_constants.hpp>
+#include <shortest_edit_script.h>
 
-#include <boost/any.hpp>
 #include <optional>
 
 #include <vector>
@@ -86,10 +84,10 @@ public:
 
     std::string filename;
     srcml_unit * unit;
-    bool approximate;
 
     const METHOD_TYPE & method;
-
+    bool approximate;
+    
     std::vector<diff_set *> output_diff;
 
   };
@@ -103,8 +101,6 @@ protected:
   std::shared_ptr<reader_state> rbuf_original;
   std::shared_ptr<reader_state> rbuf_modified;
   std::shared_ptr<writer_state> wstate;
-
-  std::shared_ptr<color_diff> colordiff;
 
   std::shared_ptr<view_t> view;
 
@@ -149,8 +145,7 @@ public:
   virtual void initialize(int is_original, int is_modified);
   virtual void start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version);
 
-  template<class T>
-  void finish(line_diff_range<T> & line_diff_range);
+  void finish();
   virtual void reset();
   virtual void close();
 
@@ -179,69 +174,5 @@ public:
   virtual void output_char(char character, int operation);
 
 };
-
-template<class T>
-void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
-
-  static const std::shared_ptr<srcML::node> flush = std::make_shared<srcML::node>(srcML::node_type::TEXT, "text");
-  output_node(flush, SES_COMMON);
-
-  if(wstate->approximate) {
-    srcml_write_start_element(wstate->unit, SRCDIFF_DEFAULT_NAMESPACE_PREFIX.c_str(), "approximate", 0);
-    srcml_write_end_element(wstate->unit);
-  }
-
-  srcml_write_end_unit(wstate->unit);
-
-  if(is_option(flags, OPTION_VISUALIZE)) {
-
-    const char * xml = srcml_unit_get_srcml(wstate->unit);
-    colordiff->colorize(xml, line_diff_range);
-
-  } else if(is_option(flags, OPTION_UNIFIED_VIEW | OPTION_SIDE_BY_SIDE_VIEW)) {
-
-    const char * xml = srcml_unit_get_srcml(wstate->unit);
-    view->transform(xml, "UTF-8");
-
-  } else if(is_option(flags, OPTION_BURST)) {
-
-    srcml_archive * srcdiff_archive = srcml_archive_clone(archive);
-    srcml_archive_enable_solitary_unit(srcdiff_archive);
-    srcml_archive_disable_hash(srcdiff_archive);
-
-    std::string filename = srcml_unit_get_filename(wstate->unit);
-    std::string::size_type pos;
-    if((pos = filename.find('|')) != std::string::npos) {
-
-      if(pos == 0) {
-        filename = filename.substr(1, std::string::npos);
-      }
-      else {
-        filename = filename.substr(0, pos);
-      }
-
-    }
-
-    for(std::string::size_type pos = filename.find('/'); pos != std::string::npos; pos = filename.find('/', pos + 1)) {
-      filename.replace(pos, 1, "_");
-    }
-    filename += ".srcdiff";
-
-    filename = wstate->filename + "/" + filename;
-    srcml_archive_write_open_filename(srcdiff_archive, filename.c_str());
-
-    srcml_archive_write_unit(srcdiff_archive, wstate->unit);
-    srcml_archive_close(srcdiff_archive);
-    srcml_archive_free(srcdiff_archive);
-
-  } 
-
-  if(output_srcdiff) {
-    srcml_archive_write_unit(archive, wstate->unit);
-  }
-
-  srcml_unit_free(wstate->unit);
-
- }
 
 #endif

@@ -34,7 +34,7 @@
 
 #include <cstdlib>
 
-void srcdiff_libxml_error(void *ctx, const char *msg, ...) {}
+void srcdiff_libxml_error(void *ctx [[maybe_unused]], const char *msg [[maybe_unused]], ...) {}
 
 srcdiff_input_source * next_input_source(const srcdiff_options & options);
 

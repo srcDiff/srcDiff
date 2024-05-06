@@ -3,7 +3,6 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <node_set.hpp>
 #include <srcml_converter.hpp>
 #include <iostream>
 #include <cstdio>
@@ -40,10 +39,10 @@ std::shared_ptr<srcml_nodes> create_nodes(const std::string & code, const std::s
 
     //Create burst_config object
 	const srcml_converter::srcml_burst_config burst_config = {
-	       	boost::optional<std::string>(),
+	       	std::optional<std::string>(),
 	       	"",
-	       	boost::optional<std::string>(),
-	       	boost::optional<std::string>()
+	       	std::optional<std::string>(),
+	       	std::optional<std::string>()
        	};
 
     //create srcml_nodes
@@ -55,11 +54,7 @@ std::shared_ptr<srcml_nodes> create_nodes(const std::string & code, const std::s
 	return std::make_shared<srcml_nodes>(testNode);
 }
 
-node_set_data create_node_set(const std::string & code, const std::string & language) {
-
-	std::shared_ptr<srcml_nodes> nodes = create_nodes(code, language);
-	int pos = 0;
-
-	node_set_data set = { nodes, node_set(*nodes, pos) };
-	return set;
+std::shared_ptr<construct> create_test_construct(const srcml_nodes & nodes) {
+	size_t START = 0;
+	return create_construct(nodes, START);
 }

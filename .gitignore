@@ -1,3 +1,13 @@
+html
+
+build
+
+test/cli/*log*
+test/cli/tmp
+
+*.vcxproj*
+*.sln
+
 # general
 *~
 \#*\#
@@ -5,6 +15,7 @@
 *.pyc
 .DS_Store
 bin
+.vs
 
 # cmake/ctest/cpack
 CMakeCache.txt
@@ -16,3 +27,4 @@ CTestTestfile.cmake
 DartConfiguration.tcl
 Testing
 Makefile
+_deps

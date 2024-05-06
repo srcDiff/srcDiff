@@ -19,7 +19,10 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+find_package(srcML REQUIRED)
+
 # include sub directories
 file(GLOB COMMON_HEADERS *.hpp ${CMAKE_SOURCE_DIR}/src/translator/srcdiff_constants.hpp)
 file(GLOB COMMON_SOURCE *.cpp)
 add_library(common OBJECT ${COMMON_HEADERS}	${COMMON_SOURCE})
+target_link_libraries(common srcML::LibsrcML)

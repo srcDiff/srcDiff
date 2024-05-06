@@ -1,5 +1,8 @@
 #include <versioned_string.hpp>
-#include <execinfo.h>
+// TODO: is this still used?
+#ifdef __linux__
+    #include <execinfo.h>
+#endif
 #include <sstream>
 #include <iterator>
 
