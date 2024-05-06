@@ -77,10 +77,10 @@ endmacro()
 
 # Building static and dynamic libraries for srcDiff.
 if (NOT DEFINED STATIC_LIB_NAME)
-    set(STATIC_LIB_NAME "srcdiff")
+    set(STATIC_LIB_NAME srcdiff)
 endif()
 
-build_library(srcdiff_static STATIC "${STATIC_LIB_NAME}")
+build_library(srcdiff_static STATIC ${STATIC_LIB_NAME})
 set_target_properties(srcdiff_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 build_library(srcdiff_shared SHARED srcdiff)
