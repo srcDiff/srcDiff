@@ -119,13 +119,13 @@ void srcdiff_input_source_local::process_directory(const std::optional<std::stri
   }
 
   std::vector<std::filesystem::directory_entry> original_contents;
-  for (auto e : std::filesystem::directory_iterator(original_entry)){
+  for (std::filesystem::directory_entry e : std::filesystem::directory_iterator(original_entry)){
     original_contents.push_back(e);
   }
   std::sort(original_contents.begin(), original_contents.end());
   
   std::vector<std::filesystem::directory_entry> modified_contents;
-  for (auto e : std::filesystem::directory_iterator(modified_entry)){
+  for (std::filesystem::directory_entry e : std::filesystem::directory_iterator(modified_entry)){
     modified_contents.push_back(e);
   }
   std::sort(modified_contents.begin(), modified_contents.end());
