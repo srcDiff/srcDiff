@@ -31,8 +31,11 @@ public:
                               const construct & set_modified,
                               std::optional<std::shared_ptr<srcML::node>> parent_modified);
 
+  /// @todo replace? start/end 
   srcdiff_nested(const srcdiff_many & diff, int start_original, int end_original, int start_modified, int end_modified, int operation);
 
+  /// @todo replace? start/end
+  /// Why does this take a whitespace?
   void output_inner(srcdiff_whitespace & whitespace,
                   const construct::construct_list & construct_list_outer,
                   int start_outer,
@@ -44,6 +47,7 @@ public:
 
   virtual void output();
 
+  /// @todo Return Object?
   static void check_nestable(construct::construct_list_view original, construct::construct_list_view modified,
                              int & start_nest_original, int & end_nest_original, int & start_nest_modified, int & end_nest_modified,
                              int & operation);
