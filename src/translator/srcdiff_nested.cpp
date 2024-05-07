@@ -646,8 +646,8 @@ std::tuple<std::vector<int>, int, int> srcdiff_nested::check_nestable(construct:
 
     for(std::size_t j = 0; j < child_list.size(); ++j) {
 
-      if(check_nestable_predicate(construct::construct_list_view(&parent_list[i], parent_list.size() - i),
-                                  construct::construct_list_view(&child_list[j], child_list.size() - j))) {
+      if(check_nestable_predicate(parent_list.subspan(i, parent_list.size() - i),
+                                  child_list.subspan(j, child_list.size() - j))) {
         continue;
       }
 
@@ -655,8 +655,8 @@ std::tuple<std::vector<int>, int, int> srcdiff_nested::check_nestable(construct:
       std::get<0>(nestings).push_back(j);
       for(std::size_t k = j + 1; k < child_list.size(); ++k) {
 
-        if(check_nestable_predicate(construct::construct_list_view(&parent_list[i], parent_list.size() - i),
-                                    construct::construct_list_view(&child_list[k], child_list.size() - k))) {
+        if(check_nestable_predicate(parent_list.subspan(i, parent_list.size() - i),
+                                    child_list.subspan(k, child_list.size() - k))) {
           continue;
         }
 
