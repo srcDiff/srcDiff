@@ -731,14 +731,18 @@ void srcdiff_nested::check_nestable(construct::construct_list_view original, con
 
 }
 
-void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
-                  const construct::construct_list & construct_list_outer,
+void srcdiff_nested::output_inner(const construct::construct_list & construct_list_outer,
                   int start_outer,
                   int end_outer,
                   const construct::construct_list & construct_list_inner,
                   int start_inner,
                   int end_inner,
                   int operation) {
+
+  srcdiff_whitespace whitespace(*out);
+
+  whitespace.output_prefix();
+
 
   std::size_t start_pos = construct_list_outer.at(start_outer)->get_terms().at(1);
   std::size_t end_pos = construct_list_outer.at(end_outer - 1)->end_position();
@@ -823,13 +827,8 @@ void srcdiff_nested::output_inner(srcdiff_whitespace & whitespace,
 
 void srcdiff_nested::output() {
 
-  srcdiff_whitespace whitespace(*out);
-
-  whitespace.output_prefix();
-
   if(operation == SES_DELETE)
-    output_inner(whitespace,
-                 construct_list_original,
+    output_inner(construct_list_original,
                  start_original,
                  end_original,
                  construct_list_modified,
@@ -838,8 +837,7 @@ void srcdiff_nested::output() {
                  operation);
 
   else
-    output_inner(whitespace,
-                 construct_list_modified,
+    output_inner(construct_list_modified,
                  start_modified,
                  end_modified,
                  construct_list_original,

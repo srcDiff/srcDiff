@@ -36,8 +36,7 @@ public:
 
   /// @todo replace? start/end
   /// Why does this take a whitespace?
-  void output_inner(srcdiff_whitespace & whitespace,
-                  const construct::construct_list & construct_list_outer,
+  void output_inner(const construct::construct_list & construct_list_outer,
                   int start_outer,
                   int end_outer,
                   const construct::construct_list & construct_list_inner,
