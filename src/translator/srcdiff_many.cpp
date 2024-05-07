@@ -11,44 +11,42 @@
 
 constexpr int MOVE = int(SES_INSERT) + 1;
 
+construct::construct_list_view safe_subspan(construct::construct_list_view view, std::size_t start, std::size_t end) {
+  if(start < 0 || start > end || end > view.size()) return construct::construct_list_view();
+  return view.subspan(start, end - start + 1);
+}
+
 srcdiff_many::srcdiff_many(const srcdiff_diff & diff, edit_t * edit_script) : srcdiff_diff(diff), edit_script(edit_script) {}
 
-void srcdiff_many::output_unmatched(int start_original, int end_original, int start_modified, int end_modified) {
+void srcdiff_many::output_unmatched(construct::construct_list_view original_unmatched, construct::construct_list_view modified_unmatched) {
 
   unsigned int finish_original = out->last_output_original();
   unsigned int finish_modified = out->last_output_modified();
 
-  if((start_original <= end_original && start_original >= 0 && end_original < (signed)original.size())
-      || (start_modified <= end_modified && start_modified >= 0 && end_modified < (signed)modified.size())) {
+  construct::construct_list_view original_view = original_unmatched;
+  construct::construct_list_view modified_view = modified_unmatched;
+  if(!original_view.empty() || !modified_view.empty()) {
 
-    if(start_original <= end_original && start_original >= 0 && end_original < (signed)original.size()
-      && start_modified <= end_modified && start_modified >= 0 && end_modified < (signed)modified.size()) {
+    if(!original_view.empty() && !modified_view.empty()) {
 
       int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
 
       do {
 
-        construct::construct_list_view original_view = construct::construct_list_view(&original[start_original], end_original - start_original + 1);
-        construct::construct_list_view modified_view = construct::construct_list_view(&modified[start_modified], end_modified - start_modified + 1);
-
         srcdiff_nested::check_nestable(original_view, modified_view,
                                        start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation);
     
-        finish_original = original[end_original]->end_position() + 1;
-        finish_modified = modified[end_modified]->end_position() + 1;
+        finish_original = original_unmatched.back()->end_position() + 1;
+        finish_modified = modified_unmatched.back()->end_position() + 1;
 
         unsigned int pre_nest_end_original = 0;
         if(start_nest_original > 0) {
-
-          pre_nest_end_original = original[start_nest_original + start_original - 1]->end_position() + 1;
-
+          pre_nest_end_original = original_view[start_nest_original - 1]->end_position() + 1;
         }
 
         unsigned int pre_nest_end_modified = 0;
         if(start_nest_modified > 0) {
-
-          pre_nest_end_modified = modified[start_nest_modified + start_modified - 1]->end_position() + 1;
-
+          pre_nest_end_modified = modified_view[start_nest_modified - 1]->end_position() + 1;
         }
 
         srcdiff_change::output_change(out, pre_nest_end_original, pre_nest_end_modified);
@@ -62,13 +60,13 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
 
         }
 
-        start_original += end_nest_original;
-        start_modified += end_nest_modified;
+        original_view = original_view.subspan(end_nest_original);
+        modified_view = modified_view.subspan(end_nest_modified);
 
-      } while((end_nest_original - start_nest_original) > 0 && (end_nest_modified - start_nest_modified) > 0 && start_original <= end_original && start_modified <= end_modified);
+      } while((end_nest_original - start_nest_original) > 0 && (end_nest_modified - start_nest_modified) > 0 && !original_view.empty() && !modified_view.empty());
 
       /** @todo may only need to do this if not at end */
-      if(end_nest_original > end_original && end_nest_modified > end_modified) {
+      if(original_view.empty() && modified_view.empty()) {
 
         srcdiff_change::output_change(out, finish_original, finish_modified);
         return;
@@ -77,41 +75,40 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
 
     } else {
 
-      if(start_original <= end_original && start_original >= 0 && end_original < (signed)original.size()) {
+      if(!original_view.empty()) {
 
-        finish_original = original[end_original]->end_position() + 1;
+        finish_original = original_unmatched.back()->end_position() + 1;
       }
 
-      if(start_modified <= end_modified && start_modified >= 0 && end_modified < (signed)modified.size()) {
+      if(!modified_view.empty()) {
 
-        finish_modified = modified[end_modified]->end_position() + 1;
+        finish_modified = modified_unmatched.back()->end_position() + 1;
       }
 
     }
 
-    if(start_original == end_original && start_original >= 0 && end_original < (signed)original.size()
-      && start_modified == end_modified && start_modified >= 0 && end_modified < (signed)modified.size()) {
+    if(original_view.size() == 1 && modified_view.size() == 1) {
 
-      if(is_identifier(original[start_original]->term(0)->get_name())
-         && is_identifier(modified[start_modified]->term(0)->get_name())) {
-         output_replace_inner_whitespace(original[start_original]->start_position(), finish_original,
-                                         modified[start_modified]->start_position(), finish_modified,
+      if(is_identifier(original_view.front()->term(0)->get_name())
+         && is_identifier(modified_view.front()->term(0)->get_name())) {
+         output_replace_inner_whitespace(original_view.front()->start_position(), finish_original,
+                                         modified_view.front()->start_position(), finish_modified,
                                          1);
        
           }
 
-       if(original[start_original]->term(0)->get_name() == "return"
-          && modified[start_modified]->term(0)->get_name() == "return") {
-          output_replace_inner_whitespace(original[start_original]->start_position(), finish_original,
-                                          modified[start_modified]->start_position(), finish_modified,
+       if(original_view.front()->term(0)->get_name() == "return"
+          && modified_view.front()->term(0)->get_name() == "return") {
+          output_replace_inner_whitespace(original_view.front()->start_position(), finish_original,
+                                          modified_view.front()->start_position(), finish_modified,
                                           2);
         
           }
 
-       if(original[start_original]->term(0)->get_name() == "throw"
-          && modified[start_modified]->term(0)->get_name() == "throw") {
-          output_replace_inner_whitespace(original[start_original]->start_position(), finish_original,
-                                          modified[start_modified]->start_position(), finish_modified,
+       if(original_view.front()->term(0)->get_name() == "throw"
+          && modified_view.front()->term(0)->get_name() == "throw") {
+          output_replace_inner_whitespace(original_view.front()->start_position(), finish_original,
+                                          modified_view.front()->start_position(), finish_modified,
                                           2);
         
           }
@@ -238,8 +235,8 @@ void srcdiff_many::output() {
       ;
 
     // output diffs until match
-    output_unmatched(edits->offset_sequence_one + start_original, edits->offset_sequence_one + end_original - 1, 
-                     edit_next->offset_sequence_two + start_modified, edit_next->offset_sequence_two + end_modified - 1);
+    output_unmatched(safe_subspan(original, edits->offset_sequence_one + start_original, edits->offset_sequence_one + end_original - 1), 
+                     safe_subspan(modified, edit_next->offset_sequence_two + start_modified, edit_next->offset_sequence_two + end_modified - 1));
 
     i = end_original;
     j = end_modified;
@@ -273,7 +270,7 @@ void srcdiff_many::output() {
 
   }
 
-  output_unmatched(edits->offset_sequence_one + i, edits->offset_sequence_one + original_moved.size() - 1,
-                   edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + modified_moved.size() - 1);
+  output_unmatched(safe_subspan(original, edits->offset_sequence_one + i, edits->offset_sequence_one + original_moved.size() - 1),
+                   safe_subspan(modified, edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + modified_moved.size() - 1));
 
 }
