@@ -18,18 +18,18 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
   unsigned int finish_original = out->last_output_original();
   unsigned int finish_modified = out->last_output_modified();
 
-  if((start_original <= end_original && start_original >= 0 && end_original < (signed)construct_list_original.size())
-      || (start_modified <= end_modified && start_modified >= 0 && end_modified < (signed)construct_list_modified.size())) {
+  if((start_original <= end_original && start_original >= 0 && end_original < (signed)original.size())
+      || (start_modified <= end_modified && start_modified >= 0 && end_modified < (signed)modified.size())) {
 
-    if(start_original <= end_original && start_original >= 0 && end_original < (signed)construct_list_original.size()
-      && start_modified <= end_modified && start_modified >= 0 && end_modified < (signed)construct_list_modified.size()) {
+    if(start_original <= end_original && start_original >= 0 && end_original < (signed)original.size()
+      && start_modified <= end_modified && start_modified >= 0 && end_modified < (signed)modified.size()) {
 
       int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
 
       do {
 
-        construct::construct_list_view original_view = construct::construct_list_view(&construct_list_original.at(start_original), end_original - start_original + 1);
-        construct::construct_list_view modified_view = construct::construct_list_view(&construct_list_modified.at(start_modified), end_modified - start_modified + 1);
+        construct::construct_list_view original_view = construct::construct_list_view(&original.at(start_original), end_original - start_original + 1);
+        construct::construct_list_view modified_view = construct::construct_list_view(&modified.at(start_modified), end_modified - start_modified + 1);
 
         srcdiff_nested::check_nestable(original_view, modified_view,
                                        start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation);
@@ -39,20 +39,20 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
         start_nest_modified += start_modified;
         end_nest_modified += start_modified;
         
-        finish_original = construct_list_original.at(end_original)->end_position() + 1;
-        finish_modified = construct_list_modified.at(end_modified)->end_position() + 1;
+        finish_original = original.at(end_original)->end_position() + 1;
+        finish_modified = modified.at(end_modified)->end_position() + 1;
 
         unsigned int pre_nest_end_original = 0;
         if(start_nest_original > 0) {
 
-          pre_nest_end_original = construct_list_original.at(start_nest_original - 1)->end_position() + 1;
+          pre_nest_end_original = original.at(start_nest_original - 1)->end_position() + 1;
 
         }
 
         unsigned int pre_nest_end_modified = 0;
         if(start_nest_modified > 0) {
 
-          pre_nest_end_modified = construct_list_modified.at(start_nest_modified - 1)->end_position() + 1;
+          pre_nest_end_modified = modified.at(start_nest_modified - 1)->end_position() + 1;
 
         }
 
@@ -80,41 +80,41 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
 
     } else {
 
-      if(start_original <= end_original && start_original >= 0 && end_original < (signed)construct_list_original.size()) {
+      if(start_original <= end_original && start_original >= 0 && end_original < (signed)original.size()) {
 
-        finish_original = construct_list_original.at(end_original)->end_position() + 1;
+        finish_original = original.at(end_original)->end_position() + 1;
       }
 
-      if(start_modified <= end_modified && start_modified >= 0 && end_modified < (signed)construct_list_modified.size()) {
+      if(start_modified <= end_modified && start_modified >= 0 && end_modified < (signed)modified.size()) {
 
-        finish_modified = construct_list_modified.at(end_modified)->end_position() + 1;
+        finish_modified = modified.at(end_modified)->end_position() + 1;
       }
 
     }
 
-    if(start_original == end_original && start_original >= 0 && end_original < (signed)construct_list_original.size()
-      && start_modified == end_modified && start_modified >= 0 && end_modified < (signed)construct_list_modified.size()) {
+    if(start_original == end_original && start_original >= 0 && end_original < (signed)original.size()
+      && start_modified == end_modified && start_modified >= 0 && end_modified < (signed)modified.size()) {
 
-      if(is_identifier(construct_list_original.at(start_original)->term(0)->get_name())
-         && is_identifier(construct_list_modified.at(start_modified)->term(0)->get_name())) {
-         output_replace_inner_whitespace(construct_list_original.at(start_original)->start_position(), finish_original,
-                                         construct_list_modified.at(start_modified)->start_position(), finish_modified,
+      if(is_identifier(original.at(start_original)->term(0)->get_name())
+         && is_identifier(modified.at(start_modified)->term(0)->get_name())) {
+         output_replace_inner_whitespace(original.at(start_original)->start_position(), finish_original,
+                                         modified.at(start_modified)->start_position(), finish_modified,
                                          1);
        
           }
 
-       if(construct_list_original.at(start_original)->term(0)->get_name() == "return"
-          && construct_list_modified.at(start_modified)->term(0)->get_name() == "return") {
-          output_replace_inner_whitespace(construct_list_original.at(start_original)->start_position(), finish_original,
-                                          construct_list_modified.at(start_modified)->start_position(), finish_modified,
+       if(original.at(start_original)->term(0)->get_name() == "return"
+          && modified.at(start_modified)->term(0)->get_name() == "return") {
+          output_replace_inner_whitespace(original.at(start_original)->start_position(), finish_original,
+                                          modified.at(start_modified)->start_position(), finish_modified,
                                           2);
         
           }
 
-       if(construct_list_original.at(start_original)->term(0)->get_name() == "throw"
-          && construct_list_modified.at(start_modified)->term(0)->get_name() == "throw") {
-          output_replace_inner_whitespace(construct_list_original.at(start_original)->start_position(), finish_original,
-                                          construct_list_modified.at(start_modified)->start_position(), finish_modified,
+       if(original.at(start_original)->term(0)->get_name() == "throw"
+          && modified.at(start_modified)->term(0)->get_name() == "throw") {
+          output_replace_inner_whitespace(original.at(start_original)->start_position(), finish_original,
+                                          modified.at(start_modified)->start_position(), finish_modified,
                                           2);
         
           }
@@ -143,7 +143,7 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
     unsigned int index = edits->offset_sequence_one + i;
 
-    if(construct_list_original.at(index)->term(0)->get_move()) {
+    if(original.at(index)->term(0)->get_move()) {
 
       original_moved.push_back(int_pair(MOVE, 0));
 
@@ -151,7 +151,7 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
       original_moved.push_back(int_pair(SES_DELETE, 0));
       pos_original.push_back(i);
-      original_sets.push_back(construct_list_original.at(index));
+      original_sets.push_back(original.at(index));
 
     }
 
@@ -165,7 +165,7 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
     unsigned int index = edit_next->offset_sequence_two + i;
 
-    if(construct_list_modified.at(index)->term(0)->get_move()) {
+    if(modified.at(index)->term(0)->get_move()) {
 
       modified_moved.push_back(int_pair(MOVE, 0));
 
@@ -173,7 +173,7 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
       modified_moved.push_back(int_pair(SES_INSERT, 0));
       pos_modified.push_back(i);
-      modified_sets.push_back(construct_list_modified.at(index));
+      modified_sets.push_back(modified.at(index));
 
     }
 
@@ -253,19 +253,19 @@ void srcdiff_many::output() {
 
     if(original_moved.at(i).first == SES_COMMON && modified_moved.at(j).first == SES_COMMON) {
  
-      if(construct_list_original.at(edits->offset_sequence_one + i)->term(0)->get_type() != srcML::node_type::TEXT) {
+      if(original.at(edits->offset_sequence_one + i)->term(0)->get_type() != srcML::node_type::TEXT) {
 
         srcdiff_single diff(out,
-                            construct_list_original.at(edits->offset_sequence_one + i), 
-                            construct_list_modified.at(edit_next->offset_sequence_two + j));
+                            original.at(edits->offset_sequence_one + i), 
+                            modified.at(edit_next->offset_sequence_two + j));
         
         diff.output();
 
       } else {
 
         // syntax mismatch
-        output_change_whitespace(construct_list_original.at(edits->offset_sequence_one + i)->end_position() + 1,
-          construct_list_modified.at(edit_next->offset_sequence_two + j)->end_position() + 1);
+        output_change_whitespace(original.at(edits->offset_sequence_one + i)->end_position() + 1,
+          modified.at(edit_next->offset_sequence_two + j)->end_position() + 1);
 
       }
 

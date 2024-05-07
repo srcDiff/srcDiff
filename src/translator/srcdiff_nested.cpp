@@ -733,8 +733,8 @@ void srcdiff_nested::check_nestable(construct::construct_list_view original, con
 
 void srcdiff_nested::output() {
 
-  construct::construct_list_view original_view = construct::construct_list_view(&construct_list_original.at(start_original), end_original - start_original);
-  construct::construct_list_view modified_view = construct::construct_list_view(&construct_list_modified.at(start_modified), end_modified - start_modified);
+  construct::construct_list_view original_view = construct::construct_list_view(&original.at(start_original), end_original - start_original);
+  construct::construct_list_view modified_view = construct::construct_list_view(&modified.at(start_modified), end_modified - start_modified);
 
   construct::construct_list_view outer;
   construct::construct_list_view inner;
