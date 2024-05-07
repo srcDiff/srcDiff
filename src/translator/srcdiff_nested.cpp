@@ -731,57 +731,55 @@ void srcdiff_nested::check_nestable(construct::construct_list_view original, con
 
 }
 
-void srcdiff_nested::output_inner(const construct::construct_list & construct_list_outer,
-                  int start_outer,
-                  int end_outer,
-                  const construct::construct_list & construct_list_inner,
-                  int start_inner,
-                  int end_inner) {
+void srcdiff_nested::output_inner(construct::construct_list_view original, construct::construct_list_view modified) {
+
+  construct::construct_list_view outer = original;
+  construct::construct_list_view inner = modified;
 
   srcdiff_whitespace whitespace(*out);
 
   whitespace.output_prefix();
 
 
-  std::size_t start_pos = construct_list_outer.at(start_outer)->get_terms().at(1);
-  std::size_t end_pos = construct_list_outer.at(end_outer - 1)->end_position();
+  std::size_t start_pos = outer.front()->get_terms().at(1);
+  std::size_t end_pos = outer.back()->end_position();
 
-  const std::string & structure_outer = construct_list_outer.at(start_outer)->root_term_name();
+  const std::string & structure_outer = outer.front()->root_term_name();
   if(structure_outer == "block_content") {
     // do not skip whitespace
-    start_pos = construct_list_outer.at(start_outer)->start_position() + 1;
+    start_pos = outer.front()->start_position() + 1;
 
-  } else if(structure_outer == "if" && !bool(construct_list_outer.at(start_outer)->root_term()->get_attribute("type"))) {
+  } else if(structure_outer == "if" && !bool(outer.front()->root_term()->get_attribute("type"))) {
 
-    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcML::node_type::START, "block");
+    advance_to_child(outer.back()->nodes(), start_pos, srcML::node_type::START, "block");
 
   } else if(structure_outer == "while") {
 
-    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcML::node_type::END, "condition");
+    advance_to_child(outer.back()->nodes(), start_pos, srcML::node_type::END, "condition");
     ++start_pos;
 
   } else if(structure_outer == "for") {
 
-    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcML::node_type::END, "control");
+    advance_to_child(outer.back()->nodes(), start_pos, srcML::node_type::END, "control");
     ++start_pos;
 
   } else if(is_class_type(structure_outer)) {
 
-    advance_to_child(construct_list_outer.back()->nodes(), start_pos, srcML::node_type::START, "block");
+    advance_to_child(outer.back()->nodes(), start_pos, srcML::node_type::START, "block");
     ++start_pos;
 
     end_pos = start_pos - 1;
-    advance_to_child(construct_list_outer.back()->nodes(), end_pos, srcML::node_type::END, "block");
+    advance_to_child(outer.back()->nodes(), end_pos, srcML::node_type::END, "block");
 
   }
 
-  construct::construct_list set = construct::get_descendent_constructs(construct_list_outer.back()->nodes(),
+  construct::construct_list set = construct::get_descendent_constructs(outer.back()->nodes(),
                             start_pos, end_pos);
 
   construct::construct_list nest_set;
 
-  for(int i = start_inner; i < end_inner; ++i) {
-      nest_set.push_back(construct_list_inner.at(i));
+  for(int i = 0; i < inner.size(); ++i) {
+      nest_set.push_back(inner[i]);
   }
 
   if(operation == SES_DELETE) {
@@ -816,30 +814,23 @@ void srcdiff_nested::output_inner(const construct::construct_list & construct_li
   }
 
   if(operation == SES_DELETE) {
-    srcdiff_change::output_change(out, construct_list_outer.at(end_outer - 1)->end_position() + 1, out->last_output_modified());
+    srcdiff_change::output_change(out, outer.back()->end_position() + 1, out->last_output_modified());
   }
   else {
-    srcdiff_change::output_change(out, out->last_output_original(), construct_list_outer.at(end_outer - 1)->end_position() + 1);
+    srcdiff_change::output_change(out, out->last_output_original(), outer.back()->end_position() + 1);
   }
 
 }
 
 void srcdiff_nested::output() {
 
+  construct::construct_list_view original_view = construct::construct_list_view(&construct_list_original.at(start_original), end_original - start_original);
+  construct::construct_list_view modified_view = construct::construct_list_view(&construct_list_modified.at(start_modified), end_modified - start_modified);
+
   if(operation == SES_DELETE)
-    output_inner(construct_list_original,
-                 start_original,
-                 end_original,
-                 construct_list_modified,
-                 start_modified,
-                 end_modified);
+    output_inner(original_view, modified_view);
 
   else
-    output_inner(construct_list_modified,
-                 start_modified,
-                 end_modified,
-                 construct_list_original,
-                 start_original,
-                 end_original);
+    output_inner(modified_view, original_view);
 
 }

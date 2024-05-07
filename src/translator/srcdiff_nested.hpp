@@ -35,13 +35,7 @@ public:
   srcdiff_nested(const srcdiff_many & diff, int start_original, int end_original, int start_modified, int end_modified, int operation);
 
   /// @todo replace? start/end
-  /// Why does this take a whitespace?
-  void output_inner(const construct::construct_list & construct_list_outer,
-                  int start_outer,
-                  int end_outer,
-                  const construct::construct_list & construct_list_inner,
-                  int start_inner,
-                  int end_inner);
+  void output_inner(construct::construct_list_view original, construct::construct_list_view modified);
 
   virtual void output();
 
