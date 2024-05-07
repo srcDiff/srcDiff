@@ -41,8 +41,7 @@ public:
                   int end_outer,
                   const construct::construct_list & construct_list_inner,
                   int start_inner,
-                  int end_inner,
-                  int operation);
+                  int end_inner);
 
   virtual void output();
 

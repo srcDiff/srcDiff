@@ -736,8 +736,7 @@ void srcdiff_nested::output_inner(const construct::construct_list & construct_li
                   int end_outer,
                   const construct::construct_list & construct_list_inner,
                   int start_inner,
-                  int end_inner,
-                  int operation) {
+                  int end_inner) {
 
   srcdiff_whitespace whitespace(*out);
 
@@ -833,8 +832,7 @@ void srcdiff_nested::output() {
                  end_original,
                  construct_list_modified,
                  start_modified,
-                 end_modified,
-                 operation);
+                 end_modified);
 
   else
     output_inner(construct_list_modified,
@@ -842,7 +840,6 @@ void srcdiff_nested::output() {
                  end_modified,
                  construct_list_original,
                  start_original,
-                 end_original,
-                 operation);
+                 end_original);
 
 }
