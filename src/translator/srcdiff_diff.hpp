@@ -11,11 +11,11 @@ class srcdiff_diff {
 protected:
   std::shared_ptr<srcdiff_output> out;
 
-  const construct::construct_list & original;
-  const construct::construct_list & modified;
+  const construct::construct_list_view original;
+  const construct::construct_list_view modified;
 
 public:
-  srcdiff_diff(std::shared_ptr<srcdiff_output> out, const construct::construct_list & original, const construct::construct_list & _modified);
+  srcdiff_diff(std::shared_ptr<srcdiff_output> out, const construct::construct_list_view original, const construct::construct_list_view modified);
 
   virtual void output();
   virtual void output_pure(int end_original, int end_modified);

@@ -9,7 +9,7 @@ int srcdiff_shortest_edit_script::compute_edit_script(const std::shared_ptr<cons
   return compute((const void *)&original, original->size(), (const void *)&modified, modified->size());
 }
 
-int srcdiff_shortest_edit_script::compute_edit_script(const construct::construct_list & original, const construct::construct_list & modified) {
+int srcdiff_shortest_edit_script::compute_edit_script(const construct::construct_list_view original, const construct::construct_list_view modified) {
   compare = construct_compare;
   accessor = construct_list_index;
 

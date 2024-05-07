@@ -24,8 +24,8 @@ bool srcdiff_move::is_move(std::shared_ptr<const construct> set) {
 }
 
 /** loop O(CD^2) */
-void srcdiff_move::mark_moves(const construct::construct_list & construct_list_original,
-                              const construct::construct_list & construct_list_modified,
+void srcdiff_move::mark_moves(const construct::construct_list_view original,
+                              const construct::construct_list_view modified,
                               edit_t * edit_script) {
 
   std::map<std::string, move_infos > constructs;
@@ -46,10 +46,10 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
         for(std::size_t i = 0; i < edits->length; ++i) {
 
-          if(construct_list_modified.at(edits->offset_sequence_two + i)->term(0)->is_text()) {
+          if(modified[edits->offset_sequence_two + i]->term(0)->is_text()) {
             continue;
           }
-          node_set_lookup_table.insert(construct_list_modified.at(edits->offset_sequence_two + i));
+          node_set_lookup_table.insert(modified[edits->offset_sequence_two + i]);
 
         }
 
@@ -59,10 +59,10 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
         for(std::size_t i = 0; i < edits->length; ++i) {
 
-          if(construct_list_original.at(edits->offset_sequence_one + i)->term(0)->is_text()) {
+          if(original[edits->offset_sequence_one + i]->term(0)->is_text()) {
             continue;
           }
-          delete_sets.push_back(construct_list_original.at(edits->offset_sequence_one + i));
+          delete_sets.push_back(original[edits->offset_sequence_one + i]);
 
         }
 
