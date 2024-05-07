@@ -38,8 +38,8 @@ bool is_match(construct::construct_list_view original, construct::construct_list
 }
 
 
-srcdiff_match::srcdiff_match(const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified)
-  : construct_list_original(construct_list_original), construct_list_modified(construct_list_modified) {}
+srcdiff_match::srcdiff_match(const construct::construct_list_view original, const construct::construct_list_view modified)
+  : original(original), modified(modified) {}
 
 /** loop O(D) */
 static offset_pair * create_linked_list(int olength, int nlength, difference * differences) {
@@ -131,8 +131,8 @@ offset_pair * srcdiff_match::match_differences() {
 
   */
 
-  int olength = construct_list_original.size();
-  int nlength = construct_list_modified.size();
+  int olength = original.size();
+  int nlength = modified.size();
 
   size_t mem_size = olength * nlength * sizeof(difference);
 
@@ -144,7 +144,7 @@ offset_pair * srcdiff_match::match_differences() {
     for(int j = 0; j < olength; ++j) {
 
       /** loop O(nd) */
-      const srcdiff_measure & measure = *construct_list_original.at(j)->measure(*construct_list_modified.at(i));
+      const srcdiff_measure & measure = *original[j]->measure(*modified[i]);
       int similarity = measure.similarity();
 
       //unsigned long long max_similarity = (unsigned long long)-1;
@@ -153,8 +153,8 @@ offset_pair * srcdiff_match::match_differences() {
 
       // check if unmatched
       /** loop text O(nd) + syntax O(nd) + best match is O(nd) times number of matches */
-      construct::construct_list_view original_view = construct::construct_list_view(&construct_list_original.at(j), construct_list_original.size() - j);
-      construct::construct_list_view modified_view = construct::construct_list_view(&construct_list_modified.at(i), construct_list_modified.size() - i);
+      construct::construct_list_view original_view = original.subspan(j, original.size() - j);
+      construct::construct_list_view modified_view = modified.subspan(i, modified.size() - i);
       if(!is_match(original_view, modified_view)) {
 
         similarity = 0;
