@@ -60,7 +60,10 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
 
         if((end_nest_original - start_nest_original) > 0 && (end_nest_modified - start_nest_modified) > 0) {
 
-          srcdiff_nested diff(*this, start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation);
+          construct::construct_list_view original_nest = construct::construct_list_view(&original[start_nest_original], end_nest_original - start_nest_original);
+          construct::construct_list_view modified_nest = construct::construct_list_view(&modified[start_nest_modified], end_nest_modified - start_nest_modified);
+
+          srcdiff_nested diff(out, original_nest, modified_nest, operation);
           diff.output();
 
         }

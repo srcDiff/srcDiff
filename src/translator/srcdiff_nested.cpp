@@ -10,8 +10,8 @@
 #include <algorithm>
 #include <cstring>
 
-srcdiff_nested::srcdiff_nested(const srcdiff_many & diff, int start_original, int end_original, int start_modified, int end_modified, int operation)
-  : srcdiff_many(diff), start_original(start_original), end_original(end_original), start_modified(start_modified), end_modified(end_modified), operation(operation) {}
+srcdiff_nested::srcdiff_nested(std::shared_ptr<srcdiff_output> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation)
+  : srcdiff_diff(out, original, modified), operation(operation) {}
 
 int nest_id = 0;
 
@@ -733,18 +733,15 @@ void srcdiff_nested::check_nestable(construct::construct_list_view original, con
 
 void srcdiff_nested::output() {
 
-  construct::construct_list_view original_view = construct::construct_list_view(&original[start_original], end_original - start_original);
-  construct::construct_list_view modified_view = construct::construct_list_view(&modified[start_modified], end_modified - start_modified);
-
   construct::construct_list_view outer;
   construct::construct_list_view inner;
 
   if(operation == SES_DELETE) {
-    outer = original_view;
-    inner = modified_view;
+    outer = original;
+    inner = modified;
   } else {
-    outer = modified_view;
-    inner = original_view;
+    outer = modified;
+    inner = original;
   }
 
   srcdiff_whitespace whitespace(*out);

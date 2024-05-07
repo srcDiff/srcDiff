@@ -7,7 +7,7 @@
 #include <srcdiff_whitespace.hpp>
 #include <srcdiff_measure.hpp>
 
-class srcdiff_nested : public srcdiff_many {
+class srcdiff_nested : public srcdiff_diff {
 
 protected:
 
@@ -32,7 +32,7 @@ public:
                               std::optional<std::shared_ptr<srcML::node>> parent_modified);
 
   /// @todo replace? start/end 
-  srcdiff_nested(const srcdiff_many & diff, int start_original, int end_original, int start_modified, int end_modified, int operation);
+  srcdiff_nested(std::shared_ptr<srcdiff_output> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation);
 
   virtual void output();
 
