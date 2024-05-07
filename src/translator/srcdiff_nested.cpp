@@ -731,10 +731,21 @@ void srcdiff_nested::check_nestable(construct::construct_list_view original, con
 
 }
 
-void srcdiff_nested::output_inner(construct::construct_list_view original, construct::construct_list_view modified) {
+void srcdiff_nested::output() {
 
-  construct::construct_list_view outer = original;
-  construct::construct_list_view inner = modified;
+  construct::construct_list_view original_view = construct::construct_list_view(&construct_list_original.at(start_original), end_original - start_original);
+  construct::construct_list_view modified_view = construct::construct_list_view(&construct_list_modified.at(start_modified), end_modified - start_modified);
+
+  construct::construct_list_view outer;
+  construct::construct_list_view inner;
+
+  if(operation == SES_DELETE) {
+    outer = original_view;
+    inner = modified_view;
+  } else {
+    outer = modified_view;
+    inner = original_view;
+  }
 
   srcdiff_whitespace whitespace(*out);
 
@@ -819,18 +830,5 @@ void srcdiff_nested::output_inner(construct::construct_list_view original, const
   else {
     srcdiff_change::output_change(out, out->last_output_original(), outer.back()->end_position() + 1);
   }
-
-}
-
-void srcdiff_nested::output() {
-
-  construct::construct_list_view original_view = construct::construct_list_view(&construct_list_original.at(start_original), end_original - start_original);
-  construct::construct_list_view modified_view = construct::construct_list_view(&construct_list_modified.at(start_modified), end_modified - start_modified);
-
-  if(operation == SES_DELETE)
-    output_inner(original_view, modified_view);
-
-  else
-    output_inner(modified_view, original_view);
 
 }

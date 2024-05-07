@@ -34,9 +34,6 @@ public:
   /// @todo replace? start/end 
   srcdiff_nested(const srcdiff_many & diff, int start_original, int end_original, int start_modified, int end_modified, int operation);
 
-  /// @todo replace? start/end
-  void output_inner(construct::construct_list_view original, construct::construct_list_view modified);
-
   virtual void output();
 
   /// @todo Return Object?
