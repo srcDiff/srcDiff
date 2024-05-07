@@ -33,26 +33,21 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
 
         srcdiff_nested::check_nestable(original_view, modified_view,
                                        start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation);
-
-        start_nest_original += start_original;
-        end_nest_original += start_original;
-        start_nest_modified += start_modified;
-        end_nest_modified += start_modified;
-        
+    
         finish_original = original[end_original]->end_position() + 1;
         finish_modified = modified[end_modified]->end_position() + 1;
 
         unsigned int pre_nest_end_original = 0;
         if(start_nest_original > 0) {
 
-          pre_nest_end_original = original[start_nest_original - 1]->end_position() + 1;
+          pre_nest_end_original = original[start_nest_original + start_original - 1]->end_position() + 1;
 
         }
 
         unsigned int pre_nest_end_modified = 0;
         if(start_nest_modified > 0) {
 
-          pre_nest_end_modified = modified[start_nest_modified - 1]->end_position() + 1;
+          pre_nest_end_modified = modified[start_nest_modified + start_modified - 1]->end_position() + 1;
 
         }
 
@@ -60,18 +55,18 @@ void srcdiff_many::output_unmatched(int start_original, int end_original, int st
 
         if((end_nest_original - start_nest_original) > 0 && (end_nest_modified - start_nest_modified) > 0) {
 
-          construct::construct_list_view original_nest = construct::construct_list_view(&original[start_nest_original], end_nest_original - start_nest_original);
-          construct::construct_list_view modified_nest = construct::construct_list_view(&modified[start_nest_modified], end_nest_modified - start_nest_modified);
+          construct::construct_list_view original_nest = construct::construct_list_view(&original_view[start_nest_original], end_nest_original - start_nest_original);
+          construct::construct_list_view modified_nest = construct::construct_list_view(&modified_view[start_nest_modified], end_nest_modified - start_nest_modified);
 
           srcdiff_nested diff(out, original_nest, modified_nest, operation);
           diff.output();
 
         }
 
-        start_original = end_nest_original;
-        start_modified = end_nest_modified;
+        start_original += end_nest_original;
+        start_modified += end_nest_modified;
 
-      } while((end_nest_original - start_nest_original) > 0 && (end_nest_modified - start_nest_modified) > 0 && end_nest_original <= end_original && end_nest_modified <= end_modified);
+      } while((end_nest_original - start_nest_original) > 0 && (end_nest_modified - start_nest_modified) > 0 && start_original <= end_original && start_modified <= end_modified);
 
       /** @todo may only need to do this if not at end */
       if(end_nest_original > end_original && end_nest_modified > end_modified) {
