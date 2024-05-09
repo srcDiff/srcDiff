@@ -471,11 +471,8 @@ bool construct::can_nest(const construct & modified) const {
                         modified, modified.root_term()->get_parent()))
     return false;
 
-  if(  original_tag == "then"    || original_tag == "block"     || original_tag == "block_content"
-    || original_tag == "comment"
-    || original_tag == "literal" || original_tag == "operator"  || original_tag == "modifier"
-    || original_tag == "expr"    || original_tag == "expr_stmt" || original_tag == "name"
-    || original_tag == "number"  || original_tag == "file") {
+  if(  original_tag == "comment" || original_tag == "operator"
+    || original_tag == "expr"    || original_tag == "expr_stmt" || original_tag == "name") {
 
     return is_similar(modified);
 
