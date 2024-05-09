@@ -146,11 +146,40 @@ factory_map_type factory_map = {
 
   {"cast", cast_factory },
 
-  {"public", access_region_factory },
-  {"private", access_region_factory },
-  {"protected", access_region_factory },
+  {"type",          always_match_factory },
+  {"then",          always_match_factory },
+  {"control",       always_match_factory },
+  {"init",          always_match_factory },
+  {"default",       always_match_factory },
+  {"argument",      always_match_factory },
+  {"range",         always_match_factory },
+  {"block_content", always_match_factory },
+  {"comment",       always_match_factory },
+  {"signal",        always_match_factory },
 
-  {"always_match", always_match_factory },
+  {"literal",  always_match_factory },
+  {"operator", always_match_factory },
+  {"modifier", always_match_factory },
+
+  {"number", always_match_factory },
+  {"file",   always_match_factory },
+     
+
+  {"parameter_list",   always_match_factory },
+  {"krparameter_list", always_match_factory },
+  {"argument_list",    always_match_factory },
+  {"attribute_list",   always_match_factory },
+  {"association_list", always_match_factory },
+  {"protocol_list",    always_match_factory },
+
+  {"super_list",       always_match_factory },
+  {"member_init_list", always_match_factory },
+  {"member_list",      always_match_factory },
+  {"super_list",       always_match_factory },
+
+  {"public",    access_region_factory },
+  {"private",   access_region_factory },
+  {"protected", access_region_factory },
 
   {"block", block_factory },
 
@@ -167,8 +196,6 @@ std::shared_ptr<construct> create_construct(const srcml_nodes & node_list, std::
 
   if(tag_name == "if" && bool(node->get_attribute("type"))) {
     tag_name = "elseif";
-  } else if(always_matched_construct::is_always_match(node->get_name())) {
-    tag_name = "always_match";
   }
 
   factory_map_type::const_iterator citr = factory_map.find(tag_name);
