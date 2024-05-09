@@ -30,7 +30,6 @@ public:
     identifier_decl(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
         : construct(node_list, start, out), named_construct(node_list, start, out) {}
     virtual std::shared_ptr<const name_t> name() const;
-    virtual bool is_matchable_impl(const construct & modified) const;
 
 private:
     
