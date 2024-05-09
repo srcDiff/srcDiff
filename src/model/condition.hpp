@@ -28,7 +28,7 @@ class condition : public always_matched_construct {
 public:
 
     condition(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) : always_matched_construct(node_list, start, out) {}
-    std::string to_string(bool skip_whitespace = false) const;
+    virtual std::string to_string(bool skip_whitespace = false) const;
 
 protected:
 };
