@@ -164,7 +164,6 @@ factory_map_type factory_map = {
   {"number", always_match_factory },
   {"file",   always_match_factory },
      
-
   {"parameter_list",   always_match_factory },
   {"krparameter_list", always_match_factory },
   {"argument_list",    always_match_factory },
@@ -203,4 +202,3 @@ std::shared_ptr<construct> create_construct(const srcml_nodes & node_list, std::
 
   return default_factory(node_list, start, out);
 }
-
