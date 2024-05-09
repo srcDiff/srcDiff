@@ -69,6 +69,7 @@ construct::construct_list construct::get_descendent_constructs(const srcml_nodes
             // text is separate node if not surrounded by a tag in range
             if(node_list.at(pos)->get_type() == srcML::node_type::TEXT || node_list.at(pos)->get_type() == srcML::node_type::START) {
                 descendent_constructs.push_back(create_construct(node_list, pos, out));
+                // descendent_constructs.back()->parent_construct = this;
             } else {
                 return descendent_constructs;
             }
@@ -181,6 +182,10 @@ std::ostream & operator<<(std::ostream & out, const construct & that) {
 
     return out;
 
+}
+
+const construct* construct::parent() const {
+    return parent_construct;
 }
 
 void construct::expand_children() const {

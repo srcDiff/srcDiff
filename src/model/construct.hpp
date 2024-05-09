@@ -68,6 +68,8 @@ public:
 
     friend std::ostream & operator<<(std::ostream & out, const construct & that);
 
+    const construct* parent() const;
+
     void expand_children() const;
 
     const construct_list & children() const;
@@ -134,6 +136,7 @@ protected:
     std::vector<int> terms;
     mutable std::optional<std::size_t> hash_value;
 
+    const construct* parent_construct;
     mutable std::optional<construct_list> child_constructs;
 
     mutable std::unordered_map<int, std::shared_ptr<srcdiff_measure>> measures;
