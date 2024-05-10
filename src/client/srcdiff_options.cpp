@@ -304,7 +304,7 @@ void view_option_unified_view_context(const std::string & arg) {
 
   try {
 
-    options.view_options.unified_view_context = (std::size_t)std::stoll(arg);
+    options.view_options.unified_view_context = std::stoi(arg);
 
   } catch(std::invalid_argument &) {
 

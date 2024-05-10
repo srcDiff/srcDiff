@@ -30,7 +30,7 @@ private:
 
   std::ostringstream context;
 
-  size_t number_context_lines;
+  int number_context_lines;
 
   bool is_after_change;
   bool wait_change;

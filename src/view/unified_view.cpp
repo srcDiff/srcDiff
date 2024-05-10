@@ -30,9 +30,9 @@ unified_view::unified_view(const std::string & output_filename,
                 change_ending_operation(view_t::UNSET),
                 close_num_spans(0) {
 
-  if(context_type.type() == typeid(std::size_t)) {
+  if(context_type.type() == typeid(int)) {
 
-    number_context_lines = std::any_cast<std::size_t>(context_type);
+    number_context_lines = std::any_cast<int>(context_type);
 
   } else {
 
@@ -92,7 +92,7 @@ void unified_view::output_additional_context() {
   std::size_t line_delete = line_number_delete + 1 - additional_context.size();
   std::size_t line_insert = line_number_insert + 1 - additional_context.size();
 
-  if(number_context_lines > 0 && wait_change && last_context_line != (line_number_delete - 1)) {
+  if(number_context_lines != -1 && wait_change && last_context_line != (line_number_delete - 1)) {
 
     if(!is_html) {
       (*output) << theme->common_color << theme->line_number_color << "@@ -" << line_delete << " +" << line_insert << " @@" << theme->common_color << '\n';
@@ -203,7 +203,7 @@ void unified_view::end_unit(const std::string & local_name [[maybe_unused]],
 
   }
 
-  if(!(number_context_lines > 0 && wait_change)) {
+  if(!(number_context_lines != -1 && wait_change)) {
     output_additional_context();
   }
 

@@ -111,7 +111,7 @@ struct srcdiff_options
   struct view_options_t {
     std::string syntax_highlight;
     std::string theme;
-    std::any unified_view_context = (size_t)3;
+    std::any unified_view_context = (int)3;
     int side_by_side_tab_size;
     std::optional<std::string> srcdiff_filename;
   } view_options;
