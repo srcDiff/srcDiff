@@ -2,12 +2,25 @@
 
 #include <view.hpp>
 
+int char_compare(const void * c1, const void * c2, const void * context [[maybe_unused]]) {
+
+  char ch1 = *(char *)c1;
+  char ch2 = *(char *)c2;
+  return ch1 != ch2;
+
+}
+
+const void * char_index(int index, const void * s, const void * context [[maybe_unused]]) {
+  const std::string & str = *(const std::string *)s;
+  return &str[index];
+}
+
 character_diff::character_diff(const versioned_string & str)
-    : ses(),
+    : ses(char_compare, char_index, nullptr),
       str(str) {}
 
 void character_diff::compute() {
-    ses.compute_edit_script(str.original(), str.modified());
+    ses.compute(&str.original(), str.original().size(), &str.modified(), str.modified().size());
 }
 
 void character_diff::output(view_t & view, const std::string & type) {

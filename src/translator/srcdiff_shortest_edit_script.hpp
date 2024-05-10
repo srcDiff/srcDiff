@@ -15,7 +15,6 @@ public:
 
 	int compute_edit_script(const std::shared_ptr<construct> & original, const std::shared_ptr<construct> & modified);
 	int compute_edit_script(const construct::construct_list & original, const construct::construct_list & modified);
-	int compute_edit_script(const std::string & original, const std::string & modified);
 	int compute_edit_script(const std::vector<std::string> & original, const std::vector<std::string> & modified);
 
 private:
@@ -25,9 +24,6 @@ private:
 	static const void * construct_node_index(int idx, const void *s, const void * context);
 	static int node_compare(const void * node1, const void * node2, const void * context);
 	static int node_compare(const std::shared_ptr<srcML::node> & node1, const std::shared_ptr<srcML::node> & node2);
-
-	static int char_compare(const void * c1, const void * c2, const void * context);
-	static const void * char_index(int idx, const void * s, const void * context);
 
 	static int string_compare(const void * s1, const void * s2, const void * context);
 	static const void * string_index(int idx, const void * s, const void * context);

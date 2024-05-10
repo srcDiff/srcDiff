@@ -9,7 +9,7 @@
 #ifndef INCLUDED_CHARACTER_DIFF_HPP
 #define INCLUDED_CHARACTER_DIFF_HPP
 
-#include <srcdiff_shortest_edit_script.hpp>
+#include <shortest_edit_script.hpp>
 #include <versioned_string.hpp>
 
 class view_t;
@@ -18,7 +18,7 @@ class character_diff {
 
 private:
 
-    srcdiff_shortest_edit_script ses;
+    shortest_edit_script_t ses;
     const versioned_string & str;
 
 public:
