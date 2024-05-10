@@ -103,15 +103,12 @@ void srcdiff_single::output_recursive_interchangeable() {
     srcdiff_whitespace whitespace(*out);
     whitespace.output_all();
 
-    const std::shared_ptr<srcML::node> & original_start_node = original_construct->root_term();
-    const std::shared_ptr<srcML::node> & modified_start_node = modified_construct->root_term();
-
     construct::construct_list original_children = original_construct->children();
     construct::construct_list modified_children = modified_construct->children();
 
     /**@todo replace get_descendent with using children above */
     int original_collect_start_pos = 1;
-    if(original_start_node->get_name() == "if_stmt") {
+    if(original_construct->root_term_name() == "if_stmt") {
         // must have if, if interchange passed
         while(original_construct->term(original_collect_start_pos)->get_name() != "if") {
             ++original_collect_start_pos;
@@ -120,7 +117,7 @@ void srcdiff_single::output_recursive_interchangeable() {
     }
 
     int modified_collect_start_pos = 1;
-    if(modified_start_node->get_name() == "if_stmt") {
+    if(modified_construct->root_term_name() == "if_stmt") {
         // must have if, if interchange passed
         while(modified_construct->term(modified_collect_start_pos)->get_name() != "if") {
             ++modified_collect_start_pos;
