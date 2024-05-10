@@ -27,6 +27,9 @@
 #include <srcdiff_whitespace.hpp>
 #include <shortest_edit_script.h>
 
+#include <if_stmt.hpp>
+#include <if.hpp>
+
 #include <cstring>
 #include <map>
 #include <list>
@@ -103,34 +106,26 @@ void srcdiff_single::output_recursive_interchangeable() {
     srcdiff_whitespace whitespace(*out);
     whitespace.output_all();
 
-    construct::construct_list original_children = original_construct->children();
-    construct::construct_list modified_children = modified_construct->children();
+    // construct::construct_list original_children = original_construct->children();
+    // construct::construct_list modified_children = modified_construct->children();
 
     /**@todo replace get_descendent with using children above */
     int original_collect_start_pos = 1;
     if(original_construct->root_term_name() == "if_stmt") {
-        // must have if, if interchange passed
-        while(original_construct->term(original_collect_start_pos)->get_name() != "if") {
-            ++original_collect_start_pos;
-        }
-        ++original_collect_start_pos;
+        original_collect_start_pos = static_cast<const if_stmt &>(*original_construct).find_if()->start_position();
     }
 
     int modified_collect_start_pos = 1;
     if(modified_construct->root_term_name() == "if_stmt") {
-        // must have if, if interchange passed
-        while(modified_construct->term(modified_collect_start_pos)->get_name() != "if") {
-            ++modified_collect_start_pos;
-        }
-        ++modified_collect_start_pos;
+        modified_collect_start_pos = static_cast<const if_stmt &>(*modified_construct).find_if()->start_position();
     }
 
     // get keyword if present
     const std::shared_ptr<srcML::node> & keyword_node_original = original_construct->term(original_collect_start_pos);
     const std::shared_ptr<srcML::node> & keyword_node_modified = modified_construct->term(modified_collect_start_pos);
-    bool is_keyword    = keyword_node_original->is_text() && !keyword_node_original->is_whitespace();
-    bool is_keywords = is_keyword
-                                         && keyword_node_modified->is_text() && !keyword_node_modified->is_whitespace();
+
+    bool is_keyword  = keyword_node_original->is_text() && !keyword_node_original->is_whitespace();
+    bool is_keywords = is_keyword && keyword_node_modified->is_text() && !keyword_node_modified->is_whitespace();
     bool is_same_keyword = is_keywords && *keyword_node_original == *keyword_node_modified;
 
 
