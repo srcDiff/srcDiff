@@ -27,7 +27,7 @@ class case_t : public construct {
 
 public:
 
-    case_t(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) : construct(node_list, start, out) {}
+    case_t(const construct* parent, std::size_t& start) : construct(parent, start) {}
     std::shared_ptr<const construct> expr() const;
     virtual bool is_matchable_impl(const construct & modified) const;
 private:

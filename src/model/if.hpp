@@ -27,8 +27,8 @@ class if_t : public clause {
 
 public:
 
-    if_t(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
-        : clause(node_list, start, out) {}
+    if_t(const construct* parent, std::size_t& start)
+        : clause(parent, start) {}
 
     bool has_real_block() const;
     bool is_block_matchable(const construct & modified) const;

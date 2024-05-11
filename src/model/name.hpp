@@ -27,7 +27,7 @@ class name_t : public construct {
 
 public:
 
-    name_t(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) : construct(node_list, start, out) {}
+    name_t(const construct* parent, std::size_t& start) : construct(parent, start) {}
     std::string simple_name() const;
     virtual bool is_matchable_impl(const construct & modified) const;
 

@@ -355,7 +355,7 @@ bool srcdiff_nested::check_nest_name(const construct & set_original,
     std::size_t simple_name_pos = set_original.start_position();
     if(set_original.nodes().at(simple_name_pos)->get_name() == "name") {
 
-      std::shared_ptr<construct> inner_set = std::make_shared<construct>(set_original.nodes(), simple_name_pos);
+      std::shared_ptr<construct> inner_set = std::make_shared<construct>(set_original.parent(), simple_name_pos);
       srcdiff_text_measure measure(*inner_set, set_modified);
       int count = measure.number_match_beginning();
       return 2 * count >= measure.max_length();
@@ -369,7 +369,7 @@ bool srcdiff_nested::check_nest_name(const construct & set_original,
     std::size_t simple_name_pos = set_modified.start_position();
     if(set_modified.nodes().at(simple_name_pos)->get_name() == "name") {
 
-      std::shared_ptr<construct> inner_set = std::make_shared<construct>(set_modified.nodes(), simple_name_pos);
+      std::shared_ptr<construct> inner_set = std::make_shared<construct>(set_modified.parent(), simple_name_pos);
       srcdiff_text_measure measure(set_original, *inner_set);
       int count = measure.number_match_beginning();
       return 2 * count >= measure.max_length();

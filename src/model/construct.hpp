@@ -54,7 +54,7 @@ public:
 
     construct(const construct & that);
 
-    construct(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>());
+    construct(const construct* parent, std::size_t& start);
 
     virtual ~construct() {};
 
@@ -67,6 +67,9 @@ public:
     friend std::ostream & operator<<(std::ostream & out, const construct & that);
 
     const construct* parent() const;
+
+    const std::shared_ptr<srcdiff_output> output() const;
+    std::shared_ptr<srcdiff_output> output();
 
     void expand_children() const;
 

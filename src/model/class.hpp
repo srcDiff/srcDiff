@@ -27,8 +27,8 @@ class class_t : public named_construct {
 
 public:
 
-    class_t(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), named_construct(node_list, start, out) {}
+    class_t(const construct* parent, std::size_t& start)
+        : construct(parent, start), named_construct(parent, start) {}
     virtual bool is_tag_convertable(const construct & modified) const;
     virtual bool is_convertable_impl(const construct & modified) const;
 private:

@@ -65,8 +65,7 @@ construct::construct_list construct::get_descendents(std::size_t start_pos, std:
 
             // text is separate node if not surrounded by a tag in range
             if(node_list.at(pos)->get_type() == srcML::node_type::TEXT || node_list.at(pos)->get_type() == srcML::node_type::START) {
-                descendents.push_back(create_construct(node_list, pos, out));
-                // descendents.back()->parent_construct = this;
+                descendents.push_back(create_construct(this, pos));
             } else {
                 return descendents;
             }
@@ -85,7 +84,8 @@ construct::construct(const construct & that) : out(that.out), node_list(that.nod
 
 }
 
-construct::construct(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) : out(out), node_list(node_list), hash_value() {
+construct::construct(const construct* parent, std::size_t & start)
+    : out(parent->output()), node_list(parent->nodes()), hash_value(), parent_construct(parent) {
 
   if(node_list.at(start)->get_type() != srcML::node_type::TEXT && node_list.at(start)->get_type() != srcML::node_type::START) return;
 
@@ -170,7 +170,6 @@ bool construct::operator!=(const construct & that) const {
     return !operator==(that);
 }
 
-
 std::ostream & operator<<(std::ostream & out, const construct & that) {
 
     for(std::size_t pos = 0, size = that.size(); pos < size; ++pos) {
@@ -183,6 +182,14 @@ std::ostream & operator<<(std::ostream & out, const construct & that) {
 
 const construct* construct::parent() const {
     return parent_construct;
+}
+
+const std::shared_ptr<srcdiff_output> construct::output() const {
+    return out;
+}
+
+std::shared_ptr<srcdiff_output> construct::output() {
+    return out;
 }
 
 void construct::expand_children() const {

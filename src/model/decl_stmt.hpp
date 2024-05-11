@@ -27,8 +27,8 @@
 class decl_stmt : public identifier_decl, public expr_construct {
 
 public:
-    decl_stmt(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), identifier_decl(node_list, start, out), expr_construct(node_list, start, out) {}
+    decl_stmt(const construct* parent, std::size_t& start)
+        : construct(parent, start), identifier_decl(parent, start), expr_construct(parent, start) {}
 
     virtual std::shared_ptr<const expr_t> expr(const expr_construct & that) const;
 };
