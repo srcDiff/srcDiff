@@ -93,6 +93,7 @@ bool name_t::check_nest(const construct & modified, bool find_name_parent) const
 
   }
 
+  /** Not sure about this. Not exactly the same after refactoring */
   return parent_original->get_name() == parent_modified->get_name();
 }
 
