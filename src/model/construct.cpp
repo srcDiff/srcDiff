@@ -280,6 +280,13 @@ const std::string & construct::root_term_name() const {
     return term_name(0);
 }
 
+const std::shared_ptr<srcML::node> construct::parent_term() const {
+    return term(0)->get_parent();
+}
+const std::string & construct::parent_term_name() const {
+    return term(0)->get_parent()->get_name();
+}
+
 std::shared_ptr<const construct> construct::find_child(const std::string & name) const {
     std::shared_ptr<const construct> found_child;
     for(std::shared_ptr<const construct> child : children()) {
@@ -469,19 +476,14 @@ bool construct::can_nest(const construct & modified) const {
 
   if(original_tag != modified_tag && !is_tag_convertable(modified)) return false;
 
-  // if interchanging decl_stmt always nest expr into init or argument
-  if(original_tag == "expr" 
-    && (srcdiff_nested::is_decl_stmt_from_expr(nodes(), start_position()) 
-    ||  srcdiff_nested::is_decl_stmt_from_expr(modified.nodes(), modified.start_position()))) return true;
-
   if(original_tag == "name"
     && root_term()->is_simple() != modified.root_term()->is_simple()
     && !srcdiff_nested::check_nest_name(*this, root_term()->get_parent(),
                         modified, modified.root_term()->get_parent()))
     return false;
 
-  if(  original_tag == "comment" || original_tag == "operator"
-    || original_tag == "expr" || original_tag == "expr_stmt" || original_tag == "name") {
+  if(  original_tag == "comment"   || original_tag == "operator"
+    || original_tag == "expr_stmt" || original_tag == "name") {
 
     return is_similar(modified);
 

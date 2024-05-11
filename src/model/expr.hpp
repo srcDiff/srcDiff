@@ -30,7 +30,7 @@ public:
     expr_t(const construct* parent, std::size_t& start) : construct(parent, start) {}
     bool is_single_call() const;
     virtual bool is_matchable_impl(const construct & modified) const;
-    // virtual bool can_nest(const construct & modified) const;
+    virtual bool can_nest(const construct & modified) const;
 };
 
 

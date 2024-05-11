@@ -289,7 +289,7 @@ int srcML::node::get_move() const {
     return move;
 }
 
-std::optional<std::shared_ptr<srcML::node>> srcML::node::get_parent() const {
+std::shared_ptr<srcML::node> srcML::node::get_parent() const {
     return parent;
 }
 

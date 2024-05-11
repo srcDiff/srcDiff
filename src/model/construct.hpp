@@ -98,6 +98,8 @@ public:
     const std::shared_ptr<srcML::node> & root_term() const;
     const std::string & term_name(std::size_t pos) const;
     const std::string & root_term_name() const;
+    const std::shared_ptr<srcML::node> parent_term() const;
+    const std::string & parent_term_name() const;
 
 
     std::size_t hash() const;
@@ -126,6 +128,7 @@ public:
 
     // can nest -> can it be placed inside
     virtual bool can_nest(const construct & modified) const;
+
     // does it have a nest target that is better
     //virtual bool is_nest(const construct & modified) const;
 
