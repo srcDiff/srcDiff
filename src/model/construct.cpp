@@ -476,14 +476,8 @@ bool construct::can_nest(const construct & modified) const {
 
   if(original_tag != modified_tag && !is_tag_convertable(modified)) return false;
 
-  if(original_tag == "name"
-    && root_term()->is_simple() != modified.root_term()->is_simple()
-    && !srcdiff_nested::check_nest_name(*this, root_term()->get_parent(),
-                        modified, modified.root_term()->get_parent()))
-    return false;
-
-  if(  original_tag == "comment"   || original_tag == "operator"
-    || original_tag == "expr_stmt" || original_tag == "name") {
+  if(  original_tag == "comment" || original_tag == "operator"
+    || original_tag == "expr_stmt") {
 
     return is_similar(modified);
 

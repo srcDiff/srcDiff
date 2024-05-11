@@ -25,12 +25,6 @@ static std::tuple<std::vector<int>, int, int> check_nestable(construct::construc
 
 public:
 
-  static bool check_nest_name(const construct & set_original,
-                              std::shared_ptr<srcML::node> parent_original,
-                              const construct & set_modified,
-                              std::shared_ptr<srcML::node> parent_modified);
-
-  /// @todo replace? start/end 
   srcdiff_nested(std::shared_ptr<srcdiff_output> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation);
 
   virtual void output();
