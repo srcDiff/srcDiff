@@ -781,8 +781,7 @@ void srcdiff_nested::output() {
 
   }
 
-  construct::construct_list set = construct::get_descendent_constructs(outer.back()->nodes(),
-                            start_pos, end_pos);
+  construct::construct_list set = outer.back()->get_descendents(start_pos, end_pos);
 
   construct::construct_list nest_set;
 

@@ -42,7 +42,7 @@ bool construct::is_non_white_space(std::size_t & node_pos, const srcml_nodes & n
 
 }
 
-bool construct::is_match(std::size_t & node_pos, const srcml_nodes & nodes, const void * context [[maybe_unused]]) {
+bool construct::is_match(std::size_t & node_pos, const srcml_nodes & nodes, const void * context) {
 
   const std::shared_ptr<srcML::node> & node = nodes[node_pos];
   const std::shared_ptr<srcML::node> & context_node = *(const std::shared_ptr<srcML::node> *)context;
@@ -53,12 +53,9 @@ bool construct::is_match(std::size_t & node_pos, const srcml_nodes & nodes, cons
 
 /// @todo make member.  Requires modifiying a lot of methods in other classes.
 // name does not quite match because not a member yet.
-construct::construct_list construct::get_descendent_constructs(const srcml_nodes & node_list, 
-                                                    std::size_t start_pos, std::size_t end_pos,
-                                                    construct_filter filter,
-                                                    const void * context [[maybe_unused]],
-                                                    std::shared_ptr<srcdiff_output> out) {
-    construct::construct_list descendent_constructs;
+construct::construct_list construct::get_descendents(std::size_t start_pos, std::size_t end_pos,
+                                                     construct_filter filter, const void * context) const {
+    construct::construct_list descendents;
 
     // runs on a subset of base array
     for(std::size_t pos = start_pos; pos < end_pos; ++pos) {
@@ -68,16 +65,16 @@ construct::construct_list construct::get_descendent_constructs(const srcml_nodes
 
             // text is separate node if not surrounded by a tag in range
             if(node_list.at(pos)->get_type() == srcML::node_type::TEXT || node_list.at(pos)->get_type() == srcML::node_type::START) {
-                descendent_constructs.push_back(create_construct(node_list, pos, out));
-                // descendent_constructs.back()->parent_construct = this;
+                descendents.push_back(create_construct(node_list, pos, out));
+                // descendents.back()->parent_construct = this;
             } else {
-                return descendent_constructs;
+                return descendents;
             }
 
         }
 
     }
-    return descendent_constructs;
+    return descendents;
 }
 
 construct::construct(const construct & that) : out(that.out), node_list(that.node_list), terms(), hash_value(that.hash_value) {
@@ -189,7 +186,7 @@ const construct* construct::parent() const {
 }
 
 void construct::expand_children() const {
-    child_constructs = get_descendent_constructs(node_list, start_position() + 1, end_position(), is_non_white_space, nullptr, out);
+    child_constructs = get_descendents(start_position() + 1, end_position(), is_non_white_space);
 }
 
 const construct::construct_list & construct::children() const {
@@ -288,7 +285,7 @@ std::shared_ptr<const construct> construct::find_child(const std::string & name)
 }
 
 construct::construct_list construct::find_descendents(std::shared_ptr<srcML::node> element) const {
-    return get_descendent_constructs(node_list, start_position() + 1, end_position(), construct::is_match, &element, out);
+    return get_descendents(start_position() + 1, end_position(), construct::is_match, &element);
 }
 
 std::shared_ptr<const construct> construct::find_best_descendent(std::shared_ptr<const construct> match_construct) const {
@@ -477,7 +474,7 @@ bool construct::can_nest(const construct & modified) const {
     return false;
 
   if(  original_tag == "comment" || original_tag == "operator"
-    || original_tag == "expr"    || original_tag == "expr_stmt" || original_tag == "name") {
+    || original_tag == "expr" || original_tag == "expr_stmt" || original_tag == "name") {
 
     return is_similar(modified);
 

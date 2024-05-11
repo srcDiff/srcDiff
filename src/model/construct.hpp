@@ -45,11 +45,9 @@ public:
 
     /// @todo make member.  Requires modifiying a lot of methods in other classes.
     // name does not quite match because not a member yet.
-    static construct_list get_descendent_constructs(const srcml_nodes & node_list, 
-                                                    std::size_t start_pos, std::size_t end_pos,
-                                                    construct_filter filter = is_non_white_space,
-                                                    const void * context = nullptr,
-                                                    std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>());
+    construct_list get_descendents(std::size_t start_pos, std::size_t end_pos,
+                                   construct_filter filter = is_non_white_space,
+                                   const void * context = nullptr) const;
 
     construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>())
         : out(out), node_list(node_list), terms(), hash_value() {}

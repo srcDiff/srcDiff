@@ -106,9 +106,6 @@ void srcdiff_single::output_recursive_interchangeable() {
     srcdiff_whitespace whitespace(*out);
     whitespace.output_all();
 
-    // construct::construct_list original_children = original_construct->children();
-    // construct::construct_list modified_children = modified_construct->children();
-
     /**@todo replace get_descendent with using children above */
     int original_collect_start_pos = 1;
     if(original_construct->root_term_name() == "if_stmt") {
@@ -159,12 +156,12 @@ void srcdiff_single::output_recursive_interchangeable() {
 
     // collect subset of nodes
     construct::construct_list next_set_original
-        = construct::get_descendent_constructs(out->nodes_original(), original_construct->get_terms().at(original_collect_start_pos)
-                                            , original_construct->end_position());
+        = original_construct->get_descendents(original_construct->get_terms().at(original_collect_start_pos),
+                                             original_construct->end_position());
 
     construct::construct_list next_set_modified
-        = construct::get_descendent_constructs(out->nodes_modified(), modified_construct->get_terms().at(modified_collect_start_pos)
-                                            , modified_construct->end_position());
+        = modified_construct->get_descendents(modified_construct->get_terms().at(modified_collect_start_pos),
+                                             modified_construct->end_position());
 
     srcdiff_diff diff(out, next_set_original, next_set_modified);
     diff.output();
