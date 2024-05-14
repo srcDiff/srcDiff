@@ -32,8 +32,6 @@ std::string name_t::simple_name() const {
 }
 
 bool name_t::check_nest(const construct & modified, bool find_name_parent) const {
-  if(root_term_name() == "text") return false;
-  if(modified.root_term_name() == "text") return false;
 
   std::shared_ptr<srcML::node> parent_original = parent_term();
   std::shared_ptr<srcML::node> parent_modified = modified.parent_term();
@@ -67,33 +65,20 @@ bool name_t::check_nest(const construct & modified, bool find_name_parent) const
 
   if(is_call_name_original && is_expr_name_modified) {
 
-    std::size_t simple_name_pos = start_position();
-    if(nodes().at(simple_name_pos)->get_name() == "name") {
-
-      std::shared_ptr<construct> inner_set = std::make_shared<construct>(parent(), simple_name_pos);
-      srcdiff_text_measure measure(*inner_set, modified);
+      srcdiff_text_measure measure(*this, modified);
       int count = measure.number_match_beginning();
       return 2 * count >= measure.max_length();
-
-    }
 
   }
 
   if(is_call_name_modified && is_expr_name_original) {
 
-    std::size_t simple_name_pos = modified.start_position();
-    if(modified.nodes().at(simple_name_pos)->get_name() == "name") {
-
-      std::shared_ptr<construct> inner_set = std::make_shared<construct>(modified.parent(), simple_name_pos);
-      srcdiff_text_measure measure(*this, *inner_set);
+      srcdiff_text_measure measure(*this, modified);
       int count = measure.number_match_beginning();
       return 2 * count >= measure.max_length();
 
-    }
-
   }
 
-  /** Not sure about this. Not exactly the same after refactoring */
   return parent_original->get_name() == parent_modified->get_name();
 }
 
