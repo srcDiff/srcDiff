@@ -454,12 +454,10 @@ bool construct::is_match_similar(const construct & modified) const {
 }
 
 bool construct::is_tag_convertable(const construct & modified [[maybe_unused]]) const {
-
   return false;
 }
 
 bool construct::is_convertable(const construct & modified) const {
-
   if(is_convertable_impl(modified)) return true;
   return is_similar(modified);
 }
