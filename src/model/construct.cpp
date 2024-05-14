@@ -470,22 +470,6 @@ bool construct::is_convertable_impl(const construct & modified [[maybe_unused]])
 }
 
 bool construct::can_nest(const construct & modified) const {
-
-  const std::string & original_tag = root_term_name();
-  const std::string & modified_tag = modified.root_term_name();
-
-  if(original_tag != modified_tag && !is_tag_convertable(modified)) return false;
-
-  if(  original_tag == "comment" || original_tag == "operator"
-    || original_tag == "expr_stmt") {
-
-    return is_similar(modified);
-
-  } else {
-
-    return can_refine_difference(modified);
-
-  }
-
+  return can_refine_difference(modified);
 }
 

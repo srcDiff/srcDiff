@@ -1,7 +1,7 @@
 /**
- * @file expr_stmt.hpp
+ * @file comment.cpp
  *
- * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2024-2024 srcML, LLC. (www.srcML.org)
  *
  * srcDiff is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,18 +18,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_EXPR_STMT_HPP
-#define INCLUDED_EXPR_STMT_HPP
+#include <comment.hpp>
 
-#include <expr_construct.hpp>
-
-class expr_stmt : public expr_construct {
-
-public:
-    expr_stmt(const construct* parent, std::size_t& start) : construct(parent, start), expr_construct(parent, start) {}
-    virtual bool can_nest(const construct & modified) const;
-    virtual bool is_matchable_impl(const construct & modified) const;
-};
-
-
-#endif
+bool comment_t::can_nest(const construct & modified) const {
+    return is_similar(modified); 
+}

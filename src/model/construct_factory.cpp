@@ -54,6 +54,9 @@
 
 #include <block.hpp>
 
+#include <operator.hpp>
+#include <comment.hpp>
+
 #include <srcdiff_match.hpp>
 
 #include <unordered_map>
@@ -97,6 +100,9 @@ factory_function access_region_factory = [](const construct* parent, std::size_t
 factory_function always_match_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<always_matched_construct>(parent, start); };
 
 factory_function block_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<block>(parent, start); };
+
+factory_function operator_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<operator_t>(parent, start); };
+factory_function comment_factory =  [](const construct* parent, std::size_t& start) { return std::make_shared<comment_t>(parent, start); };
 
 factory_map_type factory_map = {
 
@@ -153,11 +159,9 @@ factory_map_type factory_map = {
   {"argument",      always_match_factory },
   {"range",         always_match_factory },
   {"block_content", always_match_factory },
-  {"comment",       always_match_factory },
   {"signal",        always_match_factory },
 
   {"literal",  always_match_factory },
-  {"operator", always_match_factory },
   {"modifier", always_match_factory },
 
   {"number", always_match_factory },
@@ -180,6 +184,9 @@ factory_map_type factory_map = {
   {"protected", access_region_factory },
 
   {"block", block_factory },
+
+  {"operator", operator_factory },
+  {"comment",  comment_factory },
 
 };
 

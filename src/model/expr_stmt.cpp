@@ -1,7 +1,7 @@
 /**
  * @file expr_stmt.cpp
  *
- * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
+ * @copyright Copyright (C) 2024-2024 srcML, LLC. (www.srcML.org)
  *
  * srcDiff is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,6 +19,10 @@
  */
 
 #include <expr_stmt.hpp>
+
+bool expr_stmt::can_nest(const construct & modified) const {
+	return is_similar(modified); 
+}
 
 bool expr_stmt::is_matchable_impl(const construct & modified) const {
 	const expr_stmt & modified_expr_stmt = dynamic_cast<const expr_stmt &>(modified);

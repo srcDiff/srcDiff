@@ -1,5 +1,5 @@
 /**
- * @file expr_stmt.hpp
+ * @file comment.hpp
  *
  * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
  *
@@ -18,17 +18,18 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef INCLUDED_EXPR_STMT_HPP
-#define INCLUDED_EXPR_STMT_HPP
+#ifndef INCLUDED_COMMENT_HPP
+#define INCLUDED_COMMENT_HPP
 
-#include <expr_construct.hpp>
+#include <always_matched_construct.hpp>
 
-class expr_stmt : public expr_construct {
+class comment_t : public always_matched_construct {
 
 public:
-    expr_stmt(const construct* parent, std::size_t& start) : construct(parent, start), expr_construct(parent, start) {}
+
+    comment_t(const construct* parent, std::size_t& start) : always_matched_construct(parent, start) {}
     virtual bool can_nest(const construct & modified) const;
-    virtual bool is_matchable_impl(const construct & modified) const;
+private:
 };
 
 

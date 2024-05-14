@@ -21,7 +21,7 @@
 #ifndef INCLUDED_ALWAYS_MATCHED_CONSTRUCT_HPP
 #define INCLUDED_ALWAYS_MATCHED_CONSTRUCT_HPP
 
-#include <named_construct.hpp>
+#include <construct.hpp>
 
 #include <string>
 
