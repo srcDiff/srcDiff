@@ -11,10 +11,6 @@ class srcdiff_nested : public srcdiff_diff {
 
 protected:
 
-  int start_original;
-  int end_original;
-  int start_modified;
-  int end_modified;
   int operation;
 
 private:
