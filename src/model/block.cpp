@@ -78,12 +78,8 @@ bool block::is_matchable_impl(const construct & modified) const {
 
 	}
 
-    int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
+    nest_result nesting = srcdiff_nested::check_nestable(construct::construct_list_view(&original_stmts.front(), original_stmts.size()),
+					  						    		 construct::construct_list_view(&modified_stmts.front(), modified_stmts.size()));
 
-    construct::construct_list_view original_view = construct::construct_list_view(&original_stmts.front(), original_stmts.size());
-    construct::construct_list_view modified_view = construct::construct_list_view(&modified_stmts.front(), modified_stmts.size());
-    srcdiff_nested::check_nestable(original_view, modified_view,
-                     			   start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
-
-    return match_operation == operation;
+    return match_operation == nesting.operation;
 }

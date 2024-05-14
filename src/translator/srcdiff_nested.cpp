@@ -277,11 +277,8 @@ bool srcdiff_nested::is_better_nested(construct::construct_list_view original, c
 
   for(std::size_t pos = 0; pos < original.size(); ++pos) {
 
-    int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
-    check_nestable(original, modified,
-                   start_nest_original, end_nest_original, start_nest_modified, end_nest_modified,
-                   operation);
-    if(operation == SES_COMMON) continue;
+    nest_result nesting = check_nestable(original, modified);
+    if(nesting.operation == SES_COMMON) continue;
     if(is_better_nest(original[pos], modified[0], measure)) {
       return true;
     }
@@ -290,11 +287,8 @@ bool srcdiff_nested::is_better_nested(construct::construct_list_view original, c
 
   for(std::size_t pos = 0; pos < modified.size(); ++pos) {
 
-    int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
-    check_nestable(original, modified,
-                   start_nest_original, end_nest_original, start_nest_modified, end_nest_modified,
-                   operation);
-    if(operation == SES_COMMON) continue;
+    nest_result nesting = check_nestable(original, modified);
+    if(nesting.operation == SES_COMMON) continue;
     if(is_better_nest(modified[pos], original[0], measure)) {
       return true;
     }
@@ -305,9 +299,7 @@ bool srcdiff_nested::is_better_nested(construct::construct_list_view original, c
 
 }
 
-static bool check_nested_single_to_many(construct::construct_list_view original, construct::construct_list_view modified,
-                                        int & start_nest_original, int & end_nest_original, int & start_nest_modified, int & end_nest_modified,
-                                        int & operation) {
+static nest_result check_nested_single_to_many(construct::construct_list_view original, construct::construct_list_view modified) {
 
   int nest_count_original = 0;
   std::optional<int> pos_original;
@@ -441,24 +433,28 @@ static bool check_nested_single_to_many(construct::construct_list_view original,
     difference_modified = std::optional<int>();
   }
 
-  if(nest_count_original == 0 && nest_count_modified == 0) return true;
+  // does not signal end this way
+  if(nest_count_original == 0 && nest_count_modified == 0) return nest_result();
   if(((original.size()) > 1 || (modified.size()) > 1)
     &&  (((original.size()) == 1 && nest_count_original != 0)
       || ((modified.size()) == 1 && nest_count_modified != 0)))
-    return false;
+    return nest_result();
 
+  int start_nest_original = 0;  
+  int end_nest_original = 0;
+  int start_nest_modified = 0;  
+  int end_nest_modified = 0;
+  int operation = SES_COMMON;
   if(bool(pos_original) && (!bool(pos_modified) || *similarity_original > *similarity_modified
     || (*similarity_original == *similarity_modified && *difference_original <= *difference_modified))) {
 
       start_nest_original = *pos_original;
       end_nest_original   = *pos_original + 1;
-      start_nest_modified = 0;
       end_nest_modified   = 1;
       operation = SES_DELETE;
 
   } else if(bool(pos_modified)) {
 
-      start_nest_original = 0;
       end_nest_original   = 1;
       start_nest_modified = *pos_modified;
       end_nest_modified   = *pos_modified + 1;
@@ -466,7 +462,9 @@ static bool check_nested_single_to_many(construct::construct_list_view original,
 
   }
 
-  return true;
+  return nest_result(start_nest_original, end_nest_original,
+                     start_nest_modified, end_nest_modified,
+                     operation);
 
 }
 
@@ -525,7 +523,7 @@ bool srcdiff_nested::check_nestable_predicate(construct::construct_list_view con
  *
  */
 
-std::tuple<std::vector<int>, int, int> srcdiff_nested::check_nestable(construct::construct_list_view parent_list, construct::construct_list_view child_list) {
+std::tuple<std::vector<int>, int, int> srcdiff_nested::check_nestable_inner(construct::construct_list_view parent_list, construct::construct_list_view child_list) {
 
   for(std::size_t i = 0; i < parent_list.size(); ++i) {
 
@@ -559,27 +557,23 @@ std::tuple<std::vector<int>, int, int> srcdiff_nested::check_nestable(construct:
 
 }
 
-void srcdiff_nested::check_nestable(construct::construct_list_view original, construct::construct_list_view modified,
-                                    int & start_nest_original, int & end_nest_original, int & start_nest_modified, int & end_nest_modified,
-                                    int & operation) {
-
-  start_nest_original = 0;  
-  end_nest_original = 0;
-  start_nest_modified = 0;  
-  end_nest_modified = 0;
-
-  operation = SES_COMMON;
+nest_result srcdiff_nested::check_nestable(construct::construct_list_view original, construct::construct_list_view modified) {
 
   if(original.size() == 1 || modified.size() == 1) {
 
-    if(check_nested_single_to_many(original, modified,
-                                   start_nest_original, end_nest_original, start_nest_modified, end_nest_modified,
-                                   operation))
-      return;
+    if(nest_result nesting = check_nested_single_to_many(original, modified)) {
+      return nesting;
+    }
 
   }
 
-  std::tuple<std::vector<int>, int, int> original_check = check_nestable(original, modified);
+  int start_nest_original = 0;  
+  int end_nest_original = 0;
+  int start_nest_modified = 0;  
+  int end_nest_modified = 0;
+  int operation = SES_COMMON;
+
+  std::tuple<std::vector<int>, int, int> original_check = check_nestable_inner(original, modified);
 
   const std::vector<int> & valid_nests_original = std::get<0>(original_check);
   if(valid_nests_original.size()) {
@@ -587,7 +581,7 @@ void srcdiff_nested::check_nestable(construct::construct_list_view original, con
     end_nest_original  = std::get<2>(original_check); 
   }
 
-  std::tuple<std::vector<int>, int, int> modified_check = check_nestable(modified, original);
+  std::tuple<std::vector<int>, int, int> modified_check = check_nestable_inner(modified, original);
 
   const std::vector<int> & valid_nests_modified = std::get<0>(modified_check);
   if(valid_nests_modified.size()) {
@@ -615,6 +609,10 @@ void srcdiff_nested::check_nestable(construct::construct_list_view original, con
       operation = SES_INSERT;
 
   }
+
+  return nest_result(start_nest_original, end_nest_original,
+                     start_nest_modified, end_nest_modified,
+                     operation);
 
 }
 
