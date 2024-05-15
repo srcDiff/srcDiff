@@ -51,10 +51,8 @@ public:
 
     construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>())
         : out(out), node_list(node_list), terms(), hash_value() {}
-
-    construct(const construct & that);
-
     construct(const construct* parent, std::size_t& start);
+    construct(const construct & that);
 
     virtual ~construct() {};
 

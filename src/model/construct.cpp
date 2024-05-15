@@ -76,14 +76,6 @@ construct::construct_list construct::get_descendents(std::size_t start_pos, std:
     return descendents;
 }
 
-construct::construct(const construct & that) : out(that.out), node_list(that.node_list), terms(), hash_value(that.hash_value) {
-
-    for(std::size_t pos = 0; pos < that.size(); ++pos) {
-        terms.push_back(that.terms[pos]);
-    }
-
-}
-
 construct::construct(const construct* parent, std::size_t & start)
     : out(parent->output()), node_list(parent->nodes()), hash_value(), parent_construct(parent) {
 
@@ -119,6 +111,12 @@ construct::construct(const construct* parent, std::size_t & start)
   }
 
   --start;
+}
+
+construct::construct(const construct & that) : out(that.out), node_list(that.node_list), terms(), hash_value(that.hash_value) {
+    for(std::size_t pos = 0; pos < that.size(); ++pos) {
+        terms.push_back(that.terms[pos]);
+    }
 }
 
 void construct::swap(construct & that) {
