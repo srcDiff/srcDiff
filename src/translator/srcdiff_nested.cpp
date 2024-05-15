@@ -113,9 +113,6 @@ const nest_info nesting[] = {
 
 int is_block_type(std::shared_ptr<const construct> & structure) {
 
-  if(structure->root_term()->get_type() != srcML::node_type::START)
-    return -1;
-
   if(structure->root_term()->get_namespace()->get_uri() != SRCML_SRC_NAMESPACE_HREF)
     return -1;
 
@@ -131,7 +128,7 @@ bool has_internal_structure(std::shared_ptr<const construct> & structure, const 
   if(!type) return false;
 
   for(unsigned int i = 1; i < structure->size(); ++i) {
-    if(structure->term(i)->get_type() == srcML::node_type::START
+    if(structure->term(i)->is_start()
               && structure->term(i)->get_name() == type)
       return true;
   }
@@ -142,9 +139,6 @@ bool has_internal_structure(std::shared_ptr<const construct> & structure, const 
 bool is_nest_type(std::shared_ptr<const construct> & structure,
                   std::shared_ptr<const construct> & structure_other,
                   int type_index) {
-
-  if(structure->root_term()->get_type() != srcML::node_type::START)
-    return false;
 
   if(structure->root_term()->get_namespace()->get_uri() != SRCML_SRC_NAMESPACE_HREF)
     return true;
@@ -218,7 +212,7 @@ bool has_compound_inner(std::shared_ptr<const construct> & node_set_outer) {
   if(node_set_outer->root_term()->is_simple()) return false;
 
   for(unsigned int i = 1; i < node_set_outer->size(); ++i) {
-    if(node_set_outer->term(i)->get_type() == srcML::node_type::START
+    if(node_set_outer->term(i)->is_start()
       && node_set_outer->term(i)->get_name() == "name" && !node_set_outer->term(i)->is_simple())
       return true;
   }
