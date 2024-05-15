@@ -43,8 +43,6 @@ public:
     static bool is_non_white_space(std::size_t & node_pos, const srcml_nodes & node_list, const void * context);
     static bool is_match(std::size_t & node_pos, const srcml_nodes & nodes, const void * context);
 
-    /// @todo make member.  Requires modifiying a lot of methods in other classes.
-    // name does not quite match because not a member yet.
     construct_list get_descendents(std::size_t start_pos, std::size_t end_pos,
                                    construct_filter filter = is_non_white_space,
                                    const void * context = nullptr) const;
