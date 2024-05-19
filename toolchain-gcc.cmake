@@ -2,10 +2,10 @@
 ##
 # @file toolchain-gcc.cmake
 #
-# @copyright Copyright (C) 2023 srcML, LLC. (www.srcML.org)
-#
+# @copyright Copyright (C) 2024 srcML, LLC. (www.srcDiff.org)
+# This file is part of the srcDiff translator.
 # GCC-specific tool configuration
-
+# 
 # Link the stdc++fs library if on gcc 7.5.0
 if(CMAKE_CXX_COMPILER_VERSION STREQUAL "7.5.0")
     link_libraries(stdc++fs)
