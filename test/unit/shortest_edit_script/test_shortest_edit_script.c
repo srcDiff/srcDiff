@@ -1,12 +1,9 @@
 /*
-  test_hortest_edit_script.c
+ * SPDX-License-Identifier: GPL-3.0-only
 
-  Unit tests for shortest_edit_script.
-
-  Michael J. Decker
-  mjd52@zips.uakron.edu
-*/
-
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #include <shortest_edit_script.h>
 #include <shortest_edit_script_private.h>
 

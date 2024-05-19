@@ -1,10 +1,9 @@
 /*
-  Create srcdiff format from two src files.
+ * SPDX-License-Identifier: GPL-3.0-only
 
-  Michael J. Decker
-  mjd52@zips.uakron.edu
-*/
-
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #include <stdio.h>
 #include <fstream>
 #include <string>
