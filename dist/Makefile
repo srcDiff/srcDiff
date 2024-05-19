@@ -1,8 +1,12 @@
-##
-# Makefile for building srcML distributions
+## SPDX-License-Identifier: GPL-3.0-only
+#
+#  Copyright (C) 2011-2013  SDML (www.srcDiff.org)
+#
+#  This file is part of the srcDiff translator.
+#  Makefile for building srcML distributions
 #
 
-# tools
+#  tools
 ECHO=${firstword ${wildcard /opt/local/bin/gecho /usr/local/bin/gecho /bin/echo}}
 SED=${firstword ${wilcard /opt/local/bin/gsed /usr/local/bin/gecho /bin/sed}}
 GREP=${firstword ${wildcard /bin/grep /usr/bin/grep}}
