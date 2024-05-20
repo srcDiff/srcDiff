@@ -1,3 +1,8 @@
+## SPDX-License-Identifier: GPL-3.0-only
+#
+#  Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+#
+#  This file is part of the srcDiff translator.
 # copied from the official x86-windows triplet:
 set(VCPKG_TARGET_ARCHITECTURE x64)
 set(VCPKG_CRT_LINKAGE dynamic)

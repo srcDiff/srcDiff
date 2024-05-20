@@ -1,3 +1,8 @@
+## SPDX-License-Identifier: GPL-3.0-only
+#
+#  Copyright (C) 2011-2013  SDML (www.srcDiff.org)
+#
+#  This file is part of the srcDiff translator.
 MAN_PAGES= srcdiff.1
 HTML_PAGES = srcdiff.html
 MAN_GZIP= srcdiff.1.gz
