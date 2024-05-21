@@ -29,20 +29,14 @@ public:
     static bool is_non_white_space(std::size_t & node_pos, const srcml_nodes & node_list, const void * context);
     static bool is_match(std::size_t & node_pos, const srcml_nodes & nodes, const void * context);
 
-    /// @todo make member.  Requires modifiying a lot of methods in other classes.
-    // name does not quite match because not a member yet.
-    static construct_list get_descendent_constructs(const srcml_nodes & node_list, 
-                                                    std::size_t start_pos, std::size_t end_pos,
-                                                    construct_filter filter = is_non_white_space,
-                                                    const void * context = nullptr,
-                                                    std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>());
+    construct_list get_descendents(std::size_t start_pos, std::size_t end_pos,
+                                   construct_filter filter = is_non_white_space,
+                                   const void * context = nullptr) const;
 
     construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>())
         : out(out), node_list(node_list), terms(), hash_value() {}
-
+    construct(const construct* parent, std::size_t& start);
     construct(const construct & that);
-
-    construct(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>());
 
     virtual ~construct() {};
 
@@ -53,6 +47,11 @@ public:
     bool operator!=(const construct & that) const;
 
     friend std::ostream & operator<<(std::ostream & out, const construct & that);
+
+    const construct* parent() const;
+
+    const std::shared_ptr<srcdiff_output> output() const;
+    std::shared_ptr<srcdiff_output> output();
 
     void expand_children() const;
 
@@ -81,6 +80,8 @@ public:
     const std::shared_ptr<srcML::node> & root_term() const;
     const std::string & term_name(std::size_t pos) const;
     const std::string & root_term_name() const;
+    const std::shared_ptr<srcML::node> parent_term() const;
+    const std::string & parent_term_name() const;
 
 
     std::size_t hash() const;
@@ -109,6 +110,7 @@ public:
 
     // can nest -> can it be placed inside
     virtual bool can_nest(const construct & modified) const;
+
     // does it have a nest target that is better
     //virtual bool is_nest(const construct & modified) const;
 
@@ -120,6 +122,7 @@ protected:
     std::vector<int> terms;
     mutable std::optional<std::size_t> hash_value;
 
+    const construct* parent_construct;
     mutable std::optional<construct_list> child_constructs;
 
     mutable std::unordered_map<int, std::shared_ptr<srcdiff_measure>> measures;

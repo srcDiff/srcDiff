@@ -13,39 +13,39 @@
 #include <srcdiff_whitespace.hpp>
 #include <srcdiff_measure.hpp>
 
+struct nest_result {
+  nest_result(int start_original = 0, int end_original = 0,
+              int start_modified = 0, int end_modified = 0,
+              int operation = SES_COMMON)
+    : start_original(start_original), end_original(end_original),
+      start_modified(start_modified), end_modified(end_modified),
+    operation(operation) {}
+  operator bool() { return operation != SES_COMMON; }
+
+  int start_original, end_original;
+  int start_modified, end_modified;
+  int operation;
+};
+
 class srcdiff_nested : public srcdiff_diff {
 
 protected:
 
-  int start_original;
-  int end_original;
-  int start_modified;
-  int end_modified;
   int operation;
 
 private:
 
 static bool check_nestable_predicate(construct::construct_list_view construct_list_outer,
                                      construct::construct_list_view construct_list_inner);
-static std::tuple<std::vector<int>, int, int> check_nestable(construct::construct_list_view parent_list, construct::construct_list_view child_list);
+static std::tuple<std::vector<int>, int, int> check_nestable_inner(construct::construct_list_view parent_list, construct::construct_list_view child_list);
 
 public:
 
-  static bool is_decl_stmt_from_expr(const srcml_nodes & nodes, int pos);
-  static bool check_nest_name(const construct & set_original,
-                              std::optional<std::shared_ptr<srcML::node>> parent_original,
-                              const construct & set_modified,
-                              std::optional<std::shared_ptr<srcML::node>> parent_modified);
-
-  /// @todo replace? start/end 
   srcdiff_nested(std::shared_ptr<srcdiff_output> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation);
 
   virtual void output();
 
-  /// @todo Return Object?
-  static void check_nestable(construct::construct_list_view original, construct::construct_list_view modified,
-                             int & start_nest_original, int & end_nest_original, int & start_nest_modified, int & end_nest_modified,
-                             int & operation);
+  static nest_result check_nestable(construct::construct_list_view original, construct::construct_list_view modified);
 
   static bool is_nestable(std::shared_ptr<const construct> structure_one,
                           std::shared_ptr<const construct> structure_two);

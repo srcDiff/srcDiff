@@ -62,7 +62,7 @@ namespace srcML {
     const std::string & get_name() const;
     const std::optional<std::string> & get_content() const;
     int get_move() const;
-    std::optional<std::shared_ptr<node>> get_parent() const;
+    std::shared_ptr<node> get_parent() const;
     std::shared_ptr<name_space> get_namespace() const;
 
     std::string full_name() const;
@@ -96,7 +96,7 @@ namespace srcML {
     std::shared_ptr<name_space> ns;
     std::optional<std::string> content;
     std::list<std::shared_ptr<name_space>> ns_definition;
-    std::optional<std::shared_ptr<node>> parent;
+    std::shared_ptr<node> parent;
     attribute_map attributes;
 
     bool temporary;

@@ -13,7 +13,8 @@
 class expr_stmt : public expr_construct {
 
 public:
-    expr_stmt(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) : construct(node_list, start, out), expr_construct(node_list, start, out) {}
+    expr_stmt(const construct* parent, std::size_t& start) : construct(parent, start), expr_construct(parent, start) {}
+    virtual bool can_nest(const construct & modified) const;
     virtual bool is_matchable_impl(const construct & modified) const;
 };
 

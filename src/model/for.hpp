@@ -16,8 +16,8 @@ class for_t : public conditional {
 
 public:
 
-    for_t(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
-        : conditional(node_list, start, out), control_child() {}
+    for_t(const construct* parent, std::size_t& start)
+        : conditional(parent, start), control_child() {}
 
     std::shared_ptr<const construct> control() const;
     virtual std::shared_ptr<const construct> condition() const;

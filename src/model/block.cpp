@@ -55,21 +55,17 @@ bool block::is_matchable_impl(const construct & modified) const {
 	if(is_pseudo_original) {
 		original_stmts = block_content()->children();
 		std::size_t start_pos = modified_block.start_position();
-		modified_stmts.push_back(std::make_shared<block>(modified_block.nodes(), start_pos, modified_block.out));
+		modified_stmts.push_back(std::make_shared<block>(modified_block.parent(), start_pos));
 	} else {
 		std::size_t start_pos = start_position();
-		original_stmts.push_back(std::make_shared<block>(nodes(), start_pos, out));
+		original_stmts.push_back(std::make_shared<block>(parent(), start_pos));
 		modified_stmts = modified_block.block_content()->children();
 		match_operation = SES_DELETE;
 
 	}
 
-    int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
+    nest_result nesting = srcdiff_nested::check_nestable(construct::construct_list_view(&original_stmts.front(), original_stmts.size()),
+					  						    		 construct::construct_list_view(&modified_stmts.front(), modified_stmts.size()));
 
-    construct::construct_list_view original_view = construct::construct_list_view(&original_stmts.front(), original_stmts.size());
-    construct::construct_list_view modified_view = construct::construct_list_view(&modified_stmts.front(), modified_stmts.size());
-    srcdiff_nested::check_nestable(original_view, modified_view,
-                     			   start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
-
-    return match_operation == operation;
+    return match_operation == nesting.operation;
 }

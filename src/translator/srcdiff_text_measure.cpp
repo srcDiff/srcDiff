@@ -55,7 +55,7 @@ void srcdiff_text_measure::collect_text_element(const construct & set, construct
     if(set.term(i)->get_name() == "operator"
       || set.term(i)->get_name() == "modifier") {
 
-      if(set.term(i)->get_parent() && (*set.term(i)->get_parent())->get_name() != "name") continue;
+      if(set.term(i)->get_parent() && set.term(i)->get_parent()->get_name() != "name") continue;
       // comparison of signed vs unsigned
       if((std::size_t)(set.get_terms().at(i) + 1) < set.nodes().size() && set.nodes().at(set.get_terms().at(i) + 1)->is_text()
         && (*set.nodes().at(set.get_terms().at(i) + 1)->get_content() == "::")) continue;
@@ -69,7 +69,7 @@ void srcdiff_text_measure::collect_text_element(const construct & set, construct
     const std::shared_ptr<srcML::node> & node = set.term(i);
 
     bool is_text = node->is_text() && !node->is_whitespace() && node->get_content();
-    bool is_operator = node->get_parent() && (*node->get_parent())->get_name() == "operator";
+    bool is_operator = node->get_parent() && node->get_parent()->get_name() == "operator";
 
     if(is_operator && is_text
         && (*node->get_content() == "."

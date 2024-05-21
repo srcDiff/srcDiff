@@ -13,8 +13,8 @@ class block : public construct {
 
 public:
 
-    block(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), block_content_child() {}
+    block(const construct* parent, std::size_t& start)
+        : construct(parent, start), block_content_child() {}
 
     std::shared_ptr<const construct> block_content() const;
 

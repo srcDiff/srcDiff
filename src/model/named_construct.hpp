@@ -15,8 +15,8 @@ class named_construct : virtual public construct {
 
 public:
 
-    named_construct(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
-        : construct(node_list, start, out), name_child() {} 
+    named_construct(const construct* parent, std::size_t& start)
+        : construct(parent, start), name_child() {} 
 
     virtual std::shared_ptr<const name_t> name() const;
     virtual bool is_matchable_impl(const construct & modified) const;

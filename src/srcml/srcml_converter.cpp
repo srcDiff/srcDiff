@@ -429,8 +429,8 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
       if(node->get_name() == "unit") return nodes;
 
       
-      if(node->get_type() == srcML::node_type::START && (*node->get_parent())->is_simple()) {
-        (*node->get_parent())->set_simple(false);
+      if(node->get_type() == srcML::node_type::START && node->get_parent()->is_simple()) {
+        node->get_parent()->set_simple(false);
       }
       
       

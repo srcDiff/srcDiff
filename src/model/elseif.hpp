@@ -15,8 +15,8 @@ class elseif : public clause {
 
 public:
 
-    elseif(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
-        : clause(node_list, start, out), if_child() {}
+    elseif(const construct* parent, std::size_t& start)
+        : clause(parent, start), if_child() {}
 
     std::shared_ptr<const if_t> find_if() const;
 

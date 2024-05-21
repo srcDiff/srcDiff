@@ -13,8 +13,8 @@ class condition : public always_matched_construct {
 
 public:
 
-    condition(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out) : always_matched_construct(node_list, start, out) {}
-    std::string to_string(bool skip_whitespace = false) const;
+    condition(const construct* parent, std::size_t& start) : always_matched_construct(parent, start) {}
+    virtual std::string to_string(bool skip_whitespace = false) const;
 
 protected:
 };

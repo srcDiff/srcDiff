@@ -13,6 +13,6 @@ class construct;
 #include <string>
 #include <memory>
 
-std::shared_ptr<construct> create_construct(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>());
+std::shared_ptr<construct> create_construct(const construct* parent, std::size_t & start);
 
 #endif

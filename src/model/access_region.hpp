@@ -13,8 +13,8 @@ class access_region : public always_matched_construct {
 
 public:
 
-    access_region(const srcml_nodes & node_list, std::size_t & start, std::shared_ptr<srcdiff_output> out)
-        : always_matched_construct(node_list, start, out) {}
+    access_region(const construct* parent, std::size_t& start)
+        : always_matched_construct(parent, start) {}
     virtual bool is_tag_convertable(const construct & modified) const;
 private:
 
