@@ -50,7 +50,7 @@ int srcdiff_shortest_edit_script::node_compare(const std::shared_ptr<srcML::node
 
 const void * srcdiff_shortest_edit_script::construct_list_index(int index, const void* data, const void * context [[maybe_unused]]) {
 
-  construct::construct_list & elements = *(construct::construct_list *)data;
+  construct::construct_list_view elements = *(construct::construct_list_view *)data;
   return &elements[index];
 }
 
