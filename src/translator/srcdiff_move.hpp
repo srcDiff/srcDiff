@@ -27,8 +27,8 @@ public:
 
 	static bool is_move(std::shared_ptr<const construct> set);
 
-	static void mark_moves(const construct::construct_list & construct_list_original,
-                           const construct::construct_list & construct_list_modified,
+	static void mark_moves(const construct::construct_list_view original,
+                           const construct::construct_list_view modified,
                            edit_t * edit_script);
 
 	virtual void output();

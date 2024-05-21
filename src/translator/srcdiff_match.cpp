@@ -28,18 +28,15 @@ struct difference {
 
 };
 
-bool is_match(const construct::construct_list & sets_original, int start_pos_original,
-              const construct::construct_list & sets_modified, int start_pos_modified) {
+bool is_match(construct::construct_list_view original, construct::construct_list_view modified) {
+  const srcdiff_measure & measure = *original[0]->measure(*modified[0]);
 
-  const srcdiff_measure & measure = *sets_original.at(start_pos_original)->measure(*sets_modified.at(start_pos_modified));
   if(measure.similarity() == MAX_INT) return false;
 
-  if(!sets_original.at(start_pos_original)->is_match_similar(*sets_modified.at(start_pos_modified))
-    && !sets_original.at(start_pos_original)->can_refine_difference(*sets_modified.at(start_pos_modified)))
+  if(!original[0]->is_match_similar(*modified[0]) && !original[0]->can_refine_difference(*modified[0]))
     return false;
 
-  if(srcdiff_nested::is_better_nested(sets_original, start_pos_original,
-                                      sets_modified, start_pos_modified))
+  if(srcdiff_nested::is_better_nested(original, modified))
     return false;
 
   return true;
@@ -47,8 +44,8 @@ bool is_match(const construct::construct_list & sets_original, int start_pos_ori
 }
 
 
-srcdiff_match::srcdiff_match(const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified)
-  : construct_list_original(construct_list_original), construct_list_modified(construct_list_modified) {}
+srcdiff_match::srcdiff_match(const construct::construct_list_view original, const construct::construct_list_view modified)
+  : original(original), modified(modified) {}
 
 /** loop O(D) */
 static offset_pair * create_linked_list(int olength, int nlength, difference * differences) {
@@ -140,8 +137,8 @@ offset_pair * srcdiff_match::match_differences() {
 
   */
 
-  int olength = construct_list_original.size();
-  int nlength = construct_list_modified.size();
+  int olength = original.size();
+  int nlength = modified.size();
 
   size_t mem_size = olength * nlength * sizeof(difference);
 
@@ -153,7 +150,7 @@ offset_pair * srcdiff_match::match_differences() {
     for(int j = 0; j < olength; ++j) {
 
       /** loop O(nd) */
-      const srcdiff_measure & measure = *construct_list_original.at(j)->measure(*construct_list_modified.at(i));
+      const srcdiff_measure & measure = *original[j]->measure(*modified[i]);
       int similarity = measure.similarity();
 
       //unsigned long long max_similarity = (unsigned long long)-1;
@@ -162,7 +159,9 @@ offset_pair * srcdiff_match::match_differences() {
 
       // check if unmatched
       /** loop text O(nd) + syntax O(nd) + best match is O(nd) times number of matches */
-      if(!is_match(construct_list_original, j, construct_list_modified, i)) {
+      construct::construct_list_view original_view = original.subspan(j, original.size() - j);
+      construct::construct_list_view modified_view = modified.subspan(i, modified.size() - i);
+      if(!is_match(original_view, modified_view)) {
 
         similarity = 0;
         unmatched = 2;

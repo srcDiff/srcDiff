@@ -15,8 +15,8 @@
 class srcdiff_edit_correction {
 
 private:
-	const construct::construct_list & sets_original;
-	const construct::construct_list & sets_modified;
+	const construct::construct_list_view sets_original;
+	const construct::construct_list_view sets_modified;
 	srcdiff_shortest_edit_script & ses;
 
 private:
@@ -29,8 +29,8 @@ private:
 	std::shared_ptr<srcdiff_text_measure> edit2measure(int original_offset, int modified_offset);
 
 public:
-	srcdiff_edit_correction(const construct::construct_list & sets_original,
-							const construct::construct_list & sets_modified,
+	srcdiff_edit_correction(const construct::construct_list_view sets_original,
+							const construct::construct_list_view sets_modified,
 							srcdiff_shortest_edit_script & ses);
 	void correct();
 
