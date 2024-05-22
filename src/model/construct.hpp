@@ -90,7 +90,7 @@ public:
 
     std::shared_ptr<const construct> find_child(const std::string & name) const;
     construct_list find_descendents(std::shared_ptr<srcML::node> element) const;
-    std::shared_ptr<const construct> find_best_descendent(std::shared_ptr<const construct> match_construct) const;
+    std::shared_ptr<const construct> find_best_descendent(const construct& match_construct) const;
 
     // Differencing Rules
     const std::shared_ptr<srcdiff_measure> & measure(const construct & modified) const;
@@ -110,6 +110,7 @@ public:
     virtual bool is_convertable_impl(const construct & modified) const;
 
     // can nest -> can it be placed inside
+    bool is_nestable(const construct & modified) const;
     virtual bool can_nest(const construct & modified) const;
 
     // does it have a nest target that is better

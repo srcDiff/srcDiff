@@ -16,6 +16,8 @@ public:
 
     rule_checker(const construct& client);
 
+    virtual bool is_nestable(const construct& modified) const;
+
 private:
     const construct& client;
 };

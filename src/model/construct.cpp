@@ -270,20 +270,20 @@ construct::construct_list construct::find_descendents(std::shared_ptr<srcML::nod
     return get_descendents(start_position() + 1, end_position(), construct::is_match, &element);
 }
 
-std::shared_ptr<const construct> construct::find_best_descendent(std::shared_ptr<const construct> match_construct) const {
-    construct::construct_list descendents = find_descendents(match_construct->term(0));
+std::shared_ptr<const construct> construct::find_best_descendent(const construct& match_construct) const {
+    construct::construct_list descendents = find_descendents(match_construct.term(0));
 
     std::shared_ptr<const construct> best_descendent;
     for(std::shared_ptr<const construct> descendent : descendents) {
 
-        size_t max_size = std::max(descendent->terms.size(), match_construct->terms.size());
-        size_t min_size = std::min(descendent->terms.size(), match_construct->terms.size());
+        size_t max_size = std::max(descendent->terms.size(), match_construct.terms.size());
+        size_t min_size = std::min(descendent->terms.size(), match_construct.terms.size());
 
         if(max_size > (4 * min_size)) {
           continue;
         }
 
-        if(!best_descendent || match_construct->measure(*descendent)->similarity() > match_construct->measure(*best_descendent)->similarity()) {
+        if(!best_descendent || match_construct.measure(*descendent)->similarity() > match_construct.measure(*best_descendent)->similarity()) {
             best_descendent = descendent;
         }
 
@@ -432,6 +432,10 @@ bool construct::is_convertable(const construct & modified) const {
 
 bool construct::is_convertable_impl(const construct & modified [[maybe_unused]]) const {
     return false;
+}
+
+bool construct::is_nestable(const construct & modified) const {
+    return nest_checker->is_nestable(modified);
 }
 
 bool construct::can_nest(const construct & modified) const {
