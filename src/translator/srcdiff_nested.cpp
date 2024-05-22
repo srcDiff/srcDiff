@@ -75,7 +75,7 @@ const char * const decl_nest_types[]         = { "expr",                        
 const char * const static_nest_types[]       = { "decl_stmt",                                                        0 };
 
 // tags that can have something nested in them (incomplete)    
-const nest_info nesting[] = {   
+const nest_info nestable[] = {   
 
   { "block",         block_nest_types        },
   { "block_content", block_nest_types        },
@@ -122,8 +122,8 @@ int is_block_type(std::shared_ptr<const construct> & structure) {
   if(structure->root_term()->get_namespace()->get_uri() != SRCML_SRC_NAMESPACE_HREF)
     return -1;
 
-  for(int i = 0; nesting[i].type; ++i)
-    if(structure->root_term_name() == nesting[i].type)
+  for(int i = 0; nestable[i].type; ++i)
+    if(structure->root_term_name() == nestable[i].type)
       return i;
 
   return -1;
@@ -149,8 +149,8 @@ bool is_nest_type(std::shared_ptr<const construct> & structure,
   if(structure->root_term()->get_namespace()->get_uri() != SRCML_SRC_NAMESPACE_HREF)
     return true;
 
-  for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i) {
-    if(structure->root_term_name() == nesting[type_index].possible_nest_items[i]
+  for(int i = 0; nestable[type_index].possible_nest_items[i]; ++i) {
+    if(structure->root_term_name() == nestable[type_index].possible_nest_items[i]
        && has_internal_structure(structure_other, structure->root_term_name()))
       return true;
   }
@@ -277,8 +277,8 @@ bool srcdiff_nested::is_better_nested(construct::construct_list_view original, c
 
   for(std::size_t pos = 0; pos < original.size(); ++pos) {
 
-    nest_result nesting = check_nestable(original, modified);
-    if(nesting.operation == SES_COMMON) continue;
+    nest_result nestable = check_nestable(original, modified);
+    if(nestable.operation == SES_COMMON) continue;
     if(is_better_nest(original[pos], modified[0], measure)) {
       return true;
     }
@@ -287,8 +287,8 @@ bool srcdiff_nested::is_better_nested(construct::construct_list_view original, c
 
   for(std::size_t pos = 0; pos < modified.size(); ++pos) {
 
-    nest_result nesting = check_nestable(original, modified);
-    if(nesting.operation == SES_COMMON) continue;
+    nest_result nestable = check_nestable(original, modified);
+    if(nestable.operation == SES_COMMON) continue;
     if(is_better_nest(modified[pos], original[0], measure)) {
       return true;
     }

@@ -11,6 +11,8 @@
 #include <srcml_nodes.hpp>
 #include <construct_utils.hpp>
 
+#include <nesting/rule_checker.hpp>
+
 #include <srcdiff_measure.hpp>
 
 #include <optional>
@@ -36,12 +38,11 @@ public:
     construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>())
         : out(out), node_list(node_list), terms(), hash_value() {}
     construct(const construct* parent, std::size_t& start);
-    construct(const construct & that);
 
-    virtual ~construct() {};
+    construct(const construct & that) = delete;
+    construct & operator=(construct that) = delete;
 
-    void swap(construct & that);
-    construct & operator=(construct that);
+    virtual ~construct() {}
 
     bool operator==(const construct & that) const;
     bool operator!=(const construct & that) const;
@@ -115,6 +116,11 @@ public:
     //virtual bool is_nest(const construct & modified) const;
 
 protected:
+    // Delegates rule object(s)
+    std::shared_ptr<nesting::rule_checker> nest_checker;
+
+protected:
+
     std::shared_ptr<srcdiff_output> out;
 
     const srcml_nodes & node_list;

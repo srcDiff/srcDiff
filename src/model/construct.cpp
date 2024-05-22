@@ -64,7 +64,7 @@ construct::construct_list construct::get_descendents(std::size_t start_pos, std:
 }
 
 construct::construct(const construct* parent, std::size_t & start)
-    : out(parent->output()), node_list(parent->nodes()), hash_value(), parent_construct(parent) {
+    : nest_checker(std::make_shared<nesting::rule_checker>(*this)), out(parent->output()), node_list(parent->nodes()), hash_value(), parent_construct(parent) {
 
   if(node_list.at(start)->get_type() != srcML::node_type::TEXT && node_list.at(start)->get_type() != srcML::node_type::START) return;
 
@@ -98,23 +98,6 @@ construct::construct(const construct* parent, std::size_t & start)
   }
 
   --start;
-}
-
-construct::construct(const construct & that) : out(that.out), node_list(that.node_list), terms(), hash_value(that.hash_value) {
-    for(std::size_t pos = 0; pos < that.size(); ++pos) {
-        terms.push_back(that.terms[pos]);
-    }
-}
-
-void construct::swap(construct & that) {
-    std::swap(terms, that.terms);
-    std::swap(hash_value, that.hash_value);
-    std::swap(child_constructs, that.child_constructs);
-}
-
-construct & construct::operator=(construct that) {
-    swap(that);
-    return *this;
 }
 
 bool construct::operator==(const construct & that) const {

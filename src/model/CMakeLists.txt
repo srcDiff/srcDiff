@@ -6,12 +6,13 @@
 #  This file is part of the srcDiff translator.
 #
 
-
 file(GLOB MODEL_HEADERS *.hpp)
 file(GLOB MODEL_SOURCE  *.cpp)
 
 find_package(srcML REQUIRED)
 find_package(LibXml2 REQUIRED)
+
+add_subdirectory(nesting)
 
 add_library(model OBJECT ${MODEL_HEADERS} ${MODEL_SOURCE})
 target_link_libraries(model PRIVATE srcML::LibsrcML LibXml2::LibXml2)
