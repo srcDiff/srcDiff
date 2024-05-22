@@ -96,12 +96,18 @@ void srcdiff_single::output_recursive_interchangeable() {
     /**@todo replace get_descendent with using children above */
     int original_collect_start_pos = 1;
     if(original_construct->root_term_name() == "if_stmt") {
-        original_collect_start_pos = static_cast<const if_stmt &>(*original_construct).find_if()->start_position();
+        while(original_construct->term(original_collect_start_pos)->get_name() != "if") {
+            ++original_collect_start_pos;
+        }
+        ++original_collect_start_pos;
     }
 
     int modified_collect_start_pos = 1;
     if(modified_construct->root_term_name() == "if_stmt") {
-        modified_collect_start_pos = static_cast<const if_stmt &>(*modified_construct).find_if()->start_position();
+        while(modified_construct->term(modified_collect_start_pos)->get_name() != "if") {
+          ++modified_collect_start_pos;
+        }
+      ++modified_collect_start_pos;
     }
 
     // get keyword if present
@@ -144,11 +150,11 @@ void srcdiff_single::output_recursive_interchangeable() {
     // collect subset of nodes
     construct::construct_list next_set_original
         = original_construct->get_descendents(original_construct->get_terms().at(original_collect_start_pos),
-                                             original_construct->end_position());
+                                              original_construct->end_position());
 
     construct::construct_list next_set_modified
         = modified_construct->get_descendents(modified_construct->get_terms().at(modified_collect_start_pos),
-                                             modified_construct->end_position());
+                                              modified_construct->end_position());
 
     srcdiff_diff diff(out, next_set_original, next_set_modified);
     diff.output();

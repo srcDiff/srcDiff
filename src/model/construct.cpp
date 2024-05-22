@@ -406,9 +406,6 @@ bool construct::is_matchable_impl(const construct & modified [[maybe_unused]]) c
 
 bool construct::is_match_similar(const construct & modified) const {
 
-  //int original_pos = start_position();
-  //int modified_pos = modified.start_position();
-
   if(*term(0) != *modified.term(0)) return false;
 
   srcdiff_text_measure complete_measure(*this, modified, false);

@@ -22,7 +22,6 @@ public:
     std::shared_ptr<const else_t> find_else() const;
     virtual std::shared_ptr<const construct> condition() const;
 
-
     virtual bool is_syntax_similar_impl(const construct & modified) const;
     virtual bool is_matchable_impl(const construct & modified) const;
 
