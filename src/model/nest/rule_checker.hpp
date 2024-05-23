@@ -8,7 +8,7 @@
 #define INCLUDED_NESTING_RULE_CHECKER_HPP
 
 class construct;
-namespace nesting {
+namespace nest {
 
 class rule_checker {
 

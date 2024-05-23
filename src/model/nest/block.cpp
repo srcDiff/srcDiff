@@ -11,7 +11,7 @@
 #include <string>
 #include <unordered_set>
 
-namespace nesting {
+namespace nest {
 
 block::block(const construct& client)
         : rule_checker(client) {}

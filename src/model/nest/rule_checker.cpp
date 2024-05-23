@@ -146,7 +146,7 @@ bool is_nest_type(const construct& structure,
 
 
 
-namespace nesting {
+namespace nest {
 
 rule_checker::rule_checker(const construct& client)
     : client(client) {}

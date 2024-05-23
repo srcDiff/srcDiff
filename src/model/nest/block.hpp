@@ -9,7 +9,7 @@
 
 #include "rule_checker.hpp"
 
-namespace nesting {
+namespace nest {
 
 class block : public rule_checker {
 

@@ -11,7 +11,7 @@
 #include <srcml_nodes.hpp>
 #include <construct_utils.hpp>
 
-#include <nesting/rule_checker.hpp>
+#include <nest/rule_checker.hpp>
 
 #include <srcdiff_measure.hpp>
 
@@ -117,11 +117,11 @@ public:
     //virtual bool is_nest(const construct & modified) const;
 
 protected:
-    construct(const construct* parent, std::size_t& start, std::shared_ptr<nesting::rule_checker> nest_checker);
+    construct(const construct* parent, std::size_t& start, std::shared_ptr<nest::rule_checker> nest_checker);
 
 protected:
     // Delegates rule object(s)
-    std::shared_ptr<nesting::rule_checker> nest_checker;
+    std::shared_ptr<nest::rule_checker> nest_checker;
 
 protected:
     std::shared_ptr<srcdiff_output> out;

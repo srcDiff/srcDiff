@@ -8,13 +8,13 @@
 
 #include <srcdiff_match.hpp>
 
-#include <nesting/block.hpp>
+#include <nest/block.hpp>
 #include <srcdiff_nested.hpp>
 
 #include <srcdiff_syntax_measure.hpp>
 
 block::block(const construct* parent, std::size_t& start)
-    : construct(parent, start, std::make_shared<nesting::block>(*this)), block_content_child() {
+    : construct(parent, start, std::make_shared<nest::block>(*this)), block_content_child() {
 }
 
 std::shared_ptr<const construct> block::block_content() const {
