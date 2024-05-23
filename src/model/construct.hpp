@@ -35,9 +35,9 @@ public:
                                    construct_filter filter = is_non_white_space,
                                    const void * context = nullptr) const;
 
-    construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>())
-        : out(out), node_list(node_list), terms(), hash_value() {}
+    construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>());
     construct(const construct* parent, std::size_t& start);
+    construct(const construct* parent, std::size_t& start, std::shared_ptr<nesting::rule_checker> nest_checker);
 
     construct(const construct & that) = delete;
     construct & operator=(construct that) = delete;
