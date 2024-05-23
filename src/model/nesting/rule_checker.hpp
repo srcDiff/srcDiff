@@ -16,9 +16,12 @@ public:
 
     rule_checker(const construct& client);
 
-    virtual bool is_nestable(const construct& modified) const;
+    bool is_nestable(const construct& modified) const;
 
-private:
+    virtual bool is_nestable_internal(const construct& modified) const;
+    virtual bool is_same_nestable(const construct& modified) const;
+
+protected:
     const construct& client;
 };
 

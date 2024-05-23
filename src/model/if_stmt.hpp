@@ -16,8 +16,8 @@ class if_stmt : public conditional {
 
 public:
 
-    if_stmt(const construct* parent, std::size_t& start)
-        : conditional(parent, start), if_child(), else_child() {}
+    if_stmt(const construct* parent, std::size_t& start);
+
     std::shared_ptr<const if_t> find_if() const;
     std::shared_ptr<const else_t> find_else() const;
     virtual std::shared_ptr<const construct> condition() const;

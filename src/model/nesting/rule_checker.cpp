@@ -63,8 +63,10 @@ const nest_info nestable[] = {
 
   { "block",         block_nest_types        },
   { "block_content", block_nest_types        },
+
   { "if_stmt",       block_nest_types        },
   { "if",            block_nest_types        },
+
   { "then",          ternary_then_nest_types },
   { "else",          else_nest_types         },
   { "while",         block_nest_types        },
@@ -142,20 +144,33 @@ bool is_nest_type(const construct& structure,
   return false;
 }
 
-bool is_nestable_internal(const construct& structure_one,
-                          const construct& structure_two) {
 
-  int block = is_block_type(structure_two);
+
+namespace nesting {
+
+rule_checker::rule_checker(const construct& client)
+    : client(client) {}
+
+bool rule_checker::is_nestable(const construct& modified) const {
+    if(*client.root_term() == *modified.root_term())
+        return is_same_nestable(modified);
+    else
+        return is_nestable_internal(modified);
+}
+
+bool rule_checker::is_nestable_internal(const construct& modified) const {
+
+  int block = is_block_type(modified);
 
   if(block == -1)
     return false;
 
   /** Only can nest a block into another block if it's parent is a block */
-  bool is_block = structure_one.root_term_name() == "block" && structure_two.root_term_name() == "block";
-  bool parent_is_block = structure_one.root_term()->get_parent() && structure_one.root_term()->get_parent()->get_name() == "block";
+  bool is_block = client.root_term_name() == "block" && modified.root_term_name() == "block";
+  bool parent_is_block = client.root_term()->get_parent() && client.root_term()->get_parent()->get_name() == "block";
   if(is_block && !parent_is_block) return false;
 
-  if(is_nest_type(structure_one, structure_two, block)) {
+  if(is_nest_type(client, modified, block)) {
 
     return true;
 
@@ -164,18 +179,17 @@ bool is_nestable_internal(const construct& structure_one,
   return false;
 }
 
-bool is_same_nestable(const construct& structure_one,
-                      const construct& structure_two) {
+bool rule_checker::is_same_nestable(const construct& modified) const {
 
-  if(!is_nestable_internal(structure_one, structure_two)) return false;
+  if(!is_nestable_internal(modified)) return false;
 
-  std::shared_ptr<const construct> best_match = structure_two.find_best_descendent(structure_one);
+  std::shared_ptr<const construct> best_match = modified.find_best_descendent(client);
   if(!best_match) return false;
 
-  srcdiff_text_measure match_measure(structure_one, *best_match);
+  srcdiff_text_measure match_measure(client, *best_match);
   match_measure.compute();
 
-  srcdiff_text_measure measure(structure_one, structure_two);
+  srcdiff_text_measure measure(client, modified);
   measure.compute();
 
   double min_size = measure.min_length();
@@ -183,19 +197,8 @@ bool is_same_nestable(const construct& structure_one,
 
   return (match_measure.similarity() >= measure.similarity() && match_measure.difference() <= measure.difference()) 
   || (match_min_size > 50 && min_size > 50 && (match_min_size / match_measure.similarity()) < (0.9 * (min_size / measure.similarity()))
-    && best_match->can_nest(structure_one));
+    && best_match->can_nest(client));
 
 }
 
-namespace nesting {
-
-    rule_checker::rule_checker(const construct& client)
-        : client(client) {}
-
-    bool rule_checker::is_nestable(const construct& modified) const {
-        if(*client.root_term() == *modified.root_term())
-            return is_same_nestable(client, modified);
-        else
-            return is_nestable_internal(client, modified);
-    }
 }

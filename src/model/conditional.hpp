@@ -15,8 +15,7 @@ class conditional : public construct {
 
 public:
 
-    conditional(const construct* parent, std::size_t& start)
-        : construct(parent, start), condition_child() {}
+    conditional(const construct* parent, std::size_t& start);
 
     virtual std::shared_ptr<const construct> condition() const;
     virtual bool is_matchable_impl(const construct & modified) const;

@@ -36,8 +36,8 @@ public:
                                    const void * context = nullptr) const;
 
     construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>());
+
     construct(const construct* parent, std::size_t& start);
-    construct(const construct* parent, std::size_t& start, std::shared_ptr<nesting::rule_checker> nest_checker);
 
     construct(const construct & that) = delete;
     construct & operator=(construct that) = delete;
@@ -117,11 +117,13 @@ public:
     //virtual bool is_nest(const construct & modified) const;
 
 protected:
+    construct(const construct* parent, std::size_t& start, std::shared_ptr<nesting::rule_checker> nest_checker);
+
+protected:
     // Delegates rule object(s)
     std::shared_ptr<nesting::rule_checker> nest_checker;
 
 protected:
-
     std::shared_ptr<srcdiff_output> out;
 
     const srcml_nodes & node_list;
