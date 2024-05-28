@@ -19,9 +19,9 @@ block::block(const construct& client)
 bool block::is_nestable_internal(const construct& modified) const {
 	std::unordered_set<std::string> nestable_constructs = {
 	  "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
-      "if_stmt", "if", "while", "for", "foreach", "else", "switch", "do",
-      "try", "catch", "finally", "synchronized", "continue", "break", "goto"
-    };
+          "if_stmt", "if", "while", "for", "foreach", "else", "switch", "do",
+          "try", "catch", "finally", "synchronized", "continue", "break", "goto"
+        };
 
     /** Only can nest a block into another block if it's parent is a block */
     bool is_block = client.root_term_name() == "block" && modified.root_term_name() == "block";

@@ -39,6 +39,10 @@ public:
 
     construct(const construct* parent, std::size_t& start);
 
+    template <typename nest_rule_checker>
+    construct(const construct* parent, std::size_t& start, std::shared_ptr<nest_rule_checker> nest_checker);
+
+
     construct(const construct & that) = delete;
     construct & operator=(construct that) = delete;
 
@@ -117,9 +121,6 @@ public:
     //virtual bool is_nest(const construct & modified) const;
 
 protected:
-    construct(const construct* parent, std::size_t& start, std::shared_ptr<nest::rule_checker> nest_checker);
-
-protected:
     // Delegates rule object(s)
     std::shared_ptr<nest::rule_checker> nest_checker;
 
@@ -138,5 +139,6 @@ protected:
 
 };
 
+#include <construct.txx>
 
 #endif

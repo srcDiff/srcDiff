@@ -71,43 +71,6 @@ construct::construct(const construct* parent, std::size_t& start)
     : construct(parent, start, std::make_shared<nest::rule_checker>(*this)) {
 }
 
-construct::construct(const construct* parent, std::size_t& start, std::shared_ptr<nest::rule_checker> nest_checker)
-    : nest_checker(nest_checker), out(parent->output()), node_list(parent->nodes()), hash_value(), parent_construct(parent) {
-
-  if(node_list.at(start)->get_type() != srcML::node_type::TEXT && node_list.at(start)->get_type() != srcML::node_type::START) return;
-
-  terms.push_back(start);
-
-  if(node_list.at(start)->is_empty() || node_list.at(start)->get_type() == srcML::node_type::TEXT) return;
-
-  ++start;
-
-  // track open tags because could have same type nested
-  int is_open = 1;
-  for(; is_open; ++start) {
-
-    // skip whitespace
-    if(node_list.at(start)->is_whitespace()) {
-      continue;
-    }
-
-    terms.push_back(start);
-
-    // opening tags
-    if(node_list.at(start)->get_type() == srcML::node_type::START
-       && !(node_list.at(start)->is_empty())) {
-      ++is_open;
-    }
-
-    // closing tags
-    else if(node_list.at(start)->get_type() == srcML::node_type::END) {
-      --is_open;
-    }
-  }
-
-  --start;
-}
-
 bool construct::operator==(const construct & that) const {
 
     if(!(hash() == that.hash())) return false;

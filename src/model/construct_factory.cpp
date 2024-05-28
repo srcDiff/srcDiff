@@ -46,6 +46,9 @@
 
 #include <srcdiff_match.hpp>
 
+#include <nest/rule_checker.hpp>
+#include <nest/block.hpp>
+
 #include <unordered_map>
 #include <string_view>
 
@@ -86,7 +89,7 @@ factory_function access_region_factory = [](const construct* parent, std::size_t
 
 factory_function always_match_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<always_matched_construct>(parent, start); };
 
-factory_function block_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<block>(parent, start); };
+factory_function block_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<block>(parent, start, std::shared_ptr<nest::block>()); };
 
 factory_function operator_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<operator_t>(parent, start); };
 factory_function comment_factory =  [](const construct* parent, std::size_t& start) { return std::make_shared<comment_t>(parent, start); };
