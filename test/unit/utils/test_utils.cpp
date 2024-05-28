@@ -60,21 +60,14 @@ std::shared_ptr<srcml_nodes> create_nodes(const std::string & code, const std::s
 	return std::make_shared<srcml_nodes>(testNode);
 }
 
-/*
-std::shared_ptr<construct> create_test_construct(const srcml_nodes & nodes) {
-	size_t START = 0;
-	return create_construct(nodes, START);
-}
-*/
-
-std::shared_ptr<construct> create_test_construct(const std::string & code, const std::string & construct_name, const std::string & language) {
+construct_test_data create_test_construct(const std::string & code, const std::string & construct_name, const std::string & language) {
 	
-	std::shared_ptr nodes = create_nodes(code, language);
+	std::shared_ptr<srcml_nodes> nodes = create_nodes(code, language);
 
 	for (size_t i = 0; i < nodes->size(); ++i) {
 		if ((*nodes)[i]->get_name() == construct_name) {
-		  return (create_construct(*nodes, i, std::make_shared<srcdiff_output>()));
+		  return { nodes, create_construct(*nodes, i, std::make_shared<srcdiff_output>()) };
 		}
 	}
-	return std::shared_ptr<construct>();
+	return {nodes, std::shared_ptr<construct>() };
 }
