@@ -6,6 +6,7 @@
 #include "clause.hpp"
 #include "conditional.hpp"
 #include <iostream>
+#include <typeinfo>
 
 // Define test data 
 namespace boostdata = boost::unit_test::data;
@@ -23,11 +24,13 @@ BOOST_DATA_TEST_CASE(test_constructs, boostdata::make(test_cases), code, constru
 
     BOOST_TEST(construct);
     if (construct_name == "if") {
-     
-      BOOST_TEST(dynamic_cast<if_t*>(construct.get()) != nullptr);
+
+      BOOST_TEST_MESSAGE("Construct: " << *(construct.get()));
+      if_t* if_construct = dynamic_cast<if_t*>(construct.get());
+      BOOST_TEST(if_construct->has_real_block());
  
     }
-    else if (construct_name == "clause") {
+    else if (construct_name == "else") {
       
       BOOST_TEST(dynamic_cast<clause*>(construct.get()) != nullptr);
       
