@@ -69,7 +69,7 @@ std::shared_ptr<construct> create_test_construct(const srcml_nodes & nodes) {
 
 std::shared_ptr<construct> create_test_construct(const std::string & code, const std::string & construct_name, const std::string & language) {
 	
-	std::shared_ptr nodes = create_nodes(code, "C++");
+	std::shared_ptr nodes = create_nodes(code, language);
 
 	for (size_t i = 0; i < nodes->size(); ++i) {
 		if ((*nodes)[i]->get_name() == construct_name) {
