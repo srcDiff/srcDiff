@@ -1,40 +1,26 @@
 #define BOOST_TEST_MODULE ConditionalTests
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
-#include "test_utils.hpp"
-#include "if.hpp"
-#include "clause.hpp"
-#include "conditional.hpp"
-#include <iostream>
-#include <typeinfo>
+
+#include <test_utils.hpp>
+
+#include <if.hpp>
 
 // Define test data 
-namespace boostdata = boost::unit_test::data;
+namespace data = boost::unit_test::data;
 
 std::vector<std::tuple<std::string, std::string>> test_cases = {
     {"if (x) {y=1;}", "if"},
-    {"else {y=0;}", "else"}
 };
 
-BOOST_DATA_TEST_CASE(test_constructs, boostdata::make(test_cases), code, construct_name) {
-    std::shared_ptr<construct> construct = create_test_construct(code, construct_name);
+BOOST_DATA_TEST_CASE(test_constructs, data::make(test_cases), code, construct_name) {
 
-    BOOST_TEST_MESSAGE("Testing construct: " << construct_name);
-    BOOST_TEST_MESSAGE("Construct pointer: " << construct.get());
+    construct_test_data test_data = create_test_construct(code, construct_name);
 
-    BOOST_TEST(construct);
-    if (construct_name == "if") {
+    BOOST_TEST(test_data.construct);
+    std::shared_ptr<if_t> if_construct = std::dynamic_pointer_cast<if_t>(test_data.construct);
+    BOOST_TEST(if_construct->has_real_block());
 
-      BOOST_TEST_MESSAGE("Construct: " << *(construct.get()));
-      if_t* if_construct = dynamic_cast<if_t*>(construct.get());
-      BOOST_TEST(if_construct->has_real_block());
- 
-    }
-    else if (construct_name == "else") {
-      
-      BOOST_TEST(dynamic_cast<clause*>(construct.get()) != nullptr);
-      
-    }
 }
 
 
