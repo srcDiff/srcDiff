@@ -7,10 +7,6 @@
 
 #include <conditional.hpp>
 
-conditional::conditional(const construct* parent, std::size_t& start)
-    : construct(parent, start), condition_child() {
-}
-
 // if match rule is in child class
 
 std::shared_ptr<const construct> conditional::condition() const {

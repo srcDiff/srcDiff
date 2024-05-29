@@ -12,10 +12,6 @@
 
 #include <srcdiff_match.hpp>
 
-if_stmt::if_stmt(const construct* parent, std::size_t& start)
-    : conditional(parent, start), if_child(), else_child() {
-}
-
 std::shared_ptr<const if_t> if_stmt::find_if() const {
    if(if_child) return *if_child;
 

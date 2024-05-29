@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
-
- * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ *
+ * Copyright (C) 2023-2024  SDML (www.srcDiff.org)
  * This file is part of the srcDiff translator.
  */
 #ifndef INCLUDED_IF_STMT_HPP
@@ -16,7 +16,11 @@ class if_stmt : public conditional {
 
 public:
 
-    if_stmt(const construct* parent, std::size_t& start);
+    template<class nest_rule_checker>
+    if_stmt(const construct* parent, std::size_t& start, std::shared_ptr<nest_rule_checker> nest_checker)
+        : conditional(parent, start, std::make_shared<nest_rule_checker>(*this)), if_child(), else_child() {
+    }
+
 
     std::shared_ptr<const if_t> find_if() const;
     std::shared_ptr<const else_t> find_else() const;

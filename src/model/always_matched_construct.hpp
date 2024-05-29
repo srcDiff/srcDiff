@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
-
- * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ *
+ * Copyright (C) 2023-2024  SDML (www.srcDiff.org)
  * This file is part of the srcDiff translator.
  */
 #ifndef INCLUDED_ALWAYS_MATCHED_CONSTRUCT_HPP
@@ -15,8 +15,9 @@ class always_matched_construct : public construct {
 
 public:
 
-    always_matched_construct(const construct* parent, std::size_t& start)
-        : construct(parent, start) {}
+    template<class nest_rule_checker>
+    always_matched_construct(const construct* parent, std::size_t& start, std::shared_ptr<nest_rule_checker> nest_checker)
+        : construct(parent, start, std::make_shared<nest_rule_checker>(*this)) {}
     virtual bool is_matchable_impl(const construct & modified) const;
 
 private:

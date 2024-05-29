@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
-
- * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ *
+ * Copyright (C) 2023-2024  SDML (www.srcDiff.org)
  * This file is part of the srcDiff translator.
  */
 #ifndef INCLUDED_EXPR_CONSTRUCT_HPP
@@ -15,8 +15,10 @@ class expr_construct : virtual public construct {
 
 public:
 
-    expr_construct(const construct* parent, std::size_t& start)
-        : construct(parent, start), expr_child() {} 
+    template<class nest_rule_checker>
+    expr_construct(const construct* parent, std::size_t& start, std::shared_ptr<nest_rule_checker> nest_checker)
+        : construct(parent, start, std::make_shared<nest_rule_checker>(*this)), expr_child() {
+    } 
 
     virtual std::shared_ptr<const expr_t> expr(const expr_construct & that) const;
 

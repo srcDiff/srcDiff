@@ -1,23 +1,9 @@
-/**
- * @file operator.hpp
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
  *
- * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
- *
- * srcDiff is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * srcDiff is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Copyright (C) 2023-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
  */
-
 #ifndef INCLUDED_OPERATOR_HPP
 #define INCLUDED_OPERATOR_HPP
 
@@ -26,8 +12,11 @@
 class operator_t : public always_matched_construct {
 
 public:
-    operator_t(const construct* parent, std::size_t& start) : always_matched_construct(parent, start) {}
+    template<class nest_rule_checker>
+    operator_t(const construct* parent, std::size_t& start, std::shared_ptr<nest_rule_checker> nest_checker)
+        : always_matched_construct(parent, start, std::make_shared<nest_rule_checker>(*this)) {}
     virtual bool can_nest(const construct & modified) const;
+
 private:
 };
 
