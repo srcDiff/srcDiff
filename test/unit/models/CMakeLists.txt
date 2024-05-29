@@ -23,5 +23,5 @@ find_package(Boost REQUIRED)
 
 # add tests
 
-add_unit_test(test_conditional.cpp Boost::headers)
-set_tests_properties(test_conditional PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_LEVEL=all")
+add_unit_test(test_if_t.cpp Boost::headers)
+set_tests_properties(test_if_t PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_LEVEL=all")
