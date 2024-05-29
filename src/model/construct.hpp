@@ -42,7 +42,6 @@ public:
     template <typename nest_rule_checker>
     construct(const construct* parent, std::size_t& start, std::shared_ptr<nest_rule_checker> nest_checker);
 
-
     construct(const construct & that) = delete;
     construct & operator=(construct that) = delete;
 
