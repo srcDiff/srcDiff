@@ -50,7 +50,6 @@ BOOST_DATA_TEST_CASE(if_t_is_block_matchable, data::make(test_cases_is_block_mat
   std::shared_ptr<if_t> if_construct_original = std::dynamic_pointer_cast<if_t>(original_data.test_construct);
   std::shared_ptr<if_t> if_construct_modified = std::dynamic_pointer_cast<if_t>(modified_data.test_construct);
 
-  //bool matchable = if_construct_original->is_block_matchable(*if_construct_modified);
   BOOST_TEST(!if_construct_original->is_block_matchable(*if_construct_modified));
 }
 
