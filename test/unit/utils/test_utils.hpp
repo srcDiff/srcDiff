@@ -12,7 +12,7 @@ std::string read_from_file(std::string);
 
 struct construct_test_data {
     std::shared_ptr<srcml_nodes> nodes;
-    std::shared_ptr<construct>   construct;
+    std::shared_ptr<construct>   test_construct;
 
 };
 
