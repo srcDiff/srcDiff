@@ -151,14 +151,14 @@ namespace nest {
 rule_checker::rule_checker(const construct& client)
     : client(client) {}
 
-bool rule_checker::is_nestable(const construct& modified) const {
+bool rule_checker::can_nest(const construct& modified) const {
     if(*client.root_term() == *modified.root_term())
-        return is_same_nestable(modified);
+        return can_nest_same(modified);
     else
-        return is_nestable_internal(modified);
+        return can_nest_internal(modified);
 }
 
-bool rule_checker::is_nestable_internal(const construct& modified) const {
+bool rule_checker::can_nest_internal(const construct& modified) const {
 
   int block = is_block_type(modified);
 
@@ -179,9 +179,9 @@ bool rule_checker::is_nestable_internal(const construct& modified) const {
   return false;
 }
 
-bool rule_checker::is_same_nestable(const construct& modified) const {
+bool rule_checker::can_nest_same(const construct& modified) const {
 
-  if(!is_nestable_internal(modified)) return false;
+  if(!can_nest_internal(modified)) return false;
 
   std::shared_ptr<const construct> best_match = modified.find_best_descendent(client);
   if(!best_match) return false;

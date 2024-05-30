@@ -113,7 +113,7 @@ public:
     virtual bool is_convertable_impl(const construct & modified) const;
 
     // can nest -> can it be placed inside
-    bool is_nestable(const construct & modified) const;
+    bool can_nest(const construct & modified) const;
     virtual bool check_nest(const construct & modified) const;
 
     // does it have a nest target that is better

@@ -402,8 +402,8 @@ bool construct::is_convertable_impl(const construct & modified [[maybe_unused]])
     return false;
 }
 
-bool construct::is_nestable(const construct & modified) const {
-    return nest_checker->is_nestable(modified);
+bool construct::can_nest(const construct & modified) const {
+    return nest_checker->can_nest(modified);
 }
 
 bool construct::check_nest(const construct & modified) const {

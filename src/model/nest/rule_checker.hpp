@@ -16,10 +16,10 @@ public:
 
     rule_checker(const construct& client);
 
-    bool is_nestable(const construct& modified) const;
-    bool is_same_nestable(const construct& modified) const;
+    bool can_nest(const construct& modified) const;
+    bool can_nest_same(const construct& modified) const;
 
-    virtual bool is_nestable_internal(const construct& modified) const;
+    virtual bool can_nest_internal(const construct& modified) const;
 
 protected:
     const construct& client;
