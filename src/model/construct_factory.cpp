@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
-
+ *
  * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
  * This file is part of the srcDiff translator.
  */
@@ -85,18 +85,18 @@ factory_map_type factory_map = {
   {"destructor_decl",  generate_factory<named_construct>() },
 
   // // conditionals
-  {"while",     generate_factory<conditional>() },
+  {"while",     generate_factory<conditional, nest::block>() },
   {"switch",    generate_factory<conditional>() },
   {"do",        generate_factory<conditional>() },
   {"condition", generate_factory<condition>() },
 
-  {"if_stmt", generate_factory<if_stmt>() },
-  {"if",      generate_factory<if_t>() },
-  {"elseif",  generate_factory<elseif>() },
+  {"if_stmt", generate_factory<if_stmt, nest::block>() },
+  {"if",      generate_factory<if_t, nest::block>() },
+  {"elseif",  generate_factory<elseif, nest::block>() },
   {"else",    generate_factory<else_t>() },
 
-  {"for",     generate_factory<for_t>() },
-  {"foreach", generate_factory<for_t>() },
+  {"for",     generate_factory<for_t, nest::block>() },
+  {"foreach", generate_factory<for_t, nest::block>() },
 
   {"case", generate_factory<case_t>() },
   {"call", generate_factory<call>() },
@@ -149,6 +149,13 @@ factory_map_type factory_map = {
 
   {"operator", generate_factory<operator_t>() },
   {"comment",  generate_factory<comment_t>() },
+
+  // nest only
+  {"try",      generate_factory<construct, nest::block>() },
+  {"catch",    generate_factory<construct, nest::block>() },
+  {"finally",  generate_factory<construct, nest::block>() },
+
+  {"synchronized",  generate_factory<construct, nest::block>() },
 
 };
 

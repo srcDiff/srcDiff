@@ -17,18 +17,18 @@ block::block(const construct& client) : rule_checker(client) {
 }
 
 bool block::can_nest_internal(const construct& modified) const {
-    std::unordered_set<std::string> nestable_constructs = {
-      "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
-      "if_stmt", "if", "while", "for", "foreach", "else", "switch", "do",
-      "try", "catch", "finally", "synchronized", "continue", "break", "goto"
-    };
+  std::unordered_set<std::string> nestable_constructs = {
+    "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
+    "if_stmt", "if", "while", "for", "foreach", "else", "switch", "do",
+    "try", "catch", "finally", "synchronized", "continue", "break", "goto"
+  };
 
-    /** Only can nest a block into another block if it's parent is a block */
-    bool is_block = client.root_term_name() == "block" && modified.root_term_name() == "block";
-    bool parent_is_block = client.root_term()->get_parent() && client.root_term()->get_parent()->get_name() == "block";
-    if(is_block && !parent_is_block) return false;
+  /** Only can nest a block into another block if it's parent is a block */
+  bool is_block = client.root_term_name() == "block" && modified.root_term_name() == "block";
+  bool parent_is_block = client.root_term()->get_parent() && client.root_term()->get_parent()->get_name() == "block";
+  if(is_block && !parent_is_block) return false;
 
-    return nestable_constructs.find(modified.root_term_name()) != nestable_constructs.end();
+  return nestable_constructs.find(modified.root_term_name()) != nestable_constructs.end();
 }
 
 }

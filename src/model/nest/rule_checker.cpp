@@ -61,14 +61,8 @@ const char * const static_nest_types[]       = { "decl_stmt",                   
 // tags that can have something nested in them (incomplete)    
 const nest_info nestable[] = {   
 
-  { "if_stmt",       block_nest_types        },
-  { "if",            block_nest_types        },
-
   { "then",          ternary_then_nest_types },
   { "else",          else_nest_types         },
-  { "while",         block_nest_types        },
-  { "for",           block_nest_types        },
-  { "foreach",       block_nest_types        },
   { "control",       for_control_nest_types  },
   { "function",      block_nest_types        },
 
@@ -86,8 +80,6 @@ const nest_info nestable[] = {
   { "ternary",       ternary_nest_types      },
   { "condition",     condition_nest_types    },
   { "name",          name_nest_types         },
-  { "try",           block_nest_types        },
-  { "catch",         block_nest_types        },
   { "extern",        extern_nest_types       },
   { "decl",          decl_nest_types         },
   { "init",          decl_nest_types         },
