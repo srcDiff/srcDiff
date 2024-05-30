@@ -45,7 +45,7 @@ bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
       || (!node_set_inner->root_term()->is_simple() && !has_compound_inner(node_set_outer)))) return false;
 
   // parents and children same do not nest.
-  if(node_set_inner->is_nestable(*node_set_outer)) {
+  if(node_set_outer->can_nest(*node_set_inner)) {
 
     std::shared_ptr<const construct> best_match = node_set_outer->find_best_descendent(*node_set_inner);
 
@@ -65,7 +65,7 @@ bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
         // old code used node_set_outer (i.e., is it interchangeable) this seemed wrong
         // fixes test case, but it failed because interchange not implemented (passes now)
         // that interchange implemented
-          && node_set_inner->can_nest(*best_match))
+          && node_set_inner->check_nest(*best_match))
        ) {
         // check if other way is better
         return recurse? !is_better_nest(node_set_inner, node_set_outer, match_measure, false) : true;
@@ -122,7 +122,7 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
 
       if(modified[j]->root_term()->get_move()) continue;
 
-      if(modified[j]->is_nestable(*original[i])) {
+      if(original[i]->can_nest(*modified[j])) {
 
         std::shared_ptr<const construct> best_match = original[i]->find_best_descendent(*modified[j]);
         if(!best_match) continue;
@@ -130,7 +130,7 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
         srcdiff_text_measure measure(*best_match, *modified[j]);
         measure.compute();
 
-        if(!best_match->can_nest(*modified[j])) {
+        if(!best_match->check_nest(*modified[j])) {
           continue;
         }
 
@@ -188,7 +188,7 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
 
       if(original[j]->root_term()->get_move()) continue;
 
-      if(original[j]->is_nestable(*modified[i])) {
+      if(modified[i]->can_nest(*original[j])) {
 
         std::shared_ptr<const construct> best_match = modified[i]->find_best_descendent(*original[j]);
         if(!best_match) continue;
@@ -196,7 +196,7 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
         srcdiff_text_measure measure(*original[j], *best_match);
         measure.compute();
 
-        if(!original[j]->can_nest(*best_match)) {
+        if(!original[j]->check_nest(*best_match)) {
           continue;
         }
 
@@ -281,7 +281,7 @@ bool srcdiff_nested::check_nestable_predicate(construct::construct_list_view con
 
   if(construct_list_inner[0]->root_term()->get_move()) return true;
 
-  if(!construct_list_inner[0]->is_nestable(*construct_list_outer[0]))
+  if(!construct_list_outer[0]->can_nest(*construct_list_inner[0]))
     return true;
 
   std::shared_ptr<const construct> best_match = construct_list_outer[0]->find_best_descendent(*construct_list_inner[0]);
@@ -290,7 +290,7 @@ bool srcdiff_nested::check_nestable_predicate(construct::construct_list_view con
   srcdiff_text_measure measure(*best_match, *construct_list_inner[0]);
   measure.compute();
 
-  if(!best_match->can_nest(*construct_list_inner[0]))
+  if(!best_match->check_nest(*construct_list_inner[0]))
     return true;
 
   if(is_better_nest(construct_list_inner[0], construct_list_outer[0], measure))
