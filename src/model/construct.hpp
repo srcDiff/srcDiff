@@ -114,7 +114,7 @@ public:
 
     // can nest -> can it be placed inside
     bool is_nestable(const construct & modified) const;
-    virtual bool can_nest(const construct & modified) const;
+    virtual bool check_nest(const construct & modified) const;
 
     // does it have a nest target that is better
     //virtual bool is_nest(const construct & modified) const;

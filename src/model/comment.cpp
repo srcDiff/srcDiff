@@ -20,6 +20,6 @@
 
 #include <comment.hpp>
 
-bool comment_t::can_nest(const construct & modified) const {
+bool comment_t::check_nest(const construct & modified) const {
     return is_similar(modified); 
 }

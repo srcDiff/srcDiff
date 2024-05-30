@@ -68,7 +68,7 @@ bool name_t::check_nest_name(const construct & modified, bool find_name_parent) 
   return parent_original->get_name() == parent_modified->get_name();
 }
 
-bool name_t::can_nest(const construct & modified) const {
+bool name_t::check_nest(const construct & modified) const {
     if(root_term()->is_simple() != modified.root_term()->is_simple()
        && !check_nest_name(modified, false)) return false;
 

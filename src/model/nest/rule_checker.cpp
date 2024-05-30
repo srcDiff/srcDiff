@@ -197,7 +197,7 @@ bool rule_checker::is_same_nestable(const construct& modified) const {
 
   return (match_measure.similarity() >= measure.similarity() && match_measure.difference() <= measure.difference()) 
   || (match_min_size > 50 && min_size > 50 && (match_min_size / match_measure.similarity()) < (0.9 * (min_size / measure.similarity()))
-    && best_match->can_nest(client));
+    && best_match->check_nest(client));
 
 }
 

@@ -18,7 +18,7 @@ public:
         : construct(parent, start, std::make_shared<nest_rule_checker>(*this)) {
     }
     bool is_single_call() const;
-    virtual bool can_nest(const construct & modified) const;
+    virtual bool check_nest(const construct & modified) const;
     virtual bool is_matchable_impl(const construct & modified) const;
 };
 

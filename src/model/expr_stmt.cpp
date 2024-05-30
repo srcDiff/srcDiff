@@ -6,7 +6,7 @@
  */
 #include <expr_stmt.hpp>
 
-bool expr_stmt::can_nest(const construct & modified) const {
+bool expr_stmt::check_nest(const construct & modified) const {
 	return is_similar(modified); 
 }
 

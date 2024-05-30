@@ -406,6 +406,6 @@ bool construct::is_nestable(const construct & modified) const {
     return nest_checker->is_nestable(modified);
 }
 
-bool construct::can_nest(const construct & modified) const {
+bool construct::check_nest(const construct & modified) const {
   return can_refine_difference(modified);
 }
