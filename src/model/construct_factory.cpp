@@ -49,6 +49,7 @@
 #include <nest/rule_checker.hpp>
 #include <nest/block.hpp>
 #include <nest/class.hpp>
+#include <nest/call.hpp>
 
 #include <unordered_map>
 #include <string_view>
@@ -105,13 +106,16 @@ factory_map_type factory_map = {
   {"foreach", generate_factory<for_t, nest::block>() },
 
   {"case", generate_factory<case_t>() },
-  {"call", generate_factory<call>() },
+
+  {"call",          generate_factory<call, nest::call>() },
+  {"argument_list", generate_factory<always_matched_construct, nest::call>() },
+  {"argument",      generate_factory<always_matched_construct, nest::call>() },
+  {"expr",          generate_factory<expr_t, nest::call>() },
 
   {"decl",      generate_factory<named_construct>() },
   {"parameter", generate_factory<identifier_decl>() },
   {"param",     generate_factory<identifier_decl>() },
 
-  {"expr",      generate_factory<expr_t>() },
   {"expr_stmt", generate_factory<expr_stmt>() },
   {"return",    generate_factory<expr_construct>() },
 
@@ -124,7 +128,6 @@ factory_map_type factory_map = {
   {"control",       generate_factory<always_matched_construct>() },
   {"init",          generate_factory<always_matched_construct>() },
   {"default",       generate_factory<always_matched_construct>() },
-  {"argument",      generate_factory<always_matched_construct>() },
   {"range",         generate_factory<always_matched_construct>() },
   {"signal",        generate_factory<always_matched_construct>() },
 
@@ -136,7 +139,6 @@ factory_map_type factory_map = {
      
   {"parameter_list",   generate_factory<always_matched_construct>() },
   {"krparameter_list", generate_factory<always_matched_construct>() },
-  {"argument_list",    generate_factory<always_matched_construct>() },
   {"attribute_list",   generate_factory<always_matched_construct>() },
   {"association_list", generate_factory<always_matched_construct>() },
   {"protocol_list",    generate_factory<always_matched_construct>() },
