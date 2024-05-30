@@ -17,7 +17,7 @@ std::string name_t::simple_name() const {
     return childs[0]->to_string();
 }
 
-bool name_t::check_nest(const construct & modified, bool find_name_parent) const {
+bool name_t::check_nest_name(const construct & modified, bool find_name_parent) const {
 
   std::shared_ptr<srcML::node> parent_original = parent_term();
   std::shared_ptr<srcML::node> parent_modified = modified.parent_term();
@@ -70,7 +70,7 @@ bool name_t::check_nest(const construct & modified, bool find_name_parent) const
 
 bool name_t::can_nest(const construct & modified) const {
     if(root_term()->is_simple() != modified.root_term()->is_simple()
-       && !check_nest(modified, false)) return false;
+       && !check_nest_name(modified, false)) return false;
 
     return is_similar(modified);
 }

@@ -147,7 +147,7 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
               continue;
             }
 
-            if(!static_cast<const name_t&>(*best_match).check_nest(*modified[j])) {
+            if(!static_cast<const name_t&>(*best_match).check_nest_name(*modified[j])) {
               continue;
             }
 
@@ -213,7 +213,7 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
               continue;
             }
 
-            if(!static_cast<const name_t&>(*original[j]).check_nest(*best_match)) {
+            if(!static_cast<const name_t&>(*original[j]).check_nest_name(*best_match)) {
               continue;
             }
 
@@ -313,7 +313,7 @@ bool srcdiff_nested::check_nestable_predicate(construct::construct_list_view con
       if(!construct_list_inner[0]->root_term()->get_parent() || !best_match->root_term()->get_parent())
         return true;
 
-       if(!static_cast<const name_t&>(*best_match).check_nest(*construct_list_inner[0]))
+       if(!static_cast<const name_t&>(*best_match).check_nest_name(*construct_list_inner[0]))
         return true;
 
   }
