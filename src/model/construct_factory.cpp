@@ -58,7 +58,9 @@ typedef std::function<
 
 template<class match_rule_checker = construct, class nest_rule_checker = nest::rule_checker>
 factory_function generate_factory() {
-  return [](const construct* parent, std::size_t& start) { return std::make_shared<match_rule_checker>(parent, start, std::shared_ptr<nest_rule_checker>()); };
+  return  [](const construct* parent, std::size_t& start) { 
+            return std::make_shared<match_rule_checker>(parent, start, std::shared_ptr<nest_rule_checker>());
+          };
 }
 
 typedef std::unordered_map<std::string_view, factory_function> factory_map_type;
@@ -118,7 +120,6 @@ factory_map_type factory_map = {
   {"default",       generate_factory<always_matched_construct>() },
   {"argument",      generate_factory<always_matched_construct>() },
   {"range",         generate_factory<always_matched_construct>() },
-  {"block_content", generate_factory<always_matched_construct>() },
   {"signal",        generate_factory<always_matched_construct>() },
 
   {"literal",  generate_factory<always_matched_construct>() },
@@ -143,7 +144,8 @@ factory_map_type factory_map = {
   {"private",   generate_factory<access_region>() },
   {"protected", generate_factory<access_region>() },
 
-  {"block", generate_factory<block, nest::block>() },
+  {"block", generate_factory<block/*, nest::block*/>() },
+  {"block_content", generate_factory<always_matched_construct/*, nest::block*/>() },
 
   {"operator", generate_factory<operator_t>() },
   {"comment",  generate_factory<comment_t>() },
