@@ -48,6 +48,7 @@
 
 #include <nest/rule_checker.hpp>
 #include <nest/block.hpp>
+#include <nest/class.hpp>
 
 #include <unordered_map>
 #include <string_view>
@@ -71,13 +72,18 @@ factory_map_type factory_map = {
   {"name", generate_factory<name_t>() },
 
   // // class-type
-  {"class",  generate_factory<class_t>() },
-  {"struct", generate_factory<class_t>() },
-  {"union",  generate_factory<class_t>() },
-  {"enum",   generate_factory<class_t>() },
+  {"class",  generate_factory<class_t, nest::class_t>() },
+  {"struct", generate_factory<class_t, nest::class_t>() },
+  {"union",  generate_factory<class_t, nest::class_t>() },
+  {"enum",   generate_factory<class_t, nest::class_t>() },
+
+  // access regions
+  {"public",    generate_factory<access_region, nest::class_t>() },
+  {"private",   generate_factory<access_region, nest::class_t>() },
+  {"protected", generate_factory<access_region, nest::class_t>() },
 
   // function-type
-  {"function",         generate_factory<named_construct>() },
+  {"function",         generate_factory<named_construct, nest::block>() },
   {"function_decl",    generate_factory<named_construct>() },
   {"constructor",      generate_factory<named_construct>() },
   {"constructor_decl", generate_factory<named_construct>() },
@@ -139,10 +145,6 @@ factory_map_type factory_map = {
   {"member_init_list", generate_factory<always_matched_construct>() },
   {"member_list",      generate_factory<always_matched_construct>() },
   {"super_list",       generate_factory<always_matched_construct>() },
-
-  {"public",    generate_factory<access_region>() },
-  {"private",   generate_factory<access_region>() },
-  {"protected", generate_factory<access_region>() },
 
   {"block", generate_factory<block, nest::block>() },
   {"block_content", generate_factory<always_matched_construct, nest::block>() },

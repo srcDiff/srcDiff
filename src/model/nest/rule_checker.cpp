@@ -15,11 +15,6 @@ struct nest_info {
   const char * const * possible_nest_items;
 };
 
-// may need to change collection algorithm to gather full and nested of same type           
-const char * const block_nest_types[]        = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
-                                                 "if_stmt", "if", "while", "for", "foreach", "else", "switch", "do",
-                                                 "try", "catch", "finally", "synchronized", "continue", "break", "goto", 0 };
-
 const char * const ternary_then_nest_types[] = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
                                                  "if", "while", "for", "foreach", "else", "elseif", "switch", "do",
                                                  "try", "catch", "finally", "synchronized",
@@ -29,24 +24,6 @@ const char * const else_nest_types[]         = { "goto", "expr_stmt", "decl_stmt
                                                 "if_stmt", "if", "while", "for", "foreach", "switch", "do",
                                                 "try", "catch", "finally", "synchronized",
                                                 "expr", "call", "operator", "literal", "continue", "break", "goto", 0 };
-
-const char * const class_nest_types[]        = { "function",
-                                                 "constructor", 
-                                                 "destructor",
-                                                 "class", 
-                                                 "struct", 
-                                                 "union",
-                                                 "enum",
-                                                 "decl_stmt",                                                
-                                                 "function_decl",
-                                                 "constructor_decl", 
-                                                 "destructor_decl",
-                                                 "class_decl",
-                                                 "struct_decl",
-                                                 "union_decl",
-                                                 "enum_decl",
-                                                 "typedef",
-                                                 0 };
 
 const char * const extern_nest_types[]       = { "decl_stmt", "function_decl", "function", "class", "class_decl",
                                                  "struct", "struct_decl", "union", "union_decl", "typedef", "using", 0 };
@@ -64,14 +41,6 @@ const nest_info nestable[] = {
   { "then",          ternary_then_nest_types },
   { "else",          else_nest_types         },
   { "control",       for_control_nest_types  },
-  { "function",      block_nest_types        },
-
-  { "class",         class_nest_types        },
-  { "struct",        class_nest_types        },
-  { "enum",          class_nest_types        },
-  { "public",        class_nest_types        },
-  { "private",       class_nest_types        },
-  { "protected",     class_nest_types        },
 
   { "call",          call_nest_types         },
   { "argument_list", call_nest_types         },
@@ -86,8 +55,6 @@ const nest_info nestable[] = {
 
   // Java
   { "static",        static_nest_types       },
-  { "synchronized",  block_nest_types        },
-  { "finally",       block_nest_types        },
   { 0, 0 }
 
 };
