@@ -144,8 +144,8 @@ factory_map_type factory_map = {
   {"private",   generate_factory<access_region>() },
   {"protected", generate_factory<access_region>() },
 
-  {"block", generate_factory<block/*, nest::block*/>() },
-  {"block_content", generate_factory<always_matched_construct/*, nest::block*/>() },
+  {"block", generate_factory<block, nest::block>() },
+  {"block_content", generate_factory<always_matched_construct, nest::block>() },
 
   {"operator", generate_factory<operator_t>() },
   {"comment",  generate_factory<comment_t>() },

@@ -16,7 +16,7 @@ namespace nest {
 block::block(const construct& client) : rule_checker(client) {
 }
 
-bool block::is_nestable_internal(const construct& modified) const {
+bool block::can_nest_internal(const construct& modified) const {
     std::unordered_set<std::string> nestable_constructs = {
       "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
       "if_stmt", "if", "while", "for", "foreach", "else", "switch", "do",

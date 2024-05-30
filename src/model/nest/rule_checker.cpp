@@ -61,9 +61,6 @@ const char * const static_nest_types[]       = { "decl_stmt",                   
 // tags that can have something nested in them (incomplete)    
 const nest_info nestable[] = {   
 
-  { "block",         block_nest_types        },
-  { "block_content", block_nest_types        },
-
   { "if_stmt",       block_nest_types        },
   { "if",            block_nest_types        },
 
@@ -161,22 +158,9 @@ bool rule_checker::can_nest(const construct& modified) const {
 bool rule_checker::can_nest_internal(const construct& modified) const {
 
   int block = is_block_type(client);
+  if(block == -1) return false;
 
-  if(block == -1)
-    return false;
-
-  /** Only can nest a block into another block if it's parent is a block */
-  bool is_block = modified.root_term_name() == "block" && client.root_term_name() == "block";
-  bool parent_is_block = modified.root_term()->get_parent() && modified.root_term()->get_parent()->get_name() == "block";
-  if(is_block && !parent_is_block) return false;
-
-  if(is_nest_type(modified, client, block)) {
-
-    return true;
-
-  }
-
-  return false;
+  return is_nest_type(modified, client, block);
 }
 
 bool rule_checker::can_nest_same(const construct& modified) const {
