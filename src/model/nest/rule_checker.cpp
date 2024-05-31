@@ -98,8 +98,8 @@ bool is_nest_type(const construct& structure,
 
 namespace nest {
 
-rule_checker::rule_checker(const construct& client)
-    : client(client) {}
+rule_checker::rule_checker(const construct& client, const string_set& nestable_constructs)
+    : client(client), nestable_constructs(nestable_constructs) {}
 
 bool rule_checker::can_nest(const construct& modified) const {
     if(*client.root_term() == *modified.root_term())
@@ -111,7 +111,7 @@ bool rule_checker::can_nest(const construct& modified) const {
 bool rule_checker::can_nest_internal(const construct& modified) const {
 
   int block = is_block_type(client);
-  if(block == -1) return false;
+  if(block == -1) return nestable_constructs.find(modified.root_term_name()) != nestable_constructs.end();;
 
   return is_nest_type(modified, client, block);
 }

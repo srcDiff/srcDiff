@@ -13,11 +13,7 @@
 
 namespace nest {
 
-class_t::class_t(const construct& client) : rule_checker(client) {
-}
-
-bool class_t::can_nest_internal(const construct& modified) const {
-  std::unordered_set<std::string> nestable_constructs = {
+string_set class_nestable{
     "function", "constructor", "destructor",
     "function_decl", "constructor_decl", "destructor_decl",
     "decl_stmt", "typedef"
@@ -25,7 +21,7 @@ bool class_t::can_nest_internal(const construct& modified) const {
     "class_decl", "struct_decl", "union_decl", "enum_decl"                                                
   };
 
-  return nestable_constructs.find(modified.root_term_name()) != nestable_constructs.end();
+class_t::class_t(const construct& client) : rule_checker(client, class_nestable) {
 }
 
 }

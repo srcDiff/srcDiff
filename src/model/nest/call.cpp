@@ -13,15 +13,9 @@
 
 namespace nest {
 
-call::call(const construct& client) : rule_checker(client) {
-}
+const string_set call_nestable{"expr", "call", "operator", "literal", "name"};
 
-bool call::can_nest_internal(const construct& modified) const {
-  std::unordered_set<std::string> nestable_constructs = {
-    "expr", "call", "operator", "literal", "name",
-  };
-
-  return nestable_constructs.find(modified.root_term_name()) != nestable_constructs.end();
+call::call(const construct& client) : rule_checker(client, call_nestable) {
 }
 
 }

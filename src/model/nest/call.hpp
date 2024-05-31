@@ -14,10 +14,7 @@ namespace nest {
 class call : public rule_checker {
 
 public:
-    call(const construct& client);
-
-    virtual bool can_nest_internal(const construct& modified) const;
-    
+    call(const construct& client);    
 private:
 };
 

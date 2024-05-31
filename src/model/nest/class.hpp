@@ -16,8 +16,6 @@ class class_t : public rule_checker {
 public:
     class_t(const construct& client);
 
-    virtual bool can_nest_internal(const construct& modified) const;
-    
 private:
 };
 

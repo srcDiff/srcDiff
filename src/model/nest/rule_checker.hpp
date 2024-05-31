@@ -8,13 +8,18 @@
 #define INCLUDED_NEST_RULE_CHECKER_HPP
 
 class construct;
+
+#include <unordered_set>
+#include <string>
+
 namespace nest {
 
+typedef std::unordered_set<std::string> string_set;
 class rule_checker {
 
 public:
 
-    rule_checker(const construct& client);
+    rule_checker(const construct& client, const string_set& nestable_constructs = {});
 
     bool can_nest(const construct& modified) const;
     bool can_nest_same(const construct& modified) const;
@@ -23,6 +28,7 @@ public:
 
 protected:
     const construct& client;
+    string_set nestable_constructs;
 };
 
 }
