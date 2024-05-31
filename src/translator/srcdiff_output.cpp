@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #include <srcdiff_output.hpp>
 
 #include <srcdiff_constants.hpp>
@@ -11,12 +17,13 @@
 bool srcdiff_output::delay = false;
 int srcdiff_output::delay_operation = -2;
 
+// summary_type_str is unused here
 srcdiff_output::srcdiff_output(srcml_archive * archive, 
                                const std::string & srcdiff_filename,
                                const OPTION_TYPE & flags,
                                const METHOD_TYPE & method,
                                const srcdiff_options::view_options_t & view_options,
-                               const std::optional<std::string> & summary_type_str)
+                               const std::optional<std::string> & summary_type_str [[maybe_unused]])
  : output_srcdiff(false), archive(archive), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcML::name_space>()) {
@@ -200,10 +207,12 @@ void srcdiff_output::finish() {
  void srcdiff_output::start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version) {
 
   wstate->unit = srcml_unit_create(archive);
-  // srcml_unit_register_namespace(wstate->unit,
-  //     srcML::name_space::DIFF_NAMESPACE->get_prefix()->c_str(),
-  //     srcML::name_space::DIFF_NAMESPACE->get_uri().c_str()
-  // );
+  /** @todo FIX ME
+  srcml_unit_register_namespace(wstate->unit,
+      srcML::name_space::DIFF_NAMESPACE->get_prefix()->c_str(),
+      srcML::name_space::DIFF_NAMESPACE->get_uri().c_str()
+  );
+  */
   srcml_unit_set_language(wstate->unit, language_string.c_str());
 
   srcml_unit_set_filename(wstate->unit, unit_filename ? unit_filename->c_str() : 0);
@@ -566,7 +575,7 @@ void srcdiff_output::output_node_inner(const srcML::node & node) {
     // copy all the attributes
     {
 
-      for(const srcML::attribute_map_pair attr : node.get_attributes()) {
+      for(srcML::attribute_map_cpair attr : node.get_attributes()) {
 
         srcml_write_attribute(wstate->unit, 0, attr.second.get_name().c_str(), 0, attr.second.get_value() ? attr.second.get_value()->c_str() : 0);
 

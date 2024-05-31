@@ -1,12 +1,9 @@
 /*
-  svn_t.cpp
+ * SPDX-License-Identifier: GPL-3.0-only
 
-  Testing as subversion.
-
-  Michael J. Decker
-  mdecker6@kent.edu
-*/
-
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #include <srcdiff_input_source_svn.hpp>
 
 #include <srcdiff_input.hpp>
@@ -112,11 +109,16 @@ void srcdiff_input_source_svn::consume() {
 
 const char * srcdiff_input_source_svn::get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified) {
 
-  std::optional<std::string> path = path_original;
-  if(!path || path->empty()) path = path_modified;
-  if(!path || path->empty()) path = options.svn_url->c_str();
+  const char * archive_language = srcml_archive_get_language(options.archive);
+  if (archive_language) {
+    return archive_language;
+  } else {
+    std::optional<std::string> path = path_original;
+    if(!path || path->empty()) path = path_modified;
+    if(!path || path->empty()) path = options.svn_url->c_str();
 
-  return srcml_archive_check_extension(options.archive, path->c_str());
+    return srcml_archive_check_extension(options.archive, path->c_str());
+  }
 
 }
 

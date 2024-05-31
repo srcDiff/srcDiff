@@ -1,11 +1,9 @@
-/**
- *  @file default_theme.hpp
- *
- *  Specifies default color scheme.
- *
- *  @author Michael John Decker <mdecker6@kent.edu>
- */
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
 
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #ifndef INCLUDED_DEFAULT_THEME_HPP
 #define INCLUDED_DEFAULT_THEME_HPP
 

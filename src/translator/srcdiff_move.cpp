@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #include <srcdiff_move.hpp>
 #include <srcdiff_diff.hpp>
 #include <srcdiff_measure.hpp>
@@ -14,7 +20,7 @@ const std::string move("move");
 typedef std::tuple<int, int> move_info;
 typedef std::vector<move_info> move_infos;
 
-srcdiff_move::srcdiff_move(const srcdiff_output & out, unsigned int & position, int operation)
+srcdiff_move::srcdiff_move(const srcdiff_output & out, std::size_t & position, int operation)
   : srcdiff_output(out), position(position), operation(operation) {}
 
 bool srcdiff_move::is_move(std::shared_ptr<const construct> set) {
@@ -24,8 +30,8 @@ bool srcdiff_move::is_move(std::shared_ptr<const construct> set) {
 }
 
 /** loop O(CD^2) */
-void srcdiff_move::mark_moves(const construct::construct_list & construct_list_original,
-                              const construct::construct_list & construct_list_modified,
+void srcdiff_move::mark_moves(const construct::construct_list_view original,
+                              const construct::construct_list_view modified,
                               edit_t * edit_script) {
 
   std::map<std::string, move_infos > constructs;
@@ -44,12 +50,12 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
       case SES_INSERT :
 
-        for(int i = 0; i < edits->length; ++i) {
+        for(std::size_t i = 0; i < edits->length; ++i) {
 
-          if(construct_list_modified.at(edits->offset_sequence_two + i)->term(0)->is_text()) {
+          if(modified[edits->offset_sequence_two + i]->term(0)->is_text()) {
             continue;
           }
-          node_set_lookup_table.insert(construct_list_modified.at(edits->offset_sequence_two + i));
+          node_set_lookup_table.insert(modified[edits->offset_sequence_two + i]);
 
         }
 
@@ -57,12 +63,12 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
       case SES_DELETE :
 
-        for(int i = 0; i < edits->length; ++i) {
+        for(std::size_t i = 0; i < edits->length; ++i) {
 
-          if(construct_list_original.at(edits->offset_sequence_one + i)->term(0)->is_text()) {
+          if(original[edits->offset_sequence_one + i]->term(0)->is_text()) {
             continue;
           }
-          delete_sets.push_back(construct_list_original.at(edits->offset_sequence_one + i));
+          delete_sets.push_back(original[edits->offset_sequence_one + i]);
 
         }
 
@@ -119,7 +125,8 @@ void srcdiff_move::mark_moves(const construct::construct_list & construct_list_o
 
 void srcdiff_move::output() {
 
-  static int attribute_id = 0;
+  // unused
+  //static int attribute_id = 0;
 
   // store current diff if is any
   std::shared_ptr<reader_state> rbuf = rbuf_original;

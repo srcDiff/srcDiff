@@ -1,11 +1,9 @@
 /*
-  svn_io.hpp
-
-  Functions for reading a file form svn
-
-  Michael J. Decker
-  mdecker6@kent.edu
-*/
+ * SPDX-License-Identifier: GPL-3.0-only
+ *
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 
 #ifndef INCLUDED_SRCDIFF_INPUT_SOURCE_LOCAL_HPP
 #define INCLUDED_SRCDIFF_INPUT_SOURCE_LOCAL_HPP
@@ -14,23 +12,14 @@
 
 #include <fstream>
 
-#ifndef _MSC_BUILD
-#include <dirent.h>
-#endif
 #include <sys/stat.h>
+#include <filesystem>
 
 class srcdiff_input_source_local : public srcdiff_input_source {
 
 protected:
 
-  struct stat outstat;
-
-#ifndef _MSC_BUILD
-  static int dir_filter(const struct dirent* d);
-  static int dir_filter(struct dirent* d);
-  static int is_dir(struct dirent * file, const char * filename);
-#endif
-  static int is_output_file(const char * filename, const struct stat & outstat);
+  std::filesystem::directory_entry output_file;
 
 public:
 
@@ -38,8 +27,6 @@ public:
   virtual ~srcdiff_input_source_local();
 
   virtual void consume();
-
-  virtual const char * get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified);
 
   virtual void process_file(const std::optional<std::string> & path_original,
                             const std::optional<std::string> & path_modified);

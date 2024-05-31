@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #ifndef INCLUDED_SRCDIFF_MATCH_HPP
 #define INCLUDED_SRCDIFF_MATCH_HPP
 
@@ -32,17 +38,14 @@ struct offset_pair {
 class srcdiff_match {
 
 public:
-
-  srcdiff_match(const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified);
+  srcdiff_match(const construct::construct_list_view original, const construct::construct_list_view modified);
   offset_pair * match_differences();
 
 protected:
 
-  const construct::construct_list & construct_list_original;
-  const construct::construct_list & construct_list_modified;
+  const construct::construct_list_view original;
+  const construct::construct_list_view modified;
 
 };
-
-// std::optional<std::string> find_attribute(const std::shared_ptr<const srcML::node> & node, const char * attr_name);
 
 #endif

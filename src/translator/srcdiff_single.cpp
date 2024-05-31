@@ -1,21 +1,8 @@
-/**
- * @file srcdiff_single.cpp
- *
- * @copyright Copyright (C) 2014-2023 srcML, LLC. (www.srcML.org)
- *
- * srcDiff is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * srcDiff is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.    See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA    02111-1307    USA
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
  */
 
 #include <srcdiff_single.hpp>
@@ -26,6 +13,9 @@
 #include <srcdiff_common.hpp>
 #include <srcdiff_whitespace.hpp>
 #include <shortest_edit_script.h>
+
+#include <if_stmt.hpp>
+#include <if.hpp>
 
 #include <cstring>
 #include <map>
@@ -103,12 +93,9 @@ void srcdiff_single::output_recursive_interchangeable() {
     srcdiff_whitespace whitespace(*out);
     whitespace.output_all();
 
-    const std::shared_ptr<srcML::node> & original_start_node = original_construct->root_term();
-    const std::shared_ptr<srcML::node> & modified_start_node = modified_construct->root_term();
-
+    /**@todo replace get_descendent with using children above */
     int original_collect_start_pos = 1;
-    if(original_start_node->get_name() == "if_stmt") {
-        // must have if, if interchange passed
+    if(original_construct->root_term_name() == "if_stmt") {
         while(original_construct->term(original_collect_start_pos)->get_name() != "if") {
             ++original_collect_start_pos;
         }
@@ -116,20 +103,19 @@ void srcdiff_single::output_recursive_interchangeable() {
     }
 
     int modified_collect_start_pos = 1;
-    if(modified_start_node->get_name() == "if_stmt") {
-        // must have if, if interchange passed
+    if(modified_construct->root_term_name() == "if_stmt") {
         while(modified_construct->term(modified_collect_start_pos)->get_name() != "if") {
-            ++modified_collect_start_pos;
+          ++modified_collect_start_pos;
         }
-        ++modified_collect_start_pos;
+      ++modified_collect_start_pos;
     }
 
     // get keyword if present
     const std::shared_ptr<srcML::node> & keyword_node_original = original_construct->term(original_collect_start_pos);
     const std::shared_ptr<srcML::node> & keyword_node_modified = modified_construct->term(modified_collect_start_pos);
-    bool is_keyword    = keyword_node_original->is_text() && !keyword_node_original->is_whitespace();
-    bool is_keywords = is_keyword
-                                         && keyword_node_modified->is_text() && !keyword_node_modified->is_whitespace();
+
+    bool is_keyword  = keyword_node_original->is_text() && !keyword_node_original->is_whitespace();
+    bool is_keywords = is_keyword && keyword_node_modified->is_text() && !keyword_node_modified->is_whitespace();
     bool is_same_keyword = is_keywords && *keyword_node_original == *keyword_node_modified;
 
 
@@ -163,12 +149,12 @@ void srcdiff_single::output_recursive_interchangeable() {
 
     // collect subset of nodes
     construct::construct_list next_set_original
-        = construct::get_descendent_constructs(out->nodes_original(), original_construct->get_terms().at(original_collect_start_pos)
-                                            , original_construct->end_position());
+        = original_construct->get_descendents(original_construct->get_terms().at(original_collect_start_pos),
+                                              original_construct->end_position());
 
     construct::construct_list next_set_modified
-        = construct::get_descendent_constructs(out->nodes_modified(), modified_construct->get_terms().at(modified_collect_start_pos)
-                                            , modified_construct->end_position());
+        = modified_construct->get_descendents(modified_construct->get_terms().at(modified_collect_start_pos),
+                                              modified_construct->end_position());
 
     srcdiff_diff diff(out, next_set_original, next_set_modified);
     diff.output();

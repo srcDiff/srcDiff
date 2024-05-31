@@ -1,11 +1,9 @@
-/**
- *  @file srcdiff_edit_corretion.cpp
- *
- *  This is a generic C++ main file.
- *
- *  @author Michael John Decker <mdecker6@kent.edu>
- */
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
 
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #ifndef INCLUDED_SRCDIFF_EDIT_CORRECTION_HPP
 #define INCLUDED_SRCDIFF_EDIT_CORRECTION_HPP
 
@@ -17,8 +15,8 @@
 class srcdiff_edit_correction {
 
 private:
-	const construct::construct_list & sets_original;
-	const construct::construct_list & sets_modified;
+	const construct::construct_list_view sets_original;
+	const construct::construct_list_view sets_modified;
 	srcdiff_shortest_edit_script & ses;
 
 private:
@@ -31,8 +29,8 @@ private:
 	std::shared_ptr<srcdiff_text_measure> edit2measure(int original_offset, int modified_offset);
 
 public:
-	srcdiff_edit_correction(const construct::construct_list & sets_original,
-							const construct::construct_list & sets_modified,
+	srcdiff_edit_correction(const construct::construct_list_view sets_original,
+							const construct::construct_list_view sets_modified,
 							srcdiff_shortest_edit_script & ses);
 	void correct();
 

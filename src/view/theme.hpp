@@ -1,9 +1,8 @@
-/**
- *  @file theme.hpp
- *
- *  Specifies color scheme.
- *
- *  @author Michael John Decker <mdecker6@kent.edu>
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
  */
 
 #ifndef INCLUDED_THEME_HPP

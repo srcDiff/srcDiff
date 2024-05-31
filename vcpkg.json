@@ -1,0 +1,14 @@
+{
+  "dependencies": [
+    "boost-date-time",
+    "boost-filesystem",
+    "boost-regex",
+    "boost-system",
+    "libxml2",
+    "srcml",
+    {
+      "name": "cli11",
+      "version>=": "2.4.0"
+    }
+  ]
+}

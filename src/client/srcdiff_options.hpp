@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #ifndef INCLUDED_CLIENT_OPTIONS_HPP
 #define INCLUDED_CLIENT_OPTIONS_HPP
 
@@ -5,7 +11,7 @@
 #include <srcml.h>
 
 #include <optional>
-#include <boost/any.hpp>
+#include <any>
 
 #include <string>
 #include <vector>
@@ -73,9 +79,6 @@ const OPTION_TYPE OPTION_UNIFIED_VIEW          = ull(1) << __COUNTER__;
 const OPTION_TYPE OPTION_SIDE_BY_SIDE_VIEW     = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_DIFFDOC_VIEW          = ull(1) << __COUNTER__;
-
-// @srcdiff
 const OPTION_TYPE OPTION_HTML_VIEW             = ull(1) << __COUNTER__;
 
 // @srcdiff
@@ -114,7 +117,7 @@ struct srcdiff_options
   struct view_options_t {
     std::string syntax_highlight;
     std::string theme;
-    boost::any unified_view_context;
+    std::any unified_view_context = (int)3;
     int side_by_side_tab_size;
     std::optional<std::string> srcdiff_filename;
   } view_options;

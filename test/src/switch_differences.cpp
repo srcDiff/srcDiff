@@ -1,10 +1,9 @@
 /*
-  Create srcdiff format from two src files.
+ * SPDX-License-Identifier: GPL-3.0-only
 
-  Michael J. Decker
-  mjd52@zips.uakron.edu
-*/
-
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #include <stdio.h>
 #include <fstream>
 #include <string>
@@ -14,18 +13,21 @@
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
 
+// unused parameters, unsigned vs signed comparison
 const char * XML_VERSION = "1.0";
 const char * output_encoding = "UTF-8";
 const char * XML_DECLARATION_STANDALONE = "yes";
 
 #ifdef _MSC_BUILD
 
+#define strdup _strdup
+
 char * strndup(const char * source, size_t n) {
 
   if(source == 0) return 0;
 
   char * dup = (char *)malloc((n + 1) * sizeof(char));
-  strncpy(dup, source, n);
+  strncpy_s(dup, n+1, source, n);
   dup[n] = 0;
 
   return dup;
@@ -164,7 +166,6 @@ void outputNode(const xmlNode & node, xmlTextWriterPtr writer, bool output_ns) {
 #define SIZEPLUSLITERAL(s) sizeof(s) - 1, BAD_CAST s
 #define LITERALPLUSSIZE(s) BAD_CAST s, sizeof(s) - 1
 
-const char * const UNIT_TAG = "unit";
 const char * const DIFF_PREFIX = "diff";
 const char * const DELETE_TAG = "delete";
 const char * const INSERT_TAG = "insert";
@@ -182,7 +183,8 @@ const char * get_attr(xmlNodePtr node, const char * attribute) {
 
 }
 
-int main(int argc, char * argv[]) {
+// are parameters necessary here?
+int main(/*int argc, char * argv[]*/) {
 
   /*
     Create xmlreader and the xmlwriter
@@ -273,7 +275,7 @@ int main(int argc, char * argv[]) {
 
     if(output_saved) {
 
-      for(int i = 0; i < nodes.size(); ++i) {
+      for(std::size_t i = 0; i < nodes.size(); ++i) {
 
         outputNode(*nodes[i], writer, output_ns);
 

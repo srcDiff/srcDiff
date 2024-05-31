@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #include <unified_view.hpp>
 
 #include <srcdiff_constants.hpp>
@@ -6,7 +12,7 @@
 
 #include <cstring>
 #include <cassert>
-
+// signed vs unsigned comparisons, unused parameters, future API usage again?
 unified_view::unified_view(const std::string & output_filename,
                            const std::string & syntax_highlight,
                            const std::string & theme,
@@ -14,7 +20,7 @@ unified_view::unified_view(const std::string & output_filename,
                            bool ignore_whitespace,
                            bool ignore_comments,
                            bool is_html,
-                           boost::any context_type)
+                           std::any context_type)
               : view_t(output_filename,
                           syntax_highlight, 
                           theme,
@@ -30,13 +36,13 @@ unified_view::unified_view(const std::string & output_filename,
                 change_ending_operation(view_t::UNSET),
                 close_num_spans(0) {
 
-  if(context_type.type() == typeid(size_t)) {
+  if(context_type.type() == typeid(int)) {
 
-    number_context_lines = boost::any_cast<size_t>(context_type);
+    number_context_lines = std::any_cast<int>(context_type);
 
   } else {
 
-    const std::string & context_type_str = boost::any_cast<std::string>(context_type);
+    const std::string & context_type_str = std::any_cast<std::string>(context_type);
     const std::string::size_type dash_pos = context_type_str.find('-');
     context_mode mode = context_string_to_id(context_type_str.substr(0, dash_pos));
 
@@ -89,8 +95,8 @@ bool unified_view::in_mode(context_mode mode) {
 
 void unified_view::output_additional_context() {
 
-  size_t line_delete = line_number_delete + 1 - additional_context.size();
-  size_t line_insert = line_number_insert + 1 - additional_context.size();
+  std::size_t line_delete = line_number_delete + 1 - additional_context.size();
+  std::size_t line_insert = line_number_insert + 1 - additional_context.size();
 
   if(number_context_lines != -1 && wait_change && last_context_line != (line_number_delete - 1)) {
 
@@ -124,13 +130,13 @@ void unified_view::output_characters(const std::string & ch, int operation) {
 
 }
 
-void unified_view::start_unit(const std::string & local_name,
-                              const char * prefix,
-                              const char * URI,
-                              int num_namespaces,
-                              const struct srcsax_namespace * namespaces,
-                              int num_attributes,
-                              const struct srcsax_attribute * attributes) {
+void unified_view::start_unit(const std::string & local_name [[maybe_unused]],
+                              const char * prefix [[maybe_unused]],
+                              const char * URI [[maybe_unused]],
+                              int num_namespaces [[maybe_unused]],
+                              const struct srcsax_namespace * namespaces [[maybe_unused]],
+                              int num_attributes [[maybe_unused]],
+                              const struct srcsax_attribute * attributes [[maybe_unused]]) {
 
   if(is_html) {
     (*output) << "<pre>";
@@ -139,12 +145,12 @@ void unified_view::start_unit(const std::string & local_name,
 }
 
 void unified_view::start_element(const std::string & local_name,
-                                 const char * prefix,
+                                 const char * prefix [[maybe_unused]],
                                  const char * URI,
-                                 int num_namespaces,
-                                 const struct srcsax_namespace * namespaces,
-                                 int num_attributes,
-                                 const struct srcsax_attribute * attributes) {
+                                 int num_namespaces [[maybe_unused]],
+                                 const struct srcsax_namespace * namespaces [[maybe_unused]],
+                                 int num_attributes [[maybe_unused]],
+                                 const struct srcsax_attribute * attributes [[maybe_unused]]) {
 
 
   if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
@@ -191,9 +197,9 @@ void unified_view::start_element(const std::string & local_name,
 
 }
 
-void unified_view::end_unit(const std::string & local_name,
-                            const char * prefix,
-                            const char * URI) {
+void unified_view::end_unit(const std::string & local_name [[maybe_unused]],
+                            const char * prefix [[maybe_unused]],
+                            const char * URI [[maybe_unused]]) {
 
   if(!change_ending_space.empty()) {
 
@@ -214,7 +220,7 @@ void unified_view::end_unit(const std::string & local_name,
 }
 
 void unified_view::end_element(const std::string & local_name,
-                               const char * prefix,
+                               const char * prefix [[maybe_unused]],
                                const char * URI) {
 
     if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {

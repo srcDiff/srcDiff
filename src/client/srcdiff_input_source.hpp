@@ -1,11 +1,9 @@
 /*
-  svn_io.hpp
-
-  Functions for reading a file form svn
-
-  Michael J. Decker
-  mdecker6@kent.edu
-*/
+ * SPDX-License-Identifier: GPL-3.0-only
+ *
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 
 #ifndef INCLUDED_SRCDIFF_INPUT_SOURCE_HPP
 #define INCLUDED_SRCDIFF_INPUT_SOURCE_HPP
@@ -49,7 +47,7 @@ public:
   virtual ~srcdiff_input_source() {}
 
   virtual void consume() = 0;
-  virtual const char * get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified) = 0;
+  virtual const char * get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified);
 
   virtual void file(const std::optional<std::string> & path_original,
                     const std::optional<std::string> & path_modified);

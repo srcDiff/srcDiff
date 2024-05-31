@@ -1,13 +1,9 @@
 /*
-  shortest_edit_sequence.c
+ * SPDX-License-Identifier: GPL-3.0-only
 
-  Compute the shortest edit script between two sequences.
-
-  Miller and Myers Shortest Edit Script Algorithm.
-
-  Michael J. Decker
-  mjd52@zips.uakron.edu
-*/
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 
 #include <shortest_edit_script.h>
 #include <shortest_edit_script_private.h>

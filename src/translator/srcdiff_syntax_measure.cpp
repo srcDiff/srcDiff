@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #include <srcdiff_syntax_measure.hpp>
 
 #include <srcdiff_shortest_edit_script.hpp>
@@ -10,14 +16,14 @@
 srcdiff_syntax_measure::srcdiff_syntax_measure(const construct & set_original, const construct & set_modified) 
   : srcdiff_measure(set_original, set_modified) {}
 
-
-static bool is_significant(int & node_pos, const srcml_nodes & nodes, const void * context) {
+// context is unused here
+static bool is_significant(std::size_t & node_pos, const srcml_nodes & nodes, const void * context [[maybe_unused]]) {
 
   const std::shared_ptr<srcML::node> & node = nodes[node_pos];
 
   if(node->get_name() == "argument_list") {
 
-    int pos = node_pos + 1;
+    std::size_t pos = node_pos + 1;
     while(pos < nodes.size() && (nodes[pos]->get_type() == srcML::node_type::START || nodes[pos]->get_name() != "argument_list")) {
 
       if(!nodes[pos]->is_text()) return true;
@@ -58,8 +64,8 @@ void srcdiff_syntax_measure::compute() {
   }
 
   // collect subset of nodes
-  construct::construct_list next_construct_list_original = set_original.size() > 1 ? construct::get_descendent_constructs(set_original.nodes(), set_original.get_terms().at(1), set_original.end_position(), is_significant) : construct::construct_list();
-  construct::construct_list next_construct_list_modified = set_modified.size() > 1 ? construct::get_descendent_constructs(set_modified.nodes(), set_modified.get_terms().at(1), set_modified.end_position(), is_significant) : construct::construct_list();
+  construct::construct_list next_construct_list_original = set_original.size() > 1 ? set_original.get_descendents(set_original.get_terms().at(1), set_original.end_position(), is_significant) : construct::construct_list();
+  construct::construct_list next_construct_list_modified = set_modified.size() > 1 ? set_modified.get_descendents(set_modified.get_terms().at(1), set_modified.end_position(), is_significant) : construct::construct_list();
   original_len = next_construct_list_original.size();
   modified_len = next_construct_list_modified.size();
 

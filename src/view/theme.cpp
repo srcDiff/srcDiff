@@ -1,17 +1,15 @@
-/**
- *  @file theme.hpp
- *
- *  Specifies color scheme for syntax highlighting.
- *
- *  @author Michael John Decker <mdecker6@kent.edu>
- */
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
 
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #include <theme.hpp>
 
 #include <cpp_keywords.hpp>
 #include <java_keywords.hpp>
 
-theme_t::theme_t(const std::string & highlight_level, bool is_html) : keywords(nullptr) {
+theme_t::theme_t(const std::string & highlight_level, bool is_html [[maybe_unused]]) : keywords(nullptr) {
 
     if(highlight_level == "full") {
         level = FULL;

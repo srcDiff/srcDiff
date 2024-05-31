@@ -1,11 +1,9 @@
-/**
- *  @file monokai_theme.cpp
- *
- *  Specifies monokai color scheme.
- *
- *  @author Michael John Decker <mdecker6@kent.edu>
- */
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
 
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #include <monokai_theme.hpp>
 
 monokai_theme::monokai_theme(const std::string & highlight_level, bool is_html)

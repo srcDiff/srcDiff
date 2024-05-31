@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #include <srcdiff_change.hpp>
 
 #include <srcdiff_constants.hpp>
@@ -15,7 +21,7 @@
 const std::string replace("replace");
 const srcML::attribute diff_type(DIFF_TYPE, srcML::name_space::SRC_NAMESPACE, replace);
 
-srcdiff_change::srcdiff_change(const srcdiff_output & out, unsigned int end_original, unsigned int end_modified)
+srcdiff_change::srcdiff_change(const srcdiff_output & out, std::size_t end_original, std::size_t end_modified)
 : srcdiff_output(out), end_original(end_original), end_modified(end_modified) {}
 
 /*
@@ -54,8 +60,8 @@ void srcdiff_change::output_whitespace_prefix() {
 */
 void srcdiff_change::output() {
 
-  unsigned int begin_original = rbuf_original->last_output;
-  unsigned int begin_modified = rbuf_modified->last_output;
+  std::size_t begin_original = rbuf_original->last_output;
+  std::size_t begin_modified = rbuf_modified->last_output;
 
   bool is_replace = false;
   if(end_original > begin_original && end_modified > begin_modified) {
@@ -76,7 +82,7 @@ void srcdiff_change::output() {
   if(end_original > begin_original) {
 
     bool first = true;
-    for(unsigned int i = begin_original; i < end_original; ++i) {
+    for(std::size_t i = begin_original; i < end_original; ++i) {
 
       // output diff tag begin
       if(first && is_replace) {
@@ -145,7 +151,7 @@ void srcdiff_change::output() {
   if(end_modified > begin_modified) {
 
     bool first = true;
-    for(unsigned int i = begin_modified; i < end_modified; ++i) {
+    for(std::size_t i = begin_modified; i < end_modified; ++i) {
 
       // output diff tag
       if(first && is_replace) {

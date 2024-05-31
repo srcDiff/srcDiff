@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #include <srcml_converter.hpp>
 
 #include <srcdiff_constants.hpp>
@@ -14,7 +20,7 @@ std::mutex srcml_converter::mutex;
 std::map<std::string, std::shared_ptr<srcML::node>> srcml_converter::start_tags;
 std::map<std::string, std::shared_ptr<srcML::node>> srcml_converter::end_tags;
 
-std::shared_ptr<srcML::node> srcml_converter::get_current_node(xmlTextReaderPtr reader, bool is_archive) {
+std::shared_ptr<srcML::node> srcml_converter::get_current_node(xmlTextReaderPtr reader, bool is_archive [[maybe_unused]]) {
 
   xmlNode * curnode = xmlTextReaderCurrentNode(reader);
   curnode->type = (xmlElementType)xmlTextReaderNodeType(reader);
@@ -99,7 +105,10 @@ srcml_converter::srcml_converter(srcml_archive * archive, bool split_strings, in
 
 srcml_converter::~srcml_converter() {
 
-  if(output_buffer) srcml_memory_free(output_buffer);
+  // libsrcml uses xmlBufferCreate to create this buffer, so we need to use
+  // xmlFree to free it. srcml_memory_free just calls the normal free(), which
+  // might not match how libxml2 made the allocation
+  if(output_buffer) xmlFree(output_buffer);
 
 }
 
@@ -420,8 +429,8 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
       if(node->get_name() == "unit") return nodes;
 
       
-      if(node->get_type() == srcML::node_type::START && (*node->get_parent())->is_simple()) {
-        (*node->get_parent())->set_simple(false);
+      if(node->get_type() == srcML::node_type::START && node->get_parent()->is_simple()) {
+        node->get_parent()->set_simple(false);
       }
       
       

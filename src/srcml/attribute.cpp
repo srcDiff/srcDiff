@@ -1,23 +1,9 @@
-/**
- * @file attribute.cpp
- *
- * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
- *
- * srcDiff is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * srcDiff is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
 
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #include <attribute.hpp>
 #include <cassert>
 #include <optional>
@@ -31,7 +17,7 @@ srcML::attribute::attribute(xmlAttrPtr attribute)
 srcML::attribute::attribute(
     const std::string & name,
     std::shared_ptr<srcML::name_space> ns,
-    std::optional<std::string> value) : name(name), ns(ns), value(value) {}
+    std::optional<std::string> value) : name(name), value(value), ns(ns) {}
 
 void srcML::attribute::merge(const srcML::attribute & that) {
     assert(this->get_name() == that.get_name());
@@ -48,9 +34,9 @@ std::string srcML::attribute::full_name() const {
     return name;
 }
 
-std::ostream & srcML::operator<<(std::ostream & out, const attribute & that) {
+std::ostream & srcML::operator<<(std::ostream & out, const srcML::attribute & that) {
     out << that.full_name();
-    if(that.value) out << "=" << *that.value;
+    if(that.get_value().has_value()) out << "=" << that.get_value().value();
     return out;
 }
 

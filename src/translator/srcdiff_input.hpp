@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #ifndef INCLUDED_SRCDIFF_INPUT_HPP
 #define INCLUDED_SRCDIFF_INPUT_HPP
 
@@ -19,8 +25,8 @@ protected:
 
 	srcml_archive * archive;
 	const std::optional<std::string> input_path;
-	const OPTION_TYPE & options;
 	const char * language_string;
+	const OPTION_TYPE & options;
 	const T & input;
 
 private:

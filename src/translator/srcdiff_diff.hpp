@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #ifndef INCLUDED_SRCDIFF_DIFF_HPP
 #define INCLUDED_SRCDIFF_DIFF_HPP
 
@@ -11,11 +17,12 @@ class srcdiff_diff {
 protected:
   std::shared_ptr<srcdiff_output> out;
 
-  const construct::construct_list & construct_list_original;
-  const construct::construct_list & construct_list_modified;
+  const construct::construct_list_view original;
+  const construct::construct_list_view modified;
 
 public:
-  srcdiff_diff(std::shared_ptr<srcdiff_output> out, const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified);
+  srcdiff_diff(std::shared_ptr<srcdiff_output> out, const construct::construct_list_view original, const construct::construct_list_view modified);
+
 
   virtual void output();
   virtual void output_pure(int end_original, int end_modified);

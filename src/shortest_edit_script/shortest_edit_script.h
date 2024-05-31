@@ -1,12 +1,9 @@
 /*
-  shortest_edit_sequence.h
+ * SPDX-License-Identifier: GPL-3.0-only
 
-  Interface to compute the shortest edit script between two sequences.
-
-  Michael J. Decker
-  mjd52@zips.uakron.edu
-*/
-
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #ifndef INCLUDED_SHORTEST_EDIT_SCRIPT_H
 #define INCLUDED_SHORTEST_EDIT_SCRIPT_H
 
@@ -21,9 +18,9 @@ enum edit_operations { SES_COMMON, SES_DELETE, SES_INSERT };
 struct edit_t {
 
   int operation;
-  int offset_sequence_one;
-  int offset_sequence_two;
-  int length;
+  unsigned long offset_sequence_one;
+  unsigned long offset_sequence_two;
+  unsigned long length;
 
   // links
   struct edit_t * next;

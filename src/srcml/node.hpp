@@ -1,26 +1,9 @@
 /*
-  node.hpp
+ * SPDX-License-Identifier: GPL-3.0-only
 
-  Copyright (C) 2018 srcML, LLC. (www.srcML.org)
-
-  This file is part of a translator from source code to srcReader
-
-  srcReader is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  srcReader is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with the srcML translator; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-*/
-
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #ifndef INCLUDED_NODE_HPP
 #define INCLUDED_NODE_HPP
 
@@ -45,6 +28,7 @@ namespace srcML {
 
     typedef std::map<std::string, attribute, std::greater<std::string>> attribute_map;
     typedef std::pair<std::string, attribute> attribute_map_pair;
+    typedef std::pair<const std::string &, attribute> attribute_map_cpair;
     typedef std::map<std::string, attribute, std::greater<std::string>>::const_iterator attribute_map_citr;
     typedef std::map<std::string, attribute, std::greater<std::string>>::iterator attribute_map_itr;
 
@@ -78,7 +62,7 @@ namespace srcML {
     const std::string & get_name() const;
     const std::optional<std::string> & get_content() const;
     int get_move() const;
-    std::optional<std::shared_ptr<node>> get_parent() const;
+    std::shared_ptr<node> get_parent() const;
     std::shared_ptr<name_space> get_namespace() const;
 
     std::string full_name() const;
@@ -112,7 +96,7 @@ namespace srcML {
     std::shared_ptr<name_space> ns;
     std::optional<std::string> content;
     std::list<std::shared_ptr<name_space>> ns_definition;
-    std::optional<std::shared_ptr<node>> parent;
+    std::shared_ptr<node> parent;
     attribute_map attributes;
 
     bool temporary;
@@ -126,5 +110,7 @@ namespace srcML {
 
   };
 
+  std::ostream & operator<<(std::ostream & out, const node & node);
+  
 }
 #endif

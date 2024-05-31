@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #ifndef INCLUDED_SRCDIFFMANY_HPP
 #define INCLUDED_SRCDIFFMANY_HPP
 
@@ -18,7 +24,7 @@ private:
 	typedef std::vector<int_pair> int_pairs;
   	typedef std::vector<int_pairs> moves;
 
- 	void output_unmatched(int start_original, int end_original, int start_modified, int end_modified);
+ 	void output_unmatched(construct::construct_list_view original_unmatched, construct::construct_list_view modified_unmatched);
 
 	moves determine_operations();
   

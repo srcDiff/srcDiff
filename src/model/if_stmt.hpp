@@ -1,23 +1,9 @@
-/**
- * @file if_stmt.hpp
- *
- * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
- *
- * srcDiff is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * srcDiff is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
 
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #ifndef INCLUDED_IF_STMT_HPP
 #define INCLUDED_IF_STMT_HPP
 
@@ -30,12 +16,11 @@ class if_stmt : public conditional {
 
 public:
 
-    if_stmt(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out)
-        : conditional(node_list, start, out), if_child(), else_child() {}
+    if_stmt(const construct* parent, std::size_t& start)
+        : conditional(parent, start), if_child(), else_child() {}
     std::shared_ptr<const if_t> find_if() const;
     std::shared_ptr<const else_t> find_else() const;
     virtual std::shared_ptr<const construct> condition() const;
-
 
     virtual bool is_syntax_similar_impl(const construct & modified) const;
     virtual bool is_matchable_impl(const construct & modified) const;

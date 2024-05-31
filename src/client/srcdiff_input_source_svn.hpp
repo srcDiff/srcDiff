@@ -1,12 +1,9 @@
 /*
-  svn_io.hpp
+ * SPDX-License-Identifier: GPL-3.0-only
 
-  Functions for reading a file form svn
-
-  Michael J. Decker
-  mdecker6@kent.edu
-*/
-
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #if SVN
 
 #ifndef INCLUDED_SRCDIFF_INPUT_SOURCE_SVN_HPP

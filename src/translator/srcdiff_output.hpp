@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #ifndef INCLUDED_SRCDIFF_OUTPUT_HPP
 #define INCLUDED_SRCDIFF_OUTPUT_HPP
 
@@ -13,7 +19,6 @@
 #include <srcdiff_constants.hpp>
 #include <shortest_edit_script.h>
 
-#include <boost/any.hpp>
 #include <optional>
 
 #include <vector>
@@ -85,10 +90,10 @@ public:
 
     std::string filename;
     srcml_unit * unit;
-    bool approximate;
 
     const METHOD_TYPE & method;
-
+    bool approximate;
+    
     std::vector<diff_set *> output_diff;
 
   };

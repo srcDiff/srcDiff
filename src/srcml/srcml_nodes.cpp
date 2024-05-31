@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #include <srcml_nodes.hpp>
 #include <iostream>
 
@@ -11,7 +17,7 @@ void advance_to_child(const srcml_nodes & nodes,
 
   srcml_nodes::size_type size = nodes.size();
 
-  int start_pos = pos;
+  size_t start_pos = pos;
   int depth = 0;
 
   while(start_pos < size) {

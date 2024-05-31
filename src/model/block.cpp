@@ -1,23 +1,9 @@
-/**
- * @file block.cpp
- *
- * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
- *
- * srcDiff is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * srcDiff is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- */
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
 
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #include <block.hpp>
 
 #include <srcdiff_match.hpp>
@@ -38,8 +24,9 @@ bool block::is_syntax_similar_impl(const construct & modified_block) const {
 	srcdiff_syntax_measure syntax_measure(*block_content(), *modified.block_content());
 	syntax_measure.compute();
 
+	// max_child_length is unused
 	int min_child_length = syntax_measure.min_length();
-	int max_child_length = syntax_measure.max_length();
+	//int max_child_length = syntax_measure.max_length();
 	if(min_child_length > 1) { 
 	  if(2 * syntax_measure.similarity() >= min_child_length && syntax_measure.difference() <= min_child_length)
 	    return true;
@@ -67,19 +54,18 @@ bool block::is_matchable_impl(const construct & modified) const {
 
 	if(is_pseudo_original) {
 		original_stmts = block_content()->children();
-		int start_pos = modified_block.start_position();
-		modified_stmts.push_back(std::make_shared<block>(modified_block.nodes(), start_pos, modified_block.out));
+		std::size_t start_pos = modified_block.start_position();
+		modified_stmts.push_back(std::make_shared<block>(modified_block.parent(), start_pos));
 	} else {
-		int start_pos = start_position();
-		original_stmts.push_back(std::make_shared<block>(nodes(), start_pos, out));
+		std::size_t start_pos = start_position();
+		original_stmts.push_back(std::make_shared<block>(parent(), start_pos));
 		modified_stmts = modified_block.block_content()->children();
 		match_operation = SES_DELETE;
 
 	}
 
-    int start_nest_original, end_nest_original, start_nest_modified, end_nest_modified, operation;
-    srcdiff_nested::check_nestable(original_stmts, 0, original_stmts.size(), modified_stmts, 0, modified_stmts.size(),
-                     			   start_nest_original, end_nest_original, start_nest_modified , end_nest_modified, operation);
+    nest_result nesting = srcdiff_nested::check_nestable(construct::construct_list_view(&original_stmts.front(), original_stmts.size()),
+					  						    		 construct::construct_list_view(&modified_stmts.front(), modified_stmts.size()));
 
-    return match_operation == operation;
+    return match_operation == nesting.operation;
 }

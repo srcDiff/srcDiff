@@ -1,21 +1,8 @@
-/**
- * @file construct.cpp
- *
- * @copyright Copyright (C) 2023-2023 srcML, LLC. (www.srcML.org)
- *
- * srcDiff is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * srcDiff is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with the srcML Toolkit; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
  */
 
 #include <construct.hpp>
@@ -32,7 +19,8 @@
 #include <algorithm>
 #include <iostream>
 
-bool construct::is_non_white_space(int & node_pos, const srcml_nodes & node_list, const void * context) {
+
+bool construct::is_non_white_space(std::size_t & node_pos, const srcml_nodes & node_list, const void * context [[maybe_unused]]) {
 
     const std::shared_ptr<srcML::node> & node = node_list[node_pos];
 
@@ -41,7 +29,7 @@ bool construct::is_non_white_space(int & node_pos, const srcml_nodes & node_list
 
 }
 
-bool construct::is_match(int & node_pos, const srcml_nodes & nodes, const void * context) {
+bool construct::is_match(std::size_t & node_pos, const srcml_nodes & nodes, const void * context) {
 
   const std::shared_ptr<srcML::node> & node = nodes[node_pos];
   const std::shared_ptr<srcML::node> & context_node = *(const std::shared_ptr<srcML::node> *)context;
@@ -52,41 +40,31 @@ bool construct::is_match(int & node_pos, const srcml_nodes & nodes, const void *
 
 /// @todo make member.  Requires modifiying a lot of methods in other classes.
 // name does not quite match because not a member yet.
-construct::construct_list construct::get_descendent_constructs(const srcml_nodes & node_list, 
-                                                    std::size_t start_pos, std::size_t end_pos,
-                                                    construct_filter filter,
-                                                    const void * context,
-                                                    std::shared_ptr<srcdiff_output> out) {
-    construct::construct_list descendent_constructs;
+construct::construct_list construct::get_descendents(std::size_t start_pos, std::size_t end_pos,
+                                                     construct_filter filter, const void * context) const {
+    construct::construct_list descendents;
 
     // runs on a subset of base array
-    for(int pos = start_pos; pos < end_pos; ++pos) {
+    for(std::size_t pos = start_pos; pos < end_pos; ++pos) {
 
         // skip whitespace
         if(filter(pos, node_list, context)) {
 
             // text is separate node if not surrounded by a tag in range
             if(node_list.at(pos)->get_type() == srcML::node_type::TEXT || node_list.at(pos)->get_type() == srcML::node_type::START) {
-                descendent_constructs.push_back(create_construct(node_list, pos, out));
+                descendents.push_back(create_construct(this, pos));
             } else {
-                return descendent_constructs;
+                return descendents;
             }
 
         }
 
     }
-    return descendent_constructs;
+    return descendents;
 }
 
-construct::construct(const construct & that) : out(that.out), node_list(that.node_list), terms(), hash_value(that.hash_value) {
-
-    for(std::size_t pos = 0; pos < that.size(); ++pos) {
-        terms.push_back(that.terms[pos]);
-    }
-
-}
-
-construct::construct(const srcml_nodes & node_list, int & start, std::shared_ptr<srcdiff_output> out) : out(out), node_list(node_list), hash_value() {
+construct::construct(const construct* parent, std::size_t & start)
+    : out(parent->output()), node_list(parent->nodes()), hash_value(), parent_construct(parent) {
 
   if(node_list.at(start)->get_type() != srcML::node_type::TEXT && node_list.at(start)->get_type() != srcML::node_type::START) return;
 
@@ -120,6 +98,12 @@ construct::construct(const srcml_nodes & node_list, int & start, std::shared_ptr
   }
 
   --start;
+}
+
+construct::construct(const construct & that) : out(that.out), node_list(that.node_list), terms(), hash_value(that.hash_value) {
+    for(std::size_t pos = 0; pos < that.size(); ++pos) {
+        terms.push_back(that.terms[pos]);
+    }
 }
 
 void construct::swap(construct & that) {
@@ -171,7 +155,6 @@ bool construct::operator!=(const construct & that) const {
     return !operator==(that);
 }
 
-
 std::ostream & operator<<(std::ostream & out, const construct & that) {
 
     for(std::size_t pos = 0, size = that.size(); pos < size; ++pos) {
@@ -182,8 +165,20 @@ std::ostream & operator<<(std::ostream & out, const construct & that) {
 
 }
 
+const construct* construct::parent() const {
+    return parent_construct;
+}
+
+const std::shared_ptr<srcdiff_output> construct::output() const {
+    return out;
+}
+
+std::shared_ptr<srcdiff_output> construct::output() {
+    return out;
+}
+
 void construct::expand_children() const {
-    child_constructs = get_descendent_constructs(node_list, start_position() + 1, end_position(), is_non_white_space, nullptr, out);
+    child_constructs = get_descendents(start_position() + 1, end_position(), is_non_white_space);
 }
 
 const construct::construct_list & construct::children() const {
@@ -250,7 +245,7 @@ std::size_t construct::hash() const {
 std::string construct::to_string(bool skip_whitespace) const {
 
     std::string str;
-    for(int pos = start_position(); pos < end_position(); ++pos) {
+    for(size_t pos = start_position(); pos < end_position(); ++pos) {
         std::shared_ptr<const srcML::node> node = node_list[pos];
         if(skip_whitespace && node->is_whitespace()) continue;
         if(!node->get_content()) continue;
@@ -270,6 +265,13 @@ const std::string & construct::root_term_name() const {
     return term_name(0);
 }
 
+const std::shared_ptr<srcML::node> construct::parent_term() const {
+    return term(0)->get_parent();
+}
+const std::string & construct::parent_term_name() const {
+    return term(0)->get_parent()->get_name();
+}
+
 std::shared_ptr<const construct> construct::find_child(const std::string & name) const {
     std::shared_ptr<const construct> found_child;
     for(std::shared_ptr<const construct> child : children()) {
@@ -282,7 +284,7 @@ std::shared_ptr<const construct> construct::find_child(const std::string & name)
 }
 
 construct::construct_list construct::find_descendents(std::shared_ptr<srcML::node> element) const {
-    return get_descendent_constructs(node_list, start_position() + 1, end_position(), construct::is_match, &element, out);
+    return get_descendents(start_position() + 1, end_position(), construct::is_match, &element);
 }
 
 std::shared_ptr<const construct> construct::find_best_descendent(std::shared_ptr<const construct> match_construct) const {
@@ -366,7 +368,7 @@ bool construct::is_syntax_similar(const construct & modified) const {
   syntax_measure.compute();
 
   int min_child_length = syntax_measure.min_length();
-  int max_child_length = syntax_measure.max_length();
+  //int max_child_length = syntax_measure.max_length();
 
   if(min_child_length > 1) { 
     if(2 * syntax_measure.similarity() >= min_child_length && syntax_measure.difference() <= min_child_length)
@@ -377,7 +379,7 @@ bool construct::is_syntax_similar(const construct & modified) const {
   return is_syntax_similar_impl(modified);
 }
 
-bool construct::is_syntax_similar_impl(const construct & modified) const {
+bool construct::is_syntax_similar_impl(const construct & modified [[maybe_unused]]) const {
     return false;
 }
 
@@ -415,14 +417,11 @@ bool construct::is_matchable(const construct & modified) const {
 
 }
 
-bool construct::is_matchable_impl(const construct & modified) const {
+bool construct::is_matchable_impl(const construct & modified [[maybe_unused]]) const {
     return false;
 }
 
 bool construct::is_match_similar(const construct & modified) const {
-
-  int original_pos = start_position();
-  int modified_pos = modified.start_position();
 
   if(*term(0) != *modified.term(0)) return false;
 
@@ -436,53 +435,19 @@ bool construct::is_match_similar(const construct & modified) const {
 
 }
 
-
-bool construct::is_tag_convertable(const construct & modified) const {
-
+bool construct::is_tag_convertable(const construct & modified [[maybe_unused]]) const {
   return false;
 }
 
 bool construct::is_convertable(const construct & modified) const {
-
   if(is_convertable_impl(modified)) return true;
   return is_similar(modified);
 }
 
-bool construct::is_convertable_impl(const construct & modified) const {
+bool construct::is_convertable_impl(const construct & modified [[maybe_unused]]) const {
     return false;
 }
 
 bool construct::can_nest(const construct & modified) const {
-
-  const std::string & original_tag = root_term_name();
-  const std::string & modified_tag = modified.root_term_name();
-
-  if(original_tag != modified_tag && !is_tag_convertable(modified)) return false;
-
-  // if interchanging decl_stmt always nest expr into init or argument
-  if(original_tag == "expr" 
-    && (srcdiff_nested::is_decl_stmt_from_expr(nodes(), start_position()) 
-    ||  srcdiff_nested::is_decl_stmt_from_expr(modified.nodes(), modified.start_position()))) return true;
-
-  if(original_tag == "name"
-    && root_term()->is_simple() != modified.root_term()->is_simple()
-    && !srcdiff_nested::check_nest_name(*this, root_term()->get_parent(),
-                        modified, modified.root_term()->get_parent()))
-    return false;
-
-  if(  original_tag == "then"    || original_tag == "block"     || original_tag == "block_content"
-    || original_tag == "comment"
-    || original_tag == "literal" || original_tag == "operator"  || original_tag == "modifier"
-    || original_tag == "expr"    || original_tag == "expr_stmt" || original_tag == "name"
-    || original_tag == "number"  || original_tag == "file") {
-
-    return is_similar(modified);
-
-  } else {
-
-    return can_refine_difference(modified);
-
-  }
-
+  return can_refine_difference(modified);
 }
-

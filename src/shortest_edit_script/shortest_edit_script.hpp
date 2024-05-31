@@ -1,3 +1,9 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+
+ * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ * This file is part of the srcDiff translator.
+ */
 #ifndef INCLUDED_SHORTEST_EDIT_SCRIPT_HPP
 #define INCLUDED_SHORTEST_EDIT_SCRIPT_HPP
 
@@ -7,7 +13,7 @@
 #include <iostream>
 #include <cmath>
 
-#include <boost/optional.hpp>
+#include <optional>
 
 class shortest_edit_script_t {
   
@@ -61,12 +67,12 @@ int shortest_edit_script_t::approximate_compute(const T & structure_one, const T
     size_t look_ahead_one = std::min(offset_one + 3, size_one);
     size_t look_ahead_two = std::min(offset_two + 3, size_two);
 
-    boost::optional<size_t> match_one;
-    boost::optional<size_t> match_two;
+    std::optional<size_t> match_one;
+    std::optional<size_t> match_two;
 
-    for(int pos_one = offset_one; pos_one < look_ahead_one; ++pos_one) {
+    for(std::size_t pos_one = offset_one; pos_one < look_ahead_one; ++pos_one) {
 
-      for(int pos_two = offset_two; pos_two < look_ahead_two; ++pos_two) {
+      for(std::size_t pos_two = offset_two; pos_two < look_ahead_two; ++pos_two) {
 
         const void * left = accessor(pos_one, (const void *)structure_one.data(), context);
         const void * right = accessor(pos_two, (const void *)structure_two.data(), context);
