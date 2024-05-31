@@ -11,7 +11,7 @@ namespace data = boost::unit_test::data;
 const std::string construct_type = "if";
 
 std::vector<std::tuple<std::string>> test_cases_has_real_block = {
-    {"if (x)"},
+    {"if (y) {x=1;}"},
     {"if (x) {y=1;}"},
     {"if (y) {x=1;}"},
     {"if (z) {a=0;}"}
@@ -25,7 +25,7 @@ BOOST_DATA_TEST_CASE(if_t_has_real_block, data::make(test_cases_has_real_block),
     
     BOOST_TEST(test_data.test_construct);
     std::shared_ptr<if_t> if_construct = std::dynamic_pointer_cast<if_t>(test_data.test_construct);
-    //    BOOST_TEST_MESSAGE("DEREFERENCED IF_CONSTRUCT: " << *if_construct);
+    BOOST_TEST_MESSAGE("DEREFERENCED IF_CONSTRUCT: " << *if_construct);
     BOOST_TEST(if_construct->has_real_block());
 
 }
@@ -72,7 +72,6 @@ BOOST_DATA_TEST_CASE(if_t_matchable_impl, data::make(test_cases_is_matchable_imp
   BOOST_TEST_MESSAGE("Original Construct: " << *if_construct_original << (if_construct_original ? " !!!!Created!!!! " : " NULL "));
   BOOST_TEST_MESSAGE("Modified Construct: " << *if_construct_modified << (if_construct_original ? " !!!!Created!!!! " : " NULL "));
   */
-
   bool matchable = if_construct_original->is_matchable_impl(*if_construct_modified);
 
   /* More debug
@@ -81,5 +80,8 @@ BOOST_DATA_TEST_CASE(if_t_matchable_impl, data::make(test_cases_is_matchable_imp
   
   BOOST_TEST(matchable == expected_matchable);
 }
+
+
+
 
 
