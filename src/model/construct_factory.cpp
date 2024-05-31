@@ -47,6 +47,7 @@
 #include <srcdiff_match.hpp>
 
 #include <nest/rule_checker.hpp>
+#include <nest/custom_nest.hpp>
 #include <nest/block.hpp>
 #include <nest/class.hpp>
 #include <nest/call.hpp>
@@ -70,7 +71,7 @@ typedef std::unordered_map<std::string_view, factory_function> factory_map_type;
 factory_function default_factory  = generate_factory<construct>();
 factory_map_type factory_map = {
 
-  {"name", generate_factory<name_t>() },
+  {"name", generate_factory<name_t, nest::custom_nest<"name">>() },
 
   // // class-type
   {"class",  generate_factory<class_t, nest::class_t>() },
@@ -112,7 +113,7 @@ factory_map_type factory_map = {
   {"argument",      generate_factory<always_matched_construct, nest::call>() },
   {"expr",          generate_factory<expr_t, nest::call>() },
 
-  {"decl",      generate_factory<named_construct>() },
+  {"decl",      generate_factory<named_construct, nest::custom_nest<"expr">>() },
   {"parameter", generate_factory<identifier_decl>() },
   {"param",     generate_factory<identifier_decl>() },
 
@@ -125,8 +126,8 @@ factory_map_type factory_map = {
 
   {"type",          generate_factory<always_matched_construct>() },
   {"then",          generate_factory<always_matched_construct>() },
-  {"control",       generate_factory<always_matched_construct>() },
-  {"init",          generate_factory<always_matched_construct>() },
+  {"control",       generate_factory<always_matched_construct, nest::custom_nest<"condition", "comment">>() },
+  {"init",          generate_factory<always_matched_construct, nest::custom_nest<"expr">>() },
   {"default",       generate_factory<always_matched_construct>() },
   {"range",         generate_factory<always_matched_construct>() },
   {"signal",        generate_factory<always_matched_construct>() },
@@ -159,7 +160,9 @@ factory_map_type factory_map = {
   {"catch",    generate_factory<construct, nest::block>() },
   {"finally",  generate_factory<construct, nest::block>() },
 
-  {"synchronized",  generate_factory<construct, nest::block>() },
+  {"synchronized", generate_factory<construct, nest::block>() },
+
+  {"static", generate_factory<construct, nest::custom_nest<"decl_stmt">>() },
 
 };
 

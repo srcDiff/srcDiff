@@ -27,28 +27,17 @@ const char * const else_nest_types[]         = { "goto", "expr_stmt", "decl_stmt
 
 const char * const extern_nest_types[]       = { "decl_stmt", "function_decl", "function", "class", "class_decl",
                                                  "struct", "struct_decl", "union", "union_decl", "typedef", "using", 0 };
-const char * const for_control_nest_types[]  = { "condition", "comment",                                             0 };
 const char * const ternary_nest_types[]      = { "ternary", "call", "operator", "literal", "expr", "name",           0 };
 const char * const condition_nest_types[]    = { "expr", "call", "operator", "literal", "name",                      0 };
-const char * const name_nest_types[]         = { "name",                                                             0 };
-const char * const decl_nest_types[]         = { "expr",                                                             0 };
-const char * const static_nest_types[]       = { "decl_stmt",                                                        0 };
 
 // tags that can have something nested in them (incomplete)    
 const nest_info nestable[] = {   
 
   { "then",          ternary_then_nest_types },
   { "else",          else_nest_types         },
-  { "control",       for_control_nest_types  },
   { "ternary",       ternary_nest_types      },
   { "condition",     condition_nest_types    },
-  { "name",          name_nest_types         },
   { "extern",        extern_nest_types       },
-  { "decl",          decl_nest_types         },
-  { "init",          decl_nest_types         },
-
-  // Java
-  { "static",        static_nest_types       },
   { 0, 0 }
 
 };
