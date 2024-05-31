@@ -66,12 +66,14 @@ factory_function generate_factory() {
 
 typedef nest::custom_nest<"expr", "call", "operator", "literal", "name">
         call_nest;
+
 typedef nest::custom_nest<"function", "constructor", "destructor",
                           "function_decl", "constructor_decl", "destructor_decl",
                           "decl_stmt", "typedef"
                           "class", "struct", "union", "enum",
                           "class_decl", "struct_decl", "union_decl", "enum_decl">
         class_nest;
+
 typedef nest::custom_nest<"goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
                           "if", "while", "for", "foreach", "else", "elseif", "switch", "do",
                           "try", "catch", "finally", "synchronized",
