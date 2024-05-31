@@ -49,8 +49,6 @@
 #include <nest/rule_checker.hpp>
 #include <nest/custom_nest.hpp>
 #include <nest/block.hpp>
-#include <nest/class.hpp>
-#include <nest/call.hpp>
 
 #include <unordered_map>
 #include <string_view>
@@ -66,6 +64,14 @@ factory_function generate_factory() {
           };
 }
 
+typedef nest::custom_nest<"expr", "call", "operator", "literal", "name">
+        call_nest;
+typedef nest::custom_nest<"function", "constructor", "destructor",
+                          "function_decl", "constructor_decl", "destructor_decl",
+                          "decl_stmt", "typedef"
+                          "class", "struct", "union", "enum",
+                          "class_decl", "struct_decl", "union_decl", "enum_decl">
+        class_nest;
 typedef nest::custom_nest<"goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
                           "if", "while", "for", "foreach", "else", "elseif", "switch", "do",
                           "try", "catch", "finally", "synchronized",
@@ -90,15 +96,15 @@ factory_map_type factory_map = {
   {"name", generate_factory<name_t, nest::custom_nest<"name">>() },
 
   // // class-type
-  {"class",  generate_factory<class_t, nest::class_t>() },
-  {"struct", generate_factory<class_t, nest::class_t>() },
-  {"union",  generate_factory<class_t, nest::class_t>() },
-  {"enum",   generate_factory<class_t, nest::class_t>() },
+  {"class",  generate_factory<class_t, class_nest>() },
+  {"struct", generate_factory<class_t, class_nest>() },
+  {"union",  generate_factory<class_t, class_nest>() },
+  {"enum",   generate_factory<class_t, class_nest>() },
 
   // access regions
-  {"public",    generate_factory<access_region, nest::class_t>() },
-  {"private",   generate_factory<access_region, nest::class_t>() },
-  {"protected", generate_factory<access_region, nest::class_t>() },
+  {"public",    generate_factory<access_region, class_nest>() },
+  {"private",   generate_factory<access_region, class_nest>() },
+  {"protected", generate_factory<access_region, class_nest>() },
 
   // function-type
   {"function",         generate_factory<named_construct, nest::block>() },
@@ -124,10 +130,10 @@ factory_map_type factory_map = {
 
   {"case", generate_factory<case_t>() },
 
-  {"call",          generate_factory<call, nest::call>() },
-  {"argument_list", generate_factory<always_matched_construct, nest::call>() },
-  {"argument",      generate_factory<always_matched_construct, nest::call>() },
-  {"expr",          generate_factory<expr_t, nest::call>() },
+  {"call",          generate_factory<call, call_nest>() },
+  {"argument_list", generate_factory<always_matched_construct, call_nest>() },
+  {"argument",      generate_factory<always_matched_construct, call_nest>() },
+  {"expr",          generate_factory<expr_t, call_nest>() },
 
   {"decl",      generate_factory<named_construct, nest::custom_nest<"expr">>() },
   {"parameter", generate_factory<identifier_decl>() },
