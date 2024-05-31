@@ -96,7 +96,7 @@ factory_map_type factory_map = {
   {"while",     generate_factory<conditional, nest::block>() },
   {"switch",    generate_factory<conditional>() },
   {"do",        generate_factory<conditional>() },
-  {"condition", generate_factory<condition>() },
+  {"condition", generate_factory<condition, nest::custom_nest<"expr", "call", "operator", "literal", "name">>() },
 
   {"if_stmt", generate_factory<if_stmt, nest::block>() },
   {"if",      generate_factory<if_t, nest::block>() },
@@ -163,6 +163,7 @@ factory_map_type factory_map = {
   {"synchronized", generate_factory<construct, nest::block>() },
 
   {"static", generate_factory<construct, nest::custom_nest<"decl_stmt">>() },
+  {"ternary", generate_factory<construct, nest::custom_nest<"ternary", "call", "operator", "literal", "expr", "name">>() },
 
 };
 
