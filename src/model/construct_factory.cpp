@@ -65,7 +65,7 @@ factory_function generate_factory() {
 }
 
 typedef nest::custom_nest<"expr", "call", "operator", "literal", "name">
-        call_nest;
+        expr_nest;
 
 typedef nest::custom_nest<"function", "constructor", "destructor",
                           "function_decl", "constructor_decl", "destructor_decl",
@@ -120,7 +120,7 @@ factory_map_type factory_map = {
   {"while",     generate_factory<conditional, nest::block>() },
   {"switch",    generate_factory<conditional>() },
   {"do",        generate_factory<conditional>() },
-  {"condition", generate_factory<condition, nest::custom_nest<"expr", "call", "operator", "literal", "name">>() },
+  {"condition", generate_factory<condition, expr_nest>() },
 
   {"if_stmt", generate_factory<if_stmt, nest::block>() },
   {"if",      generate_factory<if_t, nest::block>() },
@@ -132,10 +132,10 @@ factory_map_type factory_map = {
 
   {"case", generate_factory<case_t>() },
 
-  {"call",          generate_factory<call, call_nest>() },
-  {"argument_list", generate_factory<always_matched_construct, call_nest>() },
-  {"argument",      generate_factory<always_matched_construct, call_nest>() },
-  {"expr",          generate_factory<expr_t, call_nest>() },
+  {"call",          generate_factory<call, expr_nest>() },
+  {"argument_list", generate_factory<always_matched_construct, expr_nest>() },
+  {"argument",      generate_factory<always_matched_construct, expr_nest>() },
+  {"expr",          generate_factory<expr_t, expr_nest>() },
 
   {"decl",      generate_factory<named_construct, nest::custom_nest<"expr">>() },
   {"parameter", generate_factory<identifier_decl>() },
