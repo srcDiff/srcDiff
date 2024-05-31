@@ -13,4 +13,4 @@ find_package(srcML REQUIRED)
 find_package(LibXml2 REQUIRED)
 
 add_library(nesting OBJECT ${NESTING_HEADERS} ${NESTING_SOURCE})
-target_link_libraries(nesting PRIVATE srcML::LibsrcML)
+target_link_libraries(nesting PRIVATE srcML::LibsrcML LibXml2::LibXml2)
