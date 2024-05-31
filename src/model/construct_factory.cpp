@@ -66,6 +66,22 @@ factory_function generate_factory() {
           };
 }
 
+typedef nest::custom_nest<"goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
+                          "if", "while", "for", "foreach", "else", "elseif", "switch", "do",
+                          "try", "catch", "finally", "synchronized",
+                          "expr", "call", "operator", "literal", "continue", "break", "goto">
+        then_nest;
+
+typedef nest::custom_nest<"goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
+                          "if_stmt", "if", "while", "for", "foreach", "switch", "do",
+                          "try", "catch", "finally", "synchronized",
+                          "expr", "call", "operator", "literal", "continue", "break", "goto">
+        else_nest;
+
+typedef nest::custom_nest<"decl_stmt", "function_decl", "function", "class", "class_decl",
+                          "struct", "struct_decl", "union", "union_decl", "typedef", "using">
+        extern_nest;
+
 typedef std::unordered_map<std::string_view, factory_function> factory_map_type;
 
 factory_function default_factory  = generate_factory<construct>();
@@ -101,7 +117,7 @@ factory_map_type factory_map = {
   {"if_stmt", generate_factory<if_stmt, nest::block>() },
   {"if",      generate_factory<if_t, nest::block>() },
   {"elseif",  generate_factory<elseif, nest::block>() },
-  {"else",    generate_factory<else_t>() },
+  {"else",    generate_factory<else_t, else_nest>() },
 
   {"for",     generate_factory<for_t, nest::block>() },
   {"foreach", generate_factory<for_t, nest::block>() },
@@ -125,7 +141,7 @@ factory_map_type factory_map = {
   {"cast", generate_factory<cast>() },
 
   {"type",          generate_factory<always_matched_construct>() },
-  {"then",          generate_factory<always_matched_construct>() },
+  {"then",          generate_factory<always_matched_construct, then_nest>() },
   {"control",       generate_factory<always_matched_construct, nest::custom_nest<"condition", "comment">>() },
   {"init",          generate_factory<always_matched_construct, nest::custom_nest<"expr">>() },
   {"default",       generate_factory<always_matched_construct>() },
@@ -163,7 +179,10 @@ factory_map_type factory_map = {
   {"synchronized", generate_factory<construct, nest::block>() },
 
   {"static", generate_factory<construct, nest::custom_nest<"decl_stmt">>() },
+
   {"ternary", generate_factory<construct, nest::custom_nest<"ternary", "call", "operator", "literal", "expr", "name">>() },
+
+  {"extern", generate_factory<construct, extern_nest>() },
 
 };
 
