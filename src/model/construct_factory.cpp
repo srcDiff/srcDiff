@@ -50,6 +50,8 @@
 #include <nest/custom_nest.hpp>
 #include <nest/block.hpp>
 
+#include <convert/rule_checker.hpp>
+
 #include <unordered_map>
 #include <string_view>
 
@@ -57,10 +59,15 @@ typedef std::function<
           std::shared_ptr<construct>(const construct* parent, std::size_t& start)
         > factory_function;
 
-template<class match_rule_checker = construct, class nest_rule_checker = nest::rule_checker>
+template<class match_rule_checker   = construct, 
+         class nest_rule_checker    = nest::rule_checker,
+         class convert_rule_checker = convert::rule_checker
+        >
 factory_function generate_factory() {
   return  [](const construct* parent, std::size_t& start) { 
-            return std::make_shared<match_rule_checker>(parent, start, std::shared_ptr<nest_rule_checker>());
+            return std::make_shared<match_rule_checker>(parent, start, 
+                                                        std::shared_ptr<nest_rule_checker>(),
+                                                        std::shared_ptr<convert_rule_checker>());
           };
 }
 

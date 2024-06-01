@@ -6,11 +6,11 @@
 #  This file is part of the srcDiff translator.
 #
 
-file(GLOB NEST_HEADERS *.hpp)
-file(GLOB NEST_SOURCE  *.cpp)
+file(GLOB CONVERT_HEADERS *.hpp)
+file(GLOB CONVERT_SOURCE  *.cpp)
 
 find_package(srcML REQUIRED)
 find_package(LibXml2 REQUIRED)
 
-add_library(nest OBJECT ${NEST_HEADERS} ${NEST_SOURCE})
-target_link_libraries(nest PRIVATE srcML::LibsrcML LibXml2::LibXml2)
+add_library(convert OBJECT ${CONVERT_HEADERS} ${CONVERT_SOURCE})
+target_link_libraries(convert PRIVATE srcML::LibsrcML LibXml2::LibXml2)

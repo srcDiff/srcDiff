@@ -40,8 +40,10 @@ public:
 
     construct(const construct* parent, std::size_t& start);
 
-    template <typename nest_rule_checker>
-    construct(const construct* parent, std::size_t& start, std::shared_ptr<nest_rule_checker> nest_checker);
+    template <class nest_rule_checker, class convert_rule_checker>
+    construct(const construct* parent, std::size_t& start,
+              std::shared_ptr<nest_rule_checker>    nest_checker,
+              std::shared_ptr<convert_rule_checker> convert_checker);
 
     construct(const construct & that) = delete;
     construct & operator=(construct that) = delete;
@@ -122,8 +124,8 @@ public:
 
 protected:
     // Delegates rule object(s)
-    std::shared_ptr<convert::rule_checker> convert_checker;
     std::shared_ptr<nest::rule_checker>    nest_checker;
+    std::shared_ptr<convert::rule_checker> convert_checker;
 
 protected:
     std::shared_ptr<srcdiff_output> out;

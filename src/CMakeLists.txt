@@ -42,11 +42,11 @@ macro(build_library LIBRARY_NAME LIBRARY_TYPE LIBRARY_OUTPUT_NAME)
 
     if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
         add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> 
-        $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:nesting> $<TARGET_OBJECTS:project>
-        $<TARGET_OBJECTS:view> $<TARGET_OBJECTS:nesting>)
+        $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:nest> $<TARGET_OBJECTS:convert> $<TARGET_OBJECTS:project>
+        $<TARGET_OBJECTS:view>)
     else()
         add_library(${LIBRARY_NAME} ${LIBRARY_TYPE} $<TARGET_OBJECTS:shortest_edit_script> 
-        $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:nesting> $<TARGET_OBJECTS:project>
+        $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:nest> $<TARGET_OBJECTS:convert> $<TARGET_OBJECTS:project>
         $<TARGET_OBJECTS:view>)
     endif()
 

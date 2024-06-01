@@ -19,7 +19,7 @@ bool rule_checker::is_tag_convertable(const construct & modified [[maybe_unused]
 
 bool rule_checker::is_convertable(const construct & modified) const {
   if(is_convertable_impl(modified)) return true;
-  return is_similar(modified);
+  return client.is_similar(modified);
 }
 
 bool rule_checker::is_convertable_impl(const construct & modified [[maybe_unused]]) const {
