@@ -12,6 +12,7 @@
 #include <construct_utils.hpp>
 
 #include <nest/rule_checker.hpp>
+#include <convert/rule_checker.hpp>
 
 #include <srcdiff_measure.hpp>
 
@@ -121,7 +122,8 @@ public:
 
 protected:
     // Delegates rule object(s)
-    std::shared_ptr<nest::rule_checker> nest_checker;
+    std::shared_ptr<convert::rule_checker> convert_checker;
+    std::shared_ptr<nest::rule_checker>    nest_checker;
 
 protected:
     std::shared_ptr<srcdiff_output> out;
