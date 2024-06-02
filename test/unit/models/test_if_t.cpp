@@ -14,7 +14,14 @@ std::vector<std::tuple<std::string>> test_cases_has_real_block = {
     {"if (y) {x=1;}"},
     {"if (x) {y=1;}"},
     {"if (y) {x=1;}"},
-    {"if (z) {a=0;}"}
+    {"if (z) {a=0;}"},
+    {"if (z>1) {a = 0;}"},
+    {"if (z<2) {b = 1;}"},
+    {"if (a>55) {c = 2;}"},
+    {"if (f=22) {d = 3;}"},
+    {"if (z>=145) {e = 4;}"},
+    {"if (z<=1) {f = 5;}"},
+    {"if (z!=1) {g = 6;}"},
 };
 
 BOOST_DATA_TEST_CASE(if_t_has_real_block, data::make(test_cases_has_real_block), code) {
@@ -25,7 +32,7 @@ BOOST_DATA_TEST_CASE(if_t_has_real_block, data::make(test_cases_has_real_block),
     
     BOOST_TEST(test_data.test_construct);
     std::shared_ptr<const if_t> if_construct = std::dynamic_pointer_cast<const if_t>(test_data.test_construct);
-    BOOST_TEST_MESSAGE("DEREFERENCED IF_CONSTRUCT: " << *if_construct);
+    // BOOST_TEST_MESSAGE("DEREFERENCED IF_CONSTRUCT: " << *if_construct);
     BOOST_TEST(if_construct->has_real_block());
 
 }
@@ -33,10 +40,15 @@ BOOST_DATA_TEST_CASE(if_t_has_real_block, data::make(test_cases_has_real_block),
 std::vector<std::tuple<std::string, std::string>> test_cases_is_block_matchable = {
        // Original            // Modified
       {"if (x) {y=1;}", "if (y) {x=1;}"},
-  // Just swap X and Y
        // Original            // Modified
-      {"if (y) {x=1;}", "if (x) {y=1;}"},  
-  
+      {"if (y) {x=1;}", "if (x) {y=1;}"},
+      // Original            // Modified
+      {"if (z=1) {x=1;}", "if (x>=1) {z=1;}"},   
+      {"if (z>1) {x=1;}", "if (x>1) {z=1;}"},
+      {"if (z<1) {x=1;}", "if (x<1) {z=1;}"},
+      {"if (z<=1) {x=1;}", "if (x<=1) {z=1;}"},
+      {"if (z>=1) {x=1;}", "if (x>=1) {z=1;}"},
+      {"if (z!=1) {x=1;}", "if (x!=1) {z=1;}"}
 };
 
 BOOST_DATA_TEST_CASE(if_t_is_block_matchable, data::make(test_cases_is_block_matchable), code1, code2) {
@@ -58,7 +70,19 @@ std::vector<std::tuple<std::string, std::string, bool>> test_cases_is_matchable_
    // Original      // Modified     // Expected matchable return
   {"if (x) {y=1;}", "if (x) {y=1;}", true},
   {"if (y) {x=1;}", "if (x) {x=2;}", false},
-  {"if (z) {a=1;}", "if (z) {a=1;}", true}
+  {"if (z) {a=1;}", "if (z) {a=1;}", true},
+   // Original         // Modified
+  {"if (x>1) {y=1;}", "if (x>1) {y=1;}", true},
+  {"if (x>=1) {y=1;}", "if (x>=1) {y=1;}", true},  
+  {"if (y<1) {y=1;}", "if (y<1) {y=1;}", true},
+  {"if (z<=1) {y=1;}", "if (x<=1) {y=1;}", true},    
+  {"if (x=1) {y=1;}", "if (x=1) {y=1;}", true},    
+  {"if (x!=1) {y=1;}", "if (x!=1) {y=1;}", true},   
+  {"if (x!=1) {y=1;}", "if (x=1) {y!=1;}", false},        
+  {"if (x=1) {y!=1;}", "if (x=1) {y!=1;}", true},      
+  {"if (x>=1) {y=1;}", "if (x=1) {y>=1;}", false},        
+  {"if (x>=1) {y=1;}", "if (x>=1) {y=1;}", true},        
+  {"if (x<1) {y=1;}", "if (x=1) {y<1;}", false}
 };
 
 BOOST_DATA_TEST_CASE(if_t_matchable_impl, data::make(test_cases_is_matchable_impl), code1, code2, expected_matchable) {
