@@ -24,7 +24,7 @@ BOOST_DATA_TEST_CASE(if_t_has_real_block, data::make(test_cases_has_real_block),
 
     
     BOOST_TEST(test_data.test_construct);
-    std::shared_ptr<if_t> if_construct = std::dynamic_pointer_cast<if_t>(test_data.test_construct);
+    std::shared_ptr<const if_t> if_construct = std::dynamic_pointer_cast<const if_t>(test_data.test_construct);
     BOOST_TEST_MESSAGE("DEREFERENCED IF_CONSTRUCT: " << *if_construct);
     BOOST_TEST(if_construct->has_real_block());
 
@@ -47,11 +47,12 @@ BOOST_DATA_TEST_CASE(if_t_is_block_matchable, data::make(test_cases_is_block_mat
   BOOST_TEST(original_data.test_construct);
   BOOST_TEST(modified_data.test_construct);
 
-  std::shared_ptr<if_t> if_construct_original = std::dynamic_pointer_cast<if_t>(original_data.test_construct);
-  std::shared_ptr<if_t> if_construct_modified = std::dynamic_pointer_cast<if_t>(modified_data.test_construct);
+  std::shared_ptr<const if_t> if_construct_original = std::dynamic_pointer_cast<const if_t>(original_data.test_construct);
+  std::shared_ptr<const if_t> if_construct_modified = std::dynamic_pointer_cast<const if_t>(modified_data.test_construct);
 
   BOOST_TEST(!(if_construct_original)->is_block_matchable(*if_construct_modified));
 }
+
 
 std::vector<std::tuple<std::string, std::string, bool>> test_cases_is_matchable_impl = {
    // Original      // Modified     // Expected matchable return
@@ -64,22 +65,24 @@ BOOST_DATA_TEST_CASE(if_t_matchable_impl, data::make(test_cases_is_matchable_imp
   construct_test_data original_data = create_test_construct(code1, construct_type);
   construct_test_data modified_data = create_test_construct(code2, construct_type);
   
-  std::shared_ptr<if_t> if_construct_original = std::dynamic_pointer_cast<if_t>(original_data.test_construct);
-  std::shared_ptr<if_t> if_construct_modified = std::dynamic_pointer_cast<if_t>(modified_data.test_construct);
+  std::shared_ptr<const if_t> if_construct_original = std::dynamic_pointer_cast<const if_t>(original_data.test_construct);
+  std::shared_ptr<const if_t> if_construct_modified = std::dynamic_pointer_cast<const if_t>(modified_data.test_construct);
 
   
   /* Debug
   BOOST_TEST_MESSAGE("Original Construct: " << *if_construct_original << (if_construct_original ? " !!!!Created!!!! " : " NULL "));
   BOOST_TEST_MESSAGE("Modified Construct: " << *if_construct_modified << (if_construct_original ? " !!!!Created!!!! " : " NULL "));
-  */
+  //*/
   bool matchable = if_construct_original->is_matchable_impl(*if_construct_modified);
 
   /* More debug
   BOOST_TEST_MESSAGE("is_matchable_impl result: " << matchable);
-  */
+  //*/
+
   
   BOOST_TEST(matchable == expected_matchable);
 }
+
 
 
 
