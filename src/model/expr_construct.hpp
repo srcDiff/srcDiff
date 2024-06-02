@@ -22,8 +22,6 @@ public:
 
     virtual std::shared_ptr<const expr_t> expr(const expr_construct & that) const;
 
-    virtual bool is_tag_convertable(const construct & modified) const;
-    virtual bool is_convertable_impl(const construct & modified) const;
 protected:
     mutable std::optional<std::shared_ptr<const expr_t>> expr_child;
 };

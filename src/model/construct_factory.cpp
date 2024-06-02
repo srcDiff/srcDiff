@@ -50,6 +50,7 @@
 #include <convert/class.hpp>
 #include <convert/conditional.hpp>
 #include <convert/else.hpp>
+#include <convert/expr_construct.hpp>
 
 #include <unordered_map>
 #include <string_view>
@@ -147,10 +148,10 @@ factory_map_type factory_map = {
   {"parameter", generate_factory<identifier_decl>() },
   {"param",     generate_factory<identifier_decl>() },
 
-  {"expr_stmt", generate_factory<expr_stmt>() },
-  {"return",    generate_factory<expr_construct>() },
+  {"expr_stmt", generate_factory<expr_stmt, nest::rule_checker, convert::expr_construct>() },
+  {"return",    generate_factory<expr_construct, nest::rule_checker, convert::expr_construct>() },
 
-  {"decl_stmt", generate_factory<decl_stmt>() },
+  {"decl_stmt", generate_factory<decl_stmt, nest::rule_checker, convert::expr_construct>() },
 
   {"cast", generate_factory<construct, nest::rule_checker, convert::custom_convert<"cast">>() },
 
