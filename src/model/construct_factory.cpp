@@ -9,7 +9,6 @@
 
 #include <construct.hpp>
 #include <named_construct.hpp>
-#include <class.hpp>
 #include <name.hpp>
 
 #include <conditional.hpp>
@@ -33,10 +32,6 @@
 
 #include <decl_stmt.hpp>
 
-#include <cast.hpp>
-
-#include <access_region.hpp>
-
 #include <always_matched_construct.hpp>
 
 #include <block.hpp>
@@ -51,6 +46,10 @@
 #include <nest/block.hpp>
 
 #include <convert/rule_checker.hpp>
+#include <convert/custom_convert.hpp>
+#include <convert/class.hpp>
+#include <convert/conditional.hpp>
+#include <convert/else.hpp>
 
 #include <unordered_map>
 #include <string_view>
@@ -105,15 +104,15 @@ factory_map_type factory_map = {
   {"name", generate_factory<name_t, nest::custom_nest<"name">>() },
 
   // // class-type
-  {"class",  generate_factory<class_t, class_nest>() },
-  {"struct", generate_factory<class_t, class_nest>() },
-  {"union",  generate_factory<class_t, class_nest>() },
-  {"enum",   generate_factory<class_t, class_nest>() },
+  {"class",  generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"struct", generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"union",  generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"enum",   generate_factory<named_construct, class_nest, convert::class_t>() },
 
   // access regions
-  {"public",    generate_factory<access_region, class_nest>() },
-  {"private",   generate_factory<access_region, class_nest>() },
-  {"protected", generate_factory<access_region, class_nest>() },
+  {"public",    generate_factory<always_matched_construct, class_nest, convert::custom_convert<"public", "private", "protected">>() },
+  {"private",   generate_factory<always_matched_construct, class_nest, convert::custom_convert<"public", "private", "protected">>() },
+  {"protected", generate_factory<always_matched_construct, class_nest, convert::custom_convert<"public", "private", "protected">>() },
 
   // function-type
   {"function",         generate_factory<named_construct, nest::block>() },
@@ -124,18 +123,18 @@ factory_map_type factory_map = {
   {"destructor_decl",  generate_factory<named_construct>() },
 
   // // conditionals
-  {"while",     generate_factory<conditional, nest::block>() },
-  {"switch",    generate_factory<conditional>() },
-  {"do",        generate_factory<conditional>() },
+  {"while",     generate_factory<conditional, nest::block, convert::conditional>() },
+  {"switch",    generate_factory<conditional, nest::rule_checker>() },
+  {"do",        generate_factory<conditional, nest::rule_checker>() },
   {"condition", generate_factory<condition, expr_nest>() },
 
-  {"if_stmt", generate_factory<if_stmt, nest::block>() },
+  {"if_stmt", generate_factory<if_stmt, nest::block, convert::conditional>() },
   {"if",      generate_factory<if_t, nest::block>() },
-  {"elseif",  generate_factory<elseif, nest::block>() },
-  {"else",    generate_factory<else_t, else_nest>() },
+  {"elseif",  generate_factory<elseif, nest::block, convert::else_t>() },
+  {"else",    generate_factory<else_t, else_nest, convert::else_t>() },
 
-  {"for",     generate_factory<for_t, nest::block>() },
-  {"foreach", generate_factory<for_t, nest::block>() },
+  {"for",     generate_factory<for_t, nest::block, convert::conditional>() },
+  {"foreach", generate_factory<for_t, nest::block, convert::conditional>() },
 
   {"case", generate_factory<case_t>() },
 
@@ -153,7 +152,7 @@ factory_map_type factory_map = {
 
   {"decl_stmt", generate_factory<decl_stmt>() },
 
-  {"cast", generate_factory<cast>() },
+  {"cast", generate_factory<construct, nest::rule_checker, convert::custom_convert<"cast">>() },
 
   {"type",          generate_factory<always_matched_construct>() },
   {"then",          generate_factory<always_matched_construct, then_nest>() },

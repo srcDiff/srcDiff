@@ -19,7 +19,6 @@ public:
     clause(const construct* parent, std::size_t& start, std::shared_ptr<nest_rule_checker> nest_checker, std::shared_ptr<convert_rule_checker> convert_checker)
         : conditional(parent, start, std::make_shared<nest_rule_checker>(*this), std::make_shared<convert_rule_checker>(*this)), block_child() {}
     virtual std::shared_ptr<const construct> block() const;
-    virtual bool is_tag_convertable(const construct & modified) const;
 
 protected:
     mutable std::optional<std::shared_ptr<const construct>> block_child;

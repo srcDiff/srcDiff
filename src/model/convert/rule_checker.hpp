@@ -9,8 +9,7 @@
 
 class construct;
 
-#include <unordered_set>
-#include <string>
+#include <string_utils.hpp>
 
 namespace convert {
 
@@ -18,7 +17,7 @@ class rule_checker {
 
 public:
 
-    rule_checker(const construct& client);
+    rule_checker(const construct& client, const string_set& convertable_constructs = {});
 
     virtual bool is_tag_convertable(const construct & modified) const;
     bool is_convertable(const construct & modified) const;
@@ -26,6 +25,7 @@ public:
 
 protected:
     const construct& client;
+    string_set convertable_constructs;
 };
 
 }

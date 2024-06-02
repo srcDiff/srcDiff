@@ -11,10 +11,11 @@
 
 namespace convert {
 
-rule_checker::rule_checker(const construct& client) : client(client) {}
+rule_checker::rule_checker(const construct& client, const string_set& convertable_constructs)
+  : client(client), convertable_constructs(convertable_constructs) {}
 
-bool rule_checker::is_tag_convertable(const construct & modified [[maybe_unused]]) const {
-  return false;
+bool rule_checker::is_tag_convertable(const construct & modified) const {
+  return convertable_constructs.find(modified.root_term_name()) != convertable_constructs.end();;;
 }
 
 bool rule_checker::is_convertable(const construct & modified) const {

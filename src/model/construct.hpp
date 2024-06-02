@@ -111,9 +111,8 @@ public:
     virtual bool is_matchable_impl(const construct & modified) const;
     bool is_match_similar(const construct & modified) const;
 
-    virtual bool is_tag_convertable(const construct & modified) const;
+    bool is_tag_convertable(const construct & modified) const;
     bool is_convertable(const construct & modified) const;
-    virtual bool is_convertable_impl(const construct & modified) const;
 
     // can nest -> can it be placed inside
     bool can_nest(const construct & modified) const;
