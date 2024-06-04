@@ -22,12 +22,28 @@ std::vector<std::tuple<std::string>> test_cases_block_content = {
 };
 
 std::vector<std::tuple<std::string>> test_cases_is_syntax_similar_impl = {
-    {"", ""}, //identical
-    {}, //similar
-    {}, //completely different
-    {}, //TODO: add tests based on how the compute function in srcdif_syntax_measure works
+    {"int a = 1;", "int a = 1;"}, //identical
+    {"int a = 1;", "int b = 1;"}, //similar
+    {"int a = 1;", "if (b==c) {d = true;}"}, //completely different
+    //node_type START
+    {"",""},
+    {"",""}, 
+    {"",""},
+    {"",""},
+    //blocks
+    {"int a = 1;","{int a = 1;}"},
+    {"{int a = 1}", "int a = 1;"}, 
+    {"{if (a==b){for (auto c in d){e = f;}}}", "{if (b==c){d = true;}}"},
+    {"{if (b==c){d = true;}}", "{if (a==b){for (auto c in d){e = f;}}}"},
 };
 
 std::vector<std::tuple<std::string>> test_cases_is_matchable_imple = {
-    {""},
+    //psuedo_original == psuedo_modified
+    {"",""}, 
+    //similarity > 0/similarlity < 0
+    {"",""},
+    {"",""},
+    //match_operation == nesting.operation
+    {"",""},
+    {"",""}
 };
