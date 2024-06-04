@@ -114,11 +114,11 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
   std::optional<int> similarity_original;
   std::optional<int> difference_original;
   int is_name_nest_original = 0;
-  for(int i = 0; i < original.size(); ++i) {
+  for(std::size_t i = 0; i < original.size(); ++i) {
 
     if(original[i]->root_term()->get_move()) continue;
 
-    for(int j = 0; j < modified.size(); ++j) {
+    for(std::size_t j = 0; j < modified.size(); ++j) {
 
       if(modified[j]->root_term()->get_move()) continue;
 
@@ -180,11 +180,11 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
   std::optional<int> similarity_modified;
   std::optional<int> difference_modified;
   int is_name_nest_modified = 0;
-  for(int i = 0; i < modified.size(); ++i) {
+  for(std::size_t i = 0; i < modified.size(); ++i) {
 
     if(modified[i]->root_term()->get_move()) continue;
 
-    for(int j = 0; j < original.size(); ++j) {
+    for(std::size_t j = 0; j < original.size(); ++j) {
 
       if(original[j]->root_term()->get_move()) continue;
 
@@ -478,7 +478,7 @@ void srcdiff_nested::output() {
 
   construct::construct_list nest_set;
 
-  for(int i = 0; i < inner.size(); ++i) {
+  for(std::size_t i = 0; i < inner.size(); ++i) {
       nest_set.push_back(inner[i]);
   }
 
