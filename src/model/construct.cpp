@@ -64,11 +64,47 @@ construct::construct_list construct::get_descendents(std::size_t start_pos, std:
 }
 
 construct::construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out)
-    : nest_checker(std::make_shared<nest::rule_checker>(*this)), out(out), node_list(node_list), terms(), hash_value() {
+    : nest_checker(std::make_shared<nest::rule_checker>(*this)), 
+      convert_checker(std::make_shared<convert::rule_checker>(*this)), 
+      out(out), node_list(node_list), terms(), hash_value() {
 }
 
 construct::construct(const construct* parent, std::size_t& start)
-    : construct(parent, start, std::make_shared<nest::rule_checker>(*this)) {
+  : nest_checker(), convert_checker(),
+    out(parent->output()), node_list(parent->nodes()), hash_value(), parent_construct(parent) {
+
+  if(node_list.at(start)->get_type() != srcML::node_type::TEXT && node_list.at(start)->get_type() != srcML::node_type::START) return;
+
+  terms.push_back(start);
+
+  if(node_list.at(start)->is_empty() || node_list.at(start)->get_type() == srcML::node_type::TEXT) return;
+
+  ++start;
+
+  // track open tags because could have same type nested
+  int is_open = 1;
+  for(; is_open; ++start) {
+
+    // skip whitespace
+    if(node_list.at(start)->is_whitespace()) {
+      continue;
+    }
+
+    terms.push_back(start);
+
+    // opening tags
+    if(node_list.at(start)->get_type() == srcML::node_type::START
+       && !(node_list.at(start)->is_empty())) {
+      ++is_open;
+    }
+
+    // closing tags
+    else if(node_list.at(start)->get_type() == srcML::node_type::END) {
+      --is_open;
+    }
+  }
+
+  --start;
 }
 
 bool construct::operator==(const construct & that) const {
@@ -389,17 +425,12 @@ bool construct::is_match_similar(const construct & modified) const {
 
 }
 
-bool construct::is_tag_convertable(const construct & modified [[maybe_unused]]) const {
-  return false;
+bool construct::is_tag_convertable(const construct & modified) const {
+  return convert_checker->is_tag_convertable(modified);
 }
 
 bool construct::is_convertable(const construct & modified) const {
-  if(is_convertable_impl(modified)) return true;
-  return is_similar(modified);
-}
-
-bool construct::is_convertable_impl(const construct & modified [[maybe_unused]]) const {
-    return false;
+  return convert_checker->is_convertable(modified);
 }
 
 bool construct::can_nest(const construct & modified) const {

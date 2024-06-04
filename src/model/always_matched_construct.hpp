@@ -15,9 +15,8 @@ class always_matched_construct : public construct {
 
 public:
 
-    template<class nest_rule_checker>
-    always_matched_construct(const construct* parent, std::size_t& start, std::shared_ptr<nest_rule_checker> nest_checker)
-        : construct(parent, start, std::make_shared<nest_rule_checker>(*this)) {}
+    always_matched_construct(const construct* parent, std::size_t& start)
+        : construct(parent, start) {}
     virtual bool is_matchable_impl(const construct & modified) const;
 
 private:

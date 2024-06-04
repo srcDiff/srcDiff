@@ -13,9 +13,8 @@ class block : public construct {
 
 public:
 
-    template<class nest_rule_checker>
-    block(const construct* parent, std::size_t& start, std::shared_ptr<nest_rule_checker> nest_checker)
-        : construct(parent, start, std::make_shared<nest_rule_checker>(*this)) {}
+    block(const construct* parent, std::size_t& start)
+        : construct(parent, start) {}
 
     std::shared_ptr<const construct> block_content() const;
 

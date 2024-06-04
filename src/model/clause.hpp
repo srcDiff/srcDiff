@@ -15,11 +15,11 @@ class clause : public conditional {
 
 public:
 
-    template<class nest_rule_checker>
-    clause(const construct* parent, std::size_t& start, std::shared_ptr<nest_rule_checker> nest_checker)
-        : conditional(parent, start, std::make_shared<nest_rule_checker>(*this)), block_child() {}
+    clause(const construct* parent, std::size_t& start)
+        : conditional(parent, start), block_child() {
+    }
+
     virtual std::shared_ptr<const construct> block() const;
-    virtual bool is_tag_convertable(const construct & modified) const;
 
 protected:
     mutable std::optional<std::shared_ptr<const construct>> block_child;

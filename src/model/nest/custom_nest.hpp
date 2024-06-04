@@ -9,18 +9,7 @@
 
 #include "rule_checker.hpp"
 
-template<std::size_t SIZE>
-struct string_literal {
-    constexpr string_literal(const char (&s)[SIZE]) {
-        std::copy_n(s, SIZE, this->str);
-    }
-
-    operator std::string() const {
-        return str;
-    }
-
-    char str[SIZE];
-};
+#include <string_utils.hpp>
 
 namespace nest {
 

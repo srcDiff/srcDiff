@@ -13,9 +13,8 @@ class identifier_decl : public named_construct {
 
 public:
 
-    template<class nest_rule_checker>
-    identifier_decl(const construct* parent, std::size_t& start, std::shared_ptr<nest_rule_checker> nest_checker)
-        : construct(parent, start, std::make_shared<nest_rule_checker>(*this)), named_construct(parent, start, std::make_shared<nest_rule_checker>(*this)) {
+    identifier_decl(const construct* parent, std::size_t& start)
+        : construct(parent, start), named_construct(parent, start) {
     }
     virtual std::shared_ptr<const name_t> name() const;
 

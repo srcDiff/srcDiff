@@ -13,6 +13,7 @@ find_package(srcML REQUIRED)
 find_package(LibXml2 REQUIRED)
 
 add_subdirectory(nest)
+add_subdirectory(convert)
 
 add_library(model OBJECT ${MODEL_HEADERS} ${MODEL_SOURCE})
 target_link_libraries(model PRIVATE srcML::LibsrcML LibXml2::LibXml2)

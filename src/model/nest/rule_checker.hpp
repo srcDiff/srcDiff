@@ -9,12 +9,10 @@
 
 class construct;
 
-#include <unordered_set>
-#include <string>
+#include <string_utils.hpp>
 
 namespace nest {
 
-typedef std::unordered_set<std::string> string_set;
 class rule_checker {
 
 public:

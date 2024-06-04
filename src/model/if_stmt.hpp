@@ -16,9 +16,8 @@ class if_stmt : public conditional {
 
 public:
 
-    template<class nest_rule_checker>
-    if_stmt(const construct* parent, std::size_t& start, std::shared_ptr<nest_rule_checker> nest_checker)
-        : conditional(parent, start, std::make_shared<nest_rule_checker>(*this)), if_child(), else_child() {
+    if_stmt(const construct* parent, std::size_t& start)
+        : conditional(parent, start), if_child(), else_child() {
     }
 
 

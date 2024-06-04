@@ -12,6 +12,7 @@
 #include <construct_utils.hpp>
 
 #include <nest/rule_checker.hpp>
+#include <convert/rule_checker.hpp>
 
 #include <srcdiff_measure.hpp>
 
@@ -39,8 +40,8 @@ public:
 
     construct(const construct* parent, std::size_t& start);
 
-    template <typename nest_rule_checker>
-    construct(const construct* parent, std::size_t& start, std::shared_ptr<nest_rule_checker> nest_checker);
+    template <class nest_rule_checker, class convert_rule_checker>
+    void set_rule_checkers();
 
     construct(const construct & that) = delete;
     construct & operator=(construct that) = delete;
@@ -108,9 +109,8 @@ public:
     virtual bool is_matchable_impl(const construct & modified) const;
     bool is_match_similar(const construct & modified) const;
 
-    virtual bool is_tag_convertable(const construct & modified) const;
+    bool is_tag_convertable(const construct & modified) const;
     bool is_convertable(const construct & modified) const;
-    virtual bool is_convertable_impl(const construct & modified) const;
 
     // can nest -> can it be placed inside
     bool can_nest(const construct & modified) const;
@@ -121,7 +121,8 @@ public:
 
 protected:
     // Delegates rule object(s)
-    std::shared_ptr<nest::rule_checker> nest_checker;
+    std::shared_ptr<nest::rule_checker>    nest_checker;
+    std::shared_ptr<convert::rule_checker> convert_checker;
 
 protected:
     std::shared_ptr<srcdiff_output> out;

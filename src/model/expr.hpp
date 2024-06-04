@@ -13,9 +13,8 @@ class expr_t : public construct {
 
 public:
 
-    template<class nest_rule_checker>
-    expr_t(const construct* parent, std::size_t& start, std::shared_ptr<nest_rule_checker> nest_checker)
-        : construct(parent, start, std::make_shared<nest_rule_checker>(*this)) {
+    expr_t(const construct* parent, std::size_t& start)
+        : construct(parent, start) {
     }
     bool is_single_call() const;
     virtual bool check_nest(const construct & modified) const;
