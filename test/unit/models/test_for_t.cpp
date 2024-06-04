@@ -10,9 +10,9 @@
 namespace data = boost::unit_test::data;
 const std::string construct_type = "for";
 
-std::vector<std::tuple<std::string, bool>> test_cases_for_has_control = {
-	{"for (i = 0; i < 5; i++){j++;}", true},
-	{"for {j++;}", false}
+std::vector<std::tuple<std::string, std::string>> test_cases_for_control = {
+  {"for (i = 0; i < 5; i++){j++;}", "(i = 0; i < 5; i++)"},
+  //	{"for (;i < 5;) {j++;}"}
 };
 
 BOOST_DATA_TEST_CASE(for_t_control, data::make(test_cases_for_control), code, expected) {
@@ -22,10 +22,7 @@ BOOST_DATA_TEST_CASE(for_t_control, data::make(test_cases_for_control), code, ex
 	BOOST_TEST(test_data.test_construct);
 	std::shared_ptr<const for_t> for_construct = std::dynamic_pointer_cast<const for_t>(test_data.test_construct);
 	std::shared_ptr<const construct> control_child = for_construct->control();
-	bool has_control = false;
-	if (control_child) {
-		has_control = true;
-	}
-	BOOST_TEST(has_control == expected);
 
+	BOOST_TEST(control_child);
+	BOOST_TEST(control_child->to_string() == expected);
 }
