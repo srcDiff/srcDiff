@@ -11,17 +11,17 @@ namespace data = boost::unit_test::data;
 const std::string construct_type = "if";
 
 std::vector<std::tuple<std::string>> test_cases_has_real_block = {
-    {"if (y) {x=1;}"},
-    {"if (x) {y=1;}"},
-    {"if (y) {x=1;}"},
-    {"if (z) {a=0;}"},
-    {"if (z>1) {a = 0;}"},
-    {"if (z<2) {b = 1;}"},
-    {"if (a>55) {c = 2;}"},
-    {"if (f=22) {d = 3;}"},
-    {"if (z>=145) {e = 4;}"},
-    {"if (z<=1) {f = 5;}"},
-    {"if (z!=1) {g = 6;}"},
+    {"if (y) {x=1;}"     },
+    {"if (x) {y=1;}"     },
+    {"if (y) {x=1;}"     },
+    {"if (z) {a=0;}"     },
+    {"if (z>1) {a=0;}"   },
+    {"if (z<2) {b=1;}"   },
+    {"if (a>55) {c=2;}"  },
+    {"if (f=22) {d=3;}"  },
+    {"if (z>=145) {e=4;}"},
+    {"if (z<=1) {f=5;}"  },
+    {"if (z!=1) {g=6;}"  },
 };
 
 BOOST_DATA_TEST_CASE(if_t_has_real_block, data::make(test_cases_has_real_block), code) {
