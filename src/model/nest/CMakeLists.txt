@@ -9,7 +9,7 @@
 file(GLOB NEST_HEADERS *.hpp)
 file(GLOB NEST_SOURCE  *.cpp)
 
-find_package(srcML REQUIRED)
+# find_package(srcML REQUIRED)
 find_package(LibXml2 REQUIRED)
 
 add_library(nest OBJECT ${NEST_HEADERS} ${NEST_SOURCE})

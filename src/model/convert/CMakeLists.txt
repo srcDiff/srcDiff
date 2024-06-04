@@ -9,7 +9,7 @@
 file(GLOB CONVERT_HEADERS *.hpp)
 file(GLOB CONVERT_SOURCE  *.cpp)
 
-find_package(srcML REQUIRED)
+# find_package(srcML REQUIRED)
 find_package(LibXml2 REQUIRED)
 
 add_library(convert OBJECT ${CONVERT_HEADERS} ${CONVERT_SOURCE})
