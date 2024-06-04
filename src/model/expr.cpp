@@ -12,7 +12,7 @@ bool expr_t::is_single_call() const {
     return children().front()->root_term_name() == "call";
 }
 
-bool expr_t::can_nest(const construct & modified) const {
+bool expr_t::check_nest(const construct & modified) const {
 
     if(parent_term_name() == "init"     && parent_term()->get_parent()->get_parent()->get_name()               == "decl_stmt") return true;
     if(parent_term_name() == "argument" && parent_term()->get_parent()->get_parent()->get_parent()->get_name() == "decl_stmt") return true;

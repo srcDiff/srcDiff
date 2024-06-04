@@ -11,6 +11,9 @@
 #include <srcml_nodes.hpp>
 #include <construct_utils.hpp>
 
+#include <nest/rule_checker.hpp>
+#include <convert/rule_checker.hpp>
+
 #include <srcdiff_measure.hpp>
 
 #include <optional>
@@ -33,15 +36,17 @@ public:
                                    construct_filter filter = is_non_white_space,
                                    const void * context = nullptr) const;
 
-    construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>())
-        : out(out), node_list(node_list), terms(), hash_value() {}
+    construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>());
+
     construct(const construct* parent, std::size_t& start);
-    construct(const construct & that);
 
-    virtual ~construct() {};
+    template <class nest_rule_checker, class convert_rule_checker>
+    void set_rule_checkers();
 
-    void swap(construct & that);
-    construct & operator=(construct that);
+    construct(const construct & that) = delete;
+    construct & operator=(construct that) = delete;
+
+    virtual ~construct() {}
 
     bool operator==(const construct & that) const;
     bool operator!=(const construct & that) const;
@@ -89,7 +94,7 @@ public:
 
     std::shared_ptr<const construct> find_child(const std::string & name) const;
     construct_list find_descendents(std::shared_ptr<srcML::node> element) const;
-    std::shared_ptr<const construct> find_best_descendent(std::shared_ptr<const construct> match_construct) const;
+    std::shared_ptr<const construct> find_best_descendent(const construct& match_construct) const;
 
     // Differencing Rules
     const std::shared_ptr<srcdiff_measure> & measure(const construct & modified) const;
@@ -104,15 +109,20 @@ public:
     virtual bool is_matchable_impl(const construct & modified) const;
     bool is_match_similar(const construct & modified) const;
 
-    virtual bool is_tag_convertable(const construct & modified) const;
+    bool is_tag_convertable(const construct & modified) const;
     bool is_convertable(const construct & modified) const;
-    virtual bool is_convertable_impl(const construct & modified) const;
 
     // can nest -> can it be placed inside
-    virtual bool can_nest(const construct & modified) const;
+    bool can_nest(const construct & modified) const;
+    virtual bool check_nest(const construct & modified) const;
 
     // does it have a nest target that is better
     //virtual bool is_nest(const construct & modified) const;
+
+protected:
+    // Delegates rule object(s)
+    std::shared_ptr<nest::rule_checker>    nest_checker;
+    std::shared_ptr<convert::rule_checker> convert_checker;
 
 protected:
     std::shared_ptr<srcdiff_output> out;
@@ -129,5 +139,6 @@ protected:
 
 };
 
+#include <construct.txx>
 
 #endif

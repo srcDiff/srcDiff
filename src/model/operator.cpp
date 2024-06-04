@@ -20,6 +20,6 @@
 
 #include <operator.hpp>
 
-bool operator_t::can_nest(const construct & modified) const {
+bool operator_t::check_nest(const construct & modified) const {
     return is_similar(modified); 
 }

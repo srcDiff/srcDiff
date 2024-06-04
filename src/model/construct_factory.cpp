@@ -1,6 +1,6 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
-
+ *
  * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
  * This file is part of the srcDiff translator.
  */
@@ -9,7 +9,6 @@
 
 #include <construct.hpp>
 #include <named_construct.hpp>
-#include <class.hpp>
 #include <name.hpp>
 
 #include <conditional.hpp>
@@ -33,10 +32,6 @@
 
 #include <decl_stmt.hpp>
 
-#include <cast.hpp>
-
-#include <access_region.hpp>
-
 #include <always_matched_construct.hpp>
 
 #include <block.hpp>
@@ -46,134 +41,164 @@
 
 #include <srcdiff_match.hpp>
 
+#include <nest/rule_checker.hpp>
+#include <nest/custom_nest.hpp>
+#include <nest/block.hpp>
+
+#include <convert/rule_checker.hpp>
+#include <convert/custom_convert.hpp>
+#include <convert/class.hpp>
+#include <convert/conditional.hpp>
+#include <convert/else.hpp>
+#include <convert/expr_construct.hpp>
+
 #include <unordered_map>
 #include <string_view>
 
-typedef std::function<std::shared_ptr<construct>(const construct* parent,
-                                                 std::size_t & start)
-                     > factory_function;
+typedef std::function<
+          std::shared_ptr<construct>(const construct* parent, std::size_t& start)
+        > factory_function;
+
+template<class match_rule_checker   = construct, 
+         class nest_rule_checker    = nest::rule_checker,
+         class convert_rule_checker = convert::rule_checker
+        >
+factory_function generate_factory() {
+  return  [](const construct* parent, std::size_t& start) { 
+
+            std::shared_ptr<construct> product = std::make_shared<match_rule_checker>(parent, start);
+            product->set_rule_checkers<nest_rule_checker, convert_rule_checker>();
+            return product;
+          };
+}
+
+typedef nest::custom_nest<"expr", "call", "operator", "literal", "name">
+        expr_nest;
+
+typedef nest::custom_nest<"function", "constructor", "destructor",
+                          "function_decl", "constructor_decl", "destructor_decl",
+                          "decl_stmt", "typedef"
+                          "class", "struct", "union", "enum",
+                          "class_decl", "struct_decl", "union_decl", "enum_decl">
+        class_nest;
+
+typedef nest::custom_nest<"goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
+                          "if", "while", "for", "foreach", "else", "elseif", "switch", "do",
+                          "try", "catch", "finally", "synchronized",
+                          "expr", "call", "operator", "literal", "continue", "break", "goto">
+        then_nest;
+
+typedef nest::custom_nest<"goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
+                          "if_stmt", "if", "while", "for", "foreach", "switch", "do",
+                          "try", "catch", "finally", "synchronized",
+                          "expr", "call", "operator", "literal", "continue", "break", "goto">
+        else_nest;
+
+typedef nest::custom_nest<"decl_stmt", "function_decl", "function", "class", "class_decl",
+                          "struct", "struct_decl", "union", "union_decl", "typedef", "using">
+        extern_nest;
+
 typedef std::unordered_map<std::string_view, factory_function> factory_map_type;
 
-factory_function default_factory  = [](const construct* parent, std::size_t& start) { return std::make_shared<construct>(parent, start); };
-factory_function class_factory    = [](const construct* parent, std::size_t& start) { return std::make_shared<class_t>(parent, start); };
-factory_function named_factory    = [](const construct* parent, std::size_t& start) { return std::make_shared<named_construct>(parent, start); };
-factory_function name_factory     = [](const construct* parent, std::size_t& start) { return std::make_shared<name_t>(parent, start); };
-
-factory_function conditional_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<conditional>(parent, start); };
-factory_function condition_factory   = [](const construct* parent, std::size_t& start) { return std::make_shared<condition>(parent, start); };
-
-factory_function if_stmt_factory   = [](const construct* parent, std::size_t& start) { return std::make_shared<if_stmt>(parent, start); };
-factory_function if_factory        = [](const construct* parent, std::size_t& start) { return std::make_shared<if_t>(parent, start); };
-factory_function elseif_factory    = [](const construct* parent, std::size_t& start) { return std::make_shared<elseif>(parent, start); };
-factory_function else_factory      = [](const construct* parent, std::size_t& start) { return std::make_shared<else_t>(parent, start); };
-
-factory_function for_factory       = [](const construct* parent, std::size_t& start) { return std::make_shared<for_t>(parent, start); };
-
-factory_function case_factory      = [](const construct* parent, std::size_t& start) { return std::make_shared<case_t>(parent, start); };
-factory_function call_factory      = [](const construct* parent, std::size_t& start) { return std::make_shared<call>(parent, start); };
-
-factory_function identifier_decl_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<identifier_decl>(parent, start); };
-
-factory_function expr_factory           = [](const construct* parent, std::size_t& start) { return std::make_shared<expr_t>(parent, start); };
-factory_function expr_construct_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<expr_construct>(parent, start); };
-factory_function expr_stmt_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<expr_stmt>(parent, start); };
-
-factory_function decl_stmt_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<decl_stmt>(parent, start); };
-
-factory_function cast_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<cast>(parent, start); };
-
-factory_function access_region_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<access_region>(parent, start); };
-
-factory_function always_match_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<always_matched_construct>(parent, start); };
-
-factory_function block_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<block>(parent, start); };
-
-factory_function operator_factory = [](const construct* parent, std::size_t& start) { return std::make_shared<operator_t>(parent, start); };
-factory_function comment_factory =  [](const construct* parent, std::size_t& start) { return std::make_shared<comment_t>(parent, start); };
-
+factory_function default_factory  = generate_factory<construct>();
 factory_map_type factory_map = {
 
-  {"name", name_factory },
+  {"name", generate_factory<name_t, nest::custom_nest<"name">>() },
 
-  // class-type
-  {"class",  class_factory },
-  {"struct", class_factory },
-  {"union",  class_factory },
-  {"enum",   class_factory },
+  // // class-type
+  {"class",  generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"struct", generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"union",  generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"enum",   generate_factory<named_construct, class_nest, convert::class_t>() },
+
+  // access regions
+  {"public",    generate_factory<always_matched_construct, class_nest, convert::custom_convert<"public", "private", "protected">>() },
+  {"private",   generate_factory<always_matched_construct, class_nest, convert::custom_convert<"public", "private", "protected">>() },
+  {"protected", generate_factory<always_matched_construct, class_nest, convert::custom_convert<"public", "private", "protected">>() },
 
   // function-type
-  {"function",         named_factory },
-  {"function_decl",    named_factory },
-  {"constructor",      named_factory },
-  {"constructor_decl", named_factory },
-  {"destructor",       named_factory },
-  {"destructor_decl",  named_factory },
+  {"function",         generate_factory<named_construct, nest::block>() },
+  {"function_decl",    generate_factory<named_construct>() },
+  {"constructor",      generate_factory<named_construct>() },
+  {"constructor_decl", generate_factory<named_construct>() },
+  {"destructor",       generate_factory<named_construct>() },
+  {"destructor_decl",  generate_factory<named_construct>() },
 
-  // conditionals
-  {"while",     conditional_factory },
-  {"switch",    conditional_factory },
-  {"do",        conditional_factory },
-  {"condition", condition_factory },
+  // // conditionals
+  {"while",     generate_factory<conditional, nest::block, convert::conditional>() },
+  {"switch",    generate_factory<conditional, nest::rule_checker>() },
+  {"do",        generate_factory<conditional, nest::rule_checker>() },
+  {"condition", generate_factory<condition, expr_nest>() },
 
-  {"if_stmt", if_stmt_factory },
-  {"if",      if_factory },
-  {"elseif",  elseif_factory },
-  {"else",    else_factory },
+  {"if_stmt", generate_factory<if_stmt, nest::block, convert::conditional>() },
+  {"if",      generate_factory<if_t, nest::block>() },
+  {"elseif",  generate_factory<elseif, nest::block, convert::else_t>() },
+  {"else",    generate_factory<else_t, else_nest, convert::else_t>() },
 
-  {"for",     for_factory },
-  {"foreach", for_factory },
+  {"for",     generate_factory<for_t, nest::block, convert::conditional>() },
+  {"foreach", generate_factory<for_t, nest::block, convert::conditional>() },
 
-  {"case", case_factory },
-  {"call", call_factory },
+  {"case", generate_factory<case_t>() },
 
-  {"decl",      named_factory },
-  {"parameter", identifier_decl_factory },
-  {"param",     identifier_decl_factory },
+  {"call",          generate_factory<call, expr_nest>() },
+  {"argument_list", generate_factory<always_matched_construct, expr_nest>() },
+  {"argument",      generate_factory<always_matched_construct, expr_nest>() },
+  {"expr",          generate_factory<expr_t, expr_nest>() },
 
-  {"expr",      expr_factory },
-  {"expr_stmt", expr_stmt_factory },
-  {"return",    expr_construct_factory },
+  {"decl",      generate_factory<named_construct, nest::custom_nest<"expr">>() },
+  {"parameter", generate_factory<identifier_decl>() },
+  {"param",     generate_factory<identifier_decl>() },
 
-  {"decl_stmt", decl_stmt_factory },
+  {"expr_stmt", generate_factory<expr_stmt, nest::rule_checker, convert::expr_construct>() },
+  {"return",    generate_factory<expr_construct, nest::rule_checker, convert::expr_construct>() },
 
-  {"cast", cast_factory },
+  {"decl_stmt", generate_factory<decl_stmt, nest::rule_checker, convert::expr_construct>() },
 
-  {"type",          always_match_factory },
-  {"then",          always_match_factory },
-  {"control",       always_match_factory },
-  {"init",          always_match_factory },
-  {"default",       always_match_factory },
-  {"argument",      always_match_factory },
-  {"range",         always_match_factory },
-  {"block_content", always_match_factory },
-  {"signal",        always_match_factory },
+  {"cast", generate_factory<construct, nest::rule_checker, convert::custom_convert<"cast">>() },
 
-  {"literal",  always_match_factory },
-  {"modifier", always_match_factory },
+  {"type",          generate_factory<always_matched_construct>() },
+  {"then",          generate_factory<always_matched_construct, then_nest>() },
+  {"control",       generate_factory<always_matched_construct, nest::custom_nest<"condition", "comment">>() },
+  {"init",          generate_factory<always_matched_construct, nest::custom_nest<"expr">>() },
+  {"default",       generate_factory<always_matched_construct>() },
+  {"range",         generate_factory<always_matched_construct>() },
+  {"signal",        generate_factory<always_matched_construct>() },
 
-  {"number", always_match_factory },
-  {"file",   always_match_factory },
+  {"literal",  generate_factory<always_matched_construct>() },
+  {"modifier", generate_factory<always_matched_construct>() },
+
+  {"number", generate_factory<always_matched_construct>() },
+  {"file",   generate_factory<always_matched_construct>() },
      
-  {"parameter_list",   always_match_factory },
-  {"krparameter_list", always_match_factory },
-  {"argument_list",    always_match_factory },
-  {"attribute_list",   always_match_factory },
-  {"association_list", always_match_factory },
-  {"protocol_list",    always_match_factory },
+  {"parameter_list",   generate_factory<always_matched_construct>() },
+  {"krparameter_list", generate_factory<always_matched_construct>() },
+  {"attribute_list",   generate_factory<always_matched_construct>() },
+  {"association_list", generate_factory<always_matched_construct>() },
+  {"protocol_list",    generate_factory<always_matched_construct>() },
 
-  {"super_list",       always_match_factory },
-  {"member_init_list", always_match_factory },
-  {"member_list",      always_match_factory },
-  {"super_list",       always_match_factory },
+  {"super_list",       generate_factory<always_matched_construct>() },
+  {"member_init_list", generate_factory<always_matched_construct>() },
+  {"member_list",      generate_factory<always_matched_construct>() },
+  {"super_list",       generate_factory<always_matched_construct>() },
 
-  {"public",    access_region_factory },
-  {"private",   access_region_factory },
-  {"protected", access_region_factory },
+  {"block", generate_factory<block, nest::block>() },
+  {"block_content", generate_factory<always_matched_construct, nest::block>() },
 
-  {"block", block_factory },
+  {"operator", generate_factory<operator_t>() },
+  {"comment",  generate_factory<comment_t>() },
 
-  {"operator", operator_factory },
-  {"comment",  comment_factory },
+  // nest only
+  {"try",      generate_factory<construct, nest::block>() },
+  {"catch",    generate_factory<construct, nest::block>() },
+  {"finally",  generate_factory<construct, nest::block>() },
+
+  {"synchronized", generate_factory<construct, nest::block>() },
+
+  {"static", generate_factory<construct, nest::custom_nest<"decl_stmt">>() },
+
+  {"ternary", generate_factory<construct, nest::custom_nest<"ternary", "call", "operator", "literal", "expr", "name">>() },
+
+  {"extern", generate_factory<construct, extern_nest>() },
 
 };
 
