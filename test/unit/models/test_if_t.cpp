@@ -39,16 +39,18 @@ BOOST_DATA_TEST_CASE(if_t_has_real_block, data::make(test_cases_has_real_block),
 
 std::vector<std::tuple<std::string, std::string>> test_cases_is_block_matchable = {
        // Original            // Modified
-      {"if (x) {y=1;}", "if (y) {x=1;}"},
+      {"if (x) {y=1;}", "if (y) {x=1;}"      },
        // Original            // Modified
-      {"if (y) {x=1;}", "if (x) {y=1;}"},
+      {"if (y) {x=1;}", "if (x) {y=1;}"      },
       // Original            // Modified
-      {"if (z=1) {x=1;}", "if (x>=1) {z=1;}"},   
-      {"if (z>1) {x=1;}", "if (x>1) {z=1;}"},
-      {"if (z<1) {x=1;}", "if (x<1) {z=1;}"},
+      {"if (z=1) {x=1;}", "if (x>=1) {z=1;}" },   
+      {"if (z>1) {x=1;}", "if (x>1) {z=1;}"  },
+      {"if (z<1) {x=1;}", "if (x<1) {z=1;}"  },
       {"if (z<=1) {x=1;}", "if (x<=1) {z=1;}"},
       {"if (z>=1) {x=1;}", "if (x>=1) {z=1;}"},
-      {"if (z!=1) {x=1;}", "if (x!=1) {z=1;}"}
+      {"if (z!=1) {x=1;}", "if (x!=1) {z=1;}"},
+      {"if (1) {a;}"     , "if (1) a;"       },
+
 };
 
 BOOST_DATA_TEST_CASE(if_t_is_block_matchable, data::make(test_cases_is_block_matchable), code1, code2) {
@@ -82,7 +84,8 @@ std::vector<std::tuple<std::string, std::string, bool>> test_cases_is_matchable_
   {"if (x=1) {y!=1;}", "if (x=1) {y!=1;}", true},      
   {"if (x>=1) {y=1;}", "if (x=1) {y>=1;}", false},        
   {"if (x>=1) {y=1;}", "if (x>=1) {y=1;}", true},        
-  {"if (x<1) {y=1;}", "if (x=1) {y<1;}", false}
+  {"if (x<1) {y=1;}", "if (x=1) {y<1;}", false},
+  {"if (1) {a;}"     , "if (1) a;"       , true},
 };
 
 BOOST_DATA_TEST_CASE(if_t_matchable_impl, data::make(test_cases_is_matchable_impl), code1, code2, expected_matchable) {
