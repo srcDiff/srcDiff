@@ -13,8 +13,6 @@
 #include <srcdiff_match.hpp>
 #include <type_query.hpp>
 
-#include <unordered_map>
-
 constexpr int MOVE = int(SES_INSERT) + 1;
 
 construct::construct_list_view safe_subspan(construct::construct_list_view view, std::size_t start, std::size_t end) {

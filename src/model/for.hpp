@@ -1,10 +1,9 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
-
- * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ *
+ * Copyright (C) 2023-2024  SDML (www.srcDiff.org)
  * This file is part of the srcDiff translator.
  */
-
 #ifndef INCLUDED_FOR_T_HPP
 #define INCLUDED_FOR_T_HPP
 
@@ -17,7 +16,8 @@ class for_t : public conditional {
 public:
 
     for_t(const construct* parent, std::size_t& start)
-        : conditional(parent, start), control_child() {}
+        : conditional(parent, start), control_child() {
+    }
 
     std::shared_ptr<const construct> control() const;
     virtual std::shared_ptr<const construct> condition() const;

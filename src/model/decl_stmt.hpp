@@ -1,10 +1,9 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
-
- * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ *
+ * Copyright (C) 2023-2024  SDML (www.srcDiff.org)
  * This file is part of the srcDiff translator.
  */
-
 #ifndef INCLUDED_DECL_STMT_HPP
 #define INCLUDED_DECL_STMT_HPP
 
@@ -14,8 +13,10 @@
 class decl_stmt : public identifier_decl, public expr_construct {
 
 public:
+
     decl_stmt(const construct* parent, std::size_t& start)
-        : construct(parent, start), identifier_decl(parent, start), expr_construct(parent, start) {}
+        : construct(parent, start), identifier_decl(parent, start), expr_construct(parent, start) {
+    }
 
     virtual std::shared_ptr<const expr_t> expr(const expr_construct & that) const;
 };

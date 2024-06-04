@@ -7,9 +7,12 @@
 #include <block.hpp>
 
 #include <srcdiff_match.hpp>
+
+#include <nest/block.hpp>
 #include <srcdiff_nested.hpp>
 
 #include <srcdiff_syntax_measure.hpp>
+#include <construct_factory.hpp>
 
 std::shared_ptr<const construct> block::block_content() const {
     if(block_content_child) return *block_content_child;
@@ -55,10 +58,10 @@ bool block::is_matchable_impl(const construct & modified) const {
 	if(is_pseudo_original) {
 		original_stmts = block_content()->children();
 		std::size_t start_pos = modified_block.start_position();
-		modified_stmts.push_back(std::make_shared<block>(modified_block.parent(), start_pos));
+		modified_stmts.push_back(create_construct(modified_block.parent(), start_pos));
 	} else {
 		std::size_t start_pos = start_position();
-		original_stmts.push_back(std::make_shared<block>(parent(), start_pos));
+		original_stmts.push_back(create_construct(parent(), start_pos));
 		modified_stmts = modified_block.block_content()->children();
 		match_operation = SES_DELETE;
 
