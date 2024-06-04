@@ -18,7 +18,6 @@
 #include <if.hpp>
 
 #include <cstring>
-#include <map>
 #include <list>
 #include <algorithm>
 #include <iterator>
