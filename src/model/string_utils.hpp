@@ -9,6 +9,7 @@
 #define INCLUDED_STRING_UTILS_HPP
 
 #include <unordered_set>
+#include<algorithm>
 #include <string>
 
 typedef std::unordered_set<std::string> string_set;
