@@ -45,6 +45,9 @@ public:
               std::shared_ptr<nest_rule_checker>    nest_checker,
               std::shared_ptr<convert_rule_checker> convert_checker);
 
+    template <class nest_rule_checker, class convert_rule_checker>
+    void set_rule_checkers();
+
     construct(const construct & that) = delete;
     construct & operator=(construct that) = delete;
 

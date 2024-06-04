@@ -65,9 +65,12 @@ template<class match_rule_checker   = construct,
         >
 factory_function generate_factory() {
   return  [](const construct* parent, std::size_t& start) { 
-            return std::make_shared<match_rule_checker>(parent, start, 
+
+            std::shared_ptr<construct> product = std::make_shared<match_rule_checker>(parent, start, 
                                                         std::shared_ptr<nest_rule_checker>(),
                                                         std::shared_ptr<convert_rule_checker>());
+            product->set_rule_checkers<nest_rule_checker, convert_rule_checker>();
+            return product;
           };
 }
 

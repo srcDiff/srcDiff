@@ -47,3 +47,9 @@ construct::construct(const construct* parent, std::size_t& start,
 
   --start;
 }
+
+template <class nest_rule_checker, class convert_rule_checker>
+void construct::set_rule_checkers() {
+  nest_checker = std::make_shared<nest_rule_checker>(*this);
+  convert_checker = std::make_shared<convert_rule_checker>(*this);
+}
