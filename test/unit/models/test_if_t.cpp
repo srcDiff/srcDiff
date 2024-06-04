@@ -68,48 +68,66 @@ BOOST_DATA_TEST_CASE(if_t_is_block_matchable, data::make(test_cases_is_block_mat
 }
 
 
-std::vector<std::tuple<std::string, std::string, bool>> test_cases_is_matchable_impl = {
-   // Original      // Modified     // Expected matchable return
-  {"if (x) {y=1;}", "if (x) {y=1;}", true},
-  {"if (y) {x=1;}", "if (x) {x=2;}", false},
-  {"if (z) {a=1;}", "if (z) {a=1;}", true},
-   // Original         // Modified
-  {"if (x>1) {y=1;}", "if (x>1) {y=1;}", true},
-  {"if (x>=1) {y=1;}", "if (x>=1) {y=1;}", true},  
-  {"if (y<1) {y=1;}", "if (y<1) {y=1;}", true},
-  {"if (z<=1) {y=1;}", "if (x<=1) {y=1;}", true},    
-  {"if (x=1) {y=1;}", "if (x=1) {y=1;}", true},    
-  {"if (x!=1) {y=1;}", "if (x!=1) {y=1;}", true},   
-  {"if (x!=1) {y=1;}", "if (x=1) {y!=1;}", false},        
-  {"if (x=1) {y!=1;}", "if (x=1) {y!=1;}", true},      
-  {"if (x>=1) {y=1;}", "if (x=1) {y>=1;}", false},        
-  {"if (x>=1) {y=1;}", "if (x>=1) {y=1;}", true},        
-  {"if (x<1) {y=1;}", "if (x=1) {y<1;}", false},
-  {"if (1) {a;}"     , "if (1) a;"       , true},
+std::vector<std::tuple<std::string, std::string>> test_cases_is_matchable_impl_true = {
+   // Original          // Modified     
+  {"if (x) {y=1;}"    , "if (x) {y=1;}"      },
+  {"if (z) {a=1;}"    , "if (z) {a=1;}"      },
+  {"if (x>1) {y=1;}"  , "if (x>1) {y=1;}"    },
+  {"if (x>=1) {y=1;}" , "if (x>=1) {y=1;}"   },  
+  {"if (y<1) {y=1;}"  , "if (y<1) {y=1;}"    },
+  {"if (z<=1) {y=1;}" , "if (x<=1) {y=1;}"   },    
+  {"if (x=1) {y=1;}"  , "if (x=1) {y=1;}"    },    
+  {"if (x!=1) {y=1;}" , "if (x!=1) {y=1;}"   },
+  {"if (x=1) {y!=1;}" , "if (x=1) {y!=1;}"   },             
+  {"if (x>=1) {y=1;}" , "if (x>=1) {y=1;}"   },          
+  {"if (1) {a;}"      , "if (1) a;"          },
 };
 
-BOOST_DATA_TEST_CASE(if_t_matchable_impl, data::make(test_cases_is_matchable_impl), code1, code2, expected_matchable) {
-  construct_test_data original_data = create_test_construct(code1, construct_type);
-  construct_test_data modified_data = create_test_construct(code2, construct_type);
-  
-  std::shared_ptr<const if_t> if_construct_original = std::dynamic_pointer_cast<const if_t>(original_data.test_construct);
-  std::shared_ptr<const if_t> if_construct_modified = std::dynamic_pointer_cast<const if_t>(modified_data.test_construct);
+BOOST_DATA_TEST_CASE(if_t_matchable_impl_true, data::make(test_cases_is_matchable_impl_true), code1, code2) {
+    construct_test_data original_data = create_test_construct(code1, construct_type);
+    construct_test_data modified_data = create_test_construct(code2, construct_type);
 
-  
-  /* Debug
-  BOOST_TEST_MESSAGE("Original Construct: " << *if_construct_original << (if_construct_original ? " !!!!Created!!!! " : " NULL "));
-  BOOST_TEST_MESSAGE("Modified Construct: " << *if_construct_modified << (if_construct_original ? " !!!!Created!!!! " : " NULL "));
-  //*/
-  bool matchable = if_construct_original->is_matchable_impl(*if_construct_modified);
+    std::shared_ptr<const if_t> if_construct_original = std::dynamic_pointer_cast<const if_t>(original_data.test_construct);
+    std::shared_ptr<const if_t> if_construct_modified = std::dynamic_pointer_cast<const if_t>(modified_data.test_construct);
 
-  /* More debug
-  BOOST_TEST_MESSAGE("is_matchable_impl result: " << matchable);
-  //*/
 
-  
-  BOOST_TEST(matchable == expected_matchable);
+    /* Debug
+    BOOST_TEST_MESSAGE("Original Construct: " << *if_construct_original << (if_construct_original ? " !!!!Created!!!! " : " NULL "));
+    BOOST_TEST_MESSAGE("Modified Construct: " << *if_construct_modified << (if_construct_original ? " !!!!Created!!!! " : " NULL "));
+    //*/
+
+    /* More debug
+    BOOST_TEST_MESSAGE("is_matchable_impl result: " << matchable);
+    //*/
+
+    BOOST_TEST(if_construct_original->is_matchable_impl(*if_construct_modified));
 }
+std::vector<std::tuple<std::string, std::string>> test_cases_is_matchable_impl_false = {
+    {"if (y) {x=1;}"   , "if (x) {x=2;}"   },
+    {"if (x!=1) {y=1;}", "if (x=1) {y!=1;}"},
+    {"if (x>=1) {y=1;}", "if (x=1) {y>=1;}"},
+    {"if (x<1) {y=1;}" , "if (x=1) {y<1;}" },
+    {"if (1) a;"       , "if (1) {a;}"     }
+};
 
+BOOST_DATA_TEST_CASE(if_t_matchable_impl_false, data::make(test_cases_is_matchable_impl_false), code1, code2) {
+    construct_test_data original_data = create_test_construct(code1, construct_type);
+    construct_test_data modified_data = create_test_construct(code2, construct_type);
+
+    std::shared_ptr<const if_t> if_construct_original = std::dynamic_pointer_cast<const if_t>(original_data.test_construct);
+    std::shared_ptr<const if_t> if_construct_modified = std::dynamic_pointer_cast<const if_t>(modified_data.test_construct);
+
+
+    /* Debug
+    BOOST_TEST_MESSAGE("Original Construct: " << *if_construct_original << (if_construct_original ? " !!!!Created!!!! " : " NULL "));
+    BOOST_TEST_MESSAGE("Modified Construct: " << *if_construct_modified << (if_construct_original ? " !!!!Created!!!! " : " NULL "));
+    //*/
+
+    /* More debug
+    BOOST_TEST_MESSAGE("is_matchable_impl result: " << matchable);
+    //*/
+    BOOST_TEST(!(if_construct_original->is_matchable_impl(*if_construct_modified)));
+}
 
 
 
