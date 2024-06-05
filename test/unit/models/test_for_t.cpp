@@ -33,7 +33,8 @@ std::vector<std::tuple<std::string, std::string>> test_cases_for_condition = {
 	{"for (i = 0; i < 5; i++){j++;}", "i < 5;"},
 	{"for (; i < 5;){j++;}"         , "i < 5;"},
 	{"for (; i < 5;)"               , "i < 5;"},
-	{"for (){}"                     , "\0"    }
+	{"for (;;){}"                   , ";"     },
+
 };
 
 BOOST_DATA_TEST_CASE(for_t_condition, data::make(test_cases_for_condition), code, expected) {
@@ -48,4 +49,27 @@ BOOST_DATA_TEST_CASE(for_t_condition, data::make(test_cases_for_condition), code
 
 	BOOST_TEST(condition_child);
 	BOOST_TEST(condition_child->to_string() == expected);
+}
+
+std::vector<std::tuple<std::string, std::string>> test_cases_for_matchable_impl_true = {
+  {"for (i = 0; i < 5; i++){j++}"   , "for (i = 0; i < 5; i++)"},
+  {"for (i = 5; i > 0; i--){j++}"   , "for (i = 5; i > 0; i--)"},
+  {"for (; i < 5; i++){j++}"        , "for (; i < 5; i++)"     },
+  {"for (i = 5; i > 5;){j++}"       , "for (i = 5; i > 5;)"    } 
+};
+
+BOOST_DATA_TEST_CASE(for_t_control_matchable_true, data::make(test_cases_for_matchable_impl_true), code1 , expected) {
+  construct_test_data original_data = create_test_construct(code1, construct_type);
+  BOOST_TEST(original_data.test_construct);
+
+  construct_test_data modified_data = create_test_construct(expected, construct_type);
+  BOOST_TEST(modified_data.test_construct);
+
+  std::shared_ptr<const for_t> for_construct = std::dynamic_pointer_cast<const for_t>(original_data.test_construct);
+  std::shared_ptr<const for_t> modified_for_construct = std::dynamic_pointer_cast<const for_t>(modified_data.test_construct);
+
+  std::shared_ptr<const construct> original_for_control = for_construct->control();
+  std::shared_ptr<const construct> modified_for_control = modified_for_construct->control();
+
+  BOOST_TEST(original_for_control->is_matchable_impl(*modified_for_control));
 }
