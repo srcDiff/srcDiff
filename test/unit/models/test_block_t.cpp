@@ -21,6 +21,9 @@ std::vector<std::tuple<std::string>> test_cases_block_content = {
     {"{a=3;{a=5;{a=6;}}}"}
 };
 
+// TODO: add expected output
+// test here
+
 std::vector<std::tuple<std::string>> test_cases_is_syntax_similar_impl = {
     {"int a = 1;", "int a = 1;"}, //identical
     {"int a = 1;", "int b = 1;"}, //similar
@@ -39,7 +42,10 @@ std::vector<std::tuple<std::string>> test_cases_is_syntax_similar_impl = {
 
 std::vector<std::tuple<std::string>> test_cases_is_matchable_imple = {
     //psuedo_original == psuedo_modified
-    {"",""}, 
+    {"if(true) return false;","if(false) {return true;}"}, 
+    {"if(true) {return false;}","if(true) return false;"},
+    {"if(false) {return true;}","if(true) {return false;}"},
+    {"if(true) return true;","if(false) return false;"},
     //similarity > 0/similarlity < 0
     {"",""},
     {"",""},
