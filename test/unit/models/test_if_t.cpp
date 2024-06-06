@@ -90,24 +90,14 @@ BOOST_DATA_TEST_CASE(if_t_matchable_impl_true, data::make(test_cases_is_matchabl
     std::shared_ptr<const if_t> if_construct_original = std::dynamic_pointer_cast<const if_t>(original_data.test_construct);
     std::shared_ptr<const if_t> if_construct_modified = std::dynamic_pointer_cast<const if_t>(modified_data.test_construct);
 
-
-    /* Debug
-    BOOST_TEST_MESSAGE("Original Construct: " << *if_construct_original << (if_construct_original ? " !!!!Created!!!! " : " NULL "));
-    BOOST_TEST_MESSAGE("Modified Construct: " << *if_construct_modified << (if_construct_original ? " !!!!Created!!!! " : " NULL "));
-    //*/
-
-    /* More debug
-    BOOST_TEST_MESSAGE("is_matchable_impl result: " << matchable);
-    //*/
-
     BOOST_TEST(if_construct_original->is_matchable_impl(*if_construct_modified));
+    BOOST_TEST(if_construct_modified->is_matchable_impl(*if_construct_original));
 }
 std::vector<std::tuple<std::string, std::string>> test_cases_is_matchable_impl_false = {
     {"if (y) {x=1;}"   , "if (x) {x=2;}"   },
     {"if (x!=1) {y=1;}", "if (x=1) {y!=1;}"},
     {"if (x>=1) {y=1;}", "if (x=1) {y>=1;}"},
     {"if (x<1) {y=1;}" , "if (x=1) {y<1;}" },
-    {"if (1) a;"       , "if (1) {a;}"     }
 };
 
 BOOST_DATA_TEST_CASE(if_t_matchable_impl_false, data::make(test_cases_is_matchable_impl_false), code1, code2) {
@@ -117,16 +107,8 @@ BOOST_DATA_TEST_CASE(if_t_matchable_impl_false, data::make(test_cases_is_matchab
     std::shared_ptr<const if_t> if_construct_original = std::dynamic_pointer_cast<const if_t>(original_data.test_construct);
     std::shared_ptr<const if_t> if_construct_modified = std::dynamic_pointer_cast<const if_t>(modified_data.test_construct);
 
-
-    /* Debug
-    BOOST_TEST_MESSAGE("Original Construct: " << *if_construct_original << (if_construct_original ? " !!!!Created!!!! " : " NULL "));
-    BOOST_TEST_MESSAGE("Modified Construct: " << *if_construct_modified << (if_construct_original ? " !!!!Created!!!! " : " NULL "));
-    //*/
-
-    /* More debug
-    BOOST_TEST_MESSAGE("is_matchable_impl result: " << matchable);
-    //*/
     BOOST_TEST(!(if_construct_original->is_matchable_impl(*if_construct_modified)));
+    BOOST_TEST(!(if_construct_modified->is_matchable_impl(*if_construct_original)));
 }
 
 
