@@ -119,19 +119,18 @@ public:
 
     bool can_refine_difference(const construct & modified) const;
 
+    // Matchable Rules
     bool is_matchable(const construct & modified) const;
     virtual bool is_matchable_impl(const construct & modified) const;
     bool is_match_similar(const construct & modified) const;
 
+    // Convert Rules
     bool is_tag_convertable(const construct & modified) const;
     bool is_convertable(const construct & modified) const;
 
-    // can nest -> can it be placed inside
+    // Nest Rules
     bool can_nest(const construct & modified) const;
     virtual bool check_nest(const construct & modified) const;
-
-    // does it have a nest target that is better
-    //virtual bool is_nest(const construct & modified) const;
 
 protected:
     // Delegates rule object(s)
