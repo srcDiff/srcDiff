@@ -64,8 +64,7 @@ construct::construct_list construct::get_descendents(std::size_t start_pos, std:
 }
 
 construct::construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out)
-    : nest_checker(std::make_shared<nest::rule_checker>(*this)), 
-      convert_checker(std::make_shared<convert::rule_checker>(*this)), 
+    : nest_checker(), convert_checker(), 
       out(out), node_list(node_list), terms(), hash_value() {
 }
 
