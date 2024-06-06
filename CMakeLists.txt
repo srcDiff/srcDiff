@@ -5,9 +5,6 @@
 #
 #  This file is part of the srcDiff translator.
 
-find_package(LibXml2 REQUIRED)
-include_directories(${LIBXML2_INCLUDE_DIR})
-
 cmake_minimum_required(VERSION 3.28)
 
 project(srcDiff)
