@@ -64,13 +64,13 @@ construct::construct_list construct::get_descendents(std::size_t start_pos, std:
 }
 
 construct::construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out)
-    : nest_checker(), convert_checker(), 
-      out(out), node_list(node_list), terms(), hash_value() {
+    : out(out), node_list(node_list), terms(), hash_value(),
+      nest_checker(), convert_checker() {
 }
 
 construct::construct(const construct* parent, std::size_t& start)
-  : nest_checker(), convert_checker(),
-    out(parent->output()), node_list(parent->nodes()), hash_value(), parent_construct(parent) {
+  : out(parent->output()), node_list(parent->nodes()), hash_value(), parent_construct(parent),
+    nest_checker(), convert_checker() {
 
   if(node_list.at(start)->get_type() != srcML::node_type::TEXT && node_list.at(start)->get_type() != srcML::node_type::START) return;
 

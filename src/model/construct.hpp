@@ -96,7 +96,21 @@ public:
     construct_list find_descendents(std::shared_ptr<srcML::node> element) const;
     std::shared_ptr<const construct> find_best_descendent(const construct& match_construct) const;
 
-    // Differencing Rules
+ protected:
+    std::shared_ptr<srcdiff_output> out;
+
+    const srcml_nodes & node_list;
+
+    std::vector<int> terms;
+    mutable std::optional<std::size_t> hash_value;
+
+    const construct* parent_construct;
+    mutable std::optional<construct_list> child_constructs;
+
+    mutable std::unordered_map<int, std::shared_ptr<srcdiff_measure>> measures;
+
+public:
+   // Differencing Rules
     const std::shared_ptr<srcdiff_measure> & measure(const construct & modified) const;
     bool is_similar(const construct & modified) const;
     bool is_text_similar(const construct & modified) const;
@@ -123,19 +137,6 @@ protected:
     // Delegates rule object(s)
     std::shared_ptr<nest::rule_checker>    nest_checker;
     std::shared_ptr<convert::rule_checker> convert_checker;
-
-protected:
-    std::shared_ptr<srcdiff_output> out;
-
-    const srcml_nodes & node_list;
-
-    std::vector<int> terms;
-    mutable std::optional<std::size_t> hash_value;
-
-    const construct* parent_construct;
-    mutable std::optional<construct_list> child_constructs;
-
-    mutable std::unordered_map<int, std::shared_ptr<srcdiff_measure>> measures;
 
 };
 
