@@ -437,5 +437,5 @@ bool construct::can_nest(const construct & modified) const {
 }
 
 bool construct::check_nest(const construct & modified) const {
-  return can_refine_difference(modified);
+  return nest_checker->check_nest(modified);
 }

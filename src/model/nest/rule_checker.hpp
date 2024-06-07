@@ -19,6 +19,8 @@ public:
 
     rule_checker(const construct& client, const string_set& nestable_constructs = {});
 
+    virtual bool check_nest(const construct & modified) const;
+
     bool can_nest(const construct& modified) const;
     bool can_nest_same(const construct& modified) const;
 

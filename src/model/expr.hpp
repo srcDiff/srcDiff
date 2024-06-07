@@ -17,7 +17,6 @@ public:
         : construct(parent, start) {
     }
     bool is_single_call() const;
-    virtual bool check_nest(const construct & modified) const;
     virtual bool is_matchable_impl(const construct & modified) const;
 };
 
