@@ -1,3 +1,12 @@
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file test_for_t.cpp
+ *
+ * @copyright Copyright (C) 2024-2024 SDML (www.srcDiff.org)
+ *
+ * This file is part of the srcDiff Infrastructure.
+ */
+
 #define BOOST_TEST_MODULE for_t_Tests
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
@@ -57,6 +66,7 @@ std::vector<std::tuple<std::string, std::string>> test_cases_for_matchable_impl_
     {"for (; i < 5; i++){j++}"        , "for (; i < 5; i++);"     },
     {"for (i = 5; i > 5;){j++}"       , "for (i = 5; i > 5;);"    },
     {"for (; i < 5;){}"               , "for(; i < 5;);"          },
+    {"for (i : j){}"                  , "for (i : j);"            },
 };
 
 BOOST_DATA_TEST_CASE(for_t_control_matchable_true, data::make(test_cases_for_matchable_impl_true), original , modified) {
@@ -81,7 +91,6 @@ std::vector<std::tuple<std::string, std::string>> test_cases_for_matchable_impl_
     {"for (; i < 5;){}"              , "for(; i > 5; i++){k++}"  },
     {"for (j = 0;;){}"               , "for(i = 0;;j++){i++}"    },
     {"for (j = 0; j = 5;){}"         , "for(; l < 3; j++){l++}"  }
-
 };
 
 BOOST_DATA_TEST_CASE(for_t_control_matchable_false, data::make(test_cases_for_matchable_impl_false), original, modified) {
@@ -97,4 +106,3 @@ BOOST_DATA_TEST_CASE(for_t_control_matchable_false, data::make(test_cases_for_ma
     BOOST_TEST(!original_for_construct->is_matchable_impl(*modified_for_construct));
     BOOST_TEST(!modified_for_construct->is_matchable_impl(*original_for_construct));
 }
-

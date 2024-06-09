@@ -1,3 +1,12 @@
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file test_if_t.cpp
+ *
+ * @copyright Copyright (C) 2024-2024 SDML (www.srcDiff.org)
+ *
+ * This file is part of the srcDiff Infrastructure.
+ */
+
 #define BOOST_TEST_MODULE if_t_Tests
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
@@ -6,7 +15,7 @@
 
 #include <if.hpp>
 
-// Define test data 
+// Define test data
 namespace data = boost::unit_test::data;
 const std::string construct_type = "if";
 
@@ -29,7 +38,7 @@ BOOST_DATA_TEST_CASE(if_t_has_real_block, data::make(test_cases_has_real_block),
     construct_test_data test_data = create_test_construct(code, construct_type);
 
 
-    
+
     BOOST_TEST(test_data.test_construct);
     std::shared_ptr<const if_t> if_construct = std::dynamic_pointer_cast<const if_t>(test_data.test_construct);
     //BOOST_TEST_MESSAGE("DEREFERENCED IF_CONSTRUCT: " << *if_construct);
@@ -43,7 +52,7 @@ std::vector<std::tuple<std::string, std::string>> test_cases_is_block_matchable 
        // Original            // Modified
       {"if (y) {x=1;}", "if (x) {y=1;}"      },
       // Original            // Modified
-      {"if (z=1) {x=1;}", "if (x>=1) {z=1;}" },   
+      {"if (z=1) {x=1;}", "if (x>=1) {z=1;}" },
       {"if (z>1) {x=1;}", "if (x>1) {z=1;}"  },
       {"if (z<1) {x=1;}", "if (x<1) {z=1;}"  },
       {"if (z<=1) {x=1;}", "if (x<=1) {z=1;}"},
@@ -69,17 +78,17 @@ BOOST_DATA_TEST_CASE(if_t_is_block_matchable, data::make(test_cases_is_block_mat
 
 
 std::vector<std::tuple<std::string, std::string>> test_cases_is_matchable_impl_true = {
-   // Original          // Modified     
+   // Original          // Modified
   {"if (x) {y=1;}"    , "if (x) {y=1;}"      },
   {"if (z) {a=1;}"    , "if (z) {a=1;}"      },
   {"if (x>1) {y=1;}"  , "if (x>1) {y=1;}"    },
-  {"if (x>=1) {y=1;}" , "if (x>=1) {y=1;}"   },  
+  {"if (x>=1) {y=1;}" , "if (x>=1) {y=1;}"   },
   {"if (y<1) {y=1;}"  , "if (y<1) {y=1;}"    },
-  {"if (z<=1) {y=1;}" , "if (x<=1) {y=1;}"   },    
-  {"if (x=1) {y=1;}"  , "if (x=1) {y=1;}"    },    
+  {"if (z<=1) {y=1;}" , "if (x<=1) {y=1;}"   },
+  {"if (x=1) {y=1;}"  , "if (x=1) {y=1;}"    },
   {"if (x!=1) {y=1;}" , "if (x!=1) {y=1;}"   },
-  {"if (x=1) {y!=1;}" , "if (x=1) {y!=1;}"   },             
-  {"if (x>=1) {y=1;}" , "if (x>=1) {y=1;}"   },          
+  {"if (x=1) {y!=1;}" , "if (x=1) {y!=1;}"   },
+  {"if (x>=1) {y=1;}" , "if (x>=1) {y=1;}"   },
   {"if (1) {a;}"      , "if (1) a;"          },
 };
 
