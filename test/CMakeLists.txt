@@ -21,6 +21,7 @@ configure_file(${TEST_SUITE} ${CMAKE_CURRENT_BINARY_DIR}/${TEST_SUITE} COPYONLY)
 
 file(GLOB TEST_FILES ${CMAKE_SOURCE_DIR}/test/suite/*.xml)
 file(MAKE_DIRECTORY suite/)
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/reports/)
 foreach(PATH IN ITEMS ${TEST_FILES})
     get_filename_component(FILENAME ${PATH} NAME)
     configure_file(suite/${FILENAME} ${CMAKE_CURRENT_BINARY_DIR}/suite/${FILENAME} NEWLINE_STYLE LF)
