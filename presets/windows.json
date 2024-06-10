@@ -1,0 +1,63 @@
+{
+  "version": 8,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 28,
+    "patch": 0
+  },
+  "include": [
+    "base.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "windows-base",
+      "hidden": true,
+      "inherits": ["vcpkg"],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "windows-with-java",
+        "STATIC_LIB_NAME": "srcdiff_static"
+      }
+    },
+    {
+      "name": "windows",
+      "displayName": "Windows (with Clang, Ninja, and vcpkg)",
+      "description": "Default build options for Windows",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
+      "inherits": ["clang", "windows-base"],
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_CXX_FLAGS": "-DWIN32 -D_MSC_BUILD",
+        "CMAKE_C_FLAGS": "-DWIN32 -D_MSC_BUILD"
+      }
+    },
+    {
+      "name": "windows-release",
+      "displayName": "Windows Release (with Clang, Ninja, and vcpkg)",
+      "inherits": ["windows"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "windows-msvc",
+      "displayName": "Windows (with MSVC, MSBuild, and vcpkg)",
+      "description": "Alternative build options for Windows",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
+      "inherits": ["windows-base"],
+      "generator": "Visual Studio 17 2022",
+      "toolchainFile": "toolchain-msvc.cmake",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "cl",
+        "CMAKE_C_COMPILER": "cl"
+      }
+    },
+    {
+      "name": "windows-msvc-release",
+      "displayName": "Windows Release (with MSVC, MSBuild, and vcpkg)",
+      "inherits": ["windows-msvc"],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    }
+  ]
+}

@@ -7,6 +7,14 @@
   },
   "configurePresets": [
     {
+      "name": "vcpkg",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_USE_VCPKG": true
+      }
+    },
+
+    {
       "name": "clang",
       "displayName": "Clang",
       "description": "Default options for the Clang compiler",
