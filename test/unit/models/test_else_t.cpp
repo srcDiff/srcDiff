@@ -15,7 +15,7 @@
 
 #include <else.hpp>
 
-// Definte test data
+// Define test data
 namespace data = boost::unit_test::data;
 const std::string construct_type = "else";
 
