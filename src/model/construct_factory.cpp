@@ -36,14 +36,14 @@
 
 #include <block.hpp>
 
-#include <operator.hpp>
-#include <comment.hpp>
-
 #include <srcdiff_match.hpp>
 
 #include <nest/rule_checker.hpp>
 #include <nest/custom_nest.hpp>
+#include <nest/similar.hpp>
 #include <nest/block.hpp>
+#include <nest/name.hpp>
+#include <nest/expr.hpp>
 
 #include <convert/rule_checker.hpp>
 #include <convert/custom_convert.hpp>
@@ -103,7 +103,7 @@ typedef std::unordered_map<std::string_view, factory_function> factory_map_type;
 factory_function default_factory  = generate_factory<construct>();
 factory_map_type factory_map = {
 
-  {"name", generate_factory<name_t, nest::custom_nest<"name">>() },
+  {"name", generate_factory<name_t, nest::name_t>() },
 
   // // class-type
   {"class",  generate_factory<named_construct, class_nest, convert::class_t>() },
@@ -143,13 +143,13 @@ factory_map_type factory_map = {
   {"call",          generate_factory<call, expr_nest>() },
   {"argument_list", generate_factory<always_matched_construct, expr_nest>() },
   {"argument",      generate_factory<always_matched_construct, expr_nest>() },
-  {"expr",          generate_factory<expr_t, expr_nest>() },
+  {"expr",          generate_factory<expr_t, nest::expr_t>() },
 
   {"decl",      generate_factory<named_construct, nest::custom_nest<"expr">>() },
   {"parameter", generate_factory<identifier_decl>() },
   {"param",     generate_factory<identifier_decl>() },
 
-  {"expr_stmt", generate_factory<expr_stmt, nest::rule_checker, convert::expr_construct>() },
+  {"expr_stmt", generate_factory<expr_stmt, nest::similar, convert::expr_construct>() },
   {"return",    generate_factory<expr_construct, nest::rule_checker, convert::expr_construct>() },
 
   {"decl_stmt", generate_factory<decl_stmt, nest::rule_checker, convert::expr_construct>() },
@@ -184,8 +184,8 @@ factory_map_type factory_map = {
   {"block", generate_factory<block, nest::block>() },
   {"block_content", generate_factory<always_matched_construct, nest::block>() },
 
-  {"operator", generate_factory<operator_t>() },
-  {"comment",  generate_factory<comment_t>() },
+  {"operator", generate_factory<always_matched_construct, nest::similar>() },
+  {"comment",  generate_factory<always_matched_construct, nest::similar>() },
 
   // nest only
   {"try",      generate_factory<construct, nest::block>() },

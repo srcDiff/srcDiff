@@ -15,6 +15,10 @@ namespace nest {
 rule_checker::rule_checker(const construct& client, const string_set& nestable_constructs)
     : client(client), nestable_constructs(nestable_constructs) {}
 
+bool rule_checker::check_nest(const construct & modified) const {
+  return client.can_refine_difference(modified);
+}
+
 bool rule_checker::can_nest(const construct& modified) const {
     if(*client.root_term() == *modified.root_term())
         return can_nest_same(modified);

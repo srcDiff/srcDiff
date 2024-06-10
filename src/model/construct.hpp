@@ -96,35 +96,7 @@ public:
     construct_list find_descendents(std::shared_ptr<srcML::node> element) const;
     std::shared_ptr<const construct> find_best_descendent(const construct& match_construct) const;
 
-    // Differencing Rules
-    const std::shared_ptr<srcdiff_measure> & measure(const construct & modified) const;
-    bool is_similar(const construct & modified) const;
-    bool is_text_similar(const construct & modified) const;
-    bool is_syntax_similar(const construct & modified) const;
-    virtual bool is_syntax_similar_impl(const construct & modified) const;
-
-    bool can_refine_difference(const construct & modified) const;
-
-    bool is_matchable(const construct & modified) const;
-    virtual bool is_matchable_impl(const construct & modified) const;
-    bool is_match_similar(const construct & modified) const;
-
-    bool is_tag_convertable(const construct & modified) const;
-    bool is_convertable(const construct & modified) const;
-
-    // can nest -> can it be placed inside
-    bool can_nest(const construct & modified) const;
-    virtual bool check_nest(const construct & modified) const;
-
-    // does it have a nest target that is better
-    //virtual bool is_nest(const construct & modified) const;
-
-protected:
-    // Delegates rule object(s)
-    std::shared_ptr<nest::rule_checker>    nest_checker;
-    std::shared_ptr<convert::rule_checker> convert_checker;
-
-protected:
+ protected:
     std::shared_ptr<srcdiff_output> out;
 
     const srcml_nodes & node_list;
@@ -136,6 +108,34 @@ protected:
     mutable std::optional<construct_list> child_constructs;
 
     mutable std::unordered_map<int, std::shared_ptr<srcdiff_measure>> measures;
+
+public:
+   // Differencing Rules
+    const std::shared_ptr<srcdiff_measure> & measure(const construct & modified) const;
+    bool is_similar(const construct & modified) const;
+    bool is_text_similar(const construct & modified) const;
+    bool is_syntax_similar(const construct & modified) const;
+    virtual bool is_syntax_similar_impl(const construct & modified) const;
+
+    bool can_refine_difference(const construct & modified) const;
+
+    // Matchable Rules
+    bool is_matchable(const construct & modified) const;
+    virtual bool is_matchable_impl(const construct & modified) const;
+    bool is_match_similar(const construct & modified) const;
+
+    // Convert Rules
+    bool is_tag_convertable(const construct & modified) const;
+    bool is_convertable(const construct & modified) const;
+
+    // Nest Rules
+    bool can_nest(const construct & modified) const;
+    virtual bool check_nest(const construct & modified) const;
+
+protected:
+    // Delegates rule object(s)
+    std::shared_ptr<nest::rule_checker>    nest_checker;
+    std::shared_ptr<convert::rule_checker> convert_checker;
 
 };
 

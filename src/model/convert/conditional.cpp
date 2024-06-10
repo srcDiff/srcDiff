@@ -17,7 +17,6 @@ conditional::conditional(const construct& client)
 
 bool conditional::is_convertable_impl(const construct & modified_construct) const {
 
-
     const ::conditional & original = static_cast<const ::conditional &>(client);
     const ::conditional & modified = static_cast<const ::conditional &>(modified_construct);
 

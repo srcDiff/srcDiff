@@ -141,18 +141,6 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
           ++is_name_nest_original;
         }
 
-        if(modified[j]->root_term_name() == "name") {
-
-            if(!modified[j]->root_term()->get_parent() || !best_match->root_term()->get_parent()) {
-              continue;
-            }
-
-            if(!static_cast<const name_t&>(*best_match).check_nest_name(*modified[j])) {
-              continue;
-            }
-
-        }
-
         if(!bool(pos_original) || measure.similarity() > similarity_original) {
 
           ++nest_count_original;
@@ -205,18 +193,6 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
           && modified[i]->root_term()->get_parent() && modified[i]->root_term()->get_parent()->get_name() == "expr"
           && ((original.size() - 0) > 1 || (modified.size() - 0) > 1)) {
             ++is_name_nest_modified;
-          }
-
-        if(original[j]->root_term_name() == "name") {
-
-            if(!original[j]->root_term()->get_parent() || !best_match->root_term()->get_parent()) {
-              continue;
-            }
-
-            if(!static_cast<const name_t&>(*original[j]).check_nest_name(*best_match)) {
-              continue;
-            }
-
         }
 
         if(!bool(pos_modified) || measure.similarity() > similarity_modified) {
@@ -313,7 +289,7 @@ bool srcdiff_nested::check_nestable_predicate(construct::construct_list_view con
       if(!construct_list_inner[0]->root_term()->get_parent() || !best_match->root_term()->get_parent())
         return true;
 
-       if(!static_cast<const name_t&>(*best_match).check_nest_name(*construct_list_inner[0]))
+       if(!static_cast<const name_t&>(*best_match).check_nest(*construct_list_inner[0]))
         return true;
 
   }
