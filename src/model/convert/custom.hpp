@@ -4,8 +4,8 @@
  * Copyright (C) 2024-2024  SDML (www.srcDiff.org)
  * This file is part of the srcDiff translator.
  */
-#ifndef INCLUDED_CONVERT_CUSTOM_CONVERT_HPP
-#define INCLUDED_CONVERT_CUSTOM_CONVERT_HPP
+#ifndef INCLUDED_CONVERT_CUSTOM_HPP
+#define INCLUDED_CONVERT_CUSTOM_HPP
 
 #include "rule_checker.hpp"
 
@@ -14,9 +14,9 @@
 namespace convert {
 
 template<string_literal... converables>
-class custom_convert : public rule_checker {
+class custom : public rule_checker {
 public:
-    custom_convert(const construct& client) : rule_checker(client, {converables...}) {
+    custom(const construct& client) : rule_checker(client, {converables...}) {
     }
 
 private:
