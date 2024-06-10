@@ -1,0 +1,42 @@
+{
+  "version": 8,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 28,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "clang",
+      "displayName": "Clang",
+      "description": "Default options for the Clang compiler",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_C_COMPILER": "clang"
+      }
+    },
+    {
+      "name": "macos-release",
+      "inherits": ["clang-release"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "displayName": "macOS Release",
+      "description": "Default build options for macOS release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64",
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "10.15"
+      }
+    },
+    {
+      "name": "clang-release",
+      "inherits": ["clang"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "displayName": "Clang Release",
+      "description": "Default build options for Clang release",
+      "cacheVariables": {
+        "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
+        "CMAKE_BUILD_TYPE": "Release" 
+      }
+    }
+  ]
+}
