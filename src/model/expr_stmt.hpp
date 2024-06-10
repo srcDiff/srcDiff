@@ -16,7 +16,7 @@ public:
     expr_stmt(const construct* parent, std::size_t& start)
         : construct(parent, start), expr_construct(parent, start) {
     }
-    virtual bool check_nest(const construct & modified) const;
+
     virtual bool is_matchable_impl(const construct & modified) const;
 };
 

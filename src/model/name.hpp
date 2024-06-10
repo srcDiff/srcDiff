@@ -18,8 +18,6 @@ public:
     }
 
     std::string simple_name() const;
-    bool check_nest_name(const construct & modified, bool find_name_parent = true) const;
-    virtual bool check_nest(const construct & modified) const;
     virtual bool is_matchable_impl(const construct & modified) const;
 
 };
