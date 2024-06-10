@@ -6,6 +6,7 @@
     "patch": 0
   },
   "include": [
+    "presets/base.json",
     "presets/macos.json"
   ],
   "configurePresets": [
