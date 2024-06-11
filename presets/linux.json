@@ -1,0 +1,64 @@
+{
+  "version": 8,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 28,
+    "patch": 0
+  },
+  "include": [
+    "base.json"
+  ],
+  "configurePresets": [
+    {
+      "name": "ubuntu-release",
+      "displayName": "Ubuntu Release",
+      "description": "Default build options for Ubuntu release",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "inherits" : ["gcc-release"]
+    }, 
+    {
+      "name": "rpm-release",
+      "displayName": "GCC Release",
+      "description": "Default build options for GCC release",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "inherits": ["gcc-release"]
+    },
+    {
+      "name": "gcc-release",
+      "inherits": ["gcc"],
+      "displayName": "GCC Release",
+      "description": "Default build options for GCC release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "gcc-vcpkg",
+      "displayName": "GCC, using vcpkg for dependencies",
+      "inherits": ["gcc", "vcpkg"],
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-linux"
+      }
+    },
+    {
+      "name": "gcc",
+      "inherits": ["linux"],
+      "displayName": "GCC",
+      "description": "Default build options for GCC",
+      "toolchainFile": "${sourceDir}/toolchain-gcc.cmake",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++",
+        "CMAKE_C_COMPILER": "gcc"
+      }
+    },
+    {
+      "name": "linux",
+      "description": "Default build options for Linux",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_FLAGS": "-Wall -Wextra -pedantic",
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -pedantic"
+      }
+    }
+  ]
+}
