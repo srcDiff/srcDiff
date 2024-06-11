@@ -21,10 +21,9 @@ const std::string construct_type = "else";
 
 std::vector<std::tuple<std::string>> test_cases_else_condition = {
     {"else{}"},
-    {"else"},
-    {"else(){}"},
+    {"else;"},
     {"else{i=0;y=0;d=0;}"},
-    {"else(i>0){}"}
+    {"else i=0;"}
 };
 
 BOOST_DATA_TEST_CASE(else_t_condition, data::make(test_cases_else_condition), original) {
@@ -34,7 +33,6 @@ BOOST_DATA_TEST_CASE(else_t_condition, data::make(test_cases_else_condition), or
     BOOST_TEST(test_data.test_construct);
     std::shared_ptr<const else_t> else_construct = std::dynamic_pointer_cast<const else_t>(test_data.test_construct);
 
-    BOOST_TEST_MESSAGE("DEREFERENCED ELSE: " << *else_construct);
     BOOST_TEST(else_construct);
     BOOST_TEST(!else_construct->condition());
 }

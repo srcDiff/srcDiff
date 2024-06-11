@@ -29,8 +29,8 @@ std::vector<std::tuple<std::string, std::string>> test_cases_for_control = {
 BOOST_DATA_TEST_CASE(for_t_control, data::make(test_cases_for_control), code, expected) {
 
 	construct_test_data test_data = create_test_construct(code, construct_type);
+    BOOST_TEST(test_data.test_construct);
 
-	BOOST_TEST(test_data.test_construct);
 	std::shared_ptr<const for_t> for_construct = std::dynamic_pointer_cast<const for_t>(test_data.test_construct);
 	std::shared_ptr<const construct> control_child = for_construct->control();
 
@@ -49,12 +49,10 @@ std::vector<std::tuple<std::string, std::string>> test_cases_for_condition = {
 BOOST_DATA_TEST_CASE(for_t_condition, data::make(test_cases_for_condition), code, expected) {
 
 	construct_test_data test_data = create_test_construct(code, construct_type);
+    BOOST_TEST(test_data.test_construct);
 
-	BOOST_TEST(test_data.test_construct);
 	std::shared_ptr<const for_t> for_construct = std::dynamic_pointer_cast<const for_t>(test_data.test_construct);
 	std::shared_ptr<const construct> condition_child = for_construct->condition();
-
-	BOOST_TEST_MESSAGE("Condition Child Dereferenced:" << *condition_child);
 
 	BOOST_TEST(condition_child);
 	BOOST_TEST(condition_child->to_string() == expected);
@@ -70,6 +68,7 @@ std::vector<std::tuple<std::string, std::string>> test_cases_for_matchable_impl_
 };
 
 BOOST_DATA_TEST_CASE(for_t_control_matchable_true, data::make(test_cases_for_matchable_impl_true), original , modified) {
+
     construct_test_data original_data = create_test_construct(original, construct_type);
     BOOST_TEST(original_data.test_construct);
 
@@ -94,6 +93,7 @@ std::vector<std::tuple<std::string, std::string>> test_cases_for_matchable_impl_
 };
 
 BOOST_DATA_TEST_CASE(for_t_control_matchable_false, data::make(test_cases_for_matchable_impl_false), original, modified) {
+
     construct_test_data original_data = create_test_construct(original, construct_type);
     BOOST_TEST(original_data.test_construct);
 
