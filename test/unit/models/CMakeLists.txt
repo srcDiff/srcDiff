@@ -34,3 +34,9 @@ set_tests_properties(test_else_t PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_LEVEL=al
 
 add_unit_test(test_name_t.cpp Boost::headers)
 set_tests_properties(test_name_t PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_LEVEL=all")
+
+add_unit_test(test_named_construct.cpp Boost::headers)
+set_tests_properties(test_named_construct PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_LEVEL=all")
+
+add_unit_test(test_elseif.cpp Boost::headers)
+set_tests_properties(test_elseif PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_LEVEL=all")

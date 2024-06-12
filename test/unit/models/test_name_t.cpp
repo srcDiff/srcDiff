@@ -45,12 +45,9 @@ BOOST_DATA_TEST_CASE(name_matchable_true, data::make(test_cases_is_matchable_imp
 }
 
 std::vector<std::tuple<std::string, std::string>> test_cases_is_matchable_impl_name_false = {
-    {"test_function();"     , "struct function{};"   },
-    {"integerA = 10;"       , "class name_t{};"      },
-    {"characterB = 'b';"    , "int characterB = 'b';"},
-    {"class test{};"        , "class best{};"        },
-    {"template <type>"      , "std::shared_ptr<type>"},
-    {"int a;"               , "size_t word;"         }
+    {"test_function;"       , "a.test_function;"      },
+    {"integerA;"            , "boost::integerA;"      },
+    {"shared_ptr"           , "shared_ptr<type>;"     },
 };
 
 BOOST_DATA_TEST_CASE(name_matchable_false, data::make(test_cases_is_matchable_impl_name_false), original, modified) {
@@ -58,7 +55,7 @@ BOOST_DATA_TEST_CASE(name_matchable_false, data::make(test_cases_is_matchable_im
     construct_test_data original_data = create_test_construct(original, construct_type);
     BOOST_TEST(original_data.test_construct);
 
-    construct_test_data modified_data = create_test_construct(original, construct_type);
+    construct_test_data modified_data = create_test_construct(modified, construct_type);
     BOOST_TEST(modified_data.test_construct);
 
     std::shared_ptr<const name_t> original_name_construct = std::dynamic_pointer_cast<const name_t>(original_data.test_construct);
