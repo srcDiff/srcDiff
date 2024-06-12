@@ -108,7 +108,7 @@ BOOST_DATA_TEST_CASE(for_t_control_matchable_false, data::make(test_cases_for_ma
 }
 
 std::vector<std::tuple<std::string, std::string>> test_cases_foreach_control = {
-    {"for (int n : a){}"         , "(int n : a)"  },
+    {"for (int n : a){}"         , "(int n : a)"   },
     {"for (auto &x : y){}"       , "(auto &x : y)" },
 };
 
