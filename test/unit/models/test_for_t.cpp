@@ -106,3 +106,20 @@ BOOST_DATA_TEST_CASE(for_t_control_matchable_false, data::make(test_cases_for_ma
     BOOST_TEST(!original_for_construct->is_matchable_impl(*modified_for_construct));
     BOOST_TEST(!modified_for_construct->is_matchable_impl(*original_for_construct));
 }
+
+std::vector<std::tuple<std::string, std::string>> test_cases_foreach_control = {
+    {"for (int n : a){}"         , "(int n : a)"  },
+    {"for (auto &x : y){}"       , "(auto &x : y)" },
+};
+
+BOOST_DATA_TEST_CASE(foreach_control, data::make(test_cases_foreach_control), original, expected) {
+
+	construct_test_data test_data = create_test_construct(original, construct_type);
+    BOOST_TEST(test_data.test_construct);
+
+	std::shared_ptr<const for_t> for_construct = std::dynamic_pointer_cast<const for_t>(test_data.test_construct);
+	std::shared_ptr<const construct> control_child = for_construct->control();
+
+	BOOST_TEST(control_child);
+	BOOST_TEST(control_child->to_string() == expected);
+}
