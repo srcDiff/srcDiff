@@ -47,13 +47,6 @@ public:
 
   static nest_result check_nestable(construct::construct_list_view original, construct::construct_list_view modified);
 
-  static bool is_nestable(std::shared_ptr<const construct> structure_one,
-                          std::shared_ptr<const construct> structure_two);
-
-
-  static bool is_same_nestable(std::shared_ptr<const construct> structure_one,
-                               std::shared_ptr<const construct> structure_two);
-
   static bool is_better_nested(construct::construct_list_view original, construct::construct_list_view modified);
 };
 

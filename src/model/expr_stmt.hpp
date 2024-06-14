@@ -1,10 +1,9 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
-
- * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ *
+ * Copyright (C) 2023-2024  SDML (www.srcDiff.org)
  * This file is part of the srcDiff translator.
  */
-
 #ifndef INCLUDED_EXPR_STMT_HPP
 #define INCLUDED_EXPR_STMT_HPP
 
@@ -13,8 +12,11 @@
 class expr_stmt : public expr_construct {
 
 public:
-    expr_stmt(const construct* parent, std::size_t& start) : construct(parent, start), expr_construct(parent, start) {}
-    virtual bool can_nest(const construct & modified) const;
+
+    expr_stmt(const construct* parent, std::size_t& start)
+        : construct(parent, start), expr_construct(parent, start) {
+    }
+
     virtual bool is_matchable_impl(const construct & modified) const;
 };
 

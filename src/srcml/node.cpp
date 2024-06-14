@@ -149,7 +149,7 @@ void srcML::node::merge_attributes(const srcML::attribute_map & that) {
                         std::inserter(original_attributes, original_attributes.end()), key_compare);
     std::set_difference(that.begin(), that.end(), 
                         this->get_attributes().begin(), this->get_attributes().end(),
-                        std::inserter(original_attributes, original_attributes.end()), key_compare);
+                        std::inserter(modified_attributes, modified_attributes.end()), key_compare);
 
     for (attribute_map_cpair pair : same_attributes) {
         attributes.at(pair.first).merge(that.at(pair.first));
@@ -160,7 +160,7 @@ void srcML::node::merge_attributes(const srcML::attribute_map & that) {
     }
 
     for (attribute_map_cpair pair : modified_attributes) {
-        attributes.at(pair.first).set_value(std::optional<std::string>("|" + *that.at(pair.first).get_value()));
+        attributes.emplace(pair.first, attribute(pair.first, pair.second.get_ns(), std::optional<std::string>("|" + *that.at(pair.first).get_value())));
     }
 }
 

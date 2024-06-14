@@ -21,198 +21,6 @@
 srcdiff_nested::srcdiff_nested(std::shared_ptr<srcdiff_output> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation)
   : srcdiff_diff(out, original, modified), operation(operation) {}
 
-int nest_id = 0;
-
-struct nest_info {
-
-  const char * type;
-
-  const char * const * possible_nest_items;
-
-};
-
-// may need to change collection algorithm to gather full and nested of same type           
-const char * const block_nest_types[]        = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
-                                                 "if_stmt", "if", "while", "for", "foreach", "else", "switch", "do",
-                                                 "try", "catch", "finally", "synchronized", "continue", "break", "goto", 0 };
-
-const char * const ternary_then_nest_types[] = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
-                                                 "if", "while", "for", "foreach", "else", "elseif", "switch", "do",
-                                                 "try", "catch", "finally", "synchronized",
-                                                 "expr", "call", "operator", "literal", "continue", "break", "goto", 0 };
-
-const char * const else_nest_types[]         = { "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
-                                                "if_stmt", "if", "while", "for", "foreach", "switch", "do",
-                                                "try", "catch", "finally", "synchronized",
-                                                "expr", "call", "operator", "literal", "continue", "break", "goto", 0 };
-
-const char * const class_nest_types[]        = { "function",
-                                                 "constructor", 
-                                                 "destructor",
-                                                 "class", 
-                                                 "struct", 
-                                                 "union",
-                                                 "enum",
-                                                 "decl_stmt",                                                
-                                                 "function_decl",
-                                                 "constructor_decl", 
-                                                 "destructor_decl",
-                                                 "class_decl",
-                                                 "struct_decl",
-                                                 "union_decl",
-                                                 "enum_decl",
-                                                 "typedef",
-                                                 0 };
-
-const char * const extern_nest_types[]       = { "decl_stmt", "function_decl", "function", "class", "class_decl",
-                                                 "struct", "struct_decl", "union", "union_decl", "typedef", "using", 0 };
-const char * const for_control_nest_types[]  = { "condition", "comment",                                             0 };
-const char * const call_nest_types[]         = { "expr", "call", "operator", "literal", "name",                      0 };
-const char * const ternary_nest_types[]      = { "ternary", "call", "operator", "literal", "expr", "name",           0 };
-const char * const condition_nest_types[]    = { "expr", "call", "operator", "literal", "name",                      0 };
-const char * const name_nest_types[]         = { "name",                                                             0 };
-const char * const decl_nest_types[]         = { "expr",                                                             0 };
-const char * const static_nest_types[]       = { "decl_stmt",                                                        0 };
-
-// tags that can have something nested in them (incomplete)    
-const nest_info nesting[] = {   
-
-  { "block",         block_nest_types        },
-  { "block_content", block_nest_types        },
-  { "if_stmt",       block_nest_types        },
-  { "if",            block_nest_types        },
-  { "then",          ternary_then_nest_types },
-  { "else",          else_nest_types         },
-  { "while",         block_nest_types        },
-  { "for",           block_nest_types        },
-  { "foreach",       block_nest_types        },
-  { "control",       for_control_nest_types  },
-  { "function",      block_nest_types        },
-
-  { "class",         class_nest_types        },
-  { "struct",        class_nest_types        },
-  { "enum",          class_nest_types        },
-  { "public",        class_nest_types        },
-  { "private",       class_nest_types        },
-  { "protected",     class_nest_types        },
-
-  { "call",          call_nest_types         },
-  { "argument_list", call_nest_types         },
-  { "argument",      call_nest_types         },
-  { "expr",          call_nest_types         },
-  { "ternary",       ternary_nest_types      },
-  { "condition",     condition_nest_types    },
-  { "name",          name_nest_types         },
-  { "try",           block_nest_types        },
-  { "catch",         block_nest_types        },
-  { "extern",        extern_nest_types       },
-  { "decl",          decl_nest_types         },
-  { "init",          decl_nest_types         },
-
-  // Java
-  { "static",        static_nest_types       },
-  { "synchronized",  block_nest_types        },
-  { "finally",       block_nest_types        },
-  { 0, 0 }
-
-};
-
-int is_block_type(std::shared_ptr<const construct> & structure) {
-
-  if(structure->root_term()->get_namespace()->get_uri() != SRCML_SRC_NAMESPACE_HREF)
-    return -1;
-
-  for(int i = 0; nesting[i].type; ++i)
-    if(structure->root_term_name() == nesting[i].type)
-      return i;
-
-  return -1;
-}
-
-bool has_internal_structure(std::shared_ptr<const construct> & structure, const std::optional<std::string> & type) {
-
-  if(!type) return false;
-
-  for(unsigned int i = 1; i < structure->size(); ++i) {
-    if(structure->term(i)->is_start()
-              && structure->term(i)->get_name() == type)
-      return true;
-  }
-
-  return false;
-}
-
-bool is_nest_type(std::shared_ptr<const construct> & structure,
-                  std::shared_ptr<const construct> & structure_other,
-                  int type_index) {
-
-  if(structure->root_term()->get_namespace()->get_uri() != SRCML_SRC_NAMESPACE_HREF)
-    return true;
-
-  for(int i = 0; nesting[type_index].possible_nest_items[i]; ++i) {
-    if(structure->root_term_name() == nesting[type_index].possible_nest_items[i]
-       && has_internal_structure(structure_other, structure->root_term_name()))
-      return true;
-  }
-
-  return false;
-}
-
-bool is_nestable_internal(std::shared_ptr<const construct> & structure_one,
-                          std::shared_ptr<const construct> & structure_two) {
-
-  int block = is_block_type(structure_two);
-
-  if(block == -1)
-    return false;
-
-  /** Only can nest a block into another block if it's parent is a block */
-  bool is_block = structure_one->root_term_name() == "block" && structure_two->root_term_name() == "block";
-  bool parent_is_block = structure_one->root_term()->get_parent() && structure_one->root_term()->get_parent()->get_name() == "block";
-  if(is_block && !parent_is_block) return false;
-
-  if(is_nest_type(structure_one, structure_two, block)) {
-
-    return true;
-
-  }
-
-  return false;
-}
-
-bool srcdiff_nested::is_same_nestable(std::shared_ptr<const construct> structure_one,
-                                      std::shared_ptr<const construct> structure_two) {
-
-  if(!is_nestable_internal(structure_one, structure_two)) return false;
-
-  std::shared_ptr<const construct> best_match = structure_two->find_best_descendent(structure_one);
-  if(!best_match) return false;
-
-  srcdiff_text_measure match_measure(*structure_one, *best_match);
-  match_measure.compute();
-
-  srcdiff_text_measure measure(*structure_one, *structure_two);
-  measure.compute();
-
-  double min_size = measure.min_length();
-  double match_min_size = std::min(measure.original_length(), match_measure.modified_length());
-
-  return (match_measure.similarity() >= measure.similarity() && match_measure.difference() <= measure.difference()) 
-  || (match_min_size > 50 && min_size > 50 && (match_min_size / match_measure.similarity()) < (0.9 * (min_size / measure.similarity()))
-    && best_match->can_nest(*structure_one));
-
-}
-
-bool srcdiff_nested::is_nestable(std::shared_ptr<const construct> structure_one,
-                                 std::shared_ptr<const construct> structure_two) {
-
-  if(*structure_one->root_term() == *structure_two->root_term())
-    return is_same_nestable(structure_one, structure_two);
-  else
-    return is_nestable_internal(structure_one, structure_two);
-
-}
-
 bool has_compound_inner(std::shared_ptr<const construct> & node_set_outer) {
 
   if(node_set_outer->root_term()->is_simple()) return false;
@@ -237,9 +45,9 @@ bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
       || (!node_set_inner->root_term()->is_simple() && !has_compound_inner(node_set_outer)))) return false;
 
   // parents and children same do not nest.
-  if(srcdiff_nested::is_nestable(node_set_inner, node_set_outer)) {
+  if(node_set_outer->can_nest(*node_set_inner)) {
 
-    std::shared_ptr<const construct> best_match = node_set_outer->find_best_descendent(node_set_inner);
+    std::shared_ptr<const construct> best_match = node_set_outer->find_best_descendent(*node_set_inner);
 
     if(best_match) {
 
@@ -257,7 +65,7 @@ bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
         // old code used node_set_outer (i.e., is it interchangeable) this seemed wrong
         // fixes test case, but it failed because interchange not implemented (passes now)
         // that interchange implemented
-          && node_set_inner->can_nest(*best_match))
+          && node_set_inner->check_nest(*best_match))
        ) {
         // check if other way is better
         return recurse? !is_better_nest(node_set_inner, node_set_outer, match_measure, false) : true;
@@ -277,8 +85,8 @@ bool srcdiff_nested::is_better_nested(construct::construct_list_view original, c
 
   for(std::size_t pos = 0; pos < original.size(); ++pos) {
 
-    nest_result nesting = check_nestable(original, modified);
-    if(nesting.operation == SES_COMMON) continue;
+    nest_result nestable = check_nestable(original, modified);
+    if(nestable.operation == SES_COMMON) continue;
     if(is_better_nest(original[pos], modified[0], measure)) {
       return true;
     }
@@ -287,8 +95,8 @@ bool srcdiff_nested::is_better_nested(construct::construct_list_view original, c
 
   for(std::size_t pos = 0; pos < modified.size(); ++pos) {
 
-    nest_result nesting = check_nestable(original, modified);
-    if(nesting.operation == SES_COMMON) continue;
+    nest_result nestable = check_nestable(original, modified);
+    if(nestable.operation == SES_COMMON) continue;
     if(is_better_nest(modified[pos], original[0], measure)) {
       return true;
     }
@@ -306,23 +114,23 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
   std::optional<int> similarity_original;
   std::optional<int> difference_original;
   int is_name_nest_original = 0;
-  for(int i = 0; i < original.size(); ++i) {
+  for(std::size_t i = 0; i < original.size(); ++i) {
 
     if(original[i]->root_term()->get_move()) continue;
 
-    for(int j = 0; j < modified.size(); ++j) {
+    for(std::size_t j = 0; j < modified.size(); ++j) {
 
       if(modified[j]->root_term()->get_move()) continue;
 
-      if(srcdiff_nested::is_nestable(modified[j], original[i])) {
+      if(original[i]->can_nest(*modified[j])) {
 
-        std::shared_ptr<const construct> best_match = original[i]->find_best_descendent(modified[j]);
+        std::shared_ptr<const construct> best_match = original[i]->find_best_descendent(*modified[j]);
         if(!best_match) continue;
 
         srcdiff_text_measure measure(*best_match, *modified[j]);
         measure.compute();
 
-        if(!best_match->can_nest(*modified[j])) {
+        if(!best_match->check_nest(*modified[j])) {
           continue;
         }
 
@@ -331,18 +139,6 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
           && original[i]->root_term()->get_parent() && original[i]->root_term()->get_parent()->get_name() == "expr"
           && ((original.size() - 0) > 1 || (modified.size() - 0) > 1)) {
           ++is_name_nest_original;
-        }
-
-        if(modified[j]->root_term_name() == "name") {
-
-            if(!modified[j]->root_term()->get_parent() || !best_match->root_term()->get_parent()) {
-              continue;
-            }
-
-            if(!static_cast<const name_t&>(*best_match).check_nest(*modified[j])) {
-              continue;
-            }
-
         }
 
         if(!bool(pos_original) || measure.similarity() > similarity_original) {
@@ -372,23 +168,23 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
   std::optional<int> similarity_modified;
   std::optional<int> difference_modified;
   int is_name_nest_modified = 0;
-  for(int i = 0; i < modified.size(); ++i) {
+  for(std::size_t i = 0; i < modified.size(); ++i) {
 
     if(modified[i]->root_term()->get_move()) continue;
 
-    for(int j = 0; j < original.size(); ++j) {
+    for(std::size_t j = 0; j < original.size(); ++j) {
 
       if(original[j]->root_term()->get_move()) continue;
 
-      if(srcdiff_nested::is_nestable(original[j], modified[i])) {
+      if(modified[i]->can_nest(*original[j])) {
 
-        std::shared_ptr<const construct> best_match = modified[i]->find_best_descendent(original[j]);
+        std::shared_ptr<const construct> best_match = modified[i]->find_best_descendent(*original[j]);
         if(!best_match) continue;
 
         srcdiff_text_measure measure(*original[j], *best_match);
         measure.compute();
 
-        if(!original[j]->can_nest(*best_match)) {
+        if(!original[j]->check_nest(*best_match)) {
           continue;
         }
 
@@ -397,18 +193,6 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
           && modified[i]->root_term()->get_parent() && modified[i]->root_term()->get_parent()->get_name() == "expr"
           && ((original.size() - 0) > 1 || (modified.size() - 0) > 1)) {
             ++is_name_nest_modified;
-          }
-
-        if(original[j]->root_term_name() == "name") {
-
-            if(!original[j]->root_term()->get_parent() || !best_match->root_term()->get_parent()) {
-              continue;
-            }
-
-            if(!static_cast<const name_t&>(*original[j]).check_nest(*best_match)) {
-              continue;
-            }
-
         }
 
         if(!bool(pos_modified) || measure.similarity() > similarity_modified) {
@@ -473,16 +257,16 @@ bool srcdiff_nested::check_nestable_predicate(construct::construct_list_view con
 
   if(construct_list_inner[0]->root_term()->get_move()) return true;
 
-  if(!is_nestable(construct_list_inner[0], construct_list_outer[0]))
+  if(!construct_list_outer[0]->can_nest(*construct_list_inner[0]))
     return true;
 
-  std::shared_ptr<const construct> best_match = construct_list_outer[0]->find_best_descendent(construct_list_inner[0]);
+  std::shared_ptr<const construct> best_match = construct_list_outer[0]->find_best_descendent(*construct_list_inner[0]);
   if(!best_match) return true;
 
   srcdiff_text_measure measure(*best_match, *construct_list_inner[0]);
   measure.compute();
 
-  if(!best_match->can_nest(*construct_list_inner[0]))
+  if(!best_match->check_nest(*construct_list_inner[0]))
     return true;
 
   if(is_better_nest(construct_list_inner[0], construct_list_outer[0], measure))
@@ -670,7 +454,7 @@ void srcdiff_nested::output() {
 
   construct::construct_list nest_set;
 
-  for(int i = 0; i < inner.size(); ++i) {
+  for(std::size_t i = 0; i < inner.size(); ++i) {
       nest_set.push_back(inner[i]);
   }
 

@@ -6,10 +6,6 @@
  */
 #include <expr_stmt.hpp>
 
-bool expr_stmt::can_nest(const construct & modified) const {
-	return is_similar(modified); 
-}
-
 bool expr_stmt::is_matchable_impl(const construct & modified) const {
 	const expr_stmt & modified_expr_stmt = dynamic_cast<const expr_stmt &>(modified);
 
