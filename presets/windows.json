@@ -45,7 +45,7 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
       "inherits": ["windows-base"],
       "generator": "Visual Studio 17 2022",
-      "toolchainFile": "toolchain-msvc.cmake",
+      "toolchainFile": "${sourceDir}/toolchains/toolchain-msvc.cmake",
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "cl",
         "CMAKE_C_COMPILER": "cl"

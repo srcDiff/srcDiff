@@ -45,7 +45,7 @@
       "inherits": ["linux"],
       "displayName": "GCC",
       "description": "Default build options for GCC",
-      "toolchainFile": "${sourceDir}/toolchain-gcc.cmake",
+      "toolchainFile": "${sourceDir}/toolchains/toolchain-gcc.cmake",
       "cacheVariables": {
         "CMAKE_CXX_COMPILER": "g++",
         "CMAKE_C_COMPILER": "gcc"
