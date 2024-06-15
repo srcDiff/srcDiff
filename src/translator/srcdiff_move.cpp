@@ -1,9 +1,12 @@
-/*
- * SPDX-License-Identifier: GPL-3.0-only
-
- * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
- * This file is part of the srcDiff translator.
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file srcdiff_move.cpp
+ *
+ * @copyright Copyright (C) 2012-2024 SDML (www.srcDiff.org)
+ *
+ * This file is part of the srcDiff Infrastructure.
  */
+
 #include <srcdiff_move.hpp>
 #include <srcdiff_diff.hpp>
 #include <srcdiff_measure.hpp>
