@@ -63,8 +63,14 @@ construct::construct_list construct::get_descendents(std::size_t start_pos, std:
     return descendents;
 }
 
-construct::construct(const construct* parent, std::size_t & start)
-    : out(parent->output()), node_list(parent->nodes()), hash_value(), parent_construct(parent) {
+construct::construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out)
+    : out(out), node_list(node_list), terms(), hash_value(),
+      nest_checker(), convert_checker() {
+}
+
+construct::construct(const construct* parent, std::size_t& start)
+  : out(parent->output()), node_list(parent->nodes()), hash_value(), parent_construct(parent),
+    nest_checker(), convert_checker() {
 
   if(node_list.at(start)->get_type() != srcML::node_type::TEXT && node_list.at(start)->get_type() != srcML::node_type::START) return;
 
@@ -98,23 +104,6 @@ construct::construct(const construct* parent, std::size_t & start)
   }
 
   --start;
-}
-
-construct::construct(const construct & that) : out(that.out), node_list(that.node_list), terms(), hash_value(that.hash_value) {
-    for(std::size_t pos = 0; pos < that.size(); ++pos) {
-        terms.push_back(that.terms[pos]);
-    }
-}
-
-void construct::swap(construct & that) {
-    std::swap(terms, that.terms);
-    std::swap(hash_value, that.hash_value);
-    std::swap(child_constructs, that.child_constructs);
-}
-
-construct & construct::operator=(construct that) {
-    swap(that);
-    return *this;
 }
 
 bool construct::operator==(const construct & that) const {
@@ -287,20 +276,20 @@ construct::construct_list construct::find_descendents(std::shared_ptr<srcML::nod
     return get_descendents(start_position() + 1, end_position(), construct::is_match, &element);
 }
 
-std::shared_ptr<const construct> construct::find_best_descendent(std::shared_ptr<const construct> match_construct) const {
-    construct::construct_list descendents = find_descendents(match_construct->term(0));
+std::shared_ptr<const construct> construct::find_best_descendent(const construct& match_construct) const {
+    construct::construct_list descendents = find_descendents(match_construct.term(0));
 
     std::shared_ptr<const construct> best_descendent;
     for(std::shared_ptr<const construct> descendent : descendents) {
 
-        size_t max_size = std::max(descendent->terms.size(), match_construct->terms.size());
-        size_t min_size = std::min(descendent->terms.size(), match_construct->terms.size());
+        size_t max_size = std::max(descendent->terms.size(), match_construct.terms.size());
+        size_t min_size = std::min(descendent->terms.size(), match_construct.terms.size());
 
         if(max_size > (4 * min_size)) {
           continue;
         }
 
-        if(!best_descendent || match_construct->measure(*descendent)->similarity() > match_construct->measure(*best_descendent)->similarity()) {
+        if(!best_descendent || match_construct.measure(*descendent)->similarity() > match_construct.measure(*best_descendent)->similarity()) {
             best_descendent = descendent;
         }
 
@@ -435,19 +424,18 @@ bool construct::is_match_similar(const construct & modified) const {
 
 }
 
-bool construct::is_tag_convertable(const construct & modified [[maybe_unused]]) const {
-  return false;
+bool construct::is_tag_convertable(const construct & modified) const {
+  return convert_checker->is_tag_convertable(modified);
 }
 
 bool construct::is_convertable(const construct & modified) const {
-  if(is_convertable_impl(modified)) return true;
-  return is_similar(modified);
-}
-
-bool construct::is_convertable_impl(const construct & modified [[maybe_unused]]) const {
-    return false;
+  return convert_checker->is_convertable(modified);
 }
 
 bool construct::can_nest(const construct & modified) const {
-  return can_refine_difference(modified);
+    return nest_checker->can_nest(modified);
+}
+
+bool construct::check_nest(const construct & modified) const {
+  return nest_checker->check_nest(modified);
 }

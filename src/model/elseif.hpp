@@ -1,10 +1,9 @@
 /*
  * SPDX-License-Identifier: GPL-3.0-only
-
- * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+ *
+ * Copyright (C) 2023-2024  SDML (www.srcDiff.org)
  * This file is part of the srcDiff translator.
  */
-
 #ifndef INCLUDED_ELSEIF_HPP
 #define INCLUDED_ELSEIF_HPP
 
@@ -16,7 +15,9 @@ class elseif : public clause {
 public:
 
     elseif(const construct* parent, std::size_t& start)
-        : clause(parent, start), if_child() {}
+        : clause(parent, start), if_child() {
+    }
+
 
     std::shared_ptr<const if_t> find_if() const;
 

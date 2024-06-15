@@ -157,4 +157,8 @@
     </diff:ws><empty_stmt>;</empty_stmt></block_content></block></diff:insert></if></if_stmt>
 </unit>
 
+<unit language="C++" filename="if|if">
+<if_stmt><if>if<condition>(<expr><literal type="number">1</literal></expr>)</condition><diff:delete><diff:ws> </diff:ws></diff:delete><block type="|pseudo"><diff:delete>{</diff:delete><block_content><diff:insert><diff:ws> </diff:ws></diff:insert><expr_stmt><expr><name>a</name></expr>;</expr_stmt></block_content><diff:delete>}</diff:delete></block></if></if_stmt>
+</unit>
+
 </unit>

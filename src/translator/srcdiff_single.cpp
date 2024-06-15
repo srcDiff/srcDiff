@@ -18,13 +18,12 @@
 #include <if.hpp>
 
 #include <cstring>
-#include <map>
 #include <list>
 #include <algorithm>
 #include <iterator>
 
-const std::string convert("convert");
-const srcML::attribute diff_convert_type("type", srcML::name_space::DIFF_NAMESPACE, convert);
+const std::string convert_str("convert");
+const srcML::attribute diff_convert_type("type", srcML::name_space::DIFF_NAMESPACE, convert_str);
 
 srcdiff_single::srcdiff_single(std::shared_ptr<srcdiff_output> out, std::shared_ptr<const construct> original_construct, std::shared_ptr<const construct> modified_construct) 
     : out(out), original_construct(original_construct), modified_construct(modified_construct) {}
