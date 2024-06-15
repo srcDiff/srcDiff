@@ -1,9 +1,12 @@
-/*
- * SPDX-License-Identifier: GPL-3.0-only
-
- * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
- * This file is part of the srcDiff translator.
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file decl_stmt.cpp
+ *
+ * @copyright Copyright (C) 2023-2024 SDML (www.srcDiff.org)
+ *
+ * This file is part of the srcDiff Infrastructure.
  */
+
 #include <decl_stmt.hpp>
 
 std::shared_ptr<const expr_t> decl_stmt::expr(const expr_construct & that) const {

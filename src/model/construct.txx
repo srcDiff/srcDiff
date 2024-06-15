@@ -1,8 +1,10 @@
-/*
- * SPDX-License-Identifier: GPL-3.0-only
-
- * Copyright (C) 2024-2024  SDML (www.srcDiff.org)
- * This file is part of the srcDiff translator.
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file construct.txx
+ *
+ * @copyright Copyright (C) 2024-2024 SDML (www.srcDiff.org)
+ *
+ * This file is part of the srcDiff Infrastructure.
  */
 
 template <class nest_rule_checker, class convert_rule_checker>

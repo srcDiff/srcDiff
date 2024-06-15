@@ -1,10 +1,11 @@
 ## SPDX-License-Identifier: GPL-3.0-only
 #  CMakeLists.txt
 #
-#  Copyright (C) 2024  SDML (www.srcDiff.org)
 #
-#  This file is part of the srcDiff translator.
+#  @copyright Copyright (C) 2024-2024 SDML (www.srcDiff.org)
 #
+#  This file is part of the srcDiff Infrastructure.
+
 
 file(GLOB NEST_HEADERS *.hpp)
 file(GLOB NEST_SOURCE  *.cpp)
