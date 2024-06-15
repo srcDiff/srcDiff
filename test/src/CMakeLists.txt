@@ -1,9 +1,9 @@
 ## SPDX-License-Identifier: GPL-3.0-only
 #  CMakeLists.txt
+# 
+#  @copyright Copyright (C) 2016-2024 SDML (www.srcDiff.org)
 #
-#  Copyright (C) 2014-2024  SDML (www.srcDiff.org)
-#
-#  This file is part of the srcDiff translator.
+#  This file is part of the srcDiff Infrastructure.
 #
 
 find_package(LibXml2 REQUIRED)
