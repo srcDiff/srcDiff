@@ -1,9 +1,12 @@
-/*
- * SPDX-License-Identifier: GPL-3.0-only
-
- * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
- * This file is part of the srcDiff translator.
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file shortest_edit_script.h
+ *
+ * @copyright Copyright (C) 2011-2024 SDML (www.srcDiff.org)
+ *
+ * This file is part of the srcDiff Infrastructure.
  */
+
 #ifndef INCLUDED_SHORTEST_EDIT_SCRIPT_H
 #define INCLUDED_SHORTEST_EDIT_SCRIPT_H
 
