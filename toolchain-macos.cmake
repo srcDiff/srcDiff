@@ -1,9 +1,10 @@
-# SPDX-License-Identifier: GPL-3.0-only
-##
-# @file toolchain-macos.cmake
+## SPDX-License-Identifier: GPL-3.0-only
+#  toolchain-macros.cmake
 #
-# @copyright Copyright (C) 2024 srcML, LLC. (www.srcDiff.org)
-# This file is part of the srcDiff translator.
+#  @copyright Copyright (C) 2024-2024 SDML (www.srcDiff.org)
+#
+#  This file is part of the srcDiff Infrastructure.
+
 # MacOS-specific tool configuration
 
 
