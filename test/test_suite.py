@@ -14,9 +14,6 @@ import difflib
 import argparse
 from datetime import datetime, time
 
-error_filename = "test_reports/srcDiffTestReport"
-error_filename_extension = ".txt"
-
 try:
     SHELL_ROWS, SHELL_COLUMNS = subprocess.check_output(['stty', 'size']).split()
 except (subprocess.CalledProcessError, FileNotFoundError):
@@ -40,68 +37,50 @@ switch_utility = f"{executable_path}/switch_differences"
 archive_reader = f"{executable_path}/archive_reader"
 srcdiff_utility = f"{executable_path}/srcdiff"
 
-def safe_communicate(command, input):
+def safe_communicate(command, input=None):
     """
-    Runs `command` and then sends `input` to its stdin, catching errors and 
-    returning its stdout
+    Runs `command`, sending `input` to its stdin. Returns a CompletedProcess instance
+    which is then accessed, or raises an exception if there was an error with the process.
     """
-    try :
-        return subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(input.encode())[0].decode('utf-8')
-    except OSError as e:
-        errornum, strerror = e.args
-        try :
-            return subprocess.Popen(command, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate(input)[0].decode('utf-8')
-        except OSError as e:
-            errornum, strerror = e.args
-            sperrorlist.append((command, input, errornum, strerror))
-            raise
+    try:
+        return subprocess.run(command, input=input, encoding="utf-8", cwd=os.getcwd(), capture_output=True, check=True).stdout
+    except subprocess.CalledProcessError as e:
+            error_num, str_error = e.args
+            sperrorlist.append((command, input, error_num, str_error))
             
 
 def safe_communicate_file(command, filename):
     """
-    runs `command` with `filename` appended to it, sends nothing to stdin, returns
-    its stdout
+    Runs `cmd` after appending `filename` to `command`. Returns the stdout of the process
+    in string form, or raises a subprocess error.
     """
-
-    newcommand = command[:]
-    newcommand.append(filename)
+    cmd = command[:]
+    cmd.append(filename)
     try:
-        return subprocess.Popen(newcommand, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0].decode('utf-8')
-    except OSError as e:
-        errornum, strerror = e.args
-        try:
-            return subprocess.Popen(newcommand, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0].decode('utf-8')
-        except OSError as e:
-            errornum, strerror = e.args
-            sperrorlist.append((command, filename, errornum, strerror))
-            raise
-
+        return safe_communicate(cmd)
+    except subprocess.CalledProcessError as e:
+        error_num, str_error = e.args
+        sperrorlist.append((command, input, error_num, str_error))
 
 def safe_communicate_two_files(command, filename_one, filename_two, url):
     """
-    runs `command` with two filenames appended to it, sends nothing to stdin,
-    returns its stdout. `url` is just logged if there is an error
+    Runs `cmd` after appending both `filename_one` and `filename_two` to `command`. Returns
+    the stdout of the process in string form, or raises a subprocess error.
     """
-
-    newcommand = command[:]
-    newcommand.append(filename_one)
-    newcommand.append(filename_two)
+    cmd = command[:]
+    cmd.append(filename_one)
+    cmd.append(filename_two)
 
     try:
-        return subprocess.Popen(newcommand, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0].decode('utf-8')
-    except OSError as e:
-        errornum, strerror = e.args
-        try:
-            return subprocess.Popen(newcommand, stdout=subprocess.PIPE, stdin=subprocess.PIPE).communicate()[0].decode('utf-8')
-        except OSError as e:
-            errornum, strerror = e.args
-            sperrorlist.append((command, url, errornum, strerror))
-            raise
+        return safe_communicate(cmd)
+    except subprocess.CalledProcessError as e:
+        error_num, str_error = e.args
+        sperrorlist.append((command, url, error_num, str_error))
 
 def extract_unit(file, count):
     """
-    extracts a particular unit, specified by `count`, from a srcML archive.
-    units are numbered starting from one
+    Extracts a particular unit, specified by `count`, from a srcML archive.
+    NOTE: Units are numbered starting from one.
     """
 
     command = [archive_reader, "--unit=" + str(count)]
@@ -109,33 +88,40 @@ def extract_unit(file, count):
     return safe_communicate_file(command, file)
 
 def convert_filename_to_string(src_filename):
-    "returns the contents of the file at `src_filename` as a string"
+    """
+    Returns the contents of `src_filename` as a string.
+    """
     with open(src_filename) as file:
         return file.read()
 
 def extract_source(file, unit, revision):
-    "gets the source for a specific revision of a unit that srcDiff outputted"
+    """
+    Gets the source for a specific revision of a unit that srcDiff outputted
+    """
 
     return safe_communicate_file([
         archive_reader, "--revision=" + str(revision), "--unit=" + str(unit), "--output-src"
     ], file)
 
 def switch_differences(srcML):
-    "switch diff order"
+    """
+    Switches diff order.
+    """
 
-    return safe_communicate([switch_utility], srcML)
+    return safe_communicate(switch_utility, srcML)
 
 def convert_unix_to_dos(srctext):
-    "converts from unix to dos line endings - unix2dos must be installed (?)"
+    """
+    Converts from UNIX to DOS line endings - unix2dos must be installed
+    """
 
-    # run the srcml processor
-    command = ['unix2dos']
+    # run the unix2dos processor
 
-    return safe_communicate(command, srctext)
+    return safe_communicate(['unix2dos'], srctext)
 
 def linediff(xml_filename1, xml_filename2):
     """
-    compute a simple line-based diff of two files - this is used to show where
+    Computes a simple line-based diff of two files - this is used to show where
     srcDiff's output differed from the expected output when tested
     """
 
@@ -144,9 +130,9 @@ def linediff(xml_filename1, xml_filename2):
     else:
         return ""
 
-def srcdiff(source_file_version_one, source_file_version_two, language, filename):
+def srcdiff(source_file_version_one, source_file_version_two, language, filename, url, doseol):
     """
-    saves the two source code strings in the specified `language` to files and
+    Saves the two source code strings in the specified `language` to files and
     then runs srcdiff on them, setting the filename attribute in the result to
     `filename`, and returning srcDiff's output
     """
@@ -164,11 +150,15 @@ def srcdiff(source_file_version_one, source_file_version_two, language, filename
     temp_file.write(source_file_version_two)
     temp_file.close()
 
+    # handle dos line endings
+    if doseol:
+        convert_unix_to_dos(f"temp_file_one.{extension}")
+        convert_unix_to_dos(f"temp_file_two.{extension}")
     return safe_communicate_two_files(command, "temp_file_one." + extension, "temp_file_two." + extension, url)
 
 def find_difference(unitxml, unitsrcml, test_number, character_count):
     """
-    takes `unitxml` and `unitsrcml`, comparing them with the linediff function 
+    Takes `unitxml` and `unitsrcml`, comparing them with the linediff function 
     then returning the result. `test_number` and `character_count` are to aid output.
     returns `result` and `character_count` for use in the main loop.
     """
@@ -179,15 +169,15 @@ def find_difference(unitxml, unitsrcml, test_number, character_count):
         character_count = get_character_count(test_number)
     return (result, character_count)
 
-def update_error_list(result, error_count, errorlist, url, language, num, num_nested_units):
+def update_error_list(result, error_count, error_list, url, language, num, num_nested_units):
     """
-    takes `result`, `url`, `language`, `num`, and appends a tuple to the errorlist with
+    Takes `result`, `url`, `language`, `num`, and appends a tuple to the error_list with
     each item, then incrementing the error count. returns `error_count` for use in the
     main loop.
     """
     if result != "":
         error_count += 1            
-        errorlist.append((url + " " + language, num, result))
+        error_list.append((url + " " + language, num, result))
 
         # part of list of nested unit number in output
         print(f"\033[0;31m{str(num)}\033[0m", end=' ')
@@ -197,9 +187,9 @@ def update_error_list(result, error_count, errorlist, url, language, num, num_ne
         print(f"\033[0;33m{str(num)}\033[0m", end=' ')
     return error_count
 
-def convert_to_srcdiff(unit_text_version_one, unit_text_version_two, lang, filename):
+def convert_to_srcdiff(unit_text_version_one, unit_text_version_two, lang, filename, url, doseol):
     """
-    takes `unit_text_version_one`, `unit_text_version_two`, `lang`, and `filename` and
+    Takes `unit_text_version_one`, `unit_text_version_two`, `lang`, and `filename` and
     sends them to the `srcdiff` function. returns unitsrcml for use in the main loop.
     """
     # convert text to srcML
@@ -207,7 +197,9 @@ def convert_to_srcdiff(unit_text_version_one, unit_text_version_two, lang, filen
         unit_text_version_one,
         unit_text_version_two,
         lang,
-        filename
+        filename,
+        url,
+        doseol
     )
     
     # additional, later stage processing (?)
@@ -219,111 +211,37 @@ def get_character_count(count):
     
     return len(str(count)) + 1
 
-def test_cleanup():
+def contains(key, list):
     """
-    removes any temporary files generated by the program.
+    A helper function for run_tests(). Takes a `key` and searches `list` for that key and
+    returns True upon finding it, otherwise returning False.
     """
-    extensions = [".cpp", ".java"]
-    for ext in extensions:
-        if os.path.exists(f"temp_file_one.{ext}"):
-            os.remove(f"temp_file_one.java.{ext}")
-        if os.path.exists(f"temp_file_two.{ext}"):
-            os.remove(f"temp_file_two.{ext}")
+    for item in list:
+        if key == item:
+            return True
+    return False
 
-class Tee:
+def match_list(key, list):
     """
-    Overrides `sys.stdout` so that standard output is written to `self.file` in
-    addition to working normally.
+    A helper function for run_tests(). Takes a `key` and `list`, of which list is comprised
+    of different Match objects. Then, each item of `list` is matched to `key`, and if so, 
+    True is appended to the list, otherwise False. Then, contains() is called to check for True.
     """
-    def __init__(self, name):
-        self.file = open(name, "w")
-        self.stdout = sys.stdout
-        sys.stdout = self
-    
-    def close(self):
-        sys.stdout = self.stdout
-        self.file.close()
+    temp = []
+    for item in list:
+        temp.append(item.match(key))
+    return(contains(True, temp))
 
-    def __del__(self):
-        self.close()
+def run_tests(source_dir, speclang_list, specname_list, specnum: int, m_list, error_list, doseol):
 
-    def write(self, data):
-        self.file.write(data)
-        self.stdout.write(data)
-    
-    def flush(self):
-        self.file.flush()
-        self.stdout.flush()
+    total_count = 0
+    error_count = 0
+    unittext = ""
 
-
-current_time = datetime.now()
-error_filename = error_filename + "_" + current_time.isoformat().replace(":", "-") + error_filename_extension
-tee = Tee(error_filename)
-
-print("Testing:")
-print()
-
-# Handle optional dos line endings
-doseol = False
-if len(sys.argv) > 1 and sys.argv[1] == "--dos":
-        sys.argv.pop(0)
-        doseol = True
-
-
-# if the user specifies a test name (the url attributes on archives are
-# considered to be the test names) and/or test number and/or test language,
-# parse those from the command line so that only the corresponding tests will
-# be run
-specname = ""
-if len(sys.argv) > 1:
-    specname = sys.argv[1]
-
-if specname != "":
-    print(specname)
-
-specnum = 0
-speclang = ""
-if len(sys.argv) == 3:
-    result = sys.argv[2]
-    if result == "C++" or result == "C" or result == "C#" or result == "Objective-C" or result == "Java":
-        speclang = result
-    else:
-        specnum = int(sys.argv[2])
-elif len(sys.argv) == 2:
-    result = sys.argv[1]
-    if result == "C++" or result == "C" or result == "C#" or result == "Objective-C" or result == "Java":
-        speclang = result
-        specname = ""
-    else:
-        specname = result
-elif len(sys.argv) > 2:
-    specnum = int(sys.argv[2])
-
-    if len(sys.argv) > 3:
-        speclang = sys.argv[3]
-
-errorlist = []
-
-m = re.compile(specname + "$")
-
-# source directory
-source_dir = "suite"
-
-# total number of errors
-error_count = 0
-
-# total test cases
-total_count = 0
-
-try:
-            
-    # process all files        
     for root, dirs, files in os.walk(source_dir, topdown=True):        
-
         # process all files
         for name in files:
             try:
-
                 # only process xml files
                 if os.path.splitext(name)[1] != ".xml":
                     continue
@@ -338,9 +256,8 @@ try:
                     continue
 
                 url = archive_info["url"]
-
                 # only process if url name matches or is not given
-                if specname != "" and m.match(url) == None:
+                if not contains(url, specname_list) and not match_list(url, m_list) and specname_list != []:
                     continue
 
                 # number of nested units
@@ -380,7 +297,7 @@ try:
                                 language = "C++"
 
                             # only process if language matches or is not given
-                            if speclang != "" and language != speclang:
+                            if not contains(language, speclang_list) and speclang_list != []:
                                 continue
                         
                             # output language and url
@@ -392,10 +309,6 @@ try:
                         # convert the unit in xml to text
                         unit_text_version_one = extract_source(xml_filename, count, 0)
                         unit_text_version_two = extract_source(xml_filename, count, 1)
-
-                        # convert the unit in xml to text (if needed)
-                        if doseol:
-                                unittext = convert_unix_to_dos(unittext)
                         
                         unit_info = json.loads(
                             safe_communicate_file(
@@ -405,7 +318,7 @@ try:
                         )
 
                         # convert the text to srcML
-                        unitsrcml = convert_to_srcdiff(unit_text_version_one, unit_text_version_two, language, unit_info["filename"])
+                        unitsrcml = convert_to_srcdiff(unit_text_version_one, unit_text_version_two, language, unit_info["filename"], url, doseol)
 
                         test_number = count * 2 - 1
                         if url == "interchange":
@@ -414,7 +327,7 @@ try:
                         # find the difference
                         result, character_count = find_difference(unitxml, unitsrcml, test_number, character_count)
 
-                        error_count = update_error_list(result, error_count, errorlist, url, language, test_number, num_nested_units)
+                        error_count = update_error_list(result, error_count, error_list, url, language, test_number, num_nested_units)
 
                         # special case: interchange tests are not swappable
                         if url == "interchange":
@@ -435,86 +348,179 @@ try:
 
                         os.remove(temp_xml_path)
 
-                        # convert the unit in xml to text (if needed)
-                        if doseol:
-                            unittext = convert_unix_to_dos(unittext)
-
                         # convert text to srcML
-                        unitsrcml = convert_to_srcdiff(unit_text_version_one, unit_text_version_two, language, unit_info["filename"])
+                        unitsrcml = convert_to_srcdiff(unit_text_version_one, unit_text_version_two, language, unit_info["filename"], url, doseol)
                         
                         test_number += 1
 
                         # find the difference
                         result, character_count = find_difference(unitxml, unitsrcml, test_number, character_count)
 
-                        error_count = update_error_list(result, error_count, errorlist, url, language, count * 2, num_nested_units)
+                        error_count = update_error_list(result, error_count, error_list, url, language, count * 2, num_nested_units)
     
-                    except OSError as e:
-                        errornum, strerror = e.args
+                    except subprocess.CalledProcessError as e:
+                        error_num, str_error = e.args
                         continue
 
-            except OSError as e:
-                errornum, strerror = e.args
+            except subprocess.CalledProcessError as e:
+                error_num, str_error = e.args
                 continue
+    return (error_list, total_count, error_count)
 
-    ki = False
-except KeyboardInterrupt:
-    ki = True
+def test_cleanup():
+    """
+    removes any temporary files generated by the program.
+    """
+    extensions = ["cpp", "java"]
+    for ext in extensions:
+        if os.path.exists(f"temp_file_one.{ext}"):
+            os.remove(f"temp_file_one.{ext}")
+        if os.path.exists(f"temp_file_two.{ext}"):
+            os.remove(f"temp_file_two.{ext}")
+
+class Tee:
+    """
+    Overrides `sys.stdout` so that standard output is written to `self.file` in
+    addition to working normally.
+    """
+    def __init__(self, name):
+        self.file = open(name, "w")
+        self.stdout = sys.stdout
+        sys.stdout = self
     
-print("\n\nReport:\n")
-if ki:
-    print("\nTesting stopped by keyboard")
+    def close(self):
+        sys.stdout = self.stdout
+        self.file.close()
+
+    def __del__(self):
+        self.close()
+
+    def write(self, data):
+        self.file.write(data)
+        self.stdout.write(data)
     
-# output error counts
-# and delete error file
+    def flush(self):
+        self.file.flush()
+        self.stdout.flush()
 
-print()
+def print_report(error_list, total_count, error_count):
+    print()
+    if error_count == 0:
+        print(f"No errors out of {str(total_count)} cases")
+    else:
 
-if error_count == 0:
-    print("No errors out of " + str(total_count) + " cases")
-else:
+        # break error_list into two, one with original name, one with a name with a dot in it
+        oerrorlist = []
+        xerrorlist = []
+        for e in error_list:
+            if str(e[0]).count(".") == 0:
+                oerrorlist.append(e)
+            else:
+                xerrorlist.append(e)
 
-    # break errorlist into two, one with original name, one with a name with a dot in it
-    oerrorlist = []
-    xerrorlist = []
-    for e in errorlist:
-        if str(e[0]).count(".") == 0:
-            oerrorlist.append(e)
-        else:
-            xerrorlist.append(e)
+        print(f"Errors: {str(error_count)} out of {str(total_count)}" + (" case" if str(total_count) == "1" else " cases"))
+        print("\n")
+        print("error_list:")
+        for e in oerrorlist:
+            othererror = ""
+            for x in xerrorlist[:]:
+                if str(e[0]).split(' ')[1] != str(x[0]).split(' ')[1]:
+                    continue
 
-    print("Errors:  " + str(error_count) + " out of " + str(total_count) + (" case" if str(total_count) == "1" else " cases"))
-    print("\n")
-    print("Errorlist:")
-    nxerrorlist = xerrorlist[:]
-    for e in oerrorlist:
-        othererror = ""
-        for x in xerrorlist[:]:
-            if str(e[0]).split(' ')[1] != str(x[0]).split(' ')[1]:
-                continue
+                if str(e[1]) != str(x[1]):
+                    continue
 
-            if str(e[1]) != str(x[1]):
-                continue
+                if str(x[0]).split('.')[0] == str(e[0]).split(' ')[0]:
+                    othererror = othererror + " " + str(x[0]).split(' ')[0].split('.')[1]
 
-            if str(x[0]).split('.')[0] == str(e[0]).split(' ')[0]:
-                othererror = othererror + " " + str(x[0]).split(' ')[0].split('.')[1]
+                xerrorlist.remove(x)
 
-            xerrorlist.remove(x)
+            print(e[0], e[1], othererror, "\n", "".join(e[2][3:]))
 
-        print(e[0], e[1], othererror, "\n", "".join(e[2][3:]))
+        for e in xerrorlist:
+            print(e[0], e[1], "\n", "".join(e[2][3:]))
 
-    for e in xerrorlist:
-        print(e[0], e[1], "\n", "".join(e[2][3:]))
+    # output tool errors counts
+    print()
+    if len(sperrorlist) == 0:
+        print("No tool errors")
+    else:
+        print("Tool errors:  " + str(len(sperrorlist)))
+        print("Tool error_list:")
+        for e in sperrorlist:
+            print(e[0], e[1], e[2], e[3])
 
-# output tool errors counts
-print()
-if len(sperrorlist) == 0:
-    print("No tool errors")
-else:
-    print("Tool errors:  " + str(len(sperrorlist)))
-    print("Tool Errorlist:")
-    for e in sperrorlist:
-        print(e[0], e[1], e[2], e[3])
 
-tee.close()
-test_cleanup()
+# source directory
+source_dir = "suite"
+
+# total number of errors
+error_count = 0
+
+# total test cases
+total_count = 0
+
+class arg_catcher():
+    # A very simple helper class; used in main to enable easy access of processed CLI
+    pass
+
+def build_parser():
+    parser = argparse.ArgumentParser(
+        prog='srcDiff Testing Utility',
+        description='Runs the test suite for srcDiff',
+        epilog="Thanks!"
+    )
+    parser.add_argument('-l', '--lang', type=str, nargs="*", required=False,
+                        help="specify the languages to test")
+    parser.add_argument('-s', '--spec', type=str, nargs="*", required=False,
+                        help="specify a list of tests in the format [<test>, <test>, ...]")
+    parser.add_argument('-n', '--num', type=int, required=False, default=0,
+                        help="specify the test number to run")
+    parser.add_argument('-d', '--dos', required=False, action="store_true",
+                        help="optionally convert UNIX line endings to DOS line endings")
+    return parser
+
+def main():
+    error_filename = "reports/srcDiffTestReport"
+    error_filename_extension = ".txt"
+    current_time = datetime.now()
+    error_filename = error_filename + "_" + current_time.isoformat().replace(":", "-") + error_filename_extension
+    tee = Tee(error_filename)
+    parser = build_parser()
+    args = arg_catcher()
+    # necessary variables for argument holding
+    error_list = []
+    speclang_list = []
+    specname_list = []
+    m_list = []
+    total_count = 0
+    error_count = 0
+    # parse arguments
+    parser.parse_args(namespace=args)
+    if args.lang:
+        speclang_list = args.lang[:]
+    if args.spec:
+        specname_list = args.spec[:]
+        for item in args.spec:
+            m_list.append(re.compile(item + "$"))
+    specnum = args.num
+    doseol = args.dos
+    print("Testing:")
+    print()
+    try:
+        error_list, total_count, error_count = run_tests("suite", speclang_list, specname_list, specnum, m_list, error_list, doseol)
+        ki = False
+    except KeyboardInterrupt:
+        ki = True
+    
+    print("\n\nReport:\n")
+    if ki:
+        print("\nTesting stopped by keyboard")
+
+    print_report(error_list, total_count, error_count)
+
+    tee.close()
+    test_cleanup()
+
+if __name__ == "__main__":
+    main()

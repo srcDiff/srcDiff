@@ -4,6 +4,7 @@ build
 
 test/cli/*log*
 test/cli/tmp
+test/reports
 
 *.vcxproj*
 *.sln
@@ -28,3 +29,4 @@ DartConfiguration.tcl
 Testing
 Makefile
 _deps
+
