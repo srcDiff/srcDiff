@@ -450,16 +450,6 @@ def print_report(error_list, total_count, error_count):
         for e in sperrorlist:
             print(e[0], e[1], e[2], e[3])
 
-
-# source directory
-source_dir = "suite"
-
-# total number of errors
-error_count = 0
-
-# total test cases
-total_count = 0
-
 class arg_catcher():
     # A very simple helper class; used in main to enable easy access of processed CLI
     pass
@@ -488,6 +478,7 @@ def main():
     tee = Tee(error_filename)
     parser = build_parser()
     args = arg_catcher()
+    source_dir = "suite"
     # necessary variables for argument holding
     error_list = []
     speclang_list = []
@@ -508,7 +499,7 @@ def main():
     print("Testing:")
     print()
     try:
-        error_list, total_count, error_count = run_tests("suite", speclang_list, specname_list, specnum, m_list, error_list, doseol)
+        error_list, total_count, error_count = run_tests(source_dir, speclang_list, specname_list, specnum, m_list, error_list, doseol)
         ki = False
     except KeyboardInterrupt:
         ki = True
