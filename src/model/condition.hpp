@@ -7,14 +7,14 @@
 #ifndef INCLUDED_CONDITION_HPP
 #define INCLUDED_CONDITION_HPP
 
-#include <always_matched_construct.hpp>
+#include <always_match.hpp>
 
-class condition : public always_matched_construct {
+class condition : public always_match {
 
 public:
 
     condition(const construct* parent, std::size_t& start)
-        : always_matched_construct(parent, start) {
+        : always_match(parent, start) {
     }
     virtual std::string to_string(bool skip_whitespace = false) const;
 
