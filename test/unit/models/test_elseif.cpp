@@ -84,10 +84,10 @@ BOOST_DATA_TEST_CASE(elseif_condition_test, data::make(test_cases_elseif_conditi
 }
 
 std::vector<std::tuple<std::string, std::string>> test_cases_elseif_block = {
-    {"else if (i){test;}"   , "{test;}"       },
-    {"else if (i>0){a.out;}", "{a.out;}"      },
-    {"else if (d>1){d=1}"   , "{d=1}"         },
-    {"else if (d<1){d=1}"   , "{d=1}"         },
+    {"else if (i){test;}"    , "{test;}"      },
+    {"else if (i>0){a.out;}" , "{a.out;}"     },
+    {"else if (d>1){d=1}"    , "{d=1}"        },
+    {"else if (d<1){d=1}"    , "{d=1}"        },
     {"else if (i){}"         , "{}"           },
     {"else if (d>1){}"       , "{}"           },
     {"else if (d<1){}"       , "{}"           },
