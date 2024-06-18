@@ -5,7 +5,6 @@
 #
 #  This file is part of the srcDiff translator.
 
-
 # MSVC-specific tool configuration
 
 # Use vcpkg
