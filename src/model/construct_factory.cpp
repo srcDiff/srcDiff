@@ -32,21 +32,21 @@
 
 #include <decl_stmt.hpp>
 
-#include <always_matched_construct.hpp>
+#include <always_match.hpp>
 
 #include <block.hpp>
 
 #include <srcdiff_match.hpp>
 
 #include <nest/rule_checker.hpp>
-#include <nest/custom_nest.hpp>
+#include <nest/custom.hpp>
 #include <nest/similar.hpp>
 #include <nest/block.hpp>
 #include <nest/name.hpp>
 #include <nest/expr.hpp>
 
 #include <convert/rule_checker.hpp>
-#include <convert/custom_convert.hpp>
+#include <convert/custom.hpp>
 #include <convert/class.hpp>
 #include <convert/conditional.hpp>
 #include <convert/else.hpp>
@@ -72,29 +72,29 @@ factory_function generate_factory() {
           };
 }
 
-typedef nest::custom_nest<"expr", "call", "operator", "literal", "name">
+typedef nest::custom<"expr", "call", "operator", "literal", "name">
         expr_nest;
 
-typedef nest::custom_nest<"function", "constructor", "destructor",
+typedef nest::custom<"function", "constructor", "destructor",
                           "function_decl", "constructor_decl", "destructor_decl",
                           "decl_stmt", "typedef"
                           "class", "struct", "union", "enum",
                           "class_decl", "struct_decl", "union_decl", "enum_decl">
         class_nest;
 
-typedef nest::custom_nest<"goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
+typedef nest::custom<"goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
                           "if", "while", "for", "foreach", "else", "elseif", "switch", "do",
                           "try", "catch", "finally", "synchronized",
                           "expr", "call", "operator", "literal", "continue", "break", "goto">
         then_nest;
 
-typedef nest::custom_nest<"goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
+typedef nest::custom<"goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
                           "if_stmt", "if", "while", "for", "foreach", "switch", "do",
                           "try", "catch", "finally", "synchronized",
                           "expr", "call", "operator", "literal", "continue", "break", "goto">
         else_nest;
 
-typedef nest::custom_nest<"decl_stmt", "function_decl", "function", "class", "class_decl",
+typedef nest::custom<"decl_stmt", "function_decl", "function", "class", "class_decl",
                           "struct", "struct_decl", "union", "union_decl", "typedef", "using">
         extern_nest;
 
@@ -112,9 +112,9 @@ factory_map_type factory_map = {
   {"enum",   generate_factory<named_construct, class_nest, convert::class_t>() },
 
   // access regions
-  {"public",    generate_factory<always_matched_construct, class_nest, convert::custom_convert<"public", "private", "protected">>() },
-  {"private",   generate_factory<always_matched_construct, class_nest, convert::custom_convert<"public", "private", "protected">>() },
-  {"protected", generate_factory<always_matched_construct, class_nest, convert::custom_convert<"public", "private", "protected">>() },
+  {"public",    generate_factory<always_match, class_nest, convert::custom<"public", "private", "protected">>() },
+  {"private",   generate_factory<always_match, class_nest, convert::custom<"public", "private", "protected">>() },
+  {"protected", generate_factory<always_match, class_nest, convert::custom<"public", "private", "protected">>() },
 
   // function-type
   {"function",         generate_factory<named_construct, nest::block>() },
@@ -141,11 +141,11 @@ factory_map_type factory_map = {
   {"case", generate_factory<case_t>() },
 
   {"call",          generate_factory<call, expr_nest>() },
-  {"argument_list", generate_factory<always_matched_construct, expr_nest>() },
-  {"argument",      generate_factory<always_matched_construct, expr_nest>() },
+  {"argument_list", generate_factory<always_match, expr_nest>() },
+  {"argument",      generate_factory<always_match, expr_nest>() },
   {"expr",          generate_factory<expr_t, nest::expr_t>() },
 
-  {"decl",      generate_factory<named_construct, nest::custom_nest<"expr">>() },
+  {"decl",      generate_factory<named_construct, nest::custom<"expr">>() },
   {"parameter", generate_factory<identifier_decl>() },
   {"param",     generate_factory<identifier_decl>() },
 
@@ -154,38 +154,38 @@ factory_map_type factory_map = {
 
   {"decl_stmt", generate_factory<decl_stmt, nest::rule_checker, convert::expr_construct>() },
 
-  {"cast", generate_factory<construct, nest::rule_checker, convert::custom_convert<"cast">>() },
+  {"cast", generate_factory<construct, nest::rule_checker, convert::custom<"cast">>() },
 
-  {"type",          generate_factory<always_matched_construct>() },
-  {"then",          generate_factory<always_matched_construct, then_nest>() },
-  {"control",       generate_factory<always_matched_construct, nest::custom_nest<"condition", "comment">>() },
-  {"init",          generate_factory<always_matched_construct, nest::custom_nest<"expr">>() },
-  {"default",       generate_factory<always_matched_construct>() },
-  {"range",         generate_factory<always_matched_construct>() },
-  {"signal",        generate_factory<always_matched_construct>() },
+  {"type",          generate_factory<always_match>() },
+  {"then",          generate_factory<always_match, then_nest>() },
+  {"control",       generate_factory<always_match, nest::custom<"condition", "comment">>() },
+  {"init",          generate_factory<always_match, nest::custom<"expr">>() },
+  {"default",       generate_factory<always_match>() },
+  {"range",         generate_factory<always_match>() },
+  {"signal",        generate_factory<always_match>() },
 
-  {"literal",  generate_factory<always_matched_construct>() },
-  {"modifier", generate_factory<always_matched_construct>() },
+  {"literal",  generate_factory<always_match>() },
+  {"modifier", generate_factory<always_match>() },
 
-  {"number", generate_factory<always_matched_construct>() },
-  {"file",   generate_factory<always_matched_construct>() },
+  {"number", generate_factory<always_match>() },
+  {"file",   generate_factory<always_match>() },
      
-  {"parameter_list",   generate_factory<always_matched_construct>() },
-  {"krparameter_list", generate_factory<always_matched_construct>() },
-  {"attribute_list",   generate_factory<always_matched_construct>() },
-  {"association_list", generate_factory<always_matched_construct>() },
-  {"protocol_list",    generate_factory<always_matched_construct>() },
+  {"parameter_list",   generate_factory<always_match>() },
+  {"krparameter_list", generate_factory<always_match>() },
+  {"attribute_list",   generate_factory<always_match>() },
+  {"association_list", generate_factory<always_match>() },
+  {"protocol_list",    generate_factory<always_match>() },
 
-  {"super_list",       generate_factory<always_matched_construct>() },
-  {"member_init_list", generate_factory<always_matched_construct>() },
-  {"member_list",      generate_factory<always_matched_construct>() },
-  {"super_list",       generate_factory<always_matched_construct>() },
+  {"super_list",       generate_factory<always_match>() },
+  {"member_init_list", generate_factory<always_match>() },
+  {"member_list",      generate_factory<always_match>() },
+  {"super_list",       generate_factory<always_match>() },
 
   {"block", generate_factory<block, nest::block>() },
-  {"block_content", generate_factory<always_matched_construct, nest::block>() },
+  {"block_content", generate_factory<always_match, nest::block>() },
 
-  {"operator", generate_factory<always_matched_construct, nest::similar>() },
-  {"comment",  generate_factory<always_matched_construct, nest::similar>() },
+  {"operator", generate_factory<always_match, nest::similar>() },
+  {"comment",  generate_factory<always_match, nest::similar>() },
 
   // nest only
   {"try",      generate_factory<construct, nest::block>() },
@@ -194,9 +194,9 @@ factory_map_type factory_map = {
 
   {"synchronized", generate_factory<construct, nest::block>() },
 
-  {"static", generate_factory<construct, nest::custom_nest<"decl_stmt">>() },
+  {"static", generate_factory<construct, nest::custom<"decl_stmt">>() },
 
-  {"ternary", generate_factory<construct, nest::custom_nest<"ternary", "call", "operator", "literal", "expr", "name">>() },
+  {"ternary", generate_factory<construct, nest::custom<"ternary", "call", "operator", "literal", "expr", "name">>() },
 
   {"extern", generate_factory<construct, extern_nest>() },
 
