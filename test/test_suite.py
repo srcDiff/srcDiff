@@ -14,6 +14,8 @@ import difflib
 import argparse
 from datetime import datetime, time
 
+
+
 try:
     SHELL_ROWS, SHELL_COLUMNS = subprocess.check_output(['stty', 'size']).split()
 except (subprocess.CalledProcessError, FileNotFoundError):
@@ -36,6 +38,50 @@ else:
 switch_utility = f"{executable_path}/switch_differences"
 archive_reader = f"{executable_path}/archive_reader"
 srcdiff_utility = f"{executable_path}/srcdiff"
+
+
+def main():
+    error_filename = "reports/srcDiffTestReport"
+    error_filename_extension = ".txt"
+    current_time = datetime.now()
+    error_filename = error_filename + "_" + current_time.isoformat().replace(":", "-") + error_filename_extension
+    tee = Tee(error_filename)
+    parser = build_parser()
+    args = arg_catcher()
+    source_dir = "suite"
+    # necessary variables for argument holding
+    error_list = []
+    speclang_list = []
+    specname_list = []
+    m_list = []
+    total_count = 0
+    error_count = 0
+    # parse arguments
+    parser.parse_args(namespace=args)
+    if args.lang:
+        speclang_list = args.lang[:]
+    if args.spec:
+        specname_list = args.spec[:]
+        for item in args.spec:
+            m_list.append(re.compile(item + "$"))
+    specnum = args.num
+    doseol = args.dos
+    print("Testing:")
+    print()
+    try:
+        error_list, total_count, error_count = run_tests(source_dir, speclang_list, specname_list, specnum, m_list, error_list, doseol)
+        ki = False
+    except KeyboardInterrupt:
+        ki = True
+    
+    print("\n\nReport:\n")
+    if ki:
+        print("\nTesting stopped by keyboard")
+
+    print_report(error_list, total_count, error_count)
+
+    tee.close()
+    test_cleanup()
 
 def safe_communicate(command, input=None):
     """
@@ -154,6 +200,7 @@ def srcdiff(source_file_version_one, source_file_version_two, language, filename
     if doseol:
         convert_unix_to_dos(f"temp_file_one.{extension}")
         convert_unix_to_dos(f"temp_file_two.{extension}")
+    
     return safe_communicate_two_files(command, "temp_file_one." + extension, "temp_file_two." + extension, url)
 
 def find_difference(unitxml, unitsrcml, test_number, character_count):
@@ -167,6 +214,7 @@ def find_difference(unitxml, unitsrcml, test_number, character_count):
     if character_count > FIELD_WIDTH_TEST_CASES:
         print("\n", "".rjust(FIELD_WIDTH_LANGUAGE), "...".ljust(FIELD_WIDTH_URL))
         character_count = get_character_count(test_number)
+    
     return (result, character_count)
 
 def update_error_list(result, error_count, error_list, url, language, num, num_nested_units):
@@ -185,6 +233,7 @@ def update_error_list(result, error_count, error_list, url, language, num, num_n
 
         # part of list of nested unit number in output
         print(f"\033[0;33m{str(num)}\033[0m", end=' ')
+    
     return error_count
 
 def convert_to_srcdiff(unit_text_version_one, unit_text_version_two, lang, filename, url, doseol):
@@ -211,27 +260,6 @@ def get_character_count(count):
     
     return len(str(count)) + 1
 
-def contains(key, list):
-    """
-    A helper function for run_tests(). Takes a `key` and searches `list` for that key and
-    returns True upon finding it, otherwise returning False.
-    """
-    for item in list:
-        if key == item:
-            return True
-    return False
-
-def match_list(key, list):
-    """
-    A helper function for run_tests(). Takes a `key` and `list`, of which list is comprised
-    of different Match objects. Then, each item of `list` is matched to `key`, and if so, 
-    True is appended to the list, otherwise False. Then, contains() is called to check for True.
-    """
-    temp = []
-    for item in list:
-        temp.append(item.match(key))
-    return(contains(True, temp))
-
 def run_tests(source_dir, speclang_list, specname_list, specnum: int, m_list, error_list, doseol):
 
     total_count = 0
@@ -257,7 +285,7 @@ def run_tests(source_dir, speclang_list, specname_list, specnum: int, m_list, er
 
                 url = archive_info["url"]
                 # only process if url name matches or is not given
-                if not contains(url, specname_list) and not match_list(url, m_list) and specname_list != []:
+                if url not in specname_list and True not in [item.match(url) for item in m_list] and specname_list != []:
                     continue
 
                 # number of nested units
@@ -297,7 +325,7 @@ def run_tests(source_dir, speclang_list, specname_list, specnum: int, m_list, er
                                 language = "C++"
 
                             # only process if language matches or is not given
-                            if not contains(language, speclang_list) and speclang_list != []:
+                            if language not in speclang_list and speclang_list != []:
                                 continue
                         
                             # output language and url
@@ -469,49 +497,6 @@ def build_parser():
     parser.add_argument('-d', '--dos', required=False, action="store_true",
                         help="optionally convert UNIX line endings to DOS line endings")
     return parser
-
-def main():
-    error_filename = "reports/srcDiffTestReport"
-    error_filename_extension = ".txt"
-    current_time = datetime.now()
-    error_filename = error_filename + "_" + current_time.isoformat().replace(":", "-") + error_filename_extension
-    tee = Tee(error_filename)
-    parser = build_parser()
-    args = arg_catcher()
-    source_dir = "suite"
-    # necessary variables for argument holding
-    error_list = []
-    speclang_list = []
-    specname_list = []
-    m_list = []
-    total_count = 0
-    error_count = 0
-    # parse arguments
-    parser.parse_args(namespace=args)
-    if args.lang:
-        speclang_list = args.lang[:]
-    if args.spec:
-        specname_list = args.spec[:]
-        for item in args.spec:
-            m_list.append(re.compile(item + "$"))
-    specnum = args.num
-    doseol = args.dos
-    print("Testing:")
-    print()
-    try:
-        error_list, total_count, error_count = run_tests(source_dir, speclang_list, specname_list, specnum, m_list, error_list, doseol)
-        ki = False
-    except KeyboardInterrupt:
-        ki = True
-    
-    print("\n\nReport:\n")
-    if ki:
-        print("\nTesting stopped by keyboard")
-
-    print_report(error_list, total_count, error_count)
-
-    tee.close()
-    test_cleanup()
 
 if __name__ == "__main__":
     main()
