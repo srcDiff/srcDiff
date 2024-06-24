@@ -18,17 +18,18 @@
 namespace data = boost::unit_test::data;
 
 std::vector<std::tuple<std::string, std::string, std::string>> test_cases_named_construct_name = {
-    {"class test_class {};"                , "test_class"     , "class"           },
-    {"struct test_struct {};"              , "test_struct"    , "struct"          },
-    {"union test_union {};"                , "test_union"     , "union"           },
-    {"enum test_enum {};"                  , "test_enum"      , "enum"            },
-    {"int test_function(){}"               , "test_function"  , "function"        },
-    {"void test_function();"               , "test_function"  , "function_decl"   },
-    {"class test_class {test_class(){}};"  , "test_class"     , "constructor"     },
-    {"class test_class {test_class();};"   , "test_class"     , "constructor_decl"},
-    {"class test_class {~test_class(){}};" , "~test_class"    , "destructor"      },
-    {"class test_class {~test_class();};"  , "~test_class"    , "destructor_decl" },
-    {"int test_decl;"                      , "test_decl"      , "decl"            }
+    {"class test_class {};"                , "test_class"           , "class"           },
+    {"struct test_struct {};"              , "test_struct"          , "struct"          },
+    {"union test_union {};"                , "test_union"           , "union"           },
+    {"enum test_enum {};"                  , "test_enum"            , "enum"            },
+    {"int test_function(){}"               , "test_function"        , "function"        },
+    {"int test::test_function(){}"         , "test::test_function"  , "function"        },
+    {"void test_function();"               , "test_function"        , "function_decl"   },
+    {"class test_class {test_class(){}};"  , "test_class"           , "constructor"     },
+    {"class test_class {test_class();};"   , "test_class"           , "constructor_decl"},
+    {"class test_class {~test_class(){}};" , "~test_class"          , "destructor"      },
+    {"class test_class {~test_class();};"  , "~test_class"          , "destructor_decl" },
+    {"int test_decl;"                      , "test_decl"            , "decl"            }
 };
 
 BOOST_DATA_TEST_CASE(named_construct_name, data::make(test_cases_named_construct_name), original, expected, construct_type) {
