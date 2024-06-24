@@ -34,3 +34,4 @@ add_custom_target(suite
     USES_TERMINAL
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
+add_dependencies(suite srcdiff)
