@@ -17,7 +17,6 @@ public:
         : construct(parent, start) {
     }
 
-    std::string simple_name() const;
     virtual bool is_matchable_impl(const construct & modified) const;
 
 };
