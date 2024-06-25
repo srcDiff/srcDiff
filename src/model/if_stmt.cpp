@@ -6,8 +6,6 @@
  */
 #include <if_stmt.hpp>
 
-#include <if.hpp>
-#include <else.hpp>
 #include <clause.hpp>
 
 #include <srcdiff_match.hpp>
