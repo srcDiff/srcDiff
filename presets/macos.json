@@ -10,26 +10,15 @@
   ],
   "configurePresets": [
     {
-      "name": "macos-release",
-      "inherits": ["clang-release"],
+      "name": "ci-macos",
+      "inherits": ["ci-clang"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "displayName": "macOS Release",
       "description": "Default build options for macOS release",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
+        "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
         "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64",
         "CMAKE_OSX_DEPLOYMENT_TARGET": "10.15"
-      }
-    },
-    {
-      "name": "clang-release",
-      "inherits": ["clang"],
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
-      "displayName": "Clang Release",
-      "description": "Default build options for Clang release",
-      "cacheVariables": {
-        "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
-        "CMAKE_BUILD_TYPE": "Release" 
       }
     }
   ]
