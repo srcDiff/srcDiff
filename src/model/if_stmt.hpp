@@ -8,9 +8,8 @@
 #define INCLUDED_IF_STMT_HPP
 
 #include <conditional.hpp>
-
-class if_t;
-class else_t;
+#include <if.hpp>
+#include <else.hpp>
 
 class if_stmt : public conditional {
 
