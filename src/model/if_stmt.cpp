@@ -7,6 +7,7 @@
 #include <if_stmt.hpp>
 
 #include <clause.hpp>
+#include <elseif.hpp>
 
 #include <srcdiff_match.hpp>
 
@@ -15,7 +16,11 @@ std::shared_ptr<const if_t> if_stmt::find_if() const {
 
     const construct_list & childs = children();
     if(!childs.empty() && childs.front()->root_term_name() == "if") {
-        if_child = std::static_pointer_cast<const if_t>(childs.front());
+        if(childs.front()->root_term()->get_attribute("type")) {
+            if_child = std::static_pointer_cast<const elseif>(childs.front())->find_if();
+        } else {
+            if_child = std::static_pointer_cast<const if_t>(childs.front());
+        }
     } else {
         if_child = std::shared_ptr<const if_t>();
     }
