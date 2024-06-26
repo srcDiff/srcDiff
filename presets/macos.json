@@ -14,10 +14,11 @@
   "configurePresets": [
     {
       "name": "ci-macos",
-      "inherits": ["ci-clang"],
+      "inherits": ["ci-clang", "subdirectory-build"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "displayName": "macOS Release",
       "description": "Default build options for macOS release",
+      "generator": "Ninja",
       "cacheVariables": {
         "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
         "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64",
@@ -54,8 +55,8 @@
       "steps": [
         { "type": "configure", "name": "ci-macos" },
         { "type": "build",     "name": "ci-macos" },
-        { "type": "build",     "name": "ci-test-unit-macos" },
-        { "type": "build",     "name": "ci-test-suite-macos" }
+        { "type": "build",     "name": "ci-test-suite-macos" },
+        { "type": "build",     "name": "ci-test-unit-macos" }
       ]
     }
   ]

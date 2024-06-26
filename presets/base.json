@@ -9,11 +9,16 @@
 
   "configurePresets": [
     {
-      "name": "vcpkg",
+      "name": "sibling-build",
+      "description": "Sibling build",
       "hidden": true,
-      "cacheVariables": {
-        "CMAKE_USE_VCPKG": true
-      }
+      "binaryDir": "${sourceParentDir}/${sourceDirName}-build"
+    },
+    {
+      "name": "subdirectory-build",
+      "description": "Subdirectory build",
+      "hidden": true,
+      "binaryDir": "build"
     },
     {
       "name": "clang",
@@ -59,6 +64,13 @@
       "description": "Default build options for GCC release",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "vcpkg",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_USE_VCPKG": true
       }
     }
   ],

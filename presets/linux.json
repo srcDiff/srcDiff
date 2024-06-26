@@ -14,17 +14,19 @@
   "configurePresets": [
     {
       "name": "ci-ubuntu",
+      "inherits" : ["ci-gcc", "subdirectory-build"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },   
       "displayName": "Ubuntu Release",
-      "description": "Default build options for Ubuntu release",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
-      "inherits" : ["ci-gcc"]
+      "description": "Default build options for Ubuntu release", 
+      "generator": "Ninja"
     }, 
     {
       "name": "ci-rpm",
+      "inherits": ["ci-gcc", "subdirectory-build"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "displayName": "GCC Release",
       "description": "Default build options for GCC release",
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
-      "inherits": ["ci-gcc"]
+      "generator": "Ninja"
     }
   ],
 
