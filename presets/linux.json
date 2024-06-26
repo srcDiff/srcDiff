@@ -1,13 +1,16 @@
 {
   "version": 8,
+
   "cmakeMinimumRequired": {
     "major": 3,
     "minor": 28,
     "patch": 0
   },
+
   "include": [
     "base.json"
   ],
+
   "configurePresets": [
     {
       "name": "ci-ubuntu",
@@ -22,6 +25,46 @@
       "description": "Default build options for GCC release",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "inherits": ["ci-gcc"]
+    }
+  ],
+
+  "buildPresets" : [
+    {
+      "name": "ci-ubuntu",
+      "displayName": "Ubuntu",
+      "description": "Build for Ubuntu",
+      "condition": {
+        "type": "allOf",
+        "conditions": [
+          { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+          { "type": "inList", "string": "$env{WORKFLOW}", "list": ["ubuntu", ""] }
+        ]
+      },
+      "configurePreset": "ci-ubuntu",
+      "configuration": "Release"
+    },
+    {
+      "name": "ci-test-unit-ubuntu",
+      "inherits": ["ci-test-unit", "ci-ubuntu"]
+    },
+    {
+      "name": "ci-test-suite-ubuntu",
+      "inherits": ["ci-test-suite", "ci-ubuntu"]
+    }
+  ],
+
+  "testPresets": [
+  ],
+
+  "workflowPresets": [
+    {
+      "name": "ci-ubuntu",
+      "steps": [
+        { "type": "configure", "name": "ci-ubuntu" },
+        { "type": "build",     "name": "ci-ubuntu" },
+        { "type": "build",     "name": "ci-test-unit-ubuntu" },
+        { "type": "build",     "name": "ci-test-suite-ubuntu" }
+      ]
     }
   ]
 }

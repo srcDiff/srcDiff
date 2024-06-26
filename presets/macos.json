@@ -1,13 +1,16 @@
 {
   "version": 8,
+
   "cmakeMinimumRequired": {
     "major": 3,
     "minor": 28,
     "patch": 0
   },
+
   "include": [
     "base.json"
   ],
+
   "configurePresets": [
     {
       "name": "ci-macos",
@@ -20,6 +23,40 @@
         "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64",
         "CMAKE_OSX_DEPLOYMENT_TARGET": "10.15"
       }
+    }
+  ],
+
+  "buildPresets" : [
+    {
+      "name": "ci-macos",
+      "displayName": "macOS",
+      "description": "Build for macOS",
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "configurePreset": "ci-macos",
+      "configuration": "Release"
+    },
+    {
+      "name": "ci-test-unit-macos",
+      "inherits": ["ci-test-unit", "ci-macos"]
+    },
+    {
+      "name": "ci-test-suite-macos",
+      "inherits": ["ci-test-suite", "ci-macos"]
+    }  
+  ],
+
+  "testPresets": [
+  ],
+
+  "workflowPresets": [
+    {
+      "name": "ci-macos",
+      "steps": [
+        { "type": "configure", "name": "ci-macos" },
+        { "type": "build",     "name": "ci-macos" },
+        { "type": "build",     "name": "ci-test-unit-macos" },
+        { "type": "build",     "name": "ci-test-suite-macos" }
+      ]
     }
   ]
 }
