@@ -20,9 +20,10 @@
       "description": "Default build options for macOS release",
       "generator": "Ninja",
       "cacheVariables": {
-        "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
         "CMAKE_OSX_ARCHITECTURES": "x86_64;arm64",
-        "CMAKE_OSX_DEPLOYMENT_TARGET": "10.15"
+        "CMAKE_OSX_DEPLOYMENT_TARGET": "10.15",
+        "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
+        "CPACK_OUTPUT_FILE_PREFIX": "dist"
       }
     }
   ],
@@ -37,6 +38,10 @@
       "configuration": "Release"
     },
     {
+      "name": "ci-install-package-macos",
+      "inherits": [ "ci-macos", "ci-install-package" ]
+    },
+    {
       "name": "ci-test-unit-macos",
       "inherits": ["ci-test-unit", "ci-macos"]
     },
@@ -44,6 +49,16 @@
       "name": "ci-test-suite-macos",
       "inherits": ["ci-test-suite", "ci-macos"]
     }  
+  ],
+
+  "packagePresets": [
+    {
+      "name": "ci-macos",
+      "inherits": ["ci-base"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
+      "configurePreset": "ci-macos",
+      "generators": [ "productbuild", "TGZ", "TBZ2" ]
+    }
   ],
 
   "testPresets": [
@@ -54,7 +69,9 @@
       "name": "ci-macos",
       "steps": [
         { "type": "configure", "name": "ci-macos" },
-        { "type": "build",     "name": "ci-macos" },
+        { "type": "build",     "name": "ci-macos" },    
+        { "type": "package",   "name": "ci-macos" },
+        { "type": "build",     "name": "ci-install-package-macos" },
         { "type": "build",     "name": "ci-test-suite-macos" },
         { "type": "build",     "name": "ci-test-unit-macos" }
       ]

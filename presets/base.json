@@ -77,6 +77,12 @@
 
   "buildPresets": [
     {
+      "name": "ci-install-package",
+      "description": "Install a package",
+      "hidden": true,
+      "targets": ["install-package"]
+    },
+    {
       "name": "ci-test-unit",
       "description": "Unit Tests",
       "hidden": true,
@@ -87,6 +93,16 @@
       "description": "Suite Tests",
       "hidden": true,
       "targets": ["suite"]
+    }
+  ],
+
+  "packagePresets": [
+    {
+      "name": "ci-base",
+      "hidden": true,
+      "configurations": [ "Release" ],
+      "generators": [ "TGZ", "TBZ2" ],
+      "packageDirectory": "dist"
     }
   ]
 }
