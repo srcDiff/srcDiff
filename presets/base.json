@@ -1,0 +1,92 @@
+{
+  "version": 8,
+
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 28,
+    "patch": 0
+  },
+
+  "configurePresets": [
+    {
+      "name": "sibling-build",
+      "description": "Sibling build",
+      "hidden": true,
+      "binaryDir": "${sourceParentDir}/${sourceDirName}-build"
+    },
+    {
+      "name": "subdirectory-build",
+      "description": "Subdirectory build",
+      "hidden": true,
+      "binaryDir": "build"
+    },
+    {
+      "name": "clang",
+      "displayName": "Clang",
+      "description": "Default options for the Clang compiler",
+      "toolchainFile": "${sourceDir}/toolchains/toolchain-clang.cmake",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang++",
+        "CMAKE_C_COMPILER": "clang"
+      }
+    },
+    {
+      "name": "gcc",
+      "displayName": "GCC",
+      "description": "Default build options for GCC",
+      "toolchainFile": "${sourceDir}/toolchains/toolchain-gcc.cmake",
+      "cacheVariables": {
+        "CMAKE_C_FLAGS": "-Wall -Wextra -pedantic",
+        "CMAKE_CXX_FLAGS": "-Wall -Wextra -pedantic"
+      }
+    },
+    {
+      "name": "ci-base",
+      "hidden": true,
+      "cacheVariables": {
+        "BUILD_UNIT_TESTS": "ON",
+        "BUILD_TRANSLATOR_TESTS": "ON"
+      }
+    },
+    {
+      "name": "ci-clang",
+      "inherits": ["clang", "ci-base"],
+      "displayName": "Clang Release",
+      "description": "Default build options for Clang release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release" 
+      }
+    },
+    {
+      "name": "ci-gcc",
+      "inherits": ["gcc", "ci-base"],
+      "displayName": "GCC Release",
+      "description": "Default build options for GCC release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "vcpkg",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_USE_VCPKG": true
+      }
+    }
+  ],
+
+  "buildPresets": [
+    {
+      "name": "ci-test-unit",
+      "description": "Unit Tests",
+      "hidden": true,
+      "targets": ["test"]
+    },
+    {
+      "name": "ci-test-suite",
+      "description": "Suite Tests",
+      "hidden": true,
+      "targets": ["suite"]
+    }
+  ]
+}

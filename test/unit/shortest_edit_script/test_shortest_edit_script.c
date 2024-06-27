@@ -49,7 +49,6 @@ int main(int argc, char * argv[]) {
     assert(copy->previous                == NULL);
 
     free(copy);
-
   }
 
   {

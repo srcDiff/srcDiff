@@ -6,13 +6,15 @@
  */
 #include <test_utils.hpp>
 
+#include <construct_factory.hpp>
+
 #include <fstream>
 #include <string>
 #include <sstream>
 #include <srcml_converter.hpp>
 #include <iostream>
 #include <cstdio>
-
+#include <cassert>
 
 ssize_t str_read(void * context, void * buffer, size_t len) {
 
@@ -60,7 +62,33 @@ std::shared_ptr<srcml_nodes> create_nodes(const std::string & code, const std::s
 	return std::make_shared<srcml_nodes>(testNode);
 }
 
-std::shared_ptr<construct> create_test_construct(const srcml_nodes & nodes) {
-	size_t START = 0;
-	return create_construct(nodes, START);
+std::shared_ptr<const construct> create_test_construct_inner(std::shared_ptr<construct> parent, size_t pos ) {
+
+	for (std::shared_ptr<const construct> const_child : parent->children()) {
+		std::shared_ptr<construct> child = std::const_pointer_cast<construct>(const_child);
+		if (child->start_position() == pos) {
+			return child;
+		}
+		if (child->start_position() < pos && pos < child->end_position()) {
+			std::shared_ptr<const construct> found_child = create_test_construct_inner(child, pos);
+			assert(found_child);
+			return found_child;
+		}
+	}
+	assert(false);
+	return std::shared_ptr<const construct>();
+}
+
+construct_test_data create_test_construct(const std::string & code, const std::string & construct_name, const std::string & language) {
+
+	std::shared_ptr<srcml_nodes> nodes = create_nodes(code, language);
+
+  	for (size_t i = 0; i < nodes->size(); ++i) {
+    	if ((*nodes)[i]->get_name() == construct_name) {
+    		std::shared_ptr<unit> root_unit = std::make_shared<unit>(*nodes, std::shared_ptr<srcdiff_output>());
+    		std::shared_ptr<const construct> found_construct = create_test_construct_inner(root_unit, i);
+    		return {nodes, found_construct};
+    	}
+  	}
+  return {nodes, std::shared_ptr<construct>() };
 }
