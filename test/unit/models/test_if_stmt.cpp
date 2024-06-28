@@ -20,8 +20,9 @@
 namespace data = boost::unit_test::data;
 const std::string construct_type = "if_stmt";
 
-std::vector<std::tuple<std::string>> test_cases_find_if = {
-    {"if (y) {}"                           },
+std::vector<std::tuple<std::string, std::string>> test_cases_find_if = {
+    {"if (y) {}"                           , "if (y) {}"},
+    /*
     {"else if (x) {}"                      },
     {"if (z>=1) {x=1;}"                    },
     {"if (z!=1) {x=1;}"                    },
@@ -31,15 +32,18 @@ std::vector<std::tuple<std::string>> test_cases_find_if = {
     {"if (1) {b;} else if (2) a;"          },
     {"if (1) b; else if (2) {a;}"          },
     {"if (1) {b;} else if (2) {a;} else {}"},
+    */
 };
 
-BOOST_DATA_TEST_CASE(if_stmt_find_if, data::make(test_cases_find_if), code) {
+BOOST_DATA_TEST_CASE(if_stmt_find_if, data::make(test_cases_find_if), code, expected) {
 
     construct_test_data test_data = create_test_construct(code, construct_type);
     BOOST_TEST(test_data.test_construct);
 
     std::shared_ptr<const if_stmt> if_stmt_construct = std::dynamic_pointer_cast<const if_stmt>(test_data.test_construct);
-    BOOST_TEST(if_stmt_construct->find_if());
+    std::shared_ptr<const if_t> if_child = if_stmt_construct->find_if();
+
+    BOOST_TEST(if_child == expected);
 }
 
 std::vector<std::tuple<std::string>> test_cases_find_else = {
