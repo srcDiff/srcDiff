@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+
+<style>
+p, li {
+    font-size : 9pt;
+}
+body { font-family: Helvetica, Sans-Serif; }
+
+code {
+    margin-left: 1em;
+    padding-left: 1em;
+    padding-bottom : 1em;
+    margin-bottom : 1em;
+}
+</style>
+</head>
+<body>
+
+<p>For details on the srcml command-line program, please refer to the man page (man srcml). Here's some examples of how to use it:</p>
+
+<pre><code class="console">
+# Convert from a source file to srcML
+srcml main.cpp -o main.cpp.xml
+
+# Convert from srcML back to source code
+srcml main.cpp.xml -o main.cpp
+
+# Convert a code fragment to srcML
+srcml --text=&quot;int a = b;&quot; -l C++ -o fragment.cpp.xml
+
+# Convert entire project to srcML
+srcml --verbose project -o project.xml
+</code></pre>
+
+<br/>
+
+<p>If you installed the libsrcml development package, you have the ability to write applications that directly use libsrcml. This contains the following:
+</p>
+
+<ul>
+<li>The include file <code>srcml.h</code></li>
+<li>The static library <code>libsrcml.a</code></li>
+<li>CMake configuration files</li>
+</ul>
+
+<br/>
+
+<p>
+In addition, the libsrcml examples are installed in /usr/local/share/srcml</p></body>
+</html>
