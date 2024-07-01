@@ -7,7 +7,7 @@
 
 cmake_minimum_required(VERSION 3.28)
 
-project(srcDiff)
+project(srcDiff VERSION "0.5" HOMEPAGE_URL "https://www.srcDiff.org")
 
 if(CMAKE_USE_VCPKG)
   message(STATUS "Building with vcpkg")
@@ -56,6 +56,9 @@ include_directories(src/shortest_edit_script
 
 # include sub directories
 add_subdirectory(src)
+
+# packaging
+add_subdirectory(package)
 
 if(BUILD_TRANSLATOR_TESTS OR BUILD_UNIT_TESTS)
 	add_subdirectory(test)

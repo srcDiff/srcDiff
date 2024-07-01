@@ -2,7 +2,7 @@
 #
 # @file macos.cmake
 #
-# @copyright Copyright (C) 2019-2023 srcML, LLC. (www.srcML.org)
+# @copyright Copyright (C) 2019-2024 srcML, LLC. (www.srcDiff.org)
 #
 # CPack configuration for macOS installers
 
@@ -20,7 +20,18 @@ execute_process(COMMAND /usr/bin/sw_vers -productVersion OUTPUT_VARIABLE OS_NUME
 set(CPACK_SYSTEM_NAME "macOS-${OS_NUMERIC}")
 
 # Archive package filenames
-set(CPACK_ARCHIVE_SRCDIFF_FILE_NAME "${CPACK_COMPONENT_SRCDIFF_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_SYSTEM_NAME}")
+set(BASE_SRCDIFF_FILE_NAME "${CPACK_COMPONENT_SRCDIFF_DISPLAY_NAME}-${PROJECT_VERSION}-${CPACK_SYSTEM_NAME}")
+set(CPACK_ARCHIVE_SRCDIFF_FILE_NAME "${BASE_SRCDIFF_FILE_NAME}")
+
+# Targets for installing generated packages
+add_custom_target(install-package
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/dist
+    COMMAND installer -pkg ${BASE_SRCDIFF_FILE_NAME}.pkg -target CurrentUserHomeDirectory
+)
+add_custom_target(install-archive
+    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    COMMAND apt-get install -y ./${CPACK_ARCHIVE_SRCDIFF_FILE_NAME}.tgz
+)
 
 # Set for discovery of custom template CPack.distribution.dist.in
 # * Removes readme
@@ -31,7 +42,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/package")
 # For archives, all components are in one file
 set(CPACK_ARCHIVE_COMPONENT_INSTALL OFF)
 
-# The srcDIFF component is required
+# The srcdiff component is required
 set(CPACK_COMPONENT_SRCDIFF_REQUIRED ON)
 
 # One package

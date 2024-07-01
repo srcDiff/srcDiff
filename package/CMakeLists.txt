@@ -20,12 +20,12 @@ set(CPACK_COMPONENTS_GROUPING "ONE_PER_GROUP")
 # Package name
 set(CPACK_PACKAGE_NAME "srcdiff")
 
-# Package release number (NOT srcml or libsrcml release)
+# Package release number (NOT srcdiff or libsrcdiff release)
 # Note: Update when package is updated, but not contents
-set(SRCML_PACKAGE_RELEASE 1)
+set(SRCDIFF_PACKAGE_RELEASE 1)
 
 # summary
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcDiff Toolkit")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcDiff Infrastructure")
 
 # description
 set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/package/welcome.html)
@@ -34,7 +34,7 @@ set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/package/welcome.html)
 set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
 
 # contact
-set(CPACK_PACKAGE_CONTACT "Software Development Laboratories <srcDIFF.org>")
+set(CPACK_PACKAGE_CONTACT "Software Development Laboratories <srcDiff.org>")
 
 # package version
 # set as part of project()
@@ -51,20 +51,17 @@ set(CPACK_RESOURCE_FILE_WELCOME ${CMAKE_SOURCE_DIR}/package/welcome.html)
 # strip executables
 set(CPACK_STRIP_FILES ON)
 
-# output directory
-set(CPACK_PACKAGE_DIRECTORY ${CMAKE_BINARY_DIR}/dist)
-
 # Generate user and development tar.gz's
 set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 
-# Client component, SRCML, is just one component so it appears as on item
+# Client component, SRCDIFF, is just one component so it appears as on item
 # for installers that let you pick what to install
-# Development group, SRCMLDEV, is composed of multiple components
+# Development group, SRCDIFFDEV, is composed of multiple components
 include(CPackComponent)
 cpack_add_install_type(CLIENT DISPLAY_NAME "srcdiff cli")
 cpack_add_install_type(DEVELOPER DISPLAY_NAME "development")
 
-cpack_add_component(SRCML
+cpack_add_component(SRCDIFF
                     DISPLAY_NAME "srcdiff"
                     DESCRIPTION "srcdiff cli program with required libraries"
                     REQUIRED
