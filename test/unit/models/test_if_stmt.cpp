@@ -1,4 +1,3 @@
-
 // SPDX-License-Identifier: GPL-3.0-only
 /**
  * @file test_if_stmt.cpp
@@ -16,7 +15,7 @@
 
 #include <if_stmt.hpp>
 
-//Define test data
+// Define test data
 namespace data = boost::unit_test::data;
 const std::string construct_type = "if_stmt";
 
