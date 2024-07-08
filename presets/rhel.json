@@ -1,0 +1,64 @@
+{
+  "version": 8,
+
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 28,
+    "patch": 0
+  },
+
+  "include": [
+    "base.json"
+  ],
+
+  "configurePresets": [
+    {
+      "name": "ci-rpm",
+      "inherits": ["ci-gcc", "subdirectory-build"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+      "displayName": "GCC Release",
+      "description": "Default build options for GCC release",
+      "generator": "Ninja"
+    }
+  ],
+
+  "buildPresets" : [
+    {
+      "name": "ci-rhel",
+      "displayName": "Red Hat",
+      "description": "Build for Red Hat Family",
+      "condition": {
+        "type": "allOf",
+        "conditions": [
+          { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
+          { "type": "inList", "string": "$env{WORKFLOW}", "list": ["fedora", ""] }
+        ]
+      },
+      "configurePreset": "ci-rhel",
+      "configuration": "Release"
+    },
+    {
+      "name": "ci-test-unit-rhel",
+      "inherits": ["ci-test-unit", "ci-rhel"]
+    },
+    {
+      "name": "ci-test-suite-rhel",
+      "inherits": ["ci-test-suite", "ci-rhel"]
+    }
+  ],
+
+  "testPresets": [
+  ],
+
+  "workflowPresets": [
+    {
+      "name": "ci-rhel",
+      "steps": [
+        { "type": "configure", "name": "ci-rhel" },
+        { "type": "build",     "name": "ci-rhel" },
+        { "type": "build",     "name": "ci-test-unit-rhel" },
+        { "type": "build",     "name": "ci-test-suite-rhel" }
+      ]
+    }
+  ]
+}
