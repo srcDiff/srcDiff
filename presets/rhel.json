@@ -13,7 +13,7 @@
 
   "configurePresets": [
     {
-      "name": "ci-rpm",
+      "name": "ci-rhel",
       "inherits": ["ci-gcc", "subdirectory-build"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "displayName": "GCC Release",
