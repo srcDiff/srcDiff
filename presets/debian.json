@@ -57,7 +57,7 @@
       "inherits": ["ci-base"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "configurePreset": "ci-debian",
-      "generators": [ "productbuild", "TGZ", "TBZ2" ]
+      "generators": [ "DEB", "TGZ", "TBZ2" ]
     }
   ],
 
