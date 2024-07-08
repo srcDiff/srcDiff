@@ -14,10 +14,10 @@
   "configurePresets": [
     {
       "name": "ci-debian",
-      "inherits" : ["ci-gcc", "subdirectory-build"],
-      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },   
+      "inherits": ["ci-gcc", "subdirectory-build"],
+      "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "displayName": "Debian Release",
-      "description": "Default build options for Debian release", 
+      "description": "Default build options for Debian release",
       "generator": "Ninja"
     }
   ],
@@ -38,6 +38,10 @@
       "configuration": "Release"
     },
     {
+      "name": "ci-install-package-debian",
+      "inherits": [ "ci-debian", "ci-install-package" ]
+    },
+    {
       "name": "ci-test-unit-debian",
       "inherits": ["ci-test-unit", "ci-debian"]
     },
@@ -52,7 +56,7 @@
       "name": "ci-debian",
       "inherits": ["ci-base"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
-      "configurePreset": "ci-devian",
+      "configurePreset": "ci-debian",
       "generators": [ "productbuild", "TGZ", "TBZ2" ]
     }
   ],
@@ -66,7 +70,7 @@
       "steps": [
         { "type": "configure", "name": "ci-debian" },
         { "type": "build",     "name": "ci-debian" },
-        { "type": "package",     "name": "ci-debian" },
+        { "type": "package",   "name": "ci-debian" },
         { "type": "build",     "name": "ci-install-package-debian" },
         { "type": "build",     "name": "ci-test-suite-debian" },
         { "type": "build",     "name": "ci-test-unit-debian" }
