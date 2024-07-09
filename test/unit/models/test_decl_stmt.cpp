@@ -19,18 +19,19 @@
 namespace data = boost::unit_test::data;
 
 std::vector<std::tuple<std::string, std::string, std::string>> test_cases_expr = {
-	{"int i = 0;"                  , "0;"        , "0"         },
-	{"char s = 's';"               , "'s';"      , "'s'"       },
-	{"float f = 3.14;"             , "3.14;"     , "3.14"      },
-	{"double d = 6.28;"            , "6.28;"     , "6.28"      },
-	{"bool b = true;"              , "true;"     , "true"      },
-	{"short sh = 10;"              , "10;"       , "10"        },
-	{"long l = 100000;"            , "100000;"   , "100000"    },
-	{"unsigned u = 42;"            , "42;"       , "42"        },
-	{"char c = 'c';"               , "'c';"      , "'c'"       },
-	{"int* p = &i;"                , "&i;"       , "&i"        },
-	{"const int ci = 5;"           , "5;"        , "5"         },
-	{"std::string str = \"hello\";", "\"hello\";", "\"hello\"" }
+	{"int i = 0;"                  , "0;"        , "0"           },
+	{"char s = 's';"               , "'s';"      , "'s'"         },
+	{"float f = 3.14;"             , "3.14;"     , "3.14"        },
+	{"double d = 6.28;"            , "6.28;"     , "6.28"        },
+	{"bool b = true;"              , "true;"     , "true"        },
+	{"short sh = 10;"              , "10;"       , "10"          },
+	{"long l = 100000;"            , "100000;"   , "100000"      },
+	{"unsigned u = 42;"            , "42;"       , "42"          },
+	{"char c = 'c';"               , "'c';"      , "'c'"         },
+	{"int* p = &i;"                , "&i;"       , "&i"          },
+	{"const int ci = 5;"           , "5;"        , "5"           },
+	{"std::string str = \"hello\";", "\"hello\";", "\"hello\""   },
+    {"int function = test(param);" , "param;"    , "test(param)" }
 };
 
 BOOST_DATA_TEST_CASE(decl_stmt_expr, data::make(test_cases_expr), code, expr, expected) {
@@ -48,6 +49,6 @@ BOOST_DATA_TEST_CASE(decl_stmt_expr, data::make(test_cases_expr), code, expr, ex
 	BOOST_TEST(expr_child->to_string() == expected);
 }
 
-/* Can't go from decl_stmt to expr without casting a separate expr_construct for use with expr() method that's why I have 
-a third part of test case ex: "0;". 
+/* Can't go from decl_stmt to expr without casting a separate expr_construct for use with expr() method that's why I have
+a third part of test case ex: "0;".
 */
