@@ -46,7 +46,7 @@ target_link_libraries(srcdiff PRIVATE srcML::LibsrcML LibXml2::LibXml2 Threads::
 
 set_target_properties(srcdiff PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-install(TARGETS srcdiff RUNTIME DESTINATION bin LIBRARY DESTINATION bin)
+install(TARGETS srcdiff COMPONENT SRCDIFF)
 
 add_custom_command(TARGET srcdiff POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:srcdiff> $<TARGET_RUNTIME_DLLS:srcdiff>

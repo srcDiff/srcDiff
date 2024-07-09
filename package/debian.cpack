@@ -68,10 +68,6 @@ set(CPACK_DEBIAN_DEVLIBS_PACKAGE_SECTION "devel")
 set(CPACK_DEBIAN_SRCDIFF_PACKAGE_PRIORITY "optional")
 set(CPACK_DEBIAN_DEVLIBS_PACKAGE_PRIORITY "optional")
 
-# Copyright file - required by lintian
-# install(FILES ${CMAKE_SOURCE_DIR}/COPYING.txt DESTINATION share/doc/srcdiff RENAME copyright COMPONENT SRCDIFF)
-# install(FILES ${CMAKE_SOURCE_DIR}/COPYING.txt DESTINATION share/doc/srcdiff RENAME copyright COMPONENT DEVLIBS)
-
 # Autogenerate dependency information
 set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 set(CPACK_DEBIAN_PACKAGE_GENERATE_SHLIBS ON)
@@ -90,7 +86,7 @@ file(WRITE "${TRIGGERS_FILE}" "activate-noawait ldconfig\n")
 set(CPACK_DEBIAN_SRCDIFF_PACKAGE_CONTROL_EXTRA "${TRIGGERS_FILE}")
 
 # Targets for workflow testing
-add_workflow_test_targets(${CMAKE_BINARY_DIR} ${CPACK_OUTPUT_FILE_PREFIX} ${BASE_SRCDIFF_FILE_NAME})
+#add_workflow_test_targets(${CMAKE_BINARY_DIR} ${CPACK_OUTPUT_FILE_PREFIX} ${BASE_SRCDIFF_FILE_NAME})
 
 # Targets for installing generated packages
 add_custom_target(install-package
