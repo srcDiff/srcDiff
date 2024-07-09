@@ -35,7 +35,10 @@
         ]
       },
       "configurePreset": "ci-debian",
-      "configuration": "Release"
+      "configuration": "Release",
+      "cacheVariables": {
+        "CPACK_OUTPUT_FILE_PREFIX": "dist"
+      }
     },
     {
       "name": "ci-install-package-debian",
