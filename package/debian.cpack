@@ -90,14 +90,14 @@ set(CPACK_DEBIAN_SRCDIFF_PACKAGE_CONTROL_EXTRA "${TRIGGERS_FILE}")
 
 # Targets for installing generated packages
 add_custom_target(install-package
-    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    WORKING_DIRECTORY {CMAKE_BINARY_DIR}/dist
     COMMAND apt-get install -y ./${CPACK_DEBIAN_SRCDIFF_FILE_NAME}
 )
 add_custom_target(install-targz
-    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    WORKING_DIRECTORY {CMAKE_BINARY_DIR}/dist
     COMMAND tar xvf ${CPACK_ARCHIVE_SRCDIFF_FILE_NAME}.tar.gz -C /usr
 )
 add_custom_target(install-tarbz2
-    WORKING_DIRECTORY ${CPACK_OUTPUT_FILE_PREFIX}
+    WORKING_DIRECTORY {CMAKE_BINARY_DIR}/dist
     COMMAND tar xvf ${CPACK_ARCHIVE_SRCDIFF_FILE_NAME}.tar.bz2 -C /usr
 )

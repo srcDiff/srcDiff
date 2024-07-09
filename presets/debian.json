@@ -20,7 +20,7 @@
       "description": "Default build options for Debian release",
       "generator": "Ninja",
       "cacheVariables": {
-        "CPACK_OUTPUT_FILE_PREFIX": "{CMAKE_BINARY_DIR}/dist"
+        "CPACK_OUTPUT_FILE_PREFIX": "dist"
       }
     }
   ],
