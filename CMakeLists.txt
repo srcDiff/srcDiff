@@ -29,6 +29,18 @@ if(NOT WIN32)
 set(CMAKE_INSTALL_PREFIX "/usr/local")
 endif()
 
+# Determine distribution
+# Does not work for all distributions, but does work for supported Linux distributions
+if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Linux")
+    cmake_host_system_information(RESULT DISTRO QUERY DISTRIB_NAME)
+endif()
+
+# Fedora and CentOS do not put /usr/local/{bin,lib64} on the default search paths
+# So change installation to /usr
+if(DISTRO AND DISTRO MATCHES "CentOS|Fedora")
+    set(CMAKE_INSTALL_PREFIX /usr)
+endif()
+
 enable_testing()
 
 option(BUILD_UNIT_TESTS "Build all unit tests" OFF)

@@ -8,7 +8,8 @@
   "include": [
     "presets/base.json",
     "presets/macos.json",
-    "presets/linux.json",
+    "presets/debian.json",
+    "presets/rhel.json",
     "presets/windows.json"
   ],
   "configurePresets": [

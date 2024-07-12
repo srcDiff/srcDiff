@@ -40,3 +40,15 @@ set_tests_properties(test_elseif PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_LEVEL=al
 
 add_unit_test(test_named_construct.cpp Boost::headers)
 set_tests_properties(test_named_construct PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_LEVEL=all")
+
+# add_unit_test(test_always_match.cpp Boost::headers)
+# set_tests_properties(test_always_match PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_LEVEL=all")
+
+add_unit_test(test_if_stmt.cpp Boost::headers)
+set_tests_properties(test_if_stmt PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_LEVEL=all")
+
+add_unit_test(test_case_t.cpp Boost::headers)
+set_tests_properties(test_case_t PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_LEVEL=all")
+
+add_unit_test(test_call.cpp Boost::headers)
+set_tests_properties(test_call PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_LEVEL=all")
