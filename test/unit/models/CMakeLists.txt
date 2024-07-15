@@ -61,3 +61,9 @@ set_tests_properties(test_expr_construct PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_
 
 add_unit_test(test_identifier_decl.cpp Boost::headers)
 set_tests_properties(test_identifier_decl PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_LEVEL=all")
+
+add_unit_test(test_expr_stmt.cpp Boost::headers)
+set_tests_properties(test_expr_stmt PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_LEVEL=all")
+
+add_unit_test(test_expr.cpp Boost::headers)
+set_tests_properties(test_expr PROPERTIES ENVIRONMENT "BOOST_TEST_LOG_LEVEL=all")

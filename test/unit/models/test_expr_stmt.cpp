@@ -47,14 +47,14 @@ BOOST_DATA_TEST_CASE(expr_stmt_is_matchable_impl_true, data::make(test_cases_is_
 }
 
 std::vector<std::tuple<std::string, std::string>> test_cases_is_matchable_impl_false = {
-    {"test;"            , "best;"                     },
-    {"test->function();", "test->tester();"           },
-    {"test.member();"   , "integer.private();"        },
-    {"new int(10);"     , "new char('a');"            },
-    {"a++;"             , "b--;"                      },
-    {"x+=3;"            , "y-=3;"                     },
-    {"0;"               , "1;"                        },
-    {"(a>b)?a:b;"       , "(test>=0)?\"done\":\"not\""}
+    {"test;"            , "best;"                      },
+    {"test->function();", "test->tester();"            },
+    {"test.member();"   , "integer.private();"         },
+    {"new int(10);"     , "new char('a');"             },
+    {"a++;"             , "b--;"                       },
+    {"x+=3;"            , "y-=3;"                      },
+    {"0;"               , "1;"                         },
+    {"(a>b)?a:b;"       , "(test>=0)?\"done\":\"not\";"}
 };
 
 BOOST_DATA_TEST_CASE(expr_stmt_is_matchable_impl_false, data::make(test_cases_is_matchable_impl_false), original, modified) {
