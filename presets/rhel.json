@@ -43,12 +43,29 @@
       "configuration": "Release"
     },
     {
+      "name": "ci-install-package-rhel",
+      "description": "Install an rpm package",
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
+      "configurePreset": "ci-rhel",
+      "inherits": "ci-install-package"
+    },
+    {
       "name": "ci-test-unit-rhel",
       "inherits": ["ci-test-unit", "ci-rhel"]
     },
     {
       "name": "ci-test-suite-rhel",
       "inherits": ["ci-test-suite", "ci-rhel"]
+    }
+  ],
+
+  "packagePresets": [
+    {
+      "name": "ci-rhel",
+      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
+      "configurePreset": "ci-rhel",
+      "generators": [ "RPM", "TGZ", "TBZ2" ],
+      "inherits": ["ci-base"]
     }
   ],
 
@@ -61,6 +78,8 @@
       "steps": [
         { "type": "configure", "name": "ci-rhel" },
         { "type": "build",     "name": "ci-rhel" },
+        { "type": "package",   "name": "ci-rhel" },
+        { "type": "build",     "name": "ci-install-package-rhel" },
         { "type": "build",     "name": "ci-test-unit-rhel" },
         { "type": "build",     "name": "ci-test-suite-rhel" }
       ]
