@@ -45,7 +45,6 @@
     {
       "name": "ci-install-package-rhel",
       "description": "Install an rpm package",
-      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "configurePreset": "ci-rhel",
       "inherits": "ci-install-package"
     },
@@ -62,7 +61,6 @@
   "packagePresets": [
     {
       "name": "ci-rhel",
-      "condition": { "type": "equals", "lhs": "$env{WORKFLOW}", "rhs": "rpm" },
       "configurePreset": "ci-rhel",
       "generators": [ "RPM", "TGZ", "TBZ2" ],
       "inherits": ["ci-base"]
