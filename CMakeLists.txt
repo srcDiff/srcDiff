@@ -39,6 +39,7 @@ endif()
 # So change installation to /usr
 if(DISTRO AND DISTRO MATCHES "CentOS|Fedora")
     set(CMAKE_INSTALL_PREFIX /usr)
+	set(CMAKE_SYSTEM_IGNORE_PATH $ENV{HOME})
 endif()
 
 enable_testing()

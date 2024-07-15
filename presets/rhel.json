@@ -20,8 +20,7 @@
       "description": "Default build options for GCC release",
       "generator": "Ninja",
       "cacheVariables": {
-          "CPACK_OUTPUT_FILE_PREFIX": "dist",
-          "CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH": "FALSE"
+          "CPACK_OUTPUT_FILE_PREFIX": "dist"
       }
 
     }
