@@ -28,7 +28,7 @@ std::vector<std::tuple<std::string, std::string>> test_cases_expr = {
     {"new int(10);"     , "new int(10)"     },
     {"test->function();", "test->function()"},
     {"test.member();"   , "test.member()"   },
-    {"(a>b)?a:b;"       , "(a>b)?a:b"      },
+    {"(a>b)?a:b;"       , "(a>b)?a:b"       },
     {"a++;"              , "a++"            }
 };
 
