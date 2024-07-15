@@ -18,7 +18,12 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "displayName": "GCC Release",
       "description": "Default build options for GCC release",
-      "generator": "Ninja"
+      "generator": "Ninja",
+      "cacheVariables": {
+          "CPACK_OUTPUT_FILE_PREFIX": "dist",
+          "CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH": "FALSE"
+      }
+
     }
   ],
 
