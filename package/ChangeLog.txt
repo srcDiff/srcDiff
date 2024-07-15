@@ -1,0 +1,3 @@
+%changelog
+* Mon Jul 15 2024 Michael J. Decker <mdecker6@kent.edu> - 0.5
+  - Initial RPM release
