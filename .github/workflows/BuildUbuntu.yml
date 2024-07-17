@@ -19,11 +19,7 @@
               ref: develop
           
           - name: Run srcML Workflow for Ubuntu 
-            run:  |
-              pushd srcML
-              cmake --workflow --preset ci-ubuntu
-              popd
-              ninja install
+            run: cmake --workflow --preset ci-ubuntu
 
           - name: Checkout Repository
             uses: actions/checkout@v4
