@@ -30,7 +30,9 @@
                                libcurl4-openssl-dev openjdk-21-jre file libboost-dev
           
           - name: Run srcML Workflow for Ubuntu 
-            run: cmake --preset ci-ubuntu
+            run: |
+              cmake --preset ci-ubuntu
+              cmake --build ../srcDiff-build -- install
 
           - name: Checkout Repository
             uses: actions/checkout@v4
@@ -38,10 +40,7 @@
               submodules: true
 
           - name: Run CI Workflow for Ubuntu
-            run: |
-              cmake --workflow --preset ci-debian
-              cd ../srcDiff-build
-              ninja install
+            run: cmake --workflow --preset ci-debian
 
           # - name: Get vcpkg
           #   uses: lukka/run-vcpkg@v11 
