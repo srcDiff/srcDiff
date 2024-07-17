@@ -17,9 +17,10 @@
               submodules: true
 
           - name: Checkout srcML
-            uses: actions/checkout@develop
+            uses: actions/checkout@master
             with:
-              repository: srcML/srcML    
+              repository: srcML/srcML
+              ref: develop
 
           - name: Get Latest CMake and Ninja
             uses: lukka/get-cmake@latest
