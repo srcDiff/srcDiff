@@ -32,7 +32,7 @@
           - name: Run srcML Workflow for Ubuntu 
             run: |
               cmake --preset ci-ubuntu
-              cmake --build ../srcDiff-build -- install
+              sudo cmake --build ../srcDiff-build -- install
 
           - name: Checkout Repository
             uses: actions/checkout@v4
