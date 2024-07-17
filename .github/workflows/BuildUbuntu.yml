@@ -19,7 +19,7 @@
           - name: Checkout srcML
             uses: actions/checkout@develop
             with:
-            name: srcML/srcML    
+              repository: srcML/srcML    
 
           - name: Get Latest CMake and Ninja
             uses: lukka/get-cmake@latest
