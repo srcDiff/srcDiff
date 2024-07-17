@@ -40,7 +40,7 @@
               submodules: true
 
           - name: Run CI Workflow for Ubuntu
-            run: cmake --workflow --preset ci-debian
+            run: sudo cmake --workflow --preset ci-debian
 
           # - name: Get vcpkg
           #   uses: lukka/run-vcpkg@v11 
