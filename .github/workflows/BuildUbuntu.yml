@@ -12,6 +12,11 @@
         runs-on: ubuntu-latest
         steps:
 
+          - name: Get Latest CMake and Ninja
+            uses: lukka/get-cmake@latest
+            with:
+              cmakeVersion: 3.29.3
+
           - name: Checkout srcML
             uses: actions/checkout@master
             with:
@@ -25,11 +30,6 @@
             uses: actions/checkout@v4
             with:
               submodules: true
-
-          - name: Get Latest CMake and Ninja
-            uses: lukka/get-cmake@latest
-            with:
-              cmakeVersion: 3.29.3
 
           # - name: Get vcpkg
           #   uses: lukka/run-vcpkg@v11 
