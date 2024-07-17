@@ -34,5 +34,5 @@
           #     configurePreset: 'gcc-vcpkg'
           #     configurePresetAdditionalArgs: "['-DBUILD_TRANSLATOR_TESTS=ON']"
           
-          - name: Run CI Ubuntu Workflow
-            run: cmake --workflow --preset ci-ubuntu
+          - name: Run CI Workflow for Ubuntu
+            run: cmake --workflow --preset ci-debian
