@@ -40,7 +40,8 @@
           - name: Run CI Workflow for Ubuntu
             run: |
               cmake --workflow --preset ci-debian
-              cmake --build ../srcML-build -- install
+              cd ../srcDiff-build
+              ninja install
 
           # - name: Get vcpkg
           #   uses: lukka/run-vcpkg@v11 
