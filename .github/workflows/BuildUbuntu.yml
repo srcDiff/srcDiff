@@ -11,16 +11,24 @@
       build_and_test:
         runs-on: ubuntu-latest
         steps:
-          - name: Checkout Repository
-            uses: actions/checkout@v4
-            with:
-              submodules: true
 
           - name: Checkout srcML
             uses: actions/checkout@master
             with:
               repository: srcML/srcML
               ref: develop
+          
+          - name: Run srcML Workflow for Ubuntu 
+            run:  |
+              pushd srcML
+              cmake --workflow --preset ci-ubuntu
+              popd
+              ninja install
+
+          - name: Checkout Repository
+            uses: actions/checkout@v4
+            with:
+              submodules: true
 
           - name: Get Latest CMake and Ninja
             uses: lukka/get-cmake@latest
@@ -38,13 +46,7 @@
           #   with:
           #     configurePreset: 'gcc-vcpkg'
           #     configurePresetAdditionalArgs: "['-DBUILD_TRANSLATOR_TESTS=ON']"
-          
-          - name: Run srcML Workflow for Ubuntu 
-            run:  | 
-              pushd srcML
-              cmake --workflow --preset ci-ubuntu
-              popd
-              ninja install
+
 
           - name: Run CI Workflow for Ubuntu
             run: cmake --workflow --preset ci-debian
