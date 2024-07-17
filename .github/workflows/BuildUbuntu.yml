@@ -19,8 +19,8 @@
     
           - name: Get latest CMake and Ninja
             uses: lukka/get-cmake@latest
-              with:
-                cmakeVersion: 3.29.3
+            with:
+              cmakeVersion: 3.29.3
 
           # - name: Get vcpkg
           #   uses: lukka/run-vcpkg@v11 
