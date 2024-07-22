@@ -1,3 +1,11 @@
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file srcdiff_input.tcc
+ *
+ * @copyright Copyright (C) 2015-2024 SDML (www.srcDiff.org)
+ *
+ * This file is part of the srcDiff Infrastructure.
+ */
 
 class no_file_exception {};
 

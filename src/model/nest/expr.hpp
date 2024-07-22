@@ -1,9 +1,12 @@
-/*
- * SPDX-License-Identifier: GPL-3.0-only
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file expr.hpp
  *
- * Copyright (C) 2024-2024  SDML (www.srcDiff.org)
- * This file is part of the srcDiff translator.
+ * @copyright Copyright (C) 2024-2024 SDML (www.srcDiff.org)
+ *
+ * This file is part of the srcDiff Infrastructure.
  */
+
 #ifndef INCLUDED_NEST_EXPR_HPP
 #define INCLUDED_NEST_EXPR_HPP
 

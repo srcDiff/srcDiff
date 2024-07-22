@@ -5,6 +5,15 @@
 # Original by Michael L. Collard
 # Updated/Modified for srcdiff by Michael John Decker
 
+## SPDX-License-Identifier: GPL-3.0-only
+#
+# @file CMakeLists.txt
+#
+# @copyright Copyright (C) 2011-2024 SDML (www.srcDiff.org)
+#
+# This file is part of the srcDiff Infrastructure.
+#
+
 import json
 import sys
 import os.path
