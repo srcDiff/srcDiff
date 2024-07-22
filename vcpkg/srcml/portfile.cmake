@@ -1,7 +1,12 @@
 ## SPDX-License-Identifier: GPL-3.0-only
-#  Copyright (C) 2011-2024  SDML (www.srcDiff.org)
 #
-#  This file is part of the srcDiff translator.
+# @file portfile.cmake
+#
+# @copyright Copyright (C) 2008-2019 SDML (www.srcDiff.org)
+#
+# This file is part of the srcDiff Infrastructure.
+#
+
 vcpkg_from_github(
   OUT_SOURCE_PATH SOURCE_PATH
   REPO srcML/srcML

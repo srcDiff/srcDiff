@@ -1,11 +1,11 @@
 ## SPDX-License-Identifier: GPL-3.0-only
 #
-#  Copyright (C) 2011-2024  SDML (www.srcDiff.org)
+# @file FindCLI11.cmake
 #
-#  This file is part of the srcDiff translator.
-#  This retrieves CLI11 from Github and makes it available as a library. Or, if
-#  vcpkg is being used, it defers to vcpkg. This file is run whenever
-#  find_package(CLI11 [...]) is called.
+# @copyright Copyright (C) 2024-2024 SDML (www.srcDiff.org)
+#
+# This file is part of the srcDiff Infrastructure.
+#
 
 if(NOT CMAKE_USE_VCPKG)
     set(CLI11_BUILD_TESTS OFF)

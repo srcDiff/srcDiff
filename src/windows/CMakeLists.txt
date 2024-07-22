@@ -1,10 +1,10 @@
 ## SPDX-License-Identifier: GPL-3.0-only
-#  CMakeLists.txt
 #
-#  Copyright (C) 2011-2021  SDML (www.srcDiff.org)
+# @file view.cpp
 #
-#  This file is part of the srcDiff translator.
+# @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
 #
+# This file is part of the srcDiff Infrastructure.
 #
 
 file(GLOB WINDOWS_HEADERS *.hpp)

@@ -1,8 +1,10 @@
-/*
- * SPDX-License-Identifier: GPL-3.0-only
-
- * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
- * This file is part of the srcDiff translator.
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file methods.hpp
+ *
+ * @copyright Copyright (C) 2011-2024 SDML (www.srcDiff.org)
+ *
+ * This file is part of the srcDiff Infrastructure.
  */
 
 #ifndef INCLUDED_METHOD_HPP

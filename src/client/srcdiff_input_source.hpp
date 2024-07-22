@@ -1,8 +1,10 @@
-/*
- * SPDX-License-Identifier: GPL-3.0-only
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file srcdiff_input_source.hpp
  *
- * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
- * This file is part of the srcDiff translator.
+ * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
+ *
+ * This file is part of the srcDiff Infrastructure.
  */
 
 #ifndef INCLUDED_SRCDIFF_INPUT_SOURCE_HPP
