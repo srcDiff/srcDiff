@@ -11,60 +11,45 @@
       build_and_test:
         runs-on: ubuntu-latest
         steps:
-    
-          - name: Checkout repository
+
+          - name: Get Latest CMake and Ninja
+            uses: lukka/get-cmake@latest
+            with:
+              cmakeVersion: 3.29.3
+
+          - name: Checkout srcML
+            uses: actions/checkout@master
+            with:
+              repository: srcML/srcML
+              ref: develop
+
+          - name: Setup Ubuntu
+            shell: bash
+            run: |
+              sudo apt install build-essential ninja-build antlr libarchive-dev libxml2-dev libxslt1-dev \
+                               libcurl4-openssl-dev openjdk-21-jre file libboost-dev
+          
+          - name: Run srcML Workflow for Ubuntu 
+            run: |
+              cmake --preset ci-ubuntu
+              sudo cmake --build ../srcDiff-build -- install
+
+          - name: Checkout Repository
             uses: actions/checkout@v4
             with:
               submodules: true
-    
-          - name: Get latest CMake and Ninja
-            uses: lukka/get-cmake@latest
-    
-          - name: Get vcpkg
-            uses: lukka/run-vcpkg@v11 
-            with:
-              # this path is arbitrary:
-              vcpkgDirectory: '${{ github.workspace }}/_tools/vcpkg'
-    
-          - name: Get dependencies and configure the build with CMake
-            uses: lukka/run-cmake@v10
-            with:
-              configurePreset: 'gcc-vcpkg'
-              configurePresetAdditionalArgs: "['-DBUILD_TRANSLATOR_TESTS=ON']"
-          
-          - name: Build project
-            run: cmake --build .
-          
-          - name: Check if built executable exists and is sane
-            shell: bash
-            run: |
-              cd bin
-              
-              # this is just for logging purposes:
-              ls
-              
-              # get version info output:
-              version_info=`./srcdiff -V`
-    
-              echo "Version info:"
-              echo $version_info
-    
-              # make sure the string "srcdiff" is somewhere in the version output
-              # this is case insensitive
-              srcdiff_match=`echo $version_info | grep -i "srcdiff"`
-              if [ -z "$srcdiff_match" ]; then exit 1; fi
-    
-              echo "Build succeeded!"
 
-          - name: CLI tests
-            shell: bash
-            run: |
-              cd ${{ github.workspace }}/test/cli
-              sudo chmod +x framework.sh
-              ./framework.sh ${{ github.workspace }}/bin
-          
-          - name: Integration tests
-            shell: bash
-            run: |
-              cd ${{ github.workspace }}/test
-              python3 test_suite.py
+          - name: Run CI Workflow for Ubuntu
+            run: sudo cmake --workflow --preset ci-debian
+
+          # - name: Get vcpkg
+          #   uses: lukka/run-vcpkg@v11 
+          #   with:
+          #     # this path is arbitrary:
+          #     vcpkgDirectory: '${{ github.workspace }}/_tools/vcpkg'
+    
+          # - name: Get dependencies and configure the build with CMake
+          #   uses: lukka/run-cmake@v10
+          #   with:
+          #     configurePreset: 'gcc-vcpkg'
+          #     configurePresetAdditionalArgs: "['-DBUILD_TRANSLATOR_TESTS=ON']"
