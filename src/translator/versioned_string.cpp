@@ -1,9 +1,12 @@
-/*
- * SPDX-License-Identifier: GPL-3.0-only
-
- * Copyright (C) 2011-2024  SDML (www.srcDiff.org)
- * This file is part of the srcDiff translator.
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file versioned_string.cpp
+ *
+ * @copyright Copyright (C) 2015-2024 SDML (www.srcDiff.org)
+ *
+ * This file is part of the srcDiff Infrastructure.
  */
+
 #include <versioned_string.hpp>
 // TODO: is this still used?
 #ifdef __linux__

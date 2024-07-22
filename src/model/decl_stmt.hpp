@@ -1,9 +1,12 @@
-/*
- * SPDX-License-Identifier: GPL-3.0-only
+// SPDX-License-Identifier: GPL-3.0-only
+/**
+ * @file decl_stmt.hpp
  *
- * Copyright (C) 2023-2024  SDML (www.srcDiff.org)
- * This file is part of the srcDiff translator.
+ * @copyright Copyright (C) 2023-2024 SDML (www.srcDiff.org)
+ *
+ * This file is part of the srcDiff Infrastructure.
  */
+
 #ifndef INCLUDED_DECL_STMT_HPP
 #define INCLUDED_DECL_STMT_HPP
 
