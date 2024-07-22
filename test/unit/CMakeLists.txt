@@ -26,5 +26,5 @@ macro(add_unit_test TEST_FILE)
 endmacro()
 
 add_subdirectory(utils)
-add_subdirectory(models)
+add_subdirectory(model)
 add_subdirectory(shortest_edit_script)
