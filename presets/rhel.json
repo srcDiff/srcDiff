@@ -18,7 +18,11 @@
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "displayName": "GCC Release",
       "description": "Default build options for GCC release",
-      "generator": "Ninja"
+      "generator": "Ninja",
+      "cacheVariables": {
+          "CPACK_OUTPUT_FILE_PREFIX": "dist"
+      }
+
     }
   ],
 
@@ -38,12 +42,27 @@
       "configuration": "Release"
     },
     {
+      "name": "ci-install-package-rhel",
+      "description": "Install an rpm package",
+      "configurePreset": "ci-rhel",
+      "inherits": "ci-install-package"
+    },
+    {
       "name": "ci-test-unit-rhel",
       "inherits": ["ci-test-unit", "ci-rhel"]
     },
     {
       "name": "ci-test-suite-rhel",
       "inherits": ["ci-test-suite", "ci-rhel"]
+    }
+  ],
+
+  "packagePresets": [
+    {
+      "name": "ci-rhel",
+      "configurePreset": "ci-rhel",
+      "generators": [ "RPM", "TGZ", "TBZ2" ],
+      "inherits": ["ci-base"]
     }
   ],
 
@@ -56,6 +75,8 @@
       "steps": [
         { "type": "configure", "name": "ci-rhel" },
         { "type": "build",     "name": "ci-rhel" },
+        { "type": "package",   "name": "ci-rhel" },
+        { "type": "build",     "name": "ci-install-package-rhel" },
         { "type": "build",     "name": "ci-test-unit-rhel" },
         { "type": "build",     "name": "ci-test-suite-rhel" }
       ]

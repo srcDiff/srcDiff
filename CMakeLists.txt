@@ -14,9 +14,9 @@ project(srcDiff VERSION "0.5" HOMEPAGE_URL "https://www.srcDiff.org")
 if(CMAKE_USE_VCPKG)
   message(STATUS "Building with vcpkg")
   if(DEFINED ENV{VCPKG_ROOT})
-  	include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+    include("$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
   else()
-	message(SEND_ERROR "Environment variable VCPKG_ROOT not defined!")
+    message(SEND_ERROR "Environment variable VCPKG_ROOT not defined!")
   endif()
 endif()
 
@@ -24,7 +24,7 @@ endif()
 # explicitly deactivating some legacy CMake behavior
 # https://cmake.org/cmake/help/latest/policy/CMP0003.html
 if(COMMAND cmake_policy)
-	cmake_policy(SET CMP0003 NEW)
+    cmake_policy(SET CMP0003 NEW)
 endif(COMMAND cmake_policy)
 
 if(NOT WIN32)
@@ -41,6 +41,7 @@ endif()
 # So change installation to /usr
 if(DISTRO AND DISTRO MATCHES "CentOS|Fedora")
     set(CMAKE_INSTALL_PREFIX /usr)
+    set(CMAKE_SYSTEM_IGNORE_PATH $ENV{HOME})
 endif()
 
 enable_testing()
@@ -55,18 +56,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # setup project includes
 include_directories(src/shortest_edit_script
-					src/translator
-					src/model
-					src/client
-					src/srcml
-					src/windows
-					src/project
-					src/view
-					src/summary
-					
-					src/srcSAX/src/srcsax
-					src/srcSAX/src/cpp
-					src/srcSAX/src/windows)
+                    src/translator
+                    src/model
+                    src/client
+                    src/srcml
+                    src/windows
+                    src/project
+                    src/view
+                    src/summary
+                    
+                    src/srcSAX/src/srcsax
+                    src/srcSAX/src/cpp
+                    src/srcSAX/src/windows)
 
 # include sub directories
 add_subdirectory(src)
@@ -75,5 +76,5 @@ add_subdirectory(src)
 add_subdirectory(package)
 
 if(BUILD_TRANSLATOR_TESTS OR BUILD_UNIT_TESTS)
-	add_subdirectory(test)
+    add_subdirectory(test)
 endif()

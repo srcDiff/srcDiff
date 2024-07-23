@@ -103,3 +103,17 @@ set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION ${CMAKE_INSTALL_MANDIR}/man1 $
         /usr/local /usr/local/include /usr/local/lib64 /usr/local/bin /usr/local/man /usr/local/man/man1 
         /usr/local/share /usr/local/share/man /usr/local/share/man/man1 /usr/share/man /usr/share/man/man1
         /usr/share/man1)
+
+# Targets for installing generated packages
+add_custom_target(install-package
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/dist
+    COMMAND yum localinstall --skip-broken -y ./${CPACK_RPM_SRCDIFF_FILE_NAME}
+)
+add_custom_target(install-targz
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/dist
+    COMMAND tar xvf ${CPACK_ARCHIVE_SRCDIFF_FILE_NAME}.tar.gz -C /usr
+)
+add_custom_target(install-tarbz2
+    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/dist
+    COMMAND tar xvf ${CPACK_ARCHIVE_SRCDIFF_FILE_NAME}.tar.bz2 -C /usr
+)
