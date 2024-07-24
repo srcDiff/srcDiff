@@ -48,7 +48,3 @@ BOOST_DATA_TEST_CASE(decl_stmt_expr, data::make(test_cases_expr), code, expr, ex
 
 	BOOST_TEST(expr_child->to_string() == expected);
 }
-
-/* Can't go from decl_stmt to expr without casting a separate expr_construct for use with expr() method that's why I have
-a third part of test case ex: "0;".
-*/
