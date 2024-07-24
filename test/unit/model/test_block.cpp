@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file test_block_t.cpp
+ * @file test_block.cpp
  *
  * @copyright Copyright (C) 2024-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#define BOOST_TEST_MODULE block_t_Tests
+#define BOOST_TEST_MODULE block_Tests
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
 
