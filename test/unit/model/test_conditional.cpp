@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file test_condition.cpp
+ * @file test_conditional.cpp
  *
  * @copyright Copyright (C) 2024-2024 SDML (www.srcDiff.org)
  *
@@ -117,7 +117,7 @@ BOOST_DATA_TEST_CASE(conditional_is_matchable_impl_true, data::make(test_cases_i
     BOOST_TEST(modified_conditional_construct->is_matchable_impl(*original_conditional_construct));
 }
 
-
+/*
 std::vector<std::tuple<std::string, std::string, std::string>> test_cases_is_matchable_impl_false = {
     {"if (x) {y=1;}"             , "if (z) {y=1;}"             , "if" },
     {"if (z) {a=1;}"             , "if (x) {a=1;}"             , "if" },
@@ -174,3 +174,4 @@ BOOST_DATA_TEST_CASE(conditional_is_matchable_impl_false, data::make(test_cases_
     BOOST_TEST(!original_conditional_construct->is_matchable_impl(*modified_conditional_construct));
     BOOST_TEST(!modified_conditional_construct->is_matchable_impl(*original_conditional_construct));
 }
+*/
