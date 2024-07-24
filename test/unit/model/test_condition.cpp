@@ -41,6 +41,13 @@ std::vector<std::tuple<std::string, std::string>> test_cases_to_string = {
     {"else if (*test)"           , "*test"         },
     {"else if (*test && !pass){}", "*test && !pass"},
     {"else if (!test || !pass){}", "!test || !pass"},
+    {"for (int i=0;i<1;i++){}"   , "i<1;"          },
+    {"for (int j=0;j>10;j++){}"  , "j>10;"         },
+    {"for (int k=0;k!=0;k++){}"  , "k!=0;"         },
+    {"for (int l=0;l>=1;l++){}"  , "l>=1;"         },
+    {"for (int m=5;m<=0;m--){}"  , "m<=0;"         },
+    {"for (int n=0;n==0;n++){}"  , "n==0;"         },
+    {"for (;o>5;){}"             , "o>5;"          }
 };
 
 BOOST_DATA_TEST_CASE(condition_to_string, data::make(test_cases_to_string), code, expected) {
