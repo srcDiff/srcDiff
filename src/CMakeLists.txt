@@ -58,7 +58,7 @@ macro(build_library LIBRARY_NAME LIBRARY_TYPE LIBRARY_OUTPUT_NAME)
         set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${LIBRARY_OUTPUT_NAME})
     endif()
 
-    target_link_libraries(${LIBRARY_NAME} PRIVATE srcsax_shared srcML::LibsrcML LibXml2::LibXml2 CLI11::CLI11)
+    target_link_libraries(${LIBRARY_NAME} PRIVATE srcsax_static srcML::LibsrcML LibXml2::LibXml2 CLI11::CLI11)
 
 endmacro()
 
