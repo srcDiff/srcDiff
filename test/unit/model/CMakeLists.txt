@@ -22,29 +22,7 @@
 find_package(Boost REQUIRED)
 
 # add tests
-
-set(TEST_FILES
-    test_if_t.cpp
-    test_for_t.cpp
-    test_else_t.cpp
-    test_name_t.cpp
-    test_elseif.cpp
-    test_named_construct.cpp
-    test_if_stmt.cpp
-    test_case_t.cpp
-    test_call.cpp
-    test_decl_stmt.cpp
-    test_identifier_decl.cpp
-    test_expr_construct.cpp
-    test_expr_stmt.cpp
-    test_expr.cpp
-    test_condition.cpp
-    test_conditional.cpp
-    test_clause.cpp
-    test_block.cpp
-    test_string_utils.cpp
-)
-
+file(GLOB TEST_FILES *.cpp)
 foreach(TEST_FILE ${TEST_FILES})
 
     add_unit_test(${TEST_FILE} Boost::headers)
