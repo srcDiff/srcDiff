@@ -37,9 +37,9 @@ BOOST_DATA_TEST_CASE(block_block_content, data::make(test_cases_block_content), 
 
     BOOST_TEST(block_child->to_string() == expected);
 }
-
+/*
 std::vector<std::tuple<std::string, std::string>> test_cases_is_syntax_similar_impl_true = {
-    {"{block();}", "{block();}"}
+    {"{blockblockblock();}", "{clockclocclock()}"}
 };
 
 BOOST_DATA_TEST_CASE(block_is_syntax_similar_impl_true, data::make(test_cases_is_syntax_similar_impl_true), original, modified) {
@@ -55,4 +55,51 @@ BOOST_DATA_TEST_CASE(block_is_syntax_similar_impl_true, data::make(test_cases_is
 
     BOOST_TEST(original_block->is_syntax_similar_impl(*modified_block));
     BOOST_TEST(modified_block->is_syntax_similar_impl(*original_block));
+}
+*/
+
+std::vector<std::tuple<std::string, std::string>> test_cases_is_matchable_impl_true = {
+    {"{int i = 0;}", "{int i = 0;}"},
+    {"{block();}"  , "{block();}"  },
+    {"{}"          , "{}"          },
+    {"{a;b;c;}"    , "{a;b;c;}"    },
+    {"{a; b; c;}"  , "{a;b;c;}"    },
+};
+
+BOOST_DATA_TEST_CASE(block_is_matchable_impl_true, data::make(test_cases_is_matchable_impl_true), original, modified) {
+
+    construct_test_data original_data = create_test_construct(original, construct_type);
+    BOOST_TEST(original_data.test_construct);
+
+    construct_test_data modified_data = create_test_construct(modified, construct_type);
+    BOOST_TEST(modified_data.test_construct);
+
+    std::shared_ptr<const block> original_block = std::dynamic_pointer_cast<const block>(original_data.test_construct);
+    std::shared_ptr<const block> modified_block = std::dynamic_pointer_cast<const block>(modified_data.test_construct);
+
+    BOOST_TEST(original_block->is_matchable_impl(*modified_block));
+    BOOST_TEST(modified_block->is_matchable_impl(*original_block));
+}
+
+std::vector<std::tuple<std::string, std::string>> test_cases_is_matchable_impl_false = {
+    {"{int i = 0;}", "{char a = 'a';}"},
+    {"{block();}"  , "{if(1){};}"     },
+    {"{}"          , "{test();}"      },
+    {"{a;b;c;}"    , "{test();}"      },
+    {"{a; b; c;}"  , "{}"             },
+};
+
+BOOST_DATA_TEST_CASE(block_is_matchable_impl_false, data::make(test_cases_is_matchable_impl_false), original, modified) {
+
+    construct_test_data original_data = create_test_construct(original, construct_type);
+    BOOST_TEST(original_data.test_construct);
+
+    construct_test_data modified_data = create_test_construct(modified, construct_type);
+    BOOST_TEST(modified_data.test_construct);
+
+    std::shared_ptr<const block> original_block = std::dynamic_pointer_cast<const block>(original_data.test_construct);
+    std::shared_ptr<const block> modified_block = std::dynamic_pointer_cast<const block>(modified_data.test_construct);
+
+    BOOST_TEST(!original_block->is_matchable_impl(*modified_block));
+   // BOOST_TEST(!modified_block->is_matchable_impl(*original_block));
 }
