@@ -12,7 +12,17 @@
 
 #include <string_utils.hpp>
 
+BOOST_AUTO_TEST_CASE(test_string_literal_empty) {
+    constexpr string_literal literal("");
+    BOOST_CHECK_EQUAL(std::string(literal), "");
+}
+
 BOOST_AUTO_TEST_CASE(test_string_literal_init) {
-    constexpr string_literal<6> literal("Hello");
+    constexpr string_literal literal("Hello");
     BOOST_CHECK_EQUAL(std::string(literal), "Hello");
+}
+
+BOOST_AUTO_TEST_CASE(test_string_literal_complex) {
+    constexpr string_literal literal("a1(!)s2*d3&f4=%");
+    BOOST_CHECK_EQUAL(std::string(literal), "a1(!)s2*d3&f4=%");
 }
