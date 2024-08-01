@@ -80,8 +80,8 @@ public:
     const std::shared_ptr<srcML::node> & last_term() const;
 
     /// position info of element
-    std::size_t start_position() const;
-    std::size_t end_position() const;
+    int start_position() const;
+    int end_position() const;
 
 
     const srcml_nodes & nodes() const;
