@@ -506,10 +506,10 @@ void srcdiff_input_source_svn::process_files_from() {
       for (int i = line.size() - 1; i != 0; --i) {
         if (isspace(line[i])) {
           line[i] = 0;
-	}
+    }
         else {
           break;
-	}
+    }
 
       }
 

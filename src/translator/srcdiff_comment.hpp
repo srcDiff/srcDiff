@@ -20,8 +20,8 @@ private:
 
 public:
 
-	srcdiff_comment(std::shared_ptr<srcdiff_output> out, const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified);
-	virtual void output();
+    srcdiff_comment(std::shared_ptr<srcdiff_output> out, const construct::construct_list & construct_list_original, const construct::construct_list & construct_list_modified);
+    virtual void output();
 
 };
 

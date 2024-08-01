@@ -28,34 +28,34 @@ std::vector<std::tuple<std::string, std::string>> test_cases_for_control = {
 
 BOOST_DATA_TEST_CASE(for_t_control, data::make(test_cases_for_control), code, expected) {
 
-	construct_test_data test_data = create_test_construct(code, construct_type);
+    construct_test_data test_data = create_test_construct(code, construct_type);
     BOOST_TEST(test_data.test_construct);
 
-	std::shared_ptr<const for_t> for_construct = std::dynamic_pointer_cast<const for_t>(test_data.test_construct);
-	std::shared_ptr<const construct> control_child = for_construct->control();
+    std::shared_ptr<const for_t> for_construct = std::dynamic_pointer_cast<const for_t>(test_data.test_construct);
+    std::shared_ptr<const construct> control_child = for_construct->control();
 
-	BOOST_TEST(control_child);
-	BOOST_TEST(control_child->to_string() == expected);
+    BOOST_TEST(control_child);
+    BOOST_TEST(control_child->to_string() == expected);
 }
 
 std::vector<std::tuple<std::string, std::string>> test_cases_for_condition = {
-	{"for (i = 0; i < 5; i++){j++;}", "i < 5;"},
-	{"for (; i < 5;){j++;}"         , "i < 5;"},
-	{"for (; i < 5;)"               , "i < 5;"},
-	{"for (;;){}"                   , ";"     },
+    {"for (i = 0; i < 5; i++){j++;}", "i < 5;"},
+    {"for (; i < 5;){j++;}"         , "i < 5;"},
+    {"for (; i < 5;)"               , "i < 5;"},
+    {"for (;;){}"                   , ";"     },
 
 };
 
 BOOST_DATA_TEST_CASE(for_t_condition, data::make(test_cases_for_condition), code, expected) {
 
-	construct_test_data test_data = create_test_construct(code, construct_type);
+    construct_test_data test_data = create_test_construct(code, construct_type);
     BOOST_TEST(test_data.test_construct);
 
-	std::shared_ptr<const for_t> for_construct = std::dynamic_pointer_cast<const for_t>(test_data.test_construct);
-	std::shared_ptr<const construct> condition_child = for_construct->condition();
+    std::shared_ptr<const for_t> for_construct = std::dynamic_pointer_cast<const for_t>(test_data.test_construct);
+    std::shared_ptr<const construct> condition_child = for_construct->condition();
 
-	BOOST_TEST(condition_child);
-	BOOST_TEST(condition_child->to_string() == expected);
+    BOOST_TEST(condition_child);
+    BOOST_TEST(condition_child->to_string() == expected);
 }
 
 std::vector<std::tuple<std::string, std::string>> test_cases_for_matchable_impl_true = {
@@ -114,12 +114,12 @@ std::vector<std::tuple<std::string, std::string>> test_cases_foreach_control = {
 
 BOOST_DATA_TEST_CASE(foreach_control, data::make(test_cases_foreach_control), original, expected) {
 
-	construct_test_data test_data = create_test_construct(original, construct_type);
+    construct_test_data test_data = create_test_construct(original, construct_type);
     BOOST_TEST(test_data.test_construct);
 
-	std::shared_ptr<const for_t> for_construct = std::dynamic_pointer_cast<const for_t>(test_data.test_construct);
-	std::shared_ptr<const construct> control_child = for_construct->control();
+    std::shared_ptr<const for_t> for_construct = std::dynamic_pointer_cast<const for_t>(test_data.test_construct);
+    std::shared_ptr<const construct> control_child = for_construct->control();
 
-	BOOST_TEST(control_child);
-	BOOST_TEST(control_child->to_string() == expected);
+    BOOST_TEST(control_child);
+    BOOST_TEST(control_child->to_string() == expected);
 }

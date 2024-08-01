@@ -154,7 +154,7 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
         int i;
         for(i = 0; i <= edit_array; ++i) {
           free(edit_pointers[i]);
-	}
+    }
 
         free(edit_pointers);
 

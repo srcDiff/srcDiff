@@ -11,8 +11,8 @@
 
 std::shared_ptr<const expr_t> decl_stmt::expr(const expr_construct & that) const {
 
-	std::shared_ptr<const expr_t> match_expression = that.expr(*this);
+    std::shared_ptr<const expr_t> match_expression = that.expr(*this);
 
-	if(!match_expression) return std::shared_ptr<const expr_t>();
-	return std::static_pointer_cast<const expr_t>(find_best_descendent(*match_expression));
+    if(!match_expression) return std::shared_ptr<const expr_t>();
+    return std::static_pointer_cast<const expr_t>(find_best_descendent(*match_expression));
 }

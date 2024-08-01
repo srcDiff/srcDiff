@@ -82,7 +82,7 @@ int shortest_edit_script_t::approximate_compute(const T & structure_one, const T
 
         if(compare(left, right, context) != 0) {
           continue;
-	}
+    }
 
         match_one = pos_one;
         match_two = pos_two;

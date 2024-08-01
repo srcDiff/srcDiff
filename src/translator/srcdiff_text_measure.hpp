@@ -30,7 +30,7 @@ private:
 
 public:
 
-	srcdiff_text_measure(const construct & set_original,
+    srcdiff_text_measure(const construct & set_original,
                        const construct & set_modified,
                        bool important_only = true);
 
@@ -38,7 +38,7 @@ public:
     void collect_text();
     void collect_important_text();
 
-  	virtual void compute();
+    virtual void compute();
     virtual int number_match_beginning();
 
 };

@@ -17,21 +17,21 @@ class srcdiff_single {
 
 protected:
 
-	std::shared_ptr<srcdiff_output> out;
+    std::shared_ptr<srcdiff_output> out;
 
-	std::shared_ptr<const construct> original_construct;
-	std::shared_ptr<const construct> modified_construct;
+    std::shared_ptr<const construct> original_construct;
+    std::shared_ptr<const construct> modified_construct;
 
 private:
 
-	void output_recursive_same();
-	void output_recursive_interchangeable();
+    void output_recursive_same();
+    void output_recursive_interchangeable();
 
 public:
 
-	srcdiff_single(std::shared_ptr<srcdiff_output> out, std::shared_ptr<const construct> original_construct,  std::shared_ptr<const construct> modified_construct);
+    srcdiff_single(std::shared_ptr<srcdiff_output> out, std::shared_ptr<const construct> original_construct,  std::shared_ptr<const construct> modified_construct);
 
-	virtual void output();
+    virtual void output();
 
 };
 

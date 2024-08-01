@@ -42,7 +42,7 @@ namespace srcML {
         bool operator!=(const attribute & that) const;
 
     private:
-	
+    
         std::string name;
         std::optional<std::string> value;
         std::shared_ptr<srcML::name_space> ns;

@@ -16,24 +16,24 @@ class srcdiff_common : public srcdiff_output {
 
 protected:
 
-	unsigned int end_original;
-	unsigned int end_modified;
+    unsigned int end_original;
+    unsigned int end_modified;
 
 private:
 
-	static const std::optional<std::string> whitespace;
-	virtual void markup_common();
+    static const std::optional<std::string> whitespace;
+    virtual void markup_common();
 
 public:
 
-	static void output_common(std::shared_ptr<srcdiff_output> out, int end_original, int end_modified) {
- 		srcdiff_common common(*out, end_original, end_modified);
-		common.output();
-	}
+    static void output_common(std::shared_ptr<srcdiff_output> out, int end_original, int end_modified) {
+        srcdiff_common common(*out, end_original, end_modified);
+        common.output();
+    }
 
-	srcdiff_common(const srcdiff_output & out, unsigned int end_original, unsigned int end_modified);
+    srcdiff_common(const srcdiff_output & out, unsigned int end_original, unsigned int end_modified);
 
-	virtual void output();
+    virtual void output();
 
 };
 
