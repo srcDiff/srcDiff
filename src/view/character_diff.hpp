@@ -27,7 +27,7 @@ public:
     character_diff(const versioned_string & original);
 
     void compute();
-	void output(view_t & view, const std::string & type);
+    void output(view_t & view, const std::string & type);
 
 };
 

@@ -19,22 +19,22 @@ class srcdiff_move : public srcdiff_output {
 
 protected:
 
-	std::size_t & position;
-	int operation;
+    std::size_t & position;
+    int operation;
 
 private:
 
 public:
 
-	srcdiff_move(const srcdiff_output & out, std::size_t & position, int operation);
+    srcdiff_move(const srcdiff_output & out, std::size_t & position, int operation);
 
-	static bool is_move(std::shared_ptr<const construct> set);
+    static bool is_move(std::shared_ptr<const construct> set);
 
-	static void mark_moves(const construct::construct_list_view original,
+    static void mark_moves(const construct::construct_list_view original,
                            const construct::construct_list_view modified,
                            edit_t * edit_script);
 
-	virtual void output();
+    virtual void output();
 
 
 };

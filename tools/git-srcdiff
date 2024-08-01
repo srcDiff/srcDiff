@@ -7,19 +7,25 @@ else
 fi
 
 if [[ $2 = "/dev/null" ]]; then
+temp_file = srcdiff_temp$(bash -c "echo $5 | grep -o '\.[^.]*$'")
+elif [[ $5 = "/dev/null" ]]; then
+temp_file = srcdiff_temp$(bash -c "echo $2 | grep -o '\.[^.]*$'")
+fi
 
-    touch srcdiff_temp$(bash -c "echo $5 | grep -o '\.[^.]*$'")
-    srcdiff --unified --unified-context=3 srcdiff_temp$(bash -c "echo $5 | grep -o '\.[^.]*$'") "$5"
-    rm -f srcdiff_temp$(bash -c "echo $5 | grep -o '\.[^.]*$'")
+echo $temp_file
+
+if [[ $2 = "/dev/null" ]]; then
+
+    touch $temp_file
+    srcdiff --unified --unified-context=3 $temp_file "$5"
+    rm -f $temp_file
 
 elif [[ $5 = "/dev/null" ]]; then
 
-    touch srcdiff_temp$(bash -c "echo $2 | grep -o '\.[^.]*$'")
-    srcdiff --unified --unified-context=3 "$2" srcdiff_temp$(bash -c "echo $2 | grep -o '\.[^.]*$'")
-    rm -f srcdiff_temp$(bash -c "echo $2 | grep -o '\.[^.]*$'")
+    touch $temp_file   
+    srcdiff --unified --unified-context=3 "$2" $temp_file
+    rm -f $temp_file
 
 else
-
     srcdiff --unified --unified-context=3 "$2" "$5"
-
 fi

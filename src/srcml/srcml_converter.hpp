@@ -40,9 +40,9 @@ protected:
 
 private:
 
-	srcml_nodes collect_nodes(xmlTextReaderPtr reader) const;
+    srcml_nodes collect_nodes(xmlTextReaderPtr reader) const;
 
-	static std::shared_ptr<srcML::node> get_current_node(xmlTextReaderPtr reader, bool is_archive);
+    static std::shared_ptr<srcML::node> get_current_node(xmlTextReaderPtr reader, bool is_archive);
 
 public:
 
@@ -55,11 +55,11 @@ public:
 
   };
 
- 	srcml_converter(srcml_archive * archive, bool split_strings, int stream_source);
- 	~srcml_converter();
+    srcml_converter(srcml_archive * archive, bool split_strings, int stream_source);
+    ~srcml_converter();
 
-	void convert(const std::string & language, void * context, const std::function<ssize_t(void *, void *, size_t)> & read, const std::function<int(void *)> & close, const srcml_burst_config & burst_config); 
-	srcml_nodes create_nodes() const;
+    void convert(const std::string & language, void * context, const std::function<ssize_t(void *, void *, size_t)> & read, const std::function<int(void *)> & close, const srcml_burst_config & burst_config); 
+    srcml_nodes create_nodes() const;
 
 };
 

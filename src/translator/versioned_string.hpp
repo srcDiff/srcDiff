@@ -20,60 +20,60 @@
 
 class versioned_string {
 
-	private:
+    private:
 
-		static const std::string empty_str;
+        static const std::string empty_str;
 
-		std::optional<std::string> string_original;
-		std::optional<std::string> string_modified;
+        std::optional<std::string> string_original;
+        std::optional<std::string> string_modified;
 
-		char separator;
+        char separator;
 
-	protected:
+    protected:
 
-	public:
-		static std::string normalize(const std::string & str, const std::string & sep);
+    public:
+        static std::string normalize(const std::string & str, const std::string & sep);
 
-		versioned_string(char separator = '|');
-		versioned_string(std::string string, char separator = '|');
-		versioned_string(std::string string_original, std::string string_modified, char separator = '|');
+        versioned_string(char separator = '|');
+        versioned_string(std::string string, char separator = '|');
+        versioned_string(std::string string_original, std::string string_modified, char separator = '|');
 
-		bool is_common() const;
-		bool has_original() const;
-		bool has_modified() const;
+        bool is_common() const;
+        bool has_original() const;
+        bool has_modified() const;
 
-		std::string & original();
-		const std::string & original() const;
-		std::string & modified();
-		const std::string & modified() const;
-		const std::string & first_active_string() const;
+        std::string & original();
+        const std::string & original() const;
+        std::string & modified();
+        const std::string & modified() const;
+        const std::string & first_active_string() const;
 
-		void set_original(const std::string & string_original);
-		void set_modified(const std::string & string_modified);
-		void append(const std::string & str, enum srcdiff_type version);
-		void append(const char * characters, size_t len, enum srcdiff_type version);
-		void clear();
+        void set_original(const std::string & string_original);
+        void set_modified(const std::string & string_modified);
+        void append(const std::string & str, enum srcdiff_type version);
+        void append(const char * characters, size_t len, enum srcdiff_type version);
+        void clear();
 
-		versioned_string remove_spaces() const;
-		versioned_string normalize_spaces() const;
+        versioned_string remove_spaces() const;
+        versioned_string normalize_spaces() const;
 
-		void swap(versioned_string & other);
+        void swap(versioned_string & other);
 
-       	operator std::string() const;
-       	bool operator==(const std::string & str) const;
-		bool operator!=(const std::string & str) const;
-       	bool operator==(const char * c_str) const;
-       	bool operator!=(const char * c_str) const;
-       	bool operator<(const versioned_string & v_str) const;
-		std::string operator+(const std::string & str) const;
-		std::string operator+(const char * c_str) const;
-		versioned_string operator+(const versioned_string & v_str) const;
+        operator std::string() const;
+        bool operator==(const std::string & str) const;
+        bool operator!=(const std::string & str) const;
+        bool operator==(const char * c_str) const;
+        bool operator!=(const char * c_str) const;
+        bool operator<(const versioned_string & v_str) const;
+        std::string operator+(const std::string & str) const;
+        std::string operator+(const char * c_str) const;
+        versioned_string operator+(const versioned_string & v_str) const;
 
-		versioned_string & operator+=(const versioned_string & v_str);
+        versioned_string & operator+=(const versioned_string & v_str);
 
         friend std::ostream & operator<<(std::ostream & out, const versioned_string & string);
-		friend std::string operator+(const std::string & str, const versioned_string & v_str);
-		friend std::string operator+(const char * c_str, const versioned_string & v_str);
+        friend std::string operator+(const std::string & str, const versioned_string & v_str);
+        friend std::string operator+(const char * c_str, const versioned_string & v_str);
 
 };
 

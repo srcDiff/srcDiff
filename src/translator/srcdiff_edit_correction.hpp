@@ -18,24 +18,24 @@
 class srcdiff_edit_correction {
 
 private:
-	const construct::construct_list_view sets_original;
-	const construct::construct_list_view sets_modified;
-	srcdiff_shortest_edit_script & ses;
+    const construct::construct_list_view sets_original;
+    const construct::construct_list_view sets_modified;
+    srcdiff_shortest_edit_script & ses;
 
 private:
-	void split_change(edit_t * delete_edit, edit_t * insert_edit,
-	                    int original_pos, int modified_pos,
-	                    edit_t *& start_edits,
-	                    edit_t *& last_edits);
-	edit_t * correct_common_inner(edit_t * change_edit);
-	edit_t * correct_common(edit_t * start_edit);
-	std::shared_ptr<srcdiff_text_measure> edit2measure(int original_offset, int modified_offset);
+    void split_change(edit_t * delete_edit, edit_t * insert_edit,
+                        int original_pos, int modified_pos,
+                        edit_t *& start_edits,
+                        edit_t *& last_edits);
+    edit_t * correct_common_inner(edit_t * change_edit);
+    edit_t * correct_common(edit_t * start_edit);
+    std::shared_ptr<srcdiff_text_measure> edit2measure(int original_offset, int modified_offset);
 
 public:
-	srcdiff_edit_correction(const construct::construct_list_view sets_original,
-							const construct::construct_list_view sets_modified,
-							srcdiff_shortest_edit_script & ses);
-	void correct();
+    srcdiff_edit_correction(const construct::construct_list_view sets_original,
+                            const construct::construct_list_view sets_modified,
+                            srcdiff_shortest_edit_script & ses);
+    void correct();
 
 };
 

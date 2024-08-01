@@ -18,35 +18,35 @@ class construct;
 class srcdiff_measure {
 
 protected:
-	const construct & set_original;
-	const construct & set_modified;
+    const construct & set_original;
+    const construct & set_modified;
 
-	bool computed;
+    bool computed;
 
-	int a_similarity;
-	int a_original_difference;
-	int a_modified_difference;
-	int original_len;
-	int modified_len;
+    int a_similarity;
+    int a_original_difference;
+    int a_modified_difference;
+    int original_len;
+    int modified_len;
 
-	void process_edit_script(const edit_t * edit_script);
+    void process_edit_script(const edit_t * edit_script);
 
 public:
 
-	srcdiff_measure(const construct & set_original, const construct & set_modified);
+    srcdiff_measure(const construct & set_original, const construct & set_modified);
 
-	int similarity()          const;
-	int difference()          const;
-	int original_difference() const;
-	int modified_difference() const;
-	int original_length()     const;
-	int modified_length()     const;
+    int similarity()          const;
+    int difference()          const;
+    int original_difference() const;
+    int modified_difference() const;
+    int original_length()     const;
+    int modified_length()     const;
 
-	int max_length() const;
-	int min_length() const;
+    int max_length() const;
+    int min_length() const;
 
-	virtual void compute() = 0;
-	virtual ~srcdiff_measure() {};
+    virtual void compute() = 0;
+    virtual ~srcdiff_measure() {};
 };
 
 

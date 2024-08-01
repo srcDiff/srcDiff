@@ -22,8 +22,8 @@ private:
 public:
 
     user_defined_theme(const std::string & highlight_level,
-    				   bool is_html,
-    				   const std::string & theme_filename);
+                       bool is_html,
+                       const std::string & theme_filename);
 
 };
 

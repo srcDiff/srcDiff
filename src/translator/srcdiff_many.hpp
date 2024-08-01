@@ -19,22 +19,22 @@ class srcdiff_many : public srcdiff_diff {
 
 protected:
 
-	edit_t * edit_script;
+    edit_t * edit_script;
 
 private:
 
-	typedef std::pair<int, int> int_pair;
-	typedef std::vector<int_pair> int_pairs;
-  	typedef std::vector<int_pairs> moves;
+    typedef std::pair<int, int> int_pair;
+    typedef std::vector<int_pair> int_pairs;
+    typedef std::vector<int_pairs> moves;
 
- 	void output_unmatched(construct::construct_list_view original_unmatched, construct::construct_list_view modified_unmatched);
+    void output_unmatched(construct::construct_list_view original_unmatched, construct::construct_list_view modified_unmatched);
 
-	moves determine_operations();
+    moves determine_operations();
   
 public:
 
-	srcdiff_many(const srcdiff_diff & diff, edit_t * edit_script);
-	virtual void output();
+    srcdiff_many(const srcdiff_diff & diff, edit_t * edit_script);
+    virtual void output();
 
 };
 
