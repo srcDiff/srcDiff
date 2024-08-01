@@ -212,12 +212,12 @@ const std::shared_ptr<srcML::node> & construct::last_term() const {
 } 
 
 /// position info of element
-std::size_t construct::start_position() const {
+int construct::start_position() const {
     assert(!terms.empty());
     return terms.front();
 }
 
-std::size_t construct::end_position() const {
+int construct::end_position() const {
     assert(!terms.empty());
     return terms.back();
 }
