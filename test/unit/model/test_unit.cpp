@@ -18,7 +18,9 @@
 namespace data = boost::unit_test::data;
 
 std::vector<std::tuple<std::string>> unit_test_cases = {
-    {"int i = 0;"},
+    {"int i = 0;"           },
+    {""                     },
+    {"int main(){return 0;}"}
 };
 
 BOOST_DATA_TEST_CASE(unit_tests, data::make(unit_test_cases), code) {
@@ -26,8 +28,6 @@ BOOST_DATA_TEST_CASE(unit_tests, data::make(unit_test_cases), code) {
 
     unit test_unit(*nodes, std::shared_ptr<srcdiff_output>());
 
-    const std::vector<int>& test_terms = test_unit.get_terms();
-
-    BOOST_CHECK_EQUAL(test_terms.size(), 2);
-    BOOST_CHECK_EQUAL(test_terms[0], -1);
+    BOOST_CHECK_EQUAL(test_unit.start_position(), -1);
+    BOOST_CHECK_EQUAL(test_unit.end_position(), nodes->size());
 }
