@@ -572,7 +572,7 @@ void srcdiff_output::output_node_inner(const srcML::node & node) {
     srcml_write_start_element(wstate->unit,
       node.get_namespace()->get_prefix() ? node.get_namespace()->get_prefix()->c_str() : 0,
       node.get_name().c_str(),
-      nullptr//node.get_namespace()->get_uri().c_str()
+      node.get_namespace()->get_uri().c_str()
       );
 
     // copy all the attributes
