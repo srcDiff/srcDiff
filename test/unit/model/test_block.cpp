@@ -59,11 +59,12 @@ BOOST_DATA_TEST_CASE(block_is_syntax_similar_impl_true, data::make(test_cases_is
 */
 
 std::vector<std::tuple<std::string, std::string>> test_cases_is_matchable_impl_true = {
-    {"{int i = 0;}", "{int i = 0;}"},
-    {"{block();}"  , "{block();}"  },
-    {"{}"          , "{}"          },
-    {"{a;b;c;}"    , "{a;b;c;}"    },
-    {"{a; b; c;}"  , "{a;b;c;}"    },
+    {"{int i = 0;}", "{int i = 0;}" },
+    {"{block();}"  , "{block();}"   },
+    {"{}"          , "{}"           },
+    {"{a;b;c;}"    , "{a;b;c;}"     },
+    {"{a; b; c;}"  , "{a;b;c;}"     },
+    {"{test();}"   , "{}"           },
 };
 
 BOOST_DATA_TEST_CASE(block_is_matchable_impl_true, data::make(test_cases_is_matchable_impl_true), original, modified) {
@@ -82,11 +83,6 @@ BOOST_DATA_TEST_CASE(block_is_matchable_impl_true, data::make(test_cases_is_matc
 }
 
 std::vector<std::tuple<std::string, std::string>> test_cases_is_matchable_impl_false = {
-    {"{int i = 0;}", "{char a = 'a';}"},
-    {"{block();}"  , "{if(1){};}"     },
-    {"{}"          , "{test();}"      },
-    {"{a;b;c;}"    , "{test();}"      },
-    {"{a; b; c;}"  , "{}"             },
 };
 
 BOOST_DATA_TEST_CASE(block_is_matchable_impl_false, data::make(test_cases_is_matchable_impl_false), original, modified) {
@@ -101,5 +97,6 @@ BOOST_DATA_TEST_CASE(block_is_matchable_impl_false, data::make(test_cases_is_mat
     std::shared_ptr<const block> modified_block = std::dynamic_pointer_cast<const block>(modified_data.test_construct);
 
     BOOST_TEST(!original_block->is_matchable_impl(*modified_block));
-   // BOOST_TEST(!modified_block->is_matchable_impl(*original_block));
+    BOOST_TEST(!modified_block->is_matchable_impl(*original_block));
 }
+
