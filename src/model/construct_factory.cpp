@@ -46,6 +46,7 @@
 #include <nest/block.hpp>
 #include <nest/name.hpp>
 #include <nest/expr.hpp>
+#include <nest/always.hpp>
 
 #include <convert/rule_checker.hpp>
 #include <convert/custom.hpp>
@@ -95,10 +96,6 @@ typedef nest::custom<"goto", "expr_stmt", "decl_stmt", "return", "comment", "blo
                           "try", "catch", "finally", "synchronized",
                           "expr", "call", "operator", "literal", "continue", "break", "goto">
         else_nest;
-
-typedef nest::custom<"decl_stmt", "function_decl", "function", "class", "class_decl",
-                          "struct", "struct_decl", "union", "union_decl", "typedef", "using">
-        extern_nest;
 
 typedef std::unordered_map<std::string_view, factory_function> factory_map_type;
 
@@ -200,7 +197,7 @@ factory_map_type factory_map = {
 
   {"ternary", generate_factory<construct, nest::custom<"ternary", "call", "operator", "literal", "expr", "name">>() },
 
-  {"extern", generate_factory<construct, extern_nest>() },
+  {"extern", generate_factory<construct, nest::always>() },
 
 };
 
