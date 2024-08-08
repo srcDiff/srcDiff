@@ -115,18 +115,21 @@ BOOST_DATA_TEST_CASE(construct_to_string, data::make(test_cases_to_string), code
     BOOST_CHECK_EQUAL(test_construct->to_string(), expected);
 }
 
-std::vector<std::tuple<std::string>> test_cases_term = {
-    {"try {}"}
+std::vector<std::tuple<std::string, std::size_t>> test_cases_term = {
+    {"try {}"        , 0},
+    {"try{}catch{}", 2},
 };
 
-BOOST_DATA_TEST_CASE(construct_term, data::make(test_cases_term), code) {
+BOOST_DATA_TEST_CASE(construct_term, data::make(test_cases_term), code, pos) {
 
     construct_test_data test_data = create_test_construct(code, construct_type);
     BOOST_TEST(test_data.test_construct);
 
     std::shared_ptr<const construct> test_construct = std::dynamic_pointer_cast<const construct>(test_data.test_construct);
+    std::shared_ptr<srcml_nodes> nodes = create_nodes(code, "C++");
 
-    std::shared_ptr<const srcML::node> test_term = test_construct->term(0);
+   // BOOST_TEST_MESSAGE("USING TERM: " << *test_construct->term(pos) << "\nUSING FRONT: " << *nodes->at(pos));
 
-    BOOST_CHECK_EQUAL(test_construct->term(0), test_term);
+    BOOST_TEST(*test_construct->term(pos) == *nodes->at(pos));
+
 }
