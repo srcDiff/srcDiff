@@ -125,11 +125,52 @@ BOOST_DATA_TEST_CASE(construct_term, data::make(test_cases_term), code, pos) {
     construct_test_data test_data = create_test_construct(code, construct_type);
     BOOST_TEST(test_data.test_construct);
 
-    std::shared_ptr<const construct> test_construct = std::dynamic_pointer_cast<const construct>(test_data.test_construct);
     std::shared_ptr<srcml_nodes> nodes = create_nodes(code, "C++");
 
-   // BOOST_TEST_MESSAGE("USING TERM: " << *test_construct->term(pos) << "\nUSING FRONT: " << *nodes->at(pos));
+    std::shared_ptr<const construct> test_construct = std::dynamic_pointer_cast<const construct>(test_data.test_construct);
 
     BOOST_TEST(*test_construct->term(pos) == *nodes->at(pos));
 
 }
+
+std::vector<std::tuple<std::string>> test_cases_start_position = {
+    {"try {}"},
+};
+
+BOOST_DATA_TEST_CASE(construct_start_position, data::make(test_cases_start_position), code) {
+
+    construct_test_data test_data = create_test_construct(code, construct_type);
+    BOOST_TEST(test_data.test_construct);
+
+    std::shared_ptr<const construct> test_construct = std::dynamic_pointer_cast<const construct>(test_data.test_construct);
+
+    BOOST_TEST(test_construct->start_position() == 0);
+}
+
+// end_position() tests
+
+std::vector<std::tuple<std::string>> test_cases_end_position = {
+    {"try {}"         },
+    {"try {} catch {}"},
+    {"try {} catch {}"},
+    {"try {int i= 0;}"},
+
+};
+
+BOOST_DATA_TEST_CASE(construct_end_position, data::make(test_cases_end_position), code) {
+
+    construct_test_data test_data = create_test_construct(code, construct_type);
+    BOOST_TEST(test_data.test_construct);
+
+    std::shared_ptr<const construct> test_construct = std::dynamic_pointer_cast<const construct>(test_data.test_construct);
+
+    int count = -1;
+
+    for (const auto& terms_pos : test_construct->nodes()) {
+        count++;
+    }
+
+    BOOST_TEST(test_construct->end_position() == count);
+}
+
+
