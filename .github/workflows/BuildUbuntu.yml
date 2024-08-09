@@ -26,8 +26,8 @@
           - name: Setup Ubuntu
             shell: bash
             run: |
-              sudo apt install build-essential ninja-build antlr libarchive-dev libxml2-dev libxslt1-dev \
-                               libcurl4-openssl-dev openjdk-21-jre file libboost-dev
+              sudo apt install --fix-missing build-essential ninja-build antlr libarchive-dev libxml2-dev libxslt1-dev \
+                                             libcurl4-openssl-dev openjdk-21-jre file libboost-dev
           
           - name: Run srcML Workflow for Ubuntu 
             run: |
