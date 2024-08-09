@@ -2,7 +2,7 @@
 /**
  * @file srcdiff_type.hpp
  *
- * @copyright Copyright (C) 2015-2024 SDML (www.srcDiff.org)
+ * @copyright Copyright (C) 2024-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
