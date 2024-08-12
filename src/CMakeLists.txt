@@ -68,7 +68,7 @@ if (NOT DEFINED STATIC_LIB_NAME)
 endif()
 
 build_library(srcdiff_static STATIC ${STATIC_LIB_NAME})
-set_target_properties(srcdiff_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set_target_properties(srcdiff_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin OUTPUT_NAME srcdiff_static)
 
 build_library(srcdiff_shared SHARED srcdiff)
 set_target_properties(srcdiff_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

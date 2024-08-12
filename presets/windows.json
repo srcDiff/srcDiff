@@ -10,54 +10,67 @@
   ],
   "configurePresets": [
     {
-      "name": "windows-base",
-      "hidden": true,
-      "inherits": ["vcpkg"],
-      "cacheVariables": {
-        "VCPKG_TARGET_TRIPLET": "windows-with-java",
-        "STATIC_LIB_NAME": "srcdiff_static"
-      }
-    },
-    {
-      "name": "windows",
+      "name": "ci-windows",
       "displayName": "Windows (with Clang, Ninja, and vcpkg)",
       "description": "Default build options for Windows",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
-      "inherits": ["clang", "windows-base"],
+      "inherits": ["ci-clang", "subdirectory-build", "vcpkg"],
       "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_CXX_FLAGS": "-DWIN32 -D_MSC_BUILD",
         "CMAKE_C_FLAGS": "-DWIN32 -D_MSC_BUILD"
       }
-    },
+    }
+  ],
+
+  "buildPresets" : [
     {
-      "name": "windows-release",
-      "displayName": "Windows Release (with Clang, Ninja, and vcpkg)",
-      "inherits": ["windows"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
-    },
-    {
-      "name": "windows-msvc",
-      "displayName": "Windows (with MSVC, MSBuild, and vcpkg)",
-      "description": "Alternative build options for Windows",
+      "name": "ci-windows",
+      "displayName": "Windows",
+      "description": "Build for Windows",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
-      "inherits": ["windows-base"],
-      "generator": "Visual Studio 17 2022",
-      "toolchainFile": "${sourceDir}/toolchains/toolchain-msvc.cmake",
-      "cacheVariables": {
-        "CMAKE_CXX_COMPILER": "cl",
-        "CMAKE_C_COMPILER": "cl"
-      }
+      "configurePreset": "ci-windows",
+      "configuration": "Release"
     },
     {
-      "name": "windows-msvc-release",
-      "displayName": "Windows Release (with MSVC, MSBuild, and vcpkg)",
-      "inherits": ["windows-msvc"],
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
-      }
+      "name": "ci-install-package-windows",
+      "description": "Install a Windows package",
+      "configurePreset": "ci-windows",
+      "inherits": "ci-install-package"
+    },
+    {
+      "name": "ci-test-unit-windows",
+      "inherits": ["ci-test-unit", "ci-windows"]
+    },
+    {
+      "name": "ci-test-suite-windows",
+      "inherits": ["ci-test-suite", "ci-windows"]
+    }
+  ],
+
+  "packagePresets": [
+    {
+      "name": "ci-windows",
+      "configurePreset": "ci-windows",
+      "generators": ["NSIS"],
+      "inherits": ["ci-base"]
+    }
+  ],
+  
+  "testPresets": [
+
+  ],
+  "workflowPresets": [
+    {
+      "name": "ci-windows",
+      "steps": [
+        { "type": "configure", "name": "ci-windows" },
+        { "type": "build",     "name": "ci-windows" },
+        { "type": "package",   "name": "ci-windows" },
+        { "type": "build",     "name": "ci-install-package-windows" },
+        { "type": "build",     "name": "ci-test-unit-windows" },
+        { "type": "build",     "name": "ci-test-suite-windows" }
+      ]
     }
   ]
 }

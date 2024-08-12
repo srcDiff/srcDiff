@@ -4,6 +4,7 @@
     "boost-filesystem",
     "boost-regex",
     "boost-system",
+    "boost-test",
     "libxml2",
     "srcml",
     {

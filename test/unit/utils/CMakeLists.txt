@@ -6,7 +6,7 @@
 #  This file is part of the srcDiff translator.
 
 
-find_package(srcML REQUIRED)
+#find_package(srcML REQUIRED)
 find_package(LibXml2 REQUIRED)
 
 # include sub directories
