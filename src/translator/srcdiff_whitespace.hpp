@@ -19,7 +19,7 @@ protected:
 private:
 
   void markup_whitespace(unsigned int end_original, unsigned int end_modified);
-  static int extend_end_to_new_line(std::shared_ptr<reader_state> rbuf);
+  static bool extend_end_to_new_line(std::shared_ptr<reader_state> rbuf, unsigned int& end);
 
 public:
 
@@ -35,7 +35,7 @@ public:
   virtual void output_nested(int operation);
   virtual void output_statement();
 
-  virtual void output_suffix();
+  virtual void output_suffix(int operation);
 
 
 };

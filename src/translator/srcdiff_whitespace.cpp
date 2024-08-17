@@ -2,7 +2,7 @@
 /**
  * @file srcdiff_whitespace.cpp
  *
- * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
+ * @copyright Copyright (C) 2011-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
@@ -141,18 +141,17 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned i
 
 }
 
-int srcdiff_whitespace::extend_end_to_new_line(std::shared_ptr<reader_state> rbuf) {
-
-  unsigned int end = rbuf->last_output;
+bool srcdiff_whitespace::extend_end_to_new_line(std::shared_ptr<reader_state> rbuf, unsigned int& end) {
 
   for(; end < rbuf->nodes.size() && rbuf->nodes.at(end)->is_whitespace() && !rbuf->nodes.at(end)->is_new_line(); ++end)
     ;
 
   if(end < rbuf->nodes.size() && rbuf->nodes.at(end)->is_new_line()) {
     ++end;
+    return true;
   }
 
-  return end;
+  return false;
 }
 
 
@@ -182,8 +181,8 @@ void srcdiff_whitespace::output_statement() {
     && nend >= 1 && !is_statement(rbuf_modified->nodes.at(nend - 1)->get_name())) return;
 
   // advance whitespace after targeted end
-  oend = extend_end_to_new_line(rbuf_original);
-  nend = extend_end_to_new_line(rbuf_modified);
+  extend_end_to_new_line(rbuf_original, oend);
+  extend_end_to_new_line(rbuf_modified, nend);
 
   markup_whitespace(oend, nend);
 
@@ -198,7 +197,6 @@ void srcdiff_whitespace::output_all(int operation) {
   if(operation == SES_COMMON || operation == SES_DELETE) {
     for(; oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_whitespace(); ++oend)
     ;
-
   }
 
   if(operation == SES_COMMON || operation == SES_INSERT) {
@@ -264,80 +262,22 @@ void srcdiff_whitespace::output_prefix() {
 
 }
 
-void srcdiff_whitespace::output_suffix() {
+void srcdiff_whitespace::output_suffix(int operation) {
 
-  int ostart = rbuf_original->last_output;
-  int nstart = rbuf_modified->last_output;
-  int oend = ostart;
-  int nend = nstart;
+  unsigned int oend = rbuf_original->last_output;
+  unsigned int nend = rbuf_modified->last_output;
 
-  // advance all whitespace
-  for(; oend < (signed)rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_whitespace(); ++oend)
-    ;
-
-  for(; nend < (signed)rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_whitespace(); ++nend)
-    ;
-
-  int opivot = oend - 1;
-  int npivot = nend - 1;
-
-  for(; opivot > ostart && npivot > nstart
-        && *rbuf_original->nodes.at(opivot) == *rbuf_modified->nodes.at(npivot); --opivot, --npivot)
-    ;
-
-
-  if(opivot < ostart || npivot < nstart) {
-
-    opivot = oend;
-    npivot = nend;
-
-  } else if(*rbuf_original->nodes.at(opivot) != *rbuf_modified->nodes.at(npivot)) {
-    ++opivot;
-    ++npivot;
-  }
-
-  if(ostart < opivot) {
-
-    // output delete
-    output_node(diff_original_start, SES_DELETE);
-
-    for(int i = ostart; i < opivot; ++i) {
-      output_node(rbuf_original->nodes.at(i), SES_DELETE);
+  if(operation != SES_INSERT) {
+    if(!extend_end_to_new_line(rbuf_original, oend)) {
+      oend = rbuf_original->last_output;
     }
-
-    // output diff tag begin
-    output_node(diff_original_end, SES_DELETE);
-
   }
 
-  if(nstart < npivot) {
-
-    // output insert
-    output_node(diff_modified_start, SES_INSERT);
-
-    for(int i = nstart; i < npivot; ++i) {
-      output_node(rbuf_modified->nodes.at(i), SES_INSERT);
+  if(operation != SES_DELETE) {
+    if(!extend_end_to_new_line(rbuf_modified, nend)) {
+      nend = rbuf_modified->last_output;
     }
-
-    // output diff tag begin
-    output_node(diff_modified_end, SES_INSERT);
-
   }
 
-  if(opivot < oend) {
-
-  // output common
-  output_node(diff_common_start, SES_COMMON);
-
-  for(int i = opivot; i < oend; ++i) {
-    output_node(rbuf_original->nodes.at(i), SES_COMMON);
-  }
-
-  output_node(diff_common_end, SES_COMMON);
-
-  }
-
-  rbuf_original->last_output = oend > (signed)rbuf_original->last_output ? oend : rbuf_original->last_output;
-  rbuf_modified->last_output = nend > (signed)rbuf_modified->last_output ? nend : rbuf_modified->last_output;
-
+  markup_whitespace(oend, nend);
 }

@@ -135,6 +135,13 @@ void srcdiff_change::output() {
 
     }
 
+    rbuf_original->last_output = end_original;
+
+    if(is_replace) {
+      srcdiff_whitespace whitespace(*this);
+      whitespace.output_suffix(SES_DELETE);
+    }
+
     // output diff tag end
     if(!first) {
       output_node(diff_original_end, SES_DELETE, is_replace);
@@ -145,9 +152,6 @@ void srcdiff_change::output() {
       output_node(diff_original_end, SES_DELETE);
     
     }
-
-    rbuf_original->last_output = end_original;
-  
 
   }
 
@@ -207,6 +211,13 @@ void srcdiff_change::output() {
 
     }
 
+    rbuf_modified->last_output = end_modified;
+
+    if(is_replace) {
+      srcdiff_whitespace whitespace(*this);
+      whitespace.output_suffix(SES_INSERT);  
+    }
+
     // output diff tag end
     if(!first) {
       output_node(diff_modified_end, SES_INSERT, is_replace);
@@ -217,8 +228,6 @@ void srcdiff_change::output() {
       output_node(diff_modified_end, SES_INSERT);
     
     }
-
-    rbuf_modified->last_output = end_modified;
   
 
   }
