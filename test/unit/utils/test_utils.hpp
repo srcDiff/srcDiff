@@ -2,7 +2,7 @@
 /**
  * @file test_utils.hpp
  *
- * @copyright Copyright (C) 2020-2024 SDML (www.srcDiff.org)
+ * @copyright Copyright (C) 2021-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
