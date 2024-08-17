@@ -19,6 +19,7 @@ protected:
 private:
 
   void markup_whitespace(unsigned int end_original, unsigned int end_modified);
+  static int extend_end_to_new_line(std::shared_ptr<reader_state> rbuf);
 
 public:
 
