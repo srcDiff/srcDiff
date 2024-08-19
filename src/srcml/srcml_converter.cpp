@@ -404,13 +404,10 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
       mutex.lock();
       std::shared_ptr<srcML::node> node = get_current_node(reader, srcml_archive_get_options(archive));
       mutex.unlock();
-
       
       if(node->get_type() == srcML::node_type::START) {
         node->set_parent(element_stack.back());
       }
-      
-
 
       // insert end if temp element for elseif and detect elseif
       if(node->get_type() == srcML::node_type::END
@@ -435,7 +432,6 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
       if(node->get_type() == srcML::node_type::START && node->get_parent()->is_simple()) {
         node->get_parent()->set_simple(false);
       }
-      
       
       if(node->is_empty()) {
         node->set_empty(false);

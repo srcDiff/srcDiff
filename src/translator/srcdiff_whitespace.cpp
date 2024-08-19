@@ -172,22 +172,6 @@ void srcdiff_whitespace::output_nested(int operation) {
 
 }
 
-void srcdiff_whitespace::output_statement() {
-
-  unsigned int oend = rbuf_original->last_output;
-  unsigned int nend = rbuf_modified->last_output;
-
-  if(oend >= 1 && !is_statement(rbuf_original->nodes.at(oend - 1)->get_name())
-    && nend >= 1 && !is_statement(rbuf_modified->nodes.at(nend - 1)->get_name())) return;
-
-  // advance whitespace after targeted end
-  extend_end_to_new_line(rbuf_original, oend);
-  extend_end_to_new_line(rbuf_modified, nend);
-
-  markup_whitespace(oend, nend);
-
-}
-
 void srcdiff_whitespace::output_all(int operation) {
 
   unsigned int oend = rbuf_original->last_output;

@@ -326,9 +326,6 @@ void srcdiff_common::output() {
   // output common nodes
   markup_common();
 
-  // may need to take out all occurences afterwards except on pure deletes of this after something
-  //output_statement(rbuf_original, rbuf_modified, wstate);
-
   // output common tag if needed
   if(rbuf_original->last_output >= oend || rbuf_modified->last_output >= nend
      || rbuf_original->nodes.at(rbuf_original->last_output)->is_temporary() == rbuf_modified->nodes.at(rbuf_modified->last_output)->is_temporary()) {
