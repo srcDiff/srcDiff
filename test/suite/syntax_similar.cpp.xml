@@ -7,13 +7,15 @@
     <expr_stmt><expr><call><name><name>data</name><operator>-&gt;</operator><name>setDocument</name></name><argument_list>(<argument><expr><name>m_document</name></expr></argument>, <argument><expr><literal type="boolean">false</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
     <expr_stmt><expr><call><name><name>data</name><operator>-&gt;</operator><name>setEndPosition</name></name><argument_list>(<argument><expr><operator>-</operator><literal type="number">1</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt>
     <expr_stmt><expr><call><name><name>data</name><operator>-&gt;</operator><name>foul</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-<diff:delete type="replace"><diff:ws>    </diff:ws><expr_stmt><expr><call><name>updateTextLayout</name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:ws>    </diff:ws><if_stmt><if>if<diff:ws> </diff:ws><condition>(<expr><name>m_allowLayoutRequests</name></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
+<diff:delete type="replace"><diff:ws>    </diff:ws><expr_stmt><expr><call><name>updateTextLayout</name><argument_list>()</argument_list></call></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:delete><diff:insert type="replace"><diff:ws>    </diff:ws><if_stmt><if>if<diff:ws> </diff:ws><condition>(<expr><name>m_allowLayoutRequests</name></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
         </diff:ws><decl_stmt><decl><type><name>KWTextDocumentLayout</name><diff:ws> </diff:ws><modifier>*</modifier></type><name>lay</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><cast type="dynamic">dynamic_cast<argument_list type="generic">&lt;<argument><expr><name>KWTextDocumentLayout</name><operator>*</operator></expr></argument>&gt;</argument_list><argument_list>(<argument><expr><call><name><name>m_document</name><operator>-&gt;</operator><name>documentLayout</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></cast></expr></init></decl>;</decl_stmt><diff:ws>
         </diff:ws><if_stmt><if>if<diff:ws> </diff:ws><condition>(<expr><name>lay</name></expr>)</condition><diff:ws> </diff:ws><block>{<block_content><diff:ws>
             </diff:ws><expr_stmt><expr><call><name><name>lay</name><operator>-&gt;</operator><name>scheduleLayout</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt><diff:ws>
             </diff:ws><emit>emit<diff:ws> </diff:ws><expr><call><name><name>lay</name><operator>-&gt;</operator><name>shapeAdded</name></name><argument_list>(<argument><expr><call><name><name>frame</name><operator>-&gt;</operator><name>shape</name></name><argument_list>()</argument_list></call></expr></argument>)</argument_list></call></expr>;</emit><diff:ws>
         </diff:ws></block_content>}</block></if></if_stmt><diff:ws>
-    </diff:ws></block_content>}</block></if></if_stmt></diff:insert>
+    </diff:ws></block_content>}</block></if></if_stmt><diff:ws>
+</diff:ws></diff:insert>
 </block_content>}</block></else></if_stmt></unit>
 
 </unit>

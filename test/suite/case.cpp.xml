@@ -77,14 +77,18 @@
     <case>case <expr><name>bar</name></expr>:</case>
 
         <expr_stmt><expr><name>a</name></expr>;</expr_stmt>
-<diff:delete type="replace"><diff:ws>        </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:ws>        </diff:ws><expr_stmt><expr><name>e</name></expr>;</expr_stmt></diff:insert>
+<diff:delete type="replace"><diff:ws>        </diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:delete><diff:insert type="replace"><diff:ws>        </diff:ws><expr_stmt><expr><name>e</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:insert>
 
     <break>break;</break>
 
     <case>case <expr><name>foobar</name></expr>:</case>
 
         <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
-<diff:delete type="replace"><diff:ws>        </diff:ws><expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:ws>        </diff:ws><expr_stmt><expr><name>f</name></expr>;</expr_stmt></diff:insert>
+<diff:delete type="replace"><diff:ws>        </diff:ws><expr_stmt><expr><name>d</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:delete><diff:insert type="replace"><diff:ws>        </diff:ws><expr_stmt><expr><name>f</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:insert>
 
     <break>break;</break>
 

@@ -9,7 +9,9 @@
 
 <unit language="C++" filename="move|move">
 <diff:delete type="replace"><diff:delete move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:ws>
-</diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>e</name></expr>;</expr_stmt></diff:insert>
+</diff:ws><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>e</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:insert>
 <expr_stmt><expr><name>c</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
 <diff:insert move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:insert><diff:insert><diff:ws>

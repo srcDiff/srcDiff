@@ -6,7 +6,9 @@
 </unit>
 
 <unit language="C++" filename="name|name">
-<diff:delete type="replace"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:insert>
+<diff:delete type="replace"><expr_stmt><expr><name>a</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:insert>
 </unit>
 
 <unit language="C++" filename="name|name">

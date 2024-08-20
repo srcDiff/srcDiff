@@ -56,7 +56,8 @@
       </diff:ws><expr_stmt><expr><call><name><name>writerPauseLock</name><operator>.</operator><name>notifyAll</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt><diff:ws>
     </diff:ws></block_content>}</block></finally></try><diff:ws>
   </diff:ws></block_content>}</block></synchronized><diff:ws>
-</diff:ws></block_content>}</block></function></diff:delete><diff:insert type="replace"><comment type="line">//<diff:ws> </diff:ws>closes<diff:ws> </diff:ws>and<diff:ws> </diff:ws>opens<diff:ws> </diff:ws>index<diff:ws> </diff:ws>writers<diff:ws> </diff:ws>without<diff:ws> </diff:ws>any<diff:ws> </diff:ws>locking</comment><diff:ws>
+</diff:ws></block_content>}</block></function><diff:ws>
+</diff:ws></diff:delete><diff:insert type="replace"><comment type="line">//<diff:ws> </diff:ws>closes<diff:ws> </diff:ws>and<diff:ws> </diff:ws>opens<diff:ws> </diff:ws>index<diff:ws> </diff:ws>writers<diff:ws> </diff:ws>without<diff:ws> </diff:ws>any<diff:ws> </diff:ws>locking</comment><diff:ws>
 </diff:ws><function><type><specifier>private</specifier><diff:ws> </diff:ws><name>void</name></type><diff:ws> </diff:ws><name>changeWriter</name><parameter_list>(<parameter><decl><type><name>SolrCore</name></type><diff:ws> </diff:ws><name>core</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>boolean</name></type><diff:ws> </diff:ws><name>rollback</name></decl></parameter>,<diff:ws> </diff:ws><parameter><decl><type><name>boolean</name></type><diff:ws> </diff:ws><name>openNewWriter</name></decl></parameter>)</parameter_list><diff:ws> </diff:ws><throws>throws<diff:ws> </diff:ws><argument><expr><name>IOException</name></expr></argument></throws><diff:ws> </diff:ws><block>{<block_content><diff:ws>
   </diff:ws><decl_stmt><decl><type><name>String</name></type><diff:ws> </diff:ws><name>coreName</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><call><name><name>core</name><operator>.</operator><name>getName</name></name><argument_list>()</argument_list></call></expr></init></decl>;</decl_stmt><diff:ws>
 
@@ -88,7 +89,8 @@
     </diff:ws><expr_stmt><expr><name>indexWriter</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><call><name>createMainIndexWriter</name><argument_list>(<argument><expr><name>core</name></expr></argument>,<diff:ws> </diff:ws><argument><expr><literal type="string">"DirectUpdateHandler2"</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
     </diff:ws><expr_stmt><expr><call><name><name>log</name><operator>.</operator><name>info</name></name><argument_list>(<argument><expr><literal type="string">"New<diff:ws> </diff:ws>IndexWriter<diff:ws> </diff:ws>is<diff:ws> </diff:ws>ready<diff:ws> </diff:ws>to<diff:ws> </diff:ws>be<diff:ws> </diff:ws>used."</literal></expr></argument>)</argument_list></call></expr>;</expr_stmt><diff:ws>
   </diff:ws></block_content>}</block></if></if_stmt><diff:ws>
-</diff:ws></block_content>}</block></function></diff:insert>
+</diff:ws></block_content>}</block></function><diff:ws>
+</diff:ws></diff:insert>
 </unit>
 
 </unit>

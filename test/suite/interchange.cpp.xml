@@ -316,7 +316,9 @@
 </unit>
 
 <unit language="C++" filename="interchange|interchange">
-<diff:delete type="replace"><decl_stmt><decl><type><name>String</name></type><diff:ws> </diff:ws><name>redirectPath</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><call><name><name>rmWebApp</name><operator>.</operator><name>getRedirectPath</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>uri</name></expr></init></decl>;</decl_stmt></diff:delete><diff:insert type="replace"><return>return;</return></diff:insert>
+<diff:delete type="replace"><decl_stmt><decl><type><name>String</name></type><diff:ws> </diff:ws><name>redirectPath</name><diff:ws> </diff:ws><init>=<diff:ws> </diff:ws><expr><call><name><name>rmWebApp</name><operator>.</operator><name>getRedirectPath</name></name><argument_list>()</argument_list></call><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>uri</name></expr></init></decl>;</decl_stmt><diff:ws>
+</diff:ws></diff:delete><diff:insert type="replace"><return>return;</return><diff:ws>
+</diff:ws></diff:insert>
 </unit>
 
 <unit language="C++" filename="interchange|interchange">

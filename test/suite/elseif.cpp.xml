@@ -4,7 +4,9 @@
 <unit language="C++" filename="elseif|elseif">
 <if_stmt><if type="elseif">else if<condition>(<expr><name>a</name> <operator>==</operator> <name>b</name></expr>)</condition> <block>{<block_content>
 
-<diff:delete type="replace"><diff:ws>   </diff:ws><expr_stmt><expr><call><name><name>c</name><operator>.</operator><name>d</name><operator>.</operator><name>e</name><operator>.</operator><name>f</name><operator>.</operator><name>g</name><operator>.</operator><name>h</name><operator>.</operator><name>i</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:ws> </diff:ws><expr_stmt><expr><call><name><name>j</name><operator>.</operator><name>k</name><operator>.</operator><name>l</name><operator>.</operator><name>m</name><operator>.</operator><name>n</name><operator>.</operator><name>o</name><operator>.</operator><name>p</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt></diff:insert>
+<diff:delete type="replace"><diff:ws>   </diff:ws><expr_stmt><expr><call><name><name>c</name><operator>.</operator><name>d</name><operator>.</operator><name>e</name><operator>.</operator><name>f</name><operator>.</operator><name>g</name><operator>.</operator><name>h</name><operator>.</operator><name>i</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:delete><diff:insert type="replace"><diff:ws> </diff:ws><expr_stmt><expr><call><name><name>j</name><operator>.</operator><name>k</name><operator>.</operator><name>l</name><operator>.</operator><name>m</name><operator>.</operator><name>n</name><operator>.</operator><name>o</name><operator>.</operator><name>p</name></name><argument_list>()</argument_list></call></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:insert>
 
 </block_content>}</block></if></if_stmt>
 </unit>

@@ -45,7 +45,9 @@
 <decl><name>b</name></decl>,
 <decl><name>c</name></decl>,
 <decl><name>d</name></decl>,
-<diff:delete type="replace"><decl><name>e</name></decl></diff:delete><diff:insert type="replace"><decl><name>f</name></decl></diff:insert>
+<diff:delete type="replace"><decl><name>e</name></decl><diff:ws>
+</diff:ws></diff:delete><diff:insert type="replace"><decl><name>f</name></decl><diff:ws>
+</diff:ws></diff:insert>
 
 }</block>;</enum></unit>
 

@@ -12,7 +12,9 @@
     <expr_stmt><expr><name>f</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>g</name></expr>;</expr_stmt>
     <expr_stmt><expr><name>h</name></expr>;</expr_stmt>
-<diff:delete type="replace"><diff:ws>	</diff:ws><expr_stmt><expr><name>g</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:ws>	</diff:ws><expr_stmt><expr><name>h</name></expr>;</expr_stmt></diff:insert>
+<diff:delete type="replace"><diff:ws>	</diff:ws><expr_stmt><expr><name>g</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:delete><diff:insert type="replace"><diff:ws>	</diff:ws><expr_stmt><expr><name>h</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:insert>
 
 </block_content>}</block></if></if_stmt>
 <diff:insert move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:insert><diff:insert><diff:ws>
@@ -248,24 +250,34 @@
 
 <unit language="C++" filename="edit_correction|edit_correction">
 <diff:delete type="replace"><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
-</diff:ws><diff:delete move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:insert>
+</diff:ws><diff:delete move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:ws>
+</diff:ws></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>c</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:insert>
 <expr_stmt><expr><call><name><name>e</name><operator>.</operator><name>f</name><operator>.</operator><name>g</name><operator>.</operator><name>h</name><operator>.</operator><name>j</name><operator>.</operator><name>k</name><operator>.</operator><name>l</name><operator>.</operator><name>m</name><operator>.</operator><name>n</name><operator>.</operator><name>o</name><operator>.</operator><name><diff:delete type="replace">p</diff:delete><diff:insert type="replace">q</diff:insert></name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-<diff:delete type="replace"><expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:insert move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:insert></diff:insert>
+<diff:delete type="replace"><expr_stmt><expr><name>d</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:delete><diff:insert type="replace"><diff:insert move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:insert><diff:ws>
+</diff:ws></diff:insert>
 </unit>
 
 <unit language="C++" filename="edit_correction|edit_correction">
 <diff:delete type="replace"><expr_stmt><expr><name>b</name></expr>;</expr_stmt><diff:ws>
-</diff:ws><diff:delete move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:insert>
+</diff:ws><diff:delete move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:ws>
+</diff:ws></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>c</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:insert>
 <expr_stmt><expr><call><name><name>e</name><operator>.</operator><name>f</name><operator>.</operator><name>g</name><operator>.</operator><name>h</name><operator>.</operator><name>j</name><operator>.</operator><name>k</name><operator>.</operator><name>l</name><operator>.</operator><name>m</name><operator>.</operator><name>n</name><operator>.</operator><name>o</name><operator>.</operator><name><diff:delete type="replace">p</diff:delete><diff:insert type="replace">q</diff:insert></name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-<diff:delete type="replace"><expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:insert move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:insert><diff:ws>
-</diff:ws><expr_stmt><expr><name>e</name></expr>;</expr_stmt></diff:insert>
+<diff:delete type="replace"><expr_stmt><expr><name>d</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:delete><diff:insert type="replace"><diff:insert move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:insert><diff:ws>
+</diff:ws><expr_stmt><expr><name>e</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:insert>
 </unit>
 
 <unit language="C++" filename="edit_correction|edit_correction">
 <diff:delete move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:delete><diff:ws>
 </diff:ws></diff:delete><expr_stmt><expr><call><name><name>e</name><operator>.</operator><name>f</name><operator>.</operator><name>g</name><operator>.</operator><name>h</name><operator>.</operator><name>j</name><operator>.</operator><name>k</name><operator>.</operator><name>l</name><operator>.</operator><name>m</name><operator>.</operator><name>n</name><operator>.</operator><name>o</name><operator>.</operator><name><diff:delete type="replace">p</diff:delete><diff:insert type="replace">q</diff:insert></name></name><argument_list>()</argument_list></call></expr>;</expr_stmt>
-<diff:delete type="replace"><expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><diff:insert move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:insert><diff:ws>
-</diff:ws><expr_stmt><expr><name>e</name></expr>;</expr_stmt></diff:insert>
+<diff:delete type="replace"><expr_stmt><expr><name>d</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:delete><diff:insert type="replace"><diff:insert move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:insert><diff:ws>
+</diff:ws><expr_stmt><expr><name>e</name></expr>;</expr_stmt><diff:ws>
+</diff:ws></diff:insert>
 </unit>
 
 <unit language="C++" filename="edit_correction|edit_correction">
