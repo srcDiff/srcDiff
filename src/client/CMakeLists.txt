@@ -43,7 +43,7 @@ else()
               $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:nest> $<TARGET_OBJECTS:convert> $<TARGET_OBJECTS:project>)
 endif()
 
-target_link_libraries(srcdiff PRIVATE srcML::LibsrcML LibXml2::LibXml2 Threads::Threads srcsax_shared CLI11::CLI11)
+target_link_libraries(srcdiff PRIVATE srcML::LibsrcML LibXml2::LibXml2 Threads::Threads srcsax_static CLI11::CLI11)
 
 set_target_properties(srcdiff PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
