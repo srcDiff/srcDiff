@@ -78,6 +78,7 @@ public:
   virtual ~view_t();
 
   virtual void transform(const std::string & srcdiff, const std::string & xml_encoding);
+  virtual void transform(const char* srcdiff, const std::string & xml_encoding);
   void reset();
 
 protected:

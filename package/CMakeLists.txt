@@ -67,10 +67,10 @@ cpack_add_component(SRCDIFF
                     REQUIRED
                     INSTALL_TYPES CLIENT DEVELOPER)
 
-#cpack_add_component(DEVLIBS
-#                    DISPLAY_NAME "libsrcdiff"
-#                    DESCRIPTION "Include file, development libraries, i.e.., static library, and CMake configuration"
-#                    INSTALL_TYPES DEVELOPER)
+cpack_add_component(DEVLIBS
+                    DISPLAY_NAME "libsrcdiff"
+                    DESCRIPTION "Include file, development libraries, i.e.., static library, and CMake configuration"
+                    INSTALL_TYPES DEVELOPER)
 
 # Copy and rename the README file for the proper extension
 configure_file(${CMAKE_SOURCE_DIR}/README.md ${CMAKE_BINARY_DIR}/README.txt COPYONLY)

@@ -106,9 +106,15 @@ view_t::~view_t() {
 void view_t::transform(const std::string & srcdiff, const std::string & xml_encoding) {
 
   srcSAXController controller(srcdiff, xml_encoding.c_str());
-
   controller.parse(this);
+  reset();
 
+}
+
+void view_t::transform(const char* srcdiff, const std::string & xml_encoding) {
+
+  srcSAXController controller(srcdiff, xml_encoding.c_str());
+  controller.parse(this);
   reset();
 
 }
