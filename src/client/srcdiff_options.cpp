@@ -587,13 +587,6 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "Options: \"default\", \"monokai\", or the filename of a custom theme."
   )->default_val("default");
 
-  view_options->add_option(
-    "--srcdiff",
-    options.view_options.srcdiff_filename,
-    "Output srcdiff in addition to view. Supply the filename for the\n"
-    "srcDiff XML document as the argument for this option."
-  );
-
   view_options->add_flag(
     "--html",
     option_flag_enable<OPTION_HTML_VIEW>,

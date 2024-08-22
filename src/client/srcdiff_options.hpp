@@ -104,7 +104,6 @@ struct srcdiff_options
     std::string theme;
     std::any unified_view_context = (int)3;
     int side_by_side_tab_size;
-    std::optional<std::string> srcdiff_filename;
   } view_options;
 
   std::optional<std::string> summary_type_str;
