@@ -121,25 +121,11 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
 
   } else if(rbuf_original->nodes.empty()) {
 
-    if(!is_option(flags, OPTION_PURE)) {
-
-      is_original = 0;
-      is_modified = 0;
-
-    }
-
     update_diff_stack(rbuf_original->open_diff, diff_common_start, SES_COMMON);
     update_diff_stack(rbuf_modified->open_diff, unit_tag, SES_COMMON);
     update_diff_stack(wstate->output_diff, unit_tag, SES_COMMON);
 
   } else {
-
-    if(!is_option(flags, OPTION_PURE)) {
-
-      is_original = 0;
-      is_modified = 0;
-
-    }
 
     update_diff_stack(rbuf_original->open_diff, unit_tag, SES_COMMON);
     update_diff_stack(rbuf_modified->open_diff, diff_common_start, SES_COMMON);
