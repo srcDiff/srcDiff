@@ -56,11 +56,22 @@ public:
                  const std::optional<std::string> & unit_filename  = std::optional<std::string>(),
                  const std::optional<std::string> & unit_version   = std::optional<std::string>());
 
+  // temporary view needs removed from output
+  void view(const char* srcdiff_filename) {
+    if(!output->get_view()) {
+      std::cerr << "View not specified\n";
+      return;
+    }
+    output->get_view()->transform(srcdiff_filename, "UTF-8");
+  }
+
 };
 
 #include <thread>
 #include <srcdiff_diff.hpp>
 #include <srcdiff_whitespace.hpp>
+
+
 
 // Translate from input stream to output stream
 template<class T>

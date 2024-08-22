@@ -83,9 +83,13 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
 
  }
 
- srcdiff_output::~srcdiff_output() {}
+srcdiff_output::~srcdiff_output() {}
 
- void srcdiff_output::initialize(int is_original, int is_modified) {
+std::shared_ptr<view_t> srcdiff_output::get_view() {
+  return view;
+}
+
+void srcdiff_output::initialize(int is_original, int is_modified) {
 
   diff_set * original_diff = new diff_set();
   original_diff->operation = SES_COMMON;

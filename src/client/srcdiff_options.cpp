@@ -58,10 +58,13 @@ void option_input_file(const std::vector<std::string> & arg) {
   for(std::vector<std::string>::size_type pos = 0; pos < arg.size(); pos += 1) {
 
     std::string::size_type sep_pos = arg[pos].find('|');
+    std::string::size_type ext_pos = arg[pos].rfind(".");
     if(sep_pos != std::string::npos) {
       std::string path_original = arg[pos].substr(0, sep_pos);
       std::string path_modified = arg[pos].substr(sep_pos + 1);
       options.input_pairs.push_back(std::make_pair(path_original, path_modified));
+    } else if(ext_pos != std::string::npos && arg[pos].substr(ext_pos + 1) == "xml") {
+      options.input_pairs.push_back(std::make_pair(arg[pos], ""));
     } else {
 
       if((pos + 1) >= arg.size()) {

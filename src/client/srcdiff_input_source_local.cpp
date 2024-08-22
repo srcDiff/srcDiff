@@ -49,6 +49,11 @@ void srcdiff_input_source_local::consume()
 
     for (std::pair<std::string, std::string> input_pair : options.input_pairs) {
 
+      if(input_pair.second.empty()) {
+        process_xml(input_pair.first);
+        continue;
+      }
+
       std::filesystem::path original(input_pair.first);
       std::filesystem::path modified(input_pair.second);
 
@@ -79,6 +84,10 @@ void srcdiff_input_source_local::consume()
       }
     }
   }
+}
+
+void srcdiff_input_source_local::process_xml(const std::string& path) {
+    translator->view(path.c_str());
 }
 
 void srcdiff_input_source_local::process_file(const std::optional<std::string> & path_original,
