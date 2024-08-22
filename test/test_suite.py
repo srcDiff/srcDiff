@@ -166,7 +166,7 @@ def color_diff(xml):
 
     colorized_diff = safe_communicate([srcdiff_utility, 'srcdiff.xml', '-u'])
 
-    # os.remove('srcdiff.xml')
+    os.remove('srcdiff.xml')
 
     return colorized_diff
 
@@ -224,8 +224,6 @@ def find_difference(unitxml, unitsrcml, test_number, character_count):
     if result != "":
         actual   = color_diff(unitxml)
         expected = color_diff(unitsrcml)
-        print(actual)
-        print(expected)
         color_result = actual + '\n----------\n' + expected
     
     return (result, character_count, color_result)
