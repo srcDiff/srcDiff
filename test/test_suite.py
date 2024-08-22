@@ -226,7 +226,7 @@ def find_difference(unitxml, unitsrcml, test_number, character_count):
         expected = color_diff(unitsrcml)
         print(actual)
         print(expected)
-        color_result = actual + '\n\n\n' + expected
+        color_result = actual + '\n----------\n' + expected
     
     return (result, character_count, color_result)
 
@@ -450,10 +450,10 @@ def print_report(error_list, total_count, error_count):
 
                 xerrorlist.remove(x)
 
-            print(e[0], e[1], othererror, "\n", "".join(e[2][3:]))
+            print(e[0], e[1], othererror, "\n", e[2], "".join(e[3][3:]))
 
         for e in xerrorlist:
-            print(e[0], e[1], "\n", "".join(e[2][3:]))
+            print(e[0], e[1], "\n", e[2], "".join(e[3][3:]))
 
     # output tool errors counts
     print()
