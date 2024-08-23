@@ -99,12 +99,14 @@ public:
 
 protected:
 
-  srcml_archive * archive;
+  srcml_archive* archive;
   OPTION_TYPE flags;
 
   std::shared_ptr<reader_state> rbuf_original;
   std::shared_ptr<reader_state> rbuf_modified;
   std::shared_ptr<writer_state> wstate;
+
+  bool is_initialized;
 
 public:
 
@@ -144,7 +146,10 @@ public:
                  const std::optional<std::string> & summary_type_str);
   virtual ~srcdiff_output();
 
-  void initialize(int is_original, int is_modified);
+
+  void initialize();
+
+  void prime(int is_original, int is_modified);
   void start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version);
   std::string end_unit();
 
