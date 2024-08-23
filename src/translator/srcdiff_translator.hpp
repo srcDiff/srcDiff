@@ -83,7 +83,7 @@ std::string srcdiff_translator::translate(
 
   thread_modified.join();
 
-  output->initialize(is_original, is_modified);
+  output->prime(is_original, is_modified);
 
   std::string srcdiff;
   // run on file level
