@@ -17,12 +17,12 @@ template<class T>
 srcdiff_input<T>::~srcdiff_input() {}
 
 template<class T>
-void srcdiff_input<T>::operator()(int stream_source, srcml_nodes & nodes, int & is_input, const srcml_converter::srcml_burst_config & burst_config) const {
+void srcdiff_input<T>::operator()(int stream_source, srcml_nodes & nodes, int & is_input) const {
 
   is_input = 0;
   try {
 
-    nodes = input_nodes(stream_source, burst_config);
+    nodes = input_nodes(stream_source);
     is_input = 1;
 
   } catch(no_file_exception) {}
@@ -35,7 +35,7 @@ void srcdiff_input<T>::operator()(int stream_source, srcml_nodes & nodes, int & 
 }
 
 template<class T>
-srcml_nodes srcdiff_input<T>::input_nodes(int stream_source, const srcml_converter::srcml_burst_config & burst_config) const {
+srcml_nodes srcdiff_input<T>::input_nodes(int stream_source) const {
 
   if(!input_path || input_path->empty()) throw no_file_exception();
 
@@ -43,7 +43,7 @@ srcml_nodes srcdiff_input<T>::input_nodes(int stream_source, const srcml_convert
 
   typename T::input_context * context = input.open(input_path->c_str());
 
-  converter.convert(language_string, (void *)context, T::read, T::close, burst_config);
+  converter.convert(language_string, (void *)context, T::read, T::close);
 
   return converter.create_nodes();
 

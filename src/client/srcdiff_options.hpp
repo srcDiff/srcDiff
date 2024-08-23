@@ -58,6 +58,9 @@ const OPTION_TYPE OPTION_SVN                   = ull(1) << __COUNTER__;
 const OPTION_TYPE OPTION_RECURSIVE             = ull(1) << __COUNTER__;
 
 // @srcdiff
+const OPTION_TYPE OPTION_VIEW_XML              = ull(1) << __COUNTER__;
+
+// @srcdiff
 const OPTION_TYPE OPTION_UNIFIED_VIEW          = ull(1) << __COUNTER__;
 
 // @srcdiff
@@ -74,9 +77,6 @@ const OPTION_TYPE OPTION_IGNORE_WHITESPACE     = ull(1) << __COUNTER__;
 
 // @srcdiff
 const OPTION_TYPE OPTION_IGNORE_COMMENTS       = ull(1) << __COUNTER__;
-
-// @srcdiff
-const OPTION_TYPE OPTION_BURST                 = ull(1) << __COUNTER__;
 
 // @srcdiff
 const OPTION_TYPE OPTION_SRCML                 = ull(1) << __COUNTER__;

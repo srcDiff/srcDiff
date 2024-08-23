@@ -50,8 +50,8 @@ public:
   void session_single();
   void session_range();
 
-  virtual void process_file(const std::optional<std::string> & path_original,
-                            const std::optional<std::string> & path_modified);
+  virtual std::string process_file(const std::optional<std::string> & path_original,
+                                   const std::optional<std::string> & path_modified);
   virtual void process_directory(const std::optional<std::string> & directory_original,
                                  const std::optional<std::string> & directory_modified);
   virtual void process_files_from();

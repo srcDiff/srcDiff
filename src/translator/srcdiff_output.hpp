@@ -14,10 +14,6 @@
 #include <srcml_nodes.hpp>
 #include <srcdiff_options.hpp>
 
-#include <view.hpp>
-#include <unified_view.hpp>
-#include <side_by_side_view.hpp>
-
 #include <methods.hpp>
 #include <srcdiff_constants.hpp>
 #include <shortest_edit_script.h>
@@ -103,15 +99,12 @@ public:
 
 protected:
 
-  bool output_srcdiff;
   srcml_archive * archive;
   OPTION_TYPE flags;
 
   std::shared_ptr<reader_state> rbuf_original;
   std::shared_ptr<reader_state> rbuf_modified;
   std::shared_ptr<writer_state> wstate;
-
-  std::shared_ptr<view_t> view;
 
 public:
 
@@ -151,16 +144,14 @@ public:
                  const std::optional<std::string> & summary_type_str);
   virtual ~srcdiff_output();
 
-  // temporary view needs removed from output
-  std::shared_ptr<view_t> get_view();
+  void initialize(int is_original, int is_modified);
+  void start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version);
+  std::string end_unit();
 
-  virtual void initialize(int is_original, int is_modified);
-  virtual void start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version);
+  void reset();
 
-  void finish();
 
-  virtual void reset();
-  virtual void close();
+  void close();
 
   virtual const std::string & srcdiff_filename() const;
   virtual const srcml_nodes & nodes_original() const;

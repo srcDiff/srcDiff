@@ -117,8 +117,7 @@ srcml_converter::~srcml_converter() {
 
 // converts source code to srcML
 void srcml_converter::convert(const std::string & language, void * context,
-                              const std::function<ssize_t(void *, void *, size_t)> & read, const std::function<int(void *)> & close,
-                              const srcml_burst_config & burst_config) {
+                              const std::function<ssize_t(void *, void *, size_t)> & read, const std::function<int(void *)> & close) {
 
   srcml_archive * unit_archive = srcml_archive_clone(archive);
   srcml_archive_enable_solitary_unit(unit_archive);
@@ -133,54 +132,6 @@ void srcml_converter::convert(const std::string & language, void * context,
   srcml_unit_parse_io(unit, context, *read.target<ssize_t (*) (void *, void *, size_t)>(), *close.target<int (*) (void *)>());
 
   srcml_archive_write_unit(unit_archive, unit);
-
-  if(bool(burst_config.output_path)) {
-
-    srcml_archive * srcml_archive = srcml_archive_create();
-    srcml_archive_set_options(srcml_archive, srcml_archive_get_options(unit_archive));
-    srcml_archive_enable_solitary_unit(srcml_archive);
-    srcml_archive_disable_hash(srcml_archive);
-    srcml_archive_set_tabstop(srcml_archive, srcml_archive_get_tabstop(unit_archive));
-    srcml_archive_set_src_encoding(srcml_archive, srcml_archive_get_src_encoding(unit_archive));
-    srcml_archive_set_xml_encoding(srcml_archive, srcml_archive_get_xml_encoding(unit_archive));
-
-    std::string filename = !bool(burst_config.unit_filename) ? "" : burst_config.unit_filename->find("|") == std::string::npos ? *burst_config.unit_filename
-                          : stream_source == SES_DELETE && burst_config.unit_filename->front() != '|' ? burst_config.unit_filename->substr(0, burst_config.unit_filename->find("|"))
-                            : burst_config.unit_filename->back() != '|' ? burst_config.unit_filename->substr(burst_config.unit_filename->find("|") + 1, std::string::npos)
-                              : burst_config.unit_filename->substr(0, burst_config.unit_filename->find("|"));
-
-    srcml_unit_set_language(unit, burst_config.language.c_str());
-    srcml_unit_set_filename(unit, filename.c_str());
-    srcml_unit_set_version(unit, burst_config.unit_version ? burst_config.unit_version->c_str() : 0);
-
-    // skipping register extension as probably does not need done.  Some of the above may not need to be done as well.
-    for(size_t pos = 0; pos < srcml_archive_get_namespace_size(unit_archive); ++pos) {
-      if(srcml_archive_get_namespace_uri(unit_archive, pos) != SRCDIFF_DEFAULT_NAMESPACE_HREF) {
-        srcml_archive_register_namespace(srcml_archive, srcml_archive_get_namespace_prefix(unit_archive, pos), srcml_archive_get_namespace_uri(unit_archive, pos));
-      }
-    }
- 
-    for(std::string::size_type pos = filename.find('/'); pos != std::string::npos; pos = filename.find('/', pos + 1)) {
-      filename.replace(pos, 1, "_");
-    }
-
-    if(stream_source == SES_DELETE) {
-      filename = filename + "_original.srcml";
-    }
-    else {
-      filename = filename + "_modified.srcml";
-    }
-
-    if(burst_config.output_path) {
-      filename = *burst_config.output_path + "/" + filename;
-    }
-
-    srcml_archive_write_open_filename(srcml_archive, filename.c_str());
-    srcml_archive_write_unit(srcml_archive, unit);
-    srcml_archive_close(srcml_archive);
-    srcml_archive_free(srcml_archive);
-
-  }
 
   srcml_unit_free(unit);
 

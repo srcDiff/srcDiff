@@ -48,18 +48,10 @@ std::shared_ptr<srcml_nodes> create_nodes(const std::string & code, const std::s
     srcml_archive_disable_hash(archive);
     srcml_archive_register_namespace(archive, "diff", "http://www.srcML.org/srcDiff");
 
-    //Create burst_config object
-    const srcml_converter::srcml_burst_config burst_config = {
-            std::optional<std::string>(),
-            "",
-            std::optional<std::string>(),
-            std::optional<std::string>()
-        };
-
     //create srcml_nodes
     srcml_converter contNodes(archive, true, 0);
     std::string source = code;
-    contNodes.convert(language, (void*)&source, &str_read, &str_close, burst_config);
+    contNodes.convert(language, (void*)&source, &str_read, &str_close);
     srcml_nodes testNode = contNodes.create_nodes();
 
     return std::make_shared<srcml_nodes>(testNode);
