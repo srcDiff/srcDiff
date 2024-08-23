@@ -28,8 +28,9 @@ srcdiff_translator::srcdiff_translator(const std::string & srcdiff_filename,
 
 // destructor
 srcdiff_translator::~srcdiff_translator() {
-
   output->close();
-
 }
 
+void srcdiff_translator::write_translation() {
+  output->write_unit();
+}

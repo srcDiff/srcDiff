@@ -107,6 +107,7 @@ protected:
   std::shared_ptr<writer_state> wstate;
 
   bool is_initialized;
+  bool is_open;
 
 public:
 
@@ -151,11 +152,11 @@ public:
 
   void prime(int is_original, int is_modified);
   void start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version);
+
   std::string end_unit();
+  void write_unit();
 
   void reset();
-
-
   void close();
 
   virtual const std::string & srcdiff_filename() const;

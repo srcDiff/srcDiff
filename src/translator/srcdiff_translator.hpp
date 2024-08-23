@@ -56,6 +56,10 @@ public:
                  const std::string & language,
                  const std::optional<std::string> & unit_filename  = std::optional<std::string>(),
                  const std::optional<std::string> & unit_version   = std::optional<std::string>());
+
+  // Think about taking out archive writing and putting having in input
+  // separates concerns better
+  void write_translation();
 };
 
 #include <thread>
