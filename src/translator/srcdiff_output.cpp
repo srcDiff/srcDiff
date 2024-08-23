@@ -27,23 +27,14 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
                                const METHOD_TYPE & method,
                                const srcdiff_options::view_options_t & view_options,
                                const std::optional<std::string> & summary_type_str [[maybe_unused]])
- : output_srcdiff(false), archive(archive), flags(flags),
+ : archive(archive), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcML::name_space>()) {
 
-  if(!is_option(flags, OPTION_BURST)) {
-      output_srcdiff = true;
-      int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str());
-      if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
+  int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str());
+  if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
 
-  }
-
-  if(!is_option(flags, OPTION_BURST) || srcdiff_filename != "-") {
-    wstate->filename = srcdiff_filename;
-  }
-  else {
-    wstate->filename = ".";
-  }
+  wstate->filename = srcdiff_filename;
 
   diff->set_prefix(srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()));
   diff->set_uri(SRCDIFF_DEFAULT_NAMESPACE_HREF);
@@ -151,43 +142,7 @@ std::string srcdiff_output::end_unit() {
   }
 
   srcml_write_end_unit(wstate->unit);
-
-  if(is_option(flags, OPTION_BURST)) {
-
-    srcml_archive * srcdiff_archive = srcml_archive_clone(archive);
-    srcml_archive_enable_solitary_unit(srcdiff_archive);
-    srcml_archive_disable_hash(srcdiff_archive);
-
-    std::string filename = srcml_unit_get_filename(wstate->unit);
-    std::string::size_type pos;
-    if((pos = filename.find('|')) != std::string::npos) {
-
-      if(pos == 0) {
-        filename = filename.substr(1, std::string::npos);
-      }
-      else {
-        filename = filename.substr(0, pos);
-      }
-
-    }
-
-    for(std::string::size_type pos = filename.find('/'); pos != std::string::npos; pos = filename.find('/', pos + 1)) {
-      filename.replace(pos, 1, "_");
-    }
-    filename += ".srcdiff";
-
-    filename = wstate->filename + "/" + filename;
-    srcml_archive_write_open_filename(srcdiff_archive, filename.c_str());
-
-    srcml_archive_write_unit(srcdiff_archive, wstate->unit);
-    srcml_archive_close(srcdiff_archive);
-    srcml_archive_free(srcdiff_archive);
-
-  } 
-
-  if(output_srcdiff) {
-    srcml_archive_write_unit(archive, wstate->unit);
-  }
+  srcml_archive_write_unit(archive, wstate->unit);
 
   std::string srcdiff = srcml_unit_get_srcml(wstate->unit);
   srcml_unit_free(wstate->unit);
@@ -197,96 +152,62 @@ std::string srcdiff_output::end_unit() {
 }
 
 void srcdiff_output::close() {
-
-  if(output_srcdiff) {
-
-    srcml_archive_close(archive);
-
-  }
-
+  srcml_archive_close(archive);
 }
 
 const std::string & srcdiff_output::srcdiff_filename() const {
-
   return wstate->filename;
-
-
 }
 
 const srcml_nodes & srcdiff_output::nodes_original() const {
-
   return rbuf_original->nodes;
-
 }
 
 const srcml_nodes & srcdiff_output::nodes_modified() const {
-
   return rbuf_modified->nodes;
-
 }
 
 srcml_nodes & srcdiff_output::nodes_original() {
-
   return rbuf_original->nodes;
-
 }
 
 srcml_nodes & srcdiff_output::nodes_modified() {
-
   return rbuf_modified->nodes;
-
 }
 
 unsigned int srcdiff_output::last_output_original() const {
-
   return rbuf_original->last_output;
 
 }
 
 unsigned int srcdiff_output::last_output_modified() const {
-
-return rbuf_modified->last_output;
-
+  return rbuf_modified->last_output;
 }
 
 unsigned int & srcdiff_output::last_output_original() {
-
   return rbuf_original->last_output;
-
 }
 
 unsigned int & srcdiff_output::last_output_modified() {
-
-return rbuf_modified->last_output;
-
+  return rbuf_modified->last_output;
 }
 
 int srcdiff_output::output_state() const {
-
   return wstate->output_diff.back()->operation;
-
 }
 
 METHOD_TYPE srcdiff_output::method() const {
-
   return wstate->method;
-
 }
 
 void srcdiff_output::approximate(bool is_approximate) {
-
   wstate->approximate = is_approximate;
-
 }
 
 
 bool srcdiff_output::is_delay_type(int operation) {
-
   if(!delay) return false;
-
   return operation == delay_operation;
-
-
 }
 
 void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcML::node> & node, int operation) {

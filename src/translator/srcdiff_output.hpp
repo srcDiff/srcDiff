@@ -99,7 +99,6 @@ public:
 
 protected:
 
-  bool output_srcdiff;
   srcml_archive * archive;
   OPTION_TYPE flags;
 

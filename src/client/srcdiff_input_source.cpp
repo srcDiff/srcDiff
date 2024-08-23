@@ -22,8 +22,7 @@ srcdiff_input_source::srcdiff_input_source(const srcdiff_options & options) : op
 
   OPTION_TYPE flags = options.flags;
 　if(srcml_archive_get_version(options.archive)
-    && (srcml_archive_is_solitary_unit(options.archive)
-      || is_option(flags, OPTION_BURST))) {
+    && srcml_archive_is_solitary_unit(options.archive)) {
 
     unit_version = srcml_archive_get_version(options.archive);
 
