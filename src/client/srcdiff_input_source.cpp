@@ -82,7 +82,9 @@ void srcdiff_input_source::file(const std::optional<std::string> & path_original
 
   std::string srcdiff = process_file(path_original, path_modified);
 
-  if(view) {
+  if(!view) {
+    translator->write_translation();
+  } else {
     view->transform(srcdiff, "UTF-8");
   }
 

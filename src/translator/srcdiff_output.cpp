@@ -30,16 +30,13 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
  : archive(archive), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcML::name_space>()),
-   is_initialized(false) {
+   is_initialized(false), is_open(false) {
 
   wstate->filename = srcdiff_filename;
 
 }
 
 void srcdiff_output::initialize() {
-
-  int ret_status = srcml_archive_write_open_filename(archive, wstate->filename.c_str());
-  if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + wstate->filename + "' could not be opened");
 
   diff->set_prefix(srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()));
   diff->set_uri(SRCDIFF_DEFAULT_NAMESPACE_HREF);
@@ -122,6 +119,7 @@ void srcdiff_output::reset() {
 
 void srcdiff_output::start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version) {
 
+  srcml_unit_free(wstate->unit);
   wstate->unit = srcml_unit_create(archive);
   srcml_unit_set_language(wstate->unit, language_string.c_str());
 
@@ -144,17 +142,26 @@ std::string srcdiff_output::end_unit() {
   }
 
   srcml_write_end_unit(wstate->unit);
-  srcml_archive_write_unit(archive, wstate->unit);
 
   std::string srcdiff = srcml_unit_get_srcml(wstate->unit);
-  srcml_unit_free(wstate->unit);
 
   return srcdiff;
 
 }
 
+void srcdiff_output::write_unit() {
+  if(!is_open) {
+    int ret_status = srcml_archive_write_open_filename(archive, wstate->filename.c_str());
+    if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + wstate->filename + "' could not be opened");
+  }
+
+  is_open = true;
+  srcml_archive_write_unit(archive, wstate->unit);
+}
+
 void srcdiff_output::close() {
-  srcml_archive_close(archive);
+  srcml_unit_free(wstate->unit);
+  if(is_open) srcml_archive_close(archive);
 }
 
 const std::string & srcdiff_output::srcdiff_filename() const {
