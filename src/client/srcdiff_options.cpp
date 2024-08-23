@@ -64,6 +64,7 @@ void option_input_file(const std::vector<std::string> & arg) {
       std::string path_modified = arg[pos].substr(sep_pos + 1);
       options.input_pairs.push_back(std::make_pair(path_original, path_modified));
     } else if(ext_pos != std::string::npos && arg[pos].substr(ext_pos + 1) == "xml") {
+      options.flags |= OPTION_VIEW_XML;
       options.input_pairs.push_back(std::make_pair(arg[pos], ""));
     } else {
 
@@ -367,7 +368,8 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "input",
     option_input_file,
     "Pairs of input source files or directories, separated by spaces.\n"
-    "Example: orig1.cpp mod1.cpp orig2.cpp mod2.cpp dir1 dir2 ..."
+    "Example: orig1.cpp mod1.cpp orig2.cpp mod2.cpp dir1 dir2 ...]\n"
+    "srcDiff file with xml extension, requires --unified or --side-by-side"
   );
 
   CLI::Option_group * general_group = cli.add_option_group("General");
@@ -653,6 +655,14 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
           );
         }
       }
+    }
+
+    if(   is_option(options.flags, OPTION_VIEW_XML)
+      && !is_option(options.flags, OPTION_UNIFIED_VIEW) 
+      && !is_option(options.flags, OPTION_SIDE_BY_SIDE_VIEW)) {
+          throw CLI::ValidationError("XML input requires either --unified or --side-by-side to be set."
+          );
+
     }
 
   } catch (const CLI::ParseError &e) {
