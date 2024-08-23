@@ -31,29 +31,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcML::name_space>()) {
 
-  if(is_option(flags, OPTION_UNIFIED_VIEW)) {
-
-     view = std::make_shared<unified_view>(srcdiff_filename,
-                                           view_options.syntax_highlight,
-                                           view_options.theme,
-                                           is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),
-                                           is_option(flags, OPTION_IGNORE_WHITESPACE),
-                                           is_option(flags, OPTION_IGNORE_COMMENTS),
-                                           is_option(flags, OPTION_HTML_VIEW),
-                                           view_options.unified_view_context);
-
-  } else if(is_option(flags, OPTION_SIDE_BY_SIDE_VIEW)) {
-
-     view = std::make_shared<side_by_side_view>(srcdiff_filename,
-                                                view_options.syntax_highlight,
-                                                view_options.theme,
-                                                is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),
-                                                is_option(flags, OPTION_IGNORE_WHITESPACE),
-                                                is_option(flags, OPTION_IGNORE_COMMENTS),
-                                                is_option(flags, OPTION_HTML_VIEW),
-                                                view_options.side_by_side_tab_size);
-
-  } else if(!is_option(flags, OPTION_BURST)) {
+  if(!is_option(flags, OPTION_BURST)) {
       output_srcdiff = true;
       int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str());
       if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
@@ -84,10 +62,6 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
  }
 
 srcdiff_output::~srcdiff_output() {}
-
-std::shared_ptr<view_t> srcdiff_output::get_view() {
-  return view;
-}
 
 void srcdiff_output::initialize(int is_original, int is_modified) {
 
@@ -137,9 +111,36 @@ void srcdiff_output::initialize(int is_original, int is_modified) {
 
   }
 
- }
+}
 
-void srcdiff_output::finish() {
+void srcdiff_output::reset() {
+
+  rbuf_original->clear();
+  rbuf_modified->clear();
+  wstate->clear();
+
+}
+
+void srcdiff_output::start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version) {
+
+  wstate->unit = srcml_unit_create(archive);
+  /** @todo FIX ME
+  srcml_unit_register_namespace(wstate->unit,
+      srcML::name_space::DIFF_NAMESPACE->get_prefix()->c_str(),
+      srcML::name_space::DIFF_NAMESPACE->get_uri().c_str()
+  );
+  */
+  srcml_unit_set_language(wstate->unit, language_string.c_str());
+
+  srcml_unit_set_filename(wstate->unit, unit_filename ? unit_filename->c_str() : 0);
+  srcml_unit_set_version(wstate->unit, unit_version ? unit_version->c_str() : 0);
+  /** @todo when output non-archive additional namespaces not appended, because not collected 
+    However this is correct when output is to archive */
+  srcml_write_start_unit(wstate->unit);
+
+}
+
+std::string srcdiff_output::end_unit() {
 
   static const std::shared_ptr<srcML::node> flush = std::make_shared<srcML::node>(srcML::node_type::TEXT, "text");
   output_node(flush, SES_COMMON);
@@ -151,12 +152,7 @@ void srcdiff_output::finish() {
 
   srcml_write_end_unit(wstate->unit);
 
-  if(is_option(flags, OPTION_UNIFIED_VIEW | OPTION_SIDE_BY_SIDE_VIEW)) {
-
-    const char * xml = srcml_unit_get_srcml(wstate->unit);
-    view->transform(xml, "UTF-8");
-
-  } else if(is_option(flags, OPTION_BURST)) {
+  if(is_option(flags, OPTION_BURST)) {
 
     srcml_archive * srcdiff_archive = srcml_archive_clone(archive);
     srcml_archive_enable_solitary_unit(srcdiff_archive);
@@ -193,36 +189,12 @@ void srcdiff_output::finish() {
     srcml_archive_write_unit(archive, wstate->unit);
   }
 
+  std::string srcdiff = srcml_unit_get_srcml(wstate->unit);
   srcml_unit_free(wstate->unit);
 
- }
+  return srcdiff;
 
- void srcdiff_output::start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version) {
-
-  wstate->unit = srcml_unit_create(archive);
-  /** @todo FIX ME
-  srcml_unit_register_namespace(wstate->unit,
-      srcML::name_space::DIFF_NAMESPACE->get_prefix()->c_str(),
-      srcML::name_space::DIFF_NAMESPACE->get_uri().c_str()
-  );
-  */
-  srcml_unit_set_language(wstate->unit, language_string.c_str());
-
-  srcml_unit_set_filename(wstate->unit, unit_filename ? unit_filename->c_str() : 0);
-  srcml_unit_set_version(wstate->unit, unit_version ? unit_version->c_str() : 0);
-  /** @todo when output non-archive additional namespaces not appended, because not collected 
-    However this is correct when output is to archive */
-  srcml_write_start_unit(wstate->unit);
-
- }
-
- void srcdiff_output::reset() {
-
-  rbuf_original->clear();
-  rbuf_modified->clear();
-  wstate->clear();
-
- }
+}
 
 void srcdiff_output::close() {
 

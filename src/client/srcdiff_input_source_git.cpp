@@ -186,8 +186,8 @@ void srcdiff_input_source_git::consume() {
 
 }
 
-void srcdiff_input_source_git::process_file(const std::optional<std::string> & path_original,
-                                            const std::optional<std::string> & path_modified) {
+std::string srcdiff_input_source_git::process_file(const std::optional<std::string> & path_original,
+                                                   const std::optional<std::string> & path_modified) {
 
   const char * language_string = get_language(path_original, path_modified);
 
@@ -211,7 +211,7 @@ void srcdiff_input_source_git::process_file(const std::optional<std::string> & p
   srcdiff_input<srcdiff_input_source_local> input_original(options.archive, path_one_full, language_string, options.flags, *this);
   srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_two_full, language_string, options.flags, *this);
 
-  translator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
+  return translator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
 
 }
 

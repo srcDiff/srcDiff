@@ -543,18 +543,6 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   //   "Disable splitting strings into multiple nodes"
   // );
 
-  // srcdiff_group->add_flag(
-  //   "--burst",
-  //   option_flag_enable<OPTION_BURST>,
-  //   "Output each input file to a single srcDiff document. -o gives output directory"
-  // );
-
-  // srcdiff_group->add_flag(
-  //   "--srcml",
-  //   option_flag_enable<OPTION_SRCML>,
-  //   "Also, output the original and modified srcML of each file when burst enabled"
-  // );
-
   CLI::Option_group * view_options = cli.add_option_group("View");
   view_options->description(
     "These options configure the view produced by --unified or --side-by-side."

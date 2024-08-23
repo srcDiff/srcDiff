@@ -12,10 +12,12 @@
 
 #include <srcdiff_options.hpp>
 #include <srcdiff_translator.hpp>
+#include <view.hpp>
 
 #include <string>
 
 #include <optional>
+#include <memory>
 
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'
@@ -27,8 +29,9 @@ class srcdiff_input_source {
 
 protected:
 
-  const srcdiff_options & options;
-  srcdiff_translator * translator;
+  const srcdiff_options& options;
+  srcdiff_translator* translator;
+  std::unique_ptr<view_t> view;
 
   int directory_length_original;
   int directory_length_modified;
@@ -57,8 +60,8 @@ public:
                          const std::optional<std::string> & directory_modified);
   virtual void files_from();
 
-  virtual void process_file(const std::optional<std::string> & path_original,
-                            const std::optional<std::string> & path_modified) = 0;
+  virtual std::string process_file(const std::optional<std::string> & path_original,
+                                   const std::optional<std::string> & path_modified) = 0;
   virtual void process_directory(const std::optional<std::string> & directory_original,
                                  const std::optional<std::string> & directory_modified) = 0;
   virtual void process_files_from() = 0;

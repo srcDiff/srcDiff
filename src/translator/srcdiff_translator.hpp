@@ -50,32 +50,22 @@ public:
   ~srcdiff_translator();
 
   template<class T>
-  void translate(const srcdiff_input<T> & input_original,
+  std::string translate(
+                 const srcdiff_input<T> & input_original,
                  const srcdiff_input<T> & input_modified,
                  const std::string & language,
                  const std::optional<std::string> & unit_filename  = std::optional<std::string>(),
                  const std::optional<std::string> & unit_version   = std::optional<std::string>());
-
-  // temporary view needs removed from output
-  void view(const char* srcdiff_filename) {
-    if(!output->get_view()) {
-      std::cerr << "View not specified\n";
-      return;
-    }
-    output->get_view()->transform(srcdiff_filename, "UTF-8");
-  }
-
 };
 
 #include <thread>
 #include <srcdiff_diff.hpp>
 #include <srcdiff_whitespace.hpp>
 
-
-
 // Translate from input stream to output stream
 template<class T>
-void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
+std::string srcdiff_translator::translate(
+                                   const srcdiff_input<T> & input_original,
                                    const srcdiff_input<T> & input_modified,
                                    const std::string & language,
                                    const std::optional<std::string> & unit_filename,
@@ -96,6 +86,7 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
 
   output->initialize(is_original, is_modified);
 
+  std::string srcdiff;
   // run on file level
   if(is_original || is_modified) {
 
@@ -111,12 +102,13 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
     srcdiff_whitespace whitespace(*output);
     whitespace.output_all();
 
-    output->finish();
+    srcdiff = output->end_unit();
 
   }
 
   output->reset();
 
+  return srcdiff;
 }
 
 #endif

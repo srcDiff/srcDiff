@@ -9,6 +9,9 @@
 
 #include <srcdiff_input_source.hpp>
 
+#include <unified_view.hpp>
+#include <side_by_side_view.hpp>
+
 bool srcdiff_input_source::show_input = false;
 
 size_t srcdiff_input_source::input_count = 0;
@@ -17,15 +20,43 @@ size_t srcdiff_input_source::input_total = 0;
 
 srcdiff_input_source::srcdiff_input_source(const srcdiff_options & options) : options(options), translator(0), directory_length_original(0), directory_length_modified(0) {
 
-  if(srcml_archive_get_version(options.archive)
+  OPTION_TYPE flags = options.flags;
+　if(srcml_archive_get_version(options.archive)
     && (srcml_archive_is_solitary_unit(options.archive)
-      || is_option(options.flags, OPTION_BURST))) {
+      || is_option(flags, OPTION_BURST))) {
 
     unit_version = srcml_archive_get_version(options.archive);
 
   }
 
-  show_input = is_option(options.flags, OPTION_VERBOSE) && !is_option(options.flags, OPTION_QUIET);
+  show_input = is_option(flags, OPTION_VERBOSE) && !is_option(flags, OPTION_QUIET);
+
+  const srcdiff_options::view_options_t& view_options = options.view_options;
+  if(is_option(flags, OPTION_UNIFIED_VIEW)) {
+
+     view = std::make_unique<unified_view>(
+              options.srcdiff_filename,
+              view_options.syntax_highlight,
+              view_options.theme,
+              is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),
+              is_option(flags, OPTION_IGNORE_WHITESPACE),
+              is_option(flags, OPTION_IGNORE_COMMENTS),
+              is_option(flags, OPTION_HTML_VIEW),
+              view_options.unified_view_context);
+
+  } else if(is_option(flags, OPTION_SIDE_BY_SIDE_VIEW)) {
+
+     view = std::make_unique<side_by_side_view>(
+              options.srcdiff_filename,
+              view_options.syntax_highlight,
+              view_options.theme,
+              is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),
+              is_option(flags, OPTION_IGNORE_WHITESPACE),
+              is_option(flags, OPTION_IGNORE_COMMENTS),
+              is_option(flags, OPTION_HTML_VIEW),
+              view_options.side_by_side_tab_size);
+
+  }
 
 }
 
@@ -50,7 +81,11 @@ void srcdiff_input_source::file(const std::optional<std::string> & path_original
 
   }
 
-  process_file(path_original, path_modified);
+  std::string srcdiff = process_file(path_original, path_modified);
+
+  if(view) {
+    view->transform(srcdiff, "UTF-8");
+  }
 
 }
 
