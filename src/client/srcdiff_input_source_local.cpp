@@ -22,20 +22,10 @@
 
 
 srcdiff_input_source_local::srcdiff_input_source_local(const srcdiff_options & options) : srcdiff_input_source(options) {
-
-  translator = new srcdiff_translator(options.srcdiff_filename, options.flags, options.methods, options.archive,
-                                      options.unit_filename,
-                                      options.view_options,
-                                      options.summary_type_str);
-
   output_file = std::filesystem::directory_entry(options.srcdiff_filename);
-
 }
 
 srcdiff_input_source_local::~srcdiff_input_source_local() {
-
-  if(translator) delete translator;
-
 }
 
 // determines whether the input path(s) exist and whether they are files or

@@ -30,7 +30,7 @@ class srcdiff_input_source {
 protected:
 
   const srcdiff_options& options;
-  srcdiff_translator* translator;
+  std::unique_ptr<srcdiff_translator> translator;
   std::unique_ptr<view_t> view;
 
   int directory_length_original;
@@ -49,7 +49,7 @@ private:
 public:
 
   srcdiff_input_source(const srcdiff_options & options);
-  virtual ~srcdiff_input_source() {}
+  virtual ~srcdiff_input_source();
 
   virtual void consume() = 0;
   virtual const char * get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified);
