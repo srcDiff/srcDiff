@@ -19,6 +19,8 @@
 namespace data = boost::unit_test::data;
 const std::string construct_type = "try";
 
+// equals tests true
+
 std::vector<std::tuple<std::string, std::string>> test_cases_operator_equals_true = {
     {"try {int test = 15;}" , "try {int test = 15;}" },
     {"try {}"               , "try {}"               },
@@ -39,6 +41,8 @@ BOOST_DATA_TEST_CASE(construct_equals_true, data::make(test_cases_operator_equal
     BOOST_TEST(*original_construct == *modified_construct);
 }
 
+// equals tests false
+
 std::vector<std::tuple<std::string, std::string>> test_cases_operator_equals_false = {
     {"try {int test = 15;}" , "try {}"               },
     {"try {}"               , "try {test();}"        },
@@ -58,6 +62,8 @@ BOOST_DATA_TEST_CASE(construct_equals_false, data::make(test_cases_operator_equa
 
     BOOST_TEST(!(*original_construct == *modified_construct));
 }
+
+// !equals tests true
 
 std::vector<std::tuple<std::string, std::string>> test_cases_operator_not_equals_true = {
     {"try {test();}"        , "try {}"               },
@@ -80,6 +86,8 @@ BOOST_DATA_TEST_CASE(construct_not_equals_true, data::make(test_cases_operator_n
     BOOST_TEST(*original_construct != *modified_construct);
 }
 
+// !equals tests false
+
 std::vector<std::tuple<std::string, std::string>> test_cases_operator_not_equals_false = {
     {"try {int test = 15;}" , "try {int test = 15;}" },
     {"try {}"               , "try {}"               },
@@ -100,6 +108,8 @@ BOOST_DATA_TEST_CASE(construct_not_equals_false, data::make(test_cases_operator_
     BOOST_TEST(!(*original_construct != *modified_construct));
 }
 
+// to_string() tests
+
 std::vector<std::tuple<std::string, std::string>> test_cases_to_string = {
     {"try {}"        , "try {}"        },
     {"try {} catch{}", "try {} catch{}"},
@@ -114,6 +124,8 @@ BOOST_DATA_TEST_CASE(construct_to_string, data::make(test_cases_to_string), code
 
     BOOST_CHECK_EQUAL(test_construct->to_string(), expected);
 }
+
+// term() tests
 
 std::vector<std::tuple<std::string, std::size_t>> test_cases_term = {
     {"try {}"        , 0},
@@ -133,8 +145,12 @@ BOOST_DATA_TEST_CASE(construct_term, data::make(test_cases_term), code, pos) {
 
 }
 
+// start_position() tests
+
 std::vector<std::tuple<std::string>> test_cases_start_position = {
     {"try {}"},
+    {"try {} catch{}"},
+    
 };
 
 BOOST_DATA_TEST_CASE(construct_start_position, data::make(test_cases_start_position), code) {
@@ -171,6 +187,20 @@ BOOST_DATA_TEST_CASE(construct_end_position, data::make(test_cases_end_position)
     }
 
     BOOST_TEST(test_construct->end_position() == count);
+}
+
+std::vector<std::tuple<std::string, std::size_t>> test_cases_size = {
+    {"try {} catch{}", 18}
+};
+
+BOOST_DATA_TEST_CASE(construct_size, data::make(test_cases_size), code, size) {
+
+    construct_test_data test_data = create_test_construct(code, construct_type);
+    BOOST_TEST(test_data.test_construct);
+
+    std::shared_ptr<const construct> test_construct = std::dynamic_pointer_cast<const construct>(test_data.test_construct);
+
+    BOOST_TEST(test_construct->size() == size);
 }
 
 
