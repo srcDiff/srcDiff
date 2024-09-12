@@ -150,7 +150,7 @@ BOOST_DATA_TEST_CASE(construct_term, data::make(test_cases_term), code, pos) {
 std::vector<std::tuple<std::string>> test_cases_start_position = {
     {"try {}"},
     {"try {} catch{}"},
-    
+
 };
 
 BOOST_DATA_TEST_CASE(construct_start_position, data::make(test_cases_start_position), code) {
@@ -165,29 +165,23 @@ BOOST_DATA_TEST_CASE(construct_start_position, data::make(test_cases_start_posit
 
 // end_position() tests
 
-std::vector<std::tuple<std::string>> test_cases_end_position = {
-    {"try {}"         },
-    {"try {} catch {}"},
-    {"try {} catch {}"},
-    {"try {int i= 0;}"},
-
+std::vector<std::tuple<std::string, std::size_t>> test_cases_end_position = {
+    {"try {}"          , 9 },
+    {"try {} catch {}" , 20},
+    {"try {int i = 0;}", 33},
 };
 
-BOOST_DATA_TEST_CASE(construct_end_position, data::make(test_cases_end_position), code) {
+BOOST_DATA_TEST_CASE(construct_end_position, data::make(test_cases_end_position), code, count) {
 
     construct_test_data test_data = create_test_construct(code, construct_type);
     BOOST_TEST(test_data.test_construct);
 
     std::shared_ptr<const construct> test_construct = std::dynamic_pointer_cast<const construct>(test_data.test_construct);
 
-    int count = -1;
-
-    for (const auto& terms_pos : test_construct->nodes()) {
-        count++;
-    }
-
     BOOST_TEST(test_construct->end_position() == count);
 }
+
+// size() tests
 
 std::vector<std::tuple<std::string, std::size_t>> test_cases_size = {
     {"try {} catch{}", 18}
@@ -203,4 +197,56 @@ BOOST_DATA_TEST_CASE(construct_size, data::make(test_cases_size), code, size) {
     BOOST_TEST(test_construct->size() == size);
 }
 
+// empty() == tests
 
+std::vector<std::tuple<std::string, bool>> test_cases_empty_true = {
+    {"try {} catch {}" , false},
+    {"try {}"          , false},
+};
+
+BOOST_DATA_TEST_CASE(construct_empty_true, data::make(test_cases_empty_true), code, result) {
+
+    construct_test_data test_data = create_test_construct(code, construct_type);
+    BOOST_TEST(test_data.test_construct);
+
+    std::shared_ptr<const construct> test_construct = std::dynamic_pointer_cast<const construct>(test_data.test_construct);
+
+    BOOST_TEST(test_construct->empty() == result);
+}
+
+// empty() != tests
+
+
+std::vector<std::tuple<std::string, bool>> test_cases_empty_false = {
+    {"try {} catch {}" , true},
+    {"try {}"          , true},
+};
+
+BOOST_DATA_TEST_CASE(construct_empty_false, data::make(test_cases_empty_false), code, result) {
+
+    construct_test_data test_data = create_test_construct(code, construct_type);
+    BOOST_TEST(test_data.test_construct);
+
+    std::shared_ptr<const construct> test_construct = std::dynamic_pointer_cast<const construct>(test_data.test_construct);
+
+    BOOST_TEST(!(test_construct->empty() == result));
+}
+
+/*
+std::vector<std::tuple<std::string, std::string, std::string>> test_cases_parent = {
+    {"int i = 0;", "decl", "decl_stmt"}
+};
+
+BOOST_DATA_TEST_CASE(construct_parent, data::make(test_cases_parent), code, construct_type, parent_construct) {
+
+    construct_test_data test_data = create_test_construct(code, construct_type);
+    BOOST_TEST(test_data.test_construct);
+
+    std::shared_ptr<const construct> test_construct = std::dynamic_pointer_cast<const construct>(test_data.test_construct);
+
+
+
+    BOOST_TEST_MESSAGE("DEREFERENCED PARENT: " << *test_construct->term << "\n");
+
+}
+*/
