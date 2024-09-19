@@ -2,10 +2,12 @@
 <unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="C++" url="move">
 
 <unit language="C++" filename="move|move">
-<diff:delete move="1"><expr_stmt><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name></expr>;</expr_stmt></diff:delete>
-<expr_stmt><expr><name>c</name></expr>;</expr_stmt>
+<diff:delete move="1"><expr_stmt><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name></expr>;</expr_stmt></diff:delete><diff:delete><diff:ws>
+</diff:ws></diff:delete><expr_stmt><expr><name>c</name></expr>;</expr_stmt>
 <expr_stmt><expr><name>d</name></expr>;</expr_stmt>
-<diff:insert move="1"><expr_stmt><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name></expr>;</expr_stmt></diff:insert></unit>
+<diff:insert move="1"><expr_stmt><expr><name>a</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><name>b</name></expr>;</expr_stmt></diff:insert><diff:insert><diff:ws>
+</diff:ws></diff:insert>
+</unit>
 
 <unit language="C++" filename="move|move">
 <diff:delete type="replace"><diff:delete move="1"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:ws>
