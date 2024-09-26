@@ -57,7 +57,7 @@ macro(build_library LIBRARY_NAME LIBRARY_TYPE LIBRARY_OUTPUT_NAME)
     else()
         set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${LIBRARY_OUTPUT_NAME})
     endif()
-
+    
     target_link_libraries(${LIBRARY_NAME} PRIVATE srcsax_shared srcML::LibsrcML LibXml2::LibXml2 CLI11::CLI11)
 
 endmacro()
@@ -67,11 +67,19 @@ if (NOT DEFINED STATIC_LIB_NAME)
     set(STATIC_LIB_NAME srcdiff)
 endif()
 
+if(WIN32)
+    set(SRCDIFF_LIBSRCDIFF_SHARED_OUTPUT_NAME "libsrcdiff")
+    set(SRCDIFF_LIBSRCDIFF_STATIC_OUTPUT_NAME "libsrcdiff_static")
+else()
+    set(SRCDIFF_LIBSRCDIFF_SHARED_OUTPUT_NAME "srcdiff")
+    set(SRCDIFF_LIBSRCDIFF_STATIC_OUTPUT_NAME "srcdiff")
+endif()
+
 build_library(srcdiff_static STATIC ${STATIC_LIB_NAME})
-set_target_properties(srcdiff_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin OUTPUT_NAME srcdiff_static)
+set_target_properties(srcdiff_static PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin OUTPUT_NAME "${SRCDIFF_LIBSRCDIFF_STATIC_OUTPUT_NAME}")
 
 build_library(srcdiff_shared SHARED srcdiff)
-set_target_properties(srcdiff_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set_target_properties(srcdiff_shared PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin OUTPUT_NAME "${SRCDIFF_LIBSRCDIFF_SHARED_OUTPUT_NAME}" ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 # which types of libraries
-install(TARGETS srcdiff_shared srcdiff_static COMPONENT DEVLIBS)
+install(TARGETS srcdiff_static srcdiff_shared COMPONENT DEVLIBS DESTINATION lib)

@@ -4,11 +4,7 @@
 #
 # @copyright Copyright (C) 2014-2024 srcDiff, LLC. (www.src.org)
 #
-# CPack configuration for NSIS installers
-
-# Turn off start menu and possibly desktop links
-# unset(CPACK_PACKAGE_EXECUTABLES)
-# unset(CPACK_CREATE_DESKTOP_LINKS)
+# CPack configuration for WIX installers
 
 # Exclude other platforms
 if(NOT WIN32)
@@ -16,29 +12,25 @@ if(NOT WIN32)
 endif()
 
 # Update the generator list
-list(APPEND CPACK_GENERATOR "NSIS;ZIP")
+list(APPEND CPACK_GENERATOR "WIX;ZIP")
 list(REMOVE_DUPLICATES CPACK_GENERATOR)
 
 # package naming
 set(CPACK_SYSTEM_NAME "windows-x86_64")
 
-add_custom_target(install-package DEPENDS install)
-
-
 # Windows is one package
-set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
+set(CPACK_ARCHIVE_COMPONENT_INSTALL OFF)
+
+add_custom_target(install-package
+    COMMAND msiexec.exe /i "${CMAKE_BINARY_DIR}/dist/srcdiff-0.5-windows-x86_64.msi")
 
 # set icon
 install(FILES ${CMAKE_SOURCE_DIR}/package/srcdiff_icon.ico DESTINATION . COMPONENT SRCDIFF)
-set(CPACK_NSIS_MUI_ICON 
+set(CPACK_WIX_PRODUCT_ICON 
         "${CMAKE_SOURCE_DIR}/package/srcdiff_icon.ico")
-set(CPACK_NSIS_MUI_UNIICON 
-        "${CMAKE_SOURCE_DIR}/package/srcdiff_icon.ico")
-set(CPACK_NSIS_INSTALLED_ICON_NAME "bin\\srcdiff.exe")
 
 # Prevent start menu shortcut
 unset(CPACK_WIX_PROGRAM_MENU_FOLDER)
-
 set(CPACK_START_MENU_SHORTCUTS "")
 set(CPACK_DESKTOP_SHORTCUTS "")
 
@@ -46,26 +38,26 @@ set(CPACK_DESKTOP_SHORTCUTS "")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "srcDiff")
 
 # Custom GUID
-# set(CPACK_WIX_PRODUCT_GUID "8EB65BD8-DF5B-4DED-A642-80BDBBDEB58C")
+set(CPACK_WIX_PRODUCT_GUID "5A0F42D2-B5DD-4947-A7DE-8C1082EB6800")
 
 # Custom GUID
-# set(CPACK_WIX_UPGRADE_GUID "8666C73A-223D-4E5A-BB14-D4740158066F")
+set(CPACK_WIX_UPGRADE_GUID "2556D644-D165-4883-A213-7A09470A20BA")
 
 # Background on dialogs
 set(CPACK_WIX_UI_DIALOG "${CMAKE_CURRENT_SOURCE_DIR}/background.png")
 set(CPACK_WIX_UI_BANNER "${CMAKE_CURRENT_SOURCE_DIR}/banner.png")
 
 # ID of custom UI
-set(CPACK_WIX_UI_REF "srcDiffUI_InstallDir")
+# set(CPACK_WIX_UI_REF "srcDiffUI_InstallDir")
 
 # Add to CMake registry so that other CMake files can use find_program()
 set(CPACK_WIX_CMAKE_PACKAGE_REGISTRY srcDiff)
 
 # Extra dialog for adding to path
-set(CPACK_WIX_EXTRA_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_extra_dialog.wxs" "${CMAKE_CURRENT_SOURCE_DIR}/install_dir.wxs")
+#set(CPACK_WIX_EXTRA_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_extra_dialog.wxs" "${CMAKE_CURRENT_SOURCE_DIR}/install_dir.wxs")
 
 # Path for path environment
-set(CPACK_WIX_PATCH_FILE "${CMAKE_CURRENT_SOURCE_DIR}/patch_path_env.xml")
+#set(CPACK_WIX_PATCH_FILE "${CMAKE_CURRENT_SOURCE_DIR}/patch_path_env.xml")
 
 # Template instead of default WiX template
-set(CPACK_WIX_TEMPLATE "${CMAKE_CURRENT_SOURCE_DIR}/WIX.template.in")
+#set(CPACK_WIX_TEMPLATE "${CMAKE_CURRENT_SOURCE_DIR}/WIX.template.in")

@@ -21,11 +21,14 @@
 #include <fstream>
 #include <iostream>
 
+#undef DELETE
+
+
 
 class view_t : public srcSAXHandler {
 
 public:
-
+  // change to an enum
   static int UNSET;
   static int COMMON;
   static int DELETE;

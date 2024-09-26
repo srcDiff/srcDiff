@@ -58,19 +58,19 @@ set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 # for installers that let you pick what to install
 # Development group, SRCDIFFDEV, is composed of multiple components
 include(CPackComponent)
-cpack_add_install_type(CLIENT DISPLAY_NAME "srcdiff cli")
-cpack_add_install_type(DEVELOPER DISPLAY_NAME "development")
+cpack_add_install_type(CLIENT DISPLAY_NAME "srcDiff CLI")
+cpack_add_install_type(DEVELOPER DISPLAY_NAME "Development")
 
 cpack_add_component(SRCDIFF
-                    DISPLAY_NAME "srcdiff"
-                    DESCRIPTION "srcdiff cli program with required libraries"
+                    DISPLAY_NAME "srcDiff"
+                    DESCRIPTION "srcDiff CLI program with required libraries"
                     REQUIRED
-                    INSTALL_TYPES CLIENT DEVELOPER)
+                    INSTALL_TYPES CLIENT)
 
-#cpack_add_component(DEVLIBS
-#                    DISPLAY_NAME "libsrcdiff"
-#                    DESCRIPTION "Include file, development libraries, i.e.., static library, and CMake configuration"
-#                    INSTALL_TYPES DEVELOPER)
+cpack_add_component(DEVLIBS
+                    DISPLAY_NAME "libsrcdiff"
+                    DESCRIPTION "Include file, development libraries, i.e.., static library, and CMake configuration"
+                    INSTALL_TYPES DEVELOPER)
 
 # Copy and rename the README file for the proper extension
 configure_file(${CMAKE_SOURCE_DIR}/README.md ${CMAKE_BINARY_DIR}/README.txt COPYONLY)

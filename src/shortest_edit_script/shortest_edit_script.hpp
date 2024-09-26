@@ -18,6 +18,8 @@
 
 #include <optional>
 
+#undef min
+
 class shortest_edit_script_t {
   
 protected:

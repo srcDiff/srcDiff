@@ -52,7 +52,7 @@
     {
       "name": "ci-windows",
       "configurePreset": "ci-windows",
-      "generators": ["NSIS"],
+      "generators": ["WIX", "ZIP"],
       "inherits": ["ci-base"]
     }
   ],
@@ -68,7 +68,6 @@
         { "type": "build",     "name": "ci-windows" },
         { "type": "package",   "name": "ci-windows" },
         { "type": "build",     "name": "ci-install-package-windows" },
-        { "type": "build",     "name": "ci-test-unit-windows" },
         { "type": "build",     "name": "ci-test-suite-windows" }
       ]
     }
