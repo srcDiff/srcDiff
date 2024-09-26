@@ -1,200 +1,115 @@
+## SPDX-License-Identifier: GPL-3.0-only
+#
+# @file framework.sh
+#
+# @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
+#
+# This file is part of the srcDiff Infrastructure.
+#
+
 #!/bin/bash
 
-# make srcdiff build available:
+export REVISION=1.0.0
 
-if [ $# -eq 1 ]
-  then
-    export PATH="$1:$PATH"
+# Create temp directory 
+TEMPDIR=./tmp/$(basename $0 .sh)
+
+# Remove old TEMPDIR
+rm -fR $TEMPDIR
+mkdir -p $TEMPDIR
+cd $TEMPDIR
+
+# Find srcDiff executable
+export PATH=.:$PATH
+
+if [[ "$OSTYPE" == 'msys' ]]; then
+    EOL="\r\n"
+    export PATH=$PATH:"/c/Program Files/srcDiff/bin/"
+    SRCML="$SRCML_HOME/srcdiff.exe"
+    export MSYS2_ARG_CONV_EXCL="*"
+else
+    EOL="\n"
+	if [ -z "$SRCDIFF"]; then
+
+	    if [ -e "/usr/bin/srcdiff" ]; then
+	        SRCDIFF='/usr/bin/srcdiff'
+	    fi
+
+	    if [ -e "/usr/local/bin/srcdiff" ]; then
+	        SRCML='/usr/local/bin/srcdiff'
+	    fi
+
+	fi
 fi
 
+function srcdiff() {
+    "$SRCDIFF" "$@"
+}
 
-# if srcdiff is not found:
-if ! [ -x "$(command -v srcdiff)" ]; then
+# History on
+set -o history
+HISTIGNORE=check:\#
+HISTSIZE=2
+HISTFILESIZE=0
 
-    # if srcdiff.exe is found:
-    if [ -x "$(command -v srcdiff.exe)" ]; then
+# Output the first entry in history file, without numbers
+firsthistoryentry() {
+    fc -l -n -l
+}
 
-        # the .exe file extension must be manually specified when running a
-        # windows executable from WSL's bash; see protracted discussion:
-        # https://github.com/microsoft/WSL/issues/2003
-        alias srcdiff="srcdiff.exe";
+CAPTURE_STDOUT=true
+CAPTURE_STDERR=true
 
-        # without this, aliases aren't effective in scripts
-        shopt -s expand_aliases;
+# Variable $1 is set to contents of stdin
+define() {
+    # Read stdin into variable $1
+    IFS= read -r -d '' $1 || true
 
-    else
-        
-        echo "Could not find srcdiff!" > /dev/stderr;
-        echo "If srcdiff is not on the path, please pass its location to this" > /dev/stderr;
-        echo "script as the first argument: \"./framework.sh ../../build/bin/\"" > /dev/stderr;
-        echo "Exiting..."
-        exit 1;
+    # Replace any mention of REVISION with the revision number
+    eval $1=\${$1//REVISION/{$REVISION}}
+} 
 
-    fi
-fi
+# file with name `$1` is created from contents of var `$2`
 
-# set up testing functions:
+create_file() {
+    # Make directory paths
+    mkdir -p $(dirname $1)
 
-# create output log file and force it to be empty
-LOG=test_log.txt
-touch $LOG
-echo "" > $LOG
+    # add contents to file
+    echo -ne "${2}" > ${1}
+}
 
-# redirect stdout and stderr to file
+rmfile() { rm -f ${1}; }
+rmdir()  { rm -fr ${1};} 
+
+# capture stdout/stderr
 capture_output() {
-    # create temp file descriptors 3 and 4 to hold the original standard output
-    # and error, then set standard output and error to append to the log file
-    exec 3>&1 1>>$LOG
-    exec 4>&2 2>>$LOG
+    [ "$CAPTURE_STDOUT" = true ] && exec 3>&1 1>$STDOUT
+    [ "$CAPTURE_STDERR" = true ] && exec 4>&2 2>$STDERR
 }
 
-# release stdout and stderr
+# uncapture stdout/stderr
 uncapture_output() {
-    # restore standard output and error from the temp file descriptors created
-    # in capture_output, closing the temp fds while doing so
-    exec 1>&3 3>&-
-    exec 2>&4 4>&-
+    ["$CAPTURE_STDOUT" = true ] && exec 1>&3
+    ["$CAPTURE_STDERR" = true ] && exec 2>&4
 }
 
-# variables to keep track of what's passed and failed
-passed=0
-failed=0
-failures=()
-
-# this should be set to the name of the current test file while tests are being run
-current_file=""
-
-# base test running function.
-# $1: indicates whether to expect the test code to succeed (1) or fail (0)
-# $2: description of test
-# $3: shell script for test
-_run_test() {
-    local expect_success="$1"
-    shift
-    local description="$1"
-    shift
-    local test_case="$@"
-
-    # get the next line number of the log file so it can be referenced in messages
-    local log_file_length=$(wc -l < $LOG)
-    ((log_file_length++))
+message() {
+    # return stdout and stderr to standard streams
+    uncapture_output
+    
+    echo "$1" >&2
 
     capture_output
 
-    echo -e "\n\nTesting: \"$description\"\n\n"
-
-    (
-        set -e
-        eval "$test_case"
-    )
-
-    local exit_code=$?
-
-    uncapture_output
-
-    # if the code block was supposed to error out but succeeded, or was supposed
-    # to succeed but errored out, then the test automatically failed
-    if ([ $expect_success -eq 1 ] && [ $exit_code -ne 0 ]) ||
-            ([ $expect_success -eq 0 ] && [ $exit_code -eq 0 ]); then
-        echo "Test failed: $description (exit code $exit_code) (see $LOG:$log_file_length)"
-        ((failed++))
-        failures+=("$description ($current_file) ($LOG:$log_file_length)")
-    else
-        echo "Test passed: $description (exit code $exit_code)"
-        ((passed++))
-    fi
+    true
 }
 
-# run test and expect success
-run_test() {
-    _run_test 1 "$@"
-}
+# output filenames for capture stdout/stderr
+base=$(basename $0 .sh)
 
-# run test and expect failure
-expect_failure() {
-    _run_test 0 "$@"
-}
+typeset STDERR=.stderr_$base
+typeset STDOUT=.stdout_$base
 
-# argument equality comparison. normalizes newlines
-assert_equal() {
-    one=$(echo "$1" | sed 's/\r$//')
-    two=$(echo "$2" | sed 's/\r$//')
-    if [ "$one" != "$two" ]; then
-        echo "ERROR: \`$one\` is not equal to \`$two\`"
-        exit 1
-    else
-        echo "SUCCESS: \`$one\` is equal to \`$two\`"
-    fi
-}
-
-# assert the first argument contains the second argument as a substring.
-# case insensitive
-assert_contains() {
-    if [[ "${1,,}" != *"${2,,}"* ]]; then
-        echo "ERROR: \`$1\` does not contain \`$2\`"
-        exit 1
-    else
-        echo "SUCCESS: \`$1\` contains \`$2\`"
-    fi
-}
-# assert the first argument doesn't contain the second argument as a substring.
-# case insensitive
-assert_not_contains() {
-    if [[ "${1,,}" == *"${2,,}"* ]]; then
-        echo "ERROR: \`$1\` contains \`$2\`"
-        exit 1
-    else
-        echo "SUCCESS: \`$1\` does not contain \`$2\`"
-    fi
-}
-
-# create folder for temp files and a function for creating them. the normal
-# linux mktemp is problematic when running tests on windows - .exes in the
-# windows file system can't access files in /tmp/
-rm -rf ./tmp
-mkdir ./tmp
-
-localtemp() {
-    echo "./tmp/$1"
-}
-
-normalize_path() {
-    # normalize path separator by replacing windows \ with linux /
-    echo "$1" | sed 's/\\/\//'
-}
-
-# get useful variables storing temp code file paths and expected diffs:
-source $(dirname "$0")/constants.sh
-
-# run all tests:
-
-current_dir="$(dirname "$0")"
-for test in "$current_dir"/options/*; do
-    if [ -f "$test" ]; then
-        # setting global variable current_file so it can be picked up in error
-        # strings if its test fail
-        current_file=$(basename -- $test)
-
-        log_file_length=$(($(wc -l < $LOG)+3))
-
-        echo -e "\n\nRunning $current_file" >> $LOG
-
-        echo -e "\nRunning $current_file ($LOG:$log_file_length)"
-
-        source "$test"
-    fi
-done
-
-# output results of running all tests:
-
-echo -e "\n$passed passed; $failed failed"
-if [ $failed -gt 0 ]; then
-    echo -e "\nFailures:"
-    for failure in "${failures[@]}"; do echo "$failure"; done
-    echo -e "\nExiting with code 1"
-    exit 1
-fi
-
-# remove temp files:
-
-rm -rf ./tmp
+# save stdout and stderr to files
+capture_output
