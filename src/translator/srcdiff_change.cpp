@@ -137,8 +137,10 @@ void srcdiff_change::output() {
 
     rbuf_original->last_output = end_original;
 
-    srcdiff_whitespace whitespace(*this);
-    whitespace.output_suffix(SES_DELETE);
+    if(is_replace) {
+      srcdiff_whitespace whitespace(*this);
+      whitespace.output_suffix(SES_DELETE);
+    }
 
     // output diff tag end
     if(!first) {
@@ -211,8 +213,10 @@ void srcdiff_change::output() {
 
     rbuf_modified->last_output = end_modified;
 
-    srcdiff_whitespace whitespace(*this);
-    whitespace.output_suffix(SES_INSERT);  
+    if(is_replace) {
+      srcdiff_whitespace whitespace(*this);
+      whitespace.output_suffix(SES_INSERT);  
+    }
 
     // output diff tag end
     if(!first) {
