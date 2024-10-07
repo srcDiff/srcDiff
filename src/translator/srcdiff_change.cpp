@@ -85,6 +85,7 @@ void srcdiff_change::output() {
   if(end_original > begin_original) {
 
     bool first = true;
+    bool is_move = false;
     for(std::size_t i = begin_original; i < end_original; ++i) {
 
       // output diff tag begin
@@ -96,7 +97,7 @@ void srcdiff_change::output() {
       }
 
       if(rbuf_original->nodes.at(i)->get_move()) {
-
+        is_move = true;
         if(is_replace) {
           diff_original_start->clear_attributes();
         
@@ -137,7 +138,7 @@ void srcdiff_change::output() {
 
     rbuf_original->last_output = end_original;
 
-    if(is_replace) {
+    if(is_replace || is_move) {
       srcdiff_whitespace whitespace(*this);
       whitespace.output_suffix(SES_DELETE);
     }
@@ -155,9 +156,11 @@ void srcdiff_change::output() {
 
   }
 
+
   if(end_modified > begin_modified) {
 
     bool first = true;
+    bool is_move = false;
     for(std::size_t i = begin_modified; i < end_modified; ++i) {
 
       // output diff tag
@@ -169,7 +172,7 @@ void srcdiff_change::output() {
       }
 
       if(rbuf_modified->nodes.at(i)->get_move()) {
-
+        is_move = true;
         if(is_replace) {
           diff_modified_start->clear_attributes();
         
@@ -213,7 +216,7 @@ void srcdiff_change::output() {
 
     rbuf_modified->last_output = end_modified;
 
-    if(is_replace) {
+    if(is_replace || is_move) {
       srcdiff_whitespace whitespace(*this);
       whitespace.output_suffix(SES_INSERT);  
     }
