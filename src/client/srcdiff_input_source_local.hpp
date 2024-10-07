@@ -30,6 +30,8 @@ public:
 
   virtual void consume();
 
+  void process_xml(const std::string& path);
+
   virtual void process_file(const std::optional<std::string> & path_original,
                             const std::optional<std::string> & path_modified);
   virtual void process_directory(const std::optional<std::string> & directory_original,

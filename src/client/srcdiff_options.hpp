@@ -49,24 +49,6 @@ const OPTION_TYPE OPTION_QUIET                 = ull(1) << __COUNTER__;
 const OPTION_TYPE OPTION_COMPRESS              = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_VISUALIZE             = ull(1) << __COUNTER__;
-
-// @srcdiff
-const OPTION_TYPE OPTION_SAME                  = ull(1) << __COUNTER__;
-
-// @srcdiff
-const OPTION_TYPE OPTION_PURE                  = ull(1) << __COUNTER__;
-
-// @srcdiff
-const OPTION_TYPE OPTION_CHANGE                = ull(1) << __COUNTER__;
-
-// @srcdiff
-const OPTION_TYPE OPTION_SRCDIFFONLY           = ull(1) << __COUNTER__;
-
-// @srcdiff
-const OPTION_TYPE OPTION_DIFFONLY              = ull(1) << __COUNTER__;
-
-// @srcdiff
 const OPTION_TYPE OPTION_SVN_CONTINUOUS        = ull(1) << __COUNTER__;
 
 // @srcdiff
@@ -102,8 +84,7 @@ const OPTION_TYPE OPTION_SRCML                 = ull(1) << __COUNTER__;
 // @srcdiff
 const OPTION_TYPE OPTION_STRING_SPLITTING      = ull(1) << __COUNTER__;
 
-struct srcdiff_options
-{
+struct srcdiff_options {
 
   srcdiff_options() : flags(OPTION_STRING_SPLITTING) {}
 
@@ -122,7 +103,6 @@ struct srcdiff_options
     std::string theme;
     std::any unified_view_context = (int)3;
     int side_by_side_tab_size;
-    std::optional<std::string> srcdiff_filename;
   } view_options;
 
   std::optional<std::string> summary_type_str;

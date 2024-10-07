@@ -151,13 +151,16 @@ public:
                  const std::optional<std::string> & summary_type_str);
   virtual ~srcdiff_output();
 
+  // temporary view needs removed from output
+  std::shared_ptr<view_t> get_view();
+
   virtual void initialize(int is_original, int is_modified);
   virtual void start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version);
 
   void finish();
+
   virtual void reset();
   virtual void close();
-
 
   virtual const std::string & srcdiff_filename() const;
   virtual const srcml_nodes & nodes_original() const;
