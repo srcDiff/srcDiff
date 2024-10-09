@@ -36,7 +36,7 @@ else
 	    fi
 
 	    if [ -e "/usr/local/bin/srcdiff" ]; then
-	        SRCML='/usr/local/bin/srcdiff'
+	        SRCDIFF='/usr/local/bin/srcdiff'
 	    fi
 
 	fi
@@ -90,8 +90,8 @@ capture_output() {
 
 # uncapture stdout/stderr
 uncapture_output() {
-    ["$CAPTURE_STDOUT" = true ] && exec 1>&3
-    ["$CAPTURE_STDERR" = true ] && exec 2>&4
+    [ "$CAPTURE_STDOUT" = true ] && exec 1>&3
+    [ "$CAPTURE_STDERR" = true ] && exec 2>&4
 }
 
 message() {
