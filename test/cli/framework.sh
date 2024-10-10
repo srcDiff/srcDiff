@@ -113,3 +113,97 @@ typeset STDOUT=.stdout_$base
 
 # save stdout and stderr to files
 capture_output
+
+#Check the result of command
+
+check() {
+
+    local exit_status = $?
+
+    set -e
+
+    # test file pattern
+    line = $(caller | cut -d' ' -f1)
+    TEMPFILE = $PWD'/.test.'$line
+
+    # return stdout and stderr to standard streams
+    uncapture_output
+
+    # follow the command
+    firsthistoryentry
+
+    #check <filename> stdoutstr stderrstr
+    if [ $# -ge 3]; then
+        tmpfile2 = $TEMPFILE.2
+        echo -en '$2' > $tmpfile2
+        $diff $tmpfile2 $1
+
+        tmpfile3 = $TEMPFILE.3
+        echo -en "$3" > $tmpfile3
+        $diff $tmpfile3 $1
+
+    #check <filename> stdoutstr
+    elif [ $# ge 2 ] && [ "$1" != "" ] && [ -e "$1"]; then
+        tmpfile2 = $TEMPFILE.2
+        echo -en "$2" > $tmpfile2
+        $diff $tmpfile2 $1
+
+        [! -s $STDERR]
+
+    # check stdoutstr stderrstr
+    elif [ $# -ge 2 ]; then
+
+        tmpfile1 = $TEMPFILE.1
+        echo -en "$1" > $tmpfile1
+        $diff $tmpfile1 $STDOUT
+
+    # check <filename>
+    elif [ $# -ge 1 ] && [ "$1" != "" ] && [ -e "$1" ]; then
+
+        $diff $1 $STDOUT
+
+        [ ! -s $STDERR ]
+
+    # check stdoutstr
+    elif [ $# -ge 1 ]; then
+
+        tmpfile1=$TEMPFILE.1
+        echo -en "$1" > $tmpfile1
+        $diff $tmpfile1 $STDOUT
+
+        [ ! -s $STDERR ]
+
+    else
+        # check that the captured stdout is empty
+        [ ! -s $STDOUT ]
+        [ ! -s $STDERR ]
+    fi
+
+    set +e
+
+    if [ $exit_status -ne 0 ]; then
+        exit 1
+    fi
+
+    # return to capturing stdout and stderr
+    capture_output
+
+    true
+}
+
+
+# Check the validity of the xml
+# Currently only checks for well-formed xml, not DTD validity
+xmlcheck() {
+
+    set -e
+
+    if [ "${1:0:1}" != "<" ]; then
+        xmllint --noout ${1}
+    else
+        echo "${1}" | xmllint --noout /dev/stdin
+    fi;
+
+    set +e
+    true
+}
