@@ -28,6 +28,12 @@ find_package(LibXml2 REQUIRED)
 find_package(Threads REQUIRED)
 find_package(CLI11 REQUIRED)
 
+# Add rpath for macos
+if(APPLE)
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+    list(APPEND CMAKE_INSTALL_RPATH "/usr/local/lib")
+endif()
+
 # srcdiff
 if(WIN32)
 
