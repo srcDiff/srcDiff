@@ -67,8 +67,8 @@
         { "type": "configure", "name": "ci-windows" },
         { "type": "build",     "name": "ci-windows" },
         { "type": "package",   "name": "ci-windows" },
-        { "type": "build",     "name": "ci-install-package-windows" },
-        { "type": "build",     "name": "ci-test-suite-windows" }
+        { "type": "test",      "name": "ci-test-suite-windows" },
+        { "type": "test",      "name": "ci-test-unit-windows"  }
       ]
     }
   ]
