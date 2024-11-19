@@ -104,6 +104,7 @@ void srcdiff_input_source::directory(const std::optional<std::string> & director
                                      const std::optional<std::string> & directory_modified) {
 
   show_input = !is_option(options.flags, OPTION_QUIET);
+  srcml_archive_disable_solitary_unit(options.archive);
 
   if(show_input) {
 
