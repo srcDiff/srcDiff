@@ -36,7 +36,7 @@ track_srcdiff_performance() {
 }
 
 # Clone repositories
-echo "Cloning repository $REPO_1_URL (branch $BRANCH_1) into $REPO_OLD" >> $LOGFILE
+echo "Cloning repository $REPO_1_URL (branch $BRANCH_1) into $REPO_OLD" > $LOGFILE
 git clone --branch "$BRANCH_1" "$REPO_1_URL" "$REPO_OLD" || { echo "Error: Failed to clone $REPO_1_URL" >> $LOGFILE; exit 1; }
 
 echo "Cloning repository $REPO_2_URL (branch $BRANCH_2) into $REPO_NEW" >> $LOGFILE
