@@ -91,7 +91,7 @@ std::string srcdiff_input_source_local::process_file(const std::optional<std::st
   std::string path_two = path_modified ? *path_modified : std::string();
 
   std::string unit_filename = !path_one.empty() ? path_one.substr(directory_length_original) : path_one;
-  std::string filename_two =  !path_two.empty() ? path_two.substr(directory_length_modified) : path_two;
+  std::string filename_two  = !path_two.empty() ? path_two.substr(directory_length_modified) : path_two;
   if(path_two.empty() || unit_filename != filename_two) {
 
     unit_filename += "|";
@@ -112,31 +112,25 @@ void srcdiff_input_source_local::process_directory(const std::optional<std::stri
   std::filesystem::directory_entry modified_entry(directory_modified ? *directory_modified : "");
 
   if (!original_entry.is_directory() && !modified_entry.is_directory()) {
-
     throw std::string("Directories '" + (directory_original ? *directory_original : "")
       + "' and '" + (directory_modified ? *directory_modified : "") + "' could not be opened");
-
-  } else if(!original_entry.is_directory()) {
-
-    throw std::string("Directory '" + (directory_original ? *directory_original : "") + "' could not be opened");
-  
-  } else if(!original_entry.is_directory()){
-  
-    throw std::string("Directory '" + (directory_modified ? *directory_modified : "") + "' could not be opened");
-  
   }
 
   std::vector<std::filesystem::directory_entry> original_contents;
-  for (std::filesystem::directory_entry e : std::filesystem::directory_iterator(original_entry)){
-    original_contents.push_back(e);
+  if(original_entry.is_directory()) {
+    for (std::filesystem::directory_entry e : std::filesystem::directory_iterator(original_entry)){
+      original_contents.push_back(e);
+    }
+    std::sort(original_contents.begin(), original_contents.end());
   }
-  std::sort(original_contents.begin(), original_contents.end());
-  
+
   std::vector<std::filesystem::directory_entry> modified_contents;
-  for (std::filesystem::directory_entry e : std::filesystem::directory_iterator(modified_entry)){
-    modified_contents.push_back(e);
+  if(modified_entry.is_directory()) {
+    for (std::filesystem::directory_entry e : std::filesystem::directory_iterator(modified_entry)){
+      modified_contents.push_back(e);
+    }
+    std::sort(modified_contents.begin(), modified_contents.end());
   }
-  std::sort(modified_contents.begin(), modified_contents.end());
 
   // process all non-directory files
   std::vector<std::filesystem::directory_entry>::iterator in_original = original_contents.begin();
