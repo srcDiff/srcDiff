@@ -77,7 +77,9 @@ void option_input_file(const std::vector<std::string> & arg) {
 
   }
 
-  if(options.input_pairs.size() > 1) srcml_archive_disable_solitary_unit(options.archive);
+  if(options.input_pairs.size() > 1) {
+    srcml_archive_disable_solitary_unit(options.archive);
+  }
 
 }
 
@@ -168,9 +170,6 @@ void option_srcml_bool<ARCHIVE>(int flagged_count) {
 
   if(flagged_count) {
     srcml_archive_disable_solitary_unit(options.archive);
-  }
-  else {
-    srcml_archive_enable_solitary_unit(options.archive);
   }
 
 }
@@ -350,7 +349,8 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   srcml_archive_disable_hash(options.archive);
   srcml_archive_register_namespace(options.archive,
       SRCDIFF_DEFAULT_NAMESPACE_PREFIX.c_str(),
-      SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
+      SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()
+  );
 
   CLI::App cli(
     "Translates C, C++, and Java source code into the XML source-code representation srcDiff.\n"
