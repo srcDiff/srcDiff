@@ -43,6 +43,26 @@ BOOST_DATA_TEST_CASE(if_t_has_real_block, data::make(test_cases_has_real_block),
 
 }
 
+std::vector<std::string> test_cases_has_real_block_false = {
+	{"if (y)"},
+	{"if (x)"},
+	{"if (i == 1)"},
+	{"if (i**2 == 4)"},
+	{"if (!test)"},
+	{"if (test.int == 5)"},
+	{"if ()"}
+};
+
+BOOST_DATA_TEST_CASE(if_t_has_real_block_false, data::make(test_cases_has_real_block_false), code) {
+	
+	construct_test_data test_data = create_test_construct(code, construct_type);
+
+	BOOST_TEST(test_data.test_construct);
+	std::shared_ptr<const if_t> if_construct = std::dynamic_pointer_cast<const if_t>(test_data.test_construct);
+	BOOST_TEST(!(if_construct->has_real_block()));
+
+}
+
 std::vector<std::tuple<std::string, std::string>> test_cases_is_block_matchable = {
        // Original         // Modified
       {"if (x) {y=1;}"  , "if (y) {x=1;}"    },
