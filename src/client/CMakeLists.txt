@@ -64,3 +64,5 @@ add_custom_command(TARGET srcdiff POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:srcdiff> $<TARGET_RUNTIME_DLLS:srcdiff>
   COMMAND_EXPAND_LISTS
 )
+
+install(TARGETS srcdiff COMPONENT SRCDIFF)

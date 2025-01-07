@@ -54,13 +54,11 @@ else
     diff='diff '
     if [ -z "$SRCDIFF"]; then
 
-        if [ -e "../../../../../build/bin/srcdiff" ]; then
-            SRCDIFF='../../../../../build/bin/srcdiff'
-
-        elif [ -e "/usr/bin/srcdiff" ]; then
+        if [ -e "/usr/bin/srcdiff" ]; then
             SRCDIFF='/usr/bin/srcdiff'
+        fi
 
-        elif [ -e "/usr/local/bin/srcdiff" ]; then
+        if [ -e "/usr/local/bin/srcdiff" ]; then
             SRCDIFF='/usr/local/bin/srcdiff'
         fi
 
