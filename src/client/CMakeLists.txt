@@ -7,9 +7,16 @@
 # This file is part of the srcDiff Infrastructure.
 #
 
-
 file(GLOB CLIENT_HEADERS *.hpp)
 file(GLOB CLIENT_SOURCE *.cpp)
+
+if(APPLE)
+    # Use rpath for the install directory
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+    # Specify the rpath directory (in this case, /usr/local/lib)
+    list(APPEND CMAKE_INSTALL_RPATH "/usr/local/lib")
+endif()
 
 if(NOT SVN_ENABLED)
 
@@ -46,8 +53,6 @@ endif()
 target_link_libraries(srcdiff PRIVATE srcML::LibsrcML LibXml2::LibXml2 Threads::Threads srcsax_shared CLI11::CLI11)
 
 set_target_properties(srcdiff PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-install(TARGETS srcdiff COMPONENT SRCDIFF)
 
 add_custom_command(TARGET srcdiff POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:srcdiff> $<TARGET_RUNTIME_DLLS:srcdiff>
