@@ -141,6 +141,21 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned i
 
 }
 
+int srcdiff_whitespace::extend_end_to_new_line(std::shared_ptr<reader_state> rbuf) {
+
+  unsigned int end = rbuf->last_output;
+
+  for(; end < rbuf->nodes.size() && rbuf->nodes.at(end)->is_whitespace() && !rbuf->nodes.at(end)->is_new_line(); ++end)
+    ;
+
+  if(end < rbuf->nodes.size() && rbuf->nodes.at(end)->is_new_line()) {
+    ++end;
+  }
+
+  return end;
+}
+
+
 void srcdiff_whitespace::output_nested(int operation) {
 
   unsigned int oend = rbuf_original->last_output;
@@ -158,7 +173,6 @@ void srcdiff_whitespace::output_nested(int operation) {
 
 }
 
-
 void srcdiff_whitespace::output_statement() {
 
   unsigned int oend = rbuf_original->last_output;
@@ -168,19 +182,8 @@ void srcdiff_whitespace::output_statement() {
     && nend >= 1 && !is_statement(rbuf_modified->nodes.at(nend - 1)->get_name())) return;
 
   // advance whitespace after targeted end
-  for(; oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_whitespace() && !rbuf_original->nodes.at(oend)->is_new_line(); ++oend)
-    ;
-
-  for(; nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_whitespace() && !rbuf_modified->nodes.at(nend)->is_new_line(); ++nend)
-    ;
-
-  if(oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_new_line()) {
-    ++oend;
-  }
-
-  if(nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_new_line()) {
-    ++nend;
-  }
+  oend = extend_end_to_new_line(rbuf_original);
+  nend = extend_end_to_new_line(rbuf_modified);
 
   markup_whitespace(oend, nend);
 
@@ -194,11 +197,12 @@ void srcdiff_whitespace::output_all(int operation) {
   // advance whitespace after targeted end
   if(operation == SES_COMMON || operation == SES_DELETE) {
     for(; oend < rbuf_original->nodes.size() && rbuf_original->nodes.at(oend)->is_whitespace(); ++oend)
-      ;
+    ;
+
   }
 
   if(operation == SES_COMMON || operation == SES_INSERT) {
-  for(; nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_whitespace(); ++nend)
+    for(; nend < rbuf_modified->nodes.size() && rbuf_modified->nodes.at(nend)->is_whitespace(); ++nend)
     ;
   }
 

@@ -155,7 +155,22 @@ def convert_unix_to_dos(srctext):
 
     return safe_communicate(['unix2dos'], srctext)
 
-def linediff(xml_filename1, xml_filename2):
+def color_diff(xml):
+    """
+    Get colorized source-code diff
+    """
+
+    temp_file = open('srcdiff.xml', 'w')
+    temp_file.write(xml)
+    temp_file.close()
+
+    colorized_diff = safe_communicate([srcdiff_utility, 'srcdiff.xml', '-u'])
+
+    os.remove('srcdiff.xml')
+
+    return colorized_diff
+
+def line_diff(xml_filename1, xml_filename2):
     """
     Computes a simple line-based diff of two files - this is used to show where
     srcDiff's output differed from the expected output when tested
@@ -195,27 +210,34 @@ def convert_to_srcdiff(source_file_version_one, source_file_version_two, languag
 
 def find_difference(unitxml, unitsrcml, test_number, character_count):
     """
-    Takes `unitxml` and `unitsrcml`, comparing them with the linediff function 
+    Takes `unitxml` and `unitsrcml`, comparing them with the line_diff function 
     then returning the result. `test_number` and `character_count` are to aid output.
     returns `result` and `character_count` for use in the main loop.
     """
-    result = linediff(unitxml, unitsrcml)
+    result = line_diff(unitxml, unitsrcml)
     character_count += get_character_count(test_number)
+    color_result = None
     if character_count > FIELD_WIDTH_TEST_CASES:
         print("\n", "".rjust(FIELD_WIDTH_LANGUAGE), "...".ljust(FIELD_WIDTH_URL), end=' ')
         character_count = get_character_count(test_number)
-    
-    return (result, character_count)
 
-def update_error_list(result, error_count, error_list, url, language, num, num_nested_units):
+    if result != "":
+        actual   = color_diff(unitxml)
+        expected = color_diff(unitsrcml)
+        color_result = actual + '\n----------\n' + expected
+    
+    return (result, character_count, color_result)
+
+def update_error_list(result, color_result, error_count, error_list, url, language, num, num_nested_units):
     """
     Takes `result`, `url`, `language`, `num`, and appends a tuple to the error_list with
     each item, then incrementing the error count. returns `error_count` for use in the
     main loop.
     """
+
     if result != "":
         error_count += 1            
-        error_list.append((url + " " + language, num, result))
+        error_list.append((url + " " + language, num, color_result, result))
 
         # part of list of nested unit number in output
         print(f"\033[0;31m{str(num)}\033[0m", end=' ')
@@ -340,9 +362,9 @@ def run_tests(source_dir, speclang_list, specname_list, specnum: int, m_list, er
                             test_number = count
                         
                         # find the difference
-                        result, character_count = find_difference(unitxml, unitsrcml, test_number, character_count)
+                        result, character_count, color_result = find_difference(unitxml, unitsrcml, test_number, character_count)
 
-                        error_count = update_error_list(result, error_count, error_list, url, language, test_number, num_nested_units)
+                        error_count = update_error_list(result, color_result, error_count, error_list, url, language, test_number, num_nested_units)
 
                         # special case: interchange tests are not swappable
                         if url == "interchange":
@@ -369,9 +391,9 @@ def run_tests(source_dir, speclang_list, specname_list, specnum: int, m_list, er
                         test_number += 1
 
                         # find the difference
-                        result, character_count = find_difference(unitxml, unitsrcml, test_number, character_count)
+                        result, character_count, color_result = find_difference(unitxml, unitsrcml, test_number, character_count)
 
-                        error_count = update_error_list(result, error_count, error_list, url, language, count * 2, num_nested_units)
+                        error_count = update_error_list(result, color_result, error_count, error_list, url, language, count * 2, num_nested_units)
     
                     except subprocess.CalledProcessError as e:
                         error_num, str_error = e.args
@@ -426,10 +448,10 @@ def print_report(error_list, total_count, error_count):
 
                 xerrorlist.remove(x)
 
-            print(e[0], e[1], othererror, "\n", "".join(e[2][3:]))
+            print(e[0], e[1], othererror, "\n", e[2], "".join(e[3][3:]))
 
         for e in xerrorlist:
-            print(e[0], e[1], "\n", "".join(e[2][3:]))
+            print(e[0], e[1], "\n", e[2], "".join(e[3][3:]))
 
     # output tool errors counts
     print()

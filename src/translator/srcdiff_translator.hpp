@@ -50,12 +50,16 @@ public:
   ~srcdiff_translator();
 
   template<class T>
-  void translate(const srcdiff_input<T> & input_original,
+  std::string translate(
+                 const srcdiff_input<T> & input_original,
                  const srcdiff_input<T> & input_modified,
                  const std::string & language,
                  const std::optional<std::string> & unit_filename  = std::optional<std::string>(),
                  const std::optional<std::string> & unit_version   = std::optional<std::string>());
 
+  // Think about taking out archive writing and putting having in input
+  // separates concerns better
+  void write_translation();
 };
 
 #include <thread>
@@ -64,27 +68,28 @@ public:
 
 // Translate from input stream to output stream
 template<class T>
-void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
+std::string srcdiff_translator::translate(
+                                   const srcdiff_input<T> & input_original,
                                    const srcdiff_input<T> & input_modified,
                                    const std::string & language,
                                    const std::optional<std::string> & unit_filename,
                                    const std::optional<std::string> & unit_version) {
 
-  const std::optional<std::string> output_path = is_option(flags, OPTION_BURST) && is_option(flags, OPTION_SRCML) ? output->srcdiff_filename() : std::optional<std::string>();
+  const std::optional<std::string> output_path = "";
 
-  const srcml_converter::srcml_burst_config burst_config = { output_path, language, (this->unit_filename ? this->unit_filename : unit_filename), unit_version };
   int is_original = 0;
-  std::thread thread_original(std::ref(input_original), SES_DELETE, std::ref(output->nodes_original()), std::ref(is_original), burst_config);
+  std::thread thread_original(std::ref(input_original), SES_DELETE, std::ref(output->nodes_original()), std::ref(is_original));
 
   thread_original.join();
 
   int is_modified = 0;
-  std::thread thread_modified(std::ref(input_modified), SES_INSERT, std::ref(output->nodes_modified()), std::ref(is_modified), burst_config);
+  std::thread thread_modified(std::ref(input_modified), SES_INSERT, std::ref(output->nodes_modified()), std::ref(is_modified));
 
   thread_modified.join();
 
-  output->initialize(is_original, is_modified);
+  output->prime(is_original, is_modified);
 
+  std::string srcdiff;
   // run on file level
   if(is_original || is_modified) {
 
@@ -100,12 +105,13 @@ void srcdiff_translator::translate(const srcdiff_input<T> & input_original,
     srcdiff_whitespace whitespace(*output);
     whitespace.output_all();
 
-    output->finish();
+    srcdiff = output->end_unit();
 
   }
 
   output->reset();
 
+  return srcdiff;
 }
 
 #endif

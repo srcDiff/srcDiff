@@ -17,23 +17,15 @@
 
 #include <cstring>
 #include <filesystem>
+#include <fstream>
+#include <sstream>
 
 
 srcdiff_input_source_local::srcdiff_input_source_local(const srcdiff_options & options) : srcdiff_input_source(options) {
-
-  translator = new srcdiff_translator(options.srcdiff_filename, options.flags, options.methods, options.archive,
-                                      options.unit_filename,
-                                      options.view_options,
-                                      options.summary_type_str);
-
   output_file = std::filesystem::directory_entry(options.srcdiff_filename);
-
 }
 
 srcdiff_input_source_local::~srcdiff_input_source_local() {
-
-  if(translator) delete translator;
-
 }
 
 // determines whether the input path(s) exist and whether they are files or
@@ -56,7 +48,7 @@ void srcdiff_input_source_local::consume()
         throw std::string("Input sources '" + input_pair.first + "' and '" + input_pair.second + "' could not be opened");
       else if (!std::filesystem::exists(original))
         throw std::string("Input source '" + input_pair.first + "' could not be opened");
-      else if (!std::filesystem::exists(modified))
+      else if (input_pair.second != "" && !std::filesystem::exists(modified))
         throw std::string("Input source '" + input_pair.second + "' could not be opened");
 
       if (std::filesystem::is_directory(original)) {
@@ -81,18 +73,25 @@ void srcdiff_input_source_local::consume()
   }
 }
 
-void srcdiff_input_source_local::process_file(const std::optional<std::string> & path_original,
-                                              const std::optional<std::string> & path_modified) {
+std::string srcdiff_input_source_local::process_file(const std::optional<std::string> & path_original,
+                                                     const std::optional<std::string> & path_modified) {
+
+  if(path_modified == "") {
+    std::ifstream in(*path_original);
+    std::ostringstream buffer;
+    buffer << in.rdbuf();
+    return buffer.str();
+  }
 
   const char * language_string = get_language(path_original, path_modified);
 
-  if(language_string == SRCML_LANGUAGE_NONE) return;
+  if(language_string == SRCML_LANGUAGE_NONE) return "";
 
   std::string path_one = path_original ? *path_original : std::string();
   std::string path_two = path_modified ? *path_modified : std::string();
 
   std::string unit_filename = !path_one.empty() ? path_one.substr(directory_length_original) : path_one;
-  std::string filename_two =  !path_two.empty() ? path_two.substr(directory_length_modified) : path_two;
+  std::string filename_two  = !path_two.empty() ? path_two.substr(directory_length_modified) : path_two;
   if(path_two.empty() || unit_filename != filename_two) {
 
     unit_filename += "|";
@@ -102,7 +101,7 @@ void srcdiff_input_source_local::process_file(const std::optional<std::string> &
 
   srcdiff_input<srcdiff_input_source_local> input_original(options.archive, path_original, language_string, options.flags, *this);
   srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_modified, language_string, options.flags, *this);
-  translator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
+  return translator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
 
 }
 
@@ -113,31 +112,25 @@ void srcdiff_input_source_local::process_directory(const std::optional<std::stri
   std::filesystem::directory_entry modified_entry(directory_modified ? *directory_modified : "");
 
   if (!original_entry.is_directory() && !modified_entry.is_directory()) {
-
     throw std::string("Directories '" + (directory_original ? *directory_original : "")
       + "' and '" + (directory_modified ? *directory_modified : "") + "' could not be opened");
-
-  } else if(!original_entry.is_directory()) {
-
-    throw std::string("Directory '" + (directory_original ? *directory_original : "") + "' could not be opened");
-  
-  } else if(!original_entry.is_directory()){
-  
-    throw std::string("Directory '" + (directory_modified ? *directory_modified : "") + "' could not be opened");
-  
   }
 
   std::vector<std::filesystem::directory_entry> original_contents;
-  for (std::filesystem::directory_entry e : std::filesystem::directory_iterator(original_entry)){
-    original_contents.push_back(e);
+  if(original_entry.is_directory()) {
+    for (std::filesystem::directory_entry e : std::filesystem::directory_iterator(original_entry)){
+      original_contents.push_back(e);
+    }
+    std::sort(original_contents.begin(), original_contents.end());
   }
-  std::sort(original_contents.begin(), original_contents.end());
-  
+
   std::vector<std::filesystem::directory_entry> modified_contents;
-  for (std::filesystem::directory_entry e : std::filesystem::directory_iterator(modified_entry)){
-    modified_contents.push_back(e);
+  if(modified_entry.is_directory()) {
+    for (std::filesystem::directory_entry e : std::filesystem::directory_iterator(modified_entry)){
+      modified_contents.push_back(e);
+    }
+    std::sort(modified_contents.begin(), modified_contents.end());
   }
-  std::sort(modified_contents.begin(), modified_contents.end());
 
   // process all non-directory files
   std::vector<std::filesystem::directory_entry>::iterator in_original = original_contents.begin();

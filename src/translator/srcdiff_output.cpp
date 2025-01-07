@@ -27,45 +27,16 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
                                const METHOD_TYPE & method,
                                const srcdiff_options::view_options_t & view_options,
                                const std::optional<std::string> & summary_type_str [[maybe_unused]])
- : output_srcdiff(false), archive(archive), flags(flags),
+ : archive(archive), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
-   diff(std::make_shared<srcML::name_space>()) {
+   diff(std::make_shared<srcML::name_space>()),
+   is_initialized(false), is_open(false) {
 
-  if(is_option(flags, OPTION_UNIFIED_VIEW)) {
+  wstate->filename = srcdiff_filename;
 
-     view = std::make_shared<unified_view>(srcdiff_filename,
-                                           view_options.syntax_highlight,
-                                           view_options.theme,
-                                           is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),
-                                           is_option(flags, OPTION_IGNORE_WHITESPACE),
-                                           is_option(flags, OPTION_IGNORE_COMMENTS),
-                                           is_option(flags, OPTION_HTML_VIEW),
-                                           view_options.unified_view_context);
+}
 
-  } else if(is_option(flags, OPTION_SIDE_BY_SIDE_VIEW)) {
-
-     view = std::make_shared<side_by_side_view>(srcdiff_filename,
-                                                view_options.syntax_highlight,
-                                                view_options.theme,
-                                                is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),
-                                                is_option(flags, OPTION_IGNORE_WHITESPACE),
-                                                is_option(flags, OPTION_IGNORE_COMMENTS),
-                                                is_option(flags, OPTION_HTML_VIEW),
-                                                view_options.side_by_side_tab_size);
-
-  } else if(!is_option(flags, OPTION_BURST)) {
-      output_srcdiff = true;
-      int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str());
-      if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
-
-  }
-
-  if(!is_option(flags, OPTION_BURST) || srcdiff_filename != "-") {
-    wstate->filename = srcdiff_filename;
-  }
-  else {
-    wstate->filename = ".";
-  }
+void srcdiff_output::initialize() {
 
   diff->set_prefix(srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()));
   diff->set_uri(SRCDIFF_DEFAULT_NAMESPACE_HREF);
@@ -81,11 +52,14 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
   diff_ws_start = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_WHITESPACE, srcML::name_space::DIFF_NAMESPACE);
   diff_ws_end   = std::make_shared<srcML::node>(srcML::node_type::END, DIFF_WHITESPACE, srcML::name_space::DIFF_NAMESPACE);
 
- }
+  is_initialized = true;
+}
 
- srcdiff_output::~srcdiff_output() {}
+srcdiff_output::~srcdiff_output() {}
 
- void srcdiff_output::initialize(int is_original, int is_modified) {
+void srcdiff_output::prime(int is_original, int is_modified) {
+
+  if(!is_initialized) initialize();
 
   diff_set * original_diff = new diff_set();
   original_diff->operation = SES_COMMON;
@@ -121,25 +95,11 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
 
   } else if(rbuf_original->nodes.empty()) {
 
-    if(!is_option(flags, OPTION_PURE)) {
-
-      is_original = 0;
-      is_modified = 0;
-
-    }
-
     update_diff_stack(rbuf_original->open_diff, diff_common_start, SES_COMMON);
     update_diff_stack(rbuf_modified->open_diff, unit_tag, SES_COMMON);
     update_diff_stack(wstate->output_diff, unit_tag, SES_COMMON);
 
   } else {
-
-    if(!is_option(flags, OPTION_PURE)) {
-
-      is_original = 0;
-      is_modified = 0;
-
-    }
 
     update_diff_stack(rbuf_original->open_diff, unit_tag, SES_COMMON);
     update_diff_stack(rbuf_modified->open_diff, diff_common_start, SES_COMMON);
@@ -147,9 +107,31 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
 
   }
 
- }
+}
 
-void srcdiff_output::finish() {
+void srcdiff_output::reset() {
+
+  rbuf_original->clear();
+  rbuf_modified->clear();
+  wstate->clear();
+
+}
+
+void srcdiff_output::start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version) {
+
+  srcml_unit_free(wstate->unit);
+  wstate->unit = srcml_unit_create(archive);
+  srcml_unit_set_language(wstate->unit, language_string.c_str());
+
+  srcml_unit_set_filename(wstate->unit, unit_filename ? unit_filename->c_str() : 0);
+  srcml_unit_set_version(wstate->unit, unit_version ? unit_version->c_str() : 0);
+  /** @todo when output non-archive additional namespaces not appended, because not collected 
+    However this is correct when output is to archive */
+  srcml_write_start_unit(wstate->unit);
+
+}
+
+std::string srcdiff_output::end_unit() {
 
   static const std::shared_ptr<srcML::node> flush = std::make_shared<srcML::node>(srcML::node_type::TEXT, "text");
   output_node(flush, SES_COMMON);
@@ -161,170 +143,80 @@ void srcdiff_output::finish() {
 
   srcml_write_end_unit(wstate->unit);
 
-  if(is_option(flags, OPTION_UNIFIED_VIEW | OPTION_SIDE_BY_SIDE_VIEW)) {
+  std::string srcdiff = srcml_unit_get_srcml(wstate->unit);
 
-    const char * xml = srcml_unit_get_srcml(wstate->unit);
-    view->transform(xml, "UTF-8");
+  return srcdiff;
 
-  } else if(is_option(flags, OPTION_BURST)) {
+}
 
-    srcml_archive * srcdiff_archive = srcml_archive_clone(archive);
-    srcml_archive_enable_solitary_unit(srcdiff_archive);
-    srcml_archive_disable_hash(srcdiff_archive);
-
-    std::string filename = srcml_unit_get_filename(wstate->unit);
-    std::string::size_type pos;
-    if((pos = filename.find('|')) != std::string::npos) {
-
-      if(pos == 0) {
-        filename = filename.substr(1, std::string::npos);
-      }
-      else {
-        filename = filename.substr(0, pos);
-      }
-
-    }
-
-    for(std::string::size_type pos = filename.find('/'); pos != std::string::npos; pos = filename.find('/', pos + 1)) {
-      filename.replace(pos, 1, "_");
-    }
-    filename += ".srcdiff";
-
-    filename = wstate->filename + "/" + filename;
-    srcml_archive_write_open_filename(srcdiff_archive, filename.c_str());
-
-    srcml_archive_write_unit(srcdiff_archive, wstate->unit);
-    srcml_archive_close(srcdiff_archive);
-    srcml_archive_free(srcdiff_archive);
-
-  } 
-
-  if(output_srcdiff) {
-    srcml_archive_write_unit(archive, wstate->unit);
+void srcdiff_output::write_unit() {
+  if(!is_open) {
+    int ret_status = srcml_archive_write_open_filename(archive, wstate->filename.c_str());
+    if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + wstate->filename + "' could not be opened");
   }
 
-  srcml_unit_free(wstate->unit);
-
- }
-
- void srcdiff_output::start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version) {
-
-  wstate->unit = srcml_unit_create(archive);
-  /** @todo FIX ME
-  srcml_unit_register_namespace(wstate->unit,
-      srcML::name_space::DIFF_NAMESPACE->get_prefix()->c_str(),
-      srcML::name_space::DIFF_NAMESPACE->get_uri().c_str()
-  );
-  */
-  srcml_unit_set_language(wstate->unit, language_string.c_str());
-
-  srcml_unit_set_filename(wstate->unit, unit_filename ? unit_filename->c_str() : 0);
-  srcml_unit_set_version(wstate->unit, unit_version ? unit_version->c_str() : 0);
-  /** @todo when output non-archive additional namespaces not appended, because not collected 
-    However this is correct when output is to archive */
-  srcml_write_start_unit(wstate->unit);
-
- }
-
- void srcdiff_output::reset() {
-
-  rbuf_original->clear();
-  rbuf_modified->clear();
-  wstate->clear();
-
- }
+  is_open = true;
+  srcml_archive_write_unit(archive, wstate->unit);
+}
 
 void srcdiff_output::close() {
-
-  if(output_srcdiff) {
-
-    srcml_archive_close(archive);
-
-  }
-
+  srcml_unit_free(wstate->unit);
+  if(is_open) srcml_archive_close(archive);
 }
 
 const std::string & srcdiff_output::srcdiff_filename() const {
-
   return wstate->filename;
-
-
 }
 
 const srcml_nodes & srcdiff_output::nodes_original() const {
-
   return rbuf_original->nodes;
-
 }
 
 const srcml_nodes & srcdiff_output::nodes_modified() const {
-
   return rbuf_modified->nodes;
-
 }
 
 srcml_nodes & srcdiff_output::nodes_original() {
-
   return rbuf_original->nodes;
-
 }
 
 srcml_nodes & srcdiff_output::nodes_modified() {
-
   return rbuf_modified->nodes;
-
 }
 
 unsigned int srcdiff_output::last_output_original() const {
-
   return rbuf_original->last_output;
 
 }
 
 unsigned int srcdiff_output::last_output_modified() const {
-
-return rbuf_modified->last_output;
-
+  return rbuf_modified->last_output;
 }
 
 unsigned int & srcdiff_output::last_output_original() {
-
   return rbuf_original->last_output;
-
 }
 
 unsigned int & srcdiff_output::last_output_modified() {
-
-return rbuf_modified->last_output;
-
+  return rbuf_modified->last_output;
 }
 
 int srcdiff_output::output_state() const {
-
   return wstate->output_diff.back()->operation;
-
 }
 
 METHOD_TYPE srcdiff_output::method() const {
-
   return wstate->method;
-
 }
 
 void srcdiff_output::approximate(bool is_approximate) {
-
   wstate->approximate = is_approximate;
-
 }
 
 
 bool srcdiff_output::is_delay_type(int operation) {
-
   if(!delay) return false;
-
   return operation == delay_operation;
-
-
 }
 
 void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcML::node> & node, int operation) {

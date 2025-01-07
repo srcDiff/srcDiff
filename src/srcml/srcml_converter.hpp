@@ -46,19 +46,10 @@ private:
 
 public:
 
-  struct srcml_burst_config {
-
-    const std::optional<std::string> & output_path;
-    const std::string & language;
-    const std::optional<std::string> & unit_filename;
-    const std::optional<std::string> & unit_version;
-
-  };
-
     srcml_converter(srcml_archive * archive, bool split_strings, int stream_source);
     ~srcml_converter();
 
-    void convert(const std::string & language, void * context, const std::function<ssize_t(void *, void *, size_t)> & read, const std::function<int(void *)> & close, const srcml_burst_config & burst_config); 
+    void convert(const std::string & language, void * context, const std::function<ssize_t(void *, void *, size_t)> & read, const std::function<int(void *)> & close); 
     srcml_nodes create_nodes() const;
 
 };

@@ -194,8 +194,8 @@ void srcdiff_input_source_svn::session_range() {
 
 }
 
-void srcdiff_input_source_svn::process_file(const std::optional<std::string> & path_original,
-                                            const std::optional<std::string> & path_modified) {
+std::string srcdiff_input_source_svn::process_file(const std::optional<std::string> & path_original,
+                                                   const std::optional<std::string> & path_modified) {
 
   const char * language_string = get_language(path_original, path_modified);
   if(language_string == SRCML_LANGUAGE_NONE) return;
@@ -227,7 +227,7 @@ void srcdiff_input_source_svn::process_file(const std::optional<std::string> & p
   srcdiff_input<srcdiff_input_source_svn> input_original(options.archive, svn_path_original_temp, language_string, 0, *this);
   srcdiff_input<srcdiff_input_source_svn> input_modified(options.archive, svn_path_modified_temp, language_string, 0, *this);
 
-  translator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
+  returntranslator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
 
 }
 

@@ -57,10 +57,14 @@ void option_input_file(const std::vector<std::string> & arg) {
   for(std::vector<std::string>::size_type pos = 0; pos < arg.size(); pos += 1) {
 
     std::string::size_type sep_pos = arg[pos].find('|');
+    std::string::size_type ext_pos = arg[pos].rfind(".");
     if(sep_pos != std::string::npos) {
       std::string path_original = arg[pos].substr(0, sep_pos);
       std::string path_modified = arg[pos].substr(sep_pos + 1);
       options.input_pairs.push_back(std::make_pair(path_original, path_modified));
+    } else if(ext_pos != std::string::npos && arg[pos].substr(ext_pos + 1) == "xml") {
+      options.flags |= OPTION_VIEW_XML;
+      options.input_pairs.push_back(std::make_pair(arg[pos], ""));
     } else {
 
       if((pos + 1) >= arg.size()) {
@@ -72,7 +76,9 @@ void option_input_file(const std::vector<std::string> & arg) {
 
   }
 
-  if(options.input_pairs.size() > 1) srcml_archive_disable_solitary_unit(options.archive);
+  if(options.input_pairs.size() > 1) {
+    srcml_archive_disable_solitary_unit(options.archive);
+  }
 
 }
 
@@ -163,9 +169,6 @@ void option_srcml_bool<ARCHIVE>(int flagged_count) {
 
   if(flagged_count) {
     srcml_archive_disable_solitary_unit(options.archive);
-  }
-  else {
-    srcml_archive_enable_solitary_unit(options.archive);
   }
 
 }
@@ -345,7 +348,8 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   srcml_archive_disable_hash(options.archive);
   srcml_archive_register_namespace(options.archive,
       SRCDIFF_DEFAULT_NAMESPACE_PREFIX.c_str(),
-      SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str());
+      SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()
+  );
 
   CLI::App cli(
     "Translates C, C++, and Java source code into the XML source-code representation srcDiff.\n"
@@ -363,7 +367,8 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "input",
     option_input_file,
     "Pairs of input source files or directories, separated by spaces.\n"
-    "Example: orig1.cpp mod1.cpp orig2.cpp mod2.cpp dir1 dir2 ..."
+    "Example: orig1.cpp mod1.cpp orig2.cpp mod2.cpp dir1 dir2 ...]\n"
+    "srcDiff file with xml extension, requires --unified or --side-by-side"
   );
 
   CLI::Option_group * general_group = cli.add_option_group("General");
@@ -539,18 +544,6 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   //   "Disable splitting strings into multiple nodes"
   // );
 
-  // srcdiff_group->add_flag(
-  //   "--burst",
-  //   option_flag_enable<OPTION_BURST>,
-  //   "Output each input file to a single srcDiff document. -o gives output directory"
-  // );
-
-  // srcdiff_group->add_flag(
-  //   "--srcml",
-  //   option_flag_enable<OPTION_SRCML>,
-  //   "Also, output the original and modified srcML of each file when burst enabled"
-  // );
-
   CLI::Option_group * view_options = cli.add_option_group("View");
   view_options->description(
     "These options configure the view produced by --unified or --side-by-side."
@@ -585,13 +578,6 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
     "Select theme for syntax highlighting.\n"
     "Options: \"default\", \"monokai\", or the filename of a custom theme."
   )->default_val("default");
-
-  view_options->add_option(
-    "--srcdiff",
-    options.view_options.srcdiff_filename,
-    "Output srcdiff in addition to view. Supply the filename for the\n"
-    "srcDiff XML document as the argument for this option."
-  );
 
   view_options->add_flag(
     "--html",
@@ -668,6 +654,14 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
           );
         }
       }
+    }
+
+    if(   is_option(options.flags, OPTION_VIEW_XML)
+      && !is_option(options.flags, OPTION_UNIFIED_VIEW) 
+      && !is_option(options.flags, OPTION_SIDE_BY_SIDE_VIEW)) {
+          throw CLI::ValidationError("XML input requires either --unified or --side-by-side to be set."
+          );
+
     }
 
   } catch (const CLI::ParseError &e) {
