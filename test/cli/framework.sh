@@ -30,7 +30,7 @@
 #   can be made
 
 # current revision number, replaced in expected output strings
-export REVISION=1.0.0
+export REVISION=0.2.0
 
 # construct a temporary directory name based on the test name (without the .sh)
 TEMPDIR=./tmp/$(basename $0 .sh)
@@ -48,21 +48,23 @@ if [[ "$OSTYPE" == 'msys' ]]; then
     export PATH=$PATH:"/c/Program Files/srcML/bin/"
     SRCDIFF="$SRCDIFF_HOME/srcdiff.exe"
     export MSYS2_ARG_CONV_EXCL="*"
-	diff='diff -Z '
+    diff='diff -Z '
 else
     EOL="\n"
-	diff='diff '
-	if [ -z "$SRCDIFF"]; then
+    diff='diff '
+    if [ -z "$SRCDIFF"]; then
 
-	    if [ -e "/usr/bin/srcdiff" ]; then
-	        SRCDIFF='/usr/bin/srcdiff'
-	    fi
+        if [ -e "../../../../../build/bin/srcdiff" ]; then
+            SRCDIFF='../../../../../build/bin/srcdiff'
 
-	    if [ -e "/usr/local/bin/srcdiff" ]; then
-	        SRCDIFF='/usr/local/bin/srcdiff'
-	    fi
+        elif [ -e "/usr/bin/srcdiff" ]; then
+            SRCDIFF='/usr/bin/srcdiff'
 
-	fi
+        elif [ -e "/usr/local/bin/srcdiff" ]; then
+            SRCDIFF='/usr/local/bin/srcdiff'
+        fi
+
+    fi
 fi
 
 function srcdiff () {

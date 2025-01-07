@@ -35,9 +35,8 @@ std::string get_version() {
 
   std::stringstream out;
 
-  out << PROGRAM_NAME << " Version 1\n"
-    << "Using:\n"
-    << "libsrcml " << srcml_version_string() << "\n";
+  out << PROGRAM_NAME << ' ' << "0.2.0\n"
+      << "libsrcml " << srcml_version_string() << "\n";
 
   if(atoi(xmlParserVersion) == LIBXML_VERSION) {
     out << "libxml " << LIBXML_VERSION;

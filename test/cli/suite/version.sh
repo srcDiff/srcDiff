@@ -12,7 +12,7 @@
 source $(dirname "$0")/../framework.sh
 
 define output <<- 'STDOUT'
-	srcdiff Version 1
+	srcdiff REVISION
 	STDOUT
 
 srcdiff --version | head -n 1
