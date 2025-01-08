@@ -7,7 +7,12 @@
 # This file is part of the srcDiff Infrastructure.
 #
 
+
 # include sub directories
+if(BUILD_CLI_TESTS)
+    add_subdirectory(cli)
+endif()
+
 if(BUILD_UNIT_TESTS)
     add_subdirectory(unit)
 endif()
@@ -15,6 +20,7 @@ endif()
 if(BUILD_TRANSLATOR_TESTS)
     add_subdirectory(src)
 endif()
+
 
 # copy test suite over to build directory, so tests run from that directory
 set(TEST_SUITE "test_suite.py")

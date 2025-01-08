@@ -65,3 +65,6 @@ configure_file(${CMAKE_SOURCE_DIR}/package/background.png ${CPACK_PRODUCTBUILD_R
 
 # Conclusion
 configure_file(${CMAKE_SOURCE_DIR}/package/installed.html ${CPACK_PRODUCTBUILD_RESOURCES_DIR}/installed.html COPYONLY)
+
+# Targets for workflow testing
+add_workflow_test_targets(${CMAKE_BINARY_DIR} ${CPACK_OUTPUT_FILE_PREFIX} ${BASE_SRCDIFF_FILE_NAME})

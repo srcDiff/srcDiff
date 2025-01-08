@@ -76,6 +76,25 @@ cpack_add_component(DEVLIBS
 configure_file(${CMAKE_SOURCE_DIR}/README.md ${CMAKE_BINARY_DIR}/README.txt COPYONLY)
 set(CPACK_RESOURCE_FILE_README ${CMAKE_BINARY_DIR}/README.txt)
 
+# Test targets for workflows
+set(SRCDIFF_TEST_TIMEOUT 5 CACHE STRING "ctest timeout in seconds")
+function(add_workflow_test_targets binary_dir output_directory package_file_name)
+
+    # Target for test_client
+    add_custom_target(client
+        WORKING_DIRECTORY ${binary_dir}
+        COMMAND ${CMAKE_CTEST_COMMAND} -R ^srcdiff --timeout ${SRCDIFF_TEST_TIMEOUT} --output-log ${output_directory}/${package_file_name}-client.log || true
+    )
+
+    # Target for test_parser
+    #add_custom_target(test_parser
+    #    WORKING_DIRECTORY ${binary_dir}
+    #    COMMAND ${CMAKE_COMMAND} --build . --target run_parser_tests | tee ${output_directory}/${package_file_name}-parser.log
+    #    DEPENDS gen_parser_tests
+    #)
+
+endfunction()
+
 # Generators are defined in the *.cpack files
 set(CPACK_GENERATOR)
 file(GLOB INSTALLERS "*.cpack")
