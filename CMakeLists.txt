@@ -11,6 +11,9 @@ cmake_minimum_required(VERSION 3.28)
 
 project(srcDiff VERSION "0.5" HOMEPAGE_URL "https://www.srcDiff.org")
 
+enable_testing()
+include(CTest)
+
 if(CMAKE_USE_VCPKG)
   message(STATUS "Building with vcpkg")
   if(DEFINED ENV{VCPKG_ROOT})

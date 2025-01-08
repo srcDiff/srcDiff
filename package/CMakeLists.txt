@@ -80,8 +80,8 @@ set(CPACK_RESOURCE_FILE_README ${CMAKE_BINARY_DIR}/README.txt)
 set(SRCDIFF_TEST_TIMEOUT 5 CACHE STRING "ctest timeout in seconds")
 function(add_workflow_test_targets binary_dir output_directory package_file_name)
 
-    # Target for test_client
-    add_custom_target(client
+    # Target for cli tests
+    add_custom_target(cli
         WORKING_DIRECTORY ${binary_dir}
         COMMAND ${CMAKE_CTEST_COMMAND} -R ^srcdiff --timeout ${SRCDIFF_TEST_TIMEOUT} --output-log ${output_directory}/${package_file_name}-client.log || true
     )
