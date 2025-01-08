@@ -33,8 +33,8 @@ FIELD_WIDTH_URL        = 20
 FIELD_WIDTH_TEST_CASES = int(SHELL_COLUMNS) - (FIELD_WIDTH_LANGUAGE + 1) - (FIELD_WIDTH_URL + 1)
 sperrorlist = []
 
-if os.path.exists("../bin"):
-    executable_path = "../bin"
+if os.path.exists("../../bin"):
+    executable_path = "../../bin"
 else:
     raise Exception("Could not find directory for compiled executables! Are you running from the build directory?")
 
@@ -51,7 +51,8 @@ def main():
     tee = Tee(error_filename)
     parser = build_parser()
     args = arg_catcher()
-    source_dir = "suite"
+    source_dir = "."
+
     # necessary variables for argument holding
     error_list = []
     speclang_list = []
