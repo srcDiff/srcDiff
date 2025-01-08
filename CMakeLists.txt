@@ -44,12 +44,6 @@ if(DISTRO AND DISTRO MATCHES "CentOS|Fedora")
     set(CMAKE_SYSTEM_IGNORE_PATH $ENV{HOME})
 endif()
 
-enable_testing()
-
-option(BUILD_CLI_TESTS  "Build all cli tests" ON)
-option(BUILD_UNIT_TESTS "Build all unit tests" OFF)
-option(BUILD_TRANSLATOR_TESTS "Build all transltor tests" ON)
-
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 20)

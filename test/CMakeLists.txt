@@ -7,6 +7,12 @@
 # This file is part of the srcDiff Infrastructure.
 #
 
+enable_testing()
+include(CTest)
+
+option(BUILD_CLI_TESTS  "Build all cli tests" ON)
+option(BUILD_UNIT_TESTS "Build all unit tests" OFF)
+option(BUILD_TRANSLATOR_TESTS "Build all transltor tests" ON)
 
 # include sub directories
 if(BUILD_CLI_TESTS)
@@ -20,7 +26,6 @@ endif()
 if(BUILD_TRANSLATOR_TESTS)
     add_subdirectory(src)
 endif()
-
 
 # copy test suite over to build directory, so tests run from that directory
 set(TEST_SUITE "test_suite.py")
