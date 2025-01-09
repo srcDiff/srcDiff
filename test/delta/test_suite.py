@@ -51,7 +51,7 @@ def main():
     tee = Tee(error_filename)
     parser = build_parser()
     args = arg_catcher()
-    source_dir = "."
+    source_dir = "suite"
 
     # necessary variables for argument holding
     error_list = []
