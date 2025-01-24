@@ -92,7 +92,7 @@
       "name": "ci-test-unit",
       "description": "Unit Tests",
       "hidden": true,
-      "targets": ["test"]
+      "targets": ["unit"]
     },
     {
       "name": "ci-test-delta",
