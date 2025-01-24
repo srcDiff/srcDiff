@@ -11,5 +11,12 @@
 # test framework
 source $(dirname "$0")/../framework.sh
 
-srcdiff --help
-srcdiff -h
+define output <<- 'STDOUT'
+	Translates C, C++, and Java source code into the XML source-code representation srcDiff.
+	STDOUT
+
+srcdiff --help | head -n 1
+check "$output"
+
+srcdiff -h | head -n 1
+check "$output"

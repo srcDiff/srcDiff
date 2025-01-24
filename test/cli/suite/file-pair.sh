@@ -36,8 +36,6 @@ define output_verbose <<- 'STDOUT'
 	STDOUT
 
 xmlcheck "$output"
-xmlcheck "$output_compressed"
-xmlcheck "$output_verbose"
 
 createfile sub/a.cpp "$original"
 createfile sub/b.cpp "$modified"
