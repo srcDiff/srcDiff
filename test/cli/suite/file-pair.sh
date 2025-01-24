@@ -25,6 +25,10 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
+define output_verbose <<- 'STDOUT'
+	1 sub/a.cpp|sub/b.cpp
+	STDOUT
+
 xmlcheck "$output"
 
 createfile sub/a.cpp "$original"
@@ -35,3 +39,11 @@ check "$output"
 
 srcdiff sub/a.cpp sub/b.cpp -o sub/ab.xml
 check sub/ab.xml "$output"
+
+# Compressed Test
+srcdiff sub/a.cpp sub/b.cpp -o sub/ab_compressed.xml -z
+xmlcheck sub/ab_compressed.xml
+
+# Verbose Test
+srcdiff sub/a.cpp sub/b.cpp -v | head -n 1
+check "$output_verbose"
