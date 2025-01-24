@@ -25,17 +25,19 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-define output_verbose <<- 'STDOUT'
-	1 sub/a.cpp|sub/b.cpp
-	STDOUT
-
 define output_compressed <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" revision="1.0.0" language="C++" filename="sub/a.cpp|sub/b.cpp"><diff:delete type="replace"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:insert>
 	</unit>
 	STDOUT
 
+define output_verbose <<- 'STDOUT'
+	1 sub/a.cpp|sub/b.cpp
+	STDOUT
+
 xmlcheck "$output"
+xmlcheck "$output_compressed"
+xmlcheck "$output_verbose"
 
 createfile sub/a.cpp "$original"
 createfile sub/b.cpp "$modified"
