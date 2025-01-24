@@ -42,12 +42,16 @@
       "inherits": [ "ci-macos", "ci-install-package" ]
     },
     {
+      "name": "ci-test-cli-macos",
+      "inherits": ["ci-test-cli", "ci-macos"]
+    },
+    {
       "name": "ci-test-unit-macos",
       "inherits": ["ci-test-unit", "ci-macos"]
     },
     {
-      "name": "ci-test-suite-macos",
-      "inherits": ["ci-test-suite", "ci-macos"]
+      "name": "ci-test-delta-macos",
+      "inherits": ["ci-test-delta", "ci-macos"]
     }  
   ],
 
@@ -72,8 +76,9 @@
         { "type": "build",     "name": "ci-macos" },    
         { "type": "package",   "name": "ci-macos" },
         { "type": "build",     "name": "ci-install-package-macos" },
-        { "type": "build",     "name": "ci-test-suite-macos" },
-        { "type": "build",     "name": "ci-test-unit-macos" }
+        { "type": "build",     "name": "ci-test-cli-macos"        },
+        { "type": "build",     "name": "ci-test-unit-macos"       },
+        { "type": "build",     "name": "ci-test-delta-macos"      }
       ]
     }
   ]

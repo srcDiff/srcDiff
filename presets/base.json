@@ -83,16 +83,22 @@
       "targets": ["install-package"]
     },
     {
+      "name": "ci-test-cli",
+      "description": "CLI Tests",
+      "hidden": true,
+      "targets": ["cli"]
+    },
+    {
       "name": "ci-test-unit",
       "description": "Unit Tests",
       "hidden": true,
       "targets": ["test"]
     },
     {
-      "name": "ci-test-suite",
-      "description": "Suite Tests",
+      "name": "ci-test-delta",
+      "description": "Delta Tests",
       "hidden": true,
-      "targets": ["suite"]
+      "targets": ["delta"]
     }
   ],
 

@@ -45,12 +45,16 @@
       "inherits": [ "ci-debian", "ci-install-package" ]
     },
     {
+      "name": "ci-test-cli-debian",
+      "inherits": ["ci-test-cli", "ci-debian"]
+    },
+    {
       "name": "ci-test-unit-debian",
       "inherits": ["ci-test-unit", "ci-debian"]
     },
     {
-      "name": "ci-test-suite-debian",
-      "inherits": ["ci-test-suite", "ci-debian"]
+      "name": "ci-test-delta-debian",
+      "inherits": ["ci-test-delta", "ci-debian"]
     }
   ],
 
@@ -75,8 +79,9 @@
         { "type": "build",     "name": "ci-debian" },
         { "type": "package",   "name": "ci-debian" },
         { "type": "build",     "name": "ci-install-package-debian" },
-        { "type": "build",     "name": "ci-test-suite-debian" },
-        { "type": "build",     "name": "ci-test-unit-debian" }
+        { "type": "build",     "name": "ci-test-cli-debian"        },
+        { "type": "build",     "name": "ci-test-unit-debian"       },
+        { "type": "build",     "name": "ci-test-delta-debian"      }
       ]
     }
   ]
