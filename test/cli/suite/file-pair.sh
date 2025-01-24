@@ -29,6 +29,12 @@ define output_verbose <<- 'STDOUT'
 	1 sub/a.cpp|sub/b.cpp
 	STDOUT
 
+define output_compressed <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" revision="1.0.0" language="C++" filename="sub/a.cpp|sub/b.cpp"><diff:delete type="replace"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:insert>
+	</unit>
+	STDOUT
+
 xmlcheck "$output"
 
 createfile sub/a.cpp "$original"
@@ -44,6 +50,11 @@ check sub/ab.xml "$output"
 srcdiff sub/a.cpp sub/b.cpp -o sub/ab_compressed.xml -z
 xmlcheck sub/ab_compressed.xml
 
+srcdiff sub/a.cpp sub/b.cpp -z
+check "$output_compressed"
+
 # Verbose Test
 srcdiff sub/a.cpp sub/b.cpp -v | head -n 1
 check "$output_verbose"
+
+
