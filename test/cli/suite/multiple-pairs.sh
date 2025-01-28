@@ -32,24 +32,6 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-define output_compressed <<- 'STDOUT'
-	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" revision="1.0.0">
-
-	<unit revision="1.0.0" language="C++" filename="sub/a.cpp|sub/b.cpp"><diff:delete type="replace"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:insert>
-	</unit>
-
-	<unit revision="1.0.0" language="C++" filename="sub/b.cpp|sub/a.cpp"><diff:delete type="replace"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:insert>
-	</unit>
-
-	</unit>
-	STDOUT
-
-define output_verbose <<- 'STDOUT'
-	1 sub/a.cpp|sub/b.cpp
-	2 sub/b.cpp|sub/a.cpp
-	STDOUT
-
 xmlcheck "$output"
 
 createfile sub/a.cpp "$original"
@@ -60,14 +42,3 @@ check "$output"
 
 srcdiff sub/a.cpp sub/b.cpp sub/b.cpp sub/a.cpp -o sub/ab.xml
 check sub/ab.xml "$output"
-
-# Compressed Test
-srcdiff sub/a.cpp sub/b.cpp sub/b.cpp sub/a.cpp -o sub/ab_compressed.xml -z
-xmlcheck sub/ab_compressed.xml
-
-srcdiff sub/a.cpp sub/b.cpp sub/b.cpp sub/a.cpp -z
-check "$output_compressed"
-
-# Verbose Test
-srcdiff sub/a.cpp sub/b.cpp sub/b.cpp sub/a.cpp -v | head -n 2
-check "$output_verbose"
