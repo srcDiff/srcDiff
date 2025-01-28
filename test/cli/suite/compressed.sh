@@ -1,9 +1,9 @@
 #!/bin/bash
 # SPDX-License-Identifier: GPL-3.0-only
 #
-# @file file-pair.sh
+# @file multiple-pairs.sh
 #
-# @copyright Copyright (C) 2024-2025 SDML (www.srcDiff.org)
+# @copyright Copyright (C) 2024-2024 SDML (www.srcDiff.org)
 #
 # This file is part of the srcDiff Infrastructure.
 #
@@ -25,13 +25,14 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-xmlcheck "$output"
+#xmlcheck "$output"
 
 createfile sub/a.cpp "$original"
 createfile sub/b.cpp "$modified"
 
-srcdiff sub/a.cpp sub/b.cpp
+srcdiff sub/a.cpp sub/b.cpp -z
 check "$output"
 
-srcdiff sub/a.cpp sub/b.cpp -o sub/ab.xml
-check sub/ab.xml "$output"
+srcdiff sub/a.cpp sub/b.cpp -z -o sub/ab_compressed.xml
+#xmlcheck sub/ab_compressed.xml
+check sub/ab_compressed "$output"

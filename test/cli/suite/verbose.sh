@@ -1,7 +1,7 @@
 #!/bin/bash
 # SPDX-License-Identifier: GPL-3.0-only
 #
-# @file version.sh
+# @file verbose.sh
 #
 # @copyright Copyright (C) 2024-2025 SDML (www.srcDiff.org)
 #
@@ -11,12 +11,20 @@
 # test framework
 source $(dirname "$0")/../framework.sh
 
+define original <<- 'SOURCE'
+	a;
+	SOURCE
+
+define modified <<- 'SOURCE'
+	b;
+	SOURCE
+
 define output <<- 'STDOUT'
-	srcdiff REVISION
+	1 sub/a.cpp|sub/b.cpp
 	STDOUT
 
-srcdiff --version | head -n 1
-check "$output"
+createfile sub/a.cpp "$original"
+createfile sub/b.cpp "$modified"
 
-srcdiff -V | head -n 1
+srcdiff sub/a.cpp sub/b.cpp -v | head -n 1
 check "$output"
