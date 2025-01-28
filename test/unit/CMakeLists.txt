@@ -22,8 +22,8 @@ macro(add_unit_test TEST_FILE)
 
     add_executable(${TEST_NAME} ${TEST_FILE})
     target_link_libraries(${TEST_NAME} ${ARGN} srcdiff_static srcML::LibsrcML LibXml2::LibXml2 $<TARGET_OBJECTS:common> ${ARGN})
-    add_test(NAME ${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
     set_target_properties(${TEST_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+    add_test(NAME unit.${TEST_NAME} COMMAND $<TARGET_FILE:${TEST_NAME}>)
 
 endmacro()
 

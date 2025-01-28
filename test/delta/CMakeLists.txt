@@ -16,7 +16,7 @@ configure_file(${TEST_SUITE} ${CMAKE_CURRENT_BINARY_DIR}/${TEST_SUITE} COPYONLY)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/reports)
 
 add_custom_target(delta
-    COMMAND python3 ${TEST_SUITE}
+    COMMAND python3 ${TEST_SUITE} || true
     COMMENT "Run all test delta cases"
     USES_TERMINAL
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}

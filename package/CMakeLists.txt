@@ -86,12 +86,11 @@ function(add_workflow_test_targets binary_dir output_directory package_file_name
         COMMAND ${CMAKE_CTEST_COMMAND} -R ^srcdiff --timeout ${SRCDIFF_TEST_TIMEOUT} --output-log ${output_directory}/${package_file_name}-client.log || true
     )
 
-    # Target for test_parser
-    #add_custom_target(test_parser
-    #    WORKING_DIRECTORY ${binary_dir}
-    #    COMMAND ${CMAKE_COMMAND} --build . --target run_parser_tests | tee ${output_directory}/${package_file_name}-parser.log
-    #    DEPENDS gen_parser_tests
-    #)
+    # Target for unit tests
+    add_custom_target(unit
+        WORKING_DIRECTORY ${binary_dir}
+        COMMAND ${CMAKE_CTEST_COMMAND} -R ^unit --timeout ${SRCDIFF_TEST_TIMEOUT} --output-log ${output_directory}/${package_file_name}-unit.log || true
+    )
 
 endfunction()
 
