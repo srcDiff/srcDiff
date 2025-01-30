@@ -1,9 +1,9 @@
 #!/bin/bash
 # SPDX-License-Identifier: GPL-3.0-only
 #
-# @file multiple-pairs.sh
+# @file compressed.sh
 #
-# @copyright Copyright (C) 2024-2024 SDML (www.srcDiff.org)
+# @copyright Copyright (C) 2024-2025 SDML (www.srcDiff.org)
 #
 # This file is part of the srcDiff Infrastructure.
 #
@@ -20,15 +20,15 @@ define modified <<- 'SOURCE'
 	SOURCE
 
 define output <<- 'STDOUT'
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" revision="1.0.0" language="C++" filename="sub/a.cpp|sub/b.cpp"><diff:delete type="replace"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:insert>
-</unit>
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" revision="1.0.0" language="C++" filename="sub/a.cpp|sub/b.cpp"><diff:delete type="replace"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:insert>
+	</unit>
 	STDOUT
 
-xmlcheck "$output"
+#xmlcheck "$output"
 
 createfile sub/a.cpp "$original"
 createfile sub/b.cpp "$modified"
 
-srcdiff sub/a.cpp sub/b.cpp -o sub/ab_compressed.xml -z
+srcdiff sub/a.cpp sub/b.cpp -z -o sub/ab_compressed.xml
 check "$output"

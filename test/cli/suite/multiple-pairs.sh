@@ -3,7 +3,7 @@
 #
 # @file multiple-pairs.sh
 #
-# @copyright Copyright (C) 2024-2024 SDML (www.srcDiff.org)
+# @copyright Copyright (C) 2024-2025 SDML (www.srcDiff.org)
 #
 # This file is part of the srcDiff Infrastructure.
 #
