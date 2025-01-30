@@ -25,10 +25,10 @@ define output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-#xmlcheck "$output"
+xmlcheck "$output"
 
 createfile sub/a.cpp "$original"
 createfile sub/b.cpp "$modified"
 
 srcdiff sub/a.cpp sub/b.cpp -z -o sub/ab_compressed.xml
-check "$output"
+check sub/ab_compressed.xml "$output"
