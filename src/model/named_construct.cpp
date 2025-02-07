@@ -13,6 +13,8 @@ std::shared_ptr<const name_t> named_construct::name() const {
     if(name_child) return *name_child;
 
     name_child = std::static_pointer_cast<const name_t>(find_child("name"));
+    if(!name_child) name_child = std::shared_ptr<const name_t>();
+
     return *name_child;
 }
 

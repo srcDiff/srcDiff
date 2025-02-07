@@ -597,13 +597,13 @@ void view_t::charactersRoot(const char * ch [[maybe_unused]], int len [[maybe_un
  */
 void view_t::charactersUnit(const char * ch, int len) {
 
-  // Need diff on stack for this but not others so use srcml_element_stack here only
-  if(!save_name && srcml_element_stack.size() > 1 && srcml_element_stack.back() == "diff:delete" 
-    && (srcml_element_stack.at(srcml_element_stack.size() - 2) == "name"
-      || srcml_element_stack.at(srcml_element_stack.size() - 2) == "operator")) {
+  // Need diff on stack for this but not others so use element_stack here only
+  if(!save_name && element_stack.size() > 1 && element_stack.back() == "diff:delete" 
+    && (element_stack.at(element_stack.size() - 2) == "name"
+      || element_stack.at(element_stack.size() - 2) == "operator")) {
 
     save_name = true;
-    saved_name_type = srcml_element_stack.at(srcml_element_stack.size() - 2);
+    saved_name_type = element_stack.at(element_stack.size() - 2);
 
   }
 
