@@ -26,6 +26,6 @@ define output <<- 'STDOUT'
 createfile sub/a.cpp "$original"
 createfile sub/b.cpp "$modified"
 
-srcdiff sub/a.cpp sub/b.cpp -u | head -n 1
+srcdiff sub/a.cpp sub/b.cpp -u
 
 check "$output"
