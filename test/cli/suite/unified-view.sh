@@ -20,12 +20,14 @@ define modified <<- 'SOURCE'
 	SOURCE
 
 define output <<- 'STDOUT'
-	\x1b[0m\x1b[0m\x1b[36m@@ -1 +1 @@\x1b[0m
+\x1b[36m@@ -1 +1 @@\x1b[0m
+\x1b[9;48;5;217;1ma;\x1b[0m\x1b[4;48;5;120;1mb;\x1b[0m
+\ No newline at end of file 
 	STDOUT
 
 createfile sub/a.cpp "$original"
 createfile sub/b.cpp "$modified"
 
-srcdiff sub/a.cpp sub/b.cpp -u
+srcdiff sub/a.cpp sub/b.cpp -u | head -n 3
 
 check "$output"
