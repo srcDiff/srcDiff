@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # SPDX-License-Identifier: GPL-3.0-only
 #
 # @file unified-view.sh
@@ -19,13 +19,16 @@ define modified <<- 'SOURCE'
 	b;
 	SOURCE
 
-define output <<- 'STDOUT'
+define_no_eof_nl output <<- 'STDOUT'
 	\x1b[0m\x1b[0m\x1b[36m@@ -1 +1 @@\x1b[0m
+	\x1b[9;48;5;217;1ma;\x1b[48;5;120;1mb;\x1b[0m
+	\x1b[0m
 	STDOUT
 
 createfile sub/a.cpp "$original"
 createfile sub/b.cpp "$modified"
+createfile sub/out.txt "$output"
 
-srcdiff sub/a.cpp sub/b.cpp -u | head -n 1
+srcdiff sub/a.cpp sub/b.cpp -u
 
 check "$output"

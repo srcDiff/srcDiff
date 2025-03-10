@@ -93,6 +93,20 @@ define() {
     eval $1=\${$1//REVISION/${REVISION}}
 }
 
+# variable $1 is set to the contents of stdin
+define_no_eof_nl() {
+
+    # read stdin into variable $1
+    IFS= read -r -d '' $1 || true
+
+    # replace any mention of REVISION with the revision number,
+    eval $1=\${$1//REVISION/${REVISION}}
+
+    # remove eof newline
+    eval $1=\"\${"$1"::-1}\"
+
+}
+
 # file with name $1 is created from the contents of string variable $2
 # created files are recorded so that cleanup can occur
 createfile() {
