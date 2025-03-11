@@ -193,11 +193,19 @@ factory_map_type factory_map = {
 
   {"synchronized", generate_factory<construct, nest::block>() },
 
-  {"static", generate_factory<construct, nest::custom<"decl_stmt">>() },
 
   {"ternary", generate_factory<construct, nest::custom<"ternary", "call", "operator", "literal", "expr", "name">>() },
 
   {"extern", generate_factory<construct, nest::always>() },
+
+
+  // java
+  {"static", generate_factory<construct, nest::custom<"decl_stmt">>() },
+
+  {"extends",    generate_factory<construct, nest::rule_checker, convert::custom<"extends", "implements", "permits">>() },
+  {"implements", generate_factory<construct, nest::rule_checker, convert::custom<"extends", "implements", "permits">>() },
+  {"permits",    generate_factory<construct, nest::rule_checker, convert::custom<"extends", "implements", "permits">>() },
+
 
 };
 

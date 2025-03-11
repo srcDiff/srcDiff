@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Java" url="class">
+
+<unit language="Java" filename="super_list|super_list">
+<class>class <name>foo</name> <super_list><diff:delete type="convert"><extends>extends<diff:insert type="convert"><implements>implements<diff:common> <super><name>bar</name></super></diff:common></implements></diff:insert></extends></diff:delete></super_list> <block>{}</block></class>
+</unit>
+
+</unit>
