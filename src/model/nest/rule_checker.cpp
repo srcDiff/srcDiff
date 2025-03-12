@@ -29,7 +29,7 @@ bool rule_checker::can_nest(const construct& modified) const {
 }
 
 bool rule_checker::can_nest_internal(const construct& modified) const {
-  return nestable_constructs.find(modified.root_term_name()) != nestable_constructs.end();;
+  return nestable_constructs.find(modified.root_term_name()) != nestable_constructs.end();
 }
 
 bool rule_checker::can_nest_same(const construct& modified) const {
