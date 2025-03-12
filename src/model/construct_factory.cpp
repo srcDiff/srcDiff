@@ -75,7 +75,7 @@ factory_function generate_factory() {
           };
 }
 
-typedef nest::custom<"expr", "call", "operator", "literal", "name">
+typedef nest::custom<"expr", "call", "operator", "literal", "name", "switch">
         expr_nest;
 
 typedef nest::custom<"function", "constructor", "destructor",
@@ -127,38 +127,38 @@ factory_map_type factory_map = {
   {"while",     generate_factory<conditional, nest::block, convert::conditional>() },
   {"switch",    generate_factory<conditional, nest::rule_checker>() },
   {"do",        generate_factory<conditional, nest::rule_checker>() },
-  {"condition", generate_factory<condition, expr_nest>() },
+  {"condition", generate_factory<condition,   expr_nest>() },
 
   {"if_stmt", generate_factory<if_stmt, nest::block, convert::conditional>() },
-  {"if",      generate_factory<if_t, nest::block>() },
-  {"elseif",  generate_factory<elseif, nest::block, convert::else_t>() },
-  {"else",    generate_factory<else_t, else_nest, convert::else_t>() },
+  {"if",      generate_factory<if_t,    nest::block>() },
+  {"elseif",  generate_factory<elseif,  nest::block, convert::else_t>() },
+  {"else",    generate_factory<else_t,  else_nest, convert::else_t>() },
 
   {"for",     generate_factory<for_t, nest::block, convert::conditional>() },
   {"foreach", generate_factory<for_t, nest::block, convert::conditional>() },
 
   {"case", generate_factory<case_t>() },
 
-  {"call",          generate_factory<call, expr_nest>() },
+  {"call",          generate_factory<call,         expr_nest>() },
   {"argument_list", generate_factory<always_match, expr_nest>() },
   {"argument",      generate_factory<always_match, expr_nest>() },
-  {"expr",          generate_factory<expr_t, nest::expr_t>() },
+  {"expr",          generate_factory<expr_t,       nest::expr_t>() },
 
-  {"decl",      generate_factory<named_construct, nest::custom<"expr">>() },
+  {"decl",      generate_factory<named_construct, nest::custom<"expr", "switch">>() },
   {"parameter", generate_factory<identifier_decl>() },
   {"param",     generate_factory<identifier_decl>() },
 
-  {"expr_stmt", generate_factory<expr_stmt, nest::similar, convert::expr_construct>() },
-  {"return",    generate_factory<expr_construct, nest::rule_checker, convert::expr_construct>() },
+  {"expr_stmt", generate_factory<expr_stmt,      nest::similar,          convert::expr_construct>() },
+  {"return",    generate_factory<expr_construct, nest::custom<"switch">, convert::expr_construct>() },
 
-  {"decl_stmt", generate_factory<decl_stmt, nest::rule_checker, convert::expr_construct>() },
+  {"decl_stmt", generate_factory<decl_stmt, nest::custom<"switch">, convert::expr_construct>() },
 
   {"cast", generate_factory<construct, nest::rule_checker, convert::custom<"cast">>() },
 
   {"type",          generate_factory<always_match>() },
   {"then",          generate_factory<always_match, then_nest>() },
-  {"control",       generate_factory<always_match, nest::custom<"condition", "comment">>() },
-  {"init",          generate_factory<always_match, nest::custom<"expr">>() },
+  {"control",       generate_factory<always_match, nest::custom<"condition", "comment", "switch">>() },
+  {"init",          generate_factory<always_match, nest::custom<"expr", "switch">>() },
   {"default",       generate_factory<always_match>() },
   {"range",         generate_factory<always_match>() },
   {"signal",        generate_factory<always_match>() },

@@ -17,7 +17,7 @@ rule_checker::rule_checker(const construct& client, const string_set& convertabl
   : client(client), convertable_constructs(convertable_constructs) {}
 
 bool rule_checker::is_tag_convertable(const construct & modified) const {
-  return convertable_constructs.find(modified.root_term_name()) != convertable_constructs.end();;;
+  return convertable_constructs.find(modified.root_term_name()) != convertable_constructs.end();
 }
 
 bool rule_checker::is_convertable(const construct & modified) const {
