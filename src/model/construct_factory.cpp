@@ -47,6 +47,7 @@
 #include <nest/name.hpp>
 #include <nest/expr.hpp>
 #include <nest/always.hpp>
+#include <nest/expr_stmt.hpp>
 
 #include <convert/rule_checker.hpp>
 #include <convert/custom.hpp>
@@ -148,7 +149,7 @@ factory_map_type factory_map = {
   {"parameter", generate_factory<identifier_decl>() },
   {"param",     generate_factory<identifier_decl>() },
 
-  {"expr_stmt", generate_factory<expr_stmt,      nest::similar,          convert::expr_construct>() },
+  {"expr_stmt", generate_factory<expr_stmt,      nest::expr_stmt,        convert::expr_construct>() },
   {"return",    generate_factory<expr_construct, nest::custom<"switch">, convert::expr_construct>() },
 
   {"decl_stmt", generate_factory<decl_stmt, nest::custom<"switch">, convert::expr_construct>() },

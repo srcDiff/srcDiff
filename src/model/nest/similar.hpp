@@ -16,7 +16,7 @@ namespace nest {
 
 class similar : public rule_checker {
 public:
-    similar(const construct& client) : rule_checker(client, {}) {
+    similar(const construct& client, const string_set& nestable_constructs = {}) : rule_checker(client, {}) {
     }
 
     virtual bool check_nest(const construct & modified) const;
