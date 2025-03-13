@@ -207,7 +207,6 @@ factory_map_type factory_map = {
   {"implements", generate_factory<construct, nest::rule_checker, convert::custom<"extends", "implements", "permits">>() },
   {"permits",    generate_factory<construct, nest::rule_checker, convert::custom<"extends", "implements", "permits">>() },
 
-
 };
 
 std::shared_ptr<construct> create_construct(const construct* parent, std::size_t & start) {
