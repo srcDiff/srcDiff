@@ -106,10 +106,11 @@ factory_map_type factory_map = {
   {"name", generate_factory<name_t, nest::name_t>() },
 
   // // class-type
-  {"class",  generate_factory<named_construct, class_nest, convert::class_t>() },
-  {"struct", generate_factory<named_construct, class_nest, convert::class_t>() },
-  {"union",  generate_factory<named_construct, class_nest, convert::class_t>() },
-  {"enum",   generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"class",      generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"struct",     generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"union",      generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"enum",       generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"interface",  generate_factory<named_construct, class_nest, convert::class_t>() },
 
   // access regions
   {"public",    generate_factory<always_match, class_nest, convert::custom<"public", "private", "protected">>() },
