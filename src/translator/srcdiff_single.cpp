@@ -11,7 +11,7 @@
 
 #include <constants.hpp>
 #include <change_stream.hpp>
-#include <srcdiff_comment.hpp>
+#include <comment_differ.hpp>
 #include <common_stream.hpp>
 #include <differ.hpp>
 #include <whitespace_stream.hpp>
@@ -63,7 +63,7 @@ void srcdiff_single::output_recursive_same() {
 
         construct::construct_list children_modified = modified_construct->children();
 
-        srcdiff_comment diff(out, children_original, children_modified);
+        srcdiff::comment_differ diff(out, children_original, children_modified);
         diff.output();
 
     } else {
