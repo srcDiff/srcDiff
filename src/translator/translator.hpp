@@ -12,7 +12,7 @@
 
 #include <input_stream.hpp>
 #include <output_stream.hpp>
-#include <srcdiff_options.hpp>
+#include <options.hpp>
 #include <differ.hpp>
 #include <whitespace_stream.hpp>
 #include <methods.hpp>
@@ -50,7 +50,7 @@ public:
   // constructor
   translator(const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method, srcml_archive * archive,
                      const std::optional<std::string> & unit_filename,
-                     const srcdiff_options::view_options_t & view_options,
+                     const client::options::view_options_t & view_options,
                      const std::optional<std::string> & summary_type_str);
 
   // destructor

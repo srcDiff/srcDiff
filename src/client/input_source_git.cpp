@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_input_source_git.cpp
+ * @file input_source_git.cpp
  *
  * @copyright Copyright (C) 2015-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_input_source_git.hpp>
+#include <input_source_git.hpp>
 
 #include <srcdiff_input.hpp>
 
@@ -52,8 +52,8 @@ std::filesystem::path unique_path() {
 
 }
 
-srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & options)
-  : srcdiff_input_source_local(options), clean_path(false) {
+input_source_git::input_source_git(const options & options)
+  : input_source_local(options), clean_path(false) {
 
   // half is what is used by gxargs
   arg_max = sysconf(_SC_ARG_MAX) / 2;
@@ -150,7 +150,7 @@ srcdiff_input_source_git::srcdiff_input_source_git(const srcdiff_options & optio
   if (checkout_modified_error) throw std::string("Unable to checkout " + options.git_revision_two);
 }
 
-srcdiff_input_source_git::~srcdiff_input_source_git() {
+input_source_git::~input_source_git() {
 
   if(clean_path) {
 
@@ -170,7 +170,7 @@ srcdiff_input_source_git::~srcdiff_input_source_git() {
 
 }
 
-void srcdiff_input_source_git::consume() {
+void input_source_git::consume() {
 
   if(options.files_from_name) {
     files_from();
@@ -186,7 +186,7 @@ void srcdiff_input_source_git::consume() {
 
 }
 
-std::string srcdiff_input_source_git::process_file(const std::optional<std::string> & path_original,
+std::string input_source_git::process_file(const std::optional<std::string> & path_original,
                                                    const std::optional<std::string> & path_modified) {
 
   const char * language_string = get_language(path_original, path_modified);
@@ -208,14 +208,14 @@ std::string srcdiff_input_source_git::process_file(const std::optional<std::stri
 
   }
 
-  srcdiff_input<srcdiff_input_source_local> input_original(options.archive, path_one_full, language_string, options.flags, *this);
-  srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_two_full, language_string, options.flags, *this);
+  srcdiff_input<input_source_local> input_original(options.archive, path_one_full, language_string, options.flags, *this);
+  srcdiff_input<input_source_local> input_modified(options.archive, path_two_full, language_string, options.flags, *this);
 
   return translator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
 
 }
 
-void srcdiff_input_source_git::process_directory(const std::optional<std::string> & directory_original,
+void input_source_git::process_directory(const std::optional<std::string> & directory_original,
                                                  const std::optional<std::string> & directory_modified) {
 
 #ifndef _MSC_BUILD
@@ -476,7 +476,7 @@ void srcdiff_input_source_git::process_directory(const std::optional<std::string
   
 }
 
-void srcdiff_input_source_git::process_files_from() {
+void input_source_git::process_files_from() {
 
   try {
 

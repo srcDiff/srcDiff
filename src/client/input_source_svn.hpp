@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_input_source_svn.hpp
+ * @file input_source_svn.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
@@ -12,7 +12,7 @@
 #ifndef INCLUDED_SRCDIFF_INPUT_SOURCE_SVN_HPP
 #define INCLUDED_SRCDIFF_INPUT_SOURCE_SVN_HPP
 
-#include <srcdiff_input_source.hpp>
+#include <input_source.hpp>
 
 #include <apr.h>
 #include <svn_fs.h>
@@ -26,7 +26,7 @@
 #include <svn_string.h>
 #include <svn_subst.h>
 
-class srcdiff_input_source_svn : public srcdiff_input_source {
+class input_source_svn : public input_source {
 
 protected:
 
@@ -40,8 +40,8 @@ private:
 
 public:
 
-  srcdiff_input_source_svn(const srcdiff_options & options);
-  virtual ~srcdiff_input_source_svn();
+  input_source_svn(const options & options);
+  virtual ~input_source_svn();
 
   virtual void consume();
 

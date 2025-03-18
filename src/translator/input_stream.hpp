@@ -11,8 +11,8 @@
 #define INCLUDED_INPUT_STREAM_HPP
 
 #include <srcml_nodes.hpp>
-#include <srcdiff_options.hpp>
 #include <srcml_converter.hpp>
+#include <options.hpp>
 
 #include <srcml.h>
 

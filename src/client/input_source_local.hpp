@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_input_source_local.hpp
+ * @file input_source_local.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
@@ -10,14 +10,14 @@
 #ifndef INCLUDED_SRCDIFF_INPUT_SOURCE_LOCAL_HPP
 #define INCLUDED_SRCDIFF_INPUT_SOURCE_LOCAL_HPP
 
-#include <srcdiff_input_source.hpp>
+#include <input_source.hpp>
 
 #include <fstream>
 
 #include <sys/stat.h>
 #include <filesystem>
 
-class srcdiff_input_source_local : public srcdiff_input_source {
+class input_source_local : public input_source {
 
 protected:
 
@@ -25,8 +25,8 @@ protected:
 
 public:
 
-  srcdiff_input_source_local(const srcdiff_options & options);
-  virtual ~srcdiff_input_source_local();
+  input_source_local(const srcdiff::client::options & options);
+  virtual ~input_source_local();
 
   virtual void consume();
 

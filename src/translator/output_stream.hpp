@@ -12,7 +12,7 @@
 
 #include <namespace.hpp>
 #include <srcml_nodes.hpp>
-#include <srcdiff_options.hpp>
+#include <options.hpp>
 
 #include <methods.hpp>
 #include <constants.hpp>
@@ -145,7 +145,7 @@ public:
                  const std::string & srcdiff_filename,
                  const OPTION_TYPE & flags,
                  const METHOD_TYPE & method,
-                 const srcdiff_options::view_options_t & view_options,
+                 const client::options::view_options_t & view_options,
                  const std::optional<std::string> & summary_type_str);
   virtual ~output_stream();
 

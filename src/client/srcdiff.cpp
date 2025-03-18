@@ -7,12 +7,12 @@
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_options.hpp>
+#include <options.hpp>
 
-#include <srcdiff_input_source.hpp>
-#include <srcdiff_input_source_local.hpp>
-#include <srcdiff_input_source_svn.hpp>
-#include <srcdiff_input_source_git.hpp>
+#include <input_source.hpp>
+#include <input_source_local.hpp>
+#include <input_source_svn.hpp>
+#include <input_source_git.hpp>
 
 #include <srcml.h>
 
@@ -20,7 +20,7 @@
 
 void srcdiff_libxml_error(void *ctx [[maybe_unused]], const char *msg [[maybe_unused]], ...) {}
 
-srcdiff_input_source * next_input_source(const srcdiff_options & options);
+input_source * next_input_source(const srcdiff::client::options & options);
 
 int main(int argc, char* argv[]) {
 
@@ -32,9 +32,9 @@ int main(int argc, char* argv[]) {
   initGenericErrorDefaultFunc(&handler);
 
   // process command-line arguments
-  const srcdiff_options & options = process_command_line(argc, argv);
+  const srcdiff::client::options & options = srcdiff::client::process_command_line(argc, argv);
 
-  srcdiff_input_source * input = next_input_source(options);
+  input_source * input = next_input_source(options);
 
   if(input) {
 
@@ -66,9 +66,9 @@ int main(int argc, char* argv[]) {
 
 }
 
-srcdiff_input_source * next_input_source(const srcdiff_options & options) {
+input_source * next_input_source(const srcdiff::client::options & options) {
 
-  srcdiff_input_source * input = nullptr;
+  input_source * input = nullptr;
 
 #if SVN
 
@@ -76,7 +76,7 @@ srcdiff_input_source * next_input_source(const srcdiff_options & options) {
 
     try {
 
-      input = new srcdiff_input_source_svn(options);
+      input = new input_source_svn(options);
 
     } catch(const std::string & error) {
 
@@ -97,7 +97,7 @@ srcdiff_input_source * next_input_source(const srcdiff_options & options) {
 
     try {
 
-      input = new srcdiff_input_source_git(options);
+      input = new input_source_git(options);
 
     } catch(const std::string & error) {
 
@@ -114,7 +114,7 @@ srcdiff_input_source * next_input_source(const srcdiff_options & options) {
 
     try {
 
-     input = new srcdiff_input_source_local(options);
+     input = new input_source_local(options);
 
     } catch(const std::string & error) {
 

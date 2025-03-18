@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_input_source_local.cpp
+ * @file input_source_local.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_input_source_local.hpp>
+#include <input_source_local.hpp>
 
 #include <srcml.h>
 
@@ -21,16 +21,16 @@
 #include <sstream>
 
 
-srcdiff_input_source_local::srcdiff_input_source_local(const srcdiff_options & options) : srcdiff_input_source(options) {
+input_source_local::input_source_local(const srcdiff::client::options & options) : input_source(options) {
   output_file = std::filesystem::directory_entry(options.srcdiff_filename);
 }
 
-srcdiff_input_source_local::~srcdiff_input_source_local() {
+input_source_local::~input_source_local() {
 }
 
 // determines whether the input path(s) exist and whether they are files or
 // directories, and then processes them
-void srcdiff_input_source_local::consume()
+void input_source_local::consume()
 {
 
   if (options.files_from_name) {
@@ -73,7 +73,7 @@ void srcdiff_input_source_local::consume()
   }
 }
 
-std::string srcdiff_input_source_local::process_file(const std::optional<std::string> & path_original,
+std::string input_source_local::process_file(const std::optional<std::string> & path_original,
                                                      const std::optional<std::string> & path_modified) {
 
   if(path_modified == "") {
@@ -99,13 +99,13 @@ std::string srcdiff_input_source_local::process_file(const std::optional<std::st
 
   }
 
-  srcdiff::input_stream<srcdiff_input_source_local> input_original(options.archive, path_original, language_string, options.flags, *this);
-  srcdiff::input_stream<srcdiff_input_source_local> input_modified(options.archive, path_modified, language_string, options.flags, *this);
+  srcdiff::input_stream<input_source_local> input_original(options.archive, path_original, language_string, options.flags, *this);
+  srcdiff::input_stream<input_source_local> input_modified(options.archive, path_modified, language_string, options.flags, *this);
   return translator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
 
 }
 
-void srcdiff_input_source_local::process_directory(const std::optional<std::string> & directory_original,
+void input_source_local::process_directory(const std::optional<std::string> & directory_original,
                                                    const std::optional<std::string> & directory_modified) {
 
   std::filesystem::directory_entry original_entry(directory_original ? *directory_original : "");
@@ -213,7 +213,7 @@ void srcdiff_input_source_local::process_directory(const std::optional<std::stri
 }
 
 
-void srcdiff_input_source_local::process_files_from() {
+void input_source_local::process_files_from() {
 
 #define FILELIST_COMMENT '#'
 
@@ -222,7 +222,7 @@ void srcdiff_input_source_local::process_files_from() {
     // translate all the filenames listed in the named file
 
     input_context * context = open(options.files_from_name->c_str());
-    uri_stream<srcdiff_input_source_local> uriinput(context);
+    uri_stream<input_source_local> uriinput(context);
 
     const char * c_line = 0;
     while ((c_line = uriinput.readline())) {
@@ -253,7 +253,7 @@ void srcdiff_input_source_local::process_files_from() {
 
 }
 
-srcdiff_input_source_local::input_context * srcdiff_input_source_local::open(const char * uri) const {
+input_source_local::input_context * input_source_local::open(const char * uri) const {
 
   input_context * context = new input_context;
 
@@ -263,7 +263,7 @@ srcdiff_input_source_local::input_context * srcdiff_input_source_local::open(con
 
 }
 
-ssize_t srcdiff_input_source_local::read(void * context, void * buffer, size_t len) {
+ssize_t input_source_local::read(void * context, void * buffer, size_t len) {
 
   input_context * ctx = (input_context *)context;
 
@@ -272,7 +272,7 @@ ssize_t srcdiff_input_source_local::read(void * context, void * buffer, size_t l
   return ctx->in.gcount();
 }
 
-int srcdiff_input_source_local::close(void * context) {
+int input_source_local::close(void * context) {
 
   input_context * ctx = (input_context *)context;
 

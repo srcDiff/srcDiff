@@ -13,13 +13,13 @@ file(GLOB CLIENT_SOURCE *.cpp)
 
 if(NOT SVN_ENABLED)
 
-    list(REMOVE_ITEM CLIENT_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_input_source_svn.cpp)
+    list(REMOVE_ITEM CLIENT_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/input_source_svn.cpp)
 
 endif()
 
 if(NOT GIT_ENABLED)
 
-    list(REMOVE_ITEM CLIENT_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_input_source_git.cpp)
+    list(REMOVE_ITEM CLIENT_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/input_source_git.cpp)
 
 endif()
 

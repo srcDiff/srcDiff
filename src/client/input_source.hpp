@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_input_source.hpp
+ * @file input_source.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_SRCDIFF_INPUT_SOURCE_HPP
-#define INCLUDED_SRCDIFF_INPUT_SOURCE_HPP
+#ifndef INCLUDED_NPUT_SOURCE_HPP
+#define INCLUDED_NPUT_SOURCE_HPP
 
-#include <srcdiff_options.hpp>
+#include <options.hpp>
 #include <translator.hpp>
 #include <view.hpp>
 
@@ -25,11 +25,11 @@
 #define PATH_SEPARATOR '/'
 #endif
 
-class srcdiff_input_source {
+class input_source {
 
 protected:
 
-  const srcdiff_options& options;
+  const srcdiff::client::options& options;
   std::unique_ptr<srcdiff::translator> translator;
   std::unique_ptr<view_t> view;
 
@@ -48,8 +48,8 @@ private:
 
 public:
 
-  srcdiff_input_source(const srcdiff_options & options);
-  virtual ~srcdiff_input_source();
+  input_source(const srcdiff::client::options & options);
+  virtual ~input_source();
 
   virtual void consume() = 0;
   virtual const char * get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified);

@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_input_source_svn.cpp
+ * @file input_source_svn.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_input_source_svn.hpp>
+#include <input_source_svn.hpp>
 
 #include <srcdiff_input.hpp>
 
@@ -35,7 +35,7 @@ int abortfunc(int retcode) {
   return retcode;
 }
 
-srcdiff_input_source_svn::srcdiff_input_source_svn(const srcdiff_options & options) : srcdiff_input_source(options) {
+input_source_svn::input_source_svn(const options & options) : input_source(options) {
 
 
   apr_initialize();
@@ -94,7 +94,7 @@ srcdiff_input_source_svn::srcdiff_input_source_svn(const srcdiff_options & optio
 
 }
 
-srcdiff_input_source_svn::~srcdiff_input_source_svn() {
+input_source_svn::~input_source_svn() {
 
   apr_pool_destroy(pool);
 
@@ -102,7 +102,7 @@ srcdiff_input_source_svn::~srcdiff_input_source_svn() {
 
 }
 
-void srcdiff_input_source_svn::consume() {
+void input_source_svn::consume() {
 
   if(options.files_from_name)                              files_from();
   else if(is_option(options.flags, OPTION_SVN_CONTINUOUS)) session_range();
@@ -110,7 +110,7 @@ void srcdiff_input_source_svn::consume() {
 
 }
 
-const char * srcdiff_input_source_svn::get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified) {
+const char * input_source_svn::get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified) {
 
   const char * archive_language = srcml_archive_get_language(options.archive);
   if (archive_language) {
@@ -125,7 +125,7 @@ const char * srcdiff_input_source_svn::get_language(const std::optional<std::str
 
 }
 
-void srcdiff_input_source_svn::session_single() {
+void input_source_svn::session_single() {
 
   this->revision_one = options.revision_one;
   this->revision_two = options.revision_two;
@@ -153,7 +153,7 @@ void srcdiff_input_source_svn::session_single() {
 
 
 
-void srcdiff_input_source_svn::session_range() {
+void input_source_svn::session_range() {
 
   const svn_revnum_t & start_revision = options.revision_one;
 
@@ -194,7 +194,7 @@ void srcdiff_input_source_svn::session_range() {
 
 }
 
-std::string srcdiff_input_source_svn::process_file(const std::optional<std::string> & path_original,
+std::string input_source_svn::process_file(const std::optional<std::string> & path_original,
                                                    const std::optional<std::string> & path_modified) {
 
   const char * language_string = get_language(path_original, path_modified);
@@ -224,14 +224,14 @@ std::string srcdiff_input_source_svn::process_file(const std::optional<std::stri
   std::string svn_path_original_temp = svn_path_original.str();
   std::string svn_path_modified_temp = svn_path_modified.str();
 
-  srcdiff_input<srcdiff_input_source_svn> input_original(options.archive, svn_path_original_temp, language_string, 0, *this);
-  srcdiff_input<srcdiff_input_source_svn> input_modified(options.archive, svn_path_modified_temp, language_string, 0, *this);
+  srcdiff_input<input_source_svn> input_original(options.archive, svn_path_original_temp, language_string, 0, *this);
+  srcdiff_input<input_source_svn> input_modified(options.archive, svn_path_modified_temp, language_string, 0, *this);
 
   returntranslator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
 
 }
 
-void srcdiff_input_source_svn::process_directory(const std::optional<std::string> & directory_original,
+void input_source_svn::process_directory(const std::optional<std::string> & directory_original,
                                                  const std::optional<std::string> & directory_modified) {
 
 #ifdef __MINGW32__
@@ -470,7 +470,7 @@ void srcdiff_input_source_svn::process_directory(const std::optional<std::string
 
 }
 
-void srcdiff_input_source_svn::process_files_from() {
+void input_source_svn::process_files_from() {
 
   this->revision_one = options.revision_one;
   this->revision_two = options.revision_two;
@@ -542,7 +542,7 @@ void srcdiff_input_source_svn::process_files_from() {
 
 }
 
-srcdiff_input_source_svn::input_context * srcdiff_input_source_svn::open(const char * uri) const {
+input_source_svn::input_context * input_source_svn::open(const char * uri) const {
 
   input_context * context = new input_context;
 
@@ -575,7 +575,7 @@ srcdiff_input_source_svn::input_context * srcdiff_input_source_svn::open(const c
 
 }
 
-ssize_t srcdiff_input_source_svn::read(void * context, void * buffer, size_t len) {
+ssize_t input_source_svn::read(void * context, void * buffer, size_t len) {
 
   input_context * ctx = (input_context *)context;
 
@@ -588,7 +588,7 @@ ssize_t srcdiff_input_source_svn::read(void * context, void * buffer, size_t len
   return length;
 }
 
-int srcdiff_input_source_svn::close(void * context) {
+int input_source_svn::close(void * context) {
 
   input_context * ctx = (input_context *)context;
 

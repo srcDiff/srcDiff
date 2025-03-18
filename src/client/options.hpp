@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_options.hpp
+ * @file options.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
@@ -34,10 +34,6 @@ typedef unsigned __int64 OPTION_TYPE;
 #else
 #define ull(a) a##i64
 #endif
-
-inline bool is_option(OPTION_TYPE options, OPTION_TYPE flag) {
-    return (flag & options) > 0;
-}
 
 // @srcdiff
 const OPTION_TYPE OPTION_VERBOSE               = ull(1) << __COUNTER__;
@@ -84,9 +80,17 @@ const OPTION_TYPE OPTION_SRCML                 = ull(1) << __COUNTER__;
 // @srcdiff
 const OPTION_TYPE OPTION_STRING_SPLITTING      = ull(1) << __COUNTER__;
 
-struct srcdiff_options {
+namespace srcdiff {
 
-  srcdiff_options() : flags(OPTION_STRING_SPLITTING) {}
+namespace client {
+
+inline bool is_option(OPTION_TYPE options, OPTION_TYPE flag) {
+    return (flag & options) > 0;
+}
+
+struct options {
+
+  options() : flags(OPTION_STRING_SPLITTING) {}
 
   srcml_archive * archive;
 
@@ -123,6 +127,10 @@ struct srcdiff_options {
 
 };
 
-const srcdiff_options & process_command_line(int argc, char* argv[]);
+const options & process_command_line(int argc, char* argv[]);
+
+}
+
+}
 
 #endif

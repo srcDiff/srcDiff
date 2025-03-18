@@ -27,7 +27,7 @@ output_stream::output_stream(srcml_archive * archive,
                                const std::string & srcdiff_filename,
                                const OPTION_TYPE & flags,
                                const METHOD_TYPE & method,
-                               const srcdiff_options::view_options_t & view_options,
+                               const client::options::view_options_t & view_options,
                                const std::optional<std::string> & summary_type_str [[maybe_unused]])
  : archive(archive), flags(flags),
    rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
