@@ -10,7 +10,7 @@
 #include <block.hpp>
 
 #include <nest/block.hpp>
-#include <srcdiff_nested.hpp>
+#include <nested_differ.hpp>
 
 #include <syntax_measurer.hpp>
 #include <construct_factory.hpp>
@@ -68,8 +68,8 @@ bool block::is_matchable_impl(const construct & modified) const {
 
     }
 
-    nest_result nesting = srcdiff_nested::check_nestable(construct::construct_list_view(&original_stmts.front(), original_stmts.size()),
-                                                         construct::construct_list_view(&modified_stmts.front(), modified_stmts.size()));
+    srcdiff::nest_result nesting = srcdiff::nested_differ::check_nestable(construct::construct_list_view(&original_stmts.front(), original_stmts.size()),
+                                                                          construct::construct_list_view(&modified_stmts.front(), modified_stmts.size()));
 
     return match_operation == nesting.operation;
 }

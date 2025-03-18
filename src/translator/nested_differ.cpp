@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_nested.cpp
+ * @file nested_differ.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_nested.hpp>
+#include <nested_differ.hpp>
 
 #include <constants.hpp>
 #include <change_stream.hpp>
@@ -21,8 +21,10 @@
 #include <algorithm>
 #include <cstring>
 
-srcdiff_nested::srcdiff_nested(std::shared_ptr<srcdiff::output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation)
-  : srcdiff::differ(out, original, modified), operation(operation) {}
+namespace srcdiff {
+
+nested_differ::nested_differ(std::shared_ptr<output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation)
+  : differ(out, original, modified), operation(operation) {}
 
 bool has_compound_inner(std::shared_ptr<const construct> & node_set_outer) {
 
@@ -40,7 +42,7 @@ bool has_compound_inner(std::shared_ptr<const construct> & node_set_outer) {
 
 bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
                     std::shared_ptr<const construct> node_set_inner,
-                    const srcdiff::measurer & measure, bool recurse = true) {
+                    const measurer & measure, bool recurse = true) {
 
   // do not nest compound name in simple or anything into something that is not compound
   if(node_set_outer->root_term_name() == "name" && node_set_inner->root_term_name() == "name"
@@ -54,7 +56,7 @@ bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
 
     if(best_match) {
 
-      srcdiff::text_measurer match_measure(*best_match, *node_set_inner);
+      text_measurer match_measure(*best_match, *node_set_inner);
       match_measure.compute();
 
       double min_size = measure.min_length();
@@ -82,9 +84,9 @@ bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
 
 }
 
-bool srcdiff_nested::is_better_nested(construct::construct_list_view original, construct::construct_list_view modified) {
+bool nested_differ::is_better_nested(construct::construct_list_view original, construct::construct_list_view modified) {
 
-  const srcdiff::measurer & measure = *original[0]->measure(*modified[0]);
+  const measurer & measure = *original[0]->measure(*modified[0]);
 
   for(std::size_t pos = 0; pos < original.size(); ++pos) {
 
@@ -130,7 +132,7 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
         std::shared_ptr<const construct> best_match = original[i]->find_best_descendent(*modified[j]);
         if(!best_match) continue;
 
-        srcdiff::text_measurer measure(*best_match, *modified[j]);
+        text_measurer measure(*best_match, *modified[j]);
         measure.compute();
 
         if(!best_match->check_nest(*modified[j])) {
@@ -184,7 +186,7 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
         std::shared_ptr<const construct> best_match = modified[i]->find_best_descendent(*original[j]);
         if(!best_match) continue;
 
-        srcdiff::text_measurer measure(*original[j], *best_match);
+        text_measurer measure(*original[j], *best_match);
         measure.compute();
 
         if(!original[j]->check_nest(*best_match)) {
@@ -255,7 +257,7 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
 
 }
 
-bool srcdiff_nested::check_nestable_predicate(construct::construct_list_view construct_list_outer,
+bool nested_differ::check_nestable_predicate(construct::construct_list_view construct_list_outer,
                                               construct::construct_list_view construct_list_inner) {
 
   if(construct_list_inner[0]->root_term()->get_move()) return true;
@@ -266,7 +268,7 @@ bool srcdiff_nested::check_nestable_predicate(construct::construct_list_view con
   std::shared_ptr<const construct> best_match = construct_list_outer[0]->find_best_descendent(*construct_list_inner[0]);
   if(!best_match) return true;
 
-  srcdiff::text_measurer measure(*best_match, *construct_list_inner[0]);
+  text_measurer measure(*best_match, *construct_list_inner[0]);
   measure.compute();
 
   if(!best_match->check_nest(*construct_list_inner[0]))
@@ -310,7 +312,7 @@ bool srcdiff_nested::check_nestable_predicate(construct::construct_list_view con
  *
  */
 
-std::tuple<std::vector<int>, int, int> srcdiff_nested::check_nestable_inner(construct::construct_list_view parent_list, construct::construct_list_view child_list) {
+std::tuple<std::vector<int>, int, int> nested_differ::check_nestable_inner(construct::construct_list_view parent_list, construct::construct_list_view child_list) {
 
   for(std::size_t i = 0; i < parent_list.size(); ++i) {
 
@@ -344,7 +346,7 @@ std::tuple<std::vector<int>, int, int> srcdiff_nested::check_nestable_inner(cons
 
 }
 
-nest_result srcdiff_nested::check_nestable(construct::construct_list_view original, construct::construct_list_view modified) {
+nest_result nested_differ::check_nestable(construct::construct_list_view original, construct::construct_list_view modified) {
 
   if(original.size() == 1 || modified.size() == 1) {
 
@@ -403,7 +405,7 @@ nest_result srcdiff_nested::check_nestable(construct::construct_list_view origin
 
 }
 
-void srcdiff_nested::output() {
+void nested_differ::output() {
 
   construct::construct_list_view outer;
   construct::construct_list_view inner;
@@ -416,7 +418,7 @@ void srcdiff_nested::output() {
     inner = original;
   }
 
-  srcdiff::whitespace_stream whitespace(*out);
+  whitespace_stream whitespace(*out);
   whitespace.output_prefix();
 
 
@@ -463,10 +465,10 @@ void srcdiff_nested::output() {
   }
 
   if(operation == SES_DELETE) {
-    srcdiff::change_stream::output_change(out, start_pos, out->last_output_modified());
+    change_stream::output_change(out, start_pos, out->last_output_modified());
   }
   else {
-    srcdiff::change_stream::output_change(out, out->last_output_original(), start_pos);
+    change_stream::output_change(out, out->last_output_original(), start_pos);
   }
 
   if(structure_outer == "block_content") {
@@ -477,12 +479,12 @@ void srcdiff_nested::output() {
 
   if(operation == SES_DELETE) {
 
-    srcdiff::differ diff(out, set, nest_set);
+    differ diff(out, set, nest_set);
     diff.output();
 
   } else {
 
-    srcdiff::differ diff(out, nest_set, set);
+    differ diff(out, nest_set, set);
     diff.output();
 
   }
@@ -494,10 +496,12 @@ void srcdiff_nested::output() {
   }
 
   if(operation == SES_DELETE) {
-    srcdiff::change_stream::output_change(out, outer.back()->end_position() + 1, out->last_output_modified());
+    change_stream::output_change(out, outer.back()->end_position() + 1, out->last_output_modified());
   }
   else {
-    srcdiff::change_stream::output_change(out, out->last_output_original(), outer.back()->end_position() + 1);
+    change_stream::output_change(out, out->last_output_original(), outer.back()->end_position() + 1);
   }
+
+}
 
 }

@@ -1,19 +1,21 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_nested.hpp
+ * @file nested_differ.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_SRCDIFF_NESTED_HPP
-#define INCLUDED_SRCDIFF_NESTED_HPP
+#ifndef INCLUDED_NESTED_DIFFER_HPP
+#define INCLUDED_NESTED_DIFFER_HPP
 
 #include <differ.hpp>
 #include <srcml_nodes.hpp>
 #include <construct.hpp>
 #include <measurer.hpp>
+
+namespace srcdiff {
 
 struct nest_result {
   nest_result(int start_original = 0, int end_original = 0,
@@ -29,7 +31,7 @@ struct nest_result {
   int operation;
 };
 
-class srcdiff_nested : public srcdiff::differ {
+class nested_differ : public differ {
 
 protected:
 
@@ -43,7 +45,7 @@ static std::tuple<std::vector<int>, int, int> check_nestable_inner(construct::co
 
 public:
 
-  srcdiff_nested(std::shared_ptr<srcdiff::output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation);
+  nested_differ(std::shared_ptr<output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation);
 
   virtual void output();
 
@@ -51,5 +53,7 @@ public:
 
   static bool is_better_nested(construct::construct_list_view original, construct::construct_list_view modified);
 };
+
+}
 
 #endif

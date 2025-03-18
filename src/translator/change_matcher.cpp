@@ -9,7 +9,7 @@
 
 #include <change_matcher.hpp>
 
-#include <srcdiff_nested.hpp>
+#include <nested_differ.hpp>
 #include <text_measurer.hpp>
 #include <syntax_measurer.hpp>
 #include <constants.hpp>
@@ -40,7 +40,7 @@ bool is_match(construct::construct_list_view original, construct::construct_list
   if(!original[0]->is_match_similar(*modified[0]) && !original[0]->can_refine_difference(*modified[0]))
     return false;
 
-  if(srcdiff_nested::is_better_nested(original, modified))
+  if(nested_differ::is_better_nested(original, modified))
     return false;
 
   return true;
