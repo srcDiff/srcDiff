@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_move.cpp
+ * @file move_detector.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_move.hpp>
+#include <move_detector.hpp>
 #include <measurer.hpp>
 #include <whitespace_stream.hpp>
 
@@ -16,25 +16,27 @@
 #include <list>
 #include <unordered_set>
 
+namespace srcdiff {
+
 int move_id = 0;
 const std::string move("move");
 
 typedef std::tuple<int, int> move_info;
 typedef std::vector<move_info> move_infos;
 
-srcdiff_move::srcdiff_move(const srcdiff::output_stream & out, std::size_t & position, int operation)
-  : srcdiff::output_stream(out), position(position), operation(operation) {}
+move_detector::move_detector(const output_stream& out, std::size_t& position, int operation)
+  : output_stream(out), position(position), operation(operation) {}
 
-bool srcdiff_move::is_move(std::shared_ptr<const construct> set) {
+bool move_detector::is_move(std::shared_ptr<const construct> set) {
 
   return set->term(0)->get_move();
 
 }
 
 /** loop O(CD^2) */
-void srcdiff_move::mark_moves(const construct::construct_list_view original,
-                              const construct::construct_list_view modified,
-                              edit_t * edit_script) {
+void move_detector::mark_moves(const construct::construct_list_view original,
+                               const construct::construct_list_view modified,
+                               edit_t* edit_script) {
 
   std::map<std::string, move_infos > constructs;
 
@@ -125,7 +127,7 @@ void srcdiff_move::mark_moves(const construct::construct_list_view original,
 
 }
 
-void srcdiff_move::output() {
+void move_detector::output() {
 
   // unused
   //static int attribute_id = 0;
@@ -160,7 +162,7 @@ void srcdiff_move::output() {
       if(rbuf->nodes.at(position)->is_whitespace()) {
 
         rbuf->last_output = position;
-        srcdiff::whitespace_stream whitespace(*this);
+        whitespace_stream whitespace(*this);
         whitespace.output_all(operation);
         position = rbuf->last_output - 1;
 
@@ -178,5 +180,7 @@ void srcdiff_move::output() {
   output_node(end_node, operation, true);
 
   start_node->clear_attributes();
+
+}
 
 }

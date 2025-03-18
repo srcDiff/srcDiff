@@ -13,7 +13,7 @@
 #include <change_stream.hpp>
 #include <srcdiff_single.hpp>
 #include <common_stream.hpp>
-#include <srcdiff_move.hpp>
+#include <move_detector.hpp>
 #include <measurer.hpp>
 #include <shortest_edit_script.hpp>
 #include <edit_corrector.hpp>
@@ -57,7 +57,7 @@ void differ::output() {
   }
 
   /** O(CD^2) */
-  srcdiff_move::mark_moves(original, modified, edit_script);
+  move_detector::mark_moves(original, modified, edit_script);
 
   std::size_t last_diff_original = 0;
   std::size_t last_diff_modified = 0;

@@ -11,7 +11,7 @@
 
 #include <constants.hpp>
 #include <whitespace_stream.hpp>
-#include <srcdiff_move.hpp>
+#include <move_detector.hpp>
 #include <shortest_edit_script.h>
 
 #ifdef __MINGW32__
@@ -104,7 +104,7 @@ void change_stream::output() {
         
         }
 
-        srcdiff_move move(*this, i, SES_DELETE);
+        move_detector move(*this, i, SES_DELETE);
         move.output();
 
         if(is_replace) {
@@ -173,7 +173,7 @@ void change_stream::output() {
         
         }
 
-        srcdiff_move move(*this, i, SES_INSERT);
+        move_detector move(*this, i, SES_INSERT);
       
         move.output();
 
