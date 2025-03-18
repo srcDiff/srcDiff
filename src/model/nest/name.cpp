@@ -11,7 +11,7 @@
 
 #include <construct.hpp>
 
-#include <srcdiff_text_measure.hpp>
+#include <text_measurer.hpp>
 
 namespace nest {
 
@@ -54,7 +54,7 @@ bool name_t::check_nest_name(const construct & modified, bool find_name_parent) 
 
   if(is_call_name_original && is_expr_name_modified) {
 
-      srcdiff_text_measure measure(client, modified);
+      srcdiff::text_measurer measure(client, modified);
       int count = measure.number_match_beginning();
       return 2 * count >= measure.max_length();
 
@@ -62,7 +62,7 @@ bool name_t::check_nest_name(const construct & modified, bool find_name_parent) 
 
   if(is_call_name_modified && is_expr_name_original) {
 
-      srcdiff_text_measure measure(client, modified);
+      srcdiff::text_measurer measure(client, modified);
       int count = measure.number_match_beginning();
       return 2 * count >= measure.max_length();
 

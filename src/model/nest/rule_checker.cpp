@@ -10,7 +10,7 @@
 #include "rule_checker.hpp"
 
 #include <construct.hpp>
-#include <srcdiff_text_measure.hpp>
+#include <text_measurer.hpp>
 
 namespace nest {
 
@@ -39,10 +39,10 @@ bool rule_checker::can_nest_same(const construct& modified) const {
   std::shared_ptr<const construct> best_match = client.find_best_descendent(modified);
   if(!best_match) return false;
 
-  srcdiff_text_measure match_measure(*best_match, modified);
+  srcdiff::text_measurer match_measure(*best_match, modified);
   match_measure.compute();
 
-  srcdiff_text_measure measure(client, modified);
+  srcdiff::text_measurer measure(client, modified);
   measure.compute();
 
   double min_size = measure.min_length();

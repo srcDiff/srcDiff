@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_text_measure.cpp
+ * @file text_measurer.cpp
  *
  * @copyright Copyright (C) 2016-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_text_measure.hpp>
+#include <text_measurer.hpp>
 
 
 #include <srcdiff_shortest_edit_script.hpp>
@@ -16,14 +16,16 @@
 #include <algorithm>
 #include <cassert>
 
-srcdiff_text_measure::srcdiff_text_measure(const construct & set_original, const construct & set_modified, bool important_only) 
-  : srcdiff::measure(set_original, set_modified),
+namespace srcdiff {
+
+text_measurer::text_measurer(const construct & set_original, const construct & set_modified, bool important_only) 
+  : measurer(set_original, set_modified),
     set_original_text(std::make_shared<construct>(set_original.nodes())),
     set_modified_text(std::make_shared<construct>(set_modified.nodes())),
     important_only(important_only),
     text_collected(false) {}
 
-void srcdiff_text_measure::collect_text() {
+void text_measurer::collect_text() {
 
   text_collected = true;
 
@@ -47,7 +49,7 @@ void srcdiff_text_measure::collect_text() {
 
 }
 
-void srcdiff_text_measure::collect_text_element(const construct & set, construct & set_text) {
+void text_measurer::collect_text_element(const construct & set, construct & set_text) {
 
   std::size_t length = set.size();
 
@@ -97,7 +99,7 @@ void srcdiff_text_measure::collect_text_element(const construct & set, construct
 
 }
  
-void srcdiff_text_measure::collect_important_text() {
+void text_measurer::collect_important_text() {
 
   text_collected = true;
 
@@ -111,7 +113,7 @@ void srcdiff_text_measure::collect_important_text() {
 
 /// @todo this is not really used, and it seems like it was always wrong even before
 /// construct refactoring
-void srcdiff_text_measure::unigrams(construct & collected_set_original,
+void text_measurer::unigrams(construct & collected_set_original,
                                     construct & collected_set_modified) {
 
   std::sort(collected_set_original.get_terms().begin(), collected_set_original.get_terms().end());
@@ -143,7 +145,7 @@ void srcdiff_text_measure::unigrams(construct & collected_set_original,
 
 }
 
-void srcdiff_text_measure::compute() {
+void text_measurer::compute() {
 
   if(computed) return;
 
@@ -180,7 +182,7 @@ void srcdiff_text_measure::compute() {
 
 }
 
-int srcdiff_text_measure::number_match_beginning() {
+int text_measurer::number_match_beginning() {
 
       collect_important_text();
       computed = true;
@@ -192,5 +194,7 @@ int srcdiff_text_measure::number_match_beginning() {
       }
 
       return count;
+
+}
 
 }

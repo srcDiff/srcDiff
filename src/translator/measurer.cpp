@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file measure.cpp
+ * @file measurer.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <measure.hpp>
+#include <measurer.hpp>
 
 #include <srcdiff_constants.hpp>
 #include <construct.hpp>
@@ -17,7 +17,7 @@
 
 namespace srcdiff {
 
-measure::measure(const construct & set_original,
+measurer::measurer(const construct & set_original,
                                  const construct & set_modified) 
   : set_original(set_original),
     set_modified(set_modified),
@@ -28,7 +28,7 @@ measure::measure(const construct & set_original,
     original_len(0),
     modified_len(0) {}
 
-int measure::similarity() const {
+int measurer::similarity() const {
 
   assert(computed);
 
@@ -36,7 +36,7 @@ int measure::similarity() const {
 
 }
 
-int measure::difference() const {
+int measurer::difference() const {
 
   assert(computed);
   if(a_original_difference == MAX_INT) return MAX_INT;
@@ -45,7 +45,7 @@ int measure::difference() const {
 
 }
 
-int measure::original_difference() const {
+int measurer::original_difference() const {
 
   assert(computed);
 
@@ -53,7 +53,7 @@ int measure::original_difference() const {
 
 }
 
-int measure::modified_difference() const {
+int measurer::modified_difference() const {
 
   assert(computed);
 
@@ -61,7 +61,7 @@ int measure::modified_difference() const {
 
 }
 
-int measure::original_length() const {
+int measurer::original_length() const {
 
   assert(computed);
 
@@ -69,7 +69,7 @@ int measure::original_length() const {
 
 }
 
-int measure::modified_length() const {
+int measurer::modified_length() const {
 
   assert(computed);
 
@@ -77,7 +77,7 @@ int measure::modified_length() const {
 
 }
 
-int measure::max_length() const {
+int measurer::max_length() const {
 
   assert(computed);
 
@@ -85,7 +85,7 @@ int measure::max_length() const {
 
 }
 
-int measure::min_length() const {
+int measurer::min_length() const {
 
   assert(computed);
 
@@ -93,7 +93,7 @@ int measure::min_length() const {
 
 }
 
-void measure::process_edit_script(const edit_t * edit_script) {
+void measurer::process_edit_script(const edit_t * edit_script) {
 
     a_similarity = 0;
     a_original_difference = 0;

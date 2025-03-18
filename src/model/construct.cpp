@@ -11,8 +11,8 @@
 
 #include <srcml_nodes.hpp>
 #include <construct_factory.hpp>
-#include <srcdiff_text_measure.hpp>
-#include <srcdiff_syntax_measure.hpp>
+#include <text_measurer.hpp>
+#include <syntax_measurer.hpp>
 
 #include <algorithm>
 #include <iostream>
@@ -297,11 +297,11 @@ std::shared_ptr<const construct> construct::find_best_descendent(const construct
 }
 
 
-const std::shared_ptr<srcdiff::measure> & construct::measure(const construct & modified) const {
-    std::unordered_map<int, std::shared_ptr<srcdiff::measure>>::const_iterator citr = measures.find(modified.start_position());
+const std::shared_ptr<srcdiff::measurer> & construct::measure(const construct & modified) const {
+    std::unordered_map<int, std::shared_ptr<srcdiff::measurer>>::const_iterator citr = measures.find(modified.start_position());
     if(citr != measures.end()) return citr->second;
 
-    std::shared_ptr<srcdiff::measure> similarity = std::make_shared<srcdiff_text_measure>(*this, modified);
+    std::shared_ptr<srcdiff::measurer> similarity = std::make_shared<srcdiff::text_measurer>(*this, modified);
     similarity->compute();
 
     citr = measures.insert(citr, std::pair(modified.start_position(), similarity));
@@ -314,7 +314,7 @@ bool construct::is_similar(const construct & modified) const {
 
 bool construct::is_text_similar(const construct & modified) const {
 
- const srcdiff::measure & measure = *this->measure(modified);
+ const srcdiff::measurer & measure = *this->measure(modified);
 
   int min_size = measure.min_length();
   int max_size = measure.max_length();
@@ -351,7 +351,7 @@ bool construct::is_syntax_similar(const construct & modified) const {
 
   }
 
-  srcdiff_syntax_measure syntax_measure(*this, modified);
+  srcdiff::syntax_measurer syntax_measure(*this, modified);
   syntax_measure.compute();
 
   int min_child_length = syntax_measure.min_length();
@@ -412,7 +412,7 @@ bool construct::is_match_similar(const construct & modified) const {
 
   if(*term(0) != *modified.term(0)) return false;
 
-  srcdiff_text_measure complete_measure(*this, modified, false);
+  srcdiff::text_measurer complete_measure(*this, modified, false);
   complete_measure.compute();
   int min_size = complete_measure.min_length();
 

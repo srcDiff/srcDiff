@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file measure.hpp
+ * @file measurer.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_MEASURE_HPP
-#define INCLUDED_MEASURE_HPP
+#ifndef INCLUDED_MEASURER_HPP
+#define INCLUDED_MEASURER_HPP
 
 
 #include <shortest_edit_script.hpp>
@@ -17,7 +17,7 @@ class construct;
 
 namespace srcdiff {
 
-class measure {
+class measurer {
 
 protected:
     const construct& set_original;
@@ -35,7 +35,7 @@ protected:
 
 public:
 
-    measure(const construct& set_original, const construct& set_modified);
+    measurer(const construct& set_original, const construct& set_modified);
 
     int similarity()          const;
     int difference()          const;
@@ -48,7 +48,7 @@ public:
     int min_length() const;
 
     virtual void compute() = 0;
-    virtual ~measure() {};
+    virtual ~measurer() {};
 };
 
 }

@@ -11,7 +11,7 @@
 
 #include <srcdiff_constants.hpp>
 #include <srcdiff_change.hpp>
-#include <srcdiff_text_measure.hpp>
+#include <text_measurer.hpp>
 #include <shortest_edit_script.h>
 #include <type_query.hpp>
 
@@ -39,7 +39,7 @@ bool has_compound_inner(std::shared_ptr<const construct> & node_set_outer) {
 
 bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
                     std::shared_ptr<const construct> node_set_inner,
-                    const srcdiff::measure & measure, bool recurse = true) {
+                    const srcdiff::measurer & measure, bool recurse = true) {
 
   // do not nest compound name in simple or anything into something that is not compound
   if(node_set_outer->root_term_name() == "name" && node_set_inner->root_term_name() == "name"
@@ -53,7 +53,7 @@ bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
 
     if(best_match) {
 
-      srcdiff_text_measure match_measure(*best_match, *node_set_inner);
+      srcdiff::text_measurer match_measure(*best_match, *node_set_inner);
       match_measure.compute();
 
       double min_size = measure.min_length();
@@ -83,7 +83,7 @@ bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
 
 bool srcdiff_nested::is_better_nested(construct::construct_list_view original, construct::construct_list_view modified) {
 
-  const srcdiff::measure & measure = *original[0]->measure(*modified[0]);
+  const srcdiff::measurer & measure = *original[0]->measure(*modified[0]);
 
   for(std::size_t pos = 0; pos < original.size(); ++pos) {
 
@@ -129,7 +129,7 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
         std::shared_ptr<const construct> best_match = original[i]->find_best_descendent(*modified[j]);
         if(!best_match) continue;
 
-        srcdiff_text_measure measure(*best_match, *modified[j]);
+        srcdiff::text_measurer measure(*best_match, *modified[j]);
         measure.compute();
 
         if(!best_match->check_nest(*modified[j])) {
@@ -183,7 +183,7 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
         std::shared_ptr<const construct> best_match = modified[i]->find_best_descendent(*original[j]);
         if(!best_match) continue;
 
-        srcdiff_text_measure measure(*original[j], *best_match);
+        srcdiff::text_measurer measure(*original[j], *best_match);
         measure.compute();
 
         if(!original[j]->check_nest(*best_match)) {
@@ -265,7 +265,7 @@ bool srcdiff_nested::check_nestable_predicate(construct::construct_list_view con
   std::shared_ptr<const construct> best_match = construct_list_outer[0]->find_best_descendent(*construct_list_inner[0]);
   if(!best_match) return true;
 
-  srcdiff_text_measure measure(*best_match, *construct_list_inner[0]);
+  srcdiff::text_measurer measure(*best_match, *construct_list_inner[0]);
   measure.compute();
 
   if(!best_match->check_nest(*construct_list_inner[0]))

@@ -1,21 +1,23 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_syntax_measure.cpp
+ * @file syntax_measurer.cpp
  *
  * @copyright Copyright (C) 2016-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_syntax_measure.hpp>
+#include <syntax_measurer.hpp>
 
 #include <srcdiff_shortest_edit_script.hpp>
 #include <srcdiff_constants.hpp>
 
 #include <algorithm>
 
-srcdiff_syntax_measure::srcdiff_syntax_measure(const construct & set_original, const construct & set_modified) 
-  : srcdiff::measure(set_original, set_modified) {}
+namespace srcdiff {
+
+syntax_measurer::syntax_measurer(const construct & set_original, const construct & set_modified) 
+  : measurer(set_original, set_modified) {}
 
 // context is unused here
 static bool is_significant(std::size_t & node_pos, const srcml_nodes & nodes, const void * context [[maybe_unused]]) {
@@ -44,7 +46,7 @@ static bool is_significant(std::size_t & node_pos, const srcml_nodes & nodes, co
 
 }
 
-void srcdiff_syntax_measure::compute() {
+void syntax_measurer::compute() {
 
   if(computed) return;
 
@@ -73,5 +75,7 @@ void srcdiff_syntax_measure::compute() {
   srcdiff_shortest_edit_script ses;
   ses.compute_edit_script(next_construct_list_original, next_construct_list_modified);
   process_edit_script(ses.script());
+
+}
 
 }

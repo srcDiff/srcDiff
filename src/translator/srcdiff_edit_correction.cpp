@@ -295,7 +295,7 @@ edit_t * srcdiff_edit_correction::correct_common(edit_t * start_edit) {
 
 }
 
-std::shared_ptr<srcdiff_text_measure> srcdiff_edit_correction::edit2measure(int original_offset, int modified_offset) {
+std::shared_ptr<srcdiff::text_measurer> srcdiff_edit_correction::edit2measure(int original_offset, int modified_offset) {
 
     std::size_t original_set_pos = original_offset;
     std::size_t modified_set_pos = modified_offset;
@@ -311,9 +311,9 @@ std::shared_ptr<srcdiff_text_measure> srcdiff_edit_correction::edit2measure(int 
 
     if(!(original_tag == modified_tag && original_uri == modified_uri)
         && !set_original->is_tag_convertable(*set_modified))
-        return std::shared_ptr<srcdiff_text_measure>();
+        return std::shared_ptr<srcdiff::text_measurer>();
 
-    std::shared_ptr<srcdiff_text_measure> measure = std::make_shared<srcdiff_text_measure>(*set_original, *set_modified);
+    std::shared_ptr<srcdiff::text_measurer> measure = std::make_shared<srcdiff::text_measurer>(*set_original, *set_modified);
     measure->compute();
 
     return measure;
@@ -457,7 +457,7 @@ void srcdiff_edit_correction::correct() {
 
         std::shared_ptr<const construct> common_set = sets_original[common_pos];
         std::shared_ptr<construct> common_set_text(std::make_shared<construct>(common_set->nodes()));
-        srcdiff_text_measure::collect_text_element(*common_set, *common_set_text);
+        srcdiff::text_measurer::collect_text_element(*common_set, *common_set_text);
 
         std::vector<std::size_t> original_similarities(delete_edit->length);
         std::vector<std::size_t> modified_similarities(insert_edit->length);
@@ -470,7 +470,7 @@ void srcdiff_edit_correction::correct() {
 
                 if(j == modified_offset) continue;
 
-                std::shared_ptr<srcdiff_text_measure> measure 
+                std::shared_ptr<srcdiff::text_measurer> measure 
                     = srcdiff_edit_correction::edit2measure(delete_edit->offset_sequence_one + i,
                                                             insert_edit->offset_sequence_two + j);               
                 if(!measure) continue;

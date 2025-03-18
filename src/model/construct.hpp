@@ -17,7 +17,7 @@
 #include <nest/rule_checker.hpp>
 #include <convert/rule_checker.hpp>
 
-#include <measure.hpp>
+#include <measurer.hpp>
 
 #include <optional>
 #include <memory>
@@ -110,11 +110,11 @@ public:
     const construct* parent_construct;
     mutable std::optional<construct_list> child_constructs;
 
-    mutable std::unordered_map<int, std::shared_ptr<srcdiff::measure>> measures;
+    mutable std::unordered_map<int, std::shared_ptr<srcdiff::measurer>> measures;
 
 public:
    // Differencing Rules
-    const std::shared_ptr<srcdiff::measure> & measure(const construct & modified) const;
+    const std::shared_ptr<srcdiff::measurer> & measure(const construct & modified) const;
     bool is_similar(const construct & modified) const;
     bool is_text_similar(const construct & modified) const;
     bool is_syntax_similar(const construct & modified) const;

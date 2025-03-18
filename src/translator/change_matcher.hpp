@@ -11,7 +11,7 @@
 #define INCLUDED_CHANGE_MATCHER_HPP
 
 #include <construct.hpp>
-#include <measure.hpp>
+#include <measurer.hpp>
 
 namespace srcdiff {
 

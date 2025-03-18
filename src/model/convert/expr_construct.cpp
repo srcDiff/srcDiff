@@ -27,7 +27,7 @@ bool expr_construct::is_convertable_impl(const construct& modified_construct) co
     if(!original_expr || !modified_expr) return false;
     if(!original_expr->is_similar(*modified_expr)) return false;
 
-    const srcdiff::measure & expr_measure = *original_expr->measure(*modified_expr);
+    const srcdiff::measurer & expr_measure = *original_expr->measure(*modified_expr);
     return 2 * expr_measure.similarity() > expr_measure.max_length() && 2 * expr_measure.difference() < expr_measure.max_length();
 }
 

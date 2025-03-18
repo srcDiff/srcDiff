@@ -8,7 +8,7 @@
  */
 
 #include <srcdiff_move.hpp>
-#include <measure.hpp>
+#include <measurer.hpp>
 #include <srcdiff_whitespace.hpp>
 
 #include <vector>

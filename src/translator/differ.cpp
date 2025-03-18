@@ -15,7 +15,7 @@
 #include <srcdiff_whitespace.hpp>
 #include <srcdiff_common.hpp>
 #include <srcdiff_move.hpp>
-#include <measure.hpp>
+#include <measurer.hpp>
 #include <srcdiff_shortest_edit_script.hpp>
 #include <srcdiff_edit_correction.hpp>
 

@@ -10,8 +10,8 @@
 #include <change_matcher.hpp>
 
 #include <srcdiff_nested.hpp>
-#include <srcdiff_text_measure.hpp>
-#include <srcdiff_syntax_measure.hpp>
+#include <text_measurer.hpp>
+#include <syntax_measurer.hpp>
 #include <srcdiff_shortest_edit_script.hpp>
 #include <srcdiff_constants.hpp>
 
@@ -34,7 +34,7 @@ struct difference {
 };
 
 bool is_match(construct::construct_list_view original, construct::construct_list_view modified) {
-  const srcdiff::measure & measure = *original[0]->measure(*modified[0]);
+  const srcdiff::measurer & measure = *original[0]->measure(*modified[0]);
 
   if(measure.similarity() == MAX_INT) return false;
 
@@ -155,7 +155,7 @@ offset_pair * change_matcher::match_differences() {
     for(int j = 0; j < olength; ++j) {
 
       /** loop O(nd) */
-      const srcdiff::measure & measure = *original[j]->measure(*modified[i]);
+      const srcdiff::measurer & measure = *original[j]->measure(*modified[i]);
       int similarity = measure.similarity();
 
       //unsigned long long max_similarity = (unsigned long long)-1;

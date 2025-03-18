@@ -1,20 +1,22 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_text_measure.hpp
+ * @file text_measurer.hpp
  *
  * @copyright Copyright (C) 2016-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_SRCDIFF_TEXT_MEASURE_HPP
-#define INCLUDED_SRCDIFF_TEXT_MEASURE_HPP
+#ifndef INCLUDED_TEXT_MEASURE_HPP
+#define INCLUDED_TEXT_MEASURE_HPP
 
-#include <measure.hpp>
+#include <measurer.hpp>
 
 #include <construct.hpp>
 
-class srcdiff_text_measure : public srcdiff::measure {
+namespace srcdiff {
+
+class text_measurer : public measurer {
 
 protected:
 
@@ -30,7 +32,7 @@ private:
 
 public:
 
-    srcdiff_text_measure(const construct & set_original,
+    text_measurer(const construct & set_original,
                        const construct & set_modified,
                        bool important_only = true);
 
@@ -43,8 +45,6 @@ public:
 
 };
 
-
-
-
+}
 
 #endif
