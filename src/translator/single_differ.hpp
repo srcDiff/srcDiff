@@ -1,23 +1,25 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_single.hpp
+ * @file single_differ.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_SRCDIFF_SINGLE_HPP
-#define INCLUDED_SRCDIFF_SINGLE_HPP
+#ifndef INCLUDED_SINGLE_DIFFER_HPP
+#define INCLUDED_SINGLE_DIFFER_HPP
 
 #include <construct.hpp>
 #include <output_stream.hpp>
 
-class srcdiff_single {
+namespace srcdiff {
+
+class single_differ {
 
 protected:
 
-    std::shared_ptr<srcdiff::output_stream> out;
+    std::shared_ptr<output_stream> out;
 
     std::shared_ptr<const construct> original_construct;
     std::shared_ptr<const construct> modified_construct;
@@ -29,10 +31,12 @@ private:
 
 public:
 
-    srcdiff_single(std::shared_ptr<srcdiff::output_stream> out, std::shared_ptr<const construct> original_construct,  std::shared_ptr<const construct> modified_construct);
+    single_differ(std::shared_ptr<output_stream> out, std::shared_ptr<const construct> original_construct,  std::shared_ptr<const construct> modified_construct);
 
     virtual void output();
 
 };
+
+}
 
 #endif

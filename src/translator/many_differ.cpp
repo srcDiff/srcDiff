@@ -9,7 +9,7 @@
 
 #include <many_differ.hpp>
 
-#include <srcdiff_single.hpp>
+#include <single_differ.hpp>
 #include <nested_differ.hpp>
 #include <change_stream.hpp>
 #include <measurer.hpp>
@@ -256,7 +256,7 @@ void many_differ::output() {
  
       if(original[edits->offset_sequence_one + i]->term(0)->get_type() != srcML::node_type::TEXT) {
 
-        srcdiff_single diff(out, original[edits->offset_sequence_one + i], modified[edit_next->offset_sequence_two + j]);
+        single_differ diff(out, original[edits->offset_sequence_one + i], modified[edit_next->offset_sequence_two + j]);
         
         diff.output();
 

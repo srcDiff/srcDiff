@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_single.cpp
+ * @file single_differ.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_single.hpp>
+#include <single_differ.hpp>
 
 #include <constants.hpp>
 #include <change_stream.hpp>
@@ -25,15 +25,17 @@
 #include <algorithm>
 #include <iterator>
 
+namespace srcdiff {
+
 const std::string convert_str("convert");
 const srcML::attribute diff_convert_type("type", srcML::name_space::DIFF_NAMESPACE, convert_str);
 
-srcdiff_single::srcdiff_single(std::shared_ptr<srcdiff::output_stream> out, std::shared_ptr<const construct> original_construct, std::shared_ptr<const construct> modified_construct) 
+single_differ::single_differ(std::shared_ptr<output_stream> out, std::shared_ptr<const construct> original_construct, std::shared_ptr<const construct> modified_construct) 
     : out(out), original_construct(original_construct), modified_construct(modified_construct) {}
 
-void srcdiff_single::output_recursive_same() {
+void single_differ::output_recursive_same() {
 
-    srcdiff::whitespace_stream whitespace(*out);
+    whitespace_stream whitespace(*out);
     whitespace.output_all();
 
     if(original_construct->root_term()->is_temporary() == modified_construct->root_term()->is_temporary()) {
@@ -63,7 +65,7 @@ void srcdiff_single::output_recursive_same() {
 
         construct::construct_list children_modified = modified_construct->children();
 
-        srcdiff::comment_differ diff(out, children_original, children_modified);
+        comment_differ diff(out, children_original, children_modified);
         diff.output();
 
     } else {
@@ -77,12 +79,12 @@ void srcdiff_single::output_recursive_same() {
             if(!modified_construct->root_term()->is_empty())
                 children_modified = modified_construct->children();
 
-            srcdiff::differ diff(out, children_original, children_modified);
+            differ diff(out, children_original, children_modified);
             diff.output();
 
     }
 
-    srcdiff::common_stream::output_common(out, original_construct->end_position() + 1, modified_construct->end_position() + 1);
+    common_stream::output_common(out, original_construct->end_position() + 1, modified_construct->end_position() + 1);
 
     if(original_construct->root_term()->is_temporary() == modified_construct->root_term()->is_temporary()) {
         out->output_node(out->diff_common_end, SES_COMMON);
@@ -90,9 +92,9 @@ void srcdiff_single::output_recursive_same() {
 
 }
 
-void srcdiff_single::output_recursive_interchangeable() {
+void single_differ::output_recursive_interchangeable() {
 
-    srcdiff::whitespace_stream whitespace(*out);
+    whitespace_stream whitespace(*out);
     whitespace.output_all();
 
     /**@todo replace get_descendent with using children above */
@@ -158,19 +160,19 @@ void srcdiff_single::output_recursive_interchangeable() {
         = modified_construct->get_descendents(modified_construct->get_terms().at(modified_collect_start_pos),
                                               modified_construct->end_position());
 
-    srcdiff::differ diff(out, next_set_original, next_set_modified);
+    differ diff(out, next_set_original, next_set_modified);
     diff.output();
 
-    srcdiff::whitespace_stream::output_whitespace(out);
+    whitespace_stream::output_whitespace(out);
 
-    srcdiff::change_stream::output_change(out, out->last_output_original(), modified_construct->end_position() + 1);
+    change_stream::output_change(out, out->last_output_original(), modified_construct->end_position() + 1);
 
     out->output_node(out->diff_modified_end, SES_INSERT, true);
     if(out->output_state() == SES_INSERT) {
         out->output_node(out->diff_modified_end, SES_INSERT);
     }
 
-    srcdiff::change_stream::output_change(out, original_construct->end_position() + 1, out->last_output_modified());
+    change_stream::output_change(out, original_construct->end_position() + 1, out->last_output_modified());
 
     out->output_node(out->diff_original_end, SES_DELETE, true);
     if(out->output_state() == SES_DELETE) {
@@ -179,7 +181,7 @@ void srcdiff_single::output_recursive_interchangeable() {
 
 }
 
-void srcdiff_single::output() {
+void single_differ::output() {
 
     const std::shared_ptr<srcML::node> & start_node_original = original_construct->root_term();
     const std::shared_ptr<srcML::node> & start_node_modified = modified_construct->root_term();
@@ -190,5 +192,7 @@ void srcdiff_single::output() {
     } else {
         output_recursive_interchangeable();
     }
+
+}
 
 }

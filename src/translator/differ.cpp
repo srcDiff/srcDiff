@@ -11,7 +11,7 @@
 
 #include <many_differ.hpp>
 #include <change_stream.hpp>
-#include <srcdiff_single.hpp>
+#include <single_differ.hpp>
 #include <common_stream.hpp>
 #include <move_detector.hpp>
 #include <measurer.hpp>
@@ -109,7 +109,7 @@ void differ::output() {
 
           if(original[edits->offset_sequence_one]->term(0)->get_type() != srcML::node_type::TEXT) {
 
-            srcdiff_single diff(out, original[edits->offset_sequence_one], modified[edits->offset_sequence_two]);
+            single_differ diff(out, original[edits->offset_sequence_one], modified[edits->offset_sequence_two]);
             diff.output();
 
           } else {
