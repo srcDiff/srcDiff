@@ -7,7 +7,7 @@
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <shortest_edit_script.hpp>
+#include <shortest_edit_script_t.hpp>
 
 const size_t shortest_edit_script_t::SIZE_THRESHOLD = 20480;
 shortest_edit_script_t::shortest_edit_script_t(int (*compare)(const void * item_one, const void * item_two, const void * context),

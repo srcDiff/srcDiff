@@ -10,7 +10,7 @@
 #ifndef INCLUDED_SRCDIFF_SHORTEST_EDIT_SCRIPT
 #define INCLUDED_SRCDIFF_SHORTEST_EDIT_SCRIPT
 
-#include <shortest_edit_script.hpp>
+#include <shortest_edit_script_t.hpp>
 
 #include <construct.hpp>
 #include <srcml_nodes.hpp>

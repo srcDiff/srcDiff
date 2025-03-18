@@ -10,8 +10,7 @@
 #ifndef INCLUDED_MEASURER_HPP
 #define INCLUDED_MEASURER_HPP
 
-
-#include <shortest_edit_script.hpp>
+#include <shortest_edit_script_t.hpp>
 
 class construct;
 
