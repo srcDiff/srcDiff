@@ -10,7 +10,7 @@
 #ifndef INCLUDED_NPUT_SOURCE_HPP
 #define INCLUDED_NPUT_SOURCE_HPP
 
-#include <options.hpp>
+#include <client_options.hpp>
 #include <translator.hpp>
 #include <view.hpp>
 
@@ -25,12 +25,14 @@
 #define PATH_SEPARATOR '/'
 #endif
 
+namespace srcdiff {
+
 class input_source {
 
 protected:
 
-  const srcdiff::client::options& options;
-  std::unique_ptr<srcdiff::translator> translator;
+  const client_options& options;
+  std::unique_ptr<translator> interpreter;
   std::unique_ptr<view_t> view;
 
   int directory_length_original;
@@ -48,7 +50,7 @@ private:
 
 public:
 
-  input_source(const srcdiff::client::options & options);
+  input_source(const client_options & options);
   virtual ~input_source();
 
   virtual void consume() = 0;
@@ -67,5 +69,7 @@ public:
   virtual void process_files_from() = 0;
 
 };
+
+}
 
 #endif

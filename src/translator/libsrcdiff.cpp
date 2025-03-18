@@ -12,7 +12,7 @@
 #include <translator.hpp>
 #include <output_stream.hpp>
 #include <input_stream.hpp>
-#include <options.hpp>
+#include <client_options.hpp>
 
 #include <string>
 #include <optional>
@@ -79,7 +79,7 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
         unit_filename += *modified_path;
     }
 
-    srcdiff::client::options options;
+    srcdiff::client_options options;
     options.srcdiff_filename = output_filename;
 
     file_input in;

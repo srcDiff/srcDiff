@@ -12,13 +12,15 @@
 #include <unified_view.hpp>
 #include <side_by_side_view.hpp>
 
+namespace srcdiff {
+
 bool input_source::show_input = false;
 
 size_t input_source::input_count = 0;
 size_t input_source::input_skipped = 0;
 size_t input_source::input_total = 0;
 
-input_source::input_source(const srcdiff::client::options & options) : options(options), translator(), view(), directory_length_original(0), directory_length_modified(0) {
+input_source::input_source(const client_options & options) : options(options), interpreter(), view(), directory_length_original(0), directory_length_modified(0) {
 
   OPTION_TYPE flags = options.flags;
 　if(srcml_archive_get_version(options.archive)
@@ -28,38 +30,38 @@ input_source::input_source(const srcdiff::client::options & options) : options(o
 
   }
 
-  show_input = srcdiff::client::is_option(flags, OPTION_VERBOSE) && !srcdiff::client::is_option(flags, OPTION_QUIET);
+  show_input = is_option(flags, OPTION_VERBOSE) && !is_option(flags, OPTION_QUIET);
 
-  const srcdiff::client::options::view_options_t& view_options = options.view_options;
+  const client_options::view_options_t& view_options = options.view_options;
 
-  translator = std::make_unique<srcdiff::translator>(
+  interpreter = std::make_unique<translator>(
                 options.srcdiff_filename, options.flags, options.methods, options.archive,
                 options.unit_filename,
                 options.view_options,
                 options.summary_type_str);
 
-  if(srcdiff::client::is_option(flags, OPTION_UNIFIED_VIEW)) {
+  if(is_option(flags, OPTION_UNIFIED_VIEW)) {
 
      view = std::make_unique<unified_view>(
               options.srcdiff_filename,
               view_options.syntax_highlight,
               view_options.theme,
-              srcdiff::client::is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),
-              srcdiff::client::is_option(flags, OPTION_IGNORE_WHITESPACE),
-              srcdiff::client::is_option(flags, OPTION_IGNORE_COMMENTS),
-              srcdiff::client::is_option(flags, OPTION_HTML_VIEW),
+              is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),
+              is_option(flags, OPTION_IGNORE_WHITESPACE),
+              is_option(flags, OPTION_IGNORE_COMMENTS),
+              is_option(flags, OPTION_HTML_VIEW),
               view_options.unified_view_context);
 
-  } else if(srcdiff::client::is_option(flags, OPTION_SIDE_BY_SIDE_VIEW)) {
+  } else if(is_option(flags, OPTION_SIDE_BY_SIDE_VIEW)) {
 
      view = std::make_unique<side_by_side_view>(
               options.srcdiff_filename,
               view_options.syntax_highlight,
               view_options.theme,
-              srcdiff::client::is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),
-              srcdiff::client::is_option(flags, OPTION_IGNORE_WHITESPACE),
-              srcdiff::client::is_option(flags, OPTION_IGNORE_COMMENTS),
-              srcdiff::client::is_option(flags, OPTION_HTML_VIEW),
+              is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),
+              is_option(flags, OPTION_IGNORE_WHITESPACE),
+              is_option(flags, OPTION_IGNORE_COMMENTS),
+              is_option(flags, OPTION_HTML_VIEW),
               view_options.side_by_side_tab_size);
 
   }
@@ -70,7 +72,7 @@ input_source::~input_source() {
 }
 
 void input_source::file(const std::optional<std::string> & path_original,
-                                const std::optional<std::string> & path_modified) {
+                        const std::optional<std::string> & path_modified) {
 
   if(show_input) {
 
@@ -93,7 +95,7 @@ void input_source::file(const std::optional<std::string> & path_original,
   std::string srcdiff = process_file(path_original, path_modified);
 
   if(!view) {
-    translator->write_translation();
+    interpreter->write_translation();
   } else {
     view->transform(srcdiff, "UTF-8");
   }
@@ -101,9 +103,9 @@ void input_source::file(const std::optional<std::string> & path_original,
 }
 
 void input_source::directory(const std::optional<std::string> & directory_original,
-                                     const std::optional<std::string> & directory_modified) {
+                             const std::optional<std::string> & directory_modified) {
 
-  show_input = !srcdiff::client::is_option(options.flags, OPTION_QUIET);
+  show_input = !is_option(options.flags, OPTION_QUIET);
   srcml_archive_disable_solitary_unit(options.archive);
 
   if(show_input) {
@@ -129,7 +131,7 @@ void input_source::directory(const std::optional<std::string> & directory_origin
 
 void input_source::files_from() {
 
-  show_input = !srcdiff::client::is_option(options.flags, OPTION_QUIET);
+  show_input = !is_option(options.flags, OPTION_QUIET);
 
   if(show_input) {
 
@@ -153,5 +155,7 @@ const char * input_source::get_language(const std::optional<std::string> & path_
 
     return srcml_archive_check_extension(options.archive, path->c_str());
   }
+
+}
 
 }

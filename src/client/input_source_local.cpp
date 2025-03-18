@@ -20,8 +20,9 @@
 #include <fstream>
 #include <sstream>
 
+namespace srcdiff {
 
-input_source_local::input_source_local(const srcdiff::client::options & options) : input_source(options) {
+input_source_local::input_source_local(const client_options & options) : input_source(options) {
   output_file = std::filesystem::directory_entry(options.srcdiff_filename);
 }
 
@@ -99,9 +100,9 @@ std::string input_source_local::process_file(const std::optional<std::string> & 
 
   }
 
-  srcdiff::input_stream<input_source_local> input_original(options.archive, path_original, language_string, options.flags, *this);
-  srcdiff::input_stream<input_source_local> input_modified(options.archive, path_modified, language_string, options.flags, *this);
-  return translator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
+  input_stream<input_source_local> input_original(options.archive, path_original, language_string, options.flags, *this);
+  input_stream<input_source_local> input_modified(options.archive, path_modified, language_string, options.flags, *this);
+  return interpreter->translate(input_original, input_modified, language_string, unit_filename, unit_version);
 
 }
 
@@ -281,4 +282,6 @@ int input_source_local::close(void * context) {
   delete ctx;
 
   return 1;
+}
+
 }

@@ -12,7 +12,7 @@
 
 #include <srcml_nodes.hpp>
 #include <srcml_converter.hpp>
-#include <options.hpp>
+#include <client_options.hpp>
 
 #include <srcml.h>
 

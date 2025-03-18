@@ -17,6 +17,8 @@
 #include <sys/stat.h>
 #include <filesystem>
 
+namespace srcdiff {
+
 class input_source_local : public input_source {
 
 protected:
@@ -25,7 +27,7 @@ protected:
 
 public:
 
-  input_source_local(const srcdiff::client::options & options);
+  input_source_local(const client_options & options);
   virtual ~input_source_local();
 
   virtual void consume();
@@ -47,5 +49,7 @@ public:
   static int close(void * context);
 
 };
+
+}
 
 #endif

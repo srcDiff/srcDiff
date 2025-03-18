@@ -82,15 +82,13 @@ const OPTION_TYPE OPTION_STRING_SPLITTING      = ull(1) << __COUNTER__;
 
 namespace srcdiff {
 
-namespace client {
-
 inline bool is_option(OPTION_TYPE options, OPTION_TYPE flag) {
     return (flag & options) > 0;
 }
 
-struct options {
+struct client_options {
 
-  options() : flags(OPTION_STRING_SPLITTING) {}
+  client_options() : flags(OPTION_STRING_SPLITTING) {}
 
   srcml_archive * archive;
 
@@ -127,9 +125,7 @@ struct options {
 
 };
 
-const options & process_command_line(int argc, char* argv[]);
-
-}
+const client_options& process_command_line(int argc, char* argv[]);
 
 }
 

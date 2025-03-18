@@ -7,7 +7,7 @@
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <options.hpp>
+#include <client_options.hpp>
 
 #include <input_source.hpp>
 #include <input_source_local.hpp>
@@ -20,7 +20,7 @@
 
 void srcdiff_libxml_error(void *ctx [[maybe_unused]], const char *msg [[maybe_unused]], ...) {}
 
-input_source * next_input_source(const srcdiff::client::options & options);
+srcdiff::input_source * next_input_source(const srcdiff::client_options & options);
 
 int main(int argc, char* argv[]) {
 
@@ -32,9 +32,9 @@ int main(int argc, char* argv[]) {
   initGenericErrorDefaultFunc(&handler);
 
   // process command-line arguments
-  const srcdiff::client::options & options = srcdiff::client::process_command_line(argc, argv);
+  const srcdiff::client_options & options = srcdiff::process_command_line(argc, argv);
 
-  input_source * input = next_input_source(options);
+  srcdiff::input_source * input = next_input_source(options);
 
   if(input) {
 
@@ -66,9 +66,9 @@ int main(int argc, char* argv[]) {
 
 }
 
-input_source * next_input_source(const srcdiff::client::options & options) {
+srcdiff::input_source * next_input_source(const srcdiff::client_options & options) {
 
-  input_source * input = nullptr;
+  srcdiff::input_source * input = nullptr;
 
 #if SVN
 
@@ -114,7 +114,7 @@ input_source * next_input_source(const srcdiff::client::options & options) {
 
     try {
 
-     input = new input_source_local(options);
+     input = new srcdiff::input_source_local(options);
 
     } catch(const std::string & error) {
 

@@ -7,7 +7,7 @@
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <options.hpp>
+#include <client_options.hpp>
 #include <constants.hpp>
 
 #include <libxml/parser.h>
@@ -22,8 +22,7 @@ namespace srcdiff {
 
 // this is the options object that will store all the cli options once they are
 // parsed. it is global so that it never goes out of scope and gets destroyed
-client::options global_options;
-
+client_options options;
 
 #define PROGRAM_NAME "srcdiff"
 #define EMAIL_ADDRESS "srcmldev@gmail.com"
@@ -55,7 +54,7 @@ std::string get_version() {
 // e.g. "orig.cpp|mod.cpp"
 void option_input_file(const std::vector<std::string> & arg) {
 
-  global_options.input_pairs.reserve(arg.size());
+  options.input_pairs.reserve(arg.size());
 
   for(std::vector<std::string>::size_type pos = 0; pos < arg.size(); pos += 1) {
 
@@ -64,23 +63,23 @@ void option_input_file(const std::vector<std::string> & arg) {
     if(sep_pos != std::string::npos) {
       std::string path_original = arg[pos].substr(0, sep_pos);
       std::string path_modified = arg[pos].substr(sep_pos + 1);
-      global_options.input_pairs.push_back(std::make_pair(path_original, path_modified));
+      options.input_pairs.push_back(std::make_pair(path_original, path_modified));
     } else if(ext_pos != std::string::npos && arg[pos].substr(ext_pos + 1) == "xml") {
-      global_options.flags |= OPTION_VIEW_XML;
-      global_options.input_pairs.push_back(std::make_pair(arg[pos], ""));
+      options.flags |= OPTION_VIEW_XML;
+      options.input_pairs.push_back(std::make_pair(arg[pos], ""));
     } else {
 
       if((pos + 1) >= arg.size()) {
         throw CLI::ValidationError("Odd number of input files.");
       }
-      global_options.input_pairs.push_back(std::make_pair(arg[pos], arg[pos + 1]));
+      options.input_pairs.push_back(std::make_pair(arg[pos], arg[pos + 1]));
       ++pos;
     }
 
   }
 
-  if(global_options.input_pairs.size() > 1) {
-    srcml_archive_disable_solitary_unit(global_options.archive);
+  if(options.input_pairs.size() > 1) {
+    srcml_archive_disable_solitary_unit(options.archive);
   }
 
 }
@@ -88,7 +87,7 @@ void option_input_file(const std::vector<std::string> & arg) {
 // processes the --files-from cli argument
 void option_files_from(const std::string & filename) {
 
-    global_options.files_from_name = filename;
+    options.files_from_name = filename;
 
     std::ifstream input_file(filename);
     if(!input_file) throw CLI::FileError::Missing(filename);
@@ -115,7 +114,7 @@ void option_files_from(const std::string & filename) {
     }
 
     if(line_count > 1) {
-      srcml_archive_disable_solitary_unit(global_options.archive);
+      srcml_archive_disable_solitary_unit(options.archive);
     } else if (line_count < 1) {
       throw CLI::ValidationError("No input file pairs could be obtained from " + filename);
     }
@@ -130,16 +129,16 @@ void option_svn_url(const std::string & arg) {
   std::string::size_type atsign = arg.find('@');
   if(atsign == std::string::npos) {
 
-    global_options.svn_url = arg;
-    global_options.revision_one = SVN_INVALID_REVNUM;
-    global_options.revision_two = SVN_INVALID_REVNUM;
+    options.svn_url = arg;
+    options.revision_one = SVN_INVALID_REVNUM;
+    options.revision_two = SVN_INVALID_REVNUM;
 
   } else {
 
-    global_options.svn_url = arg.substr(0, atsign);
-    global_options.revision_one = std::stoi(arg.substr(atsign + 1));
+    options.svn_url = arg.substr(0, atsign);
+    options.revision_one = std::stoi(arg.substr(atsign + 1));
     std::string::size_type dash = arg.find('-', atsign + 1);
-    global_options.revision_two = std::stoi(arg.substr(dash + 1));
+    options.revision_two = std::stoi(arg.substr(dash + 1));
 
   }
 
@@ -150,10 +149,10 @@ void option_svn_url(const std::string & arg) {
 void option_git_url(const std::string & arg) {
 
   std::string::size_type atsign = arg.find('@');
-  global_options.git_url = arg.substr(0, atsign);
+  options.git_url = arg.substr(0, atsign);
   std::string::size_type dash = arg.find('-', atsign + 1);
-  global_options.git_revision_one = arg.substr(atsign + 1, dash - (atsign + 1));
-  global_options.git_revision_two = arg.substr(dash + 1);
+  options.git_revision_one = arg.substr(atsign + 1, dash - (atsign + 1));
+  options.git_revision_two = arg.substr(dash + 1);
 
 }
 #endif
@@ -171,7 +170,7 @@ template<>
 void option_srcml_bool<ARCHIVE>(int flagged_count) {
 
   if(flagged_count) {
-    srcml_archive_disable_solitary_unit(global_options.archive);
+    srcml_archive_disable_solitary_unit(options.archive);
   }
 
 }
@@ -184,7 +183,7 @@ void option_srcml_int(const int & arg) {}
 template<>
 void option_srcml_int<TABSTOP>(const int & arg) {
 
-  srcml_archive_set_tabstop(global_options.archive, arg);
+  srcml_archive_set_tabstop(options.archive, arg);
 
 }
 
@@ -196,35 +195,35 @@ void option_srcml_string(const std::string & arg) {}
 template<>
 void option_srcml_string<SRC_ENCODING>(const std::string & arg) {
 
-  srcml_archive_set_src_encoding(global_options.archive, arg.c_str());
+  srcml_archive_set_src_encoding(options.archive, arg.c_str());
 
 }
 
 template<>
 void option_srcml_string<XML_ENCODING>(const std::string & arg) {
 
-  srcml_archive_set_xml_encoding(global_options.archive, arg.c_str());
+  srcml_archive_set_xml_encoding(options.archive, arg.c_str());
 
 }
 
 template<>
 void option_srcml_string<LANGUAGE>(const std::string & arg) {
 
-  srcml_archive_set_language(global_options.archive, arg.c_str());
+  srcml_archive_set_language(options.archive, arg.c_str());
 
 }
 
 template<>
 void option_srcml_string<URL>(const std::string & arg) {
   
-  srcml_archive_set_url(global_options.archive, arg.c_str());
+  srcml_archive_set_url(options.archive, arg.c_str());
 
 }
 
 template<>
 void option_srcml_string<SRC_VERSION>(const std::string & arg) {
 
-  srcml_archive_set_version(global_options.archive, arg.c_str());
+  srcml_archive_set_version(options.archive, arg.c_str());
 
 }
 
@@ -233,7 +232,7 @@ void option_srcml_string<REGISTER_EXT>(const std::string & arg) {
 
   std::string::size_type pos = arg.find('=');
   srcml_archive_register_file_extension(
-    global_options.archive,
+    options.archive,
     arg.substr(0, pos).c_str(),
     arg.substr(pos + 1).c_str()
   );
@@ -247,11 +246,11 @@ void option_srcml_string<XMLNS>(const std::string & arg) {
 
   std::string::size_type pos = arg.find('=');
   if(pos == std::string::npos) {
-    srcml_archive_register_namespace(global_options.archive, "", arg.c_str());
+    srcml_archive_register_namespace(options.archive, "", arg.c_str());
   }
   else {
     srcml_archive_register_namespace(
-      global_options.archive,
+      options.archive,
       arg.substr(0, pos).c_str(),
       arg.substr(pos + 1, std::string::npos).c_str()
     );
@@ -264,14 +263,14 @@ void option_srcml_string<XMLNS>(const std::string & arg) {
 template<OPTION_TYPE flag>
 void option_flag_enable(int flagged_count) {
 
-  if(flagged_count > 0) global_options.flags |= flag;
+  if(flagged_count > 0) options.flags |= flag;
 
 }
 
 template<OPTION_TYPE flag>
 void option_flag_disable(int flagged_count) {
 
-  if(flagged_count > 0) global_options.flags &= ~flag;
+  if(flagged_count > 0) options.flags &= ~flag;
 
 }
 
@@ -279,7 +278,7 @@ void option_flag_disable(int flagged_count) {
 template<int op>
 void option_srcml_flag_enable(int flagged_count) {
 
-  if(flagged_count > 0) srcml_archive_enable_option(global_options.archive, op);
+  if(flagged_count > 0) srcml_archive_enable_option(options.archive, op);
 
 }
 
@@ -300,10 +299,10 @@ void option_parsing_method(const std::string & arg) {
 
   for(std::string method : methods) {
 
-    if(method == COLLECT_METHOD)            global_options.methods &= ~METHOD_RAW;
-    else if(method == RAW_METHOD)           global_options.methods |= METHOD_RAW;
-    else if(method == NO_GROUP_DIFF_METHOD) global_options.methods &= ~METHOD_GROUP;
-    else if(method == GROUP_DIFF_METHOD)    global_options.methods |= METHOD_GROUP;
+    if(method == COLLECT_METHOD)            options.methods &= ~METHOD_RAW;
+    else if(method == RAW_METHOD)           options.methods |= METHOD_RAW;
+    else if(method == NO_GROUP_DIFF_METHOD) options.methods &= ~METHOD_GROUP;
+    else if(method == GROUP_DIFF_METHOD)    options.methods |= METHOD_GROUP;
     else {
       throw CLI::ValidationError(method + " is not a valid parsing method");
     }
@@ -318,7 +317,7 @@ void view_option_unified_view_context(const std::string & arg) {
 
   try {
 
-    global_options.view_options.unified_view_context = std::stoi(arg);
+    options.view_options.unified_view_context = std::stoi(arg);
 
   } catch(std::invalid_argument &) {
 
@@ -328,7 +327,7 @@ void view_option_unified_view_context(const std::string & arg) {
       );
     }
 
-    global_options.view_options.unified_view_context = arg;
+    options.view_options.unified_view_context = arg;
 
   }
 
@@ -336,20 +335,20 @@ void view_option_unified_view_context(const std::string & arg) {
 
 void view_option_side_by_side_tab_size(const int & arg) {
 
-  global_options.view_options.side_by_side_tab_size = arg;
+  options.view_options.side_by_side_tab_size = arg;
 
-  global_options.flags |= OPTION_SIDE_BY_SIDE_VIEW;
+  options.flags |= OPTION_SIDE_BY_SIDE_VIEW;
 
 }
 
 
 // the main interface
-const client::options& client::process_command_line(int argc, char* argv[]) {
+const client_options& process_command_line(int argc, char* argv[]) {
 
-  global_options.archive = srcml_archive_create();
-  srcml_archive_enable_solitary_unit(global_options.archive);
-  srcml_archive_disable_hash(global_options.archive);
-  srcml_archive_register_namespace(global_options.archive,
+  options.archive = srcml_archive_create();
+  srcml_archive_enable_solitary_unit(options.archive);
+  srcml_archive_disable_hash(options.archive);
+  srcml_archive_register_namespace(options.archive,
       srcdiff::SRCDIFF_DEFAULT_NAMESPACE_PREFIX.c_str(),
       srcdiff::SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()
   );
@@ -380,7 +379,7 @@ const client::options& client::process_command_line(int argc, char* argv[]) {
   
   general_group->add_option(
       "-o,--output",
-      global_options.srcdiff_filename,
+      options.srcdiff_filename,
       "Specify output filename"
     )->default_val("-");
   
@@ -467,7 +466,7 @@ const client::options& client::process_command_line(int argc, char* argv[]) {
   // Note: this will override the filename attribute on all output units
   srcml_group->add_option(
     "-f,--filename",
-    global_options.unit_filename,
+    options.unit_filename,
     "Specify a unit filename attribute that is different from the actual filename"
   );
 
@@ -577,7 +576,7 @@ const client::options& client::process_command_line(int argc, char* argv[]) {
   // TODO: document what a custom theme file should look like somewhere
   view_options->add_option(
     "--theme",
-    global_options.view_options.theme,
+    options.view_options.theme,
     "Select theme for syntax highlighting.\n"
     "Options: \"default\", \"monokai\", or the filename of a custom theme."
   )->default_val("default");
@@ -610,7 +609,7 @@ const client::options& client::process_command_line(int argc, char* argv[]) {
 
   view_options->add_option(
     "--highlight",
-    global_options.view_options.syntax_highlight,
+    options.view_options.syntax_highlight,
     "Set the level of syntax highlighting.\n"
     "Options: none, partial (default), or full"
   )->default_val("partial");
@@ -639,7 +638,7 @@ const client::options& client::process_command_line(int argc, char* argv[]) {
 
     cli.parse(arguments);
 
-    if (!global_options.files_from_name.has_value() && global_options.input_pairs.size() < 1) {
+    if (!options.files_from_name.has_value() && options.input_pairs.size() < 1) {
       throw CLI::ValidationError("Input files are required.");
     }
 
@@ -659,9 +658,9 @@ const client::options& client::process_command_line(int argc, char* argv[]) {
       }
     }
 
-    if(   client::is_option(global_options.flags, OPTION_VIEW_XML)
-      && !client::is_option(global_options.flags, OPTION_UNIFIED_VIEW) 
-      && !client::is_option(global_options.flags, OPTION_SIDE_BY_SIDE_VIEW)) {
+    if(   is_option(options.flags, OPTION_VIEW_XML)
+      && !is_option(options.flags, OPTION_UNIFIED_VIEW) 
+      && !is_option(options.flags, OPTION_SIDE_BY_SIDE_VIEW)) {
           throw CLI::ValidationError("XML input requires either --unified or --side-by-side to be set."
           );
 
@@ -674,7 +673,7 @@ const client::options& client::process_command_line(int argc, char* argv[]) {
 
   // on success, we return our options object
 
-  return global_options;
+  return options;
 
 }
 
