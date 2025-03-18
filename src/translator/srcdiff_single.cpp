@@ -13,6 +13,7 @@
 #include <srcdiff_change.hpp>
 #include <srcdiff_comment.hpp>
 #include <srcdiff_common.hpp>
+#include <differ.hpp>
 #include <srcdiff_whitespace.hpp>
 #include <shortest_edit_script.h>
 
@@ -76,7 +77,7 @@ void srcdiff_single::output_recursive_same() {
             if(!modified_construct->root_term()->is_empty())
                 children_modified = modified_construct->children();
 
-            srcdiff_diff diff(out, children_original, children_modified);
+            srcdiff::differ diff(out, children_original, children_modified);
             diff.output();
 
     }
@@ -157,7 +158,7 @@ void srcdiff_single::output_recursive_interchangeable() {
         = modified_construct->get_descendents(modified_construct->get_terms().at(modified_collect_start_pos),
                                               modified_construct->end_position());
 
-    srcdiff_diff diff(out, next_set_original, next_set_modified);
+    srcdiff::differ diff(out, next_set_original, next_set_modified);
     diff.output();
 
     srcdiff_whitespace::output_whitespace(out);

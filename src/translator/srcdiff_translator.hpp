@@ -63,7 +63,7 @@ public:
 };
 
 #include <thread>
-#include <srcdiff_diff.hpp>
+#include <differ.hpp>
 #include <srcdiff_whitespace.hpp>
 
 // Translate from input stream to output stream
@@ -98,7 +98,7 @@ std::string srcdiff_translator::translate(
     unit original_unit(output->nodes_original(), output);
     unit modified_unit(output->nodes_modified(), output);
 
-    srcdiff_diff diff(output, original_unit.children(), modified_unit.children());
+    srcdiff::differ diff(output, original_unit.children(), modified_unit.children());
     diff.output();
 
     // output remaining whitespace

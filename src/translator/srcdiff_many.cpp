@@ -23,7 +23,7 @@ construct::construct_list_view safe_subspan(construct::construct_list_view view,
   return view.subspan(start, end - start + 1);
 }
 
-srcdiff_many::srcdiff_many(const srcdiff_diff & diff, edit_t * edit_script) : srcdiff_diff(diff), edit_script(edit_script) {}
+srcdiff_many::srcdiff_many(const differ& diff, edit_t* edit_script) : differ(diff), edit_script(edit_script) {}
 
 void srcdiff_many::output_unmatched(construct::construct_list_view original_unmatched, construct::construct_list_view modified_unmatched) {
 

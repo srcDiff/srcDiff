@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_diff.cpp
+ * @file differ.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_diff.hpp>
+#include <differ.hpp>
 
 #include <srcdiff_many.hpp>
 #include <srcdiff_change.hpp>
@@ -22,7 +22,9 @@
 #include <cstring>
 #include <methods.hpp>
 
-srcdiff_diff::srcdiff_diff(std::shared_ptr<srcdiff::output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified) 
+namespace srcdiff {
+
+differ::differ(std::shared_ptr<srcdiff::output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified) 
   : out(out), original(original), modified(modified) {}
 
 /*
@@ -36,7 +38,7 @@ srcdiff_diff::srcdiff_diff(std::shared_ptr<srcdiff::output_stream> out, const co
   output before and after changes/common sections.
 
 */
-void srcdiff_diff::output() {
+void differ::output() {
 
   srcdiff_shortest_edit_script ses;
 
@@ -166,7 +168,7 @@ void srcdiff_diff::output() {
 
 }
 
-void srcdiff_diff::output_pure(int end_original, int end_modified) {
+void differ::output_pure(int end_original, int end_modified) {
 
   srcdiff_change pure(*out, end_original, end_modified);
   pure.output_whitespace_prefix();
@@ -175,7 +177,7 @@ void srcdiff_diff::output_pure(int end_original, int end_modified) {
 }
 
 
-void srcdiff_diff::output_change_whitespace(int end_original, int end_modified) {
+void differ::output_change_whitespace(int end_original, int end_modified) {
 
   srcdiff_change change(*out, end_original, end_modified);
   
@@ -186,7 +188,7 @@ void srcdiff_diff::output_change_whitespace(int end_original, int end_modified) 
 
 }
 
-void srcdiff_diff::output_replace_inner_whitespace(int start_original, int end_original,
+void differ::output_replace_inner_whitespace(int start_original, int end_original,
                                                    int start_modified [[maybe_unused]], int end_modified,
                                                    int common_offset) {
 
@@ -208,5 +210,7 @@ void srcdiff_diff::output_replace_inner_whitespace(int start_original, int end_o
 
   srcdiff_common::output_common(out, end_original, end_modified);
   out->output_node(out->diff_common_end, SES_COMMON);
+
+}
 
 }

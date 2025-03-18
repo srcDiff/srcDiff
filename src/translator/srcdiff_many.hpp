@@ -11,11 +11,11 @@
 #define INCLUDED_SRCDIFFMANY_HPP
 
 #include <shortest_edit_script.h>
-#include <srcdiff_diff.hpp>
+#include <differ.hpp>
 
 #include <vector>
 
-class srcdiff_many : public srcdiff_diff {
+class srcdiff_many : public srcdiff::differ {
 
 protected:
 
@@ -33,7 +33,7 @@ private:
   
 public:
 
-    srcdiff_many(const srcdiff_diff & diff, edit_t * edit_script);
+    srcdiff_many(const srcdiff::differ & diff, edit_t * edit_script);
     virtual void output();
 
 };

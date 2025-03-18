@@ -8,7 +8,6 @@
  */
 
 #include <srcdiff_move.hpp>
-#include <srcdiff_diff.hpp>
 #include <srcdiff_measure.hpp>
 #include <srcdiff_whitespace.hpp>
 

@@ -10,6 +10,7 @@
 #ifndef INCLUDED_SRCDIFF_NESTED_HPP
 #define INCLUDED_SRCDIFF_NESTED_HPP
 
+#include <differ.hpp>
 #include <srcml_nodes.hpp>
 #include <construct.hpp>
 #include <srcdiff_many.hpp>
@@ -30,7 +31,7 @@ struct nest_result {
   int operation;
 };
 
-class srcdiff_nested : public srcdiff_diff {
+class srcdiff_nested : public srcdiff::differ {
 
 protected:
 

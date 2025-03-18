@@ -1,21 +1,23 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_diff.hpp
+ * @file differ.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_SRCDIFF_DIFF_HPP
-#define INCLUDED_SRCDIFF_DIFF_HPP
+#ifndef INCLUDED_DIFFER_HPP
+#define INCLUDED_DIFFER_HPP
 
 #include <output_stream.hpp>
 #include <construct.hpp>
 
 #include <vector>
 
-class srcdiff_diff {
+namespace srcdiff {
+
+class differ {
 
 protected:
   std::shared_ptr<srcdiff::output_stream> out;
@@ -24,7 +26,7 @@ protected:
   const construct::construct_list_view modified;
 
 public:
-  srcdiff_diff(std::shared_ptr<srcdiff::output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified);
+  differ(std::shared_ptr<srcdiff::output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified);
 
 
   virtual void output();
@@ -34,5 +36,7 @@ public:
                                                int start_modified, int end_modified,
                                                int common_offset);
 };
+
+}
 
 #endif

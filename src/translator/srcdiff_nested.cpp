@@ -21,7 +21,7 @@
 #include <cstring>
 
 srcdiff_nested::srcdiff_nested(std::shared_ptr<srcdiff::output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation)
-  : srcdiff_diff(out, original, modified), operation(operation) {}
+  : srcdiff::differ(out, original, modified), operation(operation) {}
 
 bool has_compound_inner(std::shared_ptr<const construct> & node_set_outer) {
 
@@ -477,12 +477,12 @@ void srcdiff_nested::output() {
 
   if(operation == SES_DELETE) {
 
-    srcdiff_diff diff(out, set, nest_set);
+    srcdiff::differ diff(out, set, nest_set);
     diff.output();
 
   } else {
 
-    srcdiff_diff diff(out, nest_set, set);
+    srcdiff::differ diff(out, nest_set, set);
     diff.output();
 
   }

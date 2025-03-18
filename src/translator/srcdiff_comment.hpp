@@ -10,9 +10,9 @@
 #ifndef INCLUDED_SRCDIFF_COMMENT_HPP
 #define INCLUDED_SRCDIFF_COMMENT_HPP
 
-#include <srcdiff_diff.hpp>
+#include <differ.hpp>
 
-class srcdiff_comment : public srcdiff_diff {
+class srcdiff_comment : public srcdiff::differ {
 
 protected:
 

@@ -11,7 +11,6 @@
 
 #include <srcdiff_shortest_edit_script.hpp>
 #include <srcdiff_constants.hpp>
-#include <srcdiff_diff.hpp>
 
 #include <algorithm>
 
