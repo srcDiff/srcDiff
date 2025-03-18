@@ -1,18 +1,20 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_translator.hpp
+ * @file translator.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_SRCDIFF_TRANSLATOR_HPP
-#define INCLUDED_SRCDIFF_TRANSLATOR_HPP
+#ifndef INCLUDED_TRANSLATOR_HPP
+#define INCLUDED_TRANSLATOR_HPP
 
 #include <srcdiff_input.hpp>
 #include <output_stream.hpp>
 #include <srcdiff_options.hpp>
+#include <differ.hpp>
+#include <srcdiff_whitespace.hpp>
 #include <methods.hpp>
 
 #include <unit.hpp>
@@ -23,10 +25,15 @@
 #include <any>
 #include <optional>
 #include <string>
+#include <thread>
 
 #include <srcml.h>
 
-class srcdiff_translator {
+
+
+namespace srcdiff {
+
+class translator {
 
 private:
 
@@ -34,20 +41,20 @@ private:
 
   const OPTION_TYPE & flags;
 
-  std::shared_ptr<srcdiff::output_stream> output;
+  std::shared_ptr<output_stream> output;
 
   const std::optional<std::string> & unit_filename;
 
 public:
 
   // constructor
-  srcdiff_translator(const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method, srcml_archive * archive,
+  translator(const std::string & srcdiff_filename, const OPTION_TYPE & flags, const METHOD_TYPE & method, srcml_archive * archive,
                      const std::optional<std::string> & unit_filename,
                      const srcdiff_options::view_options_t & view_options,
                      const std::optional<std::string> & summary_type_str);
 
   // destructor
-  ~srcdiff_translator();
+  ~translator();
 
   template<class T>
   std::string translate(
@@ -62,13 +69,9 @@ public:
   void write_translation();
 };
 
-#include <thread>
-#include <differ.hpp>
-#include <srcdiff_whitespace.hpp>
-
 // Translate from input stream to output stream
 template<class T>
-std::string srcdiff_translator::translate(
+std::string translator::translate(
                                    const srcdiff_input<T> & input_original,
                                    const srcdiff_input<T> & input_modified,
                                    const std::string & language,
@@ -89,7 +92,7 @@ std::string srcdiff_translator::translate(
 
   output->prime(is_original, is_modified);
 
-  std::string srcdiff;
+  std::string srcdiff_str;
   // run on file level
   if(is_original || is_modified) {
 
@@ -98,20 +101,22 @@ std::string srcdiff_translator::translate(
     unit original_unit(output->nodes_original(), output);
     unit modified_unit(output->nodes_modified(), output);
 
-    srcdiff::differ diff(output, original_unit.children(), modified_unit.children());
+    differ diff(output, original_unit.children(), modified_unit.children());
     diff.output();
 
     // output remaining whitespace
     srcdiff_whitespace whitespace(*output);
     whitespace.output_all();
 
-    srcdiff = output->end_unit();
+    srcdiff_str = output->end_unit();
 
   }
 
   output->reset();
 
-  return srcdiff;
+  return srcdiff_str;
+}
+
 }
 
 #endif

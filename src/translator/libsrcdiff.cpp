@@ -9,7 +9,7 @@
 
 #include <srcdiff.h>
 
-#include <srcdiff_translator.hpp>
+#include <translator.hpp>
 #include <output_stream.hpp>
 #include <srcdiff_input.hpp>
 
@@ -85,10 +85,10 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
     srcdiff_input<file_input> input_original(options.archive, original_path, language_string, options.flags, in);
     srcdiff_input<file_input> input_modified(options.archive, modified_path, language_string, options.flags, in);
 
-    srcdiff_translator translator(options.srcdiff_filename, options.flags, options.methods, options.archive,
-                                  options.unit_filename,
-                                  options.view_options,
-                                  options.summary_type_str);
+    srcdiff::translator translator(options.srcdiff_filename, options.flags, options.methods, options.archive,
+                                   options.unit_filename,
+                                   options.view_options,
+                                   options.summary_type_str);
 
     translator.translate(input_original, input_modified, language_string, unit_filename, unit_version);
 

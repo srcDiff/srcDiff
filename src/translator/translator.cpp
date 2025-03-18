@@ -1,16 +1,18 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_translator.cpp
+ * @file translator.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_translator.hpp>
+#include <translator.hpp>
+
+namespace srcdiff {
 
 // constructor
-srcdiff_translator::srcdiff_translator(const std::string & srcdiff_filename,
+translator::translator(const std::string & srcdiff_filename,
                                        const OPTION_TYPE & flags,
                                        const METHOD_TYPE & method,
                                        srcml_archive * archive,
@@ -27,10 +29,12 @@ srcdiff_translator::srcdiff_translator(const std::string & srcdiff_filename,
 
 
 // destructor
-srcdiff_translator::~srcdiff_translator() {
+translator::~translator() {
   output->close();
 }
 
-void srcdiff_translator::write_translation() {
+void translator::write_translation() {
   output->write_unit();
+}
+
 }

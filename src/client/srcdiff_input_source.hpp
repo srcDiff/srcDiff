@@ -11,7 +11,7 @@
 #define INCLUDED_SRCDIFF_INPUT_SOURCE_HPP
 
 #include <srcdiff_options.hpp>
-#include <srcdiff_translator.hpp>
+#include <translator.hpp>
 #include <view.hpp>
 
 #include <string>
@@ -30,7 +30,7 @@ class srcdiff_input_source {
 protected:
 
   const srcdiff_options& options;
-  std::unique_ptr<srcdiff_translator> translator;
+  std::unique_ptr<srcdiff::translator> translator;
   std::unique_ptr<view_t> view;
 
   int directory_length_original;

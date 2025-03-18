@@ -32,7 +32,7 @@ srcdiff_input_source::srcdiff_input_source(const srcdiff_options & options) : op
 
   const srcdiff_options::view_options_t& view_options = options.view_options;
 
-  translator = std::make_unique<srcdiff_translator>(
+  translator = std::make_unique<srcdiff::translator>(
                 options.srcdiff_filename, options.flags, options.methods, options.archive,
                 options.unit_filename,
                 options.view_options,

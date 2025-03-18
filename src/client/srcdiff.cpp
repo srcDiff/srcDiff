@@ -7,7 +7,6 @@
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_translator.hpp>
 #include <srcdiff_options.hpp>
 
 #include <srcdiff_input_source.hpp>
