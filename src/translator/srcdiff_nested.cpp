@@ -10,7 +10,7 @@
 #include <srcdiff_nested.hpp>
 
 #include <constants.hpp>
-#include <srcdiff_change.hpp>
+#include <change_stream.hpp>
 #include <text_measurer.hpp>
 #include <shortest_edit_script.h>
 #include <type_query.hpp>
@@ -463,10 +463,10 @@ void srcdiff_nested::output() {
   }
 
   if(operation == SES_DELETE) {
-    srcdiff_change::output_change(out, start_pos, out->last_output_modified());
+    srcdiff::change_stream::output_change(out, start_pos, out->last_output_modified());
   }
   else {
-    srcdiff_change::output_change(out, out->last_output_original(), start_pos);
+    srcdiff::change_stream::output_change(out, out->last_output_original(), start_pos);
   }
 
   if(structure_outer == "block_content") {
@@ -494,10 +494,10 @@ void srcdiff_nested::output() {
   }
 
   if(operation == SES_DELETE) {
-    srcdiff_change::output_change(out, outer.back()->end_position() + 1, out->last_output_modified());
+    srcdiff::change_stream::output_change(out, outer.back()->end_position() + 1, out->last_output_modified());
   }
   else {
-    srcdiff_change::output_change(out, out->last_output_original(), outer.back()->end_position() + 1);
+    srcdiff::change_stream::output_change(out, out->last_output_original(), outer.back()->end_position() + 1);
   }
 
 }

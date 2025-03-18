@@ -11,7 +11,7 @@
 
 #include <srcdiff_single.hpp>
 #include <srcdiff_nested.hpp>
-#include <srcdiff_change.hpp>
+#include <change_stream.hpp>
 #include <measurer.hpp>
 #include <change_matcher.hpp>
 #include <type_query.hpp>
@@ -54,7 +54,7 @@ void srcdiff_many::output_unmatched(construct::construct_list_view original_unma
           pre_nest_end_modified = modified_view[nesting.start_modified - 1]->end_position() + 1;
         }
 
-        srcdiff_change::output_change(out, pre_nest_end_original, pre_nest_end_modified);
+        srcdiff::change_stream::output_change(out, pre_nest_end_original, pre_nest_end_modified);
 
         if((nesting.end_original - nesting.start_original) > 0 && (nesting.end_modified - nesting.start_modified) > 0) {
 
@@ -73,7 +73,7 @@ void srcdiff_many::output_unmatched(construct::construct_list_view original_unma
       /** @todo may only need to do this if not at end */
       if(original_view.empty() && modified_view.empty()) {
 
-        srcdiff_change::output_change(out, finish_original, finish_modified);
+        srcdiff::change_stream::output_change(out, finish_original, finish_modified);
         return;
 
       }

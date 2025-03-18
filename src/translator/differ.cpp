@@ -10,7 +10,7 @@
 #include <differ.hpp>
 
 #include <srcdiff_many.hpp>
-#include <srcdiff_change.hpp>
+#include <change_stream.hpp>
 #include <srcdiff_single.hpp>
 #include <srcdiff_common.hpp>
 #include <srcdiff_move.hpp>
@@ -169,7 +169,7 @@ void differ::output() {
 
 void differ::output_pure(int end_original, int end_modified) {
 
-  srcdiff_change pure(*out, end_original, end_modified);
+  srcdiff::change_stream pure(*out, end_original, end_modified);
   pure.output_whitespace_prefix();
   pure.output();
 
@@ -178,7 +178,7 @@ void differ::output_pure(int end_original, int end_modified) {
 
 void differ::output_change_whitespace(int end_original, int end_modified) {
 
-  srcdiff_change change(*out, end_original, end_modified);
+  srcdiff::change_stream change(*out, end_original, end_modified);
   
   change.output_whitespace_prefix();
   
@@ -192,7 +192,7 @@ void differ::output_replace_inner_whitespace(int start_original, int end_origina
                                                    int common_offset) {
 
 
-  srcdiff_change change(*out, end_original - 1, end_modified - 1);
+  srcdiff::change_stream change(*out, end_original - 1, end_modified - 1);
   change.output_whitespace_all();
 
   out->output_node(out->diff_common_start, SES_COMMON);

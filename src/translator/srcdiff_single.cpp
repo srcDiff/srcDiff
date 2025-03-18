@@ -10,7 +10,7 @@
 #include <srcdiff_single.hpp>
 
 #include <constants.hpp>
-#include <srcdiff_change.hpp>
+#include <change_stream.hpp>
 #include <srcdiff_comment.hpp>
 #include <srcdiff_common.hpp>
 #include <differ.hpp>
@@ -163,14 +163,14 @@ void srcdiff_single::output_recursive_interchangeable() {
 
     srcdiff::whitespace_stream::output_whitespace(out);
 
-    srcdiff_change::output_change(out, out->last_output_original(), modified_construct->end_position() + 1);
+    srcdiff::change_stream::output_change(out, out->last_output_original(), modified_construct->end_position() + 1);
 
     out->output_node(out->diff_modified_end, SES_INSERT, true);
     if(out->output_state() == SES_INSERT) {
         out->output_node(out->diff_modified_end, SES_INSERT);
     }
 
-    srcdiff_change::output_change(out, original_construct->end_position() + 1, out->last_output_modified());
+    srcdiff::change_stream::output_change(out, original_construct->end_position() + 1, out->last_output_modified());
 
     out->output_node(out->diff_original_end, SES_DELETE, true);
     if(out->output_state() == SES_DELETE) {

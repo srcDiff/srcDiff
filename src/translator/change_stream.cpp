@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_change.cpp
+ * @file change_stream.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_change.hpp>
+#include <change_stream.hpp>
 
 #include <constants.hpp>
 #include <whitespace_stream.hpp>
@@ -21,10 +21,12 @@
 #include <cstring>
 #include <string>
 
+namespace srcdiff {
+
 const std::string replace("replace");
 const srcML::attribute diff_type(srcdiff::DIFF_TYPE, srcML::name_space::SRC_NAMESPACE, replace);
 
-srcdiff_change::srcdiff_change(const srcdiff::output_stream & out, std::size_t end_original, std::size_t end_modified)
+change_stream::change_stream(const srcdiff::output_stream & out, std::size_t end_original, std::size_t end_modified)
 : srcdiff::output_stream(out), end_original(end_original), end_modified(end_modified) {}
 
 /*
@@ -32,7 +34,7 @@ srcdiff_change::srcdiff_change(const srcdiff::output_stream & out, std::size_t e
   Output all prepending whitespace as part of a change.
 
 */
-void srcdiff_change::output_whitespace_all() {
+void change_stream::output_whitespace_all() {
 
   srcdiff::whitespace_stream whitespace(*this);
   whitespace.output_all();
@@ -48,7 +50,7 @@ void srcdiff_change::output_whitespace_all() {
   it is included and the following nodes are included if they have a new line.
 
 */
-void srcdiff_change::output_whitespace_prefix() {
+void change_stream::output_whitespace_prefix() {
 
   srcdiff::whitespace_stream whitespace(*this);
   whitespace.output_prefix();
@@ -61,7 +63,7 @@ void srcdiff_change::output_whitespace_prefix() {
   whitespace even if it could be matches is treated as different.
 
 */
-void srcdiff_change::output() {
+void change_stream::output() {
 
   std::size_t begin_original = rbuf_original->last_output;
   std::size_t begin_modified = rbuf_modified->last_output;
@@ -225,5 +227,7 @@ void srcdiff_change::output() {
 
   diff_original_start->clear_attributes();
   diff_modified_start->clear_attributes();
+
+}
 
 }
