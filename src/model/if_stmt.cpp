@@ -12,8 +12,6 @@
 #include <clause.hpp>
 #include <elseif.hpp>
 
-#include <srcdiff_match.hpp>
-
 std::shared_ptr<const if_t> if_stmt::find_if() const {
    if(if_child) return *if_child;
 

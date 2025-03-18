@@ -13,7 +13,7 @@
 #include <srcdiff_nested.hpp>
 #include <srcdiff_change.hpp>
 #include <srcdiff_measure.hpp>
-#include <srcdiff_match.hpp>
+#include <change_matcher.hpp>
 #include <type_query.hpp>
 
 constexpr int MOVE = int(SES_INSERT) + 1;
@@ -132,7 +132,7 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
   edit_t * edits = edit_script;
   edit_t * edit_next = edit_script->next;
 
-  offset_pair * matches = NULL;
+  srcdiff::offset_pair * matches = NULL;
 
   int_pairs original_moved;
   std::vector<int> pos_original;
@@ -180,12 +180,12 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
   if(pos_original.size() != 0 && pos_modified.size()) {
 
-    srcdiff_match match(original_sets, modified_sets);
-    matches = match.match_differences();
+    srcdiff::change_matcher matcher(original_sets, modified_sets);
+    matches = matcher.match_differences();
 
   }
 
-  offset_pair * matches_save = matches;
+  srcdiff::offset_pair * matches_save = matches;
 
   for(; matches; matches = matches->next) {
 
@@ -199,7 +199,7 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
   for(; matches_save;) {
 
-    offset_pair * original_match = matches_save;
+    srcdiff::offset_pair * original_match = matches_save;
     matches_save = matches_save->next;
     delete original_match;
 

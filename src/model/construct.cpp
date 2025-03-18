@@ -14,10 +14,6 @@
 #include <srcdiff_text_measure.hpp>
 #include <srcdiff_syntax_measure.hpp>
 
-//temp, probably
-#include <srcdiff_match.hpp>
-#include <srcdiff_nested.hpp>
-
 #include <algorithm>
 #include <iostream>
 

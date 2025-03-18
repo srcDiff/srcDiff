@@ -17,7 +17,6 @@
 #include <srcdiff_move.hpp>
 #include <srcdiff_measure.hpp>
 #include <srcdiff_shortest_edit_script.hpp>
-#include <srcdiff_match.hpp>
 #include <srcdiff_edit_correction.hpp>
 
 #include <cstring>

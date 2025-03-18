@@ -9,8 +9,6 @@
 
 #include <block.hpp>
 
-#include <srcdiff_match.hpp>
-
 #include <nest/block.hpp>
 #include <srcdiff_nested.hpp>
 

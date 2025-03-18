@@ -7,7 +7,7 @@
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_match.hpp>
+#include <change_matcher.hpp>
 
 #include <srcdiff_nested.hpp>
 #include <srcdiff_text_measure.hpp>
@@ -18,6 +18,8 @@
 #include <list>
 
 #include <cstring>
+
+namespace srcdiff {
 
 struct difference {
 
@@ -47,7 +49,7 @@ bool is_match(construct::construct_list_view original, construct::construct_list
 }
 
 
-srcdiff_match::srcdiff_match(const construct::construct_list_view original, const construct::construct_list_view modified)
+change_matcher::change_matcher(const construct::construct_list_view original, const construct::construct_list_view modified)
   : original(original), modified(modified) {}
 
 /** loop O(D) */
@@ -125,7 +127,7 @@ static offset_pair * create_linked_list(int olength, int nlength, difference * d
 }
 
 /** loop O(RD^2) */
-offset_pair * srcdiff_match::match_differences() {
+offset_pair * change_matcher::match_differences() {
 
   /*
 
@@ -284,5 +286,7 @@ offset_pair * srcdiff_match::match_differences() {
   free(differences);
 
   return matches;
+
+}
 
 }

@@ -12,7 +12,6 @@
 #include <srcdiff_constants.hpp>
 #include <srcdiff_change.hpp>
 #include <srcdiff_text_measure.hpp>
-#include <srcdiff_match.hpp>
 #include <shortest_edit_script.h>
 #include <type_query.hpp>
 

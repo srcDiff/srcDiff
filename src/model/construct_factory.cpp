@@ -38,8 +38,6 @@
 
 #include <block.hpp>
 
-#include <srcdiff_match.hpp>
-
 #include <nest/rule_checker.hpp>
 #include <nest/custom.hpp>
 #include <nest/similar.hpp>

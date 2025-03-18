@@ -1,17 +1,19 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_match.hpp
+ * @file change_matcher.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_SRCDIFF_MATCH_HPP
-#define INCLUDED_SRCDIFF_MATCH_HPP
+#ifndef INCLUDED_CHANGE_MATCHER_HPP
+#define INCLUDED_CHANGE_MATCHER_HPP
 
 #include <construct.hpp>
 #include <srcdiff_measure.hpp>
+
+namespace srcdiff {
 
 struct offset_pair {
 
@@ -38,10 +40,10 @@ struct offset_pair {
 
 };
 
-class srcdiff_match {
+class change_matcher {
 
 public:
-  srcdiff_match(const construct::construct_list_view original, const construct::construct_list_view modified);
+  change_matcher(const construct::construct_list_view original, const construct::construct_list_view modified);
   offset_pair * match_differences();
 
 protected:
@@ -50,5 +52,7 @@ protected:
   const construct::construct_list_view modified;
 
 };
+
+}
 
 #endif

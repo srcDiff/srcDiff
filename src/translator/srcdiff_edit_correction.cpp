@@ -9,7 +9,6 @@
 
 #include <srcdiff_edit_correction.hpp>
 
-#include <srcdiff_match.hpp>
 #include <list>
 #include <algorithm>
 
