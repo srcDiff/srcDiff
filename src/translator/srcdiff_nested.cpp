@@ -9,7 +9,7 @@
 
 #include <srcdiff_nested.hpp>
 
-#include <srcdiff_constants.hpp>
+#include <constants.hpp>
 #include <srcdiff_change.hpp>
 #include <text_measurer.hpp>
 #include <shortest_edit_script.h>

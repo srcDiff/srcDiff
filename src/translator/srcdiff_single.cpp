@@ -9,7 +9,7 @@
 
 #include <srcdiff_single.hpp>
 
-#include <srcdiff_constants.hpp>
+#include <constants.hpp>
 #include <srcdiff_change.hpp>
 #include <srcdiff_comment.hpp>
 #include <srcdiff_common.hpp>

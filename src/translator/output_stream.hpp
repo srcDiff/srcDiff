@@ -15,7 +15,7 @@
 #include <srcdiff_options.hpp>
 
 #include <methods.hpp>
-#include <srcdiff_constants.hpp>
+#include <constants.hpp>
 #include <shortest_edit_script.h>
 
 #include <optional>

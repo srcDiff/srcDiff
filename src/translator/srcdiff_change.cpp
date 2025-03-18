@@ -9,7 +9,7 @@
 
 #include <srcdiff_change.hpp>
 
-#include <srcdiff_constants.hpp>
+#include <constants.hpp>
 #include <srcdiff_whitespace.hpp>
 #include <srcdiff_move.hpp>
 #include <shortest_edit_script.h>
@@ -22,7 +22,7 @@
 #include <string>
 
 const std::string replace("replace");
-const srcML::attribute diff_type(DIFF_TYPE, srcML::name_space::SRC_NAMESPACE, replace);
+const srcML::attribute diff_type(srcdiff::DIFF_TYPE, srcML::name_space::SRC_NAMESPACE, replace);
 
 srcdiff_change::srcdiff_change(const srcdiff::output_stream & out, std::size_t end_original, std::size_t end_modified)
 : srcdiff::output_stream(out), end_original(end_original), end_modified(end_modified) {}

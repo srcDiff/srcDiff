@@ -9,7 +9,7 @@
 
 #include <measurer.hpp>
 
-#include <srcdiff_constants.hpp>
+#include <constants.hpp>
 #include <construct.hpp>
 
 #include <algorithm>

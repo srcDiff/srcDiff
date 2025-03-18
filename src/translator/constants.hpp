@@ -1,16 +1,18 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_constants.hpp
+ * @file constants.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_SRCDIFF_CONSTANTS_HPP
-#define INCLUDED_SRCDIFF_CONSTANTS_HPP
+#ifndef INCLUDED_CONSTANTS_HPP
+#define INCLUDED_CONSTANTS_HPP
 
 #include <string>
+
+namespace srcdiff {
 
 const std::string DIFF_PREFIX = "diff:";
 const std::string DIFF_ORIGINAL = "delete";
@@ -28,5 +30,7 @@ const std::string SRCML_CPP_NAMESPACE_PREFIX = "cpp";
 const std::string SRCML_CPP_NAMESPACE_HREF = "http://www.srcML.org/srcML/cpp";
 
 const int MAX_INT = (unsigned)-1 >> 1;
+
+}
 
 #endif

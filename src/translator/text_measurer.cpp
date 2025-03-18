@@ -11,7 +11,7 @@
 
 
 #include <shortest_edit_script.hpp>
-#include <srcdiff_constants.hpp>
+#include <constants.hpp>
 
 #include <algorithm>
 #include <cassert>

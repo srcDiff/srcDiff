@@ -8,7 +8,7 @@
  */
 
 #include <srcdiff_options.hpp>
-#include <srcdiff_constants.hpp>
+#include <constants.hpp>
 
 #include <libxml/parser.h>
 #include <CLI/CLI.hpp>
@@ -348,8 +348,8 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
   srcml_archive_enable_solitary_unit(options.archive);
   srcml_archive_disable_hash(options.archive);
   srcml_archive_register_namespace(options.archive,
-      SRCDIFF_DEFAULT_NAMESPACE_PREFIX.c_str(),
-      SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()
+      srcdiff::SRCDIFF_DEFAULT_NAMESPACE_PREFIX.c_str(),
+      srcdiff::SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()
   );
 
   CLI::App cli(
