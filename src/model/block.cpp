@@ -47,7 +47,7 @@ bool block::is_matchable_impl(const construct & modified) const {
 
     if(is_pseudo_original == is_pseudo_modified) return true;
 
-    const srcdiff_measure & measure = *this->measure(modified);
+    const srcdiff::measure & measure = *this->measure(modified);
     if(!measure.similarity()) return false;
 
     construct_list original_stmts;

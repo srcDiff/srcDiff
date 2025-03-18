@@ -297,11 +297,11 @@ std::shared_ptr<const construct> construct::find_best_descendent(const construct
 }
 
 
-const std::shared_ptr<srcdiff_measure> & construct::measure(const construct & modified) const {
-    std::unordered_map<int, std::shared_ptr<srcdiff_measure>>::const_iterator citr = measures.find(modified.start_position());
+const std::shared_ptr<srcdiff::measure> & construct::measure(const construct & modified) const {
+    std::unordered_map<int, std::shared_ptr<srcdiff::measure>>::const_iterator citr = measures.find(modified.start_position());
     if(citr != measures.end()) return citr->second;
 
-    std::shared_ptr<srcdiff_measure> similarity = std::make_shared<srcdiff_text_measure>(*this, modified);
+    std::shared_ptr<srcdiff::measure> similarity = std::make_shared<srcdiff_text_measure>(*this, modified);
     similarity->compute();
 
     citr = measures.insert(citr, std::pair(modified.start_position(), similarity));
@@ -314,7 +314,7 @@ bool construct::is_similar(const construct & modified) const {
 
 bool construct::is_text_similar(const construct & modified) const {
 
- const srcdiff_measure & measure = *this->measure(modified);
+ const srcdiff::measure & measure = *this->measure(modified);
 
   int min_size = measure.min_length();
   int max_size = measure.max_length();

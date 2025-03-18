@@ -12,7 +12,7 @@
 #include <srcdiff_single.hpp>
 #include <srcdiff_nested.hpp>
 #include <srcdiff_change.hpp>
-#include <srcdiff_measure.hpp>
+#include <measure.hpp>
 #include <change_matcher.hpp>
 #include <type_query.hpp>
 

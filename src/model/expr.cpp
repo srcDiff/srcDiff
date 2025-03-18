@@ -15,7 +15,7 @@ bool expr_t::is_single_call() const {
 }
 
 bool expr_t::is_matchable_impl(const construct & modified) const {
-    const srcdiff_measure & expr_measure = *measure(modified);
+    const srcdiff::measure & expr_measure = *measure(modified);
     if(expr_measure.similarity() > 0 && expr_measure.difference() <= expr_measure.max_length()) return true;
 
     if(root_term()->get_parent()->get_name() == "argument") return true;

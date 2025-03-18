@@ -15,7 +15,7 @@
 #include <algorithm>
 
 srcdiff_syntax_measure::srcdiff_syntax_measure(const construct & set_original, const construct & set_modified) 
-  : srcdiff_measure(set_original, set_modified) {}
+  : srcdiff::measure(set_original, set_modified) {}
 
 // context is unused here
 static bool is_significant(std::size_t & node_pos, const srcml_nodes & nodes, const void * context [[maybe_unused]]) {

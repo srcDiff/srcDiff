@@ -15,7 +15,7 @@
 #include <construct.hpp>
 #include <srcdiff_many.hpp>
 #include <srcdiff_whitespace.hpp>
-#include <srcdiff_measure.hpp>
+#include <measure.hpp>
 
 struct nest_result {
   nest_result(int start_original = 0, int end_original = 0,

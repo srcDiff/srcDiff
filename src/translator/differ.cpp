@@ -15,7 +15,7 @@
 #include <srcdiff_whitespace.hpp>
 #include <srcdiff_common.hpp>
 #include <srcdiff_move.hpp>
-#include <srcdiff_measure.hpp>
+#include <measure.hpp>
 #include <srcdiff_shortest_edit_script.hpp>
 #include <srcdiff_edit_correction.hpp>
 
@@ -24,7 +24,7 @@
 
 namespace srcdiff {
 
-differ::differ(std::shared_ptr<srcdiff::output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified) 
+differ::differ(std::shared_ptr<output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified) 
   : out(out), original(original), modified(modified) {}
 
 /*

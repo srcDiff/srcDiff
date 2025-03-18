@@ -39,7 +39,7 @@ bool has_compound_inner(std::shared_ptr<const construct> & node_set_outer) {
 
 bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
                     std::shared_ptr<const construct> node_set_inner,
-                    const srcdiff_measure & measure, bool recurse = true) {
+                    const srcdiff::measure & measure, bool recurse = true) {
 
   // do not nest compound name in simple or anything into something that is not compound
   if(node_set_outer->root_term_name() == "name" && node_set_inner->root_term_name() == "name"
@@ -83,7 +83,7 @@ bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
 
 bool srcdiff_nested::is_better_nested(construct::construct_list_view original, construct::construct_list_view modified) {
 
-  const srcdiff_measure & measure = *original[0]->measure(*modified[0]);
+  const srcdiff::measure & measure = *original[0]->measure(*modified[0]);
 
   for(std::size_t pos = 0; pos < original.size(); ++pos) {
 

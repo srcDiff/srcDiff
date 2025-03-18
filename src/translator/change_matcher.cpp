@@ -34,7 +34,7 @@ struct difference {
 };
 
 bool is_match(construct::construct_list_view original, construct::construct_list_view modified) {
-  const srcdiff_measure & measure = *original[0]->measure(*modified[0]);
+  const srcdiff::measure & measure = *original[0]->measure(*modified[0]);
 
   if(measure.similarity() == MAX_INT) return false;
 
@@ -155,7 +155,7 @@ offset_pair * change_matcher::match_differences() {
     for(int j = 0; j < olength; ++j) {
 
       /** loop O(nd) */
-      const srcdiff_measure & measure = *original[j]->measure(*modified[i]);
+      const srcdiff::measure & measure = *original[j]->measure(*modified[i]);
       int similarity = measure.similarity();
 
       //unsigned long long max_similarity = (unsigned long long)-1;

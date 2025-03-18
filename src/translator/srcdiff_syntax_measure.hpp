@@ -10,11 +10,11 @@
 #ifndef INCLUDED_SRCDIFF_SYNTAX_MEASURE_HPP
 #define INCLUDED_SRCDIFF_SYNTAX_MEASURE_HPP
 
-#include <srcdiff_measure.hpp>
+#include <measure.hpp>
 
 #include <cassert>
 
-class srcdiff_syntax_measure : public srcdiff_measure {
+class srcdiff_syntax_measure : public srcdiff::measure {
 
 protected:
 

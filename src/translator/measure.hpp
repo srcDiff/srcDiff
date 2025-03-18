@@ -1,25 +1,27 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_measure.hpp
+ * @file measure.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_SRCDIFF_MEASURE_HPP
-#define INCLUDED_SRCDIFF_MEASURE_HPP
+#ifndef INCLUDED_MEASURE_HPP
+#define INCLUDED_MEASURE_HPP
 
 
 #include <shortest_edit_script.hpp>
 
 class construct;
 
-class srcdiff_measure {
+namespace srcdiff {
+
+class measure {
 
 protected:
-    const construct & set_original;
-    const construct & set_modified;
+    const construct& set_original;
+    const construct& set_modified;
 
     bool computed;
 
@@ -29,11 +31,11 @@ protected:
     int original_len;
     int modified_len;
 
-    void process_edit_script(const edit_t * edit_script);
+    void process_edit_script(const edit_t* edit_script);
 
 public:
 
-    srcdiff_measure(const construct & set_original, const construct & set_modified);
+    measure(const construct& set_original, const construct& set_modified);
 
     int similarity()          const;
     int difference()          const;
@@ -46,11 +48,9 @@ public:
     int min_length() const;
 
     virtual void compute() = 0;
-    virtual ~srcdiff_measure() {};
+    virtual ~measure() {};
 };
 
-
-
-
+}
 
 #endif

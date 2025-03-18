@@ -17,7 +17,7 @@
 #include <cassert>
 
 srcdiff_text_measure::srcdiff_text_measure(const construct & set_original, const construct & set_modified, bool important_only) 
-  : srcdiff_measure(set_original, set_modified),
+  : srcdiff::measure(set_original, set_modified),
     set_original_text(std::make_shared<construct>(set_original.nodes())),
     set_modified_text(std::make_shared<construct>(set_modified.nodes())),
     important_only(important_only),
