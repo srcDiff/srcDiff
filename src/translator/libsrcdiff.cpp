@@ -11,7 +11,7 @@
 
 #include <translator.hpp>
 #include <output_stream.hpp>
-#include <srcdiff_input.hpp>
+#include <input_stream.hpp>
 
 #include <string>
 #include <optional>
@@ -82,8 +82,8 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
     options.srcdiff_filename = output_filename;
 
     file_input in;
-    srcdiff_input<file_input> input_original(options.archive, original_path, language_string, options.flags, in);
-    srcdiff_input<file_input> input_modified(options.archive, modified_path, language_string, options.flags, in);
+    srcdiff::input_stream<file_input> input_original(options.archive, original_path, language_string, options.flags, in);
+    srcdiff::input_stream<file_input> input_modified(options.archive, modified_path, language_string, options.flags, in);
 
     srcdiff::translator translator(options.srcdiff_filename, options.flags, options.methods, options.archive,
                                    options.unit_filename,

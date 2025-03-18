@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_input.hpp
+ * @file input_stream.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_SRCDIFF_INPUT_HPP
-#define INCLUDED_SRCDIFF_INPUT_HPP
+#ifndef INCLUDED_INPUT_STREAM_HPP
+#define INCLUDED_INPUT_STREAM_HPP
 
 #include <srcml_nodes.hpp>
 #include <srcdiff_options.hpp>
@@ -21,8 +21,10 @@
 
 #include <optional>
 
+namespace srcdiff {
+
 template<class T>
-class srcdiff_input {
+class input_stream {
 
 protected:
 
@@ -36,8 +38,8 @@ private:
 
 public:
 
-    srcdiff_input(srcml_archive * archive, const std::optional<std::string> & input_path, const char * language_string, const OPTION_TYPE & options, const T & input);
-    ~srcdiff_input();
+    input_stream(srcml_archive * archive, const std::optional<std::string> & input_path, const char * language_string, const OPTION_TYPE & options, const T & input);
+    ~input_stream();
 
     void operator()(int stream_source, srcml_nodes & nodes, int & is_input) const;
 
@@ -45,6 +47,8 @@ public:
 
 };
 
-#include <srcdiff_input.tcc>
+#include <input_stream.tcc>
+
+}
 
 #endif

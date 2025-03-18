@@ -11,7 +11,7 @@
 
 #include <srcml.h>
 
-#include <srcdiff_input.hpp>
+#include <input_stream.hpp>
 
 #include <uri_stream.hpp>
 
@@ -99,8 +99,8 @@ std::string srcdiff_input_source_local::process_file(const std::optional<std::st
 
   }
 
-  srcdiff_input<srcdiff_input_source_local> input_original(options.archive, path_original, language_string, options.flags, *this);
-  srcdiff_input<srcdiff_input_source_local> input_modified(options.archive, path_modified, language_string, options.flags, *this);
+  srcdiff::input_stream<srcdiff_input_source_local> input_original(options.archive, path_original, language_string, options.flags, *this);
+  srcdiff::input_stream<srcdiff_input_source_local> input_modified(options.archive, path_modified, language_string, options.flags, *this);
   return translator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
 
 }

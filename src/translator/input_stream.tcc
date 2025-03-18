@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_input.tcc
+ * @file input_stream.tcc
  *
  * @copyright Copyright (C) 2015-2024 SDML (www.srcDiff.org)
  *
@@ -10,14 +10,14 @@
 class no_file_exception {};
 
 template<class T>
-srcdiff_input<T>::srcdiff_input(srcml_archive * archive, const std::optional<std::string> & input_path, const char * language_string, const OPTION_TYPE & options, const T & input)
+input_stream<T>::input_stream(srcml_archive * archive, const std::optional<std::string> & input_path, const char * language_string, const OPTION_TYPE & options, const T & input)
 	: archive(archive), input_path(input_path), language_string(language_string), options(options), input(input) {}
 
 template<class T>
-srcdiff_input<T>::~srcdiff_input() {}
+input_stream<T>::~input_stream() {}
 
 template<class T>
-void srcdiff_input<T>::operator()(int stream_source, srcml_nodes & nodes, int & is_input) const {
+void input_stream<T>::operator()(int stream_source, srcml_nodes & nodes, int & is_input) const {
 
   is_input = 0;
   try {
@@ -35,7 +35,7 @@ void srcdiff_input<T>::operator()(int stream_source, srcml_nodes & nodes, int & 
 }
 
 template<class T>
-srcml_nodes srcdiff_input<T>::input_nodes(int stream_source) const {
+srcml_nodes input_stream<T>::input_nodes(int stream_source) const {
 
   if(!input_path || input_path->empty()) throw no_file_exception();
 

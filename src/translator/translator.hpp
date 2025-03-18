@@ -10,7 +10,7 @@
 #ifndef INCLUDED_TRANSLATOR_HPP
 #define INCLUDED_TRANSLATOR_HPP
 
-#include <srcdiff_input.hpp>
+#include <input_stream.hpp>
 #include <output_stream.hpp>
 #include <srcdiff_options.hpp>
 #include <differ.hpp>
@@ -58,8 +58,8 @@ public:
 
   template<class T>
   std::string translate(
-                 const srcdiff_input<T> & input_original,
-                 const srcdiff_input<T> & input_modified,
+                 const input_stream<T> & input_original,
+                 const input_stream<T> & input_modified,
                  const std::string & language,
                  const std::optional<std::string> & unit_filename  = std::optional<std::string>(),
                  const std::optional<std::string> & unit_version   = std::optional<std::string>());
@@ -72,8 +72,8 @@ public:
 // Translate from input stream to output stream
 template<class T>
 std::string translator::translate(
-                                   const srcdiff_input<T> & input_original,
-                                   const srcdiff_input<T> & input_modified,
+                                   const input_stream<T> & input_original,
+                                   const input_stream<T> & input_modified,
                                    const std::string & language,
                                    const std::optional<std::string> & unit_filename,
                                    const std::optional<std::string> & unit_version) {
