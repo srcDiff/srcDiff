@@ -9,7 +9,7 @@
 
 #include <differ.hpp>
 
-#include <srcdiff_many.hpp>
+#include <many_differ.hpp>
 #include <change_stream.hpp>
 #include <srcdiff_single.hpp>
 #include <common_stream.hpp>
@@ -92,7 +92,7 @@ void differ::output() {
 
       // many to many handling
       /** loop O(RD^2) */
-      srcdiff_many diff(*this, edits);
+      many_differ diff(*this, edits);
       diff.output();
 
       // update for common

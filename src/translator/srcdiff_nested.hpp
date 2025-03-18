@@ -13,7 +13,6 @@
 #include <differ.hpp>
 #include <srcml_nodes.hpp>
 #include <construct.hpp>
-#include <srcdiff_many.hpp>
 #include <measurer.hpp>
 
 struct nest_result {

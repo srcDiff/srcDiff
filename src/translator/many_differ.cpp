@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_many.cpp
+ * @file many_differ.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_many.hpp>
+#include <many_differ.hpp>
 
 #include <srcdiff_single.hpp>
 #include <srcdiff_nested.hpp>
@@ -16,6 +16,8 @@
 #include <change_matcher.hpp>
 #include <type_query.hpp>
 
+namespace srcdiff {
+
 constexpr int MOVE = int(SES_INSERT) + 1;
 
 construct::construct_list_view safe_subspan(construct::construct_list_view view, std::size_t start, std::size_t end) {
@@ -23,9 +25,9 @@ construct::construct_list_view safe_subspan(construct::construct_list_view view,
   return view.subspan(start, end - start + 1);
 }
 
-srcdiff_many::srcdiff_many(const differ& diff, edit_t* edit_script) : differ(diff), edit_script(edit_script) {}
+many_differ::many_differ(const differ& diff, edit_t* edit_script) : differ(diff), edit_script(edit_script) {}
 
-void srcdiff_many::output_unmatched(construct::construct_list_view original_unmatched, construct::construct_list_view modified_unmatched) {
+void many_differ::output_unmatched(construct::construct_list_view original_unmatched, construct::construct_list_view modified_unmatched) {
 
   unsigned int finish_original = out->last_output_original();
   unsigned int finish_modified = out->last_output_modified();
@@ -54,7 +56,7 @@ void srcdiff_many::output_unmatched(construct::construct_list_view original_unma
           pre_nest_end_modified = modified_view[nesting.start_modified - 1]->end_position() + 1;
         }
 
-        srcdiff::change_stream::output_change(out, pre_nest_end_original, pre_nest_end_modified);
+        change_stream::output_change(out, pre_nest_end_original, pre_nest_end_modified);
 
         if((nesting.end_original - nesting.start_original) > 0 && (nesting.end_modified - nesting.start_modified) > 0) {
 
@@ -73,7 +75,7 @@ void srcdiff_many::output_unmatched(construct::construct_list_view original_unma
       /** @todo may only need to do this if not at end */
       if(original_view.empty() && modified_view.empty()) {
 
-        srcdiff::change_stream::output_change(out, finish_original, finish_modified);
+        change_stream::output_change(out, finish_original, finish_modified);
         return;
 
       }
@@ -127,12 +129,12 @@ void srcdiff_many::output_unmatched(construct::construct_list_view original_unma
 }
 
 /** loop O(RD^2) */
-srcdiff_many::moves srcdiff_many::determine_operations() {
+many_differ::moves many_differ::determine_operations() {
 
   edit_t * edits = edit_script;
   edit_t * edit_next = edit_script->next;
 
-  srcdiff::offset_pair * matches = NULL;
+  offset_pair * matches = NULL;
 
   int_pairs original_moved;
   std::vector<int> pos_original;
@@ -180,12 +182,12 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
   if(pos_original.size() != 0 && pos_modified.size()) {
 
-    srcdiff::change_matcher matcher(original_sets, modified_sets);
+    change_matcher matcher(original_sets, modified_sets);
     matches = matcher.match_differences();
 
   }
 
-  srcdiff::offset_pair * matches_save = matches;
+  offset_pair * matches_save = matches;
 
   for(; matches; matches = matches->next) {
 
@@ -199,13 +201,13 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
   for(; matches_save;) {
 
-    srcdiff::offset_pair * original_match = matches_save;
+    offset_pair * original_match = matches_save;
     matches_save = matches_save->next;
     delete original_match;
 
   }
 
-  srcdiff_many::moves moves;
+  many_differ::moves moves;
   moves.push_back(original_moved);
   moves.push_back(modified_moved);
 
@@ -213,12 +215,12 @@ srcdiff_many::moves srcdiff_many::determine_operations() {
 
 }
 
-void srcdiff_many::output() {
+void many_differ::output() {
 
   edit_t * edits = edit_script;
   edit_t * edit_next = edit_script->next;
 
-  srcdiff_many::moves moves = determine_operations();
+  many_differ::moves moves = determine_operations();
   int_pairs original_moved = moves.at(0);
   int_pairs modified_moved = moves.at(1);
 
@@ -277,5 +279,7 @@ void srcdiff_many::output() {
 
   output_unmatched(safe_subspan(original, edits->offset_sequence_one + i, edits->offset_sequence_one + original_moved.size() - 1),
                    safe_subspan(modified, edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + modified_moved.size() - 1));
+
+}
 
 }
