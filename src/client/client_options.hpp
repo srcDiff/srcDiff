@@ -23,6 +23,8 @@
 #include <svn_version.h>
 #endif
 
+namespace srcdiff {
+
 #ifdef __GNUC__
 typedef unsigned long long OPTION_TYPE;
 #else
@@ -79,8 +81,6 @@ const OPTION_TYPE OPTION_SRCML                 = ull(1) << __COUNTER__;
 
 // @srcdiff
 const OPTION_TYPE OPTION_STRING_SPLITTING      = ull(1) << __COUNTER__;
-
-namespace srcdiff {
 
 inline bool is_option(OPTION_TYPE options, OPTION_TYPE flag) {
     return (flag & options) > 0;
