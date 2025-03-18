@@ -12,7 +12,6 @@
 #include <srcdiff_nested.hpp>
 #include <text_measurer.hpp>
 #include <syntax_measurer.hpp>
-#include <srcdiff_shortest_edit_script.hpp>
 #include <srcdiff_constants.hpp>
 
 #include <list>

@@ -10,7 +10,7 @@
 #include <srcdiff_comment.hpp>
 
 #include <srcdiff_common.hpp>
-#include <srcdiff_shortest_edit_script.hpp>
+#include <shortest_edit_script.hpp>
 
 srcdiff_comment::srcdiff_comment(std::shared_ptr<srcdiff::output_stream> out, const construct::construct_list & original, const construct::construct_list & modified) 
   : srcdiff::differ(out, original, modified) {}
@@ -25,7 +25,7 @@ srcdiff_comment::srcdiff_comment(std::shared_ptr<srcdiff::output_stream> out, co
 */
 void srcdiff_comment::output() {
 
-  srcdiff_shortest_edit_script ses;
+  srcdiff::shortest_edit_script ses;
 
   int distance = ses.compute_edit_script(original, modified);
 

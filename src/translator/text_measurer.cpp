@@ -10,7 +10,7 @@
 #include <text_measurer.hpp>
 
 
-#include <srcdiff_shortest_edit_script.hpp>
+#include <shortest_edit_script.hpp>
 #include <srcdiff_constants.hpp>
 
 #include <algorithm>
@@ -176,7 +176,7 @@ void text_measurer::compute() {
 
   }
 
-    srcdiff_shortest_edit_script ses;
+    shortest_edit_script ses;
     ses.compute_edit_script(set_original_text, set_modified_text);
     process_edit_script(ses.script());
 

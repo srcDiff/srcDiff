@@ -16,7 +16,7 @@
 
 srcdiff_edit_correction::srcdiff_edit_correction(const construct::construct_list_view sets_original,
                                                  const construct::construct_list_view sets_modified,
-                                                 srcdiff_shortest_edit_script & ses) 
+                                                 srcdiff::shortest_edit_script & ses) 
     : sets_original(sets_original),
       sets_modified(sets_modified),
       ses(ses) {}

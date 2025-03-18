@@ -9,7 +9,7 @@
 
 #include <syntax_measurer.hpp>
 
-#include <srcdiff_shortest_edit_script.hpp>
+#include <shortest_edit_script.hpp>
 #include <srcdiff_constants.hpp>
 
 #include <algorithm>
@@ -72,7 +72,7 @@ void syntax_measurer::compute() {
   original_len = next_construct_list_original.size();
   modified_len = next_construct_list_modified.size();
 
-  srcdiff_shortest_edit_script ses;
+  shortest_edit_script ses;
   ses.compute_edit_script(next_construct_list_original, next_construct_list_modified);
   process_edit_script(ses.script());
 

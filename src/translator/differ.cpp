@@ -16,7 +16,7 @@
 #include <srcdiff_common.hpp>
 #include <srcdiff_move.hpp>
 #include <measurer.hpp>
-#include <srcdiff_shortest_edit_script.hpp>
+#include <shortest_edit_script.hpp>
 #include <srcdiff_edit_correction.hpp>
 
 #include <cstring>
@@ -40,7 +40,7 @@ differ::differ(std::shared_ptr<output_stream> out, const construct::construct_li
 */
 void differ::output() {
 
-  srcdiff_shortest_edit_script ses;
+  shortest_edit_script ses;
 
   /** O(CND) */
   int distance = ses.compute_edit_script(original, modified);

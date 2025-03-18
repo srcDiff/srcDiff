@@ -10,7 +10,7 @@
 #ifndef INCLUDED_SRCDIFF_EDIT_CORRECTION_HPP
 #define INCLUDED_SRCDIFF_EDIT_CORRECTION_HPP
 
-#include <srcdiff_shortest_edit_script.hpp>
+#include <shortest_edit_script.hpp>
 #include <construct.hpp>
 #include <text_measurer.hpp>
 #include <memory>
@@ -20,7 +20,7 @@ class srcdiff_edit_correction {
 private:
     const construct::construct_list_view sets_original;
     const construct::construct_list_view sets_modified;
-    srcdiff_shortest_edit_script & ses;
+    srcdiff::shortest_edit_script & ses;
 
 private:
     void split_change(edit_t * delete_edit, edit_t * insert_edit,
@@ -34,7 +34,7 @@ private:
 public:
     srcdiff_edit_correction(const construct::construct_list_view sets_original,
                             const construct::construct_list_view sets_modified,
-                            srcdiff_shortest_edit_script & ses);
+                            srcdiff::shortest_edit_script & ses);
     void correct();
 
 };
