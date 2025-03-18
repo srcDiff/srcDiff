@@ -9,7 +9,6 @@
 
 #include <whitespace_stream.hpp>
 
-#include <srcdiff_common.hpp>
 #include <type_query.hpp>
 #include <shortest_edit_script.h>
 

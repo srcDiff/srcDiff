@@ -1,27 +1,29 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_common.cpp
+ * @file common_stream.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_common.hpp>
+#include <common_stream.hpp>
 
 #include <whitespace_stream.hpp>
 
 #include <string>
 
-srcdiff_common::srcdiff_common(const srcdiff::output_stream & out, unsigned int end_original, unsigned int end_modified)
-: srcdiff::output_stream(out), end_original(end_original), end_modified(end_modified) {}
+namespace srcdiff {
+
+common_stream::common_stream(const output_stream& out, unsigned int end_original, unsigned int end_modified)
+: output_stream(out), end_original(end_original), end_modified(end_modified) {}
 
 /*
 
   Output of same syntactical entities, but possible whitespace differences.
 
 */
-void srcdiff_common::markup_common() {
+void common_stream::markup_common() {
 
   int begin_original = rbuf_original->last_output;
   int begin_modified = rbuf_modified->last_output;
@@ -303,7 +305,7 @@ void srcdiff_common::markup_common() {
 
 */
 
-void srcdiff_common::output() {
+void common_stream::output() {
 
   unsigned int oend = end_original;
   unsigned int nend = end_modified;
@@ -311,7 +313,7 @@ void srcdiff_common::output() {
   if(rbuf_original->last_output >= oend && rbuf_modified->last_output >= nend)
     return;
 
-  srcdiff::whitespace_stream whitespace(*this);
+  whitespace_stream whitespace(*this);
   whitespace.output_all();
 
   if(rbuf_original->last_output >= oend && rbuf_modified->last_output >= nend)
@@ -334,5 +336,7 @@ void srcdiff_common::output() {
      || rbuf_original->nodes.at(rbuf_original->last_output)->is_temporary() == rbuf_modified->nodes.at(rbuf_modified->last_output)->is_temporary()) {
     output_node(diff_common_end, SES_COMMON);
   }
+
+}
 
 }

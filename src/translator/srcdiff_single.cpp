@@ -12,7 +12,7 @@
 #include <constants.hpp>
 #include <change_stream.hpp>
 #include <srcdiff_comment.hpp>
-#include <srcdiff_common.hpp>
+#include <common_stream.hpp>
 #include <differ.hpp>
 #include <whitespace_stream.hpp>
 #include <shortest_edit_script.h>
@@ -82,7 +82,7 @@ void srcdiff_single::output_recursive_same() {
 
     }
 
-    srcdiff_common::output_common(out, original_construct->end_position() + 1, modified_construct->end_position() + 1);
+    srcdiff::common_stream::output_common(out, original_construct->end_position() + 1, modified_construct->end_position() + 1);
 
     if(original_construct->root_term()->is_temporary() == modified_construct->root_term()->is_temporary()) {
         out->output_node(out->diff_common_end, SES_COMMON);

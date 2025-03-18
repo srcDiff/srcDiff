@@ -9,7 +9,7 @@
 
 #include <srcdiff_comment.hpp>
 
-#include <srcdiff_common.hpp>
+#include <common_stream.hpp>
 #include <shortest_edit_script.hpp>
 
 srcdiff_comment::srcdiff_comment(std::shared_ptr<srcdiff::output_stream> out, const construct::construct_list & original, const construct::construct_list & modified) 
@@ -60,7 +60,7 @@ void srcdiff_comment::output() {
     }
 
     // output area in common
-    srcdiff_common::output_common(out, diff_end_original, diff_end_modified);
+    srcdiff::common_stream::output_common(out, diff_end_original, diff_end_modified);
 
     // detect and change
     edit_t * edit_next = edits->next;
@@ -123,7 +123,7 @@ void srcdiff_comment::output() {
   }
 
   // output area in common
-  srcdiff_common::output_common(out, diff_end_original, diff_end_modified);
+  srcdiff::common_stream::output_common(out, diff_end_original, diff_end_modified);
 
 }
 

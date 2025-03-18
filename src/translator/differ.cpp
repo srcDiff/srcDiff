@@ -12,7 +12,7 @@
 #include <srcdiff_many.hpp>
 #include <change_stream.hpp>
 #include <srcdiff_single.hpp>
-#include <srcdiff_common.hpp>
+#include <common_stream.hpp>
 #include <srcdiff_move.hpp>
 #include <measurer.hpp>
 #include <shortest_edit_script.hpp>
@@ -84,7 +84,7 @@ void differ::output() {
     }
 
     // output area in common
-    srcdiff_common::output_common(out, diff_end_original, diff_end_modified);
+    common_stream::output_common(out, diff_end_original, diff_end_modified);
 
     // detect and change
     edit_t * edit_next = edits->next;
@@ -115,7 +115,7 @@ void differ::output() {
           } else {
 
             // common text nodes
-            srcdiff_common::output_common(out, original[edits->offset_sequence_one]->end_position() + 1,
+            common_stream::output_common(out, original[edits->offset_sequence_one]->end_position() + 1,
                                                modified[edits->offset_sequence_two]->end_position() + 1);
 
           }
@@ -163,7 +163,7 @@ void differ::output() {
   }
 
   // output area in common
-  srcdiff_common::output_common(out, diff_end_original, diff_end_modified);
+  common_stream::output_common(out, diff_end_original, diff_end_modified);
 
 }
 
@@ -207,7 +207,7 @@ void differ::output_replace_inner_whitespace(int start_original, int end_origina
   change.output_whitespace_prefix();
   change.output();
 
-  srcdiff_common::output_common(out, end_original, end_modified);
+  common_stream::output_common(out, end_original, end_modified);
   out->output_node(out->diff_common_end, SES_COMMON);
 
 }

@@ -14,7 +14,7 @@
 
 namespace srcdiff {
 
-class change_stream : public srcdiff::output_stream {
+class change_stream : public output_stream {
 
 protected:
  
@@ -25,12 +25,12 @@ private:
 
 public:
 
-    static void output_change(std::shared_ptr<srcdiff::output_stream> out, std::size_t end_original, std::size_t end_modified) {
+    static void output_change(std::shared_ptr<output_stream> out, std::size_t end_original, std::size_t end_modified) {
      change_stream change(*out, end_original, end_modified);
      change.output();
     }
 
-    change_stream(const srcdiff::output_stream & out, std::size_t end_original, std::size_t end_modified);
+    change_stream(const output_stream & out, std::size_t end_original, std::size_t end_modified);
 
     virtual void output_whitespace_all();
     virtual void output_whitespace_prefix();

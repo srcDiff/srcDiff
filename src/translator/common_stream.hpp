@@ -1,18 +1,20 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_common.hpp
+ * @file common_stream.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_SRCDIFF_COMMON_HPP
-#define INCLUDED_SRCDIFF_COMMON_HPP
+#ifndef INCLUDED_COMMON_STREAM_HPP
+#define INCLUDED_COMMON_STREAM_HPP
 
 #include <output_stream.hpp>
 
-class srcdiff_common : public srcdiff::output_stream {
+namespace srcdiff {
+
+class common_stream : public output_stream {
 
 protected:
 
@@ -26,16 +28,17 @@ private:
 
 public:
 
-    static void output_common(std::shared_ptr<srcdiff::output_stream> out, int end_original, int end_modified) {
-        srcdiff_common common(*out, end_original, end_modified);
+    static void output_common(std::shared_ptr<output_stream> out, int end_original, int end_modified) {
+        common_stream common(*out, end_original, end_modified);
         common.output();
     }
 
-    srcdiff_common(const srcdiff::output_stream & out, unsigned int end_original, unsigned int end_modified);
+    common_stream(const output_stream& out, unsigned int end_original, unsigned int end_modified);
 
     virtual void output();
 
 };
 
+}
 
 #endif

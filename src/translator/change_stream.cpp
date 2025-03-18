@@ -24,10 +24,10 @@
 namespace srcdiff {
 
 const std::string replace("replace");
-const srcML::attribute diff_type(srcdiff::DIFF_TYPE, srcML::name_space::SRC_NAMESPACE, replace);
+const srcML::attribute diff_type(DIFF_TYPE, srcML::name_space::SRC_NAMESPACE, replace);
 
-change_stream::change_stream(const srcdiff::output_stream & out, std::size_t end_original, std::size_t end_modified)
-: srcdiff::output_stream(out), end_original(end_original), end_modified(end_modified) {}
+change_stream::change_stream(const output_stream& out, std::size_t end_original, std::size_t end_modified)
+: output_stream(out), end_original(end_original), end_modified(end_modified) {}
 
 /*
 
@@ -36,7 +36,7 @@ change_stream::change_stream(const srcdiff::output_stream & out, std::size_t end
 */
 void change_stream::output_whitespace_all() {
 
-  srcdiff::whitespace_stream whitespace(*this);
+  whitespace_stream whitespace(*this);
   whitespace.output_all();
 
 }
@@ -52,7 +52,7 @@ void change_stream::output_whitespace_all() {
 */
 void change_stream::output_whitespace_prefix() {
 
-  srcdiff::whitespace_stream whitespace(*this);
+  whitespace_stream whitespace(*this);
   whitespace.output_prefix();
 
 }
@@ -126,7 +126,7 @@ void change_stream::output() {
       if(rbuf_original->nodes.at(i)->is_whitespace()) {
 
         rbuf_original->last_output = i;
-        srcdiff::whitespace_stream whitespace(*this);
+        whitespace_stream whitespace(*this);
         whitespace.output_all(SES_DELETE);
         i = rbuf_original->last_output - 1;
         continue;
@@ -196,7 +196,7 @@ void change_stream::output() {
       if(rbuf_modified->nodes.at(i)->is_whitespace()) {
 
         rbuf_modified->last_output = i;
-        srcdiff::whitespace_stream whitespace(*this);
+        whitespace_stream whitespace(*this);
         whitespace.output_all(SES_INSERT);
         i = rbuf_modified->last_output - 1;
       
