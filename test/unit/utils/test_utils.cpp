@@ -80,7 +80,7 @@ construct_test_data create_test_construct(const std::string & code, const std::s
 
     for (size_t i = 0; i < nodes->size(); ++i) {
         if ((*nodes)[i]->get_name() == construct_name) {
-            std::shared_ptr<unit> root_unit = std::make_shared<unit>(*nodes, std::shared_ptr<srcdiff_output>());
+            std::shared_ptr<unit> root_unit = std::make_shared<unit>(*nodes, std::shared_ptr<srcdiff::output_stream>());
             std::shared_ptr<const construct> found_construct = create_test_construct_inner(root_unit, i);
             return {nodes, found_construct};
         }
