@@ -7,21 +7,23 @@
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_edit_correction.hpp>
+#include <edit_corrector.hpp>
 
 #include <list>
 #include <algorithm>
 
 #include <iostream>
 
-srcdiff_edit_correction::srcdiff_edit_correction(const construct::construct_list_view sets_original,
+namespace srcdiff {
+
+edit_corrector::edit_corrector(const construct::construct_list_view sets_original,
                                                  const construct::construct_list_view sets_modified,
-                                                 srcdiff::shortest_edit_script & ses) 
+                                                 shortest_edit_script & ses) 
     : sets_original(sets_original),
       sets_modified(sets_modified),
       ses(ses) {}
 
-void srcdiff_edit_correction::split_change(edit_t * delete_edit, edit_t * insert_edit,
+void edit_corrector::split_change(edit_t * delete_edit, edit_t * insert_edit,
                                            int original_pos, int modified_pos,
                                            edit_t *& start_edits,
                                            edit_t *& last_edits) {
@@ -233,7 +235,7 @@ void srcdiff_edit_correction::split_change(edit_t * delete_edit, edit_t * insert
 
 }
 
-edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
+edit_t * edit_corrector::correct_common_inner(edit_t * change_edit) {
 
     edit_t * delete_edit = change_edit;
     edit_t * insert_edit = change_edit->next;
@@ -271,7 +273,7 @@ edit_t * srcdiff_edit_correction::correct_common_inner(edit_t * change_edit) {
 
 }
 
-edit_t * srcdiff_edit_correction::correct_common(edit_t * start_edit) {
+edit_t * edit_corrector::correct_common(edit_t * start_edit) {
 
     edit_t * current = start_edit;
 
@@ -295,7 +297,7 @@ edit_t * srcdiff_edit_correction::correct_common(edit_t * start_edit) {
 
 }
 
-std::shared_ptr<srcdiff::text_measurer> srcdiff_edit_correction::edit2measure(int original_offset, int modified_offset) {
+std::shared_ptr<text_measurer> edit_corrector::edit2measure(int original_offset, int modified_offset) {
 
     std::size_t original_set_pos = original_offset;
     std::size_t modified_set_pos = modified_offset;
@@ -311,16 +313,16 @@ std::shared_ptr<srcdiff::text_measurer> srcdiff_edit_correction::edit2measure(in
 
     if(!(original_tag == modified_tag && original_uri == modified_uri)
         && !set_original->is_tag_convertable(*set_modified))
-        return std::shared_ptr<srcdiff::text_measurer>();
+        return std::shared_ptr<text_measurer>();
 
-    std::shared_ptr<srcdiff::text_measurer> measure = std::make_shared<srcdiff::text_measurer>(*set_original, *set_modified);
+    std::shared_ptr<text_measurer> measure = std::make_shared<text_measurer>(*set_original, *set_modified);
     measure->compute();
 
     return measure;
 
 }
 
-void srcdiff_edit_correction::correct() {
+void edit_corrector::correct() {
 
     // wrongly matched common correction
     for(edit_t * edit_script = ses.script(); edit_script != nullptr; edit_script = edit_script->next) {
@@ -457,7 +459,7 @@ void srcdiff_edit_correction::correct() {
 
         std::shared_ptr<const construct> common_set = sets_original[common_pos];
         std::shared_ptr<construct> common_set_text(std::make_shared<construct>(common_set->nodes()));
-        srcdiff::text_measurer::collect_text_element(*common_set, *common_set_text);
+        text_measurer::collect_text_element(*common_set, *common_set_text);
 
         std::vector<std::size_t> original_similarities(delete_edit->length);
         std::vector<std::size_t> modified_similarities(insert_edit->length);
@@ -470,8 +472,8 @@ void srcdiff_edit_correction::correct() {
 
                 if(j == modified_offset) continue;
 
-                std::shared_ptr<srcdiff::text_measurer> measure 
-                    = srcdiff_edit_correction::edit2measure(delete_edit->offset_sequence_one + i,
+                std::shared_ptr<text_measurer> measure 
+                    = edit_corrector::edit2measure(delete_edit->offset_sequence_one + i,
                                                             insert_edit->offset_sequence_two + j);               
                 if(!measure) continue;
 
@@ -561,5 +563,7 @@ end_move_check:
         /** @todo choose smaller move */
 
     }
+
+}
 
 }

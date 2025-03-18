@@ -17,7 +17,7 @@
 #include <srcdiff_move.hpp>
 #include <measurer.hpp>
 #include <shortest_edit_script.hpp>
-#include <srcdiff_edit_correction.hpp>
+#include <edit_corrector.hpp>
 
 #include <cstring>
 #include <methods.hpp>
@@ -46,7 +46,7 @@ void differ::output() {
   int distance = ses.compute_edit_script(original, modified);
   if(ses.is_approximate()) out->approximate(true);
 
-  srcdiff_edit_correction corrector(original, modified, ses);
+  edit_corrector corrector(original, modified, ses);
   corrector.correct();
 
   edit_t * edit_script = ses.script();
