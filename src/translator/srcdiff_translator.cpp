@@ -17,7 +17,7 @@ srcdiff_translator::srcdiff_translator(const std::string & srcdiff_filename,
                                        const std::optional<std::string> & unit_filename,
                                        const srcdiff_options::view_options_t & view_options,
                                        const std::optional<std::string> & summary_type_str)
-  : archive(archive), flags(flags), output(std::make_shared<srcdiff_output>(archive,
+  : archive(archive), flags(flags), output(std::make_shared<srcdiff::output_stream>(archive,
                                            srcdiff_filename,
                                            flags,
                                            method,

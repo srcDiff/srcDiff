@@ -10,9 +10,9 @@
 #ifndef INCLUDED_SRCDIFF_CHANGE_HPP
 #define INCLUDED_SRCDIFF_CHANGE_HPP
 
-#include <srcdiff_output.hpp>
+#include <output_stream.hpp>
 
-class srcdiff_change : public srcdiff_output {
+class srcdiff_change : public srcdiff::output_stream {
 
 protected:
  
@@ -23,12 +23,12 @@ private:
 
 public:
 
-    static void output_change(std::shared_ptr<srcdiff_output> out, std::size_t end_original, std::size_t end_modified) {
+    static void output_change(std::shared_ptr<srcdiff::output_stream> out, std::size_t end_original, std::size_t end_modified) {
      srcdiff_change change(*out, end_original, end_modified);
      change.output();
     }
 
-    srcdiff_change(const srcdiff_output & out, std::size_t end_original, std::size_t end_modified);
+    srcdiff_change(const srcdiff::output_stream & out, std::size_t end_original, std::size_t end_modified);
 
     virtual void output_whitespace_all();
     virtual void output_whitespace_prefix();

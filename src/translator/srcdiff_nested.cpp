@@ -20,7 +20,7 @@
 #include <algorithm>
 #include <cstring>
 
-srcdiff_nested::srcdiff_nested(std::shared_ptr<srcdiff_output> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation)
+srcdiff_nested::srcdiff_nested(std::shared_ptr<srcdiff::output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation)
   : srcdiff_diff(out, original, modified), operation(operation) {}
 
 bool has_compound_inner(std::shared_ptr<const construct> & node_set_outer) {

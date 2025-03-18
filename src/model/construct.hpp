@@ -10,7 +10,7 @@
 #ifndef INCLUDED_CONSTRUCT_HPP
 #define INCLUDED_CONSTRUCT_HPP
 
-#include <srcdiff_output.hpp>
+#include <output_stream.hpp>
 #include <srcml_nodes.hpp>
 #include <construct_utils.hpp>
 
@@ -39,7 +39,7 @@ public:
                                    construct_filter filter = is_non_white_space,
                                    const void * context = nullptr) const;
 
-    construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>());
+    construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff::output_stream> out = std::shared_ptr<srcdiff::output_stream>());
 
     construct(const construct* parent, std::size_t& start);
 
@@ -58,8 +58,8 @@ public:
 
     const construct* parent() const;
 
-    const std::shared_ptr<srcdiff_output> output() const;
-    std::shared_ptr<srcdiff_output> output();
+    const std::shared_ptr<srcdiff::output_stream> output() const;
+    std::shared_ptr<srcdiff::output_stream> output();
 
     void expand_children() const;
 
@@ -100,7 +100,7 @@ public:
     std::shared_ptr<const construct> find_best_descendent(const construct& match_construct) const;
 
  protected:
-    std::shared_ptr<srcdiff_output> out;
+    std::shared_ptr<srcdiff::output_stream> out;
 
     const srcml_nodes & node_list;
 

@@ -61,7 +61,7 @@ construct::construct_list construct::get_descendents(std::size_t start_pos, std:
     return descendents;
 }
 
-construct::construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out)
+construct::construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff::output_stream> out)
     : out(out), node_list(node_list), terms(), hash_value(),
       nest_checker(), convert_checker() {
 }
@@ -156,11 +156,11 @@ const construct* construct::parent() const {
     return parent_construct;
 }
 
-const std::shared_ptr<srcdiff_output> construct::output() const {
+const std::shared_ptr<srcdiff::output_stream> construct::output() const {
     return out;
 }
 
-std::shared_ptr<srcdiff_output> construct::output() {
+std::shared_ptr<srcdiff::output_stream> construct::output() {
     return out;
 }
 

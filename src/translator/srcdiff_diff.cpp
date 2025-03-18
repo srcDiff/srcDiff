@@ -22,7 +22,7 @@
 #include <cstring>
 #include <methods.hpp>
 
-srcdiff_diff::srcdiff_diff(std::shared_ptr<srcdiff_output> out, const construct::construct_list_view original, const construct::construct_list_view modified) 
+srcdiff_diff::srcdiff_diff(std::shared_ptr<srcdiff::output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified) 
   : out(out), original(original), modified(modified) {}
 
 /*

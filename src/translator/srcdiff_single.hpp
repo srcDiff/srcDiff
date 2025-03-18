@@ -11,13 +11,13 @@
 #define INCLUDED_SRCDIFF_SINGLE_HPP
 
 #include <construct.hpp>
-#include <srcdiff_output.hpp>
+#include <output_stream.hpp>
 
 class srcdiff_single {
 
 protected:
 
-    std::shared_ptr<srcdiff_output> out;
+    std::shared_ptr<srcdiff::output_stream> out;
 
     std::shared_ptr<const construct> original_construct;
     std::shared_ptr<const construct> modified_construct;
@@ -29,7 +29,7 @@ private:
 
 public:
 
-    srcdiff_single(std::shared_ptr<srcdiff_output> out, std::shared_ptr<const construct> original_construct,  std::shared_ptr<const construct> modified_construct);
+    srcdiff_single(std::shared_ptr<srcdiff::output_stream> out, std::shared_ptr<const construct> original_construct,  std::shared_ptr<const construct> modified_construct);
 
     virtual void output();
 

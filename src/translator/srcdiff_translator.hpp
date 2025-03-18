@@ -11,7 +11,7 @@
 #define INCLUDED_SRCDIFF_TRANSLATOR_HPP
 
 #include <srcdiff_input.hpp>
-#include <srcdiff_output.hpp>
+#include <output_stream.hpp>
 #include <srcdiff_options.hpp>
 #include <methods.hpp>
 
@@ -34,7 +34,7 @@ private:
 
   const OPTION_TYPE & flags;
 
-  std::shared_ptr<srcdiff_output> output;
+  std::shared_ptr<srcdiff::output_stream> output;
 
   const std::optional<std::string> & unit_filename;
 

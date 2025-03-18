@@ -10,7 +10,7 @@
 #ifndef INCLUDED_SRCDIFF_DIFF_HPP
 #define INCLUDED_SRCDIFF_DIFF_HPP
 
-#include <srcdiff_output.hpp>
+#include <output_stream.hpp>
 #include <construct.hpp>
 
 #include <vector>
@@ -18,13 +18,13 @@
 class srcdiff_diff {
 
 protected:
-  std::shared_ptr<srcdiff_output> out;
+  std::shared_ptr<srcdiff::output_stream> out;
 
   const construct::construct_list_view original;
   const construct::construct_list_view modified;
 
 public:
-  srcdiff_diff(std::shared_ptr<srcdiff_output> out, const construct::construct_list_view original, const construct::construct_list_view modified);
+  srcdiff_diff(std::shared_ptr<srcdiff::output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified);
 
 
   virtual void output();

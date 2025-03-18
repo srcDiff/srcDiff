@@ -23,8 +23,8 @@ const std::string move("move");
 typedef std::tuple<int, int> move_info;
 typedef std::vector<move_info> move_infos;
 
-srcdiff_move::srcdiff_move(const srcdiff_output & out, std::size_t & position, int operation)
-  : srcdiff_output(out), position(position), operation(operation) {}
+srcdiff_move::srcdiff_move(const srcdiff::output_stream & out, std::size_t & position, int operation)
+  : srcdiff::output_stream(out), position(position), operation(operation) {}
 
 bool srcdiff_move::is_move(std::shared_ptr<const construct> set) {
 

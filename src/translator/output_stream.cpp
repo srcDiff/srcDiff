@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_output.cpp
+ * @file output_stream.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_output.hpp>
+#include <output_stream.hpp>
 
 #include <srcdiff_constants.hpp>
 #include <shortest_edit_script.h>
@@ -17,11 +17,13 @@
 
 #include <cstring>
 
-bool srcdiff_output::delay = false;
-int srcdiff_output::delay_operation = -2;
+namespace srcdiff {
+
+bool output_stream::delay = false;
+int output_stream::delay_operation = -2;
 
 // summary_type_str is unused here
-srcdiff_output::srcdiff_output(srcml_archive * archive, 
+output_stream::output_stream(srcml_archive * archive, 
                                const std::string & srcdiff_filename,
                                const OPTION_TYPE & flags,
                                const METHOD_TYPE & method,
@@ -36,7 +38,7 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
 
 }
 
-void srcdiff_output::initialize() {
+void output_stream::initialize() {
 
   diff->set_prefix(srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()));
   diff->set_uri(SRCDIFF_DEFAULT_NAMESPACE_HREF);
@@ -55,9 +57,9 @@ void srcdiff_output::initialize() {
   is_initialized = true;
 }
 
-srcdiff_output::~srcdiff_output() {}
+output_stream::~output_stream() {}
 
-void srcdiff_output::prime(int is_original, int is_modified) {
+void output_stream::prime(int is_original, int is_modified) {
 
   if(!is_initialized) initialize();
 
@@ -109,7 +111,7 @@ void srcdiff_output::prime(int is_original, int is_modified) {
 
 }
 
-void srcdiff_output::reset() {
+void output_stream::reset() {
 
   rbuf_original->clear();
   rbuf_modified->clear();
@@ -117,7 +119,7 @@ void srcdiff_output::reset() {
 
 }
 
-void srcdiff_output::start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version) {
+void output_stream::start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version) {
 
   srcml_unit_free(wstate->unit);
   wstate->unit = srcml_unit_create(archive);
@@ -131,7 +133,7 @@ void srcdiff_output::start_unit(const std::string & language_string, const std::
 
 }
 
-std::string srcdiff_output::end_unit() {
+std::string output_stream::end_unit() {
 
   static const std::shared_ptr<srcML::node> flush = std::make_shared<srcML::node>(srcML::node_type::TEXT, "text");
   output_node(flush, SES_COMMON);
@@ -149,7 +151,7 @@ std::string srcdiff_output::end_unit() {
 
 }
 
-void srcdiff_output::write_unit() {
+void output_stream::write_unit() {
   if(!is_open) {
     int ret_status = srcml_archive_write_open_filename(archive, wstate->filename.c_str());
     if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + wstate->filename + "' could not be opened");
@@ -159,67 +161,67 @@ void srcdiff_output::write_unit() {
   srcml_archive_write_unit(archive, wstate->unit);
 }
 
-void srcdiff_output::close() {
+void output_stream::close() {
   srcml_unit_free(wstate->unit);
   if(is_open) srcml_archive_close(archive);
 }
 
-const std::string & srcdiff_output::srcdiff_filename() const {
+const std::string & output_stream::srcdiff_filename() const {
   return wstate->filename;
 }
 
-const srcml_nodes & srcdiff_output::nodes_original() const {
+const srcml_nodes & output_stream::nodes_original() const {
   return rbuf_original->nodes;
 }
 
-const srcml_nodes & srcdiff_output::nodes_modified() const {
+const srcml_nodes & output_stream::nodes_modified() const {
   return rbuf_modified->nodes;
 }
 
-srcml_nodes & srcdiff_output::nodes_original() {
+srcml_nodes & output_stream::nodes_original() {
   return rbuf_original->nodes;
 }
 
-srcml_nodes & srcdiff_output::nodes_modified() {
+srcml_nodes & output_stream::nodes_modified() {
   return rbuf_modified->nodes;
 }
 
-unsigned int srcdiff_output::last_output_original() const {
+unsigned int output_stream::last_output_original() const {
   return rbuf_original->last_output;
 
 }
 
-unsigned int srcdiff_output::last_output_modified() const {
+unsigned int output_stream::last_output_modified() const {
   return rbuf_modified->last_output;
 }
 
-unsigned int & srcdiff_output::last_output_original() {
+unsigned int & output_stream::last_output_original() {
   return rbuf_original->last_output;
 }
 
-unsigned int & srcdiff_output::last_output_modified() {
+unsigned int & output_stream::last_output_modified() {
   return rbuf_modified->last_output;
 }
 
-int srcdiff_output::output_state() const {
+int output_stream::output_state() const {
   return wstate->output_diff.back()->operation;
 }
 
-METHOD_TYPE srcdiff_output::method() const {
+METHOD_TYPE output_stream::method() const {
   return wstate->method;
 }
 
-void srcdiff_output::approximate(bool is_approximate) {
+void output_stream::approximate(bool is_approximate) {
   wstate->approximate = is_approximate;
 }
 
 
-bool srcdiff_output::is_delay_type(int operation) {
+bool output_stream::is_delay_type(int operation) {
   if(!delay) return false;
   return operation == delay_operation;
 }
 
-void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcML::node> & node, int operation) {
+void output_stream::update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcML::node> & node, int operation) {
 
   // Skip empty node
   if(node->is_empty() || node->is_text())
@@ -254,7 +256,7 @@ void srcdiff_output::update_diff_stack(std::vector<diff_set *> & open_diffs, con
 
 }
 
-void srcdiff_output::update_diff_stacks(const std::shared_ptr<srcML::node> & node, int operation) {
+void output_stream::update_diff_stacks(const std::shared_ptr<srcML::node> & node, int operation) {
 
   if(operation == SES_COMMON) {
 
@@ -280,7 +282,7 @@ void srcdiff_output::update_diff_stacks(const std::shared_ptr<srcML::node> & nod
 
 }
 
-void srcdiff_output::output_node(const std::shared_ptr<srcML::node> & original_node, 
+void output_stream::output_node(const std::shared_ptr<srcML::node> & original_node, 
                                  const std::shared_ptr<srcML::node> & modified_node,
                                  int operation, bool force_output) {
 
@@ -321,7 +323,7 @@ void srcdiff_output::output_node(const std::shared_ptr<srcML::node> & original_n
 }
 
 
-void srcdiff_output::output_node(const std::shared_ptr<srcML::node> & node, int operation, bool force_output) {
+void output_stream::output_node(const std::shared_ptr<srcML::node> & node, int operation, bool force_output) {
 
   // check if delaying SES_DELETE/SES_INSERT/SES_COMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)
@@ -408,7 +410,7 @@ void srcdiff_output::output_node(const std::shared_ptr<srcML::node> & node, int 
 
 }
 
-void srcdiff_output::output_text_as_node(const std::string & text, int operation) {
+void output_stream::output_text_as_node(const std::string & text, int operation) {
 
   if(text.size() == 0) return;
   std::shared_ptr<srcML::node> node = std::make_shared<srcML::node>(srcML::node_type::TEXT, std::string("text"));
@@ -419,7 +421,7 @@ void srcdiff_output::output_text_as_node(const std::string & text, int operation
 }
 
 
-void srcdiff_output::output_char(char character, int operation) {
+void output_stream::output_char(char character, int operation) {
 
   static char buf[2] = { 0 };
   buf[0] = character;
@@ -427,7 +429,7 @@ void srcdiff_output::output_char(char character, int operation) {
   output_text_as_node(buf, operation);
 }
 
-void srcdiff_output::output_node(const srcML::node & node) {
+void output_stream::output_node(const srcML::node & node) {
 
   static bool delay_ws_end = false;
 
@@ -452,7 +454,7 @@ void srcdiff_output::output_node(const srcML::node & node) {
 }
 
 // output current XML node in reader
-void srcdiff_output::output_node_inner(const srcML::node & node) {
+void output_stream::output_node_inner(const srcML::node & node) {
 
   if(node.is_temporary()) return;
 
@@ -500,5 +502,7 @@ void srcdiff_output::output_node_inner(const srcML::node & node) {
   default:
     break;
   }
+
+}
 
 }

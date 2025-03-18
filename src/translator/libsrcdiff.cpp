@@ -10,7 +10,7 @@
 #include <srcdiff.h>
 
 #include <srcdiff_translator.hpp>
-#include <srcdiff_output.hpp>
+#include <output_stream.hpp>
 #include <srcdiff_input.hpp>
 
 #include <string>
@@ -54,7 +54,7 @@ public:
 
 };
 
-int srcdiff(const char * original_filename, const char* modified_filename, const char* output_filename){
+int srcDiff(const char * original_filename, const char* modified_filename, const char* output_filename){
     /// @todo give actual error codes
     if(original_filename == nullptr && modified_filename == nullptr) return 1;
     if(output_filename == nullptr) return 1;

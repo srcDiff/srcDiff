@@ -24,8 +24,8 @@
 const std::string replace("replace");
 const srcML::attribute diff_type(DIFF_TYPE, srcML::name_space::SRC_NAMESPACE, replace);
 
-srcdiff_change::srcdiff_change(const srcdiff_output & out, std::size_t end_original, std::size_t end_modified)
-: srcdiff_output(out), end_original(end_original), end_modified(end_modified) {}
+srcdiff_change::srcdiff_change(const srcdiff::output_stream & out, std::size_t end_original, std::size_t end_modified)
+: srcdiff::output_stream(out), end_original(end_original), end_modified(end_modified) {}
 
 /*
 

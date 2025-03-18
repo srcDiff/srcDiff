@@ -13,8 +13,8 @@
 
 #include <string>
 
-srcdiff_common::srcdiff_common(const srcdiff_output & out, unsigned int end_original, unsigned int end_modified)
-: srcdiff_output(out), end_original(end_original), end_modified(end_modified) {}
+srcdiff_common::srcdiff_common(const srcdiff::output_stream & out, unsigned int end_original, unsigned int end_modified)
+: srcdiff::output_stream(out), end_original(end_original), end_modified(end_modified) {}
 
 /*
 

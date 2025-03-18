@@ -10,9 +10,9 @@
 #ifndef INCLUDED_SRCDIFF_WHITESPACE_HPP
 #define INCLUDED_SRCDIFF_WHITESPACE_HPP
 
-#include <srcdiff_output.hpp>
+#include <output_stream.hpp>
 
-class srcdiff_whitespace : public srcdiff_output {
+class srcdiff_whitespace : public srcdiff::output_stream {
 
 protected:
 
@@ -23,12 +23,12 @@ private:
 
 public:
 
-  static void output_whitespace(std::shared_ptr<srcdiff_output> out) {
+  static void output_whitespace(std::shared_ptr<srcdiff::output_stream> out) {
     srcdiff_whitespace whitespace(*out);
     whitespace.output_all();
   }
 
-  srcdiff_whitespace(const srcdiff_output & out);
+  srcdiff_whitespace(const srcdiff::output_stream & out);
 
   virtual void output_all(int operation = SES_COMMON);
   virtual void output_prefix();

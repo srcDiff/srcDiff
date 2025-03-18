@@ -10,12 +10,12 @@
 #ifndef INCLUDED_SRCDIFF_MOVE_HPP
 #define INCLUDED_SRCDIFF_MOVE_HPP
 
-#include <srcdiff_output.hpp>
+#include <output_stream.hpp>
 
 #include <construct.hpp>
 #include <shortest_edit_script.h>
 
-class srcdiff_move : public srcdiff_output {
+class srcdiff_move : public srcdiff::output_stream {
 
 protected:
 
@@ -26,7 +26,7 @@ private:
 
 public:
 
-    srcdiff_move(const srcdiff_output & out, std::size_t & position, int operation);
+    srcdiff_move(const srcdiff::output_stream & out, std::size_t & position, int operation);
 
     static bool is_move(std::shared_ptr<const construct> set);
 

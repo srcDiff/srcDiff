@@ -12,7 +12,7 @@
 #include <srcdiff_common.hpp>
 #include <srcdiff_shortest_edit_script.hpp>
 
-srcdiff_comment::srcdiff_comment(std::shared_ptr<srcdiff_output> out, const construct::construct_list & original, const construct::construct_list & modified) 
+srcdiff_comment::srcdiff_comment(std::shared_ptr<srcdiff::output_stream> out, const construct::construct_list & original, const construct::construct_list & modified) 
   : srcdiff_diff(out, original, modified) {}
 
 /*

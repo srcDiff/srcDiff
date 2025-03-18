@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_output.hpp
+ * @file output_stream.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_SRCDIFF_OUTPUT_HPP
-#define INCLUDED_SRCDIFF_OUTPUT_HPP
+#ifndef INCLUDED_OUTPUT_STREAM_HPP
+#define INCLUDED_OUTPUT_STREAM_HPP
 
 #include <namespace.hpp>
 #include <srcml_nodes.hpp>
@@ -24,7 +24,9 @@
 #include <memory>
 #include <string>
 
-class srcdiff_output {
+namespace srcdiff {
+
+class output_stream {
 
 public:
 
@@ -138,14 +140,14 @@ private:
 
 public:
 
-  srcdiff_output() {}
-  srcdiff_output(srcml_archive * archive,
+  output_stream() {}
+  output_stream(srcml_archive * archive,
                  const std::string & srcdiff_filename,
                  const OPTION_TYPE & flags,
                  const METHOD_TYPE & method,
                  const srcdiff_options::view_options_t & view_options,
                  const std::optional<std::string> & summary_type_str);
-  virtual ~srcdiff_output();
+  virtual ~output_stream();
 
 
   void initialize();
@@ -183,5 +185,7 @@ public:
   virtual void output_char(char character, int operation);
 
 };
+
+}
 
 #endif

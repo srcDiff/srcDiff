@@ -44,7 +44,7 @@ static std::tuple<std::vector<int>, int, int> check_nestable_inner(construct::co
 
 public:
 
-  srcdiff_nested(std::shared_ptr<srcdiff_output> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation);
+  srcdiff_nested(std::shared_ptr<srcdiff::output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation);
 
   virtual void output();
 

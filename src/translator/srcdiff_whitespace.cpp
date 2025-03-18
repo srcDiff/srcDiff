@@ -13,7 +13,7 @@
 #include <type_query.hpp>
 #include <shortest_edit_script.h>
 
-srcdiff_whitespace::srcdiff_whitespace(const srcdiff_output & out) : srcdiff_output(out) {}
+srcdiff_whitespace::srcdiff_whitespace(const srcdiff::output_stream & out) : srcdiff::output_stream(out) {}
 
 void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned int end_modified) {
 
