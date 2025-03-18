@@ -14,7 +14,7 @@
 #include <srcdiff_comment.hpp>
 #include <srcdiff_common.hpp>
 #include <differ.hpp>
-#include <srcdiff_whitespace.hpp>
+#include <whitespace_stream.hpp>
 #include <shortest_edit_script.h>
 
 #include <if_stmt.hpp>
@@ -33,7 +33,7 @@ srcdiff_single::srcdiff_single(std::shared_ptr<srcdiff::output_stream> out, std:
 
 void srcdiff_single::output_recursive_same() {
 
-    srcdiff_whitespace whitespace(*out);
+    srcdiff::whitespace_stream whitespace(*out);
     whitespace.output_all();
 
     if(original_construct->root_term()->is_temporary() == modified_construct->root_term()->is_temporary()) {
@@ -92,7 +92,7 @@ void srcdiff_single::output_recursive_same() {
 
 void srcdiff_single::output_recursive_interchangeable() {
 
-    srcdiff_whitespace whitespace(*out);
+    srcdiff::whitespace_stream whitespace(*out);
     whitespace.output_all();
 
     /**@todo replace get_descendent with using children above */
@@ -161,7 +161,7 @@ void srcdiff_single::output_recursive_interchangeable() {
     srcdiff::differ diff(out, next_set_original, next_set_modified);
     diff.output();
 
-    srcdiff_whitespace::output_whitespace(out);
+    srcdiff::whitespace_stream::output_whitespace(out);
 
     srcdiff_change::output_change(out, out->last_output_original(), modified_construct->end_position() + 1);
 

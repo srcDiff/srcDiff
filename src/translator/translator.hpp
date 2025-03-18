@@ -14,7 +14,7 @@
 #include <output_stream.hpp>
 #include <srcdiff_options.hpp>
 #include <differ.hpp>
-#include <srcdiff_whitespace.hpp>
+#include <whitespace_stream.hpp>
 #include <methods.hpp>
 
 #include <unit.hpp>
@@ -105,7 +105,7 @@ std::string translator::translate(
     diff.output();
 
     // output remaining whitespace
-    srcdiff_whitespace whitespace(*output);
+    whitespace_stream whitespace(*output);
     whitespace.output_all();
 
     srcdiff_str = output->end_unit();

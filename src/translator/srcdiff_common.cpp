@@ -9,7 +9,7 @@
 
 #include <srcdiff_common.hpp>
 
-#include <srcdiff_whitespace.hpp>
+#include <whitespace_stream.hpp>
 
 #include <string>
 
@@ -311,7 +311,7 @@ void srcdiff_common::output() {
   if(rbuf_original->last_output >= oend && rbuf_modified->last_output >= nend)
     return;
 
-  srcdiff_whitespace whitespace(*this);
+  srcdiff::whitespace_stream whitespace(*this);
   whitespace.output_all();
 
   if(rbuf_original->last_output >= oend && rbuf_modified->last_output >= nend)

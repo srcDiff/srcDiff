@@ -9,7 +9,7 @@
 
 #include <srcdiff_move.hpp>
 #include <measurer.hpp>
-#include <srcdiff_whitespace.hpp>
+#include <whitespace_stream.hpp>
 
 #include <vector>
 #include <map>
@@ -160,7 +160,7 @@ void srcdiff_move::output() {
       if(rbuf->nodes.at(position)->is_whitespace()) {
 
         rbuf->last_output = position;
-        srcdiff_whitespace whitespace(*this);
+        srcdiff::whitespace_stream whitespace(*this);
         whitespace.output_all(operation);
         position = rbuf->last_output - 1;
 

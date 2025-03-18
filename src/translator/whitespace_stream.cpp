@@ -1,21 +1,23 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_whitespace.cpp
+ * @file whitespace_stream.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcdiff_whitespace.hpp>
+#include <whitespace_stream.hpp>
 
 #include <srcdiff_common.hpp>
 #include <type_query.hpp>
 #include <shortest_edit_script.h>
 
-srcdiff_whitespace::srcdiff_whitespace(const srcdiff::output_stream & out) : srcdiff::output_stream(out) {}
+namespace srcdiff {
 
-void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned int end_modified) {
+whitespace_stream::whitespace_stream(const output_stream& out) : output_stream(out) {}
+
+void whitespace_stream::markup_whitespace(unsigned int end_original, unsigned int end_modified) {
 
   int begin_original = rbuf_original->last_output;
   int begin_modified = rbuf_modified->last_output;
@@ -141,7 +143,7 @@ void srcdiff_whitespace::markup_whitespace(unsigned int end_original, unsigned i
 
 }
 
-int srcdiff_whitespace::extend_end_to_new_line(std::shared_ptr<reader_state> rbuf) {
+int whitespace_stream::extend_end_to_new_line(std::shared_ptr<reader_state> rbuf) {
 
   unsigned int end = rbuf->last_output;
 
@@ -156,7 +158,7 @@ int srcdiff_whitespace::extend_end_to_new_line(std::shared_ptr<reader_state> rbu
 }
 
 
-void srcdiff_whitespace::output_nested(int operation) {
+void whitespace_stream::output_nested(int operation) {
 
   unsigned int oend = rbuf_original->last_output;
   unsigned int nend = rbuf_modified->last_output;
@@ -173,7 +175,7 @@ void srcdiff_whitespace::output_nested(int operation) {
 
 }
 
-void srcdiff_whitespace::output_statement() {
+void whitespace_stream::output_statement() {
 
   unsigned int oend = rbuf_original->last_output;
   unsigned int nend = rbuf_modified->last_output;
@@ -189,7 +191,7 @@ void srcdiff_whitespace::output_statement() {
 
 }
 
-void srcdiff_whitespace::output_all(int operation) {
+void whitespace_stream::output_all(int operation) {
 
   unsigned int oend = rbuf_original->last_output;
   unsigned int nend = rbuf_modified->last_output;
@@ -210,7 +212,7 @@ void srcdiff_whitespace::output_all(int operation) {
 
 }
 
-void srcdiff_whitespace::output_prefix() {
+void whitespace_stream::output_prefix() {
 
   unsigned int ostart = rbuf_original->last_output;
   unsigned int nstart = rbuf_modified->last_output;
@@ -264,7 +266,7 @@ void srcdiff_whitespace::output_prefix() {
 
 }
 
-void srcdiff_whitespace::output_suffix() {
+void whitespace_stream::output_suffix() {
 
   int ostart = rbuf_original->last_output;
   int nstart = rbuf_modified->last_output;
@@ -339,5 +341,7 @@ void srcdiff_whitespace::output_suffix() {
 
   rbuf_original->last_output = oend > (signed)rbuf_original->last_output ? oend : rbuf_original->last_output;
   rbuf_modified->last_output = nend > (signed)rbuf_modified->last_output ? nend : rbuf_modified->last_output;
+
+}
 
 }

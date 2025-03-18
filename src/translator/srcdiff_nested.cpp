@@ -14,6 +14,7 @@
 #include <text_measurer.hpp>
 #include <shortest_edit_script.h>
 #include <type_query.hpp>
+#include <whitespace_stream.hpp>
 
 #include <name.hpp>
 
@@ -415,8 +416,7 @@ void srcdiff_nested::output() {
     inner = original;
   }
 
-  srcdiff_whitespace whitespace(*out);
-
+  srcdiff::whitespace_stream whitespace(*out);
   whitespace.output_prefix();
 
 

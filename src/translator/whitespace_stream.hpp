@@ -1,18 +1,20 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_whitespace.hpp
+ * @file whitespace_stream.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_SRCDIFF_WHITESPACE_HPP
-#define INCLUDED_SRCDIFF_WHITESPACE_HPP
+#ifndef INCLUDED_WHITESPACE_STREAM_HPP
+#define INCLUDED_WHITESPACE_STREAM_HPP
 
 #include <output_stream.hpp>
 
-class srcdiff_whitespace : public srcdiff::output_stream {
+namespace srcdiff {
+
+class whitespace_stream : public output_stream {
 
 protected:
 
@@ -23,12 +25,12 @@ private:
 
 public:
 
-  static void output_whitespace(std::shared_ptr<srcdiff::output_stream> out) {
-    srcdiff_whitespace whitespace(*out);
+  static void output_whitespace(std::shared_ptr<output_stream> out) {
+    whitespace_stream whitespace(*out);
     whitespace.output_all();
   }
 
-  srcdiff_whitespace(const srcdiff::output_stream & out);
+  whitespace_stream(const output_stream& out);
 
   virtual void output_all(int operation = SES_COMMON);
   virtual void output_prefix();
@@ -37,7 +39,8 @@ public:
 
   virtual void output_suffix();
 
-
 };
+
+}
 
 #endif

@@ -10,7 +10,7 @@
 #include <srcdiff_change.hpp>
 
 #include <constants.hpp>
-#include <srcdiff_whitespace.hpp>
+#include <whitespace_stream.hpp>
 #include <srcdiff_move.hpp>
 #include <shortest_edit_script.h>
 
@@ -34,7 +34,7 @@ srcdiff_change::srcdiff_change(const srcdiff::output_stream & out, std::size_t e
 */
 void srcdiff_change::output_whitespace_all() {
 
-  srcdiff_whitespace whitespace(*this);
+  srcdiff::whitespace_stream whitespace(*this);
   whitespace.output_all();
 
 }
@@ -50,7 +50,7 @@ void srcdiff_change::output_whitespace_all() {
 */
 void srcdiff_change::output_whitespace_prefix() {
 
-  srcdiff_whitespace whitespace(*this);
+  srcdiff::whitespace_stream whitespace(*this);
   whitespace.output_prefix();
 
 }
@@ -124,7 +124,7 @@ void srcdiff_change::output() {
       if(rbuf_original->nodes.at(i)->is_whitespace()) {
 
         rbuf_original->last_output = i;
-        srcdiff_whitespace whitespace(*this);
+        srcdiff::whitespace_stream whitespace(*this);
         whitespace.output_all(SES_DELETE);
         i = rbuf_original->last_output - 1;
         continue;
@@ -194,7 +194,7 @@ void srcdiff_change::output() {
       if(rbuf_modified->nodes.at(i)->is_whitespace()) {
 
         rbuf_modified->last_output = i;
-        srcdiff_whitespace whitespace(*this);
+        srcdiff::whitespace_stream whitespace(*this);
         whitespace.output_all(SES_INSERT);
         i = rbuf_modified->last_output - 1;
       

@@ -12,7 +12,6 @@
 #include <srcdiff_many.hpp>
 #include <srcdiff_change.hpp>
 #include <srcdiff_single.hpp>
-#include <srcdiff_whitespace.hpp>
 #include <srcdiff_common.hpp>
 #include <srcdiff_move.hpp>
 #include <measurer.hpp>
