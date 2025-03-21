@@ -20,14 +20,15 @@ define modified <<- 'SOURCE'
 	SOURCE
 
 define_no_eof_nl output <<- 'STDOUT'
-	\x1b[0m\x1b[0m\x1b[9;48;5;217;1ma;\x1b[0m | \x1b[48;5;120;1mb;\x1b[0m\x1b[0m\n\x1b[0m  
-	\x1b[0m\x1b[0m
+	\x1b[0m\x1b[0m\x1b[9;48;5;217;1ma;\x1b[0m | \x1b[48;5;120;1mb;\x1b[0m
+	\x1b[0m\x1b[0m     \x1b[0m
+	\x1b[0m
 	STDOUT
 
 createfile sub/a.cpp "$original"
 createfile sub/b.cpp "$modified"
 createfile sub/out.txt "$output"
 
-srcdiff sub/a.cpp sub/b.cpp -y 1
+srcdiff sub/a.cpp sub/b.cpp -y 4
 
 check "$output"
