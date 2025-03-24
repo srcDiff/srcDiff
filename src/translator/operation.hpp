@@ -19,6 +19,7 @@ enum operation {
     DELETE,
     INSERT,
     COMMON,
+    CHANGE,
     NEST,
     MOVE
 };

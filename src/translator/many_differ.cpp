@@ -19,7 +19,7 @@
 
 namespace srcdiff {
 
-construct::construct_list_view safe_subspan(construct::construct_list_view view, std::size_t start, std::size_t end) {
+static construct::construct_list_view safe_subspan(construct::construct_list_view view, std::size_t start, std::size_t end) {
   if(start < 0 || start > end || end > view.size()) return construct::construct_list_view();
   return view.subspan(start, end - start + 1);
 }
@@ -187,6 +187,8 @@ many_differ::moves many_differ::determine_operations() {
   }
 
   for(struct change& change : changes) {
+
+    if(change.operation == srcdiff::CHANGE) continue;
 
     original_moved.at(pos_original.at(change.original_pos)).first  = change.operation;
     original_moved.at(pos_original.at(change.original_pos)).second = pos_modified.at(change.modified_pos);

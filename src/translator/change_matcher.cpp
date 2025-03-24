@@ -38,17 +38,25 @@ bool is_match(construct::construct_list_view original, construct::construct_list
 change_matcher::change_matcher(const construct::construct_list_view original, const construct::construct_list_view modified)
   : original(original), modified(modified) {}
 
+static  construct::construct_list_view safe_subspan(construct::construct_list_view view, std::size_t start, std::size_t end) {
+  if(start < 0 || start > end || end > view.size()) return construct::construct_list_view();
+  return view.subspan(start, end - start + 1);
+}
+
 /** loop O(D) */
 change_list change_matcher::create_linked_list(difference * differences) {
 
   // create match linked list
-  change_list matches;
+  change_list changes;
 
   int olength = original.size();
   int nlength = modified.size();
 
   std::vector<bool> olist(olength);
   std::vector<bool> nlist(nlength);
+
+  int original_pos = 0;
+  int modified_pos = 0;
 
   for(int i = nlength - 1, j = olength - 1; i >= 0 || j >= 0;) {
 
@@ -57,11 +65,20 @@ change_list change_matcher::create_linked_list(difference * differences) {
     // only output marked and if has not already been output
     if(diff.marked && !(olist[j] || nlist[i])) {
 
-      matches.emplace_back(original.subspan(diff.opos, 1), modified.subspan(diff.npos, 1),
+      if(diff.opos - original_pos > 0 || diff.npos - modified_pos > 0) {
+        changes.emplace_back(safe_subspan(original, original_pos, diff.opos - 1),
+                             safe_subspan(modified, modified_pos, diff.npos - 1),
+                             0, srcdiff::CHANGE, original_pos, modified_pos);
+      }
+
+      changes.emplace_back(original.subspan(diff.opos, 1), modified.subspan(diff.npos, 1),
                            diff.similarity, srcdiff::COMMON, diff.opos, diff.npos);
 
       olist[j] = true;
       nlist[i] = true;
+
+      original_pos = diff.opos + 1;
+      modified_pos = diff.npos + 1;
 
     }
 
@@ -101,7 +118,15 @@ change_list change_matcher::create_linked_list(difference * differences) {
 
   }
 
-  return matches;
+
+  if(olength - original_pos > 0 || nlength - modified_pos > 0) {
+    changes.emplace_back(safe_subspan(original, original_pos, olength - 1),
+                         safe_subspan(modified, modified_pos, nlength - 1),
+                         0, srcdiff::CHANGE, original_pos, modified_pos);
+  }
+
+
+  return changes;
 
 }
 
@@ -261,12 +286,12 @@ change_list change_matcher::create_linked_list(difference * differences) {
   }
 
   // create match linked list
-  change_list matches = create_linked_list(differences);
+  change_list changes = create_linked_list(differences);
 
   // free memory
   free(differences);
 
-  return matches;
+  return changes;
 
 }
 
