@@ -15,7 +15,7 @@
 #include <measurer.hpp>
 #include <change_matcher.hpp>
 #include <type_query.hpp>
-#include <match_list.hpp>
+#include <change_list.hpp>
 
 namespace srcdiff {
 
@@ -177,22 +177,22 @@ many_differ::moves many_differ::determine_operations() {
 
   }
 
-  match_list matches;
+  change_list changes;
 
   if(pos_original.size() != 0 && pos_modified.size()) {
 
     change_matcher matcher(original_sets, modified_sets);
-    matches = matcher.match_differences();
+    changes = matcher.match_differences();
 
   }
 
-  for(struct match& match : matches) {
+  for(struct change& change : changes) {
 
-    original_moved.at(pos_original.at(match.original_pos)).first  = match.operation;
-    original_moved.at(pos_original.at(match.original_pos)).second = pos_modified.at(match.modified_pos);
+    original_moved.at(pos_original.at(change.original_pos)).first  = change.operation;
+    original_moved.at(pos_original.at(change.original_pos)).second = pos_modified.at(change.modified_pos);
 
-    modified_moved.at(pos_modified.at(match.modified_pos)).first  = match.operation;
-    modified_moved.at(pos_modified.at(match.modified_pos)).second = pos_original.at(match.original_pos);
+    modified_moved.at(pos_modified.at(change.modified_pos)).first  = change.operation;
+    modified_moved.at(pos_modified.at(change.modified_pos)).second = pos_original.at(change.original_pos);
 
   }
 
@@ -218,11 +218,9 @@ void many_differ::output() {
   for(; i < original_moved.size() && j < modified_moved.size(); ++i, ++j) {
 
     unsigned int start_original = i;
-
     unsigned int start_modified = j;
 
     unsigned int end_original = start_original;
-
     unsigned int end_modified = start_modified;
 
     for(; end_original < original_moved.size() && (original_moved.at(end_original).first == srcdiff::DELETE || original_moved.at(end_original).first == srcdiff::MOVE); ++end_original)

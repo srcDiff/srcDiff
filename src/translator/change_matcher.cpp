@@ -39,10 +39,10 @@ change_matcher::change_matcher(const construct::construct_list_view original, co
   : original(original), modified(modified) {}
 
 /** loop O(D) */
-match_list change_matcher::create_linked_list(difference * differences) {
+change_list change_matcher::create_linked_list(difference * differences) {
 
   // create match linked list
-  match_list matches;
+  change_list matches;
 
   int olength = original.size();
   int nlength = modified.size();
@@ -52,19 +52,20 @@ match_list change_matcher::create_linked_list(difference * differences) {
 
   for(int i = nlength - 1, j = olength - 1; i >= 0 || j >= 0;) {
 
-    // only output marked and if has not already been output
-    if(differences[i * olength + j].marked && !(olist[j] || nlist[i])) {
+    difference& diff = differences[i * olength + j];
 
-      matches.emplace_back(original[differences[i * olength + j].opos], modified[differences[i * olength + j].npos],
-                           differences[i * olength + j].similarity, srcdiff::COMMON, 
-                           differences[i * olength + j].opos, differences[i * olength + j].npos);
+    // only output marked and if has not already been output
+    if(diff.marked && !(olist[j] || nlist[i])) {
+
+      matches.emplace_back(original.subspan(diff.opos, 1), modified.subspan(diff.npos, 1),
+                           diff.similarity, srcdiff::COMMON, diff.opos, diff.npos);
 
       olist[j] = true;
       nlist[i] = true;
 
     }
 
-    switch(differences[i * olength + j].direction) {
+    switch(diff.direction) {
 
     case 0:
 
@@ -105,7 +106,7 @@ match_list change_matcher::create_linked_list(difference * differences) {
 }
 
 /** loop O(RD^2) */
- match_list change_matcher::match_differences() {
+ change_list change_matcher::match_differences() {
 
   /*
 
@@ -246,19 +247,21 @@ match_list change_matcher::create_linked_list(difference * differences) {
       }
 
       // update structure
-      differences[i * olength + j].marked = matched;
-      differences[i * olength + j].similarity = max_similarity;
-      differences[i * olength + j].num_unmatched = num_unmatched;
-      differences[i * olength + j].opos = j;
-      differences[i * olength + j].npos = i;
-      differences[i * olength + j].direction = direction;
+      difference& diff = differences[i * olength + j];
+
+      diff.marked = matched;
+      diff.similarity = max_similarity;
+      diff.num_unmatched = num_unmatched;
+      diff.opos = j;
+      diff.npos = i;
+      diff.direction = direction;
 
     }
 
   }
 
   // create match linked list
-  match_list matches = create_linked_list(differences);
+  change_list matches = create_linked_list(differences);
 
   // free memory
   free(differences);

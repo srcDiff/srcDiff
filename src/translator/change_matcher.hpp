@@ -12,7 +12,7 @@
 
 #include <construct.hpp>
 #include <measurer.hpp>
-#include <match_list.hpp>
+#include <change_list.hpp>
 
 namespace srcdiff {
 
@@ -20,7 +20,7 @@ class change_matcher {
 
 public:
   change_matcher(const construct::construct_list_view original, const construct::construct_list_view modified);
-  match_list match_differences();
+  change_list match_differences();
 
 protected:
 
@@ -32,7 +32,7 @@ protected:
     unsigned int opos;
     unsigned int npos;
   };
-  match_list create_linked_list(difference * differences);
+  change_list create_linked_list(difference * differences);
 
 protected:
 
