@@ -6,6 +6,9 @@
  * @author Michael John Decker, Ph.D. <mdecke@bgsu.edu>
  */
 
+#ifndef INCLUDED_OPERATION_HPP
+#define INCLUDED_OPERATION_HPP
+
 
 namespace srcdiff {
 
@@ -18,6 +21,5 @@ enum operation {
 };
 
 }
-
 
 #endif

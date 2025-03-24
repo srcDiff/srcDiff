@@ -186,7 +186,7 @@ void view_t::output_characters_to_buffer(std::ostream & out,
   if(save_name) {
 
     saved_name.append(ch.c_str(), ch.size(),
-      diff_stack.back() == view_t::DELETE ? SRCDIFF_DELETE : SRCDIFF_INSERT);
+      diff_stack.back() == view_t::DELETE ? srcdiff::DELETE : srcdiff::INSERT);
     return;
 
   }
