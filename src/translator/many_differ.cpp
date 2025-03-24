@@ -15,10 +15,9 @@
 #include <measurer.hpp>
 #include <change_matcher.hpp>
 #include <type_query.hpp>
+#include <match_list.hpp>
 
 namespace srcdiff {
-
-constexpr int MOVE = int(SES_INSERT) + 1;
 
 construct::construct_list_view safe_subspan(construct::construct_list_view view, std::size_t start, std::size_t end) {
   if(start < 0 || start > end || end > view.size()) return construct::construct_list_view();
@@ -134,8 +133,6 @@ many_differ::moves many_differ::determine_operations() {
   edit_t * edits = edit_script;
   edit_t * edit_next = edit_script->next;
 
-  offset_pair * matches = NULL;
-
   int_pairs original_moved;
   std::vector<int> pos_original;
   construct::construct_list original_sets;
@@ -146,11 +143,11 @@ many_differ::moves many_differ::determine_operations() {
 
     if(original[index]->term(0)->get_move()) {
 
-      original_moved.push_back(int_pair(MOVE, 0));
+      original_moved.push_back(int_pair(srcdiff::MOVE, 0));
 
     } else {
 
-      original_moved.push_back(int_pair(SES_DELETE, 0));
+      original_moved.push_back(int_pair(srcdiff::DELETE, 0));
       pos_original.push_back(i);
       original_sets.push_back(original[index]);
 
@@ -168,17 +165,19 @@ many_differ::moves many_differ::determine_operations() {
 
     if(modified[index]->term(0)->get_move()) {
 
-      modified_moved.push_back(int_pair(MOVE, 0));
+      modified_moved.push_back(int_pair(srcdiff::MOVE, 0));
 
     } else {
 
-      modified_moved.push_back(int_pair(SES_INSERT, 0));
+      modified_moved.push_back(int_pair(srcdiff::INSERT, 0));
       pos_modified.push_back(i);
       modified_sets.push_back(modified[index]);
 
     }
 
   }
+
+  match_list matches;
 
   if(pos_original.size() != 0 && pos_modified.size()) {
 
@@ -187,23 +186,13 @@ many_differ::moves many_differ::determine_operations() {
 
   }
 
-  offset_pair * matches_save = matches;
+  for(struct match& match : matches) {
 
-  for(; matches; matches = matches->next) {
+    original_moved.at(pos_original.at(match.original_pos)).first  = match.operation;
+    original_moved.at(pos_original.at(match.original_pos)).second = pos_modified.at(match.modified_pos);
 
-    original_moved.at(pos_original.at(matches->original_offset)).first = SES_COMMON;
-    original_moved.at(pos_original.at(matches->original_offset)).second = pos_modified.at(matches->modified_offset);
-
-    modified_moved.at(pos_modified.at(matches->modified_offset)).first = SES_COMMON;
-    modified_moved.at(pos_modified.at(matches->modified_offset)).second = pos_original.at(matches->original_offset);
-
-  }
-
-  for(; matches_save;) {
-
-    offset_pair * original_match = matches_save;
-    matches_save = matches_save->next;
-    delete original_match;
+    modified_moved.at(pos_modified.at(match.modified_pos)).first  = match.operation;
+    modified_moved.at(pos_modified.at(match.modified_pos)).second = pos_original.at(match.original_pos);
 
   }
 
@@ -236,9 +225,9 @@ void many_differ::output() {
 
     unsigned int end_modified = start_modified;
 
-    for(; end_original < original_moved.size() && (original_moved.at(end_original).first == SES_DELETE || original_moved.at(end_original).first == MOVE); ++end_original)
+    for(; end_original < original_moved.size() && (original_moved.at(end_original).first == srcdiff::DELETE || original_moved.at(end_original).first == srcdiff::MOVE); ++end_original)
       ;
-    for(; end_modified < modified_moved.size() && (modified_moved.at(end_modified).first == SES_INSERT || modified_moved.at(end_modified).first == MOVE); ++end_modified)
+    for(; end_modified < modified_moved.size() && (modified_moved.at(end_modified).first == srcdiff::INSERT || modified_moved.at(end_modified).first == srcdiff::MOVE); ++end_modified)
       ;
 
     // output diffs until match
@@ -252,7 +241,7 @@ void many_differ::output() {
       break;
     }
 
-    if(original_moved.at(i).first == SES_COMMON && modified_moved.at(j).first == SES_COMMON) {
+    if(original_moved.at(i).first == srcdiff::COMMON && modified_moved.at(j).first == srcdiff::COMMON) {
  
       if(original[edits->offset_sequence_one + i]->term(0)->get_type() != srcML::node_type::TEXT) {
 

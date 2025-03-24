@@ -12,6 +12,7 @@
 
 #include <shortest_edit_script.h>
 #include <differ.hpp>
+#include <operation.hpp>
 
 #include <vector>
 
@@ -25,7 +26,7 @@ protected:
 
 private:
 
-    typedef std::pair<int, int> int_pair;
+    typedef std::pair<operation, int> int_pair;
     typedef std::vector<int_pair> int_pairs;
     typedef std::vector<int_pairs> moves;
 

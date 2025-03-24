@@ -20,18 +20,6 @@
 
 namespace srcdiff {
 
-struct difference {
-
-  //unsigned long long similarity;
-  int similarity;
-  int num_unmatched;
-  bool marked;
-  int direction;
-  unsigned int opos;
-  unsigned int npos;
-
-};
-
 bool is_match(construct::construct_list_view original, construct::construct_list_view modified) {
   const srcdiff::measurer & measure = *original[0]->measure(*modified[0]);
 
@@ -47,35 +35,29 @@ bool is_match(construct::construct_list_view original, construct::construct_list
 
 }
 
-
 change_matcher::change_matcher(const construct::construct_list_view original, const construct::construct_list_view modified)
   : original(original), modified(modified) {}
 
 /** loop O(D) */
-static offset_pair * create_linked_list(int olength, int nlength, difference * differences) {
+match_list change_matcher::create_linked_list(difference * differences) {
 
   // create match linked list
-  offset_pair * last_match = NULL;
+  match_list matches;
 
-  bool * olist = (bool *)malloc(olength * sizeof(bool));
-  memset(olist, 0, olength * sizeof(bool));
+  int olength = original.size();
+  int nlength = modified.size();
 
-  bool * nlist = (bool *)malloc(nlength * sizeof(bool));
-  memset(nlist, 0, nlength * sizeof(bool));
+  std::vector<bool> olist(olength);
+  std::vector<bool> nlist(nlength);
 
   for(int i = nlength - 1, j = olength - 1; i >= 0 || j >= 0;) {
 
     // only output marked and if has not already been output
     if(differences[i * olength + j].marked && !(olist[j] || nlist[i])) {
 
-      offset_pair * match = new offset_pair;
-
-      match->original_offset = differences[i * olength + j].opos;
-      match->modified_offset = differences[i * olength + j].npos;
-      match->similarity = differences[i * olength + j].similarity;
-      match->next = last_match;
-
-      last_match = match;
+      matches.emplace_back(original[differences[i * olength + j].opos], modified[differences[i * olength + j].npos],
+                           differences[i * olength + j].similarity, srcdiff::COMMON, 
+                           differences[i * olength + j].opos, differences[i * olength + j].npos);
 
       olist[j] = true;
       nlist[i] = true;
@@ -118,15 +100,12 @@ static offset_pair * create_linked_list(int olength, int nlength, difference * d
 
   }
 
-  free(olist);
-  free(nlist);
-
-  return last_match;
+  return matches;
 
 }
 
 /** loop O(RD^2) */
-offset_pair * change_matcher::match_differences() {
+ match_list change_matcher::match_differences() {
 
   /*
 
@@ -279,7 +258,7 @@ offset_pair * change_matcher::match_differences() {
   }
 
   // create match linked list
-  offset_pair * matches = create_linked_list(olength, nlength, differences);
+  match_list matches = create_linked_list(differences);
 
   // free memory
   free(differences);
