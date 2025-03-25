@@ -12,6 +12,7 @@
 
 #include <shortest_edit_script.h>
 #include <differ.hpp>
+#include <change_list.hpp>
 #include <operation.hpp>
 
 #include <vector>
@@ -24,15 +25,13 @@ protected:
 
     edit_t * edit_script;
 
+    construct::construct_list original_sets;
+    construct::construct_list modified_sets;
+
 private:
 
-    typedef std::pair<operation, int> int_pair;
-    typedef std::vector<int_pair> int_pairs;
-    typedef std::vector<int_pairs> moves;
-
     void output_unmatched(construct::construct_list_view original_unmatched, construct::construct_list_view modified_unmatched);
-
-    moves determine_operations();
+    change_list determine_operations();
   
 public:
 

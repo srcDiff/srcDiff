@@ -15,7 +15,6 @@
 #include <measurer.hpp>
 #include <change_matcher.hpp>
 #include <type_query.hpp>
-#include <change_list.hpp>
 
 namespace srcdiff {
 
@@ -24,7 +23,8 @@ static construct::construct_list_view safe_subspan(construct::construct_list_vie
   return view.subspan(start, end - start + 1);
 }
 
-many_differ::many_differ(const differ& diff, edit_t* edit_script) : differ(diff), edit_script(edit_script) {}
+many_differ::many_differ(const differ& diff, edit_t* edit_script) 
+  : differ(diff), edit_script(edit_script), original_sets(), modified_sets() {}
 
 void many_differ::output_unmatched(construct::construct_list_view original_unmatched, construct::construct_list_view modified_unmatched) {
 
@@ -60,8 +60,8 @@ void many_differ::output_unmatched(construct::construct_list_view original_unmat
         if((nesting.end_original - nesting.start_original) > 0 && (nesting.end_modified - nesting.start_modified) > 0) {
 
           nested_differ diff(out, original_view.subspan(nesting.start_original, nesting.end_original - nesting.start_original), 
-                                   modified_view.subspan(nesting.start_modified, nesting.end_modified - nesting.start_modified),
-                                   nesting.operation);
+                                  modified_view.subspan(nesting.start_modified, nesting.end_modified - nesting.start_modified),
+                                  nesting.operation);
           diff.output();
 
         }
@@ -128,146 +128,58 @@ void many_differ::output_unmatched(construct::construct_list_view original_unmat
 }
 
 /** loop O(RD^2) */
-many_differ::moves many_differ::determine_operations() {
+change_list many_differ::determine_operations() {
 
   edit_t * edits = edit_script;
   edit_t * edit_next = edit_script->next;
 
-  int_pairs original_moved;
-  std::vector<int> pos_original;
-  construct::construct_list original_sets;
-
   for(std::size_t i = 0; i < edits->length; ++i) {
 
     unsigned int index = edits->offset_sequence_one + i;
-
-    if(original[index]->term(0)->get_move()) {
-
-      original_moved.push_back(int_pair(srcdiff::MOVE, 0));
-
-    } else {
-
-      original_moved.push_back(int_pair(srcdiff::DELETE, 0));
-      pos_original.push_back(i);
+    if(!original[index]->term(0)->get_move()) {
       original_sets.push_back(original[index]);
-
     }
 
   }
 
-  int_pairs modified_moved;
-  std::vector<int> pos_modified;
-  construct::construct_list modified_sets;
-
   for(std::size_t i = 0; i < edit_next->length; ++i) {
 
     unsigned int index = edit_next->offset_sequence_two + i;
-
-    if(modified[index]->term(0)->get_move()) {
-
-      modified_moved.push_back(int_pair(srcdiff::MOVE, 0));
-
-    } else {
-
-      modified_moved.push_back(int_pair(srcdiff::INSERT, 0));
-      pos_modified.push_back(i);
+    if(!modified[index]->term(0)->get_move()) {
       modified_sets.push_back(modified[index]);
-
     }
 
   }
 
   change_list changes;
-
-  if(pos_original.size() != 0 && pos_modified.size()) {
-
+  if(original_sets.size() && modified_sets.size()) {
     change_matcher matcher(original_sets, modified_sets);
     changes = matcher.match_differences();
-
   }
 
-  for(struct change& change : changes) {
-
-    if(change.operation == srcdiff::CHANGE) continue;
-
-    original_moved.at(pos_original.at(change.original_pos)).first  = change.operation;
-    original_moved.at(pos_original.at(change.original_pos)).second = pos_modified.at(change.modified_pos);
-
-    modified_moved.at(pos_modified.at(change.modified_pos)).first  = change.operation;
-    modified_moved.at(pos_modified.at(change.modified_pos)).second = pos_original.at(change.original_pos);
-
-  }
-
-  many_differ::moves moves;
-  moves.push_back(original_moved);
-  moves.push_back(modified_moved);
-
-  return moves;
+  return changes;
 
 }
 
 void many_differ::output() {
 
-  edit_t * edits = edit_script;
-  edit_t * edit_next = edit_script->next;
+  change_list changes = determine_operations();
+  for(struct change& change : changes) {
 
-  many_differ::moves moves = determine_operations();
-  int_pairs original_moved = moves.at(0);
-  int_pairs modified_moved = moves.at(1);
-
-  unsigned int i = 0;
-  unsigned int j = 0;
-  for(; i < original_moved.size() && j < modified_moved.size(); ++i, ++j) {
-
-    unsigned int start_original = i;
-    unsigned int start_modified = j;
-
-    unsigned int end_original = start_original;
-    unsigned int end_modified = start_modified;
-
-    for(; end_original < original_moved.size() && (original_moved.at(end_original).first == srcdiff::DELETE || original_moved.at(end_original).first == srcdiff::MOVE); ++end_original)
-      ;
-    for(; end_modified < modified_moved.size() && (modified_moved.at(end_modified).first == srcdiff::INSERT || modified_moved.at(end_modified).first == srcdiff::MOVE); ++end_modified)
-      ;
-
-    // output diffs until match
-    output_unmatched(safe_subspan(original, edits->offset_sequence_one + start_original, edits->offset_sequence_one + end_original - 1), 
-                     safe_subspan(modified, edit_next->offset_sequence_two + start_modified, edit_next->offset_sequence_two + end_modified - 1));
-
-    i = end_original;
-    j = end_modified;
-
-    if(i >= original_moved.size() || j >= modified_moved.size()) {
-      break;
-    }
-
-    if(original_moved.at(i).first == srcdiff::COMMON && modified_moved.at(j).first == srcdiff::COMMON) {
- 
-      if(original[edits->offset_sequence_one + i]->term(0)->get_type() != srcML::node_type::TEXT) {
-
-        single_differ diff(out, original[edits->offset_sequence_one + i], modified[edit_next->offset_sequence_two + j]);
-        
+    if(change.operation == srcdiff::COMMON) {
+      if(change.original.front()->term(0)->get_type() != srcML::node_type::TEXT) {
+        single_differ diff(out, change.original.front(), change.modified.front());      
         diff.output();
-
       } else {
-
         // syntax mismatch
-        output_change_whitespace(original[edits->offset_sequence_one + i]->end_position() + 1,
-                                 modified[edit_next->offset_sequence_two + j]->end_position() + 1);
-
+        output_change_whitespace(change.original.front()->end_position() + 1,
+                                 change.modified.front()->end_position() + 1);
       }
-
     } else {
-
-      fprintf(stderr, "Mismatched index: %d-%d\n", original_moved.at(i).first, modified_moved.at(j).first);
-      exit(1);
-
+      output_unmatched(change.original, change.modified);
     }
 
   }
-
-  output_unmatched(safe_subspan(original, edits->offset_sequence_one + i, edits->offset_sequence_one + original_moved.size() - 1),
-                   safe_subspan(modified, edit_next->offset_sequence_two + j, edit_next->offset_sequence_two + modified_moved.size() - 1));
 
 }
 

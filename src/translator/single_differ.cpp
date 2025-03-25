@@ -122,7 +122,6 @@ void single_differ::output_recursive_interchangeable() {
     bool is_keywords = is_keyword && keyword_node_modified->is_text() && !keyword_node_modified->is_whitespace();
     bool is_same_keyword = is_keywords && *keyword_node_original == *keyword_node_modified;
 
-
     if((is_keyword && !is_keywords) || (is_keywords && !is_same_keyword)) {
         ++original_collect_start_pos;
     }

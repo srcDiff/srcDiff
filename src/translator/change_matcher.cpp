@@ -55,8 +55,8 @@ change_list change_matcher::create_linked_list(difference * differences) {
   std::vector<bool> olist(olength);
   std::vector<bool> nlist(nlength);
 
-  int original_pos = 0;
-  int modified_pos = 0;
+  int original_pos = olength - 1;
+  int modified_pos = nlength - 1;
 
   for(int i = nlength - 1, j = olength - 1; i >= 0 || j >= 0;) {
 
@@ -65,20 +65,20 @@ change_list change_matcher::create_linked_list(difference * differences) {
     // only output marked and if has not already been output
     if(diff.marked && !(olist[j] || nlist[i])) {
 
-      if(diff.opos - original_pos > 0 || diff.npos - modified_pos > 0) {
-        changes.emplace_back(safe_subspan(original, original_pos, diff.opos - 1),
-                             safe_subspan(modified, modified_pos, diff.npos - 1),
-                             0, srcdiff::CHANGE, original_pos, modified_pos);
+      if(original_pos - diff.opos > 0 ||  modified_pos - diff.npos > 0) {
+        changes.emplace_front(safe_subspan(original, diff.opos + 1, original_pos),
+                              safe_subspan(modified, diff.npos + 1, modified_pos),
+                              0, srcdiff::CHANGE, original_pos, modified_pos);
       }
 
-      changes.emplace_back(original.subspan(diff.opos, 1), modified.subspan(diff.npos, 1),
-                           diff.similarity, srcdiff::COMMON, diff.opos, diff.npos);
+      changes.emplace_front(original.subspan(diff.opos, 1), modified.subspan(diff.npos, 1),
+                            diff.similarity, srcdiff::COMMON, diff.opos, diff.npos);
 
       olist[j] = true;
       nlist[i] = true;
 
-      original_pos = diff.opos + 1;
-      modified_pos = diff.npos + 1;
+      original_pos = diff.opos - 1;
+      modified_pos = diff.npos - 1;
 
     }
 
@@ -118,13 +118,11 @@ change_list change_matcher::create_linked_list(difference * differences) {
 
   }
 
-
-  if(olength - original_pos > 0 || nlength - modified_pos > 0) {
-    changes.emplace_back(safe_subspan(original, original_pos, olength - 1),
-                         safe_subspan(modified, modified_pos, nlength - 1),
-                         0, srcdiff::CHANGE, original_pos, modified_pos);
+  if(original_pos >= 0 || modified_pos >= 0) {
+    changes.emplace_front(safe_subspan(original, 0, original_pos),
+                          safe_subspan(modified, 0, modified_pos),
+                          0, srcdiff::CHANGE, original_pos, modified_pos);
   }
-
 
   return changes;
 

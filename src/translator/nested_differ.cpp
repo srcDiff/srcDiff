@@ -421,7 +421,6 @@ void nested_differ::output() {
   whitespace_stream whitespace(*out);
   whitespace.output_prefix();
 
-
   std::size_t start_pos = outer.front()->get_terms().at(1);
   std::size_t end_pos = outer.back()->end_position();
 
