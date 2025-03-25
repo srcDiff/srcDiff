@@ -168,7 +168,7 @@ change_list change_matcher::create_linked_list(difference * differences) {
       /** loop text O(nd) + syntax O(nd) + best match is O(nd) times number of matches */
       construct::construct_list_view original_view = original.subspan(j, original.size() - j);
       construct::construct_list_view modified_view = modified.subspan(i, modified.size() - i);
-      if(!is_match(original_view, modified_view)) {
+      if(!is_match(original_view, modified_view) || original[j]->term(0)->get_move() || modified[i]->term(0)->get_move()) {
 
         similarity = 0;
         unmatched = 2;

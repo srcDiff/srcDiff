@@ -134,21 +134,13 @@ change_list many_differ::determine_operations() {
   edit_t * edit_next = edit_script->next;
 
   for(std::size_t i = 0; i < edits->length; ++i) {
-
     unsigned int index = edits->offset_sequence_one + i;
-    if(!original[index]->term(0)->get_move()) {
-      original_sets.push_back(original[index]);
-    }
-
+    original_sets.push_back(original[index]);
   }
 
   for(std::size_t i = 0; i < edit_next->length; ++i) {
-
     unsigned int index = edit_next->offset_sequence_two + i;
-    if(!modified[index]->term(0)->get_move()) {
-      modified_sets.push_back(modified[index]);
-    }
-
+    modified_sets.push_back(modified[index]);
   }
 
   change_list changes;
