@@ -68,11 +68,10 @@ change_list change_matcher::create_linked_list(difference * differences) {
       if(original_pos - diff.opos > 0 ||  modified_pos - diff.npos > 0) {
         changes.emplace_front(safe_subspan(original, diff.opos + 1, original_pos),
                               safe_subspan(modified, diff.npos + 1, modified_pos),
-                              0, CHANGE, original_pos, modified_pos);
+                              0, CHANGE);
       }
 
-      changes.emplace_front(original.subspan(diff.opos, 1), modified.subspan(diff.npos, 1),
-                            diff.similarity, COMMON, diff.opos, diff.npos);
+      changes.emplace_front(original.subspan(diff.opos, 1), modified.subspan(diff.npos, 1), diff.similarity, COMMON);
 
       olist[j] = true;
       nlist[i] = true;
@@ -119,8 +118,7 @@ change_list change_matcher::create_linked_list(difference * differences) {
   }
 
   if(original_pos >= 0 || modified_pos >= 0) {
-    changes.emplace_front(safe_subspan(original, 0, original_pos), safe_subspan(modified, 0, modified_pos),
-                          0, CHANGE, original_pos, modified_pos);
+    changes.emplace_front(safe_subspan(original, 0, original_pos),safe_subspan(modified, 0, modified_pos), 0, CHANGE);
   }
 
   return changes;

@@ -26,7 +26,7 @@ struct change {
     enum operation operation;
 
     change(const construct::construct_list_view original, const construct::construct_list_view modified,
-           int similarity, enum operation operation, int original_pos, int modified_pos)
+           int similarity, enum operation operation)
         : original(original), modified(modified), similarity(similarity), operation(operation) {}
 };
 
