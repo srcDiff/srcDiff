@@ -9,9 +9,9 @@
 
 #include <differ.hpp>
 
+#include <match_differ.hpp>
 #include <many_differ.hpp>
 #include <change_stream.hpp>
-#include <single_differ.hpp>
 #include <common_stream.hpp>
 #include <move_detector.hpp>
 #include <measurer.hpp>
@@ -109,14 +109,14 @@ void differ::output() {
 
           if(original[edits->offset_sequence_one]->term(0)->get_type() != srcML::node_type::TEXT) {
 
-            single_differ diff(out, original[edits->offset_sequence_one], modified[edits->offset_sequence_two]);
+            match_differ diff(out, original[edits->offset_sequence_one], modified[edits->offset_sequence_two]);
             diff.output();
 
           } else {
 
             // common text nodes
             common_stream::output_common(out, original[edits->offset_sequence_one]->end_position() + 1,
-                                               modified[edits->offset_sequence_two]->end_position() + 1);
+                                              modified[edits->offset_sequence_two]->end_position() + 1);
 
           }
 

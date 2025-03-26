@@ -9,7 +9,8 @@
 
 #include <many_differ.hpp>
 
-#include <single_differ.hpp>
+#include <match_differ.hpp>
+#include <convert_differ.hpp>
 #include <nested_differ.hpp>
 #include <change_stream.hpp>
 #include <measurer.hpp>
@@ -160,8 +161,15 @@ void many_differ::output() {
 
     if(change.operation == srcdiff::COMMON) {
       if(change.original.front()->term(0)->get_type() != srcML::node_type::TEXT) {
-        single_differ diff(out, change.original.front(), change.modified.front());      
-        diff.output();
+
+        if(change.original.front()->root_term_name() == change.modified.front()->root_term_name()) {
+          match_differ diff(out, change.original.front(), change.modified.front());      
+          diff.output();
+        } else {
+          convert_differ diff(out, change.original.front(), change.modified.front());      
+          diff.output();
+        }
+
       } else {
         // syntax mismatch
         output_change_whitespace(change.original.front()->end_position() + 1,
