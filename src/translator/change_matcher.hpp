@@ -13,6 +13,7 @@
 #include <construct.hpp>
 #include <measurer.hpp>
 #include <change_list.hpp>
+#include <operation.hpp>
 
 namespace srcdiff {
 
@@ -27,10 +28,15 @@ protected:
   struct difference {
     int similarity;
     int num_unmatched;
-    bool marked;
-    int direction;
+
     unsigned int opos;
     unsigned int npos;
+
+    int direction;
+    enum operation operation;
+  
+    bool marked;
+
   };
   change_list create_linked_list(difference * differences);
 

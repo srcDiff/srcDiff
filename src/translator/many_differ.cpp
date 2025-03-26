@@ -159,22 +159,23 @@ void many_differ::output() {
   change_list changes = determine_operations();
   for(struct change& change : changes) {
 
-    if(change.operation == COMMON) {
+    if(change.operation == MATCH) {
       if(change.original.front()->term(0)->get_type() != srcML::node_type::TEXT) {
 
-        if(change.original.front()->root_term_name() == change.modified.front()->root_term_name()) {
-          match_differ diff(out, change.original.front(), change.modified.front());      
-          diff.output();
-        } else {
-          convert_differ diff(out, change.original.front(), change.modified.front());      
-          diff.output();
-        }
+        match_differ diff(out, change.original.front(), change.modified.front());      
+        diff.output();
 
       } else {
         // syntax mismatch
         output_change_whitespace(change.original.front()->end_position() + 1,
                                  change.modified.front()->end_position() + 1);
       }
+
+    } else if(change.operation == CONVERT) {
+
+      convert_differ diff(out, change.original.front(), change.modified.front());      
+      diff.output();
+
     } else {
       output_unmatched(change.original, change.modified);
     }

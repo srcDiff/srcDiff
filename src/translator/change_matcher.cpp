@@ -14,24 +14,23 @@
 #include <syntax_measurer.hpp>
 #include <constants.hpp>
 
-#include <list>
-
 #include <cstring>
 
 namespace srcdiff {
 
-bool is_match(construct::construct_list_view original, construct::construct_list_view modified) {
+enum operation is_match(construct::construct_list_view original, construct::construct_list_view modified) {
   const srcdiff::measurer & measure = *original[0]->measure(*modified[0]);
 
-  if(measure.similarity() == MAX_INT) return false;
+  if(measure.similarity() == MAX_INT) return NONE;
 
-  if(!original[0]->is_match_similar(*modified[0]) && !original[0]->can_refine_difference(*modified[0]))
-    return false;
+  enum operation operation = MATCH;
+  if(!original[0]->is_match_similar(*modified[0]) && !(operation = original[0]->can_refine_difference(*modified[0])))
+    return NONE;
 
   if(nest_differ::is_better_nested(original, modified))
-    return false;
+    return NONE;
 
-  return true;
+  return operation;
 
 }
 
@@ -71,7 +70,7 @@ change_list change_matcher::create_linked_list(difference * differences) {
                               0, CHANGE);
       }
 
-      changes.emplace_front(original.subspan(diff.opos, 1), modified.subspan(diff.npos, 1), diff.similarity, COMMON);
+      changes.emplace_front(original.subspan(diff.opos, 1), modified.subspan(diff.npos, 1), diff.similarity, diff.operation);
 
       olist[j] = true;
       nlist[i] = true;
@@ -154,6 +153,9 @@ change_list change_matcher::create_linked_list(difference * differences) {
     for(int j = 0; j < olength; ++j) {
 
       /** loop O(nd) */
+
+      difference& diff = differences[i * olength + j];
+
       const srcdiff::measurer & measure = *original[j]->measure(*modified[i]);
       int similarity = measure.similarity();
 
@@ -165,11 +167,16 @@ change_list change_matcher::create_linked_list(difference * differences) {
       /** loop text O(nd) + syntax O(nd) + best match is O(nd) times number of matches */
       construct::construct_list_view original_view = original.subspan(j, original.size() - j);
       construct::construct_list_view modified_view = modified.subspan(i, modified.size() - i);
-      if(!is_match(original_view, modified_view) || original[j]->term(0)->get_move() || modified[i]->term(0)->get_move()) {
 
+      if(!(diff.operation = is_match(original_view, modified_view))) {
         similarity = 0;
         unmatched = 2;
+      }
 
+      if(original[j]->term(0)->get_move() || modified[i]->term(0)->get_move()) {
+        similarity = 0;
+        unmatched = 2;
+        diff.operation = MOVE;
       }
 
       int num_unmatched = MAX_INT;
@@ -267,8 +274,6 @@ change_list change_matcher::create_linked_list(difference * differences) {
       }
 
       // update structure
-      difference& diff = differences[i * olength + j];
-
       diff.marked = matched;
       diff.similarity = max_similarity;
       diff.num_unmatched = num_unmatched;

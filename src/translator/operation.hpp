@@ -13,12 +13,14 @@
 
 namespace srcdiff {
 
-enum operation {
-    NONE,
+enum operation : int {
+    NONE = 0,
     COMMON,
     DELETE,
     INSERT,
     CHANGE,
+    MATCH,
+    CONVERT,
     NEST,
     MOVE
 };
