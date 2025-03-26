@@ -70,7 +70,7 @@ bool block::is_matchable_impl(const construct & modified) const {
     }
 
     srcdiff::nest_result nesting = srcdiff::nest_differ::check_nestable(construct::construct_list_view(&original_stmts.front(), original_stmts.size()),
-                                                                          construct::construct_list_view(&modified_stmts.front(), modified_stmts.size()));
+                                                                        construct::construct_list_view(&modified_stmts.front(), modified_stmts.size()));
 
     return match_operation == nesting.operation;
 }
