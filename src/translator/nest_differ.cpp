@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file nested_differ.cpp
+ * @file nest_differ.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <nested_differ.hpp>
+#include <nest_differ.hpp>
 
 #include <constants.hpp>
 #include <change_stream.hpp>
@@ -22,7 +22,7 @@
 
 namespace srcdiff {
 
-nested_differ::nested_differ(std::shared_ptr<output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified, enum operation operation)
+nest_differ::nest_differ(std::shared_ptr<output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified, enum operation operation)
   : differ(out, original, modified), operation(operation) {}
 
 bool has_compound_inner(std::shared_ptr<const construct> & node_set_outer) {
@@ -83,7 +83,7 @@ bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
 
 }
 
-bool nested_differ::is_better_nested(construct::construct_list_view original, construct::construct_list_view modified) {
+bool nest_differ::is_better_nested(construct::construct_list_view original, construct::construct_list_view modified) {
 
   const measurer & measure = *original[0]->measure(*modified[0]);
 
@@ -256,7 +256,7 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
 
 }
 
-bool nested_differ::check_nestable_predicate(construct::construct_list_view construct_list_outer,
+bool nest_differ::check_nestable_predicate(construct::construct_list_view construct_list_outer,
                                               construct::construct_list_view construct_list_inner) {
 
   if(construct_list_inner[0]->root_term()->get_move()) return true;
@@ -311,7 +311,7 @@ bool nested_differ::check_nestable_predicate(construct::construct_list_view cons
  *
  */
 
-std::tuple<std::vector<int>, int, int> nested_differ::check_nestable_inner(construct::construct_list_view parent_list, construct::construct_list_view child_list) {
+std::tuple<std::vector<int>, int, int> nest_differ::check_nestable_inner(construct::construct_list_view parent_list, construct::construct_list_view child_list) {
 
   for(std::size_t i = 0; i < parent_list.size(); ++i) {
 
@@ -345,7 +345,7 @@ std::tuple<std::vector<int>, int, int> nested_differ::check_nestable_inner(const
 
 }
 
-nest_result nested_differ::check_nestable(construct::construct_list_view original, construct::construct_list_view modified) {
+nest_result nest_differ::check_nestable(construct::construct_list_view original, construct::construct_list_view modified) {
 
   if(original.size() == 1 || modified.size() == 1) {
 
@@ -404,7 +404,7 @@ nest_result nested_differ::check_nestable(construct::construct_list_view origina
 
 }
 
-void nested_differ::output() {
+void nest_differ::output() {
 
   construct::construct_list_view outer;
   construct::construct_list_view inner;

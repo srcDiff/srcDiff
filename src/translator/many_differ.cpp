@@ -11,7 +11,7 @@
 
 #include <match_differ.hpp>
 #include <convert_differ.hpp>
-#include <nested_differ.hpp>
+#include <nest_differ.hpp>
 #include <change_stream.hpp>
 #include <measurer.hpp>
 #include <change_matcher.hpp>
@@ -41,7 +41,7 @@ void many_differ::output_unmatched(construct::construct_list_view original_unmat
       nest_result nesting;
       do {
 
-        nesting = nested_differ::check_nestable(original_view, modified_view);
+        nesting = nest_differ::check_nestable(original_view, modified_view);
     
         finish_original = original_unmatched.back()->end_position() + 1;
         finish_modified = modified_unmatched.back()->end_position() + 1;
@@ -60,7 +60,7 @@ void many_differ::output_unmatched(construct::construct_list_view original_unmat
 
         if((nesting.end_original - nesting.start_original) > 0 && (nesting.end_modified - nesting.start_modified) > 0) {
 
-          nested_differ diff(out, original_view.subspan(nesting.start_original, nesting.end_original - nesting.start_original), 
+          nest_differ diff(out, original_view.subspan(nesting.start_original, nesting.end_original - nesting.start_original), 
                                   modified_view.subspan(nesting.start_modified, nesting.end_modified - nesting.start_modified),
                                   nesting.operation);
           diff.output();

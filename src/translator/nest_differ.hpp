@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file nested_differ.hpp
+ * @file nest_differ.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_NESTED_DIFFER_HPP
-#define INCLUDED_NESTED_DIFFER_HPP
+#ifndef INCLUDED_NEST_DIFFER_HPP
+#define INCLUDED_NEST_DIFFER_HPP
 
 #include <differ.hpp>
 #include <srcml_nodes.hpp>
@@ -32,7 +32,7 @@ struct nest_result {
   enum operation operation;
 };
 
-class nested_differ : public differ {
+class nest_differ : public differ {
 
 protected:
 
@@ -46,7 +46,7 @@ static std::tuple<std::vector<int>, int, int> check_nestable_inner(construct::co
 
 public:
 
-  nested_differ(std::shared_ptr<output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified, enum operation operation);
+  nest_differ(std::shared_ptr<output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified, enum operation operation);
 
   virtual void output();
 
