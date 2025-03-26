@@ -25,14 +25,9 @@ struct change {
     int similarity;
     enum operation operation;
 
-    // Would like to eventually remove this
-    int original_pos;
-    int modified_pos;
-
     change(const construct::construct_list_view original, const construct::construct_list_view modified,
            int similarity, enum operation operation, int original_pos, int modified_pos)
-        : original(original), modified(modified), similarity(similarity), operation(operation),
-          original_pos(original_pos), modified_pos(modified_pos) {}
+        : original(original), modified(modified), similarity(similarity), operation(operation) {}
 };
 
 class change_list : public std::list<change> {

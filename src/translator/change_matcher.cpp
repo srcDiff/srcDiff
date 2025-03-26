@@ -119,8 +119,7 @@ change_list change_matcher::create_linked_list(difference * differences) {
   }
 
   if(original_pos >= 0 || modified_pos >= 0) {
-    changes.emplace_front(safe_subspan(original, 0, original_pos),
-                          safe_subspan(modified, 0, modified_pos),
+    changes.emplace_front(safe_subspan(original, 0, original_pos), safe_subspan(modified, 0, modified_pos),
                           0, CHANGE, original_pos, modified_pos);
   }
 
