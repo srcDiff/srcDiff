@@ -36,18 +36,18 @@ void match_differ::output() {
     whitespace.output_all();
 
     if(original_construct->root_term()->is_temporary() == modified_construct->root_term()->is_temporary()) {
-        out->output_node(out->diff_common_start, SES_COMMON);
+        out->output_node(out->diff_common_start, COMMON);
     }
 
     if(*original_construct->root_term() == *modified_construct->root_term()) {
 
-        out->output_node(original_construct->root_term(), modified_construct->root_term(), SES_COMMON);
+        out->output_node(original_construct->root_term(), modified_construct->root_term(), COMMON);
 
     } else {
 
         std::shared_ptr<srcML::node> merged_node = std::make_shared<srcML::node>(*original_construct->root_term());
         merged_node->merge(*modified_construct->root_term());
-        out->output_node(merged_node, SES_COMMON);
+        out->output_node(merged_node, COMMON);
 
     }
 
@@ -84,7 +84,7 @@ void match_differ::output() {
     common_stream::output_common(out, original_construct->end_position() + 1, modified_construct->end_position() + 1);
 
     if(original_construct->root_term()->is_temporary() == modified_construct->root_term()->is_temporary()) {
-        out->output_node(out->diff_common_end, SES_COMMON);
+        out->output_node(out->diff_common_end, COMMON);
     }
 
 }

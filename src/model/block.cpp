@@ -11,6 +11,7 @@
 
 #include <nest/block.hpp>
 #include <nested_differ.hpp>
+#include <operation.hpp>
 
 #include <syntax_measurer.hpp>
 #include <construct_factory.hpp>
@@ -52,7 +53,7 @@ bool block::is_matchable_impl(const construct & modified) const {
 
     construct_list original_stmts;
     construct_list modified_stmts;
-    int match_operation = SES_INSERT;
+    int match_operation = srcdiff::INSERT;
 
     const block & modified_block = static_cast<const block &>(modified);
 
@@ -64,7 +65,7 @@ bool block::is_matchable_impl(const construct & modified) const {
         std::size_t start_pos = start_position();
         original_stmts.push_back(create_construct(parent(), start_pos));
         modified_stmts = modified_block.block_content()->children();
-        match_operation = SES_DELETE;
+        match_operation = srcdiff::DELETE;
 
     }
 

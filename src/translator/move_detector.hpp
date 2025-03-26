@@ -13,6 +13,8 @@
 #include <output_stream.hpp>
 
 #include <construct.hpp>
+#include <operation.hpp>
+
 #include <shortest_edit_script.h>
 
 namespace srcdiff {
@@ -22,13 +24,13 @@ class move_detector : public output_stream {
 protected:
 
     std::size_t & position;
-    int operation;
+    enum operation operation;
 
 private:
 
 public:
 
-    move_detector(const output_stream& out, std::size_t& position, int operation);
+    move_detector(const output_stream& out, std::size_t& position, enum operation operation);
 
     static bool is_move(std::shared_ptr<const construct> set);
 

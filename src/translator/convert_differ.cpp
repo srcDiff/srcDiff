@@ -69,17 +69,17 @@ void convert_differ::output() {
 
     // output deleted nodes
     out->diff_original_start->emplace_attribute("type", diff_convert_type);
-    out->output_node(out->diff_original_start, SES_DELETE, true);
+    out->output_node(out->diff_original_start, DELETE, true);
     out->diff_original_start->clear_attributes();
 
     for(int output_pos = 0; output_pos < original_collect_start_pos; ++output_pos) {
-        out->output_node(original_construct->term(output_pos), SES_DELETE);
+        out->output_node(original_construct->term(output_pos), DELETE);
         ++out->last_output_original();
     }
 
     // output inserted nodes
     out->diff_modified_start->emplace_attribute("type", diff_convert_type);
-    out->output_node(out->diff_modified_start, SES_INSERT, true);
+    out->output_node(out->diff_modified_start, INSERT, true);
     out->diff_modified_start->clear_attributes();
 
     if(is_keywords && !is_same_keyword){
@@ -87,7 +87,7 @@ void convert_differ::output() {
     }
 
     for(int output_pos = 0; output_pos < modified_collect_start_pos; ++output_pos) {
-        out->output_node(modified_construct->term(output_pos), SES_INSERT);
+        out->output_node(modified_construct->term(output_pos), INSERT);
         ++out->last_output_modified();
     }
 
@@ -107,16 +107,16 @@ void convert_differ::output() {
 
     change_stream::output_change(out, out->last_output_original(), modified_construct->end_position() + 1);
 
-    out->output_node(out->diff_modified_end, SES_INSERT, true);
-    if(out->output_state() == SES_INSERT) {
-        out->output_node(out->diff_modified_end, SES_INSERT);
+    out->output_node(out->diff_modified_end, INSERT, true);
+    if(out->output_state() == INSERT) {
+        out->output_node(out->diff_modified_end, INSERT);
     }
 
     change_stream::output_change(out, original_construct->end_position() + 1, out->last_output_modified());
 
-    out->output_node(out->diff_original_end, SES_DELETE, true);
-    if(out->output_state() == SES_DELETE) {
-            out->output_node(out->diff_original_end, SES_DELETE);
+    out->output_node(out->diff_original_end, DELETE, true);
+    if(out->output_state() == DELETE) {
+            out->output_node(out->diff_original_end, DELETE);
     }
 
 }

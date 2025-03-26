@@ -20,7 +20,7 @@
 namespace srcdiff {
 
 bool output_stream::delay = false;
-int output_stream::delay_operation = -2;
+enum operation output_stream::delay_operation = NONE;
 
 // summary_type_str is unused here
 output_stream::output_stream(srcml_archive * archive, 
@@ -30,7 +30,7 @@ output_stream::output_stream(srcml_archive * archive,
                                const client_options::view_options_t & view_options,
                                const std::optional<std::string> & summary_type_str [[maybe_unused]])
  : archive(archive), flags(flags),
-   rbuf_original(std::make_shared<reader_state>(SES_DELETE)), rbuf_modified(std::make_shared<reader_state>(SES_INSERT)), wstate(std::make_shared<writer_state>(method)),
+   rbuf_original(std::make_shared<reader_state>(DELETE)), rbuf_modified(std::make_shared<reader_state>(INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcML::name_space>()),
    is_initialized(false), is_open(false) {
 
@@ -44,8 +44,8 @@ void output_stream::initialize() {
   diff->set_uri(SRCDIFF_DEFAULT_NAMESPACE_HREF);
 
   unit_tag            = std::make_shared<srcML::node>(srcML::node_type::START, std::string("unit"));
-  diff_common_start   = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_SES_COMMON, srcML::name_space::DIFF_NAMESPACE);
-  diff_common_end     = std::make_shared<srcML::node>(srcML::node_type::END, DIFF_SES_COMMON, srcML::name_space::DIFF_NAMESPACE);
+  diff_common_start   = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_COMMON, srcML::name_space::DIFF_NAMESPACE);
+  diff_common_end     = std::make_shared<srcML::node>(srcML::node_type::END, DIFF_COMMON, srcML::name_space::DIFF_NAMESPACE);
   diff_original_start = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_ORIGINAL, srcML::name_space::DIFF_NAMESPACE);
   diff_original_end   = std::make_shared<srcML::node>(srcML::node_type::END, DIFF_ORIGINAL, srcML::name_space::DIFF_NAMESPACE);
   diff_modified_start = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_MODIFIED, srcML::name_space::DIFF_NAMESPACE);
@@ -64,28 +64,28 @@ void output_stream::prime(int is_original, int is_modified) {
   if(!is_initialized) initialize();
 
   diff_set * original_diff = new diff_set();
-  original_diff->operation = SES_COMMON;
+  original_diff->operation = COMMON;
   rbuf_original->open_diff.push_back(original_diff);
 
   diff_set * modified_diff = new diff_set();
-  modified_diff->operation = SES_COMMON;
+  modified_diff->operation = COMMON;
   rbuf_modified->open_diff.push_back(modified_diff);
 
   diff_set * output_diff = new diff_set();
-  output_diff->operation = SES_COMMON;
+  output_diff->operation = COMMON;
   wstate->output_diff.push_back(output_diff);
 
   if(!rbuf_original->nodes.empty() && !rbuf_modified->nodes.empty()) {
 
-    update_diff_stack(rbuf_original->open_diff, unit_tag, SES_COMMON);
-    update_diff_stack(rbuf_modified->open_diff, unit_tag, SES_COMMON);
-    update_diff_stack(wstate->output_diff, unit_tag, SES_COMMON);
+    update_diff_stack(rbuf_original->open_diff, unit_tag, COMMON);
+    update_diff_stack(rbuf_modified->open_diff, unit_tag, COMMON);
+    update_diff_stack(wstate->output_diff, unit_tag, COMMON);
 
   } else if(rbuf_original->nodes.empty() && rbuf_modified->nodes.empty()) {
 
-    update_diff_stack(rbuf_original->open_diff, diff_common_start, SES_COMMON);
-    update_diff_stack(rbuf_modified->open_diff, diff_common_start, SES_COMMON);
-    update_diff_stack(wstate->output_diff, diff_common_start, SES_COMMON);
+    update_diff_stack(rbuf_original->open_diff, diff_common_start, COMMON);
+    update_diff_stack(rbuf_modified->open_diff, diff_common_start, COMMON);
+    update_diff_stack(wstate->output_diff, diff_common_start, COMMON);
 
     if(is_original <= -1 && is_modified <= -1) {
 
@@ -97,15 +97,15 @@ void output_stream::prime(int is_original, int is_modified) {
 
   } else if(rbuf_original->nodes.empty()) {
 
-    update_diff_stack(rbuf_original->open_diff, diff_common_start, SES_COMMON);
-    update_diff_stack(rbuf_modified->open_diff, unit_tag, SES_COMMON);
-    update_diff_stack(wstate->output_diff, unit_tag, SES_COMMON);
+    update_diff_stack(rbuf_original->open_diff, diff_common_start, COMMON);
+    update_diff_stack(rbuf_modified->open_diff, unit_tag, COMMON);
+    update_diff_stack(wstate->output_diff, unit_tag, COMMON);
 
   } else {
 
-    update_diff_stack(rbuf_original->open_diff, unit_tag, SES_COMMON);
-    update_diff_stack(rbuf_modified->open_diff, diff_common_start, SES_COMMON);
-    update_diff_stack(wstate->output_diff, unit_tag, SES_COMMON);
+    update_diff_stack(rbuf_original->open_diff, unit_tag, COMMON);
+    update_diff_stack(rbuf_modified->open_diff, diff_common_start, COMMON);
+    update_diff_stack(wstate->output_diff, unit_tag, COMMON);
 
   }
 
@@ -136,7 +136,7 @@ void output_stream::start_unit(const std::string & language_string, const std::o
 std::string output_stream::end_unit() {
 
   static const std::shared_ptr<srcML::node> flush = std::make_shared<srcML::node>(srcML::node_type::TEXT, "text");
-  output_node(flush, SES_COMMON);
+  output_node(flush, COMMON);
 
   if(wstate->approximate) {
     srcml_write_start_element(wstate->unit, SRCDIFF_DEFAULT_NAMESPACE_PREFIX.c_str(), "approximate", 0);
@@ -216,12 +216,12 @@ void output_stream::approximate(bool is_approximate) {
 }
 
 
-bool output_stream::is_delay_type(int operation) {
+bool output_stream::is_delay_type(enum operation operation) {
   if(!delay) return false;
   return operation == delay_operation;
 }
 
-void output_stream::update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcML::node> & node, int operation) {
+void output_stream::update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcML::node> & node, enum operation operation) {
 
   // Skip empty node
   if(node->is_empty() || node->is_text())
@@ -256,9 +256,9 @@ void output_stream::update_diff_stack(std::vector<diff_set *> & open_diffs, cons
 
 }
 
-void output_stream::update_diff_stacks(const std::shared_ptr<srcML::node> & node, int operation) {
+void output_stream::update_diff_stacks(const std::shared_ptr<srcML::node> & node, enum operation operation) {
 
-  if(operation == SES_COMMON) {
+  if(operation == COMMON) {
 
     update_diff_stack(rbuf_original->open_diff, node, operation);
     update_diff_stack(rbuf_modified->open_diff, node, operation);
@@ -266,13 +266,13 @@ void output_stream::update_diff_stacks(const std::shared_ptr<srcML::node> & node
     update_diff_stack(wstate->output_diff, node, operation);
 
   }
-  else if(operation == SES_DELETE) {
+  else if(operation == DELETE) {
 
     update_diff_stack(rbuf_original->open_diff, node, operation);
 
     update_diff_stack(wstate->output_diff, node, operation);
 
-  } else if(operation == SES_INSERT) {
+  } else if(operation == INSERT) {
 
     update_diff_stack(rbuf_modified->open_diff, node, operation);
 
@@ -284,37 +284,37 @@ void output_stream::update_diff_stacks(const std::shared_ptr<srcML::node> & node
 
 void output_stream::output_node(const std::shared_ptr<srcML::node> & original_node, 
                                  const std::shared_ptr<srcML::node> & modified_node,
-                                 int operation, bool force_output) {
+                                 enum operation operation, bool force_output) {
 
-  if(operation == SES_COMMON && original_node->is_temporary() != modified_node->is_temporary()) {
+  if(operation == COMMON && original_node->is_temporary() != modified_node->is_temporary()) {
 
     if(original_node->get_type() == srcML::node_type::END) {
-      output_node(diff_common_end, SES_COMMON);
+      output_node(diff_common_end, COMMON);
     }
 
     if(original_node->is_temporary()) {
 
       if(modified_node->get_type() == srcML::node_type::START) {
-        output_node(diff_modified_start, SES_INSERT);
+        output_node(diff_modified_start, INSERT);
       }
-      output_node(modified_node, SES_INSERT, force_output);
+      output_node(modified_node, INSERT, force_output);
       if(modified_node->get_type() == srcML::node_type::END) {
-        output_node(diff_modified_end, SES_INSERT);
+        output_node(diff_modified_end, INSERT);
       }
 
     } else {
 
       if(original_node->get_type() == srcML::node_type::START) {
-        output_node(diff_original_start, SES_DELETE);
+        output_node(diff_original_start, DELETE);
       }
-      output_node(original_node, SES_DELETE, force_output);
+      output_node(original_node, DELETE, force_output);
       if(original_node->get_type() == srcML::node_type::END) {
-        output_node(diff_original_end, SES_DELETE);
+        output_node(diff_original_end, DELETE);
       }
 
     }
     if(original_node->get_type() == srcML::node_type::START) {
-      output_node(diff_common_start, SES_COMMON);
+      output_node(diff_common_start, COMMON);
     }
   } else {
     output_node(original_node, operation, force_output);
@@ -323,30 +323,30 @@ void output_stream::output_node(const std::shared_ptr<srcML::node> & original_no
 }
 
 
-void output_stream::output_node(const std::shared_ptr<srcML::node> & node, int operation, bool force_output) {
+void output_stream::output_node(const std::shared_ptr<srcML::node> & node, enum operation operation, bool force_output) {
 
-  // check if delaying SES_DELETE/SES_INSERT/SES_COMMON tag. should only stop if operation is different or not whitespace
+  // check if delaying DELETE/INSERT/COMMON tag. should only stop if operation is different or not whitespace
   if(delay && (delay_operation != operation)
-     && ((delay_operation == SES_DELETE 
+     && ((delay_operation == DELETE 
           && wstate->output_diff.back()->open_tags.back()->get_name() == diff_original_end->get_name())
-         || (delay_operation == SES_INSERT 
+         || (delay_operation == INSERT 
              && wstate->output_diff.back()->open_tags.back()->get_name() == diff_modified_end->get_name())
-         || (delay_operation == SES_COMMON 
+         || (delay_operation == COMMON 
              && wstate->output_diff.back()->open_tags.back()->get_name() == diff_common_end->get_name()))) {
 
-    if(delay_operation == SES_DELETE) {
+    if(delay_operation == DELETE) {
 
       output_node(*diff_original_end);
 
       update_diff_stacks(diff_original_end, delay_operation);
 
-    } else if(delay_operation == SES_INSERT) {
+    } else if(delay_operation == INSERT) {
 
       output_node(*diff_modified_end);
 
       update_diff_stacks(diff_modified_end, delay_operation);
 
-    } else if(delay_operation == SES_COMMON)  {
+    } else if(delay_operation == COMMON)  {
 
       output_node(*diff_common_end);
 
@@ -355,12 +355,12 @@ void output_stream::output_node(const std::shared_ptr<srcML::node> & node, int o
     }
 
     delay = false;
-    delay_operation = -2;
+    delay_operation = NONE;
 
   } else if(delay) {
 
     delay = false;
-    delay_operation = -2;
+    delay_operation = NONE;
 
   }
 
@@ -369,7 +369,7 @@ void output_stream::output_node(const std::shared_ptr<srcML::node> & node, int o
     if(node->get_type() == srcML::node_type::END && wstate->output_diff.back()->open_tags.back()->get_name() != node->get_name())
       return;
 
-    // check if ending a SES_DELETE/SES_INSERT/SES_COMMON tag. if so delay.
+    // check if ending a DELETE/INSERT/COMMON tag. if so delay.
     if(ismethod(wstate->method, METHOD_GROUP) && !force_output && (*node == *diff_original_end || *node == *diff_modified_end || *node == *diff_common_end)) {
 
 
@@ -394,9 +394,9 @@ void output_stream::output_node(const std::shared_ptr<srcML::node> & node, int o
     int size = wstate->output_diff.back()->open_tags.size();
 
     if(!force_output && size > 0 &&
-       (   (*node == *diff_original_start && current_operation == SES_DELETE)
-        || (*node == *diff_modified_start && current_operation == SES_INSERT)
-        || (*node == *diff_common_start && current_operation == SES_COMMON))) {
+       (   (*node == *diff_original_start && current_operation == DELETE)
+        || (*node == *diff_modified_start && current_operation == INSERT)
+        || (*node == *diff_common_start && current_operation == COMMON))) {
 
       return;
     }
@@ -410,7 +410,7 @@ void output_stream::output_node(const std::shared_ptr<srcML::node> & node, int o
 
 }
 
-void output_stream::output_text_as_node(const std::string & text, int operation) {
+void output_stream::output_text_as_node(const std::string & text, enum operation operation) {
 
   if(text.size() == 0) return;
   std::shared_ptr<srcML::node> node = std::make_shared<srcML::node>(srcML::node_type::TEXT, std::string("text"));
@@ -421,7 +421,7 @@ void output_stream::output_text_as_node(const std::string & text, int operation)
 }
 
 
-void output_stream::output_char(char character, int operation) {
+void output_stream::output_char(char character, enum operation operation) {
 
   static char buf[2] = { 0 };
   buf[0] = character;

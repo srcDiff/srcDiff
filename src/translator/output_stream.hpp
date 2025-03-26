@@ -16,7 +16,7 @@
 
 #include <methods.hpp>
 #include <constants.hpp>
-#include <shortest_edit_script.h>
+#include <operation.hpp>
 
 #include <optional>
 
@@ -32,7 +32,7 @@ public:
 
   struct diff_set {
 
-    int operation;
+    enum operation operation;
 
     srcml_nodes open_tags;
 
@@ -129,12 +129,12 @@ public:
   std::shared_ptr<srcML::node> unit_tag;
 
   static bool delay;
-  static int delay_operation;
+  static enum operation delay_operation;
 
 private:
 
-  static void update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcML::node> & node, int operation);
-  void update_diff_stacks(const std::shared_ptr<srcML::node> & node, int operation);
+  static void update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcML::node> & node, enum operation operation);
+  void update_diff_stacks(const std::shared_ptr<srcML::node> & node, enum operation operation);
   void output_node(const srcML::node & node);
   void output_node_inner(const srcML::node & node);
 
@@ -175,14 +175,14 @@ public:
 
   void approximate(bool is_approximate);
 
-  virtual bool is_delay_type(int operation);
+  virtual bool is_delay_type(enum operation operation);
 
   virtual void output_node(const std::shared_ptr<srcML::node> & original_node, 
                            const std::shared_ptr<srcML::node> & modified_node,
-                           int operation, bool force_output = false);
-  virtual void output_node(const std::shared_ptr<srcML::node> & node, int operation, bool force_output = false);
-  virtual void output_text_as_node(const std::string & text, int operation);
-  virtual void output_char(char character, int operation);
+                           enum operation operation, bool force_output = false);
+  virtual void output_node(const std::shared_ptr<srcML::node> & node, enum operation operation, bool force_output = false);
+  virtual void output_text_as_node(const std::string & text, enum operation operation);
+  virtual void output_char(char character, enum operation operation);
 
 };
 

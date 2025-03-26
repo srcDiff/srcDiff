@@ -11,14 +11,13 @@
 #ifndef INCLUDED_OPERATION_HPP
 #define INCLUDED_OPERATION_HPP
 
-
 namespace srcdiff {
 
 enum operation {
     NONE,
+    COMMON,
     DELETE,
     INSERT,
-    COMMON,
     CHANGE,
     NEST,
     MOVE

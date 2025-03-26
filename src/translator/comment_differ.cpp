@@ -9,8 +9,10 @@
 
 #include <comment_differ.hpp>
 
-#include <common_stream.hpp>
 #include <shortest_edit_script.hpp>
+
+#include <common_stream.hpp>
+#include <operation.hpp>
 
 namespace srcdiff {
 

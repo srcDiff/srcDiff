@@ -159,7 +159,7 @@ void many_differ::output() {
   change_list changes = determine_operations();
   for(struct change& change : changes) {
 
-    if(change.operation == srcdiff::COMMON) {
+    if(change.operation == COMMON) {
       if(change.original.front()->term(0)->get_type() != srcML::node_type::TEXT) {
 
         if(change.original.front()->root_term_name() == change.modified.front()->root_term_name()) {

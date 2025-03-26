@@ -17,8 +17,7 @@
 
 namespace srcdiff {
 
-measurer::measurer(const construct & set_original,
-                                 const construct & set_modified) 
+measurer::measurer(const construct & set_original, const construct & set_modified) 
   : set_original(set_original),
     set_modified(set_modified),
     computed(false),

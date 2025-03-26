@@ -37,7 +37,7 @@ void common_stream::markup_common() {
 
     if(*rbuf_original->nodes.at(i) == *rbuf_modified->nodes.at(j)) {
 
-      output_node(rbuf_original->nodes.at(i), rbuf_modified->nodes.at(j), SES_COMMON);
+      output_node(rbuf_original->nodes.at(i), rbuf_modified->nodes.at(j), COMMON);
         
     } else if(rbuf_original->nodes.at(i)->is_whitespace() && rbuf_modified->nodes.at(j)->is_whitespace()) {
       
@@ -70,36 +70,36 @@ void common_stream::markup_common() {
 
         if(i < opivot) {
 
-        output_node(diff_original_start, SES_DELETE);
-        output_node(diff_ws_start, SES_DELETE);
+        output_node(diff_original_start, DELETE);
+        output_node(diff_ws_start, DELETE);
 
         for(int k = i; k < opivot; ++k) {
-          output_node(rbuf_original->nodes.at(k), SES_DELETE);
+          output_node(rbuf_original->nodes.at(k), DELETE);
         }
 
-        output_node(diff_ws_end, SES_DELETE);
-        output_node(diff_original_end, SES_DELETE);
+        output_node(diff_ws_end, DELETE);
+        output_node(diff_original_end, DELETE);
 
         }
 
         if(j < npivot) {
 
-        output_node(diff_modified_start, SES_INSERT);
-        output_node(diff_ws_start, SES_INSERT);
+        output_node(diff_modified_start, INSERT);
+        output_node(diff_ws_start, INSERT);
 
         for(int k = j; k < npivot; ++k) {
-          output_node(rbuf_modified->nodes.at(k), SES_INSERT);
+          output_node(rbuf_modified->nodes.at(k), INSERT);
         }
 
-        output_node(diff_ws_end, SES_INSERT);
-        output_node(diff_modified_end, SES_INSERT);
+        output_node(diff_ws_end, INSERT);
+        output_node(diff_modified_end, INSERT);
 
         }
 
         if(opivot < olength) {
 
         for(int k = opivot; k < olength; ++k) {
-          output_node(rbuf_original->nodes.at(k), SES_COMMON);
+          output_node(rbuf_original->nodes.at(k), COMMON);
         }
 
         }
@@ -110,33 +110,33 @@ void common_stream::markup_common() {
 
     } else if(rbuf_original->nodes.at(i)->is_whitespace()) {
 
-      output_node(diff_original_start, SES_DELETE);
-        output_node(diff_ws_start, SES_DELETE);
+      output_node(diff_original_start, DELETE);
+        output_node(diff_ws_start, DELETE);
 
       for(; i < oend && rbuf_original->nodes.at(i)->is_whitespace(); ++i) {
-        output_node(rbuf_original->nodes.at(i), SES_DELETE);
+        output_node(rbuf_original->nodes.at(i), DELETE);
       }
 
 
-      output_node(diff_ws_end, SES_DELETE);
-      output_node(diff_original_end, SES_DELETE);
+      output_node(diff_ws_end, DELETE);
+      output_node(diff_original_end, DELETE);
 
       --i;
       --j;
 
     } else if(rbuf_modified->nodes.at(j)->is_whitespace()) {
 
-      output_node(diff_modified_start, SES_INSERT);
-      output_node(diff_ws_start, SES_INSERT);
+      output_node(diff_modified_start, INSERT);
+      output_node(diff_ws_start, INSERT);
 
 
       for(; j < nend && rbuf_modified->nodes.at(j)->is_whitespace(); ++j) {
-        output_node(rbuf_modified->nodes.at(j), SES_INSERT);
+        output_node(rbuf_modified->nodes.at(j), INSERT);
       }
 
 
-      output_node(diff_ws_end, SES_INSERT);
-      output_node(diff_modified_end, SES_INSERT);
+      output_node(diff_ws_end, INSERT);
+      output_node(diff_modified_end, INSERT);
 
       --i;
       --j;
@@ -163,7 +163,7 @@ void common_stream::markup_common() {
 
         if(text_original[opos] == text_modified[npos]) {
 
-          output_char((xmlChar)text_original[opos], SES_COMMON);
+          output_char((xmlChar)text_original[opos], COMMON);
 
           ++opos;
           ++npos;
@@ -174,29 +174,29 @@ void common_stream::markup_common() {
 
             if(isspace(text_original[opos])) {
 
-              output_node(diff_original_start, SES_DELETE);
+              output_node(diff_original_start, DELETE);
 
               for(; opos < (signed)text_original.size() && isspace(text_original[opos]); ++opos) {
 
-                output_char((xmlChar)text_original[opos], SES_DELETE);
+                output_char((xmlChar)text_original[opos], DELETE);
               }
 
               // output diff tag
-              output_node(diff_original_end, SES_DELETE);
+              output_node(diff_original_end, DELETE);
 
             }
 
             if(isspace(text_modified[npos])) {
 
-              output_node(diff_modified_start, SES_INSERT);
+              output_node(diff_modified_start, INSERT);
 
               for(; npos < (signed)text_modified.size() && isspace(text_modified[npos]); ++npos) {
 
-                output_char((xmlChar)text_modified[npos], SES_INSERT);
+                output_char((xmlChar)text_modified[npos], INSERT);
               }
 
               // output diff tag
-              output_node(diff_modified_end, SES_INSERT);
+              output_node(diff_modified_end, INSERT);
 
             }
 
@@ -208,29 +208,29 @@ void common_stream::markup_common() {
 
       if(opos < (signed)text_original.size()) {
 
-        output_node(diff_original_start, SES_DELETE);
+        output_node(diff_original_start, DELETE);
 
         for(; opos < (signed)text_original.size() && isspace(text_original[opos]); ++opos) {
 
-          output_char((xmlChar)text_original[opos], SES_DELETE);
+          output_char((xmlChar)text_original[opos], DELETE);
         }
 
         // output diff tag
-        output_node(diff_original_end, SES_DELETE);
+        output_node(diff_original_end, DELETE);
 
       }
 
       if(npos < (signed)text_modified.size()) {
         
-        output_node(diff_modified_start, SES_INSERT);
+        output_node(diff_modified_start, INSERT);
 
         for(; npos < (signed)text_modified.size() && isspace(text_modified[npos]); ++npos) {
 
-          output_char((xmlChar)text_modified[npos], SES_INSERT);
+          output_char((xmlChar)text_modified[npos], INSERT);
         }
 
         // output diff tag
-        output_node(diff_modified_end, SES_INSERT);
+        output_node(diff_modified_end, INSERT);
 
       }
 
@@ -261,29 +261,29 @@ void common_stream::markup_common() {
   // output leftover nodes
   if(i < oend) {
 
-    output_node(diff_original_start, SES_DELETE);
+    output_node(diff_original_start, DELETE);
     // whitespace delete
     // output diff tag
 
     for( ; i < oend; ++i) {
-      output_node(rbuf_original->nodes.at(i), SES_DELETE);
+      output_node(rbuf_original->nodes.at(i), DELETE);
     }
 
     // output diff tag
-    output_node(diff_original_end, SES_DELETE);
+    output_node(diff_original_end, DELETE);
 
   } else if(j < nend) {
 
-    output_node(diff_modified_start, SES_INSERT);
+    output_node(diff_modified_start, INSERT);
     // whitespace delete
     // output diff tag
 
     for( ; j < nend; ++j) {
-      output_node(rbuf_modified->nodes.at(j), SES_INSERT);
+      output_node(rbuf_modified->nodes.at(j), INSERT);
     }
 
     // output diff tag
-    output_node(diff_modified_end, SES_INSERT);
+    output_node(diff_modified_end, INSERT);
 
   }
 
@@ -322,7 +322,7 @@ void common_stream::output() {
   // output common tag if needed
   if(rbuf_original->last_output >= oend || rbuf_modified->last_output >= nend
      || rbuf_original->nodes.at(rbuf_original->last_output)->is_temporary() == rbuf_modified->nodes.at(rbuf_modified->last_output)->is_temporary()) {
-    output_node(diff_common_start, SES_COMMON);
+    output_node(diff_common_start, COMMON);
   }
 
   // output common nodes
@@ -334,7 +334,7 @@ void common_stream::output() {
   // output common tag if needed
   if(rbuf_original->last_output >= oend || rbuf_modified->last_output >= nend
      || rbuf_original->nodes.at(rbuf_original->last_output)->is_temporary() == rbuf_modified->nodes.at(rbuf_modified->last_output)->is_temporary()) {
-    output_node(diff_common_end, SES_COMMON);
+    output_node(diff_common_end, COMMON);
   }
 
 }

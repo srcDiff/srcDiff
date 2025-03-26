@@ -32,9 +32,9 @@ public:
 
   whitespace_stream(const output_stream& out);
 
-  virtual void output_all(int operation = SES_COMMON);
+  virtual void output_all(enum operation operation = COMMON);
   virtual void output_prefix();
-  virtual void output_nested(int operation);
+  virtual void output_nested(enum operation operation);
   virtual void output_statement();
 
   virtual void output_suffix();

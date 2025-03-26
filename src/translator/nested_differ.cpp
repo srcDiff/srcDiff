@@ -12,7 +12,6 @@
 #include <constants.hpp>
 #include <change_stream.hpp>
 #include <text_measurer.hpp>
-#include <shortest_edit_script.h>
 #include <type_query.hpp>
 #include <whitespace_stream.hpp>
 
@@ -23,7 +22,7 @@
 
 namespace srcdiff {
 
-nested_differ::nested_differ(std::shared_ptr<output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation)
+nested_differ::nested_differ(std::shared_ptr<output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified, enum operation operation)
   : differ(out, original, modified), operation(operation) {}
 
 bool has_compound_inner(std::shared_ptr<const construct> & node_set_outer) {
@@ -91,7 +90,7 @@ bool nested_differ::is_better_nested(construct::construct_list_view original, co
   for(std::size_t pos = 0; pos < original.size(); ++pos) {
 
     nest_result nestable = check_nestable(original, modified);
-    if(nestable.operation == SES_COMMON) continue;
+    if(nestable.operation == COMMON) continue;
     if(is_better_nest(original[pos], modified[0], measure)) {
       return true;
     }
@@ -101,7 +100,7 @@ bool nested_differ::is_better_nested(construct::construct_list_view original, co
   for(std::size_t pos = 0; pos < modified.size(); ++pos) {
 
     nest_result nestable = check_nestable(original, modified);
-    if(nestable.operation == SES_COMMON) continue;
+    if(nestable.operation == COMMON) continue;
     if(is_better_nest(modified[pos], original[0], measure)) {
       return true;
     }
@@ -233,21 +232,21 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
   int end_nest_original = 0;
   int start_nest_modified = 0;  
   int end_nest_modified = 0;
-  int operation = SES_COMMON;
+  enum operation operation = COMMON;
   if(bool(pos_original) && (!bool(pos_modified) || *similarity_original > *similarity_modified
     || (*similarity_original == *similarity_modified && *difference_original <= *difference_modified))) {
 
       start_nest_original = *pos_original;
       end_nest_original   = *pos_original + 1;
       end_nest_modified   = 1;
-      operation = SES_DELETE;
+      operation = DELETE;
 
   } else if(bool(pos_modified)) {
 
       end_nest_original   = 1;
       start_nest_modified = *pos_modified;
       end_nest_modified   = *pos_modified + 1;
-      operation = SES_INSERT;
+      operation = INSERT;
 
   }
 
@@ -360,7 +359,7 @@ nest_result nested_differ::check_nestable(construct::construct_list_view origina
   int end_nest_original = 0;
   int start_nest_modified = 0;  
   int end_nest_modified = 0;
-  int operation = SES_COMMON;
+  enum operation operation = COMMON;
 
   std::tuple<std::vector<int>, int, int> original_check = check_nestable_inner(original, modified);
 
@@ -389,13 +388,13 @@ nest_result nested_differ::check_nestable(construct::construct_list_view origina
 
       start_nest_modified = valid_nests_original.front();
       end_nest_modified = valid_nests_original.back() + 1;
-      operation = SES_DELETE;
+      operation = DELETE;
 
   } else if(!valid_nests_modified.empty()) {
 
       start_nest_original = valid_nests_modified.front();
       end_nest_original = valid_nests_modified.back() + 1;
-      operation = SES_INSERT;
+      operation = INSERT;
 
   }
 
@@ -410,7 +409,7 @@ void nested_differ::output() {
   construct::construct_list_view outer;
   construct::construct_list_view inner;
 
-  if(operation == SES_DELETE) {
+  if(operation == DELETE) {
     outer = original;
     inner = modified;
   } else {
@@ -463,7 +462,7 @@ void nested_differ::output() {
       nest_set.push_back(inner[i]);
   }
 
-  if(operation == SES_DELETE) {
+  if(operation == DELETE) {
     change_stream::output_change(out, start_pos, out->last_output_modified());
   }
   else {
@@ -476,7 +475,7 @@ void nested_differ::output() {
     whitespace.output_nested(operation);
   }
 
-  if(operation == SES_DELETE) {
+  if(operation == DELETE) {
 
     differ diff(out, set, nest_set);
     diff.output();
@@ -494,7 +493,7 @@ void nested_differ::output() {
     whitespace.output_nested(operation);
   }
 
-  if(operation == SES_DELETE) {
+  if(operation == DELETE) {
     change_stream::output_change(out, outer.back()->end_position() + 1, out->last_output_modified());
   }
   else {

@@ -15,6 +15,8 @@
 #include <common_stream.hpp>
 #include <move_detector.hpp>
 #include <measurer.hpp>
+#include <operation.hpp>
+
 #include <shortest_edit_script.hpp>
 #include <edit_corrector.hpp>
 
@@ -195,10 +197,10 @@ void differ::output_replace_inner_whitespace(int start_original, int end_origina
   srcdiff::change_stream change(*out, end_original - 1, end_modified - 1);
   change.output_whitespace_all();
 
-  out->output_node(out->diff_common_start, SES_COMMON);
+  out->output_node(out->diff_common_start, COMMON);
   for(int i = 0; i < common_offset; ++i) {
 
-    out->output_node(out->nodes_original().at(start_original + i), SES_COMMON);
+    out->output_node(out->nodes_original().at(start_original + i), COMMON);
     ++out->last_output_original();
     ++out->last_output_modified();
 
@@ -208,7 +210,7 @@ void differ::output_replace_inner_whitespace(int start_original, int end_origina
   change.output();
 
   common_stream::output_common(out, end_original, end_modified);
-  out->output_node(out->diff_common_end, SES_COMMON);
+  out->output_node(out->diff_common_end, COMMON);
 
 }
 

@@ -24,7 +24,7 @@ const std::string move("move");
 typedef std::tuple<int, int> move_info;
 typedef std::vector<move_info> move_infos;
 
-move_detector::move_detector(const output_stream& out, std::size_t& position, int operation)
+move_detector::move_detector(const output_stream& out, std::size_t& position, enum operation operation)
   : output_stream(out), position(position), operation(operation) {}
 
 bool move_detector::is_move(std::shared_ptr<const construct> set) {
@@ -137,7 +137,7 @@ void move_detector::output() {
   std::shared_ptr<srcML::node> start_node = diff_original_start;
   std::shared_ptr<srcML::node> end_node = diff_original_end;
 
-  if(operation == SES_INSERT) {
+  if(operation == INSERT) {
 
     rbuf = rbuf_modified;
     start_node = diff_modified_start;

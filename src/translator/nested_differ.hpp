@@ -12,6 +12,7 @@
 
 #include <differ.hpp>
 #include <srcml_nodes.hpp>
+#include <operation.hpp>
 #include <construct.hpp>
 #include <measurer.hpp>
 
@@ -20,22 +21,22 @@ namespace srcdiff {
 struct nest_result {
   nest_result(int start_original = 0, int end_original = 0,
               int start_modified = 0, int end_modified = 0,
-              int operation = SES_COMMON)
+              enum operation operation = COMMON)
     : start_original(start_original), end_original(end_original),
       start_modified(start_modified), end_modified(end_modified),
-    operation(operation) {}
-  operator bool() { return operation != SES_COMMON; }
+      operation(operation) {}
+  operator bool() { return operation != COMMON; }
 
   int start_original, end_original;
   int start_modified, end_modified;
-  int operation;
+  enum operation operation;
 };
 
 class nested_differ : public differ {
 
 protected:
 
-  int operation;
+  enum operation operation;
 
 private:
 
@@ -45,7 +46,7 @@ static std::tuple<std::vector<int>, int, int> check_nestable_inner(construct::co
 
 public:
 
-  nested_differ(std::shared_ptr<output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified, int operation);
+  nested_differ(std::shared_ptr<output_stream> out, const construct::construct_list_view original, const construct::construct_list_view modified, enum operation operation);
 
   virtual void output();
 

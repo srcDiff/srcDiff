@@ -77,9 +77,9 @@ void change_stream::output() {
     diff_modified_start->emplace_attribute(diff_type.get_name(), diff_type);
     is_replace = true;
 
-    if(is_delay_type(SES_DELETE)) {
+    if(is_delay_type(DELETE)) {
     
-      output_node(diff_original_end, SES_DELETE, true);
+      output_node(diff_original_end, DELETE, true);
     }
 
   }
@@ -92,7 +92,7 @@ void change_stream::output() {
       // output diff tag begin
       if(first && is_replace) {
 
-        output_node(diff_original_start, SES_DELETE, is_replace);
+        output_node(diff_original_start, DELETE, is_replace);
         first = false;
 
       }
@@ -104,7 +104,7 @@ void change_stream::output() {
         
         }
 
-        move_detector move(*this, i, SES_DELETE);
+        move_detector move(*this, i, DELETE);
         move.output();
 
         if(is_replace) {
@@ -118,7 +118,7 @@ void change_stream::output() {
       // output diff tag begin
       if(first) {
 
-        output_node(diff_original_start, SES_DELETE, is_replace);
+        output_node(diff_original_start, DELETE, is_replace);
         first = false;
 
       }
@@ -127,24 +127,24 @@ void change_stream::output() {
 
         rbuf_original->last_output = i;
         whitespace_stream whitespace(*this);
-        whitespace.output_all(SES_DELETE);
+        whitespace.output_all(DELETE);
         i = rbuf_original->last_output - 1;
         continue;
 
       }
 
-      output_node(rbuf_original->nodes.at(i), SES_DELETE);
+      output_node(rbuf_original->nodes.at(i), DELETE);
 
     }
 
     // output diff tag end
     if(!first) {
-      output_node(diff_original_end, SES_DELETE, is_replace);
+      output_node(diff_original_end, DELETE, is_replace);
     
     }
 
-    if(wstate->output_diff.back()->operation == SES_DELETE) {
-      output_node(diff_original_end, SES_DELETE);
+    if(wstate->output_diff.back()->operation == DELETE) {
+      output_node(diff_original_end, DELETE);
     
     }
 
@@ -161,7 +161,7 @@ void change_stream::output() {
       // output diff tag
       if(first && is_replace) {
 
-        output_node(diff_modified_start, SES_INSERT, is_replace);
+        output_node(diff_modified_start, INSERT, is_replace);
         first = false;
 
       }
@@ -173,7 +173,7 @@ void change_stream::output() {
         
         }
 
-        move_detector move(*this, i, SES_INSERT);
+        move_detector move(*this, i, INSERT);
       
         move.output();
 
@@ -188,7 +188,7 @@ void change_stream::output() {
       // output diff tag
       if(first) {
 
-        output_node(diff_modified_start, SES_INSERT, is_replace);
+        output_node(diff_modified_start, INSERT, is_replace);
         first = false;
 
       }
@@ -197,26 +197,26 @@ void change_stream::output() {
 
         rbuf_modified->last_output = i;
         whitespace_stream whitespace(*this);
-        whitespace.output_all(SES_INSERT);
+        whitespace.output_all(INSERT);
         i = rbuf_modified->last_output - 1;
       
         continue;
 
       }
 
-      output_node(rbuf_modified->nodes.at(i), SES_INSERT);
+      output_node(rbuf_modified->nodes.at(i), INSERT);
     
 
     }
 
     // output diff tag end
     if(!first) {
-      output_node(diff_modified_end, SES_INSERT, is_replace);
+      output_node(diff_modified_end, INSERT, is_replace);
     
     }
     
-    if(wstate->output_diff.back()->operation == SES_INSERT) {
-      output_node(diff_modified_end, SES_INSERT);
+    if(wstate->output_diff.back()->operation == INSERT) {
+      output_node(diff_modified_end, INSERT);
     
     }
 
