@@ -11,6 +11,7 @@
 #define INCLUDED_CONSTRUCT_HPP
 
 #include <output_stream.hpp>
+#include <operation.hpp>
 #include <srcml_nodes.hpp>
 #include <construct_utils.hpp>
 
@@ -120,7 +121,7 @@ public:
     bool is_syntax_similar(const construct & modified) const;
     virtual bool is_syntax_similar_impl(const construct & modified) const;
 
-    bool can_refine_difference(const construct & modified) const;
+    enum srcdiff::operation can_refine_difference(const construct & modified) const;
 
     // Matchable Rules
     bool is_matchable(const construct & modified) const;

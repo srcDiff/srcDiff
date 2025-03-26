@@ -370,7 +370,7 @@ bool construct::is_syntax_similar_impl(const construct & modified [[maybe_unused
     return false;
 }
 
-bool construct::can_refine_difference(const construct & modified) const {
+enum srcdiff::operation construct::can_refine_difference(const construct & modified) const {
 
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
@@ -379,11 +379,11 @@ bool construct::can_refine_difference(const construct & modified) const {
   const std::string & modified_uri = modified.term(0)->get_namespace()->get_uri();
 
   if(original_tag == modified_tag && original_uri == modified_uri) {
-    return is_matchable(modified);
+    return is_matchable(modified) ? srcdiff::MATCH : srcdiff::NONE;
   } else if(is_tag_convertable(modified)) {
-    return is_convertable(modified);
+    return is_convertable(modified) ? srcdiff::CONVERT : srcdiff::NONE;
   } else {
-    return false;
+    return srcdiff::NONE;
   }
 
 }
