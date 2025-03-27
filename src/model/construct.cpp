@@ -13,10 +13,10 @@
 #include <construct_factory.hpp>
 #include <text_measurer.hpp>
 #include <syntax_measurer.hpp>
+#include <nest_differ.hpp>
 
 #include <algorithm>
 #include <iostream>
-
 
 bool construct::is_non_white_space(std::size_t & node_pos, const srcml_nodes & node_list, const void * context [[maybe_unused]]) {
 
@@ -370,7 +370,8 @@ bool construct::is_syntax_similar_impl(const construct & modified [[maybe_unused
     return false;
 }
 
-enum srcdiff::operation construct::can_refine_difference(const construct & modified) const {
+struct none_deleter { void operator()(construct* construct_ptr) {} };
+enum srcdiff::operation construct::can_refine_difference(const construct& modified, bool test_nest) const {
 
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
@@ -383,6 +384,17 @@ enum srcdiff::operation construct::can_refine_difference(const construct & modif
   } else if(is_tag_convertable(modified)) {
     return is_convertable(modified) ? srcdiff::CONVERT : srcdiff::NONE;
   } else {
+
+    if(test_nest) {
+        std::shared_ptr<const construct> original_ptr((construct*)this, none_deleter());
+        std::shared_ptr<const construct> modified_ptr((construct*)&modified, none_deleter());
+
+        construct_list_view original_view(&original_ptr, 1);
+        construct_list_view modified_view(&modified_ptr, 1);
+        srcdiff::nest_result nest = srcdiff::nest_differ::check_nestable(original_view, modified_view);
+        return nest? srcdiff::NEST : srcdiff::NONE;
+    }
+
     return srcdiff::NONE;
   }
 
@@ -414,8 +426,8 @@ bool construct::is_match_similar(const construct & modified) const {
 
   srcdiff::text_measurer complete_measure(*this, modified, false);
   complete_measure.compute();
-  int min_size = complete_measure.min_length();
 
+  int min_size = complete_measure.min_length();
   if(min_size == 0) return false;
 
   return min_size == complete_measure.similarity();

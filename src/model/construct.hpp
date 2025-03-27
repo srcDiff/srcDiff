@@ -121,7 +121,7 @@ public:
     bool is_syntax_similar(const construct & modified) const;
     virtual bool is_syntax_similar_impl(const construct & modified) const;
 
-    enum srcdiff::operation can_refine_difference(const construct & modified) const;
+    enum srcdiff::operation can_refine_difference(const construct & modified, bool test_nest = false) const;
 
     // Matchable Rules
     bool is_matchable(const construct & modified) const;

@@ -31,7 +31,7 @@ match_info check_match(construct::construct_list_view original, construct::const
   if(measure.similarity() == MAX_INT) return match_info(NONE, 0);
   if(original[0]->is_match_similar(*modified[0])) return match_info(MATCH, measure.similarity());
 
-  enum operation operation = original[0]->can_refine_difference(*modified[0]);
+  enum operation operation = original[0]->can_refine_difference(*modified[0], true);
   if(operation) return match_info(operation, measure.similarity());
 
   return match_info(NONE, 0);
@@ -66,7 +66,7 @@ change_list change_matcher::create_linked_list(difference * differences) {
     difference& diff = differences[i * olength + j];
 
     // only output marked and if has not already been output
-    if(diff.marked && !(olist[j] || nlist[i])) {
+    if(diff.marked && diff.operation != NEST && !(olist[j] || nlist[i])) {
 
       if(original_pos - diff.opos > 0 ||  modified_pos - diff.npos > 0) {
         changes.emplace_front(safe_subspan(original, diff.opos + 1, original_pos),
@@ -161,7 +161,6 @@ change_list change_matcher::create_linked_list(difference * differences) {
       difference& diff = differences[i * olength + j];
 
       const srcdiff::measurer & measure = *original[j]->measure(*modified[i]);
-      int similarity = measure.similarity();
 
       //unsigned long long max_similarity = (unsigned long long)-1;
       int max_similarity = -1;
@@ -173,13 +172,12 @@ change_list change_matcher::create_linked_list(difference * differences) {
       construct::construct_list_view modified_view = modified.subspan(i, modified.size() - i);
       match_info info = check_match(original_view, modified_view);
 
-      if(info.operation == NONE || nest_differ::is_better_nested(original_view, modified_view)) {
+      if(info.operation == NONE || (info.operation != NEST && nest_differ::is_better_nested(original_view, modified_view))) {
         unmatched = 2;
       } else if(original[j]->term(0)->get_move() || modified[i]->term(0)->get_move()) {
         info.similarity = 0;
         unmatched = 2;
       }
-
       int num_unmatched = MAX_INT;
       int direction = 0;
 
@@ -189,19 +187,19 @@ change_list change_matcher::create_linked_list(difference * differences) {
       if(j > 0) {
 
         max_similarity = differences[i * olength + (j - 1)].similarity;
-        num_unmatched = differences[i * olength + (j - 1)].num_unmatched + 1;
+        num_unmatched  = differences[i * olength + (j - 1)].num_unmatched + 1;
 
         matched = false;
 
         // may be wrong
         int temp_num_unmatched = i + j + unmatched;
 
-        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && similarity > max_similarity)) {
+        if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && info.similarity > max_similarity)) {
 
           matched = !unmatched;
 
-          max_similarity = similarity;
-          num_unmatched = temp_num_unmatched;
+          max_similarity = info.similarity;
+          num_unmatched  = temp_num_unmatched;
 
         }
 
@@ -217,7 +215,7 @@ change_list change_matcher::create_linked_list(difference * differences) {
           direction = 2;
         }
 
-        int temp_similarity = differences[(i - 1) * olength + j].similarity;
+        int temp_similarity    = differences[(i - 1) * olength + j].similarity;
         int temp_num_unmatched = differences[(i - 1) * olength + j].num_unmatched + 1;
 
         // may be wrong
@@ -225,11 +223,11 @@ change_list change_matcher::create_linked_list(difference * differences) {
 
         int temp_matched = false;
 
-        if(temp_num_unmatched_match < temp_num_unmatched || (temp_num_unmatched_match == temp_num_unmatched && similarity > temp_similarity)) {
+        if(temp_num_unmatched_match < temp_num_unmatched || (temp_num_unmatched_match == temp_num_unmatched && info.similarity > temp_similarity)) {
 
           temp_matched = !unmatched;
 
-          temp_similarity = similarity;
+          temp_similarity    = info.similarity;
           temp_num_unmatched = temp_num_unmatched_match;
 
         }
@@ -239,7 +237,7 @@ change_list change_matcher::create_linked_list(difference * differences) {
           matched = temp_matched;
 
           max_similarity = temp_similarity;
-          num_unmatched = temp_num_unmatched;
+          num_unmatched  = temp_num_unmatched;
 
           direction = 2;
 
@@ -250,7 +248,7 @@ change_list change_matcher::create_linked_list(difference * differences) {
       // go along diagonal just add similarity and unmatched
       if(i > 0 && j > 0) {
 
-        int temp_similarity = differences[(i - 1) * olength + (j - 1)].similarity + similarity;
+        int temp_similarity    = differences[(i - 1) * olength + (j - 1)].similarity + info.similarity;
         int temp_num_unmatched = differences[(i - 1) * olength + (j - 1)].num_unmatched + unmatched;
 
         if(temp_num_unmatched < num_unmatched || (temp_num_unmatched == num_unmatched && temp_similarity > max_similarity)) {
@@ -258,7 +256,7 @@ change_list change_matcher::create_linked_list(difference * differences) {
           matched = !unmatched;
 
           max_similarity = temp_similarity;
-          num_unmatched = temp_num_unmatched;
+          num_unmatched  = temp_num_unmatched;
           direction = 3;
 
         }
@@ -268,20 +266,20 @@ change_list change_matcher::create_linked_list(difference * differences) {
       // special case starting node
       if(i == 0 && j == 0) {
 
-        max_similarity = similarity;
-        num_unmatched = unmatched;
-        matched = !unmatched;
+        max_similarity = info.similarity;
+        num_unmatched  = unmatched;
+        matched        = !unmatched;
 
       }
 
       // update structure
-      diff.marked = matched;
-      diff.operation = info.operation;
-      diff.similarity = max_similarity;
+      diff.marked        = matched;
+      diff.operation     = info.operation;
+      diff.similarity    = max_similarity;
       diff.num_unmatched = num_unmatched;
-      diff.opos = j;
-      diff.npos = i;
-      diff.direction = direction;
+      diff.opos          = j;
+      diff.npos          = i;
+      diff.direction     = direction;
 
     }
 

@@ -155,6 +155,8 @@ void text_measurer::compute() {
      || set_modified.term(0)->get_type() != srcML::node_type::START
      || (*set_original.term(0) != *set_modified.term(0)
         && !set_original.is_tag_convertable(set_modified)
+        && (!set_original.can_nest(set_modified))
+        && (!set_modified.can_nest(set_original))
         && (set_original.term(0)->get_name() != "block" || set_modified.term(0)->get_name() != "block"))) {
 
     a_similarity = MAX_INT;
