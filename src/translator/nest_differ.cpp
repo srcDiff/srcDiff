@@ -257,7 +257,7 @@ static nest_result check_nested_single_to_many(construct::construct_list_view or
 }
 
 bool nest_differ::check_nestable_predicate(construct::construct_list_view construct_list_outer,
-                                              construct::construct_list_view construct_list_inner) {
+                                           construct::construct_list_view construct_list_inner) {
 
   if(construct_list_inner[0]->root_term()->get_move()) return true;
 

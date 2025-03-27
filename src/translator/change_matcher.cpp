@@ -18,19 +18,23 @@
 
 namespace srcdiff {
 
-enum operation is_match(construct::construct_list_view original, construct::construct_list_view modified) {
+struct match_info {
+  match_info(enum operation operation, int similarity) : operation(operation), similarity(similarity) {}
+  enum operation operation;
+  int similarity;
+};
+
+match_info check_match(construct::construct_list_view original, construct::construct_list_view modified) {
+
   const srcdiff::measurer & measure = *original[0]->measure(*modified[0]);
 
-  if(measure.similarity() == MAX_INT) return NONE;
+  if(measure.similarity() == MAX_INT) return match_info(NONE, 0);
+  if(original[0]->is_match_similar(*modified[0])) return match_info(MATCH, measure.similarity());
 
-  enum operation operation = MATCH;
-  if(!original[0]->is_match_similar(*modified[0]) && !(operation = original[0]->can_refine_difference(*modified[0])))
-    return NONE;
+  enum operation operation = original[0]->can_refine_difference(*modified[0]);
+  if(operation) return match_info(operation, measure.similarity());
 
-  if(nest_differ::is_better_nested(original, modified))
-    return NONE;
-
-  return operation;
+  return match_info(NONE, 0);
 
 }
 
@@ -167,16 +171,13 @@ change_list change_matcher::create_linked_list(difference * differences) {
       /** loop text O(nd) + syntax O(nd) + best match is O(nd) times number of matches */
       construct::construct_list_view original_view = original.subspan(j, original.size() - j);
       construct::construct_list_view modified_view = modified.subspan(i, modified.size() - i);
+      match_info info = check_match(original_view, modified_view);
 
-      if(!(diff.operation = is_match(original_view, modified_view))) {
-        similarity = 0;
+      if(info.operation == NONE || nest_differ::is_better_nested(original_view, modified_view)) {
         unmatched = 2;
-      }
-
-      if(original[j]->term(0)->get_move() || modified[i]->term(0)->get_move()) {
-        similarity = 0;
+      } else if(original[j]->term(0)->get_move() || modified[i]->term(0)->get_move()) {
+        info.similarity = 0;
         unmatched = 2;
-        diff.operation = MOVE;
       }
 
       int num_unmatched = MAX_INT;
@@ -275,6 +276,7 @@ change_list change_matcher::create_linked_list(difference * differences) {
 
       // update structure
       diff.marked = matched;
+      diff.operation = info.operation;
       diff.similarity = max_similarity;
       diff.num_unmatched = num_unmatched;
       diff.opos = j;
