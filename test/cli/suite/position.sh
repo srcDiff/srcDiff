@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: GPL-3.0-only
+#
+# @file position.sh
+#
+# @copyright Copyright (C) 2024-2025 SDML (www.srcDiff.org)
+#
+# This file is part of the srcDiff Infrastructure.
+#
+
+# test framework
+source $(dirname "$0")/../framework.sh
+
+define original <<- 'SOURCE'
+	a;
+	SOURCE
+
+define modified <<- 'SOURCE'
+	b;
+	SOURCE
+
+define output <<- 'STDOUT'
+	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:pos="http://www.srcML.org/srcML/position" xmlns:diff="http://www.srcML.org/srcDiff" revision="1.0.0" language="C++" filename="sub/a.cpp|sub/b.cpp" pos:tabs="8"><diff:delete type="replace"><expr_stmt start="1:1" end="1:2"><expr start="1:1" end="1:1"><name start="1:1" end="1:1">a</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt start="1:1" end="1:2"><expr start="1:1" end="1:1"><name start="1:1" end="1:1">b</name></expr>;</expr_stmt></diff:insert>
+	</unit>
+	STDOUT
+
+xmlcheck "$output"
+
+createfile sub/a.cpp "$original"
+createfile sub/b.cpp "$modified"
+
+srcdiff sub/a.cpp sub/b.cpp --position -o sub/ab.xml
+check sub/ab.xml "$output"
