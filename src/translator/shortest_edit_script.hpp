@@ -35,7 +35,6 @@ private:
 
     static const void* construct_node_index(int idx, const void*s, const void* context);
     static int node_compare(const void* node_one, const void* node_two, const void* context);
-    static int node_compare(const std::shared_ptr<srcML::node>& node_one, const std::shared_ptr<srcML::node>& node_two);
 
     static int string_compare(const void* str_one, const void* str_two, const void* context);
     static const void* string_index(int idx, const void* s, const void* context);

@@ -49,13 +49,12 @@ const void * shortest_edit_script::construct_node_index(int index, const void* d
   return &element->term(index);
 }
 
-int shortest_edit_script::node_compare(const void * node_one, const void * node_two, const void * context [[maybe_unused]]) {
-  return node_compare(*(const std::shared_ptr<srcML::node> *)node_one, *(const std::shared_ptr<srcML::node>*)node_two);
-}
+int shortest_edit_script::node_compare(const void* node_one, const void* node_two, const void* context [[maybe_unused]]) {
 
-// shortest_edit_script::diff node comparison function
-int shortest_edit_script::node_compare(const std::shared_ptr<srcML::node> & node_one, const std::shared_ptr<srcML::node> & node_two) {
-  if(*node_one == *node_two) return 0;
+  const std::shared_ptr<srcML::node> original_node = *(const std::shared_ptr<srcML::node>*)node_one;
+  const std::shared_ptr<srcML::node> modified_node = *(const std::shared_ptr<srcML::node>*)node_two;
+
+  if(*original_node == *modified_node) return 0;
   return 1;
 }
 
