@@ -52,7 +52,29 @@ void move_detector::mark_moves(const construct::construct_list_view original,
       case SES_COMMON:
         break;
 
-      case SES_INSERT :
+      case SES_CHANGE:
+
+        for(std::size_t i = 0; i < edits->length; ++i) {
+
+          if(original[edits->offset_sequence_one + i]->term(0)->is_text()) {
+            continue;
+          }
+          delete_sets.push_back(original[edits->offset_sequence_one + i]);
+
+        }
+
+        for(std::size_t i = 0; i < edits->length_two; ++i) {
+
+          if(modified[edits->offset_sequence_two + i]->term(0)->is_text()) {
+            continue;
+          }
+          node_set_lookup_table.insert(modified[edits->offset_sequence_two + i]);
+
+        }
+
+        break;
+
+      case SES_INSERT:
 
         for(std::size_t i = 0; i < edits->length; ++i) {
 
@@ -65,7 +87,7 @@ void move_detector::mark_moves(const construct::construct_list_view original,
 
         break;
 
-      case SES_DELETE :
+      case SES_DELETE: 
 
         for(std::size_t i = 0; i < edits->length; ++i) {
 

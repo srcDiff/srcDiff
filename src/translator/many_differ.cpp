@@ -132,15 +132,14 @@ void many_differ::output_unmatched(construct::construct_list_view original_unmat
 change_list many_differ::determine_operations() {
 
   edit_t * edits = edit_script;
-  edit_t * edit_next = edit_script->next;
 
   for(std::size_t i = 0; i < edits->length; ++i) {
     unsigned int index = edits->offset_sequence_one + i;
     original_sets.push_back(original[index]);
   }
 
-  for(std::size_t i = 0; i < edit_next->length; ++i) {
-    unsigned int index = edit_next->offset_sequence_two + i;
+  for(std::size_t i = 0; i < edits->length_two; ++i) {
+    unsigned int index = edits->offset_sequence_two + i;
     modified_sets.push_back(modified[index]);
   }
 

@@ -102,13 +102,16 @@ void measurer::process_edit_script(const edit_t* edit_script) {
 
       switch(edits->operation) {
 
-        case SES_DELETE :
+        case SES_CHANGE:
+          a_original_difference += edits->length;
+          a_modified_difference += edits->length_two;
+          break;
 
+        case SES_DELETE :
           a_original_difference += edits->length;
           break;
 
         case SES_INSERT :
-
           a_modified_difference += edits->length;
           break;
 

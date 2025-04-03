@@ -38,6 +38,24 @@ edit_t*& shortest_edit_script_t::compute(const void* structure_one, int size_one
                                      *compare.target<int (*)(void const*, void const*, void const*)>(),
                                      *accessor.target<void const* (*)(int, void const*, void const*)>(),
                                      context, threshold);
+  for(edit_t* edit = edit_script; edit != nullptr; edit = edit->next) {
+    if(is_change(edit)) {
+      edit->operation = SES_CHANGE;
+
+      edit_t* next = edit->next;
+      edit->offset_sequence_two = next->offset_sequence_two;
+      edit->length_two = next->length;
+      edit->next = next->next;
+      if(edit->next) {
+        edit->next->previous = edit;
+      }
+      free(next);
+    } else {
+      // nothing
+    }
+
+  }
+
   if(distance < 0) throw std::logic_error("Error computing shortest edit script");
   return edit_script;
 }

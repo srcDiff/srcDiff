@@ -42,7 +42,7 @@ void comment_differ::output() {
     // determine ending position to output
     diff_end_original = out->last_output_original();
     diff_end_modified = out->last_output_modified();
-    if(edits->operation == SES_DELETE && last_diff_original < edits->offset_sequence_one) {
+    if((edits->operation == SES_DELETE || edits->operation == SES_CHANGE) && last_diff_original < edits->offset_sequence_one) {
 
       diff_end_original = original[edits->offset_sequence_one - 1]->end_position() + 1;
       diff_end_modified = modified[edits->offset_sequence_two - 1]->end_position() + 1;
@@ -57,33 +57,30 @@ void comment_differ::output() {
     // output area in common
     srcdiff::common_stream::output_common(out, diff_end_original, diff_end_modified);
 
-    // detect and change
-    edit_t * edit_next = edits->next;
-    if(is_change(edits)) {
+    // handle pure delete or insert
+    switch (edits->operation) {
 
-      // TODO: simplify unless plan to handle many to many different // 1-1
-      if(edits->length == edit_next->length && edits->length == 1
-         && (original[edits->offset_sequence_one]->size() > 1
-             || original[edits->offset_sequence_one]->size() > 1)) {
+      case SES_CHANGE: {
 
-        output_change_whitespace(original[edits->offset_sequence_one]->end_position() + 1, modified[edit_next->offset_sequence_two]->end_position() + 1);
+        // TODO: simplify unless plan to handle many to many different // 1-1
+        if(edits->length == edits->length_two && edits->length == 1
+           && (original[edits->offset_sequence_one]->size() > 1
+               || original[edits->offset_sequence_one]->size() > 1)) {
 
-      } else {
+          output_change_whitespace(original[edits->offset_sequence_one]->end_position() + 1, modified[edits->offset_sequence_two]->end_position() + 1);
 
-        // many to many
-        output_change_whitespace(original[edits->offset_sequence_one + edits->length - 1]->end_position() + 1,
-         modified[edit_next->offset_sequence_two + edit_next->length - 1]->end_position() + 1);
+        } else {
 
+          // many to many
+          output_change_whitespace(original[edits->offset_sequence_one + edits->length - 1]->end_position() + 1,
+                                   modified[edits->offset_sequence_two + edits->length_two - 1]->end_position() + 1);
+
+        }
+        break;
+
+        // update for common
+        last_diff_original = edits->offset_sequence_one + edits->length;
       }
-
-      // update for common
-      last_diff_original = edits->offset_sequence_one + edits->length;
-      edits = edits->next;
-
-    } else {
-
-      // handle pure delete or insert
-      switch (edits->operation) {
 
       case SES_INSERT:
 
@@ -104,7 +101,6 @@ void comment_differ::output() {
         break;
       }
 
-    }
   }
 
   // determine ending position to output
