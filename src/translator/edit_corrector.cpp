@@ -17,16 +17,16 @@
 namespace srcdiff {
 
 edit_corrector::edit_corrector(const construct::construct_list_view sets_original,
-                                                 const construct::construct_list_view sets_modified,
-                                                 shortest_edit_script & ses) 
+                               const construct::construct_list_view sets_modified,
+                               shortest_edit_script & ses) 
     : sets_original(sets_original),
       sets_modified(sets_modified),
       ses(ses) {}
 
 void edit_corrector::split_change(edit_t * delete_edit, edit_t * insert_edit,
-                                           int original_pos, int modified_pos,
-                                           edit_t *& start_edits,
-                                           edit_t *& last_edits) {
+                                  int original_pos, int modified_pos,
+                                  edit_t *& start_edits,
+                                  edit_t *& last_edits) {
 
     int original_sequence_one_offset = delete_edit->offset_sequence_one;
     int original_sequence_two_offset = delete_edit->offset_sequence_two;

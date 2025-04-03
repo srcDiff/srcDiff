@@ -48,9 +48,10 @@ public:
 
   static size_t get_size_threshold();
 
-  virtual edit_t * script() const;
+  virtual edit_t* script() const;
   virtual void script(edit_t * edit_script);
-  virtual int compute(const void * structure_one, int size_one, const void * structure_two, int size_two);
+
+  virtual edit_t* compute(const void * structure_one, int size_one, const void * structure_two, int size_two);
 
 };
 

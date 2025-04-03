@@ -92,7 +92,7 @@ int measurer::min_length() const {
 
 }
 
-void measurer::process_edit_script(const edit_t * edit_script) {
+void measurer::process_edit_script(const edit_t* edit_script) {
 
     a_similarity = 0;
     a_original_difference = 0;

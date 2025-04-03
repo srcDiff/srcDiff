@@ -18,11 +18,11 @@ character_diff::character_diff(const versioned_string & str)
 void character_diff::output(view_t & view, const std::string & type) {
 
     srcdiff::shortest_edit_script ses;
-    ses.compute(str.original(), str.modified());
+    edit_t* edit_script = ses.compute(str.original(), str.modified());
 
     int difference = 0;
     int num_consecutive_edits = 0;
-    for(const edit_t* edits = ses.script(); edits; edits = edits->next) {
+    for(const edit_t* edits = edit_script; edits; edits = edits->next) {
 
       num_consecutive_edits += 1;
       difference += edits->length;
@@ -37,7 +37,7 @@ void character_diff::output(view_t & view, const std::string & type) {
 
         std::size_t last_diff_original = 0;
         std::size_t last_diff_modified = 0;
-        for(const edit_t * edits = ses.script(); edits; edits = edits->next) {
+        for(const edit_t * edits = edit_script; edits; edits = edits->next) {
 
         if(edits->operation == SES_DELETE 
            && last_diff_original < edits->offset_sequence_one) {

@@ -30,16 +30,7 @@ comment_differ::comment_differ(std::shared_ptr<srcdiff::output_stream> out, cons
 void comment_differ::output() {
 
   srcdiff::shortest_edit_script ses;
-
-  int distance = ses.compute(original, modified);
-
-  edit_t * edit_script = ses.script();
-
-  if(distance < 0) {
-
-    fprintf(stderr, "Error with shortest edit script");
-    exit(distance);
-  }
+  edit_t* edit_script = ses.compute(original, modified);
 
   std::size_t last_diff_original = 0;
   std::size_t diff_end_original = out->last_output_original();

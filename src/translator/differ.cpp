@@ -44,18 +44,12 @@ void differ::output() {
   shortest_edit_script ses;
 
   /** O(CND) */
-  int distance = ses.compute(original, modified);
+  edit_t* edit_script = ses.compute(original, modified);
 
   edit_corrector corrector(original, modified, ses);
   corrector.correct();
 
-  edit_t * edit_script = ses.script();
-
-  if(distance < 0) {
-
-    fprintf(stderr, "Error with shortest edit script");
-    exit(distance);
-  }
+  edit_script = ses.script();
 
   /** O(CD^2) */
   move_detector::mark_moves(original, modified, edit_script);
