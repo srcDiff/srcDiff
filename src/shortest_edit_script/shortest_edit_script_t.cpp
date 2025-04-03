@@ -33,21 +33,13 @@ size_t shortest_edit_script_t::get_size_threshold() {
   return SIZE_THRESHOLD;
 }
 
-edit_t* shortest_edit_script_t::compute(const void* structure_one, int size_one, const void* structure_two, int size_two) {
+edit_t*& shortest_edit_script_t::compute(const void* structure_one, int size_one, const void* structure_two, int size_two) {
   int distance = shortest_edit_script_hybrid(structure_one, size_one, structure_two, size_two, &edit_script,
                                      *compare.target<int (*)(void const*, void const*, void const*)>(),
                                      *accessor.target<void const* (*)(int, void const*, void const*)>(),
                                      context, threshold);
   if(distance < 0) throw std::logic_error("Error computing shortest edit script");
   return edit_script;
-}
-
-edit_t* shortest_edit_script_t::script() const {
-  return edit_script;
-}
-
-void shortest_edit_script_t::script(edit_t* edit_script) {
-  this->edit_script = edit_script;
 }
 
 }

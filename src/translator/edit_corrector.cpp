@@ -18,10 +18,10 @@ namespace srcdiff {
 
 edit_corrector::edit_corrector(const construct::construct_list_view sets_original,
                                const construct::construct_list_view sets_modified,
-                               shortest_edit_script & ses) 
+                               edit_t*& edits) 
     : sets_original(sets_original),
       sets_modified(sets_modified),
-      ses(ses) {}
+      edits(edits) {}
 
 void edit_corrector::split_change(edit_t * delete_edit, edit_t * insert_edit,
                                   int original_pos, int modified_pos,
@@ -206,8 +206,8 @@ void edit_corrector::split_change(edit_t * delete_edit, edit_t * insert_edit,
         start_edit = common_edit;
     }
 
-    if(delete_edit == ses.script()) {
-       ses.script(start_edit);
+    if(delete_edit == edits) {
+       edits = start_edit;
     }
 
     start_edits = start_edit;
@@ -325,7 +325,7 @@ std::shared_ptr<text_measurer> edit_corrector::edit2measure(int original_offset,
 void edit_corrector::correct() {
 
     // wrongly matched common correction
-    for(edit_t * edit_script = ses.script(); edit_script != nullptr; edit_script = edit_script->next) {
+    for(edit_t * edit_script = edits; edit_script != nullptr; edit_script = edit_script->next) {
 
         // save pointer to before edits
         edit_t * before = edit_script->previous;
@@ -533,8 +533,8 @@ void edit_corrector::correct() {
                         free(edit);
                     }
 
-                    if(start_edit == ses.script()) {
-                        ses.script(delete_edit);
+                    if(start_edit == edits) {
+                        edits = delete_edit;
                     }
 
                     edit_t * last_edits = nullptr;

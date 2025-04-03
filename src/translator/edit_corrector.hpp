@@ -22,7 +22,7 @@ class edit_corrector {
 private:
     const construct::construct_list_view sets_original;
     const construct::construct_list_view sets_modified;
-    srcdiff::shortest_edit_script & ses;
+    edit_t*& edits;
 
 private:
     void split_change(edit_t * delete_edit, edit_t * insert_edit,
@@ -35,8 +35,8 @@ private:
 
 public:
     edit_corrector(const construct::construct_list_view sets_original,
-                            const construct::construct_list_view sets_modified,
-                            srcdiff::shortest_edit_script & ses);
+                   const construct::construct_list_view sets_modified,
+                   edit_t*& edits);
     void correct();
 
 };
