@@ -44,7 +44,7 @@ int shortest_edit_script::compute(const std::string& original, const std::string
 /** Internal comparison functions **/
 
 // diff node accessor function
-const void * shortest_edit_script::construct_node_index(int index, const void* data, const void * context [[maybe_unused]]) {
+const void * shortest_edit_script::construct_node_index(int index, const void* data, const void* context [[maybe_unused]]) {
   const std::shared_ptr<construct>& element = *(const std::shared_ptr<construct> *)data;
   return &element->term(index);
 }
@@ -59,16 +59,16 @@ int shortest_edit_script::node_compare(const std::shared_ptr<srcML::node> & node
   return 1;
 }
 
-const void * shortest_edit_script::construct_list_index(int index, const void* data, const void * context [[maybe_unused]]) {
+const void* shortest_edit_script::construct_list_index(int index, const void* data, const void* context [[maybe_unused]]) {
 
   construct::construct_list_view elements = *(construct::construct_list_view *)data;
   return &elements[index];
 }
 
-int shortest_edit_script::construct_compare(const void * e1, const void * e2, const void * context [[maybe_unused]]) {
+int shortest_edit_script::construct_compare(const void* e1, const void* e2, const void* context [[maybe_unused]]) {
 
-  const std::shared_ptr<construct> & element_1 = *(const std::shared_ptr<construct> *)e1;
-  const std::shared_ptr<construct> & element_2 = *(const std::shared_ptr<construct> *)e2;
+  const std::shared_ptr<construct>& element_1 = *(const std::shared_ptr<construct>*)e1;
+  const std::shared_ptr<construct>& element_2 = *(const std::shared_ptr<construct>*)e2;
   
   if(*element_1 == *element_2) return 0;
   return 1;
@@ -76,27 +76,27 @@ int shortest_edit_script::construct_compare(const void * e1, const void * e2, co
 
 int shortest_edit_script::string_compare(const void * s1, const void * s2, const void * context [[maybe_unused]]) {
 
-  const std::string & string1 = *(const std::string *)s1;
-  const std::string & string2 = *(const std::string *)s2;
+  const std::string& string1 = *(const std::string*)s1;
+  const std::string& string2 = *(const std::string*)s2;
 
   return string1 != string2;
 }
 
 const void * shortest_edit_script::string_index(int index, const void * s, const void * context [[maybe_unused]]) {
 
-  const std::vector<std::string> & string_list = *(const std::vector<std::string> *)s;
+  const std::vector<std::string>& string_list = *(const std::vector<std::string>*)s;
   return &string_list[index];
 }
 
 int shortest_edit_script::char_compare(const void* c1, const void* c2, const void* context [[maybe_unused]]) {
 
-  char ch1 = *(char *)c1;
-  char ch2 = *(char *)c2;
+  char ch1 = *(char*)c1;
+  char ch2 = *(char*)c2;
   return ch1 != ch2;
 }
 
 const void* shortest_edit_script::char_index(int index, const void* s, const void* context [[maybe_unused]]) {
-  const std::string& str = *(const std::string *)s;
+  const std::string& str = *(const std::string*)s;
   return &str[index];
 }
 

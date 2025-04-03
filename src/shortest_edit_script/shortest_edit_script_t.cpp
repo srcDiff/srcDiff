@@ -35,7 +35,10 @@ size_t shortest_edit_script_t::get_size_threshold() {
 }
 
 int shortest_edit_script_t::compute(const void* structure_one, int size_one, const void* structure_two, int size_two) {
-    return shortest_edit_script_hybrid(structure_one, size_one, structure_two, size_two, &edit_script, compare, accessor, context, threshold);
+    return shortest_edit_script_hybrid(structure_one, size_one, structure_two, size_two, &edit_script,
+                                       compare,
+                                       accessor,
+                                       context, threshold);
 }
 
 edit_t * shortest_edit_script_t::script() const {
