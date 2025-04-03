@@ -17,6 +17,7 @@
 #include <cmath>
 
 #include <optional>
+#include <functional>
 
 namespace ses {
 
@@ -24,8 +25,8 @@ class shortest_edit_script_t {
   
 protected:
 
-  typedef int (*compare_func)(const void * item_one, const void * item_two, const void * context);
-  typedef const void* (*accessor_func)(int index, const void * structure, const void * context);
+  typedef std::function<int (const void * item_one, const void * item_two, const void * context)> compare_func;
+  typedef std::function<const void* (int index, const void * structure, const void * context)>    accessor_func;
 
   const static size_t SIZE_THRESHOLD;
 
