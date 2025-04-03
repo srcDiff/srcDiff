@@ -18,6 +18,8 @@
 
 #include <optional>
 
+namespace ses {
+
 class shortest_edit_script_t {
   
 protected:
@@ -218,6 +220,8 @@ int shortest_edit_script_t::approximate_compute(const T & structure_one, const T
   }
 
   return distance;
+
+}
 
 }
 #endif

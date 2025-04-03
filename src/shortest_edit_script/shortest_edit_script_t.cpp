@@ -9,6 +9,8 @@
 
 #include <shortest_edit_script_t.hpp>
 
+namespace ses {
+
 const size_t shortest_edit_script_t::SIZE_THRESHOLD = 20480;
 shortest_edit_script_t::shortest_edit_script_t(int (*compare)(const void * item_one, const void * item_two, const void * context),
                                                const void * (*accessor)(int index, const void * structure, const void * context),
@@ -56,5 +58,7 @@ void shortest_edit_script_t::script(edit_t * edit_script) {
 bool shortest_edit_script_t::is_approximate() const {
 
     return approximate;
+
+}
 
 }

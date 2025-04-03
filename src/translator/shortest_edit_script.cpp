@@ -33,6 +33,14 @@ int shortest_edit_script::compute_edit_script(const std::vector<std::string> & o
   return compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
 }
 
+int shortest_edit_script::compute_edit_script(const std::string& original, const std::string& modified) {
+  compare = char_compare;
+  accessor = char_index;
+
+  return compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
+}
+
+
 /** Internal comparison functions **/
 
 // diff node accessor function
@@ -50,7 +58,6 @@ int shortest_edit_script::node_compare(const std::shared_ptr<srcML::node> & node
   if(*node_one == *node_two) return 0;
   return 1;
 }
-
 
 const void * shortest_edit_script::construct_list_index(int index, const void* data, const void * context [[maybe_unused]]) {
 
@@ -73,15 +80,24 @@ int shortest_edit_script::string_compare(const void * s1, const void * s2, const
   const std::string & string2 = *(const std::string *)s2;
 
   return string1 != string2;
-
 }
 
 const void * shortest_edit_script::string_index(int index, const void * s, const void * context [[maybe_unused]]) {
 
   const std::vector<std::string> & string_list = *(const std::vector<std::string> *)s;
-
   return &string_list[index];
+}
 
+int shortest_edit_script::char_compare(const void* c1, const void* c2, const void* context [[maybe_unused]]) {
+
+  char ch1 = *(char *)c1;
+  char ch2 = *(char *)c2;
+  return ch1 != ch2;
+}
+
+const void* shortest_edit_script::char_index(int index, const void* s, const void* context [[maybe_unused]]) {
+  const std::string& str = *(const std::string *)s;
+  return &str[index];
 }
 
 }

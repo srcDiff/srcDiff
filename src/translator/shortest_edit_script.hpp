@@ -20,13 +20,14 @@
 
 namespace srcdiff {
 
-class shortest_edit_script : public shortest_edit_script_t {
+class shortest_edit_script : public ses::shortest_edit_script_t {
 public:
     shortest_edit_script() : shortest_edit_script_t(nullptr, nullptr, nullptr) {}
 
     int compute_edit_script(const std::shared_ptr<construct>& original,    const std::shared_ptr<construct>& modified);
     int compute_edit_script(const construct::construct_list_view original, const construct::construct_list_view modified);
     int compute_edit_script(const std::vector<std::string>& original,      const std::vector<std::string>& modified);
+    int compute_edit_script(const std::string& original,                   const std::string& modified);
 
 private:
     static const void* construct_list_index(int idx, const void* s, const void* context);
@@ -38,6 +39,10 @@ private:
 
     static int string_compare(const void* s1, const void* s2, const void* context);
     static const void* string_index(int idx, const void* s, const void* context);
+
+    static int char_compare(const void* c1, const void* c2, const void* context);
+    static const void* char_index(int index, const void* s, const void* context);
+
 };
 
 }
