@@ -31,7 +31,7 @@ void comment_differ::output() {
 
   srcdiff::shortest_edit_script ses;
 
-  int distance = ses.compute_edit_script(original, modified);
+  int distance = ses.compute(original, modified);
 
   edit_t * edit_script = ses.script();
 

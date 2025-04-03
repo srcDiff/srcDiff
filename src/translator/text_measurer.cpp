@@ -179,7 +179,7 @@ void text_measurer::compute() {
   }
 
     shortest_edit_script ses;
-    ses.compute_edit_script(set_original_text, set_modified_text);
+    ses.compute(set_original_text, set_modified_text);
     process_edit_script(ses.script());
 
 }

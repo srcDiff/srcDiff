@@ -12,32 +12,32 @@
 namespace srcdiff {
 
 // all 8 of the const void * context parameters in this file are unused as of yet
-int shortest_edit_script::compute_edit_script(const std::shared_ptr<construct> & original, const std::shared_ptr<construct> & modified) {
+int shortest_edit_script::compute(const std::shared_ptr<construct> & original, const std::shared_ptr<construct> & modified) {
   compare = node_compare;
   accessor = construct_node_index;
 
-  return compute((const void *)&original, original->size(), (const void *)&modified, modified->size());
+  return shortest_edit_script_t::compute((const void *)&original, original->size(), (const void *)&modified, modified->size());
 }
 
-int shortest_edit_script::compute_edit_script(const construct::construct_list_view original, const construct::construct_list_view modified) {
+int shortest_edit_script::compute(const construct::construct_list_view original, const construct::construct_list_view modified) {
   compare = construct_compare;
   accessor = construct_list_index;
 
-  return compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
+  return shortest_edit_script_t::compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
 }
 
-int shortest_edit_script::compute_edit_script(const std::vector<std::string> & original, const std::vector<std::string> & modified) {
+int shortest_edit_script::compute(const std::vector<std::string> & original, const std::vector<std::string> & modified) {
   compare = string_compare;
   accessor = string_index;
 
-  return compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
+  return shortest_edit_script_t::compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
 }
 
-int shortest_edit_script::compute_edit_script(const std::string& original, const std::string& modified) {
+int shortest_edit_script::compute(const std::string& original, const std::string& modified) {
   compare = char_compare;
   accessor = char_index;
 
-  return compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
+  return shortest_edit_script_t::compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
 }
 
 

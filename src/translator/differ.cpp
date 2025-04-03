@@ -44,7 +44,7 @@ void differ::output() {
   shortest_edit_script ses;
 
   /** O(CND) */
-  int distance = ses.compute_edit_script(original, modified);
+  int distance = ses.compute(original, modified);
   if(ses.is_approximate()) out->approximate(true);
 
   edit_corrector corrector(original, modified, ses);
