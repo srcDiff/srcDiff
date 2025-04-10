@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: GPL-3.0-only
 #
-# @file method-raw.sh
+# @file method-group-diff.sh
 #
 # @copyright Copyright (C) 2024-2025 SDML (www.srcDiff.org)
 #
@@ -30,5 +30,5 @@ xmlcheck "$output"
 createfile sub/a.cpp "$original"
 createfile sub/b.cpp "$modified"
 
-srcdiff sub/a.cpp sub/b.cpp -m raw -o sub/ab.xml
+srcdiff sub/a.cpp sub/b.cpp -m group-diff -o sub/ab.xml
 check sub/ab.xml "$output"
