@@ -566,9 +566,9 @@ const client_options& process_command_line(int argc, char* argv[]) {
   )->default_val(8)->excludes(unified);
 
   view_options->add_option_function<std::string>(
-    "--unified-context",
+    "-C,--context",
     view_option_unified_view_context,
-    "Specify the amount of context to show around an edit in the unified view.\n"
+    "Specify the amount of context to show around an edit in the unified/side-by-side view.\n"
     "Either give a number of lines, or use \"all\" or -1 to see the entire file,\n"
     "or use \"function\" to see the encompassing function."
   )->default_val("3")->needs(unified);
