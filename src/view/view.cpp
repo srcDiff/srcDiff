@@ -186,7 +186,7 @@ void view_t::output_characters_to_buffer(std::ostream & out,
   if(save_name) {
 
     saved_name.append(ch.c_str(), ch.size(),
-      diff_stack.back() == view_t::DELETE ? srcdiff::DELETE : srcdiff::INSERT);
+    diff_stack.back() == view_t::DELETE ? srcdiff::DELETE : srcdiff::INSERT);
     return;
 
   }
@@ -598,7 +598,7 @@ void view_t::charactersRoot(const char * ch [[maybe_unused]], int len [[maybe_un
 void view_t::charactersUnit(const char * ch, int len) {
 
   // Need diff on stack for this but not others so use element_stack here only
-  if(!save_name && element_stack.size() > 1 && element_stack.back() == "diff:delete" 
+  if(!save_name && element_stack.size() > 1 && element_stack.back() == "diff:delete-type-replace" 
     && (element_stack.at(element_stack.size() - 2) == "name"
       || element_stack.at(element_stack.size() - 2) == "operator")) {
 
