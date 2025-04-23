@@ -87,11 +87,11 @@ void edit_corrector::split_change(edit_t * subject_edits,
     if(left_edit) {
 
         left_edit->operation = original_pos && modified_pos ? SES_CHANGE : (original_pos ? SES_DELETE : SES_INSERT);
-        left_edit->previous = prevous;
+        left_edit->previous = previous;
         left_edit->next = common_edit;
         left_edit->offset_sequence_one = sequence_one_offset;
         left_edit->offset_sequence_two = sequence_two_offset;
-        left_edit->length = original_pos
+        left_edit->length = original_pos;
         if(!original_pos) {
             left_edit->length = modified_pos;
         } else {
@@ -237,7 +237,7 @@ void edit_corrector::correct() {
         std::list<edit_t *> free_edit_list;
         free_edit_list.push_back(edit_script);
 
-        bool is_change_before = edit_script->operation == SES_CHANGE
+        bool is_change_before = edit_script->operation == SES_CHANGE;
 
         // guard checks for first edit
         if(edit_script->operation == SES_COMMON) continue;
@@ -245,7 +245,7 @@ void edit_corrector::correct() {
         if(is_change_before && edit_script->length_two > 3) continue;
 
         // guard checks for next edit
-        edit * next = edit_script->next;
+        edit_t * next = edit_script->next;
         if(next == nullptr) continue;
         if(next->operation == SES_COMMON) continue;
         if(next->length > 3) continue;
@@ -256,7 +256,7 @@ void edit_corrector::correct() {
 
         if(is_change_after && next->length > 3) continue;
 
-        if(    !is_change_bfore
+        if(    !is_change_before
             && !is_change_after
             && edit_script->operation == next->operation) continue;
 
@@ -277,7 +277,7 @@ void edit_corrector::correct() {
 
         if(start_edit->operation == SES_DELETE) {
             subject_edits->offset_sequence_two = start_edit->next->offset_sequence_two;
-            subject_edits->length_two = start_edits->next->length;
+            subject_edits->length_two = start_edit->next->length;
         } else if(start_edit->operation == SES_INSERT) {
             subject_edits->length_two = subject_edits->length;
             subject_edits->offset_sequence_one = start_edit->next->offset_sequence_one;
@@ -287,8 +287,8 @@ void edit_corrector::correct() {
         ++subject_edits->length;
         ++subject_edits->length_two;
 
-        delete_edit->next = after;
-        delete_edit->previous = before;
+        subject_edits->next = after;
+        subject_edits->previous = before;
 
         std::size_t original_offset = 0;
         std::size_t modified_offset = 0;
@@ -418,8 +418,7 @@ void edit_corrector::correct() {
                     }
 
                     edit_t * last_edits = nullptr;
-                    split_change(delete_edit,
-                                 insert_edit,
+                    split_change(subject_edits,
                                  i,
                                  j,
                                  edit_script,
