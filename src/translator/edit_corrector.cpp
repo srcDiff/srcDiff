@@ -42,8 +42,11 @@ void edit_corrector::split_change(edit_t * subject_edits,
         if(!left_edit) throw std::bad_alloc();
     }
 
+    bool is_delete = original_length - original_pos - 1;
+    bool is_insert = modified_length - modified_pos - 1;
+
     edit_t* right_edit = nullptr;
-    if(original_length != 1 || modified_length != 1) {
+    if(is_delete || is_insert) {
         right_edit = (struct edit_t *)malloc(sizeof(struct edit_t));
         if(!right_edit) throw std::bad_alloc();
     }
@@ -55,6 +58,7 @@ void edit_corrector::split_change(edit_t * subject_edits,
     common_edit->offset_sequence_one = sequence_one_offset + original_pos;
     common_edit->offset_sequence_two = sequence_two_offset + modified_pos;
     common_edit->length = 1;
+    common_edit->length_two = 1;
 
     if(left_edit) {
         common_edit->previous = left_edit;
@@ -92,6 +96,7 @@ void edit_corrector::split_change(edit_t * subject_edits,
         left_edit->offset_sequence_one = sequence_one_offset;
         left_edit->offset_sequence_two = sequence_two_offset;
         left_edit->length = original_pos;
+
         if(!original_pos) {
             left_edit->length = modified_pos;
         } else {
@@ -101,16 +106,29 @@ void edit_corrector::split_change(edit_t * subject_edits,
 
     if(right_edit) {
 
-        bool is_delete = original_length != 1;
-        bool is_insert = modified_length != 1;
-
         right_edit->operation = is_delete && is_insert ? SES_CHANGE : (is_delete ? SES_DELETE : SES_INSERT);
         right_edit->previous = common_edit;
         right_edit->next = next;
         right_edit->offset_sequence_one = common_edit->offset_sequence_one + 1;
         right_edit->offset_sequence_two = common_edit->offset_sequence_two + 1;
         right_edit->length = original_length - original_pos - 1;
+
+        if(!is_delete) {
+            right_edit->length = modified_length - modified_pos - 1;
+        } else {
+            right_edit->length_two = modified_length - modified_pos - 1;
+        }
     }
+
+    // for(edit_t* temp = left_edit; temp != nullptr; temp = temp->next) {
+    //     std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << temp->operation << '\n';
+    //     std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << temp->offset_sequence_one << '\n';
+    //     std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << temp->length << '\n';
+    //     std::cerr << sets_original[temp->offset_sequence_one]->to_string() << '\n';
+    //     std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << temp->offset_sequence_two << '\n';
+    //     std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << temp->length_two << '\n';
+    //     std::cerr << sets_modified[temp->offset_sequence_two]->to_string() << '\n';
+    // }
 
     edit_t * start_edit = nullptr;
     if(left_edit) {
@@ -170,7 +188,7 @@ edit_t * edit_corrector::correct_common_inner(edit_t * change_edit) {
 
     }
 
-    return change_edit->next;
+    return change_edit;
 
 }
 
@@ -282,7 +300,7 @@ void edit_corrector::correct() {
             subject_edits->length_two = subject_edits->length;
             subject_edits->offset_sequence_one = start_edit->next->offset_sequence_one;
             subject_edits->length = start_edit->next->length;
-        }
+        }// change?
 
         ++subject_edits->length;
         ++subject_edits->length_two;
