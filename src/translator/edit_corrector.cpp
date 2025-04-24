@@ -75,10 +75,6 @@ void edit_corrector::split_change(struct ses::edit subject_edits,
         right_edit->modified_length = modified_length - modified_pos - 1;
     }
 
-    // std::cerr << *left_edit << "\n\n";
-    // std::cerr << common_edit << "\n\n";
-    // std::cerr << *right_edit << "\n\n";
-
     std::vector<ses::edit_iterator> inserted_edits;
     if(left_edit) {
         inserted_edits.push_back(edits.insert(start_edits, *left_edit));
@@ -89,8 +85,6 @@ void edit_corrector::split_change(struct ses::edit subject_edits,
     if(right_edit) {
         inserted_edits.push_back(edits.insert(start_edits, *right_edit));
     }
-
-    edits.erase(start_edits, std::next(start_edits));
 
     start_edits = inserted_edits.front();
     last_edits  = inserted_edits.back();
@@ -113,13 +107,14 @@ ses::edit_iterator edit_corrector::correct_common_inner(ses::edit_iterator chang
                 continue;
             }
 
+            ses::edit_iterator start_edits = change_edit;
             ses::edit_iterator last_edits;
             split_change(*change_edit,
                          i,
                          j,
                          change_edit, 
                          last_edits);
-
+            edits.erase(start_edits);
             return last_edits;
 
         }
@@ -138,7 +133,7 @@ ses::edit_iterator edit_corrector::correct_common(ses::edit_iterator start_edit)
         current = ++correct_common_inner(current);
     }
     else {
-         ++current;
+        ++current;
     }
 
     ++current;
@@ -340,12 +335,17 @@ void edit_corrector::correct() {
                 if(is_similar
                     && 3 * common_set_text->size() <= std::size_t(measure->similarity())) {
 
+                    ses::edit_iterator start_edits = edit;
                     ses::edit_iterator last_edits;
                     split_change(subject_edits,
                                  i,
                                  j,
                                  edit,
                                  last_edits);
+
+                    edits.erase(std::next(start_edits));
+                    edits.erase(start_edits);
+
                     edit = correct_common(edit);
 
                     goto end_move_check;
