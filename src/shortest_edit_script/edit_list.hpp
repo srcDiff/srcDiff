@@ -10,40 +10,12 @@
 #ifndef INCLUDED_EDIT_LIST_HPP
 #define INCLUDED_EDIT_LIST_HPP
 
+#include <edit.hpp>
+
 #include <list>
 #include <iostream>
 
 namespace ses {
-
-enum edit_operation { COMMON, DELETE, INSERT, CHANGE };
-
-struct edit {
-    edit(edit_operation operation,
-         std::size_t original_offset = 0, std::size_t original_length = 0,
-         std::size_t modified_offset = 0, std::size_t modified_length = 0)
-        : operation(operation),
-          original_offset(original_offset), original_length(original_length),
-          modified_offset(modified_offset), modified_length(modified_length) {
-    }
-
-    friend std::ostream& operator<<(std::ostream& out, struct edit edit) {
-        out << "operation:"       << edit.operation << '\n';
-        out << "original_offset:" << edit.original_offset << '\n';
-        out << "original_length:" << edit.original_length << '\n';
-        out << "modified_offset:" << edit.modified_offset << '\n';
-        out << "modified_length:" << edit.modified_length << '\n';
-        return out;
-    }
-
-    edit_operation operation;
-
-    std::size_t original_offset;
-    std::size_t original_length;
-
-    std::size_t modified_offset;
-    std::size_t modified_length;
-
-};
 
 class edit_list : public std::list<edit> {
 public:
