@@ -10,7 +10,7 @@
 #ifndef INCLUDED_EDIT_CORRECTOR_HPP
 #define INCLUDED_EDIT_CORRECTOR_HPP
 
-#include <shortest_edit_script_t.hpp>
+#include <shortest_edit_script.hpp>
 #include <edit_list.hpp>
 
 #include <construct.hpp>

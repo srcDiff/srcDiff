@@ -7,7 +7,7 @@
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <shortest_edit_script_t.hpp>
+#include <shortest_edit_script.hpp>
 
 namespace ses {
 

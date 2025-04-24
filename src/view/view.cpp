@@ -11,7 +11,7 @@
 
 #include <constants.hpp>
 
-#include <shortest_edit_script_t.hpp>
+#include <shortest_edit_script.hpp>
 #include <character_diff.hpp>
 
 #include <type_query.hpp>

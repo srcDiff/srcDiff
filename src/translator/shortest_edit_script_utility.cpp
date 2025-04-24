@@ -9,7 +9,7 @@
 
 #include <shortest_edit_script_utility.hpp>
 
-#include <shortest_edit_script_t.hpp>
+#include <shortest_edit_script.hpp>
 
 namespace srcdiff {
 
