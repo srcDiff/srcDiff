@@ -11,6 +11,7 @@
 #define INCLUDED_EDIT_LIST_HPP
 
 #include <list>
+#include <iostream>
 
 namespace ses {
 
@@ -36,6 +37,17 @@ struct edit {
 };
 
 class edit_list : public std::list<edit> {
+public:
+    void debug() {
+        for(const struct edit& edit : *this) {
+            std::cerr << "operation:"       << edit.operation << '\n';
+            std::cerr << "original_offset:" << edit.original_offset << '\n';
+            std::cerr << "original_length:" << edit.original_length << '\n';
+            std::cerr << "modified_offset:" << edit.modified_offset << '\n';
+            std::cerr << "modified_length:" << edit.modified_length << '\n';
+        }
+    }
+
 };
 
 }

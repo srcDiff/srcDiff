@@ -32,8 +32,6 @@ protected:
 
   const static size_t SIZE_THRESHOLD;
 
-  edit_t* edit_script;
-
   const void* context;
   compare_func compare;
   accessor_func accessor;

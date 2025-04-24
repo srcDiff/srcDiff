@@ -16,17 +16,13 @@ shortest_edit_script_t::shortest_edit_script_t(int (*compare)(const void* item_o
                                                const void* (*accessor)(int index, const void* structure, const void* context),
                                                const void* context,
                                                int threshold)
-    : edit_script(nullptr),
-      context(context),
+    : context(context),
       compare(compare),
       accessor(accessor),
       threshold(threshold) {
 }
 
 shortest_edit_script_t::~shortest_edit_script_t() {
-  if(edit_script) {
-    free_shortest_edit_script(edit_script);
-  }
 }
 
 size_t shortest_edit_script_t::get_size_threshold() {
@@ -34,6 +30,7 @@ size_t shortest_edit_script_t::get_size_threshold() {
 }
 
 edit_list shortest_edit_script_t::compute(const void* structure_one, int size_one, const void* structure_two, int size_two) {
+  edit_t* edit_script = nullptr;
   int distance = shortest_edit_script_hybrid(structure_one, size_one, structure_two, size_two, &edit_script,
                                      *compare.target<int (*)(void const*, void const*, void const*)>(),
                                      *accessor.target<void const* (*)(int, void const*, void const*)>(),
@@ -48,6 +45,7 @@ edit_list shortest_edit_script_t::compute(const void* structure_one, int size_on
                          edit->offset_sequence_one, edit->length,
                          next->offset_sequence_two, next->length
       );
+      edit = next;
     } else{
       edits.emplace_back(edit->operation == SES_DELETE ? ses::DELETE : ses::INSERT,
                          edit->offset_sequence_one, edit->operation == SES_DELETE ? edit->length : 0,
