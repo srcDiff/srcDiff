@@ -7,8 +7,8 @@
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_SHORTEST_EDIT_SCRIPT
-#define INCLUDED_SHORTEST_EDIT_SCRIPT
+#ifndef INCLUDED_SHORTEST_EDIT_SCRIPT_HPP
+#define INCLUDED_SHORTEST_EDIT_SCRIPT_HPP
 
 #include <shortest_edit_script_t.hpp>
 
