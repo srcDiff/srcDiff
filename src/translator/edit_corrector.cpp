@@ -214,13 +214,13 @@ void edit_corrector::correct() {
         int common_length = next->original_offset - start_offset;
         if(common_length != 1) continue;
 
-        struct ses::edit subject_edits(ses::CHANGE);
+        struct ses::edit subject_edits(*edit);
+        subject_edits.operation = ses::CHANGE;
 
         if(edit->operation == ses::DELETE) {
             subject_edits.modified_offset = next->modified_offset;
             subject_edits.modified_length = 0;
         } else if(edit->operation == ses::INSERT) {
-            subject_edits.modified_length = edit->modified_length;
             subject_edits.original_offset = next->original_offset;
             subject_edits.original_length = 0;
         }
@@ -263,6 +263,7 @@ void edit_corrector::correct() {
             }
 
         }
+        // std::cerr << subject_edits << "\n\n\n";
 
         std::size_t common_pos = subject_edits.original_offset + original_offset;
 
@@ -330,9 +331,6 @@ void edit_corrector::correct() {
 
                 if(is_similar
                     && 3 * common_set_text->size() <= std::size_t(measure->similarity())) {
-
-
-                    // std::cerr << subject_edits << "\n\n\n";
 
                     ses::edit_iterator last_edits;
                     split_change(subject_edits,
