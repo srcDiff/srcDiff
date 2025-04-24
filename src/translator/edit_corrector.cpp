@@ -239,9 +239,6 @@ void edit_corrector::correct() {
         // save pointer to before edits
         edit_t * before = edit_script->previous;
 
-        // save pointer to starting edit
-        edit_t * start_edit = edit_script;
-
         std::list<edit_t *> free_edit_list;
         free_edit_list.push_back(edit_script);
 
@@ -269,10 +266,10 @@ void edit_corrector::correct() {
             && edit_script->operation == next->operation) continue;
 
         // start edit should be edit_script here (check later)
-        int start_offset = start_edit->offset_sequence_one;
-        if(    start_edit->operation == SES_DELETE
-            || start_edit->operation == SES_CHANGE) {
-            start_offset += start_edit->length;
+        int start_offset = edit_script->offset_sequence_one;
+        if(    edit_script->operation == SES_DELETE
+            || edit_script->operation == SES_CHANGE) {
+            start_offset += edit_script->length;
         }
 
         int common_length = next->offset_sequence_one - start_offset;
@@ -280,15 +277,15 @@ void edit_corrector::correct() {
 
         edit_t * after = next->next;
 
-        edit_t * subject_edits = copy_edit(start_edit);
+        edit_t * subject_edits = copy_edit(edit_script);
         subject_edits->operation = SES_CHANGE;
 
-        if(start_edit->operation == SES_DELETE) {
-            subject_edits->offset_sequence_two = start_edit->next->offset_sequence_two;
+        if(edit_script->operation == SES_DELETE) {
+            subject_edits->offset_sequence_two = edit_script->next->offset_sequence_two;
             subject_edits->length_two = 0;
-        } else if(start_edit->operation == SES_INSERT) {
-            subject_edits->length_two = start_edit->length;
-            subject_edits->offset_sequence_one = start_edit->next->offset_sequence_one;
+        } else if(edit_script->operation == SES_INSERT) {
+            subject_edits->length_two = edit_script->length;
+            subject_edits->offset_sequence_one = edit_script->next->offset_sequence_one;
             subject_edits->length = 0;
         }
 
@@ -317,7 +314,7 @@ void edit_corrector::correct() {
 
         } else {
 
-            if(start_edit->operation == SES_DELETE) {
+            if(edit_script->operation == SES_DELETE) {
 
                 original_offset = subject_edits->length - 1;
                 modified_offset = 0;
@@ -427,7 +424,7 @@ void edit_corrector::correct() {
                         free(edit);
                     }
 
-                    if(start_edit == edits) {
+                    if(edit_script == edits) {
                         edits = subject_edits;
                     }
 
