@@ -120,16 +120,6 @@ void edit_corrector::split_change(edit_t * subject_edits,
         }
     }
 
-    // for(edit_t* temp = left_edit; temp != nullptr; temp = temp->next) {
-    //     std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << temp->operation << '\n';
-    //     std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << temp->offset_sequence_one << '\n';
-    //     std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << temp->length << '\n';
-    //     std::cerr << sets_original[temp->offset_sequence_one]->to_string() << '\n';
-    //     std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << temp->offset_sequence_two << '\n';
-    //     std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << temp->length_two << '\n';
-    //     std::cerr << sets_modified[temp->offset_sequence_two]->to_string() << '\n';
-    // }
-
     edit_t * start_edit = nullptr;
     if(left_edit) {
         start_edit = left_edit;
@@ -295,12 +285,12 @@ void edit_corrector::correct() {
 
         if(start_edit->operation == SES_DELETE) {
             subject_edits->offset_sequence_two = start_edit->next->offset_sequence_two;
-            subject_edits->length_two = start_edit->next->length;
+            subject_edits->length_two = 0;
         } else if(start_edit->operation == SES_INSERT) {
-            subject_edits->length_two = subject_edits->length;
+            subject_edits->length_two = start_edit->length;
             subject_edits->offset_sequence_one = start_edit->next->offset_sequence_one;
-            subject_edits->length = start_edit->next->length;
-        }// change?
+            subject_edits->length = 0;
+        }
 
         ++subject_edits->length;
         ++subject_edits->length_two;
@@ -336,6 +326,9 @@ void edit_corrector::correct() {
 
                 if(is_change_after) {
                     subject_edits->length += next->length;  
+                    subject_edits->length_two += next->length_two;  
+                } else {
+                    subject_edits->length_two += next->length;                  
                 }
 
             } else {
@@ -346,7 +339,10 @@ void edit_corrector::correct() {
                 --subject_edits->offset_sequence_one;
 
                 if(is_change_after) {
+                    subject_edits->length += next->length;  
                     subject_edits->length_two += next->length_two;
+                } else {
+                    subject_edits->length += next->length;                  
                 }
 
             }

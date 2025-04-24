@@ -46,8 +46,8 @@ void differ::output() {
   /** O(CND) */
   edit_t*& edit_script = ses.compute(original, modified);
 
-  // edit_corrector corrector(original, modified, edit_script);
-  // corrector.correct();
+  edit_corrector corrector(original, modified, edit_script);
+  corrector.correct();
 
   /** O(CD^2) */
   move_detector::mark_moves(original, modified, edit_script);
