@@ -132,8 +132,7 @@ ses::edit_iterator edit_corrector::correct_common(ses::edit_iterator start_edit)
 
     if(current->operation == ses::CHANGE) {
         current = ++correct_common_inner(current);
-    }
-    else {
+    } else {
         ++current;
     }
 
@@ -141,8 +140,7 @@ ses::edit_iterator edit_corrector::correct_common(ses::edit_iterator start_edit)
 
     if(current->operation == ses::CHANGE) {
         current = correct_common_inner(current);
-    }
-    else if(current != edits.end()) {
+    } else if(current != edits.end()) {
         ++current;
     }
 
