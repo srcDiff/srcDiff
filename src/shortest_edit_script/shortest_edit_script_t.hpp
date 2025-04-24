@@ -12,6 +12,8 @@
 
 #include <shortest_edit_script.h>
 
+#include <edit_list.hpp>
+
 #include <vector>
 #include <iostream>
 #include <cmath>
@@ -49,7 +51,7 @@ public:
   static size_t get_size_threshold();
 
 
-  virtual edit_t*& compute(const void * structure_one, int size_one, const void * structure_two, int size_two);
+  virtual edit_list compute(const void * structure_one, int size_one, const void * structure_two, int size_two);
 
 };
 

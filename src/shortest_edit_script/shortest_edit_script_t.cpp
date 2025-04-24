@@ -33,31 +33,32 @@ size_t shortest_edit_script_t::get_size_threshold() {
   return SIZE_THRESHOLD;
 }
 
-edit_t*& shortest_edit_script_t::compute(const void* structure_one, int size_one, const void* structure_two, int size_two) {
+edit_list shortest_edit_script_t::compute(const void* structure_one, int size_one, const void* structure_two, int size_two) {
   int distance = shortest_edit_script_hybrid(structure_one, size_one, structure_two, size_two, &edit_script,
                                      *compare.target<int (*)(void const*, void const*, void const*)>(),
                                      *accessor.target<void const* (*)(int, void const*, void const*)>(),
                                      context, threshold);
+  if(distance < 0) throw std::logic_error("Error computing shortest edit script");
+
+  edit_list edits;
   for(edit_t* edit = edit_script; edit != nullptr; edit = edit->next) {
     if(is_change(edit)) {
-      edit->operation = SES_CHANGE;
-
       edit_t* next = edit->next;
-      edit->offset_sequence_two = next->offset_sequence_two;
-      edit->length_two = next->length;
-      edit->next = next->next;
-      if(edit->next) {
-        edit->next->previous = edit;
-      }
-      free(next);
-    } else {
-      // nothing
+      edits.emplace_back(ses::CHANGE,
+                         edit->offset_sequence_one, edit->length,
+                         next->offset_sequence_two, next->length
+      );
+    } else{
+      edits.emplace_back(edit->operation == SES_DELETE ? ses::DELETE : ses::INSERT,
+                         edit->offset_sequence_one, edit->operation == SES_DELETE ? edit->length : 0,
+                         edit->offset_sequence_two, edit->operation == SES_INSERT ? edit->length : 0
+      );
     }
-
   }
 
-  if(distance < 0) throw std::logic_error("Error computing shortest edit script");
-  return edit_script;
+  free_shortest_edit_script(edit_script);
+
+  return edits;
 }
 
 }

@@ -18,14 +18,14 @@ character_diff::character_diff(const versioned_string & str)
 void character_diff::output(view_t & view, const std::string & type) {
 
     srcdiff::shortest_edit_script ses;
-    edit_t* edit_script = ses.compute(str.original(), str.modified());
+    ses::edit_list edits = ses.compute(str.original(), str.modified());
 
     int difference = 0;
     int num_consecutive_edits = 0;
-    for(const edit_t* edits = edit_script; edits; edits = edits->next) {
+    for(const struct ses::edit& edit : edits) {
 
       num_consecutive_edits += 1;
-      difference += edits->length;
+      difference += edit.original_length + edit.modified_length;
 
     }
 
@@ -37,52 +37,52 @@ void character_diff::output(view_t & view, const std::string & type) {
 
         std::size_t last_diff_original = 0;
         std::size_t last_diff_modified = 0;
-        for(const edit_t * edits = edit_script; edits; edits = edits->next) {
+        for(const struct ses::edit& edit : edits) {
 
-        if((edits->operation == SES_DELETE || edits->offset_sequence_one == SES_CHANGE)
-           && last_diff_original < edits->offset_sequence_one) {
-            view.output_characters(str.original().substr(last_diff_original, edits->offset_sequence_one),
-                                 view_t::COMMON);
-        } else if(edits->operation == SES_INSERT && last_diff_modified < edits->offset_sequence_two) {
-            view.output_characters(str.original().substr(last_diff_modified, edits->offset_sequence_two),
-                                 view_t::COMMON);
-        }
-
-        last_diff_original = edits->offset_sequence_one + edits->length;
-        last_diff_modified = edits->offset_sequence_two + edits->length;
-
-        // handle pure delete or insert
-        switch (edits->operation) {
-
-            case SES_CHANGE:
-              view.output_characters(str.original().substr(edits->offset_sequence_one, edits->length),     view_t::DELETE);
-              view.output_characters(str.modified().substr(edits->offset_sequence_two, edits->length_two), view_t::INSERT);
-
-              last_diff_original = edits->offset_sequence_one + edits->length;
-              last_diff_modified = edits->offset_sequence_two + edits->length_two;
-
-              break;
-
-            case SES_INSERT:
-              view.output_characters(str.modified().substr(edits->offset_sequence_two, edits->length), view_t::INSERT);
-
-              // update for common
-              last_diff_original = edits->offset_sequence_one;
-              last_diff_modified = edits->offset_sequence_two + edits->length;
-
-              break;
-
-            case SES_DELETE:
-              view.output_characters(str.original().substr(edits->offset_sequence_one, edits->length), view_t::DELETE);
-
-              // update for common
-              last_diff_original = edits->offset_sequence_one + edits->length;
-              last_diff_modified = edits->offset_sequence_two;
-
-              break;
+            if((edit.operation == ses::DELETE || edit.original_offset == ses::CHANGE)
+               && last_diff_original < edit.original_offset) {
+                view.output_characters(str.original().substr(last_diff_original, edit.original_offset),
+                                     view_t::COMMON);
+            } else if(edit.operation == ses::INSERT && last_diff_modified < edit.modified_offset) {
+                view.output_characters(str.original().substr(last_diff_modified, edit.modified_offset),
+                                     view_t::COMMON);
             }
 
-      }
+            last_diff_original = edit.original_offset + edit.original_length;
+            last_diff_modified = edit.modified_offset + edit.original_length;
+
+            // handle pure delete or insert
+            switch (edit.operation) {
+
+                case ses::CHANGE:
+                  view.output_characters(str.original().substr(edit.original_offset, edit.original_length),     view_t::DELETE);
+                  view.output_characters(str.modified().substr(edit.modified_offset, edit.modified_length), view_t::INSERT);
+
+                  last_diff_original = edit.original_offset + edit.original_length;
+                  last_diff_modified = edit.modified_offset + edit.modified_length;
+
+                  break;
+
+                case ses::INSERT:
+                  view.output_characters(str.modified().substr(edit.modified_offset, edit.modified_length), view_t::INSERT);
+
+                  // update for common
+                  last_diff_original = edit.original_offset;
+                  last_diff_modified = edit.modified_offset + edit.modified_length;
+
+                  break;
+
+                case ses::DELETE:
+                  view.output_characters(str.original().substr(edit.original_offset, edit.original_length), view_t::DELETE);
+
+                  // update for common
+                  last_diff_original = edit.original_offset + edit.original_length;
+                  last_diff_modified = edit.modified_offset;
+
+                  break;
+                }
+
+          }
 
       if(last_diff_original < str.original().size()) {
         view.output_characters(str.original().substr(last_diff_original), view_t::COMMON);

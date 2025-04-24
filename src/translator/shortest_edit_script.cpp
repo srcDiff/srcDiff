@@ -2,7 +2,7 @@
 /**
  * @file shortest_edit_script.cpp
  *
- * @copyright Copyright (C) 2023-2024 SDML (www.srcDiff.org)
+ * @copyright Copyright (C) 2023-2025 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
@@ -12,28 +12,28 @@
 namespace srcdiff {
 
 // all 8 of the const void * context parameters in this file are unused as of yet
-edit_t*& shortest_edit_script::compute(const std::shared_ptr<construct>& original, const std::shared_ptr<construct>& modified) {
+ses::edit_list shortest_edit_script::compute(const std::shared_ptr<construct>& original, const std::shared_ptr<construct>& modified) {
   compare = node_compare;
   accessor = construct_node_index;
 
   return shortest_edit_script_t::compute((const void *)&original, original->size(), (const void *)&modified, modified->size());
 }
 
-edit_t*& shortest_edit_script::compute(const construct::construct_list_view original, const construct::construct_list_view modified) {
+ses::edit_list shortest_edit_script::compute(const construct::construct_list_view original, const construct::construct_list_view modified) {
   compare = construct_compare;
   accessor = construct_list_index;
 
   return shortest_edit_script_t::compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
 }
 
-edit_t*& shortest_edit_script::compute(const std::vector<std::string> & original, const std::vector<std::string> & modified) {
+ses::edit_list shortest_edit_script::compute(const std::vector<std::string> & original, const std::vector<std::string> & modified) {
   compare = string_compare;
   accessor = string_index;
 
   return shortest_edit_script_t::compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
 }
 
-edit_t*& shortest_edit_script::compute(const std::string& original, const std::string& modified) {
+ses::edit_list shortest_edit_script::compute(const std::string& original, const std::string& modified) {
   compare = char_compare;
   accessor = char_index;
 

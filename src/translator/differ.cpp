@@ -44,35 +44,34 @@ void differ::output() {
   shortest_edit_script ses;
 
   /** O(CND) */
-  edit_t*& edit_script = ses.compute(original, modified);
+  ses::edit_list edits = ses.compute(original, modified);
 
-  edit_corrector corrector(original, modified, edit_script);
-  corrector.correct();
+  // edit_corrector corrector(original, modified, edits);
+  // corrector.correct();
 
   /** O(CD^2) */
-  move_detector::mark_moves(original, modified, edit_script);
+  // move_detector::mark_moves(original, modified, edits);
 
   std::size_t last_diff_original = 0;
   std::size_t last_diff_modified = 0;
   std::size_t diff_end_original = out->last_output_original();
   std::size_t diff_end_modified = out->last_output_modified();
 
-  edit_t * edits = edit_script;
-  for (; edits; edits = edits->next) {
+  for(const struct ses::edit& edit : edits) {
 
     // determine ending position to output
     diff_end_original = out->last_output_original();
     diff_end_modified = out->last_output_modified();
 
-    if((edits->operation == SES_DELETE || edits->operation == SES_CHANGE) && last_diff_original < edits->offset_sequence_one) {
+    if((edit.operation == ses::DELETE || edit.operation == ses::CHANGE) && last_diff_original < edit.original_offset) {
 
-      diff_end_original = original[edits->offset_sequence_one - 1]->end_position() + 1;
-      diff_end_modified = modified[edits->offset_sequence_two - 1]->end_position() + 1;
+      diff_end_original = original[edit.original_offset - 1]->end_position() + 1;
+      diff_end_modified = modified[edit.modified_offset - 1]->end_position() + 1;
 
-    } else if(edits->operation == SES_INSERT && last_diff_modified < edits->offset_sequence_two) {
+    } else if(edit.operation == ses::INSERT && last_diff_modified < edit.modified_offset) {
 
-      diff_end_original = original[edits->offset_sequence_one - 1]->end_position() + 1;
-      diff_end_modified = modified[edits->offset_sequence_two - 1]->end_position() + 1;
+      diff_end_original = original[edit.original_offset - 1]->end_position() + 1;
+      diff_end_modified = modified[edit.modified_offset - 1]->end_position() + 1;
 
     }
 
@@ -80,59 +79,59 @@ void differ::output() {
     common_stream::output_common(out, diff_end_original, diff_end_modified);
 
     // handle pure delete or insert
-    switch (edits->operation) {
+    switch (edit.operation) {
 
-      case SES_CHANGE: {
+      case ses::CHANGE: {
 
         // many to many handling
         /** loop O(RD^2) */
-        many_differ diff(*this, edits);
-        diff.output();
+        // many_differ diff(*this, edits);
+        // diff.output();
 
         // update for common
-        last_diff_original = edits->offset_sequence_one + edits->length;
-        last_diff_modified = edits->offset_sequence_two + edits->length_two;
+        last_diff_original = edit.original_offset + edit.original_length;
+        last_diff_modified = edit.modified_offset + edit.modified_length;
 
         break;
       }
 
       case SES_COMMON: {
 
-        if(original[edits->offset_sequence_one]->term(0)->get_type() != srcML::node_type::TEXT) {
+        if(original[edit.original_offset]->term(0)->get_type() != srcML::node_type::TEXT) {
 
-          match_differ diff(out, original[edits->offset_sequence_one], modified[edits->offset_sequence_two]);
+          match_differ diff(out, original[edit.original_offset], modified[edit.modified_offset]);
           diff.output();
 
         } else {
 
           // common text nodes
-          common_stream::output_common(out, original[edits->offset_sequence_one]->end_position() + 1,
-                                            modified[edits->offset_sequence_two]->end_position() + 1);
+          common_stream::output_common(out, original[edit.original_offset]->end_position() + 1,
+                                            modified[edit.modified_offset]->end_position() + 1);
 
         }
 
         break;
       }
 
-      case SES_INSERT: {
+      case ses::INSERT: {
 
-        output_pure(0, modified[edits->offset_sequence_two + edits->length - 1]->end_position() + 1);
+        output_pure(0, modified[edit.modified_offset + edit.modified_length - 1]->end_position() + 1);
 
 
         // update for common
-        last_diff_original = edits->offset_sequence_one;
-        last_diff_modified = edits->offset_sequence_two + edits->length;
+        last_diff_original = edit.original_offset;
+        last_diff_modified = edit.modified_offset + edit.modified_length;
 
         break;
       }
 
-      case SES_DELETE: {
+      case ses::DELETE: {
 
-        output_pure(original[edits->offset_sequence_one + edits->length - 1]->end_position() + 1, 0);
+        output_pure(original[edit.original_offset + edit.original_length - 1]->end_position() + 1, 0);
 
         // update for common
-        last_diff_original = edits->offset_sequence_one + edits->length;
-        last_diff_modified = edits->offset_sequence_two;
+        last_diff_original = edit.original_offset + edit.original_length;
+        last_diff_modified = edit.modified_offset;
 
         break;
       }

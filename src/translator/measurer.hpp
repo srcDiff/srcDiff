@@ -30,7 +30,7 @@ protected:
     int original_len;
     int modified_len;
 
-    void process_edit_script(const edit_t* edit_script);
+    void process_edit_script(const ses::edit_list& edits);
 
 public:
 

@@ -2,7 +2,7 @@
 /**
  * @file shortest_edit_script.hpp
  *
- * @copyright Copyright (C) 2023-2024 SDML (www.srcDiff.org)
+ * @copyright Copyright (C) 2023-2025 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
@@ -24,10 +24,10 @@ class shortest_edit_script : public ses::shortest_edit_script_t {
 public:
     shortest_edit_script() : shortest_edit_script_t(nullptr, nullptr, nullptr) {}
 
-    edit_t*& compute(const std::shared_ptr<construct>& original,    const std::shared_ptr<construct>& modified);
-    edit_t*& compute(const construct::construct_list_view original, const construct::construct_list_view modified);
-    edit_t*& compute(const std::vector<std::string>& original,      const std::vector<std::string>& modified);
-    edit_t*& compute(const std::string& original,                   const std::string& modified);
+    ses::edit_list compute(const std::shared_ptr<construct>& original,    const std::shared_ptr<construct>& modified);
+    ses::edit_list compute(const construct::construct_list_view original, const construct::construct_list_view modified);
+    ses::edit_list compute(const std::vector<std::string>& original,      const std::vector<std::string>& modified);
+    ses::edit_list compute(const std::string& original,                   const std::string& modified);
 
 private:
     static const void* construct_list_index(int idx, const void* s, const void* context);
