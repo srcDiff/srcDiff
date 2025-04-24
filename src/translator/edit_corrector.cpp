@@ -79,7 +79,6 @@ void edit_corrector::split_change(struct ses::edit subject_edits,
     // std::cerr << common_edit << "\n\n";
     // std::cerr << *right_edit << "\n\n";
 
-
     std::vector<ses::edit_iterator> inserted_edits;
     if(left_edit) {
         inserted_edits.push_back(edits.insert(start_edits, *left_edit));
@@ -114,12 +113,11 @@ ses::edit_iterator edit_corrector::correct_common_inner(ses::edit_iterator chang
                 continue;
             }
 
-            ses::edit_iterator start_edits;
             ses::edit_iterator last_edits;
             split_change(*change_edit,
                          i,
                          j,
-                         start_edits, 
+                         change_edit, 
                          last_edits);
 
             return last_edits;
@@ -263,7 +261,17 @@ void edit_corrector::correct() {
             }
 
         }
+
         // std::cerr << subject_edits << "\n\n\n";
+        // for(int i = 0; i < subject_edits.original_length; ++i) {
+        //     std::cerr << sets_original[subject_edits.original_offset + i]->to_string() << "\n\n";
+        // }
+
+        // std::cerr << "\n\n\n";
+
+        // for(int i = 0; i < subject_edits.modified_length; ++i) {
+        //     std::cerr << sets_modified[subject_edits.modified_offset + i]->to_string() << "\n";
+        // }
 
         std::size_t common_pos = subject_edits.original_offset + original_offset;
 
