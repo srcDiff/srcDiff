@@ -50,8 +50,8 @@ void edit_corrector::split_change(struct ses::edit subject_edits,
 
     struct ses::edit common_edit(ses::COMMON,
                                  sequence_one_offset + original_pos,
-                                 sequence_two_offset + modified_pos,
                                  1,
+                                 sequence_two_offset + modified_pos,
                                  1
     );
 
@@ -74,6 +74,10 @@ void edit_corrector::split_change(struct ses::edit subject_edits,
         right_edit->modified_offset = common_edit.modified_offset + 1;
         right_edit->modified_length = modified_length - modified_pos - 1;
     }
+
+    // std::cerr << *left_edit << "\n\n";
+    // std::cerr << common_edit << "\n\n";
+    // std::cerr << *right_edit << "\n\n";
 
 
     std::vector<ses::edit_iterator> inserted_edits;
@@ -326,6 +330,9 @@ void edit_corrector::correct() {
 
                 if(is_similar
                     && 3 * common_set_text->size() <= std::size_t(measure->similarity())) {
+
+
+                    // std::cerr << subject_edits << "\n\n\n";
 
                     ses::edit_iterator last_edits;
                     split_change(subject_edits,
