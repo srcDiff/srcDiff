@@ -115,6 +115,8 @@ void measurer::process_edit_script(const ses::edit_list& edits) {
           a_modified_difference += edit.modified_length;
           break;
 
+        default:
+          break;
         }
 
     }

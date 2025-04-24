@@ -98,6 +98,10 @@ void comment_differ::output() {
         last_diff_original = edit.original_offset + edit.original_length;
 
         break;
+
+      default:
+        break;
+
       }
 
   }

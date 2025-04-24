@@ -80,6 +80,11 @@ void character_diff::output(view_t & view, const std::string & type) {
                   last_diff_modified = edit.modified_offset;
 
                   break;
+
+                default:
+                  break;
+
+
                 }
 
           }
