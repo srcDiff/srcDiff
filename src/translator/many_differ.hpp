@@ -12,6 +12,7 @@
 
 #include <shortest_edit_script.h>
 #include <differ.hpp>
+#include <edit_list.hpp>
 #include <change_list.hpp>
 #include <operation.hpp>
 
@@ -23,7 +24,7 @@ class many_differ : public differ {
 
 protected:
 
-    edit_t * edit_script;
+    const struct ses::edit& edit;
 
     construct::construct_list original_sets;
     construct::construct_list modified_sets;
@@ -35,7 +36,7 @@ private:
   
 public:
 
-    many_differ(const differ & diff, edit_t * edit_script);
+    many_differ(const differ& diff, const struct ses::edit& edit);
     virtual void output();
 
 };

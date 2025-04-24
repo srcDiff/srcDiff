@@ -2,7 +2,7 @@
 /**
  * @file shortest_edit_script.hpp
  *
- * @copyright Copyright (C) 2023-2024 SDML (www.srcDiff.org)
+ * @copyright Copyright (C) 2023-2025 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
@@ -20,24 +20,28 @@
 
 namespace srcdiff {
 
-class shortest_edit_script : public shortest_edit_script_t {
+class shortest_edit_script : public ses::shortest_edit_script_t {
 public:
     shortest_edit_script() : shortest_edit_script_t(nullptr, nullptr, nullptr) {}
 
-    int compute_edit_script(const std::shared_ptr<construct>& original,    const std::shared_ptr<construct>& modified);
-    int compute_edit_script(const construct::construct_list_view original, const construct::construct_list_view modified);
-    int compute_edit_script(const std::vector<std::string>& original,      const std::vector<std::string>& modified);
+    ses::edit_list compute(const std::shared_ptr<construct>& original,    const std::shared_ptr<construct>& modified);
+    ses::edit_list compute(const construct::construct_list_view original, const construct::construct_list_view modified);
+    ses::edit_list compute(const std::vector<std::string>& original,      const std::vector<std::string>& modified);
+    ses::edit_list compute(const std::string& original,                   const std::string& modified);
 
 private:
     static const void* construct_list_index(int idx, const void* s, const void* context);
-    static int construct_compare(const void* e1, const void* e2, const void* context);
+    static int construct_compare(const void* construct_one, const void* construct_two, const void* context);
 
     static const void* construct_node_index(int idx, const void*s, const void* context);
-    static int node_compare(const void* node1, const void* node2, const void* context);
-    static int node_compare(const std::shared_ptr<srcML::node>& node1, const std::shared_ptr<srcML::node>& node2);
+    static int node_compare(const void* node_one, const void* node_two, const void* context);
 
-    static int string_compare(const void* s1, const void* s2, const void* context);
+    static int string_compare(const void* str_one, const void* str_two, const void* context);
     static const void* string_index(int idx, const void* s, const void* context);
+
+    static int char_compare(const void* char_one, const void* char_two, const void* context);
+    static const void* char_index(int index, const void* s, const void* context);
+
 };
 
 }

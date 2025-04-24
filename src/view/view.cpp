@@ -528,7 +528,6 @@ void view_t::endElement(const char * localname,
     } else {
 
       character_diff char_diff(saved_name);
-      char_diff.compute();
       char_diff.output(*this, saved_name_type);
 
     }

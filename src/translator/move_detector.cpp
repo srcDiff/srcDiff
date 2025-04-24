@@ -36,7 +36,7 @@ bool move_detector::is_move(std::shared_ptr<const construct> set) {
 /** loop O(CD^2) */
 void move_detector::mark_moves(const construct::construct_list_view original,
                                const construct::construct_list_view modified,
-                               edit_t* edit_script) {
+                               const ses::edit_list& edits) {
 
   std::map<std::string, move_infos > constructs;
 
@@ -45,34 +45,56 @@ void move_detector::mark_moves(const construct::construct_list_view original,
 
   std::vector<std::shared_ptr<const construct>> delete_sets;
 
-  for(edit_t * edits = edit_script; edits != nullptr; edits = edits->next) {
+  for(const struct ses::edit& edit : edits) {
 
-    switch(edits->operation) {
+    switch(edit.operation) {
 
-      case SES_COMMON:
+      case ses::COMMON:
         break;
 
-      case SES_INSERT :
+      case ses::CHANGE:
 
-        for(std::size_t i = 0; i < edits->length; ++i) {
+        for(std::size_t i = 0; i < edit.original_length; ++i) {
 
-          if(modified[edits->offset_sequence_two + i]->term(0)->is_text()) {
+          if(original[edit.original_offset + i]->term(0)->is_text()) {
             continue;
           }
-          node_set_lookup_table.insert(modified[edits->offset_sequence_two + i]);
+          delete_sets.push_back(original[edit.original_offset + i]);
+
+        }
+
+        for(std::size_t i = 0; i < edit.modified_length; ++i) {
+
+          if(modified[edit.modified_offset + i]->term(0)->is_text()) {
+            continue;
+          }
+          node_set_lookup_table.insert(modified[edit.modified_offset + i]);
 
         }
 
         break;
 
-      case SES_DELETE :
+      case ses::INSERT:
 
-        for(std::size_t i = 0; i < edits->length; ++i) {
+        for(std::size_t i = 0; i < edit.modified_length; ++i) {
 
-          if(original[edits->offset_sequence_one + i]->term(0)->is_text()) {
+          if(modified[edit.modified_offset + i]->term(0)->is_text()) {
             continue;
           }
-          delete_sets.push_back(original[edits->offset_sequence_one + i]);
+          node_set_lookup_table.insert(modified[edit.modified_offset + i]);
+
+        }
+
+        break;
+
+      case ses::DELETE: 
+
+        for(std::size_t i = 0; i < edit.original_length; ++i) {
+
+          if(original[edit.original_offset + i]->term(0)->is_text()) {
+            continue;
+          }
+          delete_sets.push_back(original[edit.original_offset + i]);
 
         }
 

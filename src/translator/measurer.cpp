@@ -92,24 +92,27 @@ int measurer::min_length() const {
 
 }
 
-void measurer::process_edit_script(const edit_t * edit_script) {
+void measurer::process_edit_script(const ses::edit_list& edits) {
 
     a_similarity = 0;
     a_original_difference = 0;
     a_modified_difference = 0;
  
-    for(const edit_t * edits = edit_script; edits; edits = edits->next) {
+    for(const struct ses::edit& edit : edits) {
 
-      switch(edits->operation) {
+      switch(edit.operation) {
 
-        case SES_DELETE :
-
-          a_original_difference += edits->length;
+        case ses::CHANGE:
+          a_original_difference += edit.original_length;
+          a_modified_difference += edit.modified_length;
           break;
 
-        case SES_INSERT :
+        case ses::DELETE :
+          a_original_difference += edit.original_length;
+          break;
 
-          a_modified_difference += edits->length;
+        case ses::INSERT :
+          a_modified_difference += edit.modified_length;
           break;
 
         }

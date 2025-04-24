@@ -73,9 +73,7 @@ void syntax_measurer::compute() {
   modified_len = next_construct_list_modified.size();
 
   shortest_edit_script ses;
-  ses.compute_edit_script(next_construct_list_original, next_construct_list_modified);
-  process_edit_script(ses.script());
-
+  process_edit_script(ses.compute(next_construct_list_original, next_construct_list_modified));
 }
 
 }
