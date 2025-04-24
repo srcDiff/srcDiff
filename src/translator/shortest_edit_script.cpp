@@ -16,28 +16,28 @@ ses::edit_list shortest_edit_script::compute(const std::shared_ptr<construct>& o
   compare = node_compare;
   accessor = construct_node_index;
 
-  return shortest_edit_script_t::compute((const void *)&original, original->size(), (const void *)&modified, modified->size());
+  return ses::shortest_edit_script::compute((const void *)&original, original->size(), (const void *)&modified, modified->size());
 }
 
 ses::edit_list shortest_edit_script::compute(const construct::construct_list_view original, const construct::construct_list_view modified) {
   compare = construct_compare;
   accessor = construct_list_index;
 
-  return shortest_edit_script_t::compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
+  return ses::shortest_edit_script::compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
 }
 
 ses::edit_list shortest_edit_script::compute(const std::vector<std::string> & original, const std::vector<std::string> & modified) {
   compare = string_compare;
   accessor = string_index;
 
-  return shortest_edit_script_t::compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
+  return ses::shortest_edit_script::compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
 }
 
 ses::edit_list shortest_edit_script::compute(const std::string& original, const std::string& modified) {
   compare = char_compare;
   accessor = char_index;
 
-  return shortest_edit_script_t::compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
+  return ses::shortest_edit_script::compute((const void *)&original, original.size(), (const void *)&modified, modified.size());
 }
 
 

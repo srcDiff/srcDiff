@@ -20,9 +20,9 @@
 
 namespace srcdiff {
 
-class shortest_edit_script : public ses::shortest_edit_script_t {
+class shortest_edit_script : public ses::shortest_edit_script {
 public:
-    shortest_edit_script() : shortest_edit_script_t(nullptr, nullptr, nullptr) {}
+    shortest_edit_script() : ses::shortest_edit_script(nullptr, nullptr, nullptr) {}
 
     ses::edit_list compute(const std::shared_ptr<construct>& original,    const std::shared_ptr<construct>& modified);
     ses::edit_list compute(const construct::construct_list_view original, const construct::construct_list_view modified);

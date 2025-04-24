@@ -11,8 +11,8 @@
 
 namespace ses {
 
-const size_t shortest_edit_script_t::SIZE_THRESHOLD = 20480;
-shortest_edit_script_t::shortest_edit_script_t(int (*compare)(const void* item_one, const void* item_two, const void* context),
+const size_t shortest_edit_script::SIZE_THRESHOLD = 20480;
+shortest_edit_script::shortest_edit_script(int (*compare)(const void* item_one, const void* item_two, const void* context),
                                                const void* (*accessor)(int index, const void* structure, const void* context),
                                                const void* context,
                                                int threshold)
@@ -22,14 +22,14 @@ shortest_edit_script_t::shortest_edit_script_t(int (*compare)(const void* item_o
       threshold(threshold) {
 }
 
-shortest_edit_script_t::~shortest_edit_script_t() {
+shortest_edit_script::~shortest_edit_script() {
 }
 
-size_t shortest_edit_script_t::get_size_threshold() {
+size_t shortest_edit_script::get_size_threshold() {
   return SIZE_THRESHOLD;
 }
 
-edit_list shortest_edit_script_t::compute(const void* structure_one, int size_one, const void* structure_two, int size_two) {
+edit_list shortest_edit_script::compute(const void* structure_one, int size_one, const void* structure_two, int size_two) {
   edit_t* edit_script = nullptr;
   int distance = shortest_edit_script_hybrid(structure_one, size_one, structure_two, size_two, &edit_script,
                                      *compare.target<int (*)(void const*, void const*, void const*)>(),

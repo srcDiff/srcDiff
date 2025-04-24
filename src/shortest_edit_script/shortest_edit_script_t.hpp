@@ -23,7 +23,7 @@
 
 namespace ses {
 
-class shortest_edit_script_t {
+class shortest_edit_script {
   
 protected:
 
@@ -40,11 +40,11 @@ protected:
 
 public:
 
-  shortest_edit_script_t(int (*compare)(const void * item_one, const void * item_two, const void * context),
+  shortest_edit_script(int (*compare)(const void * item_one, const void * item_two, const void * context),
                          const void * (*accessor)(int index, const void * structure, const void * context),
                          const void * context, int threshold = 1000);
 
-  virtual ~shortest_edit_script_t();
+  virtual ~shortest_edit_script();
 
   static size_t get_size_threshold();
 
