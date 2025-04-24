@@ -17,8 +17,7 @@ character_diff::character_diff(const versioned_string & str)
 
 void character_diff::output(view_t & view, const std::string & type) {
 
-    srcdiff::shortest_edit_script ses;
-    ses::edit_list edits = ses.compute(str.original(), str.modified());
+    ses::edit_list edits = srcdiff::shortest_edit_script_utility::compute(str.original(), str.modified());
 
     int difference = 0;
     int num_consecutive_edits = 0;

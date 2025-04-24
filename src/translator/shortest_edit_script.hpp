@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file shortest_edit_script.hpp
+ * @file shortest_edit_script_utility.hpp
  *
  * @copyright Copyright (C) 2023-2025 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_SHORTEST_EDIT_SCRIPT_HPP
-#define INCLUDED_SHORTEST_EDIT_SCRIPT_HPP
+#ifndef INCLUDED_SHORTEST_EDIT_SCRIPT_UTILITIES_HPP
+#define INCLUDED_SHORTEST_EDIT_SCRIPT_UTILITIES_HPP
 
-#include <shortest_edit_script_t.hpp>
+#include <edit_list.hpp>
 
 #include <construct.hpp>
 #include <srcml_nodes.hpp>
@@ -20,14 +20,12 @@
 
 namespace srcdiff {
 
-class shortest_edit_script : public ses::shortest_edit_script {
+class shortest_edit_script_utility {
 public:
-    shortest_edit_script() : ses::shortest_edit_script(nullptr, nullptr, nullptr) {}
-
-    ses::edit_list compute(const std::shared_ptr<construct>& original,    const std::shared_ptr<construct>& modified);
-    ses::edit_list compute(const construct::construct_list_view original, const construct::construct_list_view modified);
-    ses::edit_list compute(const std::vector<std::string>& original,      const std::vector<std::string>& modified);
-    ses::edit_list compute(const std::string& original,                   const std::string& modified);
+    static ses::edit_list compute(const std::shared_ptr<construct>& original,    const std::shared_ptr<construct>& modified);
+    static ses::edit_list compute(const construct::construct_list_view original, const construct::construct_list_view modified);
+    static ses::edit_list compute(const std::vector<std::string>& original,      const std::vector<std::string>& modified);
+    static ses::edit_list compute(const std::string& original,                   const std::string& modified);
 
 private:
     static const void* construct_list_index(int idx, const void* s, const void* context);

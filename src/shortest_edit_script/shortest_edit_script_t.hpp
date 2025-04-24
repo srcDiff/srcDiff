@@ -41,8 +41,8 @@ protected:
 public:
 
   shortest_edit_script(int (*compare)(const void * item_one, const void * item_two, const void * context),
-                         const void * (*accessor)(int index, const void * structure, const void * context),
-                         const void * context, int threshold = 1000);
+                       const void * (*accessor)(int index, const void * structure, const void * context),
+                       const void * context, int threshold = 1000);
 
   virtual ~shortest_edit_script();
 

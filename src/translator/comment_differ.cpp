@@ -29,8 +29,7 @@ comment_differ::comment_differ(std::shared_ptr<srcdiff::output_stream> out, cons
 */
 void comment_differ::output() {
 
-  srcdiff::shortest_edit_script ses;
-  ses::edit_list edits = ses.compute(original, modified);
+  ses::edit_list edits = shortest_edit_script_utility::compute(original, modified);
 
   std::size_t last_diff_original = 0;
   std::size_t diff_end_original = out->last_output_original();

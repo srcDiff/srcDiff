@@ -178,8 +178,7 @@ void text_measurer::compute() {
 
   }
 
-    shortest_edit_script ses;
-    process_edit_script(ses.compute(set_original_text, set_modified_text));
+  process_edit_script(shortest_edit_script_utility::compute(set_original_text, set_modified_text));
 }
 
 int text_measurer::number_match_beginning() {

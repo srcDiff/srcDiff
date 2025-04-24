@@ -41,10 +41,8 @@ differ::differ(std::shared_ptr<output_stream> out, const construct::construct_li
 */
 void differ::output() {
 
-  shortest_edit_script ses;
-
   /** O(CND) */
-  ses::edit_list edits = ses.compute(original, modified);
+  ses::edit_list edits = shortest_edit_script_utility::compute(original, modified);
 
   edit_corrector corrector(original, modified, edits);
   corrector.correct();
