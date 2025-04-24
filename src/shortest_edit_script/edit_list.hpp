@@ -26,6 +26,15 @@ struct edit {
           modified_offset(modified_offset), modified_length(modified_length) {
     }
 
+    friend std::ostream& operator<<(std::ostream& out, struct edit edit) {
+        out << "operation:"       << edit.operation << '\n';
+        out << "original_offset:" << edit.original_offset << '\n';
+        out << "original_length:" << edit.original_length << '\n';
+        out << "modified_offset:" << edit.modified_offset << '\n';
+        out << "modified_length:" << edit.modified_length << '\n';
+        return out;
+    }
+
     edit_operation operation;
 
     std::size_t original_offset;
@@ -41,11 +50,7 @@ public:
 
     void debug() {
         for(const struct edit& edit : *this) {
-            std::cerr << "operation:"       << edit.operation << '\n';
-            std::cerr << "original_offset:" << edit.original_offset << '\n';
-            std::cerr << "original_length:" << edit.original_length << '\n';
-            std::cerr << "modified_offset:" << edit.modified_offset << '\n';
-            std::cerr << "modified_length:" << edit.modified_length << '\n';
+            std::cerr << edit << "\n\n";
         }
     }
 
