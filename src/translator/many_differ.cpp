@@ -24,8 +24,8 @@ static construct::construct_list_view safe_subspan(construct::construct_list_vie
   return view.subspan(start, end - start + 1);
 }
 
-many_differ::many_differ(const differ& diff, edit_t* edit_script) 
-  : differ(diff), edit_script(edit_script), original_sets(), modified_sets() {}
+many_differ::many_differ(const differ& diff, const struct ses::edit& edit) 
+  : differ(diff), edit(edit), original_sets(), modified_sets() {}
 
 void many_differ::output_unmatched(construct::construct_list_view original_unmatched, construct::construct_list_view modified_unmatched) {
 
@@ -131,15 +131,13 @@ void many_differ::output_unmatched(construct::construct_list_view original_unmat
 /** loop O(RD^2) */
 change_list many_differ::determine_operations() {
 
-  edit_t * edits = edit_script;
-
-  for(std::size_t i = 0; i < edits->length; ++i) {
-    unsigned int index = edits->offset_sequence_one + i;
+  for(std::size_t i = 0; i < edit.original_length; ++i) {
+    unsigned int index = edit.original_offset + i;
     original_sets.push_back(original[index]);
   }
 
-  for(std::size_t i = 0; i < edits->length_two; ++i) {
-    unsigned int index = edits->offset_sequence_two + i;
+  for(std::size_t i = 0; i < edit.modified_length; ++i) {
+    unsigned int index = edit.modified_offset + i;
     modified_sets.push_back(modified[index]);
   }
 

@@ -50,7 +50,7 @@ void differ::output() {
   // corrector.correct();
 
   /** O(CD^2) */
-  // move_detector::mark_moves(original, modified, edits);
+  move_detector::mark_moves(original, modified, edits);
 
   std::size_t last_diff_original = 0;
   std::size_t last_diff_modified = 0;
@@ -85,8 +85,8 @@ void differ::output() {
 
         // many to many handling
         /** loop O(RD^2) */
-        // many_differ diff(*this, edits);
-        // diff.output();
+        many_differ diff(*this, edit);
+        diff.output();
 
         // update for common
         last_diff_original = edit.original_offset + edit.original_length;
@@ -95,7 +95,7 @@ void differ::output() {
         break;
       }
 
-      case SES_COMMON: {
+      case ses::COMMON: {
 
         if(original[edit.original_offset]->term(0)->get_type() != srcML::node_type::TEXT) {
 

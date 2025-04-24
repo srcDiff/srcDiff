@@ -36,7 +36,7 @@ public:
 
     static void mark_moves(const construct::construct_list_view original,
                            const construct::construct_list_view modified,
-                           edit_t* edit_script);
+                           const ses::edit_list& edits);
 
     virtual void output();
 
