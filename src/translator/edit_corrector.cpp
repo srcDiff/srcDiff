@@ -86,6 +86,8 @@ void edit_corrector::split_change(struct ses::edit subject_edits,
         inserted_edits.push_back(edits.insert(start_edits, *right_edit));
     }
 
+    edits.erase(start_edits);
+
     start_edits = inserted_edits.front();
     last_edits  = inserted_edits.back();
 
@@ -107,14 +109,13 @@ ses::edit_iterator edit_corrector::correct_common_inner(ses::edit_iterator chang
                 continue;
             }
 
-            ses::edit_iterator start_edits = change_edit;
             ses::edit_iterator last_edits;
             split_change(*change_edit,
                          i,
                          j,
                          change_edit, 
                          last_edits);
-            edits.erase(start_edits);
+
             return last_edits;
 
         }
@@ -324,16 +325,14 @@ void edit_corrector::correct() {
                 if(is_similar
                     && 3 * common_set_text->size() <= std::size_t(measure->similarity())) {
 
-                    ses::edit_iterator start_edits = edit;
+                    edits.erase(std::next(edit));
+
                     ses::edit_iterator last_edits;
                     split_change(subject_edits,
                                  i,
                                  j,
                                  edit,
                                  last_edits);
-
-                    edits.erase(std::next(start_edits));
-                    edits.erase(start_edits);
 
                     edit = correct_common(edit);
 
