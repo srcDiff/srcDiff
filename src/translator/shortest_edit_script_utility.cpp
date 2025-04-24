@@ -7,7 +7,7 @@
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <shortest_edit_script.hpp>
+#include <shortest_edit_script_utility.hpp>
 
 #include <shortest_edit_script_t.hpp>
 

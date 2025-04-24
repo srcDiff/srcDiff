@@ -9,7 +9,7 @@
 
 #include <syntax_measurer.hpp>
 
-#include <shortest_edit_script.hpp>
+#include <shortest_edit_script_utility.hpp>
 #include <constants.hpp>
 
 #include <algorithm>

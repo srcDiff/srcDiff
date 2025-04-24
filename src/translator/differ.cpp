@@ -17,7 +17,7 @@
 #include <measurer.hpp>
 #include <operation.hpp>
 
-#include <shortest_edit_script.hpp>
+#include <shortest_edit_script_utility.hpp>
 #include <edit_corrector.hpp>
 
 #include <cstring>

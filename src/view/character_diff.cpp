@@ -10,6 +10,7 @@
 #include <character_diff.hpp>
 
 #include <view.hpp>
+#include <shortest_edit_script_utility.hpp>
 
 character_diff::character_diff(const versioned_string & str)
     : str(str) {}

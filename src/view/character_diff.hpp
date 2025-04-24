@@ -10,7 +10,6 @@
 #ifndef INCLUDED_CHARACTER_DIFF_HPP
 #define INCLUDED_CHARACTER_DIFF_HPP
 
-#include <shortest_edit_script.hpp>
 #include <versioned_string.hpp>
 
 class view_t;

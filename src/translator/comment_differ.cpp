@@ -9,7 +9,7 @@
 
 #include <comment_differ.hpp>
 
-#include <shortest_edit_script.hpp>
+#include <shortest_edit_script_utility.hpp>
 
 #include <common_stream.hpp>
 #include <operation.hpp>
