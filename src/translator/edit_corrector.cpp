@@ -257,17 +257,6 @@ void edit_corrector::correct() {
 
         }
 
-        // std::cerr << subject_edits << "\n\n\n";
-        // for(int i = 0; i < subject_edits.original_length; ++i) {
-        //     std::cerr << sets_original[subject_edits.original_offset + i]->to_string() << "\n\n";
-        // }
-
-        // std::cerr << "\n\n\n";
-
-        // for(int i = 0; i < subject_edits.modified_length; ++i) {
-        //     std::cerr << sets_modified[subject_edits.modified_offset + i]->to_string() << "\n";
-        // }
-
         std::size_t common_pos = subject_edits.original_offset + original_offset;
 
         std::shared_ptr<const construct> common_set = sets_original[common_pos];
