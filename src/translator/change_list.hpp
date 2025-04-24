@@ -10,25 +10,15 @@
 #ifndef INCLUDED_CHANGE_LIST_HPP
 #define INCLUDED_CHANGE_LIST_HPP
 
-#include <construct.hpp>
+
+#include <change.hpp>
 #include <operation.hpp>
+#include <construct.hpp>
 
 #include <memory>
 #include <list>
 
 namespace srcdiff {
-
-struct change {
-    const construct::construct_list_view original;
-    const construct::construct_list_view modified;
-
-    int similarity;
-    enum operation operation;
-
-    change(const construct::construct_list_view original, const construct::construct_list_view modified,
-           int similarity, enum operation operation)
-        : original(original), modified(modified), similarity(similarity), operation(operation) {}
-};
 
 class change_list : public std::list<change> {
 };
