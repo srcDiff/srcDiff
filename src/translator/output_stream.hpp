@@ -124,8 +124,6 @@ public:
   std::shared_ptr<srcML::node> diff_ws_start;
   std::shared_ptr<srcML::node> diff_ws_end;
 
-  std::shared_ptr<srcML::name_space> diff;
-
   std::shared_ptr<srcML::node> unit_tag;
 
   static bool delay;
