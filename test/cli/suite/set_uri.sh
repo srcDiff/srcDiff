@@ -31,7 +31,8 @@ define change_prefix_output <<- 'STDOUT'
 	</unit>
 	STDOUT
 
-xmlcheck "$output"
+xmlcheck "$new_uri_output"
+xmlcheck "$change_prefix_output"
 
 createfile sub/a.cpp "$original"
 createfile sub/b.cpp "$modified"
@@ -42,6 +43,6 @@ check "$new_uri_output"
 
 srcdiff sub/a.cpp sub/b.cpp --xmlns:delta=http://www.srcML.org/srcDiff
 
-check "$new_uri_output"
+check "$change_prefix_output"
 
 
