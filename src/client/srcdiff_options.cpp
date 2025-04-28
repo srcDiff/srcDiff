@@ -297,9 +297,7 @@ void option_parsing_method(const std::string & arg) {
 
   for(std::string method : methods) {
 
-    if(method == COLLECT_METHOD) options.methods &= ~METHOD_RAW;
-    else if(method == RAW_METHOD) options.methods |= METHOD_RAW;
-    else if(method == NO_GROUP_DIFF_METHOD) options.methods &= ~METHOD_GROUP;
+    if(method == NO_GROUP_DIFF_METHOD) options.methods &= ~METHOD_GROUP;
     else if(method == GROUP_DIFF_METHOD) options.methods |= METHOD_GROUP;
     else {
       throw CLI::ValidationError(method + " is not a valid parsing method");
@@ -381,12 +379,6 @@ const srcdiff_options & process_command_line(int argc, char* argv[]) {
       "Specify output filename"
     )->default_val("-");
   
-  general_group->add_flag(
-    "-z,--compress",
-    option_flag_enable<OPTION_COMPRESS>,
-    "Compress the output"
-  );
-
   general_group->add_flag(
     "-v,--verbose",
     option_flag_enable<OPTION_VERBOSE>,

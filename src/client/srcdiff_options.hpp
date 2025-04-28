@@ -46,9 +46,6 @@ const OPTION_TYPE OPTION_VERBOSE               = ull(1) << __COUNTER__;
 const OPTION_TYPE OPTION_QUIET                 = ull(1) << __COUNTER__;
 
 // @srcdiff
-const OPTION_TYPE OPTION_COMPRESS              = ull(1) << __COUNTER__;
-
-// @srcdiff
 const OPTION_TYPE OPTION_SVN_CONTINUOUS        = ull(1) << __COUNTER__;
 
 // @srcdiff
