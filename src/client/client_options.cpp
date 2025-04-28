@@ -300,7 +300,6 @@ void option_parsing_method(const std::string & arg) {
 
     if(method == NO_GROUP_DIFF_METHOD)   options.methods &= ~METHOD_GROUP;
     else if(method == GROUP_DIFF_METHOD) options.methods |= METHOD_GROUP;
->>>>>>> develop:src/client/client_options.cpp
     else {
       throw CLI::ValidationError(method + " is not a valid parsing method");
     }
