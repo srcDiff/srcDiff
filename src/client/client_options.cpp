@@ -468,13 +468,6 @@ const client_options& process_command_line(int argc, char* argv[]) {
     "Example: --register-ext cxx=C++"
   );
 
-// TODO: should these attributes be added to the unit(s), or require --archive?
-  srcml_group->add_option_function<std::string>(
-    "--url",
-    option_srcml_string<URL>,
-    "Set the url attribute on the root XML element of the archive"
-  );
-
   srcml_group->add_option_function<std::string>(
     "-s,--src-version",
     option_srcml_string<SRC_VERSION>,
