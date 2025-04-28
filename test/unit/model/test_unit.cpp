@@ -26,7 +26,7 @@ std::vector<std::tuple<std::string>> unit_test_cases = {
 BOOST_DATA_TEST_CASE(unit_tests, data::make(unit_test_cases), code) {
     std::shared_ptr<srcml_nodes> nodes = create_nodes(code, "C++");
 
-    unit test_unit(*nodes, std::shared_ptr<srcdiff_output>());
+    unit test_unit(*nodes, std::shared_ptr<srcdiff::output_stream>());
 
     BOOST_CHECK_EQUAL(test_unit.start_position(), -1);
     BOOST_CHECK_EQUAL(test_unit.end_position(), nodes->size());
