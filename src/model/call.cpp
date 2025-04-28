@@ -9,7 +9,7 @@
 
 #include <call.hpp>
 
-#include <srcdiff_text_measure.hpp>
+#include <text_measurer.hpp>
 
 std::shared_ptr<const name_t> call::name() const {
     std::shared_ptr<const name_t> full_name = named_construct::name();
@@ -22,7 +22,7 @@ bool call::is_matchable_impl(const construct & modified) const {
     std::shared_ptr<const name_t> original_name = name();
     std::shared_ptr<const name_t> modified_name = dynamic_cast<const call &>(modified).name();
 
-    srcdiff_text_measure text_measure(*original_name, *modified_name, false);
+    srcdiff::text_measurer text_measure(*original_name, *modified_name, false);
     text_measure.compute();
 
     return bool(text_measure.similarity());

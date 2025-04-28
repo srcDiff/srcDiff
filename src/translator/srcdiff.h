@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-  int srcdiff(const char * original_filename, const char * modified_filename, const char * output_filename);
+  int srcDiff(const char * original_filename, const char * modified_filename, const char * output_filename);
 
 #ifndef __cplusplus
 }

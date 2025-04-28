@@ -38,8 +38,6 @@
 
 #include <block.hpp>
 
-#include <srcdiff_match.hpp>
-
 #include <nest/rule_checker.hpp>
 #include <nest/custom.hpp>
 #include <nest/similar.hpp>
@@ -47,6 +45,7 @@
 #include <nest/name.hpp>
 #include <nest/expr.hpp>
 #include <nest/always.hpp>
+#include <nest/expr_stmt.hpp>
 
 #include <convert/rule_checker.hpp>
 #include <convert/custom.hpp>
@@ -75,7 +74,7 @@ factory_function generate_factory() {
           };
 }
 
-typedef nest::custom<"expr", "call", "operator", "literal", "name">
+typedef nest::custom<"expr", "call", "operator", "literal", "name", "switch">
         expr_nest;
 
 typedef nest::custom<"function", "constructor", "destructor",
@@ -105,10 +104,11 @@ factory_map_type factory_map = {
   {"name", generate_factory<name_t, nest::name_t>() },
 
   // // class-type
-  {"class",  generate_factory<named_construct, class_nest, convert::class_t>() },
-  {"struct", generate_factory<named_construct, class_nest, convert::class_t>() },
-  {"union",  generate_factory<named_construct, class_nest, convert::class_t>() },
-  {"enum",   generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"class",      generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"struct",     generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"union",      generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"enum",       generate_factory<named_construct, class_nest, convert::class_t>() },
+  {"interface",  generate_factory<named_construct, class_nest, convert::class_t>() },
 
   // access regions
   {"public",    generate_factory<always_match, class_nest, convert::custom<"public", "private", "protected">>() },
@@ -127,38 +127,38 @@ factory_map_type factory_map = {
   {"while",     generate_factory<conditional, nest::block, convert::conditional>() },
   {"switch",    generate_factory<conditional, nest::rule_checker>() },
   {"do",        generate_factory<conditional, nest::rule_checker>() },
-  {"condition", generate_factory<condition, expr_nest>() },
+  {"condition", generate_factory<condition,   expr_nest>() },
 
   {"if_stmt", generate_factory<if_stmt, nest::block, convert::conditional>() },
-  {"if",      generate_factory<if_t, nest::block>() },
-  {"elseif",  generate_factory<elseif, nest::block, convert::else_t>() },
-  {"else",    generate_factory<else_t, else_nest, convert::else_t>() },
+  {"if",      generate_factory<if_t,    nest::block>() },
+  {"elseif",  generate_factory<elseif,  nest::block, convert::else_t>() },
+  {"else",    generate_factory<else_t,  else_nest, convert::else_t>() },
 
   {"for",     generate_factory<for_t, nest::block, convert::conditional>() },
   {"foreach", generate_factory<for_t, nest::block, convert::conditional>() },
 
   {"case", generate_factory<case_t>() },
 
-  {"call",          generate_factory<call, expr_nest>() },
+  {"call",          generate_factory<call,         expr_nest>() },
   {"argument_list", generate_factory<always_match, expr_nest>() },
   {"argument",      generate_factory<always_match, expr_nest>() },
-  {"expr",          generate_factory<expr_t, nest::expr_t>() },
+  {"expr",          generate_factory<expr_t,       nest::expr_t>() },
 
-  {"decl",      generate_factory<named_construct, nest::custom<"expr">>() },
+  {"decl",      generate_factory<named_construct, nest::custom<"expr", "switch">>() },
   {"parameter", generate_factory<identifier_decl>() },
   {"param",     generate_factory<identifier_decl>() },
 
-  {"expr_stmt", generate_factory<expr_stmt, nest::similar, convert::expr_construct>() },
-  {"return",    generate_factory<expr_construct, nest::rule_checker, convert::expr_construct>() },
+  {"expr_stmt", generate_factory<expr_stmt,      nest::expr_stmt,        convert::expr_construct>() },
+  {"return",    generate_factory<expr_construct, nest::custom<"switch">, convert::expr_construct>() },
 
-  {"decl_stmt", generate_factory<decl_stmt, nest::rule_checker, convert::expr_construct>() },
+  {"decl_stmt", generate_factory<decl_stmt, nest::custom<"switch">, convert::expr_construct>() },
 
   {"cast", generate_factory<construct, nest::rule_checker, convert::custom<"cast">>() },
 
   {"type",          generate_factory<always_match>() },
   {"then",          generate_factory<always_match, then_nest>() },
-  {"control",       generate_factory<always_match, nest::custom<"condition", "comment">>() },
-  {"init",          generate_factory<always_match, nest::custom<"expr">>() },
+  {"control",       generate_factory<always_match, nest::custom<"condition", "comment", "switch">>() },
+  {"init",          generate_factory<always_match, nest::custom<"expr", "switch">>() },
   {"default",       generate_factory<always_match>() },
   {"range",         generate_factory<always_match>() },
   {"signal",        generate_factory<always_match>() },
@@ -193,11 +193,18 @@ factory_map_type factory_map = {
 
   {"synchronized", generate_factory<construct, nest::block>() },
 
-  {"static", generate_factory<construct, nest::custom<"decl_stmt">>() },
 
   {"ternary", generate_factory<construct, nest::custom<"ternary", "call", "operator", "literal", "expr", "name">>() },
 
   {"extern", generate_factory<construct, nest::always>() },
+
+
+  // java
+  {"static", generate_factory<construct, nest::custom<"decl_stmt">>() },
+
+  {"extends",    generate_factory<construct, nest::rule_checker, convert::custom<"extends", "implements", "permits">>() },
+  {"implements", generate_factory<construct, nest::rule_checker, convert::custom<"extends", "implements", "permits">>() },
+  {"permits",    generate_factory<construct, nest::rule_checker, convert::custom<"extends", "implements", "permits">>() },
 
 };
 

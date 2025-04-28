@@ -9,7 +9,7 @@
 
 #include <side_by_side_view.hpp>
 
-#include <srcdiff_constants.hpp>
+#include <constants.hpp>
 
 #include <algorithm>
 
@@ -266,7 +266,7 @@ void side_by_side_view::start_element(const std::string & local_name,
                                          int num_attributes [[maybe_unused]],
                                          const struct srcsax_attribute * attributes [[maybe_unused]]) {
 
-  if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
+  if(URI == srcdiff::SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
     if(local_name == "common") {
      diff_stack.push_back(view_t::COMMON);
@@ -297,7 +297,7 @@ void side_by_side_view::start_element(const std::string & local_name,
 void side_by_side_view::end_element(const std::string & local_name, const char * prefix [[maybe_unused]],
                                const char * URI) {
 
-  if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
+  if(URI == srcdiff::SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
     if(local_name == "common" || local_name == "delete" || local_name == "insert") {
       diff_stack.pop_back();

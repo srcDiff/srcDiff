@@ -9,8 +9,6 @@
 
 #include <if.hpp>
 
-#include <srcdiff_match.hpp>
-
 bool if_t::has_real_block() const {
     return bool(block()) && !bool(block()->root_term()->get_attribute("type"));
 }

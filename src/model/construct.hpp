@@ -10,14 +10,15 @@
 #ifndef INCLUDED_CONSTRUCT_HPP
 #define INCLUDED_CONSTRUCT_HPP
 
-#include <srcdiff_output.hpp>
+#include <output_stream.hpp>
+#include <operation.hpp>
 #include <srcml_nodes.hpp>
 #include <construct_utils.hpp>
 
 #include <nest/rule_checker.hpp>
 #include <convert/rule_checker.hpp>
 
-#include <srcdiff_measure.hpp>
+#include <measurer.hpp>
 
 #include <optional>
 #include <memory>
@@ -39,7 +40,7 @@ public:
                                    construct_filter filter = is_non_white_space,
                                    const void * context = nullptr) const;
 
-    construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out = std::shared_ptr<srcdiff_output>());
+    construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff::output_stream> out = std::shared_ptr<srcdiff::output_stream>());
 
     construct(const construct* parent, std::size_t& start);
 
@@ -58,8 +59,8 @@ public:
 
     const construct* parent() const;
 
-    const std::shared_ptr<srcdiff_output> output() const;
-    std::shared_ptr<srcdiff_output> output();
+    const std::shared_ptr<srcdiff::output_stream> output() const;
+    std::shared_ptr<srcdiff::output_stream> output();
 
     void expand_children() const;
 
@@ -100,7 +101,7 @@ public:
     std::shared_ptr<const construct> find_best_descendent(const construct& match_construct) const;
 
  protected:
-    std::shared_ptr<srcdiff_output> out;
+    std::shared_ptr<srcdiff::output_stream> out;
 
     const srcml_nodes & node_list;
 
@@ -110,17 +111,17 @@ public:
     const construct* parent_construct;
     mutable std::optional<construct_list> child_constructs;
 
-    mutable std::unordered_map<int, std::shared_ptr<srcdiff_measure>> measures;
+    mutable std::unordered_map<int, std::shared_ptr<srcdiff::measurer>> measures;
 
 public:
    // Differencing Rules
-    const std::shared_ptr<srcdiff_measure> & measure(const construct & modified) const;
+    const std::shared_ptr<srcdiff::measurer> & measure(const construct & modified) const;
     bool is_similar(const construct & modified) const;
     bool is_text_similar(const construct & modified) const;
     bool is_syntax_similar(const construct & modified) const;
     virtual bool is_syntax_similar_impl(const construct & modified) const;
 
-    bool can_refine_difference(const construct & modified) const;
+    enum srcdiff::operation can_refine_difference(const construct & modified, bool test_nest = false) const;
 
     // Matchable Rules
     bool is_matchable(const construct & modified) const;

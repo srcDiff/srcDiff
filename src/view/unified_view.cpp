@@ -9,7 +9,7 @@
 
 #include <unified_view.hpp>
 
-#include <srcdiff_constants.hpp>
+#include <constants.hpp>
 
 #include <type_query.hpp>
 
@@ -156,7 +156,7 @@ void unified_view::start_element(const std::string & local_name,
                                  const struct srcsax_attribute * attributes [[maybe_unused]]) {
 
 
-  if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
+  if(URI == srcdiff::SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
     if(ignore_comments && in_comment) return;
 
@@ -226,7 +226,7 @@ void unified_view::end_element(const std::string & local_name,
                                const char * prefix [[maybe_unused]],
                                const char * URI) {
 
-    if(URI == SRCDIFF_DEFAULT_NAMESPACE_HREF) {
+    if(URI == srcdiff::SRCDIFF_DEFAULT_NAMESPACE_HREF) {
 
       if(ignore_comments && in_comment) return;
 

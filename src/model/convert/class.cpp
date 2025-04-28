@@ -15,7 +15,7 @@
 namespace convert {
 
 class_t::class_t(const construct& client)
-  : rule_checker(client, {"class", "struct", "union", "enum"}) {}
+  : rule_checker(client, {"class", "struct", "union", "enum", "interface"}) {}
 
 bool class_t::is_convertable_impl(const construct & modified_construct) const {
 

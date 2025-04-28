@@ -14,7 +14,7 @@
 namespace nest {
 
 expr_t::expr_t(const construct& client)
-  : rule_checker(client, {"expr", "call", "operator", "literal", "name"}) {
+  : rule_checker(client, {"expr", "call", "operator", "literal", "name", "switch"}) {
 }
 
 bool expr_t::check_nest(const construct & modified) const {

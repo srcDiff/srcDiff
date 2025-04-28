@@ -368,7 +368,7 @@ def run_tests(source_dir, speclang_list, specname_list, specnum: int, m_list, er
                         error_count = update_error_list(result, color_result, error_count, error_list, url, language, test_number, num_nested_units)
 
                         # special case: interchange tests are not swappable
-                        if url == "interchange":
+                        if url == "interchange" or url == "super_list":
                             continue
 
                         # total count of test cases

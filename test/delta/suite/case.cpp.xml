@@ -14,7 +14,7 @@
 <diff:delete><case>case<diff:ws> </diff:ws><expr><name>bar</name></expr>:</case></diff:delete></unit>
 
 <unit language="C++" filename="case|case">
-<diff:delete type="replace"><case>case:</case></diff:delete><diff:insert type="replace"><case>case<diff:ws> </diff:ws><expr><name>bar</name></expr>:</case><diff:ws> </diff:ws><break>break;</break></diff:insert></unit>
+<case>case<diff:insert><diff:ws> </diff:ws><expr><name>bar</name></expr></diff:insert>:</case><diff:insert><diff:ws> </diff:ws><break>break;</break></diff:insert></unit>
 
 <unit language="C++" filename="case|case">
 <case>case <expr><name><diff:delete type="replace">foo</diff:delete><diff:insert type="replace">bar</diff:insert></name></expr>:</case> <diff:insert><diff:ws>

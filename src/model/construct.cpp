@@ -11,16 +11,12 @@
 
 #include <srcml_nodes.hpp>
 #include <construct_factory.hpp>
-#include <srcdiff_text_measure.hpp>
-#include <srcdiff_syntax_measure.hpp>
-
-//temp, probably
-#include <srcdiff_match.hpp>
-#include <srcdiff_nested.hpp>
+#include <text_measurer.hpp>
+#include <syntax_measurer.hpp>
+#include <nest_differ.hpp>
 
 #include <algorithm>
 #include <iostream>
-
 
 bool construct::is_non_white_space(std::size_t & node_pos, const srcml_nodes & node_list, const void * context [[maybe_unused]]) {
 
@@ -65,7 +61,7 @@ construct::construct_list construct::get_descendents(std::size_t start_pos, std:
     return descendents;
 }
 
-construct::construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff_output> out)
+construct::construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff::output_stream> out)
     : out(out), node_list(node_list), terms(), hash_value(),
       nest_checker(), convert_checker() {
 }
@@ -160,11 +156,11 @@ const construct* construct::parent() const {
     return parent_construct;
 }
 
-const std::shared_ptr<srcdiff_output> construct::output() const {
+const std::shared_ptr<srcdiff::output_stream> construct::output() const {
     return out;
 }
 
-std::shared_ptr<srcdiff_output> construct::output() {
+std::shared_ptr<srcdiff::output_stream> construct::output() {
     return out;
 }
 
@@ -301,11 +297,11 @@ std::shared_ptr<const construct> construct::find_best_descendent(const construct
 }
 
 
-const std::shared_ptr<srcdiff_measure> & construct::measure(const construct & modified) const {
-    std::unordered_map<int, std::shared_ptr<srcdiff_measure>>::const_iterator citr = measures.find(modified.start_position());
+const std::shared_ptr<srcdiff::measurer> & construct::measure(const construct & modified) const {
+    std::unordered_map<int, std::shared_ptr<srcdiff::measurer>>::const_iterator citr = measures.find(modified.start_position());
     if(citr != measures.end()) return citr->second;
 
-    std::shared_ptr<srcdiff_measure> similarity = std::make_shared<srcdiff_text_measure>(*this, modified);
+    std::shared_ptr<srcdiff::measurer> similarity = std::make_shared<srcdiff::text_measurer>(*this, modified);
     similarity->compute();
 
     citr = measures.insert(citr, std::pair(modified.start_position(), similarity));
@@ -318,7 +314,7 @@ bool construct::is_similar(const construct & modified) const {
 
 bool construct::is_text_similar(const construct & modified) const {
 
- const srcdiff_measure & measure = *this->measure(modified);
+ const srcdiff::measurer & measure = *this->measure(modified);
 
   int min_size = measure.min_length();
   int max_size = measure.max_length();
@@ -355,7 +351,7 @@ bool construct::is_syntax_similar(const construct & modified) const {
 
   }
 
-  srcdiff_syntax_measure syntax_measure(*this, modified);
+  srcdiff::syntax_measurer syntax_measure(*this, modified);
   syntax_measure.compute();
 
   int min_child_length = syntax_measure.min_length();
@@ -374,7 +370,8 @@ bool construct::is_syntax_similar_impl(const construct & modified [[maybe_unused
     return false;
 }
 
-bool construct::can_refine_difference(const construct & modified) const {
+struct none_deleter { void operator()(construct* construct_ptr) {} };
+enum srcdiff::operation construct::can_refine_difference(const construct& modified, bool test_nest) const {
 
   const std::string & original_tag = root_term_name();
   const std::string & modified_tag = modified.root_term_name();
@@ -383,11 +380,22 @@ bool construct::can_refine_difference(const construct & modified) const {
   const std::string & modified_uri = modified.term(0)->get_namespace()->get_uri();
 
   if(original_tag == modified_tag && original_uri == modified_uri) {
-    return is_matchable(modified);
+    return is_matchable(modified) ? srcdiff::MATCH : srcdiff::NONE;
   } else if(is_tag_convertable(modified)) {
-    return is_convertable(modified);
+    return is_convertable(modified) ? srcdiff::CONVERT : srcdiff::NONE;
   } else {
-    return false;
+
+    if(test_nest) {
+        std::shared_ptr<const construct> original_ptr((construct*)this, none_deleter());
+        std::shared_ptr<const construct> modified_ptr((construct*)&modified, none_deleter());
+
+        construct_list_view original_view(&original_ptr, 1);
+        construct_list_view modified_view(&modified_ptr, 1);
+        srcdiff::nest_result nest = srcdiff::nest_differ::check_nestable(original_view, modified_view);
+        return nest? srcdiff::NEST : srcdiff::NONE;
+    }
+
+    return srcdiff::NONE;
   }
 
 }
@@ -416,10 +424,10 @@ bool construct::is_match_similar(const construct & modified) const {
 
   if(*term(0) != *modified.term(0)) return false;
 
-  srcdiff_text_measure complete_measure(*this, modified, false);
+  srcdiff::text_measurer complete_measure(*this, modified, false);
   complete_measure.compute();
-  int min_size = complete_measure.min_length();
 
+  int min_size = complete_measure.min_length();
   if(min_size == 0) return false;
 
   return min_size == complete_measure.similarity();

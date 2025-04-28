@@ -9,7 +9,7 @@
 
 #include <view.hpp>
 
-#include <srcdiff_constants.hpp>
+#include <constants.hpp>
 
 #include <shortest_edit_script.hpp>
 #include <character_diff.hpp>
@@ -186,7 +186,7 @@ void view_t::output_characters_to_buffer(std::ostream & out,
   if(save_name) {
 
     saved_name.append(ch.c_str(), ch.size(),
-      diff_stack.back() == view_t::DELETE ? SRCDIFF_DELETE : SRCDIFF_INSERT);
+    diff_stack.back() == view_t::DELETE ? srcdiff::DELETE : srcdiff::INSERT);
     return;
 
   }
@@ -406,11 +406,11 @@ void view_t::startElement(const char * localname,
 
   const std::string local_name(localname);
 
-  if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "comment") {
+  if(URI == srcdiff::SRCML_SRC_NAMESPACE_HREF && local_name == "comment") {
 
     in_comment = true;
 
-  } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "literal") {
+  } else if(URI == srcdiff::SRCML_SRC_NAMESPACE_HREF && local_name == "literal") {
 
     std::string literal_type;
     for(int i = 0; i < num_attributes; ++i) {
@@ -431,7 +431,7 @@ void view_t::startElement(const char * localname,
       in_literal = true;
     }
 
-  } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "name"
+  } else if(URI == srcdiff::SRCML_SRC_NAMESPACE_HREF && local_name == "name"
             && srcml_stack.size() > 1) {
 
     const std::string & parent = srcml_stack.at(srcml_stack.size() - 1);
@@ -442,16 +442,16 @@ void view_t::startElement(const char * localname,
     else if(is_call(parent))
       in_call_name = true;
 
-  } else if(URI == SRCML_CPP_NAMESPACE_HREF
+  } else if(URI == srcdiff::SRCML_CPP_NAMESPACE_HREF
             && (local_name == "literal" || local_name == "file")) {
 
       in_string = true;
 
-  } else if(URI == SRCML_CPP_NAMESPACE_HREF && local_name == "number") {
+  } else if(URI == srcdiff::SRCML_CPP_NAMESPACE_HREF && local_name == "number") {
 
       in_literal = true;
 
-  } else if(URI == SRCML_CPP_NAMESPACE_HREF && local_name == "directive") {
+  } else if(URI == srcdiff::SRCML_CPP_NAMESPACE_HREF && local_name == "directive") {
 
     in_preprocessor_directive = true;
 
@@ -459,7 +459,7 @@ void view_t::startElement(const char * localname,
 
   start_element(local_name, prefix, URI, num_namespaces, namespaces,
                 num_attributes, attributes);
-  if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF) srcml_stack_push(localname, prefix);
+  if(URI != srcdiff::SRCDIFF_DEFAULT_NAMESPACE_HREF) srcml_stack_push(localname, prefix);
 }
 
 /**
@@ -512,7 +512,7 @@ void view_t::endElement(const char * localname,
                            const char * prefix,
                            const char * URI) {
 
-  if(URI != SRCDIFF_DEFAULT_NAMESPACE_HREF) srcml_stack.pop_back();
+  if(URI != srcdiff::SRCDIFF_DEFAULT_NAMESPACE_HREF) srcml_stack.pop_back();
 
   const std::string local_name(localname);
 
@@ -528,7 +528,6 @@ void view_t::endElement(const char * localname,
     } else {
 
       character_diff char_diff(saved_name);
-      char_diff.compute();
       char_diff.output(*this, saved_name_type);
 
     }
@@ -537,16 +536,16 @@ void view_t::endElement(const char * localname,
 
   }
 
-  if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "comment") {
+  if(URI == srcdiff::SRCML_SRC_NAMESPACE_HREF && local_name == "comment") {
 
     in_comment = false;
 
-  } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "literal") {
+  } else if(URI == srcdiff::SRCML_SRC_NAMESPACE_HREF && local_name == "literal") {
 
     in_literal = false;
     in_string = false;
 
-  } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "name") {
+  } else if(URI == srcdiff::SRCML_SRC_NAMESPACE_HREF && local_name == "name") {
 
     const std::string & parent = srcml_stack.back();
     if(is_function_type(parent)) {
@@ -559,7 +558,7 @@ void view_t::endElement(const char * localname,
       in_call_name = false;
     }
 
-  } else if(URI == SRCML_CPP_NAMESPACE_HREF
+  } else if(URI == srcdiff::SRCML_CPP_NAMESPACE_HREF
             && ( local_name == "literal"
               || local_name == "file"
               || local_name == "number")) {
@@ -567,7 +566,7 @@ void view_t::endElement(const char * localname,
     in_literal = false;
     in_string = false;
 
-  } else if(URI == SRCML_CPP_NAMESPACE_HREF && local_name == "directive") {
+  } else if(URI == srcdiff::SRCML_CPP_NAMESPACE_HREF && local_name == "directive") {
 
     in_preprocessor_directive = false;
 
@@ -598,7 +597,7 @@ void view_t::charactersRoot(const char * ch [[maybe_unused]], int len [[maybe_un
 void view_t::charactersUnit(const char * ch, int len) {
 
   // Need diff on stack for this but not others so use element_stack here only
-  if(!save_name && element_stack.size() > 1 && element_stack.back() == "diff:delete" 
+  if(!save_name && element_stack.size() > 1 && element_stack.back() == "diff:delete-type-replace" 
     && (element_stack.at(element_stack.size() - 2) == "name"
       || element_stack.at(element_stack.size() - 2) == "operator")) {
 

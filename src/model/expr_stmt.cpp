@@ -19,6 +19,6 @@ bool expr_stmt::is_matchable_impl(const construct & modified) const {
         return original_expr.children().front()->is_matchable_impl(*modified_expr.children().front());
 
 
-    const srcdiff_measure & expr_stmt_measure = *measure(modified);
+    const srcdiff::measurer & expr_stmt_measure = *measure(modified);
     return expr_stmt_measure.similarity() > 0 && expr_stmt_measure.difference() <= expr_stmt_measure.max_length();
 }

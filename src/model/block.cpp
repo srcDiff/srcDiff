@@ -9,12 +9,11 @@
 
 #include <block.hpp>
 
-#include <srcdiff_match.hpp>
-
 #include <nest/block.hpp>
-#include <srcdiff_nested.hpp>
+#include <nest_differ.hpp>
+#include <operation.hpp>
 
-#include <srcdiff_syntax_measure.hpp>
+#include <syntax_measurer.hpp>
 #include <construct_factory.hpp>
 
 std::shared_ptr<const construct> block::block_content() const {
@@ -27,7 +26,7 @@ std::shared_ptr<const construct> block::block_content() const {
 bool block::is_syntax_similar_impl(const construct & modified_block) const {
     const block & modified = static_cast<const block &>(modified_block);
 
-    srcdiff_syntax_measure syntax_measure(*block_content(), *modified.block_content());
+    srcdiff::syntax_measurer syntax_measure(*block_content(), *modified.block_content());
     syntax_measure.compute();
 
     // max_child_length is unused
@@ -49,12 +48,12 @@ bool block::is_matchable_impl(const construct & modified) const {
 
     if(is_pseudo_original == is_pseudo_modified) return true;
 
-    const srcdiff_measure & measure = *this->measure(modified);
+    const srcdiff::measurer & measure = *this->measure(modified);
     if(!measure.similarity()) return false;
 
     construct_list original_stmts;
     construct_list modified_stmts;
-    int match_operation = SES_INSERT;
+    int match_operation = srcdiff::INSERT;
 
     const block & modified_block = static_cast<const block &>(modified);
 
@@ -66,12 +65,12 @@ bool block::is_matchable_impl(const construct & modified) const {
         std::size_t start_pos = start_position();
         original_stmts.push_back(create_construct(parent(), start_pos));
         modified_stmts = modified_block.block_content()->children();
-        match_operation = SES_DELETE;
+        match_operation = srcdiff::DELETE;
 
     }
 
-    nest_result nesting = srcdiff_nested::check_nestable(construct::construct_list_view(&original_stmts.front(), original_stmts.size()),
-                                                         construct::construct_list_view(&modified_stmts.front(), modified_stmts.size()));
+    srcdiff::nest_result nesting = srcdiff::nest_differ::check_nestable(construct::construct_list_view(&original_stmts.front(), original_stmts.size()),
+                                                                        construct::construct_list_view(&modified_stmts.front(), modified_stmts.size()));
 
     return match_operation == nesting.operation;
 }

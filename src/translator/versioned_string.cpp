@@ -98,22 +98,22 @@ void versioned_string::set_modified(const std::string & string_modified) {
 
 }
 
-void versioned_string::append(const std::string & str, enum srcdiff_type version) {
+void versioned_string::append(const std::string & str, srcdiff::operation version) {
     append(str.c_str(), str.size(), version);
 }
 
-void versioned_string::append(const char * characters, size_t len, enum srcdiff_type version) {
+void versioned_string::append(const char * characters, size_t len, srcdiff::operation version) {
 
     if(len == 0) return;
 
-    if(version != SRCDIFF_INSERT) {
+    if(version != srcdiff::INSERT) {
 
         if(!bool(string_original)) string_original = std::string(characters, len);
         else string_original->append(characters, len);
 
     }
 
-    if(version != SRCDIFF_DELETE) {
+    if(version != srcdiff::DELETE) {
 
         if(!bool(string_modified)) string_modified = std::string(characters, len);
         else string_modified->append(characters, len);
@@ -230,11 +230,11 @@ versioned_string versioned_string::operator+(const versioned_string & v_str) con
 versioned_string & versioned_string::operator+=(const versioned_string & v_str) {
 
     if(v_str.string_original) {
-        append(*v_str.string_original, SRCDIFF_DELETE);
+        append(*v_str.string_original, srcdiff::DELETE);
     }
 
     if(v_str.string_modified) {
-        append(*v_str.string_modified, SRCDIFF_INSERT);
+        append(*v_str.string_modified, srcdiff::INSERT);
     }
 
     return *this;

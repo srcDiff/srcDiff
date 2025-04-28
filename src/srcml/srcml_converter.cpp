@@ -9,7 +9,7 @@
 
 #include <srcml_converter.hpp>
 
-#include <srcdiff_constants.hpp>
+#include <constants.hpp>
 #include <shortest_edit_script.h>
 
 #include <string>
@@ -165,7 +165,7 @@ static bool is_separate_token(const char character) {
 
   return character == '(' || character ==')'  || character == '['  || character == ']'
       || character == ',' || character == '"' || character == '\'' || character == '\\'
-      || character == ';' || character == '{' || character == '}';
+      || character == ';' || character == '{' || character == '}'  || character == ':';
 
 }
 

@@ -11,7 +11,6 @@
 #define INCLUDED_SRCML_CONVERTER_HPP
 
 #include <srcml_nodes.hpp>
-#include <srcdiff_options.hpp>
 
 #include <srcml.h>
 #include <vector>

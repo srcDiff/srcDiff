@@ -9,7 +9,7 @@
 
 #include <identifier_decl.hpp>
 
-#include <srcdiff_text_measure.hpp>
+#include <text_measurer.hpp>
 
 std::shared_ptr<const name_t> identifier_decl::name() const {
     if(name_child) return *name_child;

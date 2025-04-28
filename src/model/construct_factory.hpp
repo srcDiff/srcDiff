@@ -11,7 +11,7 @@
 #define INCLUDED_CONSTRUCT_FACTORY_HPP
 
 class construct;
-#include <srcdiff_output.hpp>
+#include <output_stream.hpp>
 
 #include <string>
 #include <memory>

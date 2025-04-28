@@ -9,9 +9,10 @@
 
 #include <srcdiff.h>
 
-#include <srcdiff_translator.hpp>
-#include <srcdiff_output.hpp>
-#include <srcdiff_input.hpp>
+#include <translator.hpp>
+#include <output_stream.hpp>
+#include <input_stream.hpp>
+#include <client_options.hpp>
 
 #include <string>
 #include <optional>
@@ -54,7 +55,7 @@ public:
 
 };
 
-int srcdiff(const char * original_filename, const char* modified_filename, const char* output_filename){
+int srcDiff(const char * original_filename, const char* modified_filename, const char* output_filename){
     /// @todo give actual error codes
     if(original_filename == nullptr && modified_filename == nullptr) return 1;
     if(output_filename == nullptr) return 1;
@@ -78,17 +79,17 @@ int srcdiff(const char * original_filename, const char* modified_filename, const
         unit_filename += *modified_path;
     }
 
-    srcdiff_options options;
+    srcdiff::client_options options;
     options.srcdiff_filename = output_filename;
 
     file_input in;
-    srcdiff_input<file_input> input_original(options.archive, original_path, language_string, options.flags, in);
-    srcdiff_input<file_input> input_modified(options.archive, modified_path, language_string, options.flags, in);
+    srcdiff::input_stream<file_input> input_original(options.archive, original_path, language_string, options.flags, in);
+    srcdiff::input_stream<file_input> input_modified(options.archive, modified_path, language_string, options.flags, in);
 
-    srcdiff_translator translator(options.srcdiff_filename, options.flags, options.methods, options.archive,
-                                  options.unit_filename,
-                                  options.view_options,
-                                  options.summary_type_str);
+    srcdiff::translator translator(options.srcdiff_filename, options.flags, options.methods, options.archive,
+                                   options.unit_filename,
+                                   options.view_options,
+                                   options.summary_type_str);
 
     translator.translate(input_original, input_modified, language_string, unit_filename, unit_version);
 
