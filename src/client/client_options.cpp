@@ -529,7 +529,7 @@ const client_options& process_command_line(int argc, char* argv[]) {
     option_parsing_method,
     "Specify a list of parsing methods, separated by commas.\n"
     "The options are collect, raw, group-diff and no-group-diff"
-  )->default_val("collect,group-diff")->force_callback();
+  )->default_val("group-diff")->force_callback();
 
   // srcdiff_group->add_flag(
   //   "--disable-string-split",
