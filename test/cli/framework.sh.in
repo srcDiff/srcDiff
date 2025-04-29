@@ -43,6 +43,8 @@ cd $TEMPDIR
 # make sure to find the srcdiff executable
 export PATH=.:$PATH
 
+SRCDIFF='SRCDIFF_PATH'
+
 if [[ "$OSTYPE" == 'msys' ]]; then
     EOL="\r\n"
     export PATH=$PATH:"/c/Program Files/srcML/bin/"
