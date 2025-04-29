@@ -13,12 +13,6 @@ else()
 	set(SRCDIFF_PATH ${SRCDIFF_DIR}/srcdiff)
 endif()
 
-file(READ framework.sh.in FRAMEWORK_STR)
-string(REPLACE "SRCDIFF_PATH" "${SRCDIFF_PATH}" FRAMEWORK_STR "${FRAMEWORK_STR}")
-file(WRITE framework.sh "${FRAMEWORK_STR}")
-file(CHMOD ${CMAKE_CURRENT_SOURCE_DIR} 
-     PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE 
-                 GROUP_READ GROUP_EXECUTE
-                 WORLD_READ WORLD_EXECUTE)
+configure_file(framework.sh.in ${CMAKE_CURRENT_SOURCE_DIR}/framework.sh USE_SOURCE_PERMISSIONS @ONLY)
 
 add_subdirectory(suite)
