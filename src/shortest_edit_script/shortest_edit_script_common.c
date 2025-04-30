@@ -80,10 +80,11 @@ int make_edit_script(struct edit_t * start_edit, struct edit_t ** edit_script, s
     ++distance;
 
     // find same continous edits
-    current_edit->length_one = 1;
 
     // condense insert edit
     if(current_edit->operation == SES_INSERT) {
+
+      current_edit->length_two = 1;
       while(current_edit->next != NULL
             && (current_edit->operation == current_edit->next->operation)
             && (current_edit->offset_one == current_edit->next->offset_one)) {
@@ -92,13 +93,15 @@ int make_edit_script(struct edit_t * start_edit, struct edit_t ** edit_script, s
         current_edit->next = current_edit->next->next;
 
         // update length_one
-        ++current_edit->length_one;
+        ++current_edit->length_two;
 
       }
     }
 
     // condense delete
     else
+  
+      current_edit->length_one = 1;
       while(current_edit->next != NULL
             && (current_edit->operation == current_edit->next->operation)
             && ((current_edit->offset_one + current_edit->length_one) == current_edit->next->offset_one)) {
