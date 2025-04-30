@@ -37,21 +37,15 @@ edit_list shortest_edit_script::compute(const void* structure_one, int size_one,
                                      context, threshold);
   if(distance < 0) throw std::logic_error("Error computing shortest edit script");
 
+  static std::unordered_map<edit_operations, edit_operation> edit_operation_map
+                = { {SES_DELETE, ses::DELETE}, {SES_INSERT, ses::INSERT}, {SES_CHANGE, ses::CHANGE}};
+
   edit_list edits;
   for(edit_t* edit = edit_script; edit != nullptr; edit = edit->next) {
-    if(is_change(edit)) {
-      edit_t* next = edit->next;
-      edits.emplace_back(ses::CHANGE,
-                         edit->offset_one, edit->length_one,
-                         next->offset_two, next->length_two
-      );
-      edit = next;
-    } else{
-      edits.emplace_back(edit->operation == SES_DELETE ? ses::DELETE : ses::INSERT,
-                         edit->offset_one, edit->operation == SES_DELETE ? edit->length_one : 0,
-                         edit->offset_two, edit->operation == SES_INSERT ? edit->length_two : 0
-      );
-    }
+    edits.emplace_back(edit_operation_map[edit->operation],
+                       edit->offset_one, edit->length_one,
+                       edit->offset_two, edit->length_two
+    );
   }
 
   free_shortest_edit_script(edit_script);

@@ -95,6 +95,25 @@ int merge_sequential_edits(struct edit_t ** edit_script) {
 
   }
 
+  current_edit = *edit_script;
+  while(current_edit != NULL) {
+
+    if(is_change(current_edit)) {
+      struct edit_t* next = current_edit->next;
+
+      current_edit->operation  = SES_CHANGE;
+      current_edit->offset_two = next->offset_two; 
+      current_edit->length_two = next->length_two;
+      current_edit->next = next->next;
+      if(current_edit->next) {
+        current_edit->next->previous = current_edit;
+      }
+
+      free(next);
+    }
+    current_edit = current_edit->next;
+  }
+
   return edit_distance;
 
 }

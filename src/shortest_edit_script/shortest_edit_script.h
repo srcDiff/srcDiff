@@ -20,7 +20,7 @@ enum edit_operations { SES_COMMON, SES_DELETE, SES_INSERT, SES_CHANGE };
 // single edit script
 struct edit_t {
 
-  int operation;
+  enum edit_operations operation;
 
   unsigned long offset_one;
   unsigned long length_one;
