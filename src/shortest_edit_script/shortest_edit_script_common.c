@@ -50,7 +50,7 @@ int make_edit_script(struct edit_t * start_edit, struct edit_t ** edit_script, s
   if(edit_script) (*edit_script) = NULL;
   if(last_edit) (*last_edit) = NULL;
 
-  // holds the length of the short edit script
+  // holds the length_one of the short edit script
   int distance = 0;
 
   // check not NULL
@@ -80,19 +80,19 @@ int make_edit_script(struct edit_t * start_edit, struct edit_t ** edit_script, s
     ++distance;
 
     // find same continous edits
-    current_edit->length = 1;
+    current_edit->length_one = 1;
 
     // condense insert edit
     if(current_edit->operation == SES_INSERT) {
       while(current_edit->next != NULL
             && (current_edit->operation == current_edit->next->operation)
-            && (current_edit->offset_sequence_one == current_edit->next->offset_sequence_one)) {
+            && (current_edit->offset_one == current_edit->next->offset_one)) {
 
         // add adjacent edit
         current_edit->next = current_edit->next->next;
 
-        // update length
-        ++current_edit->length;
+        // update length_one
+        ++current_edit->length_one;
 
       }
     }
@@ -101,13 +101,13 @@ int make_edit_script(struct edit_t * start_edit, struct edit_t ** edit_script, s
     else
       while(current_edit->next != NULL
             && (current_edit->operation == current_edit->next->operation)
-            && ((current_edit->offset_sequence_one + current_edit->length) == current_edit->next->offset_sequence_one)) {
+            && ((current_edit->offset_one + current_edit->length_one) == current_edit->next->offset_one)) {
 
         // add adjacent edit
         current_edit->next = current_edit->next->next;
 
-        // update length
-        ++current_edit->length;
+        // update length_one
+        ++current_edit->length_one;
 
       }
 
@@ -142,10 +142,10 @@ int make_edit_script(struct edit_t * start_edit, struct edit_t ** edit_script, s
 
     // correct offset
     if(current_edit->operation == SES_DELETE) {
-      --current_edit->offset_sequence_one;
+      --current_edit->offset_one;
     }
     else {
-      --current_edit->offset_sequence_two;
+      --current_edit->offset_two;
     }
 
     current_edit = current_edit->next;
@@ -171,9 +171,13 @@ struct edit_t * copy_edit(struct edit_t * edit) {
 
   // copy contents
   new_edit->operation = edit->operation;
-  new_edit->offset_sequence_one = edit->offset_sequence_one;
-  new_edit->offset_sequence_two = edit->offset_sequence_two;
-  new_edit->length = edit->length;
+
+  new_edit->offset_one = edit->offset_one;
+  new_edit->length_one = edit->length_one;
+
+  new_edit->offset_two = edit->offset_two;
+  new_edit->length_two = edit->length_two;
+
   new_edit->next = edit->next;
   new_edit->previous = edit->previous;
 
@@ -183,6 +187,6 @@ struct edit_t * copy_edit(struct edit_t * edit) {
 int is_change(const struct edit_t * edit_script) {
 
   return edit_script->operation == SES_DELETE && edit_script->next != NULL && edit_script->next->operation == SES_INSERT
-    && (edit_script->offset_sequence_one + edit_script->length) == edit_script->next->offset_sequence_one;
+    && (edit_script->offset_one + edit_script->length_one) == edit_script->next->offset_one;
 
 }

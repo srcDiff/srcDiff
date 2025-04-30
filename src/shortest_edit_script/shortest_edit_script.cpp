@@ -42,14 +42,14 @@ edit_list shortest_edit_script::compute(const void* structure_one, int size_one,
     if(is_change(edit)) {
       edit_t* next = edit->next;
       edits.emplace_back(ses::CHANGE,
-                         edit->offset_sequence_one, edit->length,
-                         next->offset_sequence_two, next->length
+                         edit->offset_one, edit->length_one,
+                         next->offset_two, next->length_two
       );
       edit = next;
     } else{
       edits.emplace_back(edit->operation == SES_DELETE ? ses::DELETE : ses::INSERT,
-                         edit->offset_sequence_one, edit->operation == SES_DELETE ? edit->length : 0,
-                         edit->offset_sequence_two, edit->operation == SES_INSERT ? edit->length : 0
+                         edit->offset_one, edit->operation == SES_DELETE ? edit->length_one : 0,
+                         edit->offset_two, edit->operation == SES_INSERT ? edit->length_two : 0
       );
     }
   }

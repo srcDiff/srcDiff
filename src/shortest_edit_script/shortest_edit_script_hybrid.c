@@ -75,29 +75,30 @@ int shortest_edit_script_hybrid_inner(const void * sequence_one, int sequence_on
     } else if((sequence_two_end - sequence_two_start) < (sequence_one_end - sequence_one_start)) {
 
       struct edit_t * new_edit = (struct edit_t *)malloc(sizeof(struct edit_t));
-      new_edit->operation = SES_DELETE;
-      new_edit->previous = 0;
-      new_edit->next = 0;
+      new_edit->operation  = SES_DELETE;
+      new_edit->length_two = 0;
+      new_edit->previous   = 0;
+      new_edit->next       = 0;
 
       if((sequence_two_end - sequence_two_start) <= 0) {
 
-        new_edit->offset_sequence_one = points[0].x;
-        new_edit->offset_sequence_two = points[0].y;
-        new_edit->length = 1;
+        new_edit->offset_one = points[0].x;
+        new_edit->offset_two = points[0].y;
+        new_edit->length_one = 1;
 
       } else if(points[0].x >= sequence_one_end
         || (points[0].x > sequence_one_start && points[0].y >= sequence_two_start 
         && compare(accessor(points[0].x - 1, sequence_one, context), accessor(points[0].y, sequence_two, context), context) != 0)) {
 
-        new_edit->offset_sequence_one = points[0].x - 1;
-        new_edit->offset_sequence_two = points[0].y;
-        new_edit->length = 1;
+        new_edit->offset_one = points[0].x - 1;
+        new_edit->offset_two = points[0].y;
+        new_edit->length_one = 1;
 
       } else {
 
-        new_edit->offset_sequence_one = points[1].x + 1;
-        new_edit->offset_sequence_two = points[1].y;
-        new_edit->length = 1;
+        new_edit->offset_one = points[1].x + 1;
+        new_edit->offset_two = points[1].y;
+        new_edit->length_one = 1;
 
       }
 
@@ -107,29 +108,30 @@ int shortest_edit_script_hybrid_inner(const void * sequence_one, int sequence_on
     } else {
 
       struct edit_t * new_edit = (struct edit_t *)malloc(sizeof(struct edit_t));
-      new_edit->operation = SES_INSERT;
-      new_edit->previous = 0;
-      new_edit->next = 0;
+      new_edit->operation  = SES_INSERT;
+      new_edit->length_one = 0;
+      new_edit->previous   = 0;
+      new_edit->next       = 0;
 
       if((sequence_one_end - sequence_one_start) <= 0) {
 
-        new_edit->offset_sequence_one = points[0].x;
-        new_edit->offset_sequence_two = points[0].y;
-        new_edit->length = 1;
+        new_edit->offset_one = points[0].x;
+        new_edit->offset_two = points[0].y;
+        new_edit->length_two = 1;
 
       } else if(points[0].y >= sequence_two_end
        || (points[0].x >= sequence_one_start && points[0].y > sequence_two_start 
         && compare(accessor(points[0].x, sequence_one, context), accessor(points[0].y - 1, sequence_two, context), context) != 0)) {
 
-        new_edit->offset_sequence_one = points[0].x;
-        new_edit->offset_sequence_two = points[0].y - 1;
-        new_edit->length = 1;
+        new_edit->offset_one = points[0].x;
+        new_edit->offset_two = points[0].y - 1;
+        new_edit->length_two = 1;
 
       } else {
 
-        new_edit->offset_sequence_one = points[1].x;
-        new_edit->offset_sequence_two = points[1].y + 1;
-        new_edit->length = 1;
+        new_edit->offset_one = points[1].x;
+        new_edit->offset_two = points[1].y + 1;
+        new_edit->length_two = 1;
 
       }
 
@@ -141,23 +143,25 @@ int shortest_edit_script_hybrid_inner(const void * sequence_one, int sequence_on
   } else if((sequence_one_end - sequence_one_start) > 0 || (sequence_two_end - sequence_two_start) > 0) {
 
     struct edit_t * new_edit = (struct edit_t *)malloc(sizeof(struct edit_t));
-    new_edit->previous = 0;
-    new_edit->next = 0;
+    new_edit->previous   = 0;
+    new_edit->next       = 0;
 
     if((sequence_one_end - sequence_one_start) > 0) {
 
       new_edit->operation = SES_DELETE;
-      new_edit->offset_sequence_one = sequence_one_start;
-      new_edit->offset_sequence_two = sequence_two_start;
-      new_edit->length = sequence_one_end - sequence_one_start;
+      new_edit->offset_one = sequence_one_start;
+      new_edit->length_one = sequence_one_end - sequence_one_start;
+      new_edit->offset_two = sequence_two_start;
+      new_edit->length_two = 0;
 
 
     } else if((sequence_two_end - sequence_two_start) > 0) {
 
       new_edit->operation = SES_INSERT;
-      new_edit->offset_sequence_one = sequence_one_start;
-      new_edit->offset_sequence_two = sequence_two_start;
-      new_edit->length = sequence_two_end - sequence_two_start;
+      new_edit->offset_one = sequence_one_start;
+      new_edit->length_one = 0;
+      new_edit->offset_two = sequence_two_start;
+      new_edit->length_two = sequence_two_end - sequence_two_start;
 
     }
 

@@ -290,29 +290,30 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
     } else if((sequence_two_end - sequence_two_start) < (sequence_one_end - sequence_one_start)) {
 
       struct edit_t * new_edit = (struct edit_t *)malloc(sizeof(struct edit_t));
-      new_edit->operation = SES_DELETE;
-      new_edit->previous = 0;
-      new_edit->next = 0;
+      new_edit->operation  = SES_DELETE;
+      new_edit->length_two = 0;
+      new_edit->previous   = 0;
+      new_edit->next       = 0;
 
       if((sequence_two_end - sequence_two_start) <= 0) {
 
-        new_edit->offset_sequence_one = points[0].x;
-        new_edit->offset_sequence_two = points[0].y;
-        new_edit->length = 1;
+        new_edit->offset_one = points[0].x;
+        new_edit->offset_two = points[0].y;
+        new_edit->length_one = 1;
 
       } else if(points[0].x >= sequence_one_end
         || (points[0].x > sequence_one_start && points[0].y >= sequence_two_start 
         && compare(accessor(points[0].x - 1, sequence_one, context), accessor(points[0].y, sequence_two, context), context) != 0)) {
 
-        new_edit->offset_sequence_one = points[0].x - 1;
-        new_edit->offset_sequence_two = points[0].y;
-        new_edit->length = 1;
+        new_edit->offset_one = points[0].x - 1;
+        new_edit->offset_two = points[0].y;
+        new_edit->length_one = 1;
 
       } else {
 
-        new_edit->offset_sequence_one = points[1].x + 1;
-        new_edit->offset_sequence_two = points[1].y;
-        new_edit->length = 1;
+        new_edit->offset_one = points[1].x + 1;
+        new_edit->offset_two = points[1].y;
+        new_edit->length_one = 1;
 
       }
 
@@ -322,29 +323,30 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
     } else {
 
       struct edit_t * new_edit = (struct edit_t *)malloc(sizeof(struct edit_t));
-      new_edit->operation = SES_INSERT;
-      new_edit->previous = 0;
-      new_edit->next = 0;
+      new_edit->operation  = SES_INSERT;
+      new_edit->length_one = 0;
+      new_edit->previous   = 0;
+      new_edit->next       = 0;
 
       if((sequence_one_end - sequence_one_start) <= 0) {
 
-        new_edit->offset_sequence_one = points[0].x;
-        new_edit->offset_sequence_two = points[0].y;
-        new_edit->length = 1;
+        new_edit->offset_one = points[0].x;
+        new_edit->offset_two = points[0].y;
+        new_edit->length_two = 1;
 
       } else if(points[0].y >= sequence_two_end
        || (points[0].x >= sequence_one_start && points[0].y > sequence_two_start 
         && compare(accessor(points[0].x, sequence_one, context), accessor(points[0].y - 1, sequence_two, context), context) != 0)) {
 
-        new_edit->offset_sequence_one = points[0].x;
-        new_edit->offset_sequence_two = points[0].y - 1;
-        new_edit->length = 1;
+        new_edit->offset_one = points[0].x;
+        new_edit->offset_two = points[0].y - 1;
+        new_edit->length_two = 1;
 
       } else {
 
-        new_edit->offset_sequence_one = points[1].x;
-        new_edit->offset_sequence_two = points[1].y + 1;
-        new_edit->length = 1;
+        new_edit->offset_one = points[1].x;
+        new_edit->offset_two = points[1].y + 1;
+        new_edit->length_two = 1;
 
       }
 
@@ -361,18 +363,20 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
 
     if((sequence_one_end - sequence_one_start) > 0) {
 
-      new_edit->operation = SES_DELETE;
-      new_edit->offset_sequence_one = sequence_one_start;
-      new_edit->offset_sequence_two = sequence_two_start;
-      new_edit->length = sequence_one_end - sequence_one_start;
+      new_edit->operation  = SES_DELETE;
+      new_edit->offset_one = sequence_one_start;
+      new_edit->length_one = sequence_one_end - sequence_one_start;
+      new_edit->offset_two = sequence_two_start;
+      new_edit->length_two = 0;
 
 
     } else if((sequence_two_end - sequence_two_start) > 0) {
 
-      new_edit->operation = SES_INSERT;
-      new_edit->offset_sequence_one = sequence_one_start;
-      new_edit->offset_sequence_two = sequence_two_start;
-      new_edit->length = sequence_two_end - sequence_two_start;
+      new_edit->operation  = SES_INSERT;
+      new_edit->offset_one = sequence_one_start;
+      new_edit->length_one = 0;
+      new_edit->offset_two = sequence_two_start;
+      new_edit->length_two = sequence_two_end - sequence_two_start;
 
     }
 
@@ -422,10 +426,10 @@ int merge_sequential_edits(struct edit_t ** edit_script) {
 
       while(current_edit->next != NULL
             && (current_edit->operation == current_edit->next->operation)
-            && (current_edit->offset_sequence_one == current_edit->next->offset_sequence_one)) {
+            && (current_edit->offset_one == current_edit->next->offset_one)) {
 
         // update length
-        current_edit->length += current_edit->next->length;
+        current_edit->length_two += current_edit->next->length_two;
 
         // save edit for deletion
         struct edit_t * save_edit = current_edit->next;
@@ -444,10 +448,10 @@ int merge_sequential_edits(struct edit_t ** edit_script) {
 
       while(current_edit->next != NULL
             && (current_edit->operation == current_edit->next->operation)
-            && ((current_edit->offset_sequence_one + current_edit->length) == current_edit->next->offset_sequence_one)) {
+            && ((current_edit->offset_one + current_edit->length_one) == current_edit->next->offset_one)) {
 
         // update length
-        current_edit->length += current_edit->next->length;
+        current_edit->length_one += current_edit->next->length_one;
 
         // save edit for deletion
         struct edit_t * save_edit = current_edit->next;

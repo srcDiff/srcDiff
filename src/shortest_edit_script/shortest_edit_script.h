@@ -15,15 +15,19 @@ extern "C" {
 #endif
 
 // edit constants
-enum edit_operations { SES_COMMON, SES_DELETE, SES_INSERT };
+enum edit_operations { SES_COMMON, SES_DELETE, SES_INSERT, SES_CHANGE };
 
 // single edit script
 struct edit_t {
 
   int operation;
-  unsigned long offset_sequence_one;
-  unsigned long offset_sequence_two;
-  unsigned long length;
+
+  unsigned long offset_one;
+  unsigned long length_one;
+
+  unsigned long offset_two;
+  unsigned long length_two;
+
 
   // links
   struct edit_t * next;

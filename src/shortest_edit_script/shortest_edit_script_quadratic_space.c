@@ -124,8 +124,8 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
 
       }
 
-      edit_pointers[edit_array][edit].offset_sequence_one = column;
-      edit_pointers[edit_array][edit].offset_sequence_two = row;
+      edit_pointers[edit_array][edit].offset_one = column;
+      edit_pointers[edit_array][edit].offset_two = row;
 
       // update the script
       script[diagonal_pos] = &edit_pointers[edit_array][edit];
