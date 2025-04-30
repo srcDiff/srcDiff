@@ -48,7 +48,7 @@ int make_edit_script(struct edit_t * start_edit, struct edit_t ** edit_script, s
   struct edit_t * current_edit = start_edit;
 
   if(edit_script) (*edit_script) = NULL;
-  if(last_edit) (*last_edit) = NULL;
+  if(last_edit)   (*last_edit)   = NULL;
 
   // holds the length_one of the short edit script
   int distance = 0;
