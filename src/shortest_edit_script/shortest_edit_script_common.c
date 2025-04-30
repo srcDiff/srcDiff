@@ -176,7 +176,6 @@ struct edit_t * copy_edit(struct edit_t * edit) {
   new_edit->length = edit->length;
   new_edit->next = edit->next;
   new_edit->previous = edit->previous;
-  new_edit->length_two = edit->length_two;
 
   return new_edit;
 }

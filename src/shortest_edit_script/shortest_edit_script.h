@@ -15,7 +15,7 @@ extern "C" {
 #endif
 
 // edit constants
-enum edit_operations { SES_COMMON, SES_DELETE, SES_INSERT, /** possibly temp for longer refactoring */SES_CHANGE };
+enum edit_operations { SES_COMMON, SES_DELETE, SES_INSERT };
 
 // single edit script
 struct edit_t {
@@ -29,8 +29,6 @@ struct edit_t {
   struct edit_t * next;
   struct edit_t * previous;
 
-  // temporary for use for longer refactoring
-  unsigned long length_two;
 };
 
 /*
