@@ -159,6 +159,70 @@ int make_edit_script(struct edit_t * start_edit, struct edit_t ** edit_script, s
 
 }
 
+int merge_sequential_edits(struct edit_t ** edit_script) {
+
+  int edit_distance = 0;
+  struct edit_t * current_edit = *edit_script;
+
+  // condense edit script
+  while(current_edit != NULL) {
+
+    ++edit_distance;
+
+    // condense insert edit
+    if(current_edit->operation == SES_INSERT) {
+
+      while(current_edit->next != NULL
+            && (current_edit->operation == current_edit->next->operation)
+            && (current_edit->offset_one == current_edit->next->offset_one)) {
+
+        // update length
+        current_edit->length_two += current_edit->next->length_two;
+
+        // save edit for deletion
+        struct edit_t * save_edit = current_edit->next;
+
+        // add adjacent edit
+        current_edit->next = current_edit->next->next;
+        if(current_edit->next) current_edit->next->previous = current_edit;
+
+        // delete edit
+        free(save_edit);
+
+      }
+
+    // condense delete
+    } else {
+
+      while(current_edit->next != NULL
+            && (current_edit->operation == current_edit->next->operation)
+            && ((current_edit->offset_one + current_edit->length_one) == current_edit->next->offset_one)) {
+
+        // update length
+        current_edit->length_one += current_edit->next->length_one;
+
+        // save edit for deletion
+        struct edit_t * save_edit = current_edit->next;
+
+        // add adjacent edit
+        current_edit->next = current_edit->next->next;
+        if(current_edit->next) current_edit->next->previous = current_edit;
+
+        // delete edit
+        free(save_edit);
+
+      }
+
+    }
+
+    current_edit = current_edit->next;
+
+  }
+
+  return edit_distance;
+
+}
+
 /*
   Copy a node from the heap.
 
