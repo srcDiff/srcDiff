@@ -30,16 +30,6 @@ int shortest_edit_script_linear_space_inner(const void * sequence_one, int seque
   struct edit_t ** edit_script, struct edit_t ** last_edit,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context);
 
-/*
-  Make a compact edit script from the found edits.
-
-  Parameter last_edit            The last edit found
-  Parameter edit_script          The shortest edit script
-
-  Returns -1 on fail, 0 otherwise
-*/
-int make_edit_script(struct edit_t * start_edit, struct edit_t ** edit_script, struct edit_t ** last_edit);
-
 int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start, int sequence_one_end, const void * sequence_two, int sequence_two_start, int sequence_two_end,
   struct edit_t ** edit_script, struct edit_t ** last_edit,
   int compare(const void *, const void *, const void *), const void * accessor(int index, const void *, const void *), const void * context);

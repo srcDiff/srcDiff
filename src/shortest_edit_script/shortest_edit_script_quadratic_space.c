@@ -14,6 +14,89 @@
 #include <string.h>
 
 /*
+  Make a compact edit script from the found edits.
+
+  Parameter last_edit            The last edit found
+  Parameter edit_script          The shortest edit script
+
+  Returns Then number of edits or an error code (-1 malloc) 
+*/
+int make_edit_script(struct edit_t * start_edit, struct edit_t ** edit_script, struct edit_t ** last_edit) {
+
+  struct edit_t * current_edit = start_edit;
+
+  if(edit_script) (*edit_script) = NULL;
+  if(last_edit)   (*last_edit)   = NULL;
+
+  // check not NULL
+  if(current_edit == NULL)
+    return 0;
+
+  current_edit->next = NULL;
+
+  // find first edit in shortest edit script
+  while(current_edit->previous != NULL) {
+
+    current_edit->previous->next = current_edit;
+    current_edit = current_edit->previous;
+
+  }
+
+  // copy first edit
+  if(((*edit_script) = copy_edit(current_edit)) == NULL)
+    return -1;
+
+  current_edit = (*edit_script);
+
+  // condense edit script
+  while(current_edit != NULL) {
+
+    // copy next edit
+    if(current_edit->next != NULL) {
+
+      struct edit_t * next;
+      if((next = copy_edit(current_edit->next)) == NULL) {
+
+        // free allocated edit
+        current_edit->next = NULL;
+        free_shortest_edit_script(*edit_script);
+
+
+        // no script on error
+        (*edit_script) = NULL;
+
+        return -1;
+
+      }
+
+      current_edit->next = next;
+
+      // reattach with copied edit
+      current_edit->next->previous = current_edit;
+
+    } else {
+
+      if(last_edit) (*last_edit) = current_edit;
+
+    }
+
+    if(current_edit->operation == SES_DELETE) {
+      current_edit->length_one = 1;
+      --current_edit->offset_one;
+    }
+    else {
+      current_edit->length_two = 1;
+      --current_edit->offset_two;
+    }
+
+    current_edit = current_edit->next;
+
+  }
+
+  return 0;
+}
+
+/*
   Finds the shortest edit script between two sequences.
    
   Parameter sequence_one_end    The size of the first sequence
@@ -147,6 +230,9 @@ int shortest_edit_script_inner(const void * sequence_one, int sequence_one_start
 
         // make shortest edit script
         int edit_distance = make_edit_script(&edit_pointers[edit_array][edit], edit_script, last_edit);
+        if(edit_distance != -1) {
+          edit_distance = merge_sequential_edits(edit_script);
+        }
 
         free(last_distance);
 
