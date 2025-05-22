@@ -10,8 +10,10 @@
 #define BOOST_TEST_MODULE test_shortest_edit_script
 #include <boost/test/included/unit_test.hpp>
 
-#include <shortest_edit_script.h>
-#include <shortest_edit_script_private.h>
+extern "C" {
+  #include "shortest_edit_script.h"
+  #include "shortest_edit_script_private.h"
+}
 
 #include <cstring>
 #include <vector>
@@ -42,6 +44,81 @@ BOOST_AUTO_TEST_CASE(copy_simple) {
   BOOST_TEST(copy->next == nullptr);
   BOOST_TEST(copy->previous == nullptr);
   free(copy);
+}
+
+BOOST_AUTO_TEST_CASE(copy_with_links) {
+    struct edit_t next, prev;
+    struct edit_t edit{ SES_DELETE, 3, 12, 48, &next, &prev };
+    struct edit_t* copy = copy_edit(&edit);
+    BOOST_REQUIRE(copy);
+    BOOST_TEST(copy->operation == SES_DELETE);
+    BOOST_TEST(copy->offset_sequence_one == 3);
+    BOOST_TEST(copy->offset_sequence_two == 12);
+    BOOST_TEST(copy->length == 48);
+    BOOST_TEST(copy->next == &next);
+    BOOST_TEST(copy->previous == &prev);
+    free(copy);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(make_edit_script_tests) 
+
+BOOST_AUTO_TEST_CASE(null_input) {
+  struct edit_t* script = nullptr;
+  BOOST_TEST(make_edit_script(nullptr, &script, nullptr) == 0);
+  BOOST_TEST(script == nullptr);
+}
+
+BOOST_AUTO_TEST_CASE(one_edit_stack) {
+    struct edit_t start{ SES_INSERT, 200, 101, 50, nullptr, nullptr };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int count = make_edit_script(&start, &script, &last);
+    BOOST_TEST(count == 1);
+    BOOST_REQUIRE(script);
+    BOOST_TEST(script->operation == SES_INSERT);
+    BOOST_TEST(script->offset_sequence_two == 100);
+    BOOST_TEST(script->length == 1);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(shortest_edit_script_tests)
+
+// Helper to run a C API SES function and collect its edits
+static std::vector<int> run_and_flatten(
+    int (*func)(const void*, int, const void*, int, struct edit_t**,
+                int(*)(const void*,const void*,const void*),
+                const void*(*)(int,const void*,const void*),
+                const void*),
+    const std::vector<const char*>& a,
+    const std::vector<const char*>& b,
+    int& out_dist)
+{
+    struct edit_t* script = nullptr;
+    out_dist = func(
+        a.empty() ? nullptr : a.data(), a.size(),
+        b.empty() ? nullptr : b.data(), b.size(),
+        &script,
+        compare, accessor, nullptr);
+    std::vector<int> flat;
+    for (auto e = script; e; e = e->next) {
+        flat.push_back(e->operation);
+        flat.push_back(static_cast<int>(e->offset_sequence_one));
+        flat.push_back(static_cast<int>(e->offset_sequence_two));
+        flat.push_back(static_cast<int>(e->length));
+    }
+    free_shortest_edit_script(script);
+    return flat;
+}
+
+BOOST_AUTO_TEST_CASE(empty_sequences) {
+    int dist;
+    auto ops = run_and_flatten(shortest_edit_script, {}, {}, dist);
+    BOOST_TEST(dist == 0);
+    BOOST_TEST(ops.empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
