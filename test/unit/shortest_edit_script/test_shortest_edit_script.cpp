@@ -46,17 +46,55 @@ BOOST_AUTO_TEST_CASE(copy_simple) {
   free(copy);
 }
 
-BOOST_AUTO_TEST_CASE(copy_with_links) {
+BOOST_AUTO_TEST_CASE(copy_stack_links) {
     struct edit_t next, prev;
-    struct edit_t edit{ SES_DELETE, 3, 12, 48, &next, &prev };
+    struct edit_t edit = { SES_INSERT, 1, 1, 1, &next, &prev };
+    struct edit_t* copy = copy_edit(&edit);
+    BOOST_REQUIRE(copy);
+    BOOST_TEST(copy->operation == SES_INSERT);
+    BOOST_TEST(copy->offset_sequence_one == 1);
+    BOOST_TEST(copy->offset_sequence_two == 1);
+    BOOST_TEST(copy->length == 1);
+    BOOST_TEST(copy->next == &next);
+    BOOST_TEST(copy->previous == &prev);
+    free(copy);
+}
+
+BOOST_AUTO_TEST_CASE(copy_malloc_links) {
+    struct edit_t * next = (struct edit_t*)malloc(sizeof(struct edit_t));
+    struct edit_t * prev = (struct edit_t*)malloc(sizeof(struct edit_t));
+    struct edit_t edit = { SES_DELETE, 3, 12, 48, next, prev };
     struct edit_t* copy = copy_edit(&edit);
     BOOST_REQUIRE(copy);
     BOOST_TEST(copy->operation == SES_DELETE);
     BOOST_TEST(copy->offset_sequence_one == 3);
     BOOST_TEST(copy->offset_sequence_two == 12);
     BOOST_TEST(copy->length == 48);
+    BOOST_TEST(copy->next == next);
+    BOOST_TEST(copy->previous == prev);
+    free(next);
+    free(prev);
+    free(copy);
+}
+
+BOOST_AUTO_TEST_CASE(malloc_with_stack_links) {
+    struct edit_t next, prev;
+    struct edit_t * edit = (struct edit_t*)malloc(sizeof(struct edit_t));
+    edit->operation = SES_INSERT;
+    edit->offset_sequence_one = 100;
+    edit->offset_sequence_two = 50;
+    edit->length = 20;
+    edit->next = &next;
+    edit->previous = &prev;
+    struct edit_t* copy = copy_edit(edit);
+    BOOST_REQUIRE(copy);
+    BOOST_TEST(copy->operation == SES_INSERT);
+    BOOST_TEST(copy->offset_sequence_one == 100);
+    BOOST_TEST(copy->offset_sequence_two == 50);
+    BOOST_TEST(copy->length == 20);
     BOOST_TEST(copy->next == &next);
     BOOST_TEST(copy->previous == &prev);
+    free(edit);
     free(copy);
 }
 
@@ -70,6 +108,14 @@ BOOST_AUTO_TEST_CASE(null_input) {
   BOOST_TEST(script == nullptr);
 }
 
+BOOST_AUTO_TEST_CASE(null_input_with_last) {
+    struct edit_t* script = nullptr;
+    struct edit_t* last = reinterpret_cast<struct edit_t*>(0xdead);
+    BOOST_TEST(make_edit_script(nullptr, &script, &last) == 0);
+    BOOST_TEST(script == nullptr);
+    BOOST_TEST(last == nullptr);
+}
+
 BOOST_AUTO_TEST_CASE(one_edit_stack) {
     struct edit_t start{ SES_INSERT, 200, 101, 50, nullptr, nullptr };
     struct edit_t* script = nullptr;
@@ -80,6 +126,91 @@ BOOST_AUTO_TEST_CASE(one_edit_stack) {
     BOOST_TEST(script->operation == SES_INSERT);
     BOOST_TEST(script->offset_sequence_two == 100);
     BOOST_TEST(script->length == 1);
+    free_shortest_edit_script(script);
+}
+
+
+BOOST_AUTO_TEST_CASE(one_edit_malloc) {
+    struct edit_t* start = (struct edit_t*)malloc(sizeof(struct edit_t));
+    start->operation = SES_INSERT;
+    start->offset_sequence_one = 200;
+    start->offset_sequence_two = 101;
+    start->length = 50;
+    start->next = nullptr;
+    start->previous = nullptr;
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(start, &script, &last);
+    BOOST_TEST(cnt == 1);
+    BOOST_REQUIRE(script);
+    BOOST_TEST(script->operation == SES_INSERT);
+    BOOST_TEST(script->offset_sequence_one == 200);
+    BOOST_TEST(script->offset_sequence_two == 100);
+    BOOST_TEST(script->length == 1);
+    BOOST_TEST(script->next == nullptr);
+    BOOST_TEST(script->previous == nullptr);
+    BOOST_TEST(script == last);
+    free(start);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(two_insert_condense) {
+    struct edit_t first = { SES_INSERT, 0, 1, 1, nullptr, nullptr };
+    struct edit_t start = { SES_INSERT, 0, 1, 1, nullptr, &first };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start, &script, &last);
+    BOOST_TEST(cnt == 1);
+    BOOST_REQUIRE(script);
+    BOOST_TEST(script->operation == SES_INSERT);
+    BOOST_TEST(script->offset_sequence_one == 0);
+    BOOST_TEST(script->offset_sequence_two == 0);
+    BOOST_TEST(script->length == 2);
+    BOOST_TEST(script->next == nullptr);
+    BOOST_TEST(script->previous == nullptr);
+    BOOST_TEST(script == last);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(two_insert_no_condense) {
+    struct edit_t first = { SES_INSERT, 0, 1, 1, nullptr, nullptr };
+    struct edit_t start = { SES_INSERT, 1, 1, 1, nullptr, &first };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start, &script, &last);
+    BOOST_TEST(cnt == 2);
+    auto e = script;
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->previous == nullptr);
+    e = e->next;
+    BOOST_REQUIRE(e);
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 1);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->next == nullptr);
+    BOOST_TEST(e == last);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(two_delete_condense) {
+    struct edit_t first = { SES_DELETE, 1, 0, 1, nullptr, nullptr };
+    struct edit_t start = { SES_DELETE, 2, 0, 1, nullptr, &first };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start, &script, &last);
+    BOOST_TEST(cnt == 1);
+    BOOST_REQUIRE(script);
+    BOOST_TEST(script->operation == SES_DELETE);
+    BOOST_TEST(script->offset_sequence_one == 0);
+    BOOST_TEST(script->offset_sequence_two == 0);
+    BOOST_TEST(script->length == 2);
+    BOOST_TEST(script->next == nullptr);
+    BOOST_TEST(script->previous == nullptr);
+    BOOST_TEST(script == last);
     free_shortest_edit_script(script);
 }
 
