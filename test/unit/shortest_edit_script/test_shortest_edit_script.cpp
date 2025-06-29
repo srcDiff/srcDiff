@@ -214,6 +214,348 @@ BOOST_AUTO_TEST_CASE(two_delete_condense) {
     free_shortest_edit_script(script);
 }
 
+BOOST_AUTO_TEST_CASE(two_delete_no_condense) {
+    struct edit_t first = { SES_DELETE, 1, 0, 1, nullptr, nullptr };
+    struct edit_t start = { SES_DELETE, 1, 0, 1, nullptr, &first };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start, &script, &last);
+    BOOST_TEST(cnt == 2);
+    auto e = script;
+    BOOST_TEST(e->operation == SES_DELETE);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->previous == nullptr);
+    e = e->next;
+    BOOST_REQUIRE(e);
+    BOOST_TEST(e->operation == SES_DELETE);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->next == nullptr);
+    BOOST_TEST(e == last);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(two_insert_delete_1) {
+    struct edit_t first_edit = { SES_INSERT, 0, 1, 1, NULL, NULL };
+    struct edit_t start_edit = { SES_DELETE, 2, 0, 1, NULL, &first_edit };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start_edit, &script, &last);
+    BOOST_TEST(cnt == 2);
+    auto e = script;
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->previous == nullptr);
+    e = e->next;
+    BOOST_REQUIRE(e);
+    BOOST_TEST(e->operation == SES_DELETE);
+    BOOST_TEST(e->offset_sequence_one == 1);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->next == nullptr);
+    BOOST_TEST(e == last);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(two_insert_delete_2) {
+    struct edit_t first_edit = { SES_INSERT, 0, 1, 1, NULL, NULL };
+    struct edit_t start_edit = { SES_DELETE, 1, 0, 1, NULL, &first_edit };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start_edit, &script, &last);
+    BOOST_TEST(cnt == 2);
+    auto e = script;
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->previous == nullptr);
+    e = e->next;
+    BOOST_REQUIRE(e);
+    BOOST_TEST(e->operation == SES_DELETE);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->next == nullptr);
+    BOOST_TEST(e == last);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(two_delete_insert_1) {
+    struct edit_t first_edit = { SES_DELETE, 1, 0, 1, NULL, NULL };
+    struct edit_t start_edit = { SES_INSERT, 0, 1, 1, NULL, &first_edit };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start_edit, &script, &last);
+    BOOST_TEST(cnt == 2);
+    auto e = script;
+    BOOST_TEST(e->operation == SES_DELETE);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->previous == nullptr);
+    e = e->next;
+    BOOST_REQUIRE(e);
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->next == nullptr);
+    BOOST_TEST(e == last);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(two_delete_insert_2) {
+    struct edit_t first_edit = { SES_DELETE, 1, 0, 1, NULL, NULL };
+    struct edit_t start_edit = { SES_INSERT, 1, 1, 1, NULL, &first_edit };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start_edit, &script, &last);
+    BOOST_TEST(cnt == 2);
+    auto e = script;
+    BOOST_TEST(e->operation == SES_DELETE);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->previous == nullptr);
+    e = e->next;
+    BOOST_REQUIRE(e);
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 1);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->next == nullptr);
+    BOOST_TEST(e == last);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(three_insert_condense_1) {
+    struct edit_t first_edit = { SES_INSERT, 0, 1, 1, NULL, NULL };
+    struct edit_t middle_edit = { SES_INSERT, 0, 1, 1, NULL, &first_edit };
+    struct edit_t start_edit = { SES_INSERT, 0, 1, 1, NULL, &middle_edit };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start_edit, &script, &last);
+    BOOST_TEST(cnt == 1);
+    auto e = script;
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 3);
+    BOOST_TEST(e->previous == nullptr);
+    BOOST_TEST(e->next == nullptr);
+    BOOST_TEST(e == last);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(three_insert_condense_2) {
+    struct edit_t first_edit = { SES_INSERT, 0, 1, 1, NULL, NULL };
+    struct edit_t middle_edit = { SES_INSERT, 0, 1, 1, NULL, &first_edit };
+    struct edit_t start_edit = { SES_INSERT, 1, 1, 1, NULL, &middle_edit };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start_edit, &script, &last);
+    BOOST_TEST(cnt == 2);
+    auto e = script;
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 2);
+    BOOST_TEST(e->previous == nullptr);
+    e = e->next;
+    BOOST_REQUIRE(e);
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 1);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->next == nullptr);
+    BOOST_TEST(e == last);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(three_insert_condense_3) {
+    struct edit_t first_edit = { SES_INSERT, 0, 1, 1, NULL, NULL };
+    struct edit_t middle_edit = { SES_INSERT, 1, 1, 1, NULL, &first_edit };
+    struct edit_t start_edit = { SES_INSERT, 1, 1, 1, NULL, &middle_edit };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start_edit, &script, &last);
+    BOOST_TEST(cnt == 2);
+    auto e = script;
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->previous == nullptr);
+    e = e->next;
+    BOOST_REQUIRE(e);
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 1);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 2);
+    BOOST_TEST(e->next == nullptr);
+    BOOST_TEST(e == last);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(three_insert_condense_4) {
+    struct edit_t first_edit = { SES_INSERT, 0, 1, 1, NULL, NULL };
+    struct edit_t middle_edit = { SES_INSERT, 1, 1, 1, NULL, &first_edit };
+    struct edit_t start_edit = { SES_INSERT, 0, 1, 1, NULL, &middle_edit };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start_edit, &script, &last);
+    BOOST_TEST(cnt == 3);
+    auto e = script;
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->previous == nullptr);
+    e = e->next;
+    BOOST_REQUIRE(e);
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 1);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    e = e->next;
+    BOOST_REQUIRE(e);
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->next == nullptr);
+    BOOST_TEST(e == last);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(three_delete_condense_1) {
+    struct edit_t first_edit = { SES_DELETE, 1, 0, 1, NULL, NULL };
+    struct edit_t middle_edit = { SES_DELETE, 2, 0, 1, NULL, &first_edit };
+    struct edit_t start_edit = { SES_DELETE, 3, 0, 1, NULL, &middle_edit };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start_edit, &script, &last);
+    BOOST_TEST(cnt == 1);
+    auto e = script;
+    BOOST_TEST(e->operation == SES_DELETE);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 3);
+    BOOST_TEST(e->previous == nullptr);
+    BOOST_TEST(e->next == nullptr);
+    BOOST_TEST(e == last);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(three_delete_condense_2) {
+    struct edit_t first_edit = { SES_DELETE, 1, 0, 1, NULL, NULL };
+    struct edit_t middle_edit = { SES_DELETE, 2, 0, 1, NULL, &first_edit };
+    struct edit_t start_edit = { SES_DELETE, 2, 0, 1, NULL, &middle_edit };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start_edit, &script, &last);
+    BOOST_TEST(cnt == 2);
+    auto e = script;
+    BOOST_TEST(e->operation == SES_DELETE);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 2);
+    BOOST_TEST(e->previous == nullptr);
+    e = e->next;
+    BOOST_REQUIRE(e);
+    BOOST_TEST(e->operation == SES_DELETE);
+    BOOST_TEST(e->offset_sequence_one == 1);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->next == nullptr);
+    BOOST_TEST(e == last);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(three_delete_condense_3) {
+    struct edit_t first_edit = { SES_DELETE, 1, 0, 1, NULL, NULL };
+    struct edit_t middle_edit = { SES_DELETE, 1, 0, 1, NULL, &first_edit };
+    struct edit_t start_edit = { SES_DELETE, 1, 0, 1, NULL, &middle_edit };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start_edit, &script, &last);
+    BOOST_TEST(cnt == 3);
+    auto e = script;
+    for (int i = 0; i < 3; ++i) {
+        BOOST_TEST(e->operation == SES_DELETE);
+        BOOST_TEST(e->offset_sequence_one == 0);
+        BOOST_TEST(e->offset_sequence_two == 0);
+        BOOST_TEST(e->length == 1);
+        if (i < 2) {
+            BOOST_REQUIRE(e->next);
+            e = e->next;
+        }
+    }
+    BOOST_TEST(e->next == nullptr);
+    BOOST_TEST(e == last);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(three_insert_delete_mixed) {
+    struct edit_t first_edit = { SES_INSERT, 0, 1, 1, NULL, NULL };
+    struct edit_t middle_edit = { SES_DELETE, 1, 0, 1, NULL, &first_edit };
+    struct edit_t start_edit = { SES_INSERT, 0, 1, 1, NULL, &middle_edit };
+    struct edit_t* script = nullptr;
+    struct edit_t* last = nullptr;
+    int cnt = make_edit_script(&start_edit, &script, &last);
+    BOOST_TEST(cnt == 3);
+    auto e = script;
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    e = e->next; BOOST_REQUIRE(e);
+    BOOST_TEST(e->operation == SES_DELETE);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    e = e->next; BOOST_REQUIRE(e);
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->next == nullptr);
+    BOOST_TEST(e == last);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_CASE(three_delete_insert_no_last) {
+    struct edit_t first_edit = { SES_DELETE, 1, 0, 1, NULL, NULL };
+    struct edit_t middle_edit = { SES_INSERT, 0, 1, 1, NULL, &first_edit };
+    struct edit_t start_edit = { SES_DELETE, 1, 0, 1, NULL, &middle_edit };
+    struct edit_t* script = nullptr;
+    int cnt = make_edit_script(&start_edit, &script, NULL);
+    BOOST_TEST(cnt == 3);
+    auto e = script;
+    BOOST_TEST(e->operation == SES_DELETE);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    e = e->next; BOOST_REQUIRE(e);
+    BOOST_TEST(e->operation == SES_INSERT);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    e = e->next; BOOST_REQUIRE(e);
+    BOOST_TEST(e->operation == SES_DELETE);
+    BOOST_TEST(e->offset_sequence_one == 0);
+    BOOST_TEST(e->offset_sequence_two == 0);
+    BOOST_TEST(e->length == 1);
+    BOOST_TEST(e->next == nullptr);
+    free_shortest_edit_script(script);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(shortest_edit_script_tests)
