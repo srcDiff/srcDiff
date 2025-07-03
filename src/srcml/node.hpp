@@ -76,6 +76,7 @@ namespace srcML {
     void merge(const node & that);
     void merge_attributes(const attribute_map & that);
 
+    bool is_equal(const node & node, bool ignore_pos_attr = true) const;
     bool operator==(const node & node) const;
     bool operator!=(const node & node) const;
 

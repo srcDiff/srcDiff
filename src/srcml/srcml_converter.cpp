@@ -365,11 +365,13 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
       // insert end if temp element for elseif and detect elseif
       if(node->get_type() == srcML::node_type::END
-        && element_stack.back()->get_name() == "if" && !element_stack.back()->get_attributes().empty()) {
+        && element_stack.back()->get_name() == "if" && !element_stack.back()->get_attributes().empty()
+        && bool(element_stack.back()->get_attribute("type"))) {
         std::shared_ptr<srcML::node> end_node = std::make_shared<srcML::node>(*node);
         end_node->set_temporary(true);
         nodes.push_back(end_node);
-      } else if(node->get_name() == "if" && !node->get_attributes().empty()) {
+      } else if(node->get_name() == "if" && !node->get_attributes().empty()
+            && bool(element_stack.back()->get_attribute("type"))) {
           is_elseif = true;
       }
 

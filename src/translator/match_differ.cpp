@@ -39,7 +39,7 @@ void match_differ::output() {
         out->output_node(out->diff_common_start, COMMON);
     }
 
-    if(*original_construct->root_term() == *modified_construct->root_term()) {
+    if(original_construct->root_term()->is_equal(*modified_construct->root_term()), false) {
 
         out->output_node(original_construct->root_term(), modified_construct->root_term(), COMMON);
 

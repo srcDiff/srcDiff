@@ -167,8 +167,24 @@ void srcML::node::merge_attributes(const srcML::attribute_map & that) {
     }
 }
 
+bool srcML::node::is_equal(const node & node, bool ignore_pos_attr) const {
+
+    std::function<bool (const attribute_map_pair&, const attribute_map_pair&)> attr_compare =
+     [ignore_pos_attr](const attribute_map_pair& lhs, const attribute_map_pair& rhs) {
+        if(lhs.first != rhs.first) return lhs.first < rhs.first;
+        if(ignore_pos_attr && lhs.first.substr(0, 3) == "pos") return false;
+        return lhs.second.get_value() < rhs.second.get_value();
+    };
+
+    attribute_map attribute_diff;
+    std::set_symmetric_difference(attributes.begin(), attributes.end(), node.attributes.begin(), node.attributes.end(),
+                                  std::inserter(attribute_diff, attribute_diff.end()), attr_compare);
+    return type == node.type && name == node.name && content == node.content && attribute_diff.empty();
+}
+
+
 bool srcML::node::operator==(const srcML::node & node) const {
-    return type == node.type && name == node.name && content == node.content && attributes == node.attributes;
+    return is_equal(node);
 }
 
 bool srcML::node::operator!=(const srcML::node & node) const {

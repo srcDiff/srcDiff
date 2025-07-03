@@ -37,6 +37,9 @@ void common_stream::markup_common() {
 
     if(*rbuf_original->nodes.at(i) == *rbuf_modified->nodes.at(j)) {
 
+      if(rbuf_original->nodes.at(i)->get_attributes() != rbuf_modified->nodes.at(j)->get_attributes()) {
+        rbuf_original->nodes.at(i)->merge_attributes(rbuf_modified->nodes.at(j)->get_attributes());
+      }
       output_node(rbuf_original->nodes.at(i), rbuf_modified->nodes.at(j), COMMON);
         
     } else if(rbuf_original->nodes.at(i)->is_whitespace() && rbuf_modified->nodes.at(j)->is_whitespace()) {
