@@ -173,7 +173,10 @@ bool srcML::node::is_equal(const node & node, bool ignore_pos_attr) const {
      [ignore_pos_attr](const attribute_map_pair& lhs, const attribute_map_pair& rhs) {
         if(lhs.first != rhs.first) return lhs.first < rhs.first;
         if(ignore_pos_attr && lhs.first.substr(0, 3) == "pos") return false;
-        return lhs.second.get_value() < rhs.second.get_value();
+        if(lhs.second == rhs.second) return false;
+        if(!lhs.second.get_value())  return true;
+        if(!rhs.second.get_value())  return false;
+        return *lhs.second.get_value() < *rhs.second.get_value();
     };
 
     attribute_map attribute_diff;

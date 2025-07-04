@@ -371,7 +371,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         end_node->set_temporary(true);
         nodes.push_back(end_node);
       } else if(node->get_name() == "if" && !node->get_attributes().empty()
-            && bool(element_stack.back()->get_attribute("type"))) {
+            && bool(node->get_attribute("type"))) {
           is_elseif = true;
       }
 

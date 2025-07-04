@@ -39,16 +39,12 @@ void match_differ::output() {
         out->output_node(out->diff_common_start, COMMON);
     }
 
-    if(original_construct->root_term()->is_equal(*modified_construct->root_term()), false) {
-
+    if(original_construct->root_term()->is_equal(*modified_construct->root_term(), false)) {
         out->output_node(original_construct->root_term(), modified_construct->root_term(), COMMON);
-
     } else {
-
         std::shared_ptr<srcML::node> merged_node = std::make_shared<srcML::node>(*original_construct->root_term());
         merged_node->merge(*modified_construct->root_term());
         out->output_node(merged_node, COMMON);
-
     }
 
     ++out->last_output_original();
@@ -56,7 +52,6 @@ void match_differ::output() {
 
     // diff comments differently then source-code
     if(original_construct->root_term()->get_name() == "comment") {
-
         // collect subset of nodes
         construct::construct_list children_original = original_construct->children();
 
