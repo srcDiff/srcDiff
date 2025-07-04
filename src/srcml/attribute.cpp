@@ -25,7 +25,9 @@ srcML::attribute::attribute(
 void srcML::attribute::merge(const srcML::attribute & that) {
     assert(this->get_name() == that.get_name());
     assert(this->get_ns() == that.get_ns());
-    this->set_value(std::optional<std::string>(*this->get_value() + "|" + *that.get_value()));
+    if(*this->get_value() != *that.get_value()) {
+        this->set_value(std::optional<std::string>(*this->get_value() + "|" + *that.get_value()));
+    }
 }
 
 void srcML::attribute::set_value(const std::optional<std::string> & input) {
