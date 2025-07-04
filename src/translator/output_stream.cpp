@@ -473,9 +473,11 @@ void output_stream::output_node_inner(const srcML::node & node) {
     {
 
       for(srcML::attribute_map_cpair attr : node.get_attributes()) {
-
-        srcml_write_attribute(wstate->unit, 0, attr.second.get_name().c_str(), 0, attr.second.get_value() ? attr.second.get_value()->c_str() : 0);
-
+        srcml_write_attribute(wstate->unit,
+                              attr.second.get_ns() && attr.second.get_ns()->get_prefix()? attr.second.get_ns()->get_prefix()->c_str() : 0, 
+                              attr.second.get_name().c_str(), 
+                              0, 
+                              attr.second.get_value()? attr.second.get_value()->c_str() : 0);
       }
 
     }

@@ -22,6 +22,8 @@ std::shared_ptr<srcML::name_space> srcML::name_space::SRC_NAMESPACE = std::make_
 
 std::shared_ptr<srcML::name_space> srcML::name_space::CPP_NAMESPACE = std::make_shared<srcML::name_space>("http://www.srcML.org/srcML/cpp", "cpp");
 
+std::shared_ptr<srcML::name_space> srcML::name_space::POS_NAMESPACE = std::make_shared<srcML::name_space>("http://www.srcML.org/srcML/position", "pos");
+
 std::shared_ptr<srcML::name_space> srcML::name_space::DIFF_NAMESPACE = std::make_shared<srcML::name_space>("http://www.srcML.org/srcDiff", "diff");
 
 std::unordered_map<std::string, std::shared_ptr<srcML::name_space>> srcML::name_space::namespaces = {};
@@ -63,6 +65,7 @@ std::shared_ptr<srcML::name_space> srcML::name_space::get_namespace(xmlNsPtr ns)
   if(init_namespace) {
       namespaces.emplace(std::make_pair("http://www.srcML.org/srcML/src", srcML::name_space::SRC_NAMESPACE));
       namespaces.emplace(std::make_pair("http://www.srcML.org/srcML/cpp", srcML::name_space::CPP_NAMESPACE));
+      namespaces.emplace(std::make_pair("http://www.srcML.org/srcML/cpp", srcML::name_space::POS_NAMESPACE));
       namespaces.emplace(std::make_pair("http://www.srcML.org/srcDiff",   srcML::name_space::DIFF_NAMESPACE));
       init_namespace = false;
   }

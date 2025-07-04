@@ -42,6 +42,7 @@ namespace srcML {
 
         static std::shared_ptr<name_space> SRC_NAMESPACE;
         static std::shared_ptr<name_space> CPP_NAMESPACE;
+        static std::shared_ptr<name_space> POS_NAMESPACE;
         static std::shared_ptr<name_space> DIFF_NAMESPACE;
         static std::unordered_map<std::string, std::shared_ptr<name_space>> namespaces;
 

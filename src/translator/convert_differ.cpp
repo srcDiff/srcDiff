@@ -28,7 +28,7 @@
 namespace srcdiff {
 
 const std::string convert_str("convert");
-const srcML::attribute diff_convert_type("type", srcML::name_space::DIFF_NAMESPACE, convert_str);
+const srcML::attribute diff_convert_type("type", srcML::name_space::SRC_NAMESPACE, convert_str);
 
 convert_differ::convert_differ(std::shared_ptr<output_stream> out, std::shared_ptr<const construct> original_construct, std::shared_ptr<const construct> modified_construct) 
     : out(out), original_construct(original_construct), modified_construct(modified_construct) {}
