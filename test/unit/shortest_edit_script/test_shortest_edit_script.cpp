@@ -560,6 +560,72 @@ BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(shortest_edit_script_tests)
 
+#define CHECK_SES(fn_call, expected_op, off1, off2, len) \
+    do { \
+        BOOST_REQUIRE(script); \
+        BOOST_TEST(script->operation == expected_op); \
+        BOOST_TEST(script->offset_sequence_one == off1); \
+        BOOST_TEST(script->offset_sequence_two == off2); \
+        BOOST_TEST(script->length == len); \
+    } while (0)
+
+// Test 1: NULL/NULL
+BOOST_AUTO_TEST_CASE(ses1_null_null) {
+    struct edit_t* script = nullptr;
+    int dist = shortest_edit_script(nullptr, 0, nullptr, 0, &script, compare, accessor, nullptr);
+    BOOST_TEST(dist == 0);
+    BOOST_TEST(script == nullptr);
+}
+
+// Test 2: empty/empty
+BOOST_AUTO_TEST_CASE(ses2_empty_empty) {
+    const char* a[] = {};
+    const char* b[] = {};
+    struct edit_t* script = nullptr;
+    int dist = shortest_edit_script(a, 0, b, 0, &script, compare, accessor, nullptr);
+    BOOST_TEST(dist == 0);
+    BOOST_TEST(script == nullptr);
+}
+
+// Test 3
+BOOST_AUTO_TEST_CASE(ses3_insert_at_end) {
+    const char* a[] = { "a" };
+    const char* b[] = { "a", "b" };
+    struct edit_t* script = nullptr;
+    int dist = shortest_edit_script(a, 1, b, 2, &script, compare, accessor, nullptr);
+    BOOST_TEST(dist == 1);
+    CHECK_SES(script, SES_INSERT, 1, 1, 1);
+    BOOST_TEST(script->next == nullptr);
+    BOOST_TEST(script->previous == nullptr);
+    free_shortest_edit_script(script);
+}
+
+BOOST_AUTO_TEST_SUITE_END() // shortest_edit_script_classic
+
+BOOST_AUTO_TEST_SUITE(shortest_edit_script_linear_variant)
+
+// Test 1: NULL/NULL
+BOOST_AUTO_TEST_CASE(ses1_null_null) {
+    struct edit_t* script = nullptr;
+    int dist = shortest_edit_script_linear_space(nullptr, 0, nullptr, 0, &script, compare, accessor, nullptr);
+    BOOST_TEST(dist == 0);
+    BOOST_TEST(script == nullptr);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(shortest_edit_script_hybrid_variant)
+
+// Test 1: NULL/NULL
+BOOST_AUTO_TEST_CASE(ses1_null_null) {
+    struct edit_t* script = nullptr;
+    int dist = shortest_edit_script_hybrid(nullptr, 0, nullptr, 0, &script, compare, accessor, nullptr, 2);
+    BOOST_TEST(dist == 0);
+    BOOST_TEST(script == nullptr);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
 // Helper to run a C API SES function and collect its edits
 static std::vector<int> run_and_flatten(
     int (*func)(const void*, int, const void*, int, struct edit_t**,
@@ -593,5 +659,3 @@ BOOST_AUTO_TEST_CASE(empty_sequences) {
     BOOST_TEST(dist == 0);
     BOOST_TEST(ops.empty());
 }
-
-BOOST_AUTO_TEST_SUITE_END()
