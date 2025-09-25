@@ -36,7 +36,7 @@ std::string get_version() {
 
   std::stringstream out;
 
-  out << PROGRAM_NAME << " Version 1\n"
+  out << PROGRAM_NAME << " Version 0.1.0\n"
     << "Using:\n"
     << "libsrcml " << srcml_version_string() << "\n";
 
