@@ -74,7 +74,9 @@ public:
 
   public:
 
-    writer_state(const METHOD_TYPE & method) : method(method), approximate(false) {}
+    writer_state(const METHOD_TYPE & method)
+      : filename(), unit(nullptr), method(method), approximate(false),
+        output_diff() {}
 
     void clear() {
 
