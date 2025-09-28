@@ -497,8 +497,8 @@ const client_options& process_command_line(int argc, char* argv[]) {
   srcml_group->add_option_function<std::string>(
     "--xmlns",
     [](std::string){},  // no-op. should never be called
-    "Set the prefix associated with a namespace or register a new one.\n"
-    "Use the form --xmlns:prefix=url, or --xmlns=url to set the\ndefault prefix."
+    "Set the prefix associated with a namespace or register a new one:\n"
+    "use the form --xmlns:prefix=url, or --xmlns=url to set the\ndefault prefix"
   );
 
   srcml_group->add_flag(
@@ -562,14 +562,15 @@ const client_options& process_command_line(int argc, char* argv[]) {
     "-y,--side-by-side",
     view_option_side_by_side_tab_size,
     "Output as colorized side-by-side diff. Provide the tabstop size as\n"
-    "the argument to this option."
+    "the argument to this option"
   )->default_val(8)->excludes(unified);
 
+  // this should be made to work with --side-by-side.
   view_options->add_option_function<std::string>(
     "-C,--context",
     view_option_unified_view_context,
-    "Specify the amount of context to show around an edit in the unified/side-by-side view.\n"
-    "Either give a number of lines, or use \"all\" or -1 to see the entire file,\n"
+    "Specify the amount of context to show around an edit in the unified view:\n"
+    "either give a number of lines, use \"all\" or -1 to see the entire file,\n"
     "or use \"function\" to see the encompassing function."
   )->default_val("3")->needs(unified);
 
@@ -577,8 +578,8 @@ const client_options& process_command_line(int argc, char* argv[]) {
   view_options->add_option(
     "--theme",
     options.view_options.theme,
-    "Select theme for syntax highlighting.\n"
-    "Options: \"default\", \"monokai\", or the filename of a custom theme."
+    "Select theme for syntax highlighting,\n"
+    "options: \"default\", \"monokai\", or the filename of a custom theme"
   )->default_val("default");
 
   view_options->add_flag(
@@ -610,8 +611,8 @@ const client_options& process_command_line(int argc, char* argv[]) {
   view_options->add_option(
     "--highlight",
     options.view_options.syntax_highlight,
-    "Set the level of syntax highlighting.\n"
-    "Options: none, partial (default), or full"
+    "Set the level of syntax highlighting,\n"
+    "options: none, partial (default), or full"
   )->default_val("partial");
 
   // our xmlns options have a custom format and need to be parsed in advance as
