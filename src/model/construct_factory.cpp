@@ -78,22 +78,22 @@ typedef nest::custom<"expr", "call", "operator", "literal", "name", "switch">
         expr_nest;
 
 typedef nest::custom<"function", "constructor", "destructor",
-                          "function_decl", "constructor_decl", "destructor_decl",
-                          "decl_stmt", "typedef"
-                          "class", "struct", "union", "enum",
-                          "class_decl", "struct_decl", "union_decl", "enum_decl">
+                     "function_decl", "constructor_decl", "destructor_decl",
+                     "decl_stmt", "typedef"
+                     "class", "struct", "union", "enum",
+                     "class_decl", "struct_decl", "union_decl", "enum_decl">
         class_nest;
 
 typedef nest::custom<"goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
-                          "if", "while", "for", "foreach", "else", "elseif", "switch", "do",
-                          "try", "catch", "finally", "synchronized",
-                          "expr", "call", "operator", "literal", "continue", "break", "goto">
+                     "if", "while", "for", "foreach", "else", "elseif", "switch", "do",
+                     "try", "catch", "finally", "synchronized",
+                     "expr", "call", "operator", "literal", "continue", "break", "goto">
         then_nest;
 
 typedef nest::custom<"goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
-                          "if_stmt", "if", "while", "for", "foreach", "switch", "do",
-                          "try", "catch", "finally", "synchronized",
-                          "expr", "call", "operator", "literal", "continue", "break", "goto">
+                     "if_stmt", "if", "while", "for", "foreach", "switch", "do",
+                     "try", "catch", "finally", "synchronized",
+                     "expr", "call", "operator", "literal", "continue", "break", "goto">
         else_nest;
 
 typedef std::unordered_map<std::string_view, factory_function> factory_map_type;
