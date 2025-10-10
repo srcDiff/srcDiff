@@ -35,6 +35,7 @@
 #include <decl_stmt.hpp>
 
 #include <always_match.hpp>
+#include <specifier.hpp>
 
 #include <block.hpp>
 
@@ -98,7 +99,7 @@ typedef nest::custom<"goto", "expr_stmt", "decl_stmt", "return", "comment", "blo
 
 typedef std::unordered_map<std::string_view, factory_function> factory_map_type;
 
-factory_function default_factory  = generate_factory<construct>();
+factory_function default_factory = generate_factory<construct>();
 factory_map_type factory_map = {
 
   {"name", generate_factory<name_t, nest::name_t>() },
@@ -200,6 +201,8 @@ factory_map_type factory_map = {
 
 
   // java
+  {"specifier", generate_factory<specifier>() },
+
   {"static", generate_factory<construct, nest::custom<"decl_stmt">>() },
 
   {"extends",    generate_factory<construct, nest::rule_checker, convert::custom<"extends", "implements", "permits">>() },

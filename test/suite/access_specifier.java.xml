@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Java" url="access_specifier">
+
+<unit language="Java" filename="access_specifier|access_specifier">
+<class><specifier><diff:delete type="replace">public</diff:delete><diff:insert type="replace">private</diff:insert></specifier> class <name>foo</name> <block>{}</block></class>
+</unit>
+
+</unit>
