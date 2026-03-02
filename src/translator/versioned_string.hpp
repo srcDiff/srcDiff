@@ -32,7 +32,7 @@ class versioned_string {
     protected:
 
     public:
-        static std::string normalize(const std::string & str, const std::string & sep);
+        static std::string normalize(const std::string& str, const std::string& sep);
 
         versioned_string(char separator = '|');
         versioned_string(std::string string, char separator = '|');
@@ -42,15 +42,15 @@ class versioned_string {
         bool has_original() const;
         bool has_modified() const;
 
-        std::string & original();
-        const std::string & original() const;
-        std::string & modified();
-        const std::string & modified() const;
-        const std::string & first_active_string() const;
+        std::string& original();
+        const std::string& original() const;
+        std::string& modified();
+        const std::string& modified() const;
+        const std::string& first_active_string() const;
 
-        void set_original(const std::string & string_original);
-        void set_modified(const std::string & string_modified);
-        void append(const std::string & str, srcdiff::operation version);
+        void set_original(const std::string& string_original);
+        void set_modified(const std::string& string_modified);
+        void append(const std::string& str, srcdiff::operation version);
         void append(const char * characters, size_t len, srcdiff::operation version);
         void clear();
 
@@ -60,19 +60,19 @@ class versioned_string {
         void swap(versioned_string & other);
 
         operator std::string() const;
-        bool operator==(const std::string & str) const;
-        bool operator!=(const std::string & str) const;
+        bool operator==(const std::string& str) const;
+        bool operator!=(const std::string& str) const;
         bool operator==(const char * c_str) const;
         bool operator!=(const char * c_str) const;
         bool operator<(const versioned_string & v_str) const;
-        std::string operator+(const std::string & str) const;
+        std::string operator+(const std::string& str) const;
         std::string operator+(const char * c_str) const;
         versioned_string operator+(const versioned_string & v_str) const;
 
         versioned_string & operator+=(const versioned_string & v_str);
 
         friend std::ostream & operator<<(std::ostream & out, const versioned_string & string);
-        friend std::string operator+(const std::string & str, const versioned_string & v_str);
+        friend std::string operator+(const std::string& str, const versioned_string & v_str);
         friend std::string operator+(const char * c_str, const versioned_string & v_str);
 
 };

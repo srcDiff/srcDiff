@@ -38,41 +38,41 @@ bool versioned_string::has_modified() const {
     return bool(string_modified);
 }
 
-std::string & versioned_string::original() {
+std::string& versioned_string::original() {
     assert(has_original());
     return *string_original;
 }
 
-const std::string & versioned_string::original() const {
+const std::string& versioned_string::original() const {
     if(!has_original()) return empty_str;
     return *string_original;
 }
 
-std::string & versioned_string::modified() {
+std::string& versioned_string::modified() {
     assert(has_modified());
     return *string_modified;
 }
 
-const std::string & versioned_string::modified() const {
+const std::string& versioned_string::modified() const {
     if(!has_modified()) return empty_str;
     return *string_modified;
 }
 
-const std::string & versioned_string::first_active_string() const {
+const std::string& versioned_string::first_active_string() const {
     if(has_original()) return original();
     if(has_modified()) return modified();
     return empty_str;
 }
 
-void versioned_string::set_original(const std::string & string_original) {
+void versioned_string::set_original(const std::string& string_original) {
     this->string_original = string_original;
 }
 
-void versioned_string::set_modified(const std::string & string_modified) {
+void versioned_string::set_modified(const std::string& string_modified) {
     this->string_modified = string_modified;
 }
 
-void versioned_string::append(const std::string & str, srcdiff::operation version) {
+void versioned_string::append(const std::string& str, srcdiff::operation version) {
     append(str.c_str(), str.size(), version);
 }
 
@@ -97,7 +97,7 @@ void versioned_string::clear() {
     string_modified = std::optional<std::string>();
 }
 
-std::string versioned_string::normalize(const std::string & str, const std::string & sep) {
+std::string versioned_string::normalize(const std::string& str, const std::string& sep) {
     std::istringstream in(str);
     std::ostringstream out;
     std::copy(std::istream_iterator<std::string>(in), std::istream_iterator<std::string>(), std::ostream_iterator<std::string>(out, sep.c_str()));
@@ -140,11 +140,11 @@ versioned_string::operator std::string() const {
     return original() + separator + modified();
 }
 
-bool versioned_string::operator==(const std::string & str) const {
+bool versioned_string::operator==(const std::string& str) const {
     return std::string(*this) == str;
 }
 
-bool versioned_string::operator!=(const std::string & str) const {
+bool versioned_string::operator!=(const std::string& str) const {
     return std::string(*this) != str;
 }
 
@@ -160,7 +160,7 @@ bool versioned_string::operator<(const versioned_string & v_str) const {
     return std::string(*this) < std::string(v_str);
 }
 
-std::string versioned_string::operator+(const std::string & str) const {
+std::string versioned_string::operator+(const std::string& str) const {
     return std::string(*this) + str;
 }
 
@@ -191,7 +191,7 @@ std::ostream & operator<<(std::ostream & out, const versioned_string & string) {
     else return out << string.original() << string.separator << string.modified();
 }
 
-std::string operator+(const std::string & str, const versioned_string & v_str) {
+std::string operator+(const std::string& str, const versioned_string & v_str) {
     return str + std::string(v_str);
 }
 
