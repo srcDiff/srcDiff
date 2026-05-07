@@ -27,7 +27,7 @@ void input_stream<T>::operator()(srcml_nodes& nodes, int& is_input) const {
 
   } catch(no_file_exception) {
   } catch(...) {
-    // Should this be somethign else
+    // Should this be something else
     is_input = -2;
 
   }

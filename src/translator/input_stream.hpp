@@ -25,17 +25,6 @@ namespace srcdiff {
 
 template<class T>
 class input_stream {
-
-protected:
-
-    srcml_archive* archive;
-    const std::optional<std::string> input_path;
-    const char* language_string;
-    const OPTION_TYPE& options;
-    const T& input;
-
-private:
-
 public:
 
     input_stream(srcml_archive* archive, const std::optional<std::string>& input_path, const char* language_string, const OPTION_TYPE& options, const T& input);
@@ -43,8 +32,14 @@ public:
 
     void operator()(srcml_nodes& nodes, int& is_input) const;
 
-    virtual srcml_nodes input_nodes() const;
+    srcml_nodes input_nodes() const;
 
+protected:
+    srcml_archive* archive;
+    const std::optional<std::string> input_path;
+    const char* language_string;
+    const OPTION_TYPE& options;
+    const T& input;
 };
 
 #include <input_stream.tcc>
