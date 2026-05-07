@@ -76,8 +76,8 @@ std::shared_ptr<srcML::node> srcml_converter::get_current_node(xmlTextReaderPtr 
 }
 
 std::shared_ptr<srcML::node> split_text(const char * characters_start,
-                                       const char * characters_end,
-                                       const std::shared_ptr<srcML::node> & parent) {
+                                        const char * characters_end,
+                                        const std::shared_ptr<srcML::node> & parent) {
 
   std::shared_ptr<srcML::node> text = std::make_shared<srcML::node>(srcML::node_type::TEXT, "text");
 
@@ -103,8 +103,8 @@ void eat_element(xmlTextReaderPtr& reader) {
   xmlTextReaderRead(reader);
 }
 
-srcml_converter::srcml_converter(srcml_archive * archive, bool split_strings, int stream_source) 
-  : archive(archive), split_strings(split_strings), stream_source(stream_source), output_buffer(0) {}
+srcml_converter::srcml_converter(srcml_archive * archive, bool split_strings) 
+  : archive(archive), split_strings(split_strings), output_buffer(0) {}
 
 srcml_converter::~srcml_converter() {
 

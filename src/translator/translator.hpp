@@ -79,12 +79,12 @@ std::string translator::translate(
   const std::optional<std::string> output_path = "";
 
   int is_original = 0;
-  std::thread thread_original(std::ref(input_original), SES_DELETE, std::ref(output->nodes_original()), std::ref(is_original));
+  std::thread thread_original(std::ref(input_original), std::ref(output->nodes_original()), std::ref(is_original));
 
   thread_original.join();
 
   int is_modified = 0;
-  std::thread thread_modified(std::ref(input_modified), SES_INSERT, std::ref(output->nodes_modified()), std::ref(is_modified));
+  std::thread thread_modified(std::ref(input_modified), std::ref(output->nodes_modified()), std::ref(is_modified));
 
   thread_modified.join();
 

@@ -27,8 +27,6 @@ protected:
 
   bool split_strings;
 
-  int stream_source;
-
   char * output_buffer;
   size_t output_size;
 
@@ -45,7 +43,7 @@ private:
 
 public:
 
-    srcml_converter(srcml_archive * archive, bool split_strings, int stream_source);
+    srcml_converter(srcml_archive * archive, bool split_strings);
     ~srcml_converter();
 
     void convert(const std::string & language, void * context, const std::function<ssize_t(void *, void *, size_t)> & read, const std::function<int(void *)> & close); 

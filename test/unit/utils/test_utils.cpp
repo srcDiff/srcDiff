@@ -49,7 +49,7 @@ std::shared_ptr<srcml_nodes> create_nodes(const std::string & code, const std::s
     srcml_archive_register_namespace(archive, "diff", "http://www.srcML.org/srcDiff");
 
     //create srcml_nodes
-    srcml_converter contNodes(archive, true, 0);
+    srcml_converter contNodes(archive, true);
     std::string source = code;
     contNodes.convert(language, (void*)&source, &str_read, &str_close);
     srcml_nodes testNode = contNodes.create_nodes();

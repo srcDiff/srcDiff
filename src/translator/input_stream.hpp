@@ -41,9 +41,9 @@ public:
     input_stream(srcml_archive * archive, const std::optional<std::string> & input_path, const char * language_string, const OPTION_TYPE & options, const T & input);
     ~input_stream();
 
-    void operator()(int stream_source, srcml_nodes & nodes, int & is_input) const;
+    void operator()(srcml_nodes & nodes, int & is_input) const;
 
-    virtual srcml_nodes input_nodes(int stream_source) const;
+    virtual srcml_nodes input_nodes() const;
 
 };
 
