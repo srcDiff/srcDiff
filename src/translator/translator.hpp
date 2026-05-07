@@ -10,6 +10,7 @@
 #ifndef INCLUDED_TRANSLATOR_HPP
 #define INCLUDED_TRANSLATOR_HPP
 
+#include <input_stream_manager.hpp>
 #include <input_stream.hpp>
 #include <output_stream.hpp>
 #include <client_options.hpp>
@@ -25,7 +26,6 @@
 #include <any>
 #include <optional>
 #include <string>
-#include <thread>
 
 #include <srcml.h>
 
@@ -69,8 +69,7 @@ public:
 
 // Translate from input stream to output stream
 template<class T>
-std::string translator::translate(
-                                   const input_stream<T> & input_original,
+std::string translator::translate( const input_stream<T> & input_original,
                                    const input_stream<T> & input_modified,
                                    const std::string & language,
                                    const std::optional<std::string> & unit_filename,
@@ -78,21 +77,14 @@ std::string translator::translate(
 
   const std::optional<std::string> output_path = "";
 
-  int is_original = 0;
-  std::thread thread_original(std::ref(input_original), std::ref(output->nodes_original()), std::ref(is_original));
+  input_stream_manager input_manager(archive, flags);
+  input_manager.input_streams(input_original, output->nodes_original(), input_modified, output->nodes_modified());
 
-  thread_original.join();
-
-  int is_modified = 0;
-  std::thread thread_modified(std::ref(input_modified), std::ref(output->nodes_modified()), std::ref(is_modified));
-
-  thread_modified.join();
-
-  output->prime(is_original, is_modified);
+  output->prime();
 
   std::string srcdiff_str;
   // run on file level
-  if(is_original || is_modified) {
+  if(!output->nodes_original().empty() || !output->nodes_modified().empty()) {
 
     output->start_unit(language, this->unit_filename ? this->unit_filename : unit_filename, unit_version);
 

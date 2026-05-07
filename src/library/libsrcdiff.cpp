@@ -83,8 +83,8 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
     options.srcdiff_filename = output_filename;
 
     file_input in;
-    srcdiff::input_stream<file_input> input_original(options.archive, original_path, language_string, options.flags, in);
-    srcdiff::input_stream<file_input> input_modified(options.archive, modified_path, language_string, options.flags, in);
+    srcdiff::input_stream<file_input> input_original(in, original_path, language_string);
+    srcdiff::input_stream<file_input> input_modified(in, modified_path, language_string);
 
     srcdiff::translator translator(options.srcdiff_filename, options.flags, options.methods, options.archive,
                                    options.unit_filename,

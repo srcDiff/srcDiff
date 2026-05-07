@@ -16,9 +16,6 @@
 
 #include <srcml.h>
 
-#include <vector>
-#include <memory>
-
 #include <optional>
 
 namespace srcdiff {
@@ -27,19 +24,17 @@ template<class T>
 class input_stream {
 public:
 
-    input_stream(srcml_archive* archive, const std::optional<std::string>& input_path, const char* language_string, const OPTION_TYPE& options, const T& input);
+    input_stream(const T& input, const std::optional<std::string>& input_path, const char* language_string);
     ~input_stream();
 
-    void operator()(srcml_nodes& nodes, int& is_input) const;
+    void operator()(srcml_nodes& nodes, srcml_archive* archive, const OPTION_TYPE& options) const;
 
-    srcml_nodes input_nodes() const;
+    srcml_nodes input_nodes(srcml_archive* archive, const OPTION_TYPE& options) const;
 
 protected:
-    srcml_archive* archive;
+    const T& input;
     const std::optional<std::string> input_path;
     const char* language_string;
-    const OPTION_TYPE& options;
-    const T& input;
 };
 
 #include <input_stream.tcc>

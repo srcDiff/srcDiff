@@ -224,8 +224,8 @@ std::string input_source_svn::process_file(const std::optional<std::string> & pa
   std::string svn_path_original_temp = svn_path_original.str();
   std::string svn_path_modified_temp = svn_path_modified.str();
 
-  srcdiff_input<input_source_svn> input_original(options.archive, svn_path_original_temp, language_string, 0, *this);
-  srcdiff_input<input_source_svn> input_modified(options.archive, svn_path_modified_temp, language_string, 0, *this);
+  srcdiff_input<input_source_svn> input_original(*this, svn_path_original_temp, language_string);
+  srcdiff_input<input_source_svn> input_modified(*this, svn_path_modified_temp, language_string);
 
   returntranslator->translate(input_original, input_modified, language_string, unit_filename, unit_version);
 

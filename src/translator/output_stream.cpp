@@ -59,7 +59,7 @@ void output_stream::initialize() {
 
 output_stream::~output_stream() {}
 
-void output_stream::prime(int is_original, int is_modified) {
+void output_stream::prime() {
 
   if(!is_initialized) initialize();
 
@@ -86,14 +86,6 @@ void output_stream::prime(int is_original, int is_modified) {
     update_diff_stack(rbuf_original->open_diff, diff_common_start, COMMON);
     update_diff_stack(rbuf_modified->open_diff, diff_common_start, COMMON);
     update_diff_stack(wstate->output_diff, diff_common_start, COMMON);
-
-    if(is_original <= -1 && is_modified <= -1) {
-
-      fprintf(stderr, "Error with files\n");
-
-      exit(1);
-
-    }
 
   } else if(rbuf_original->nodes.empty()) {
 
