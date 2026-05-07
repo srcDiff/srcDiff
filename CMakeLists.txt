@@ -57,6 +57,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # setup project includes
 include_directories(src/shortest_edit_script
                     src/translator
+                    src/library
                     src/model
                     src/client
                     src/srcml
