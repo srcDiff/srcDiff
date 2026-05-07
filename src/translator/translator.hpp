@@ -2,7 +2,7 @@
 /**
  * @file translator.hpp
  *
- * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
+ * @copyright Copyright (C) 2014-2026 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
