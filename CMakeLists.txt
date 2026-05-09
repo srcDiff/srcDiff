@@ -82,3 +82,7 @@ add_subdirectory(package)
 if(BUILD_TRANSLATOR_TESTS OR BUILD_UNIT_TESTS)
     add_subdirectory(test)
 endif()
+
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()

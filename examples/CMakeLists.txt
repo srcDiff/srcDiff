@@ -6,7 +6,7 @@
 #
 # This file is part of the srcDiff Infrastructure.
 #
-#  CMake for examples
+#  CMake for examples directory.
 
 # Turn ON/OFF building examples
 option(BUILD_EXAMPLES "Build examples usage files for libsrcdiff" OFF)
