@@ -46,8 +46,11 @@ endif()
 
 enable_testing()
 
-option(BUILD_UNIT_TESTS "Build all unit tests" OFF)
-option(BUILD_TRANSLATOR_TESTS "Build all transltor tests" ON)
+option(BUILD_ALL "Build all tests and examples (to be implemented)" OFF)
+
+option(BUILD_UNIT_TESTS "Build all unit tests" ON)
+option(BUILD_TRANSLATOR_TESTS "Build all translator tests" ON)
+option(BUILD_EXAMPLES "Build srcDiff library examples" ON)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
