@@ -23,11 +23,11 @@ class srcml_converter {
 
 protected:
 
-  srcml_archive * archive;
+  srcml_archive* archive;
 
   bool split_strings;
 
-  char * output_buffer;
+  char* output_buffer;
   size_t output_size;
 
   static std::mutex mutex;
@@ -38,15 +38,14 @@ protected:
 private:
 
     srcml_nodes collect_nodes(xmlTextReaderPtr reader) const;
-
     static std::shared_ptr<srcML::node> get_current_node(xmlTextReaderPtr reader, bool is_archive);
 
 public:
 
-    srcml_converter(srcml_archive * archive, bool split_strings);
+    srcml_converter(srcml_archive* archive, bool split_strings);
     ~srcml_converter();
 
-    void convert(const std::string & language, void * context, const std::function<ssize_t(void *, void *, size_t)> & read, const std::function<int(void *)> & close); 
+    void convert(const std::string& language, void* context, const std::function<ssize_t(void*, void*, size_t)>& read, const std::function<int(void*)>& close); 
     srcml_nodes create_nodes() const;
 
 };
