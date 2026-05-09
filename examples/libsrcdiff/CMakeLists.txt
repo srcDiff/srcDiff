@@ -8,4 +8,4 @@
 # 
 # CMake files for libsrcml examples.
 
-add_executable(srcdiff_create srcdiff_create.cpp)
+# add_executable(srcdiff_create srcdiff_create.cpp)
