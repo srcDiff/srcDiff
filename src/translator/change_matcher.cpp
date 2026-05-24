@@ -15,6 +15,7 @@
 #include <constants.hpp>
 
 #include <cstring>
+#include <algorithm>
 
 namespace srcdiff {
 
@@ -168,8 +169,8 @@ change_list change_matcher::create_linked_list(difference * differences) {
 
       // check if unmatched
       /** loop text O(nd) + syntax O(nd) + best match is O(nd) times number of matches */
-      construct::construct_list_view original_view = original.subspan(j, original.size() - j);
-      construct::construct_list_view modified_view = modified.subspan(i, modified.size() - i);
+      construct::construct_list_view original_view = original.subspan(j, std::min(original.size() - j, (size_t)5));
+      construct::construct_list_view modified_view = modified.subspan(i, std::min(modified.size() - i, (size_t)5));
       match_info info = check_match(original_view, modified_view);
 
       if(info.operation == NONE || (info.operation != NEST && nest_differ::is_better_nested(original_view, modified_view))) {

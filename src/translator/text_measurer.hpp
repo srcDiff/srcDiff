@@ -33,8 +33,8 @@ private:
 public:
 
     text_measurer(const construct & set_original,
-                       const construct & set_modified,
-                       bool important_only = true);
+                  const construct & set_modified,
+                  bool important_only = true);
 
     static void collect_text_element(const construct & set, construct & set_text);
     void collect_text();

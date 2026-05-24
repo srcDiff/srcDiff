@@ -114,7 +114,7 @@ void text_measurer::collect_important_text() {
 /// @todo this is not really used, and it seems like it was always wrong even before
 /// construct refactoring
 void text_measurer::unigrams(construct & collected_set_original,
-                                    construct & collected_set_modified) {
+                             construct & collected_set_modified) {
 
   std::sort(collected_set_original.get_terms().begin(), collected_set_original.get_terms().end());
   std::sort(collected_set_modified.get_terms().begin(), collected_set_modified.get_terms().end());
@@ -178,7 +178,11 @@ void text_measurer::compute() {
 
   }
 
-  process_edit_script(shortest_edit_script_utility::compute(set_original_text, set_modified_text));
+  if(set_original.size() > 10000 || set_modified.size() > 10000) {
+    unigrams(*set_original_text, *set_modified_text);
+  } else {
+   process_edit_script(shortest_edit_script_utility::compute(set_original_text, set_modified_text));
+ }
 }
 
 int text_measurer::number_match_beginning() {
