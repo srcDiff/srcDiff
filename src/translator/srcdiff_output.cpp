@@ -52,12 +52,12 @@ srcdiff_output::srcdiff_output(srcml_archive * archive,
   } else if(is_option(flags, OPTION_SUMMARY)) {
 
 #ifndef _MSC_BUILD
-    summary = std::make_shared<srcdiff_summary>(srcdiff_filename, summary_type_str);
+    // summary = std::make_shared<srcdiff_summary>(srcdiff_filename, summary_type_str);
 #endif
     
   } else if(!is_option(flags, OPTION_BURST)) {
 
-      int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str(), 0);
+      int ret_status = srcml_archive_write_open_filename(archive, srcdiff_filename.c_str());
       if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + srcdiff_filename + "' could not be opened");
 
   }
@@ -474,7 +474,7 @@ void srcdiff_output::output_node_inner(const srcml_node & node) {
 
   bool isemptyelement = false;
 
-  switch (node.type) {
+  switch ((xmlReaderTypes)node.type) {
   case XML_READER_TYPE_ELEMENT:
 
     // start the element

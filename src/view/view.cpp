@@ -377,9 +377,9 @@ void view_t::startElement(const char * localname,
       in_literal = true;
 
   } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "name"
-            && srcml_element_stack.size() > 1) {
+            && element_stack.size() > 1) {
 
-    const std::string & parent = srcml_element_stack.at(srcml_element_stack.size() - 2);
+    const std::string & parent = element_stack.at(element_stack.size() - 2);
     if(is_function_type(parent))
       in_function_name = true;
     else if(is_class_type(parent))
@@ -483,7 +483,7 @@ void view_t::endElement(const char * localname,
 
   } else if(URI == SRCML_SRC_NAMESPACE_HREF && local_name == "name") {
 
-    const std::string & parent = srcml_element_stack.back();
+    const std::string & parent = element_stack.back();
     if(is_function_type(parent))
       in_function_name = false;
     else if(is_class_type(parent))
@@ -529,14 +529,14 @@ void view_t::charactersRoot(const char * ch, int len) {}
  */
 void view_t::charactersUnit(const char * ch, int len) {
 
-  if(srcml_element_stack.size() > 1 && srcml_element_stack.back() == "diff:delete" 
-    && (srcml_element_stack.at(srcml_element_stack.size() - 2) == "name"
-      || srcml_element_stack.at(srcml_element_stack.size() - 2) == "operator")) {
+  if(element_stack.size() > 1 && element_stack.back() == "diff:delete" 
+    && (element_stack.at(element_stack.size() - 2) == "name"
+      || element_stack.at(element_stack.size() - 2) == "operator")) {
     
     assert(!save_text);
 
     save_text = true;
-    saved_type = srcml_element_stack.at(srcml_element_stack.size() - 2);
+    saved_type = element_stack.at(element_stack.size() - 2);
 
   }
 

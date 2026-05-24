@@ -8,9 +8,7 @@ size_t srcdiff_input_source::input_total = 0;
 
 srcdiff_input_source::srcdiff_input_source(const srcdiff_options & options) : options(options), translator(0), directory_length_original(0), directory_length_modified(0) {
 
-  if(srcml_archive_get_version(options.archive)
-    && (!srcml_archive_is_full_archive(options.archive)
-      || is_option(options.flags, OPTION_BURST))) {
+  if(srcml_archive_get_version(options.archive)) {
 
     unit_version = srcml_archive_get_version(options.archive);
 

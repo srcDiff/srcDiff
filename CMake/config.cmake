@@ -66,19 +66,7 @@ endif()
 
 set(LIBSRCML_INCLUDE_DIR /usr/local/include)
 
-set(Boost_NO_BOOST_CMAKE ON)
-set(Boost_USE_STATIC_LIBS ON)
 
-if(NOT TIMING)
-
-find_package(Boost COMPONENTS program_options filesystem system thread regex date_time REQUIRED)
-
-else()
-
-add_definitions("-DTIMING")
-find_package(Boost COMPONENTS program_options filesystem system thread regex date_time timer chrono REQUIRED)
-
-endif()
 
 find_package(LibXml2 REQUIRED)
 
@@ -88,21 +76,21 @@ include_directories(${LIBSRCML_INCLUDE_DIR} ${Boost_INCLUDE_DIR} ${LIBXML2_INCLU
 endif()
 
 # find needed libraries
-find_library(LIBSRCML_LIBRARY NAMES libsrcml.a libsrcml.lib PATHS /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
+find_library(LIBSRCML_LIBRARY NAMES libsrcml.dylib libsrcml.lib PATHS /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
 
 # Locating the antlr library.
-find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
+#find_library(ANTLR_LIBRARY NAMES libantlr-pic.a libantlr.a libantlr2-0.dll antlr.lib PATHS /usr/lib /usr/local/lib ${WINDOWS_DEP_PATH}/lib)
 
 # Set libsrcdiff libraries
 if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-set(LIBSRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} ${LIBAPR_LIBRARIES} ${LIBSVN_LIBRARIES} crypto dl CACHE INTERNAL "libsrcdiff Link Libraries")
+set(LIBSRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} ${LIBAPR_LIBRARIES} ${LIBSVN_LIBRARIES} dl CACHE INTERNAL "libsrcdiff Link Libraries")
 else()
 set(LIBSRCDIFF_LIBRARIES ${LIBSRCML_LIBRARY} ${Boost_LIBRARIES} ${LIBXML2_LIBRARIES} ${ANTLR_LIBRARY} ${LIBAPR_LIBRARIES} ${LIBSVN_LIBRARIES} CACHE INTERNAL "libsrcdiff Link Libraries")
 endif()
 
 # Set srcdiff libraries
 if(NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
-set(SRCDIFF_LIBRARIES crypto CACHE INTERNAL "srcdiff Link Libraries")
+set(SRCDIFF_LIBRARIES CACHE INTERNAL "srcdiff Link Libraries")
 else()
 set(SRCDIFF_LIBRARIES CACHE INTERNAL "srcdiff Link Libraries")
 endif()
@@ -137,7 +125,7 @@ if(${CMAKE_COMPILER_IS_GNUCXX})
     set(CMAKE_C_FLAGS_RELEASE "-O3 -DNDEBUG -DSTATIC_GLOBALS")
     set(CMAKE_C_FLAGS_DEBUG   "-O0 -g -DDEBUG")
 
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
 
     # Configuring the Clang compiler
     #set(CLANG_WARNINGS "-Wno-long-long -Wall -Wextra -Wshorten-64-to-32 -Wno-unknown-pragmas -Wno-int-to-void-pointer-cast")

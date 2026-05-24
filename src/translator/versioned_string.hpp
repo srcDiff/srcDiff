@@ -1,0 +1,62 @@
+#ifndef INCLUDED_VERSIONED_STRING_HPP
+#define INCLUDED_VERSIONED_STRING_HPP
+
+#include <srcdiff_type.hpp>
+
+#include <string>
+#include <iostream>
+
+#include <boost/optional.hpp>
+
+class versioned_string {
+
+	private:
+
+		static const std::string empty_str;
+
+		boost::optional<std::string> string_original;
+		boost::optional<std::string> string_modified;
+
+	protected:
+
+	public:
+
+		versioned_string();
+		versioned_string(std::string string);
+		versioned_string(std::string string_original, std::string string_modified);
+
+		bool is_common() const;
+		bool has_original() const;
+		bool has_modified() const;
+
+		std::string & original();
+		const std::string & original() const;
+		std::string & modified();
+		const std::string & modified() const;
+		const std::string & first_active_string() const;
+
+		void set_original(const std::string & string_original);
+		void set_modified(const std::string & string_modified);
+		void append(const char * characters, size_t len, enum srcdiff_type version);
+		void clear();
+
+		void swap(versioned_string & other);
+
+       	operator std::string() const;
+       	bool operator==(const std::string & str) const;
+		bool operator!=(const std::string & str) const;
+       	bool operator==(const char * c_str) const;
+       	bool operator!=(const char * c_str) const;
+       	bool operator<(const versioned_string & v_str) const;
+		std::string operator+(const std::string & str) const;
+		std::string operator+(const char * c_str) const;
+
+        friend std::ostream & operator<<(std::ostream & out, const versioned_string & string);
+		friend std::string operator+(const std::string & str, const versioned_string & v_str);
+		friend std::string operator+(const char * c_str, const versioned_string & v_str);
+
+};
+
+
+
+#endif

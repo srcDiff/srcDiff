@@ -19,7 +19,7 @@
 #  along with the srcDiff translator; if not, write to the Free Software
 #  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.20)
 project(srcDiff)
 
 enable_testing()
@@ -30,7 +30,8 @@ include(srcdiff)
 # setup project includes
 include_directories(src/shortest_edit_script src/translator src/windows src/client src/srcml
 					src/view src/summary src/project
-					src/srcSAX/src/srcsax src/srcSAX/src/cpp src/srcSAX/src/windows)
+					src/srcSAX/src/srcsax src/srcSAX/src/cpp src/srcSAX/src/windows
+					/opt/homebrew/include)
 
 # include sub directories
 add_subdirectory(src)

@@ -11,7 +11,7 @@
 #include <side_by_side_view.hpp>
 
 #ifndef _MSC_BUILD
-#include <srcdiff_summary.hpp>
+// #include <srcdiff_summary.hpp>
 #endif
 
 #include <methods.hpp>
@@ -111,7 +111,7 @@ protected:
   std::shared_ptr<view_t> view;
 
 #ifndef _MSC_BUILD
-  std::shared_ptr<srcdiff_summary> summary;
+  // std::shared_ptr<srcdiff_summary> summary;
 #endif
 
 public:
@@ -199,7 +199,7 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
     char * xml = 0;
     size_t size = 0;
-    srcml_unit_get_xml_standalone(wstate->unit, "UTF-8", &xml, &size);
+    // srcml_unit_get_xml_standalone(wstate->unit, "UTF-8", &xml, &size);
     colordiff->colorize(xml, line_diff_range);
     srcml_memory_free((char *)xml);
 
@@ -207,7 +207,7 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 
     char * xml = 0;
     size_t size = 0;
-    srcml_unit_get_xml_standalone(wstate->unit, "UTF-8", &xml, &size);
+    // srcml_unit_get_xml_standalone(wstate->unit, "UTF-8", &xml, &size);
     view->transform(xml, "UTF-8");
     srcml_memory_free((char *)xml);
 
@@ -216,15 +216,15 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
 #ifndef _MSC_BUILD
     char * xml = 0;
     size_t size = 0;
-    srcml_unit_get_xml_standalone(wstate->unit, "UTF-8", &xml, &size);
-    summary->summarize(xml, "UTF-8");
+    // srcml_unit_get_xml_standalone(wstate->unit, "UTF-8", &xml, &size);
+    // summary->summarize(xml, "UTF-8");
     srcml_memory_free((char *)xml);
 #endif
 
   } else if(is_option(flags, OPTION_BURST)) {
 
     srcml_archive * srcdiff_archive = srcml_archive_clone(archive);
-    srcml_archive_disable_full_archive(srcdiff_archive);
+    // srcml_archive_disable_full_archive(srcdiff_archive);
     srcml_archive_disable_hash(srcdiff_archive);
 
     std::string filename = srcml_unit_get_filename(wstate->unit);
@@ -243,15 +243,15 @@ void srcdiff_output::finish(line_diff_range<T> & line_diff_range) {
     filename += ".srcdiff";
 
     filename = wstate->filename + "/" + filename;
-    srcml_archive_write_open_filename(srcdiff_archive, filename.c_str(), 0);
+    srcml_archive_write_open_filename(srcdiff_archive, filename.c_str());
 
-    srcml_write_unit(srcdiff_archive, wstate->unit);
+    srcml_archive_write_unit(srcdiff_archive, wstate->unit);
     srcml_archive_close(srcdiff_archive);
     srcml_archive_free(srcdiff_archive);
 
   } else {
 
-    srcml_write_unit(archive, wstate->unit);
+    srcml_archive_write_unit(archive, wstate->unit);
 
   }
 
