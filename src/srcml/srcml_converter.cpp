@@ -11,6 +11,7 @@
 
 #include <constants.hpp>
 #include <shortest_edit_script.h>
+#include <type_query.hpp>
 
 #include <string>
 #include <cctype>
@@ -181,6 +182,10 @@ static bool is_cpp_file_separate(const char character) {
 
 }
 
+static void correct_function_close() {
+}
+
+
 // collect the differences
 srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
@@ -189,8 +194,10 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
   srcml_nodes element_stack;
   element_stack.push_back(std::make_shared<srcML::node>(srcML::node_type::START, "unit"));
 
-
+  std::vector<size_t> function_pos_stack;
+  std::vector<size_t> class_pos_stack = { 0 };
   bool is_elseif = false;
+
   int not_done = 1;
   while(not_done) {
 
@@ -356,17 +363,16 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
       std::shared_ptr<srcML::node> node = get_current_node(reader, srcml_archive_get_options(archive));
       mutex.unlock();
 
-      
-      if(node->get_type() == srcML::node_type::START) {
-        node->set_parent(element_stack.back());
-      }
-      
+      std::shared_ptr<srcML::node> top = element_stack.back();
 
+      if(node->get_type() == srcML::node_type::START) {
+        node->set_parent(top);
+      }
 
       // insert end if temp element for elseif and detect elseif
       if(node->get_type() == srcML::node_type::END
-        && element_stack.back()->get_name() == "if" && !element_stack.back()->get_attributes().empty()
-        && bool(element_stack.back()->get_attribute("type"))) {
+        && top->get_name() == "if" && !top->get_attributes().empty()
+        && bool(top->get_attribute("type"))) {
         std::shared_ptr<srcML::node> end_node = std::make_shared<srcML::node>(*node);
         end_node->set_temporary(true);
         nodes.push_back(end_node);
@@ -376,20 +382,43 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
       }
 
       if(node->get_type() == srcML::node_type::START && !node->is_empty()) {
+        if(is_function_type(node->get_name())
+          && function_pos_stack.size() && function_pos_stack.back() > class_pos_stack.back()) {
+          // correct_function_close();
+          while(element_stack.size() != function_pos_stack.back()) {
+            nodes.push_back(std::make_shared<srcML::node>(srcML::node_type::END, element_stack.back()->get_name()));
+            element_stack.pop_back();
+          }
+        }
+
         element_stack.push_back(node);
-      }
-      else if(node->get_type() == srcML::node_type::END) {
-        element_stack.pop_back();
+        if(is_function_type(node->get_name())) {
+          function_pos_stack.push_back(element_stack.size() - 1);
+        } else if(is_class_type(node->get_name())) {
+          class_pos_stack.push_back(element_stack.size() - 1);
+        }
+
+      } else if(node->get_type() == srcML::node_type::END) {
+        if(top->get_name() != node->get_name()) {
+          // from srcML correction
+        } else {
+          element_stack.pop_back();
+
+          if(is_function_type(node->get_name())) {
+            function_pos_stack.pop_back();
+          } else if(is_class_type(node->get_name())) {
+            class_pos_stack.pop_back();
+          }
+
+        }
       }
 
       if(node->get_name() == "unit") return nodes;
-
       
       if(node->get_type() == srcML::node_type::START && node->get_parent()->is_simple()) {
         node->get_parent()->set_simple(false);
       }
-      
-      
+            
       if(node->is_empty()) {
         node->set_empty(false);
         std::shared_ptr<srcML::node> end_node = std::make_shared<srcML::node>(*node);
@@ -397,7 +426,12 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         nodes.push_back(node);
         nodes.push_back(end_node);
       } else {
-        nodes.push_back(node);
+        if(node->get_type() == srcML::node_type::END && top->get_name() != node->get_name()) {
+          // from srcML correction
+          std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << element_stack.back()->get_name() << ":" << node->get_name() << '\n';
+        } else {
+          nodes.push_back(node);
+        }
       }
 
     }
