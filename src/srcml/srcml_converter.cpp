@@ -14,6 +14,7 @@
 #include <type_query.hpp>
 
 #include <string>
+#include <list>
 #include <cctype>
 
 #include <libxml/xmlreader.h>
@@ -182,10 +183,6 @@ static bool is_cpp_file_separate(const char character) {
 
 }
 
-static void correct_function_close() {
-}
-
-
 // collect the differences
 srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
@@ -196,6 +193,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
   std::vector<size_t> function_pos_stack;
   std::vector<size_t> class_pos_stack = { 0 };
+  std::list<std::shared_ptr<srcML::node>> skip_nodes;
   bool is_elseif = false;
 
   int not_done = 1;
@@ -387,8 +385,10 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
           // correct_function_close();
           while(element_stack.size() != function_pos_stack.back()) {
             nodes.push_back(std::make_shared<srcML::node>(srcML::node_type::END, element_stack.back()->get_name()));
+            skip_nodes.push_front(nodes.back());
             element_stack.pop_back();
           }
+          function_pos_stack.pop_back();
         }
 
         element_stack.push_back(node);
@@ -426,9 +426,12 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
         nodes.push_back(node);
         nodes.push_back(end_node);
       } else {
-        if(node->get_type() == srcML::node_type::END && top->get_name() != node->get_name()) {
+        if(skip_nodes.size() && node->get_type() == srcML::node_type::END
+          && top->get_name() != node->get_name() 
+         /* && skip_nodes.back()->get_name() == node->get_name()*/) {
           // from srcML correction
-          std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << element_stack.back()->get_name() << ":" << node->get_name() << '\n';
+          std::cerr << "HERE: " << __FILE__ << ' ' << __FUNCTION__ << ' ' << __LINE__ << ' ' << element_stack.back()->get_name() << ":" << skip_nodes.back()->get_name() << ":" << node->get_name() << '\n';
+          skip_nodes.pop_back();
         } else {
           nodes.push_back(node);
         }
