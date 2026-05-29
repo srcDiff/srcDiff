@@ -11,6 +11,7 @@
 
 #include <shortest_edit_script_utility.hpp>
 #include <constants.hpp>
+#include <nodes.hpp>
 
 #include <algorithm>
 
@@ -20,7 +21,7 @@ syntax_measurer::syntax_measurer(const construct & set_original, const construct
   : measurer(set_original, set_modified) {}
 
 // context is unused here
-static bool is_significant(std::size_t & node_pos, const srcml_nodes & nodes, const void * context [[maybe_unused]]) {
+static bool is_significant(std::size_t & node_pos, const srcML::nodes & nodes, const void * context [[maybe_unused]]) {
 
   const std::shared_ptr<srcML::node> & node = nodes[node_pos];
 

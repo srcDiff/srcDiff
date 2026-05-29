@@ -16,8 +16,6 @@ class construct;
 #include <string>
 #include <memory>
 
-#include <srcml_nodes.hpp>
-
 namespace std { 
 
   template<>

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcml_nodes.hpp
+ * @file nodes.hpp
  *
  * @copyright Copyright (C) 2015-2024 SDML (www.srcDiff.org)
  *
@@ -15,11 +15,15 @@
 #include <vector>
 #include <memory>
 
-typedef std::vector<std::shared_ptr<srcML::node>> srcml_nodes;
+namespace srcML {
 
-void advance_to_child(const srcml_nodes & nodes,
-                      size_t & pos,
+typedef std::vector<std::shared_ptr<srcML::node>> nodes;
+
+void advance_to_child(const nodes& nodes,
+                      size_t& pos,
                       srcML::node_type type,
-                      const std::string & name);
+                      const std::string& name);
+
+}
 
 #endif

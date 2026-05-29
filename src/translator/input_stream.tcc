@@ -17,7 +17,7 @@ template<class T>
 input_stream<T>::~input_stream() {}
 
 template<class T>
-void input_stream<T>::operator()(int stream_source, srcml_nodes & nodes, int & is_input) const {
+void input_stream<T>::operator()(int stream_source, srcML::nodes & nodes, int & is_input) const {
 
   is_input = 0;
   try {
@@ -35,11 +35,11 @@ void input_stream<T>::operator()(int stream_source, srcml_nodes & nodes, int & i
 }
 
 template<class T>
-srcml_nodes input_stream<T>::input_nodes(int stream_source) const {
+srcML::nodes input_stream<T>::input_nodes(int stream_source) const {
 
   if(!input_path || input_path->empty()) throw no_file_exception();
 
-  srcml_converter converter(archive, is_option(options, OPTION_STRING_SPLITTING), stream_source);
+  srcML::converter converter(archive, is_option(options, OPTION_STRING_SPLITTING), stream_source);
 
   typename T::input_context * context = input.open(input_path->c_str());
 
