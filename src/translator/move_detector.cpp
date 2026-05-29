@@ -127,8 +127,8 @@ void move_detector::mark_moves(const construct::construct_list_view original,
 
       // breaks const
       // Not sure if I can use terms here. Also, probably should fix the break const thing
-      ((srcml_nodes &)set->nodes()).at(set->start_position()) = start_node_one;
-      ((srcml_nodes &)(*pos)->nodes()).at((*pos)->start_position()) = start_node_two;
+      ((srcML::nodes&)set->nodes()).at(set->start_position()) = start_node_one;
+      ((srcML::nodes&)(*pos)->nodes()).at((*pos)->start_position()) = start_node_two;
 
       if(!start_node_one->is_empty()) {
 
@@ -138,8 +138,8 @@ void move_detector::mark_moves(const construct::construct_list_view original,
         std::shared_ptr<srcML::node> end_node_two = std::make_shared<srcML::node>(*(*pos)->last_term());
         end_node_two->set_move(move_id);
 
-        ((srcml_nodes &)set->nodes()).at(set->end_position()) = end_node_one;
-        ((srcml_nodes &)(*pos)->nodes()).at((*pos)->end_position()) = end_node_two;
+        ((srcML::nodes&)set->nodes()).at(set->end_position()) = end_node_one;
+        ((srcML::nodes&)(*pos)->nodes()).at((*pos)->end_position()) = end_node_two;
 
       }
 

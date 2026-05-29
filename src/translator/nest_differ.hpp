@@ -11,7 +11,6 @@
 #define INCLUDED_NEST_DIFFER_HPP
 
 #include <differ.hpp>
-#include <srcml_nodes.hpp>
 #include <operation.hpp>
 #include <construct.hpp>
 #include <measurer.hpp>

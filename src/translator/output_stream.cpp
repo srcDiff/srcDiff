@@ -170,19 +170,19 @@ const std::string & output_stream::srcdiff_filename() const {
   return wstate->filename;
 }
 
-const srcml_nodes & output_stream::nodes_original() const {
+const srcML::nodes & output_stream::nodes_original() const {
   return rbuf_original->nodes;
 }
 
-const srcml_nodes & output_stream::nodes_modified() const {
+const srcML::nodes & output_stream::nodes_modified() const {
   return rbuf_modified->nodes;
 }
 
-srcml_nodes & output_stream::nodes_original() {
+srcML::nodes & output_stream::nodes_original() {
   return rbuf_original->nodes;
 }
 
-srcml_nodes & output_stream::nodes_modified() {
+srcML::nodes & output_stream::nodes_modified() {
   return rbuf_modified->nodes;
 }
 

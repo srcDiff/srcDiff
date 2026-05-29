@@ -10,8 +10,8 @@
 #ifndef INCLUDED_INPUT_STREAM_HPP
 #define INCLUDED_INPUT_STREAM_HPP
 
-#include <srcml_nodes.hpp>
-#include <srcml_converter.hpp>
+#include <nodes.hpp>
+#include <converter.hpp>
 #include <client_options.hpp>
 
 #include <srcml.h>
@@ -38,12 +38,12 @@ private:
 
 public:
 
-    input_stream(srcml_archive * archive, const std::optional<std::string> & input_path, const char * language_string, const OPTION_TYPE & options, const T & input);
+    input_stream(srcml_archive* archive, const std::optional<std::string>& input_path, const char* language_string, const OPTION_TYPE& options, const T& input);
     ~input_stream();
 
-    void operator()(int stream_source, srcml_nodes & nodes, int & is_input) const;
+    void operator()(int stream_source, srcML::nodes& nodes, int& is_input) const;
 
-    virtual srcml_nodes input_nodes(int stream_source) const;
+    virtual srcML::nodes input_nodes(int stream_source) const;
 
 };
 

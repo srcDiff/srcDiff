@@ -13,7 +13,6 @@
 #include <edit_list.hpp>
 
 #include <construct.hpp>
-#include <srcml_nodes.hpp>
 
 #include <string>
 #include <memory>
