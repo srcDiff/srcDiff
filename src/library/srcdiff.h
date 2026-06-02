@@ -39,7 +39,10 @@ int srcDiff(const char* original_filename,
             const char* modified_filename, 
             const char* srcdiff_filename);
 
+
+
 LIBSRCDIFF_EXPORT struct srcdiff_config* srcdiff_config_create();
+LIBSRCDIFF_EXPORT void                   srcdiff_config_free  (struct srcdiff_config* config);
 LIBSRCDIFF_EXPORT struct srcml_unit    * srcdiff_create_delta (struct srcdiff_unit  * original_unit, 
                                                                struct srcdiff_unit  * modified_unit,
                                                                struct srcdiff_config* config);

@@ -96,3 +96,21 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
 
     return 0;
 }
+
+struct srcdiff_config* srcdiff_config_create() {
+    return new srcdiff_config();
+}
+
+void srcdiff_config_free(struct srcdiff_config* config) {
+  delete config;
+}
+
+struct srcml_unit* srcdiff_create_delta (struct srcdiff_unit  * original_unit, 
+                                         struct srcdiff_unit  * modified_unit,
+                                         struct srcdiff_config* config) {
+  if(!original_unit) return nullptr;
+  if(!modified_unit) return nullptr;
+  if(!config)        return nullptr;
+
+  return nullptr;
+}
