@@ -8,6 +8,7 @@
  */
 
 #include <srcdiff.h>
+#include <srcdiff_types.hpp>
 
 #include <translator.hpp>
 #include <output_stream.hpp>
