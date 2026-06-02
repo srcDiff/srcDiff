@@ -57,7 +57,6 @@ protected:
     srcml_archive* archive;
     const OPTION_TYPE& options;
 
-    // typedef std::function<void (srcml_nodes& nodes, srcml_archive* archive, const OPTION_TYPE& options)> input_stream_function;
     std::list<std::reference_wrapper<const input_stream_base>> streams;
 };
 
