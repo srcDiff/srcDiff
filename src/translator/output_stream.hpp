@@ -104,7 +104,6 @@ public:
 protected:
 
   srcml_archive* archive;
-  OPTION_TYPE flags;
 
   std::shared_ptr<reader_state> rbuf_original;
   std::shared_ptr<reader_state> rbuf_modified;
@@ -145,7 +144,6 @@ public:
   output_stream() {}
   output_stream(srcml_archive * archive,
                  const std::string & srcdiff_filename,
-                 const OPTION_TYPE & flags,
                  const METHOD_TYPE & method,
                  const client_options::view_options_t & view_options,
                  const std::optional<std::string> & summary_type_str);

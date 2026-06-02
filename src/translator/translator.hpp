@@ -35,18 +35,16 @@ class translator {
 
 private:
 
-  srcml_archive * archive;
-
-  const OPTION_TYPE & flags;
+  srcml_archive* archive;
 
   std::shared_ptr<output_stream> output;
 
-  const std::optional<std::string> & unit_filename;
+  const std::optional<std::string>& unit_filename;
 
 public:
 
   // constructor
-  translator(const std::string& srcdiff_filename, const OPTION_TYPE& flags, const METHOD_TYPE& method, srcml_archive * archive,
+  translator(const std::string& srcdiff_filename, const METHOD_TYPE& method, srcml_archive * archive,
              const std::optional<std::string>& unit_filename,
              const client_options::view_options_t& view_options,
              const std::optional<std::string>& summary_type_str);
@@ -59,6 +57,7 @@ public:
                  const input_stream<T>& input_original,
                  const input_stream<T>& input_modified,
                  const std::string& language,
+                 const OPTION_TYPE& flags,
                  const std::optional<std::string>& unit_filename  = std::optional<std::string>(),
                  const std::optional<std::string>& unit_version   = std::optional<std::string>());
 
@@ -72,6 +71,7 @@ template<class T>
 std::string translator::translate( const input_stream<T>& input_original,
                                    const input_stream<T>& input_modified,
                                    const std::string& language,
+                                   const OPTION_TYPE& flags,
                                    const std::optional<std::string>& unit_filename,
                                    const std::optional<std::string>& unit_version) {
 

@@ -25,11 +25,10 @@ enum operation output_stream::delay_operation = NONE;
 // summary_type_str is unused here
 output_stream::output_stream(srcml_archive * archive, 
                                const std::string & srcdiff_filename,
-                               const OPTION_TYPE & flags,
                                const METHOD_TYPE & method,
                                const client_options::view_options_t & view_options,
                                const std::optional<std::string> & summary_type_str [[maybe_unused]])
- : archive(archive), flags(flags),
+ : archive(archive),
    rbuf_original(std::make_shared<reader_state>(DELETE)), rbuf_modified(std::make_shared<reader_state>(INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcML::name_space>()),
    is_initialized(false), is_open(false) {

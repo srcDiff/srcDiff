@@ -35,7 +35,7 @@ input_source::input_source(const client_options & options) : options(options), i
   const client_options::view_options_t& view_options = options.view_options;
 
   interpreter = std::make_unique<translator>(
-                options.srcdiff_filename, options.flags, options.methods, options.archive,
+                options.srcdiff_filename, options.methods, options.archive,
                 options.unit_filename,
                 options.view_options,
                 options.summary_type_str);
