@@ -17,6 +17,7 @@
 #include <srcml.h>
 
 #include <optional>
+#include <functional>
 #include <thread>
 #include <memory>
 
@@ -31,22 +32,33 @@ public:
 
     ~input_stream_manager() {}
 
-    template<typename T, typename U>
-    void input_streams(const input_stream<T>& original_stream,
-                       srcml_nodes& original_nodes, 
-                       const input_stream<U>& modified_stream,
-                       srcml_nodes& modified_nodes) {
+    template<typename T>
+    void append_stream(const input_stream<T>& stream) {
+        streams.push_back(std::bind(stream, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+    }
 
-      std::thread thread_original(std::ref(original_stream), std::ref(original_nodes), std::ref(archive), std::ref(options));
+    std::pair<srcml_nodes, srcml_nodes> consume_streams() {
+      /// @todo handle better
+      if(streams.size() < 2) return std::pair<srcml_nodes, srcml_nodes>();
+
+      std::pair<srcml_nodes, srcml_nodes> nodes;
+      std::thread thread_original(streams.front(), std::ref(nodes.first), std::ref(archive), std::ref(options));
       thread_original.join();
+      streams.pop_front();
 
-      std::thread thread_modified(std::ref(modified_stream), std::ref(modified_nodes), std::ref(archive), std::ref(options));
+      std::thread thread_modified(streams.front(), std::ref(nodes.second), std::ref(archive), std::ref(options));
       thread_modified.join();
+      streams.pop_front();
+
+      return nodes;
     }
 
 protected:
     srcml_archive* archive;
     const OPTION_TYPE& options;
+
+    typedef std::function<void (srcml_nodes& nodes, srcml_archive* archive, const OPTION_TYPE& options)> input_stream_function;
+    std::list<input_stream_function> streams;
 };
 
 }

@@ -78,7 +78,9 @@ std::string translator::translate( const input_stream<T> & input_original,
   const std::optional<std::string> output_path = "";
 
   input_stream_manager input_manager(archive, flags);
-  input_manager.input_streams(input_original, output->nodes_original(), input_modified, output->nodes_modified());
+  input_manager.append_stream(input_original);
+  input_manager.append_stream(input_modified);
+  std::tie(output->nodes_original(), output->nodes_modified()) = input_manager.consume_streams();
 
   output->prime();
 

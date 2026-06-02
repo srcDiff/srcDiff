@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: GPL-3.0-only
+ // SPDX-License-Identifier: GPL-3.0-only
 /**
  * @file input_stream.tcc
  *
@@ -21,7 +21,7 @@ void input_stream<T>::operator()(srcml_nodes& nodes, srcml_archive* archive, con
   try {
     nodes = input_nodes(archive, options);
   } catch(...) {
-    // handle this more gracefully...
+    /// @todo handle this more gracefully...
     fprintf(stderr, "Error with files\n");
     exit(1);
   }
