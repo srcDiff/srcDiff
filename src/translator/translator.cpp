@@ -26,7 +26,6 @@ translator::translator(const std::string& srcdiff_filename,
                              summary_type_str)),
     unit_filename(unit_filename) {}
 
-
 // destructor
 translator::~translator() {
   output->close();

@@ -23,11 +23,8 @@ size_t input_source::input_total = 0;
 input_source::input_source(const client_options & options) : options(options), interpreter(), view(), directory_length_original(0), directory_length_modified(0) {
 
   OPTION_TYPE flags = options.flags;
-  if(srcml_archive_get_version(options.archive)
-    && srcml_archive_is_solitary_unit(options.archive)) {
-
+  if(srcml_archive_get_version(options.archive) && srcml_archive_is_solitary_unit(options.archive)) {
     unit_version = srcml_archive_get_version(options.archive);
-
   }
 
   show_input = is_option(flags, OPTION_VERBOSE) && !is_option(flags, OPTION_QUIET);
