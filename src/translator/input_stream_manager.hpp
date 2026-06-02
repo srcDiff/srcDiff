@@ -34,7 +34,7 @@ public:
 
     template<typename T>
     void append_stream(const input_stream<T>& stream) {
-        streams.push_back(std::bind(stream, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+        streams.push_back(std::ref(stream));
     }
 
     std::pair<srcml_nodes, srcml_nodes> consume_streams() {
@@ -57,8 +57,8 @@ protected:
     srcml_archive* archive;
     const OPTION_TYPE& options;
 
-    typedef std::function<void (srcml_nodes& nodes, srcml_archive* archive, const OPTION_TYPE& options)> input_stream_function;
-    std::list<input_stream_function> streams;
+    // typedef std::function<void (srcml_nodes& nodes, srcml_archive* archive, const OPTION_TYPE& options)> input_stream_function;
+    std::list<std::reference_wrapper<const input_stream_base>> streams;
 };
 
 }
