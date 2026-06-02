@@ -12,13 +12,13 @@
 namespace srcdiff {
 
 // constructor
-translator::translator(const std::string & srcdiff_filename,
-                                       const OPTION_TYPE & flags,
-                                       const METHOD_TYPE & method,
-                                       srcml_archive * archive,
-                                       const std::optional<std::string> & unit_filename,
-                                       const client_options::view_options_t & view_options,
-                                       const std::optional<std::string> & summary_type_str)
+translator::translator(const std::string& srcdiff_filename,
+                       const OPTION_TYPE& flags,
+                       const METHOD_TYPE& method,
+                       srcml_archive* archive,
+                       const std::optional<std::string>& unit_filename,
+                       const client_options::view_options_t& view_options,
+                       const std::optional<std::string>& summary_type_str)
   : archive(archive), flags(flags), output(std::make_shared<srcdiff::output_stream>(archive,
                                            srcdiff_filename,
                                            flags,
