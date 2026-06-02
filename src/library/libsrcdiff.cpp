@@ -98,7 +98,7 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
 }
 
 struct srcdiff_config* srcdiff_config_create() {
-    return new srcdiff_config();
+  return new srcdiff_config();
 }
 
 void srcdiff_config_free(struct srcdiff_config* config) {

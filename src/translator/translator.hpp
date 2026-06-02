@@ -56,11 +56,11 @@ public:
 
   template<class T>
   std::string translate(
-                 const input_stream<T> & input_original,
-                 const input_stream<T> & input_modified,
-                 const std::string & language,
-                 const std::optional<std::string> & unit_filename  = std::optional<std::string>(),
-                 const std::optional<std::string> & unit_version   = std::optional<std::string>());
+                 const input_stream<T>& input_original,
+                 const input_stream<T>& input_modified,
+                 const std::string& language,
+                 const std::optional<std::string>& unit_filename  = std::optional<std::string>(),
+                 const std::optional<std::string>& unit_version   = std::optional<std::string>());
 
   // Think about taking out archive writing and putting having in input
   // separates concerns better
@@ -69,11 +69,11 @@ public:
 
 // Translate from input stream to output stream
 template<class T>
-std::string translator::translate( const input_stream<T> & input_original,
-                                   const input_stream<T> & input_modified,
-                                   const std::string & language,
-                                   const std::optional<std::string> & unit_filename,
-                                   const std::optional<std::string> & unit_version) {
+std::string translator::translate( const input_stream<T>& input_original,
+                                   const input_stream<T>& input_modified,
+                                   const std::string& language,
+                                   const std::optional<std::string>& unit_filename,
+                                   const std::optional<std::string>& unit_version) {
 
   const std::optional<std::string> output_path = "";
 
