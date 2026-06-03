@@ -17,4 +17,5 @@ struct srcdiff_config {
 	std::unique_ptr<srcdiff::delta> deltor;
 
 	METHOD_TYPE method;
+	srcdiff::OPTION_TYPE options;
 };

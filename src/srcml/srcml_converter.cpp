@@ -104,14 +104,14 @@ void eat_element(xmlTextReaderPtr& reader) {
 }
 
 srcml_converter::srcml_converter(srcml_archive * archive, bool split_strings) 
-  : archive(archive), split_strings(split_strings), output_buffer(0) {}
+  : archive(archive), split_strings(split_strings), output_buffer(nullptr), free_buffer(false) {}
 
 srcml_converter::~srcml_converter() {
 
   // libsrcml uses xmlBufferCreate to create this buffer, so we need to use
   // xmlFree to free it. srcml_memory_free just calls the normal free(), which
   // might not match how libxml2 made the allocation
-  if(output_buffer) xmlFree(output_buffer);
+  if(free_buffer) xmlFree(output_buffer);
 
 }
 
@@ -124,6 +124,7 @@ void srcml_converter::convert(const std::string & language, void * context,
   srcml_archive_disable_hash(unit_archive);
 
   srcml_archive_write_open_memory(unit_archive, &output_buffer, &output_size);
+  free_buffer = true;
 
   srcml_unit * unit = srcml_unit_create(unit_archive);
 
@@ -138,6 +139,11 @@ void srcml_converter::convert(const std::string & language, void * context,
   srcml_archive_close(unit_archive);
   srcml_archive_free(unit_archive);
 
+}
+
+void srcml_converter::convert(srcml_unit* unit) {
+  output_buffer = (char*)srcml_unit_get_srcml(unit);
+  output_size   = strlen(output_buffer);
 }
 
 srcml_nodes srcml_converter::create_nodes() const {

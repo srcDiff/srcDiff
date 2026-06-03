@@ -101,6 +101,8 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
 struct srcdiff_config* srcdiff_config_create(struct srcml_archive* archive) {
   srcdiff_config* config = new srcdiff_config();
   config->deltor = std::make_unique<srcdiff::delta>(archive, config->method, std::optional<std::string>());
+  config->method  = 0;
+  config->options = srcdiff::OPTION_STRING_SPLITTING;
   return config;
 }
 
@@ -108,14 +110,21 @@ void srcdiff_config_free(struct srcdiff_config* config) {
   delete config;
 }
 
-class srcml_unit_input {
+class srcml_unit_input : public srcdiff::input_stream_base {
 public:
   srcml_unit_input(srcml_unit* unit) : unit(unit) {
   }
 
-  srcml_unit*    open(const char* uri) const { return unit; }
-  static ssize_t read(void* context, void* buffer, size_t len) {}
-  static int     close(void* context) {}
+  virtual void operator()(srcml_nodes& nodes, srcml_archive* archive, const srcdiff::OPTION_TYPE& options) const {
+    nodes = input_nodes(archive, options);
+  }
+
+  virtual srcml_nodes input_nodes(srcml_archive* archive, const srcdiff::OPTION_TYPE& options) const {
+    srcml_converter converter(archive, srcdiff::is_option(options, srcdiff::OPTION_STRING_SPLITTING));
+    converter.convert(unit);
+    return converter.create_nodes();
+  }
+
 private:
   srcml_unit* unit;
 };
@@ -127,7 +136,8 @@ struct srcml_unit* srcdiff_create_delta(struct srcdiff_unit  * original_unit,
   if(!modified_unit) return nullptr;
   if(!config)        return nullptr;
 
-  // config->deltor->create();
+  //input_stream_manager manager(original_unit);
+  //config->deltor->create();
 
   return nullptr;
 }
