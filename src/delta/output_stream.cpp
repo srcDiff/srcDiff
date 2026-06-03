@@ -32,9 +32,6 @@ output_stream::output_stream(srcml_archive * archive,
    rbuf_original(std::make_shared<reader_state>(DELETE)), rbuf_modified(std::make_shared<reader_state>(INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcML::name_space>()),
    is_initialized(false), is_open(false) {
-
-  wstate->filename = srcdiff_filename;
-
 }
 
 void output_stream::initialize() {
@@ -143,22 +140,11 @@ std::string output_stream::end_unit() {
 }
 
 void output_stream::write_unit() {
-  if(!is_open) {
-    int ret_status = srcml_archive_write_open_filename(archive, wstate->filename.c_str());
-    if(ret_status != SRCML_STATUS_OK) throw std::string("Output source '" + wstate->filename + "' could not be opened");
-  }
-
-  is_open = true;
   srcml_archive_write_unit(archive, wstate->unit);
 }
 
 void output_stream::close() {
   srcml_unit_free(wstate->unit);
-  if(is_open) srcml_archive_close(archive);
-}
-
-const std::string & output_stream::srcdiff_filename() const {
-  return wstate->filename;
 }
 
 const srcml_nodes & output_stream::nodes_original() const {

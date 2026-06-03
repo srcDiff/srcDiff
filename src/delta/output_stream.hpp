@@ -75,7 +75,7 @@ public:
   public:
 
     writer_state(const METHOD_TYPE & method)
-      : filename(), unit(nullptr), method(method), approximate(false),
+      : unit(nullptr), method(method), approximate(false),
         output_diff() {}
 
     void clear() {
@@ -91,7 +91,6 @@ public:
 
     }
 
-    std::string filename;
     srcml_unit * unit;
 
     const METHOD_TYPE & method;
@@ -161,7 +160,6 @@ public:
   void reset();
   void close();
 
-  virtual const std::string & srcdiff_filename() const;
   virtual const srcml_nodes & nodes_original() const;
   virtual const srcml_nodes & nodes_modified() const;
   virtual srcml_nodes & nodes_original();

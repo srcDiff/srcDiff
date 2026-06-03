@@ -32,7 +32,7 @@ input_source::input_source(const client_options & options) : options(options), d
   const client_options::view_options_t& view_options = options.view_options;
 
   deltor = std::make_unique<delta>(
-                options.srcdiff_filename, options.methods, options.archive,
+                options.output_filename, options.methods, options.archive,
                 options.unit_filename,
                 options.view_options,
                 options.summary_type_str);
@@ -40,7 +40,7 @@ input_source::input_source(const client_options & options) : options(options), d
   if(is_option(flags, OPTION_UNIFIED_VIEW)) {
 
      view = std::make_unique<unified_view>(
-              options.srcdiff_filename,
+              options.output_filename,
               view_options.syntax_highlight,
               view_options.theme,
               is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),
@@ -52,7 +52,7 @@ input_source::input_source(const client_options & options) : options(options), d
   } else if(is_option(flags, OPTION_SIDE_BY_SIDE_VIEW)) {
 
      view = std::make_unique<side_by_side_view>(
-              options.srcdiff_filename,
+              options.output_filename,
               view_options.syntax_highlight,
               view_options.theme,
               is_option(flags, OPTION_IGNORE_ALL_WHITESPACE),

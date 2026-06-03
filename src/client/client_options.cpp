@@ -379,7 +379,7 @@ const client_options& process_command_line(int argc, char* argv[]) {
   
   general_group->add_option(
       "-o,--output",
-      options.srcdiff_filename,
+      options.output_filename,
       "Specify output filename"
     )->default_val("-");
   

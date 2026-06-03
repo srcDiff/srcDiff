@@ -23,7 +23,7 @@
 namespace srcdiff {
 
 input_source_local::input_source_local(const client_options & options) : input_source(options) {
-  output_file = std::filesystem::directory_entry(options.srcdiff_filename);
+  output_file = std::filesystem::directory_entry(options.output_filename);
 }
 
 input_source_local::~input_source_local() {

@@ -32,7 +32,16 @@ int main(int argc, char* argv[]) {
   initGenericErrorDefaultFunc(&handler);
 
   // process command-line arguments
-  const srcdiff::client_options & options = srcdiff::process_command_line(argc, argv);
+  const srcdiff::client_options& options = srcdiff::process_command_line(argc, argv);
+
+  bool is_view = options.is_option(srcdiff::OPTION_UNIFIED_VIEW | srcdiff::OPTION_SIDE_BY_SIDE_VIEW);
+  try {
+    if(!is_view && srcml_archive_write_open_filename(options.archive, options.output_filename.c_str()) != SRCML_STATUS_OK) {
+      throw std::string("Output source '" + options.output_filename + "' could not be opened");
+    }
+  } catch(const std::string & s) {
+      std::cerr << "Error: " << s << '\n';
+  } 
 
   srcdiff::input_source * input = next_input_source(options);
 
@@ -60,6 +69,9 @@ int main(int argc, char* argv[]) {
 
   }
 
+  if(!is_view) {
+    srcml_archive_close(options.archive);
+  }
   srcml_archive_free(options.archive);
   
   return exit_status;

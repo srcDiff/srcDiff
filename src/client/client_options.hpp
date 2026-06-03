@@ -89,11 +89,14 @@ inline bool is_option(OPTION_TYPE options, OPTION_TYPE flag) {
 struct client_options {
 
   client_options() : flags(OPTION_STRING_SPLITTING) {}
+  bool is_option(OPTION_TYPE flag) const {
+    return (flags & flag) > 0;
+  }
 
-  srcml_archive * archive;
+  srcml_archive* archive;
 
   std::vector<std::pair<std::string, std::string>> input_pairs;
-  std::string srcdiff_filename;
+  std::string output_filename;
   std::optional<std::string> files_from_name;
   std::optional<std::string> unit_filename;
 

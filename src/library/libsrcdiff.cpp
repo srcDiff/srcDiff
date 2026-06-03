@@ -81,13 +81,13 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
     }
 
     srcdiff::client_options options;
-    options.srcdiff_filename = output_filename;
+    options.output_filename = output_filename;
 
     file_input in;
     srcdiff::input_stream<file_input> input_original(in, original_path, language_string);
     srcdiff::input_stream<file_input> input_modified(in, modified_path, language_string);
 
-    srcdiff::delta delta(options.srcdiff_filename, options.methods, options.archive,
+    srcdiff::delta delta(options.output_filename, options.methods, options.archive,
                                    options.unit_filename,
                                    options.view_options,
                                    options.summary_type_str);
