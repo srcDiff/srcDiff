@@ -13,17 +13,11 @@ namespace srcdiff {
 
 // constructor
 /// @todo remove srcdiff filename and in general archive open/close from output stream
-delta::delta(const std::string& srcdiff_filename,
-                       const METHOD_TYPE& method,
-                       srcml_archive* archive,
-                       const std::optional<std::string>& unit_filename,
-                       const client_options::view_options_t& view_options,
-                       const std::optional<std::string>& summary_type_str)
+delta::delta(srcml_archive* archive,
+             const METHOD_TYPE& method,
+             const std::optional<std::string>& unit_filename)
   : archive(archive), output(std::make_shared<srcdiff::output_stream>(archive,
-                             srcdiff_filename,
-                             method,
-                             view_options,
-                             summary_type_str)),
+                             method)),
     unit_filename(unit_filename) {}
 
 // destructor

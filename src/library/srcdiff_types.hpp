@@ -9,5 +9,12 @@
  * Defines the types for libsrcdiff.
  */
 
+#include <delta.hpp>
+
+#include <memory>
+
 struct srcdiff_config {
+	std::unique_ptr<srcdiff::delta> deltor;
+
+	METHOD_TYPE method;
 };

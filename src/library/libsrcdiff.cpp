@@ -18,6 +18,7 @@
 #include <string>
 #include <optional>
 #include <fstream>
+#include <memory>
 
 class file_input {
 public:
@@ -87,30 +88,31 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
     srcdiff::input_stream<file_input> input_original(in, original_path, language_string);
     srcdiff::input_stream<file_input> input_modified(in, modified_path, language_string);
 
-    srcdiff::delta delta(options.output_filename, options.methods, options.archive,
-                                   options.unit_filename,
-                                   options.view_options,
-                                   options.summary_type_str);
-
+    srcdiff::delta delta(options.archive,options.methods,
+                         options.unit_filename);
     delta.create(input_original, input_modified, language_string, options.flags, unit_filename, unit_version);
 
     return 0;
 }
 
-struct srcdiff_config* srcdiff_config_create() {
-  return new srcdiff_config();
+struct srcdiff_config* srcdiff_config_create(struct srcml_archive* archive) {
+  srcdiff_config* config = new srcdiff_config();
+  config->deltor = std::make_unique<srcdiff::delta>(archive, config->method, std::optional<std::string>());
+  return config;
 }
 
 void srcdiff_config_free(struct srcdiff_config* config) {
   delete config;
 }
 
-struct srcml_unit* srcdiff_create_delta (struct srcdiff_unit  * original_unit, 
-                                         struct srcdiff_unit  * modified_unit,
-                                         struct srcdiff_config* config) {
+struct srcml_unit* srcdiff_create_delta(struct srcdiff_unit  * original_unit, 
+                                        struct srcdiff_unit  * modified_unit,
+                                        struct srcdiff_config* config) {
   if(!original_unit) return nullptr;
   if(!modified_unit) return nullptr;
   if(!config)        return nullptr;
+
+  // config->deltor->create();
 
   return nullptr;
 }

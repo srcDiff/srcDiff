@@ -44,22 +44,18 @@ private:
 public:
 
   // constructor
-  delta(const std::string& srcdiff_filename, const METHOD_TYPE& method, srcml_archive * archive,
-        const std::optional<std::string>& unit_filename,
-        const client_options::view_options_t& view_options,
-        const std::optional<std::string>& summary_type_str);
+  delta(srcml_archive * archive, const METHOD_TYPE& method, const std::optional<std::string>& unit_filename);
 
   // destructor
   ~delta();
 
   template<class T>
-  std::string create(
-                 const input_stream<T>& input_original,
-                 const input_stream<T>& input_modified,
-                 const std::string& language,
-                 const OPTION_TYPE& flags,
-                 const std::optional<std::string>& unit_filename  = std::optional<std::string>(),
-                 const std::optional<std::string>& unit_version   = std::optional<std::string>());
+  std::string create(const input_stream<T>& input_original,
+                     const input_stream<T>& input_modified,
+                     const std::string& language,
+                     const OPTION_TYPE& flags,
+                     const std::optional<std::string>& unit_filename  = std::optional<std::string>(),
+                     const std::optional<std::string>& unit_version   = std::optional<std::string>());
 
   // Think about taking out archive writing and putting having in input
   // separates concerns better

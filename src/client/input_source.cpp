@@ -31,11 +31,9 @@ input_source::input_source(const client_options & options) : options(options), d
 
   const client_options::view_options_t& view_options = options.view_options;
 
-  deltor = std::make_unique<delta>(
-                options.output_filename, options.methods, options.archive,
-                options.unit_filename,
-                options.view_options,
-                options.summary_type_str);
+  deltor = std::make_unique<delta>(options.archive,
+                                   options.methods, 
+                                   options.unit_filename);
 
   if(is_option(flags, OPTION_UNIFIED_VIEW)) {
 

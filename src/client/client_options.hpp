@@ -110,8 +110,6 @@ struct client_options {
     int side_by_side_tab_size;
   } view_options;
 
-  std::optional<std::string> summary_type_str;
-
 #if SVN
   std::optional<std::string> svn_url;
   svn_revnum_t revision_one;

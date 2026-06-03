@@ -141,11 +141,7 @@ private:
 public:
 
   output_stream() {}
-  output_stream(srcml_archive * archive,
-                 const std::string & srcdiff_filename,
-                 const METHOD_TYPE & method,
-                 const client_options::view_options_t & view_options,
-                 const std::optional<std::string> & summary_type_str);
+  output_stream(srcml_archive * archive, const METHOD_TYPE & method);
   virtual ~output_stream();
 
 
