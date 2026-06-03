@@ -32,6 +32,8 @@ class input_source {
 
 protected:
 
+  srcml_archive* archive;
+
   const client_options& options;
   input_stream_manager manager;
   std::unique_ptr<delta> deltor;
@@ -64,7 +66,7 @@ public:
                          const std::optional<std::string> & directory_modified);
   virtual void files_from();
 
-  virtual std::string process_file(const std::optional<std::string> & path_original,
+  virtual srcml_unit* process_file(const std::optional<std::string> & path_original,
                                    const std::optional<std::string> & path_modified) = 0;
   virtual void process_directory(const std::optional<std::string> & directory_original,
                                  const std::optional<std::string> & directory_modified) = 0;

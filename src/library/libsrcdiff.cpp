@@ -150,8 +150,5 @@ struct srcml_unit* srcdiff_create_delta(struct srcml_unit  * original_unit,
   srcml_unit_input modified_input(modified_unit);
   manager.append_stream(modified_input);
 
-  config->deltor->create(manager, srcml_unit_get_language(original_unit), std::optional<std::string>(), std::optional<std::string>());
-  config->deltor->write_delta();
-
-  return nullptr;
+  return config->deltor->create(manager, srcml_unit_get_language(original_unit), std::optional<std::string>(), std::optional<std::string>());
 }

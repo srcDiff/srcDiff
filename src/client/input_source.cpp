@@ -21,7 +21,7 @@ size_t input_source::input_skipped = 0;
 size_t input_source::input_total   = 0;
 
 input_source::input_source(const client_options& options) 
-  : options(options), manager(options.archive, options.flags), 
+  : archive(options.archive), options(options), manager(options.archive, options.flags), 
     deltor(), view(), directory_length_original(0), directory_length_modified(0) {
 
   OPTION_TYPE flags = options.flags;
@@ -89,13 +89,16 @@ void input_source::file(const std::optional<std::string> & path_original,
 
   }
 
-  std::string srcdiff = process_file(path_original, path_modified);
+  srcml_unit* srcdiff_unit = process_file(path_original, path_modified);
 
   if(!view) {
-    deltor->write_delta();
+    srcml_archive_write_unit(archive, srcdiff_unit);
   } else {
+    std::string srcdiff = srcml_unit_get_srcml(srcdiff_unit);
     view->transform(srcdiff, "UTF-8");
   }
+
+  srcml_unit_free(srcdiff_unit);
 
 }
 

@@ -32,7 +32,7 @@ public:
 
   virtual void consume();
 
-  virtual std::string process_file(const std::optional<std::string> & path_original,
+  virtual srcml_unit* process_file(const std::optional<std::string> & path_original,
                                    const std::optional<std::string> & path_modified);
   virtual void process_directory(const std::optional<std::string> & directory_original,
                                  const std::optional<std::string> & directory_modified);

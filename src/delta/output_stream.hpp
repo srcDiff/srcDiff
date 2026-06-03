@@ -148,10 +148,11 @@ public:
   void initialize();
 
   void prime();
-  void start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version);
 
-  std::string end_unit();
-  void write_unit();
+  void start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version);
+  void end_unit();
+
+  srcml_unit* get_unit();
 
   void reset();
   void close();

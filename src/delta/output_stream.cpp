@@ -105,7 +105,6 @@ void output_stream::reset() {
 
 void output_stream::start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version) {
 
-  srcml_unit_free(wstate->unit);
   wstate->unit = srcml_unit_create(archive);
   srcml_unit_set_language(wstate->unit, language_string.c_str());
 
@@ -117,7 +116,7 @@ void output_stream::start_unit(const std::string & language_string, const std::o
 
 }
 
-std::string output_stream::end_unit() {
+void output_stream::end_unit() {
 
   static const std::shared_ptr<srcML::node> flush = std::make_shared<srcML::node>(srcML::node_type::TEXT, "text");
   output_node(flush, COMMON);
@@ -128,19 +127,13 @@ std::string output_stream::end_unit() {
   }
 
   srcml_write_end_unit(wstate->unit);
-
-  std::string srcdiff = srcml_unit_get_srcml(wstate->unit);
-
-  return srcdiff;
-
 }
 
-void output_stream::write_unit() {
-  srcml_archive_write_unit(archive, wstate->unit);
+srcml_unit* output_stream::get_unit() {
+  return wstate->unit;
 }
 
 void output_stream::close() {
-  srcml_unit_free(wstate->unit);
 }
 
 const srcml_nodes & output_stream::nodes_original() const {

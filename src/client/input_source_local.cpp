@@ -74,19 +74,21 @@ void input_source_local::consume()
   }
 }
 
-std::string input_source_local::process_file(const std::optional<std::string> & path_original,
-                                                     const std::optional<std::string> & path_modified) {
+srcml_unit* input_source_local::process_file(const std::optional<std::string> & path_original,
+                                             const std::optional<std::string> & path_modified) {
 
   if(path_modified == "") {
-    std::ifstream in(*path_original);
-    std::ostringstream buffer;
-    buffer << in.rdbuf();
-    return buffer.str();
+    srcml_archive* read_archive = srcml_archive_create();
+    srcml_archive_read_open_filename(read_archive, path_original->c_str());
+    srcml_unit* unit = srcml_archive_read_unit(read_archive);
+    srcml_archive_close(read_archive);
+    srcml_archive_free(read_archive);
+    return unit;
   }
 
   const char * language_string = get_language(path_original, path_modified);
 
-  if(language_string == SRCML_LANGUAGE_NONE) return "";
+  if(language_string == SRCML_LANGUAGE_NONE) return nullptr;
 
   std::string path_one = path_original ? *path_original : std::string();
   std::string path_two = path_modified ? *path_modified : std::string();

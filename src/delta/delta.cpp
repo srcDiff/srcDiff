@@ -25,7 +25,7 @@ delta::~delta() {
 }
 
 // Translate from input stream to output stream
-std::string delta::create(input_stream_manager& manager,
+srcml_unit* delta::create(input_stream_manager& manager,
                           const std::string& language,
                           const std::optional<std::string>& unit_filename,
                           const std::optional<std::string>& unit_version) {
@@ -52,17 +52,13 @@ std::string delta::create(input_stream_manager& manager,
     whitespace_stream whitespace(*output);
     whitespace.output_all();
 
-    srcdiff_str = output->end_unit();
+    output->end_unit();
 
   }
 
   output->reset();
 
-  return srcdiff_str;
-}
-
-void delta::write_delta() {
-  output->write_unit();
+  return output->get_unit();
 }
 
 }
