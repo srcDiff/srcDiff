@@ -100,7 +100,13 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
 
 struct srcdiff_config* srcdiff_config_create(struct srcml_archive* archive) {
   srcdiff_config* config = new srcdiff_config();
-  config->archive = archive;
+  srcml_archive_enable_solitary_unit(archive);
+  srcml_archive_disable_hash(archive);
+  srcml_archive_register_namespace(archive, srcdiff::SRCDIFF_DEFAULT_NAMESPACE_PREFIX.c_str(),
+                                            srcdiff::SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()
+  );
+
+  config->archive;
   config->deltor = std::make_unique<srcdiff::delta>(archive, config->method, std::optional<std::string>());
   config->method  = 0;
   config->options = srcdiff::OPTION_STRING_SPLITTING;
@@ -144,9 +150,7 @@ struct srcml_unit* srcdiff_create_delta(struct srcml_unit  * original_unit,
   srcml_unit_input modified_input(modified_unit);
   manager.append_stream(modified_input);
 
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   config->deltor->create(manager, "Java", std::optional<std::string>(), std::optional<std::string>());
-fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
   config->deltor->write_delta();
 
   return nullptr;
