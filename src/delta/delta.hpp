@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file translator.hpp
+ * @file delta.hpp
  *
  * @copyright Copyright (C) 2014-2026 SDML (www.srcDiff.org)
  *
@@ -31,7 +31,7 @@
 
 namespace srcdiff {
 
-class translator {
+class delta {
 
 private:
 
@@ -44,16 +44,16 @@ private:
 public:
 
   // constructor
-  translator(const std::string& srcdiff_filename, const METHOD_TYPE& method, srcml_archive * archive,
-             const std::optional<std::string>& unit_filename,
-             const client_options::view_options_t& view_options,
-             const std::optional<std::string>& summary_type_str);
+  delta(const std::string& srcdiff_filename, const METHOD_TYPE& method, srcml_archive * archive,
+        const std::optional<std::string>& unit_filename,
+        const client_options::view_options_t& view_options,
+        const std::optional<std::string>& summary_type_str);
 
   // destructor
-  ~translator();
+  ~delta();
 
   template<class T>
-  std::string translate(
+  std::string create(
                  const input_stream<T>& input_original,
                  const input_stream<T>& input_modified,
                  const std::string& language,
@@ -63,17 +63,17 @@ public:
 
   // Think about taking out archive writing and putting having in input
   // separates concerns better
-  void write_translation();
+  void write_delta();
 };
 
 // Translate from input stream to output stream
 template<class T>
-std::string translator::translate( const input_stream<T>& input_original,
-                                   const input_stream<T>& input_modified,
-                                   const std::string& language,
-                                   const OPTION_TYPE& flags,
-                                   const std::optional<std::string>& unit_filename,
-                                   const std::optional<std::string>& unit_version) {
+std::string delta::create(const input_stream<T>& input_original,
+                          const input_stream<T>& input_modified,
+                          const std::string& language,
+                          const OPTION_TYPE& flags,
+                          const std::optional<std::string>& unit_filename,
+                          const std::optional<std::string>& unit_version) {
 
   const std::optional<std::string> output_path = "";
 

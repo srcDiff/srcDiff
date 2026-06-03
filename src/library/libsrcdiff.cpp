@@ -10,7 +10,7 @@
 #include <srcdiff.h>
 #include <srcdiff_types.hpp>
 
-#include <translator.hpp>
+#include <delta.hpp>
 #include <output_stream.hpp>
 #include <input_stream.hpp>
 #include <client_options.hpp>
@@ -87,12 +87,12 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
     srcdiff::input_stream<file_input> input_original(in, original_path, language_string);
     srcdiff::input_stream<file_input> input_modified(in, modified_path, language_string);
 
-    srcdiff::translator translator(options.srcdiff_filename, options.methods, options.archive,
+    srcdiff::delta delta(options.srcdiff_filename, options.methods, options.archive,
                                    options.unit_filename,
                                    options.view_options,
                                    options.summary_type_str);
 
-    translator.translate(input_original, input_modified, language_string, options.flags, unit_filename, unit_version);
+    delta.create(input_original, input_modified, language_string, options.flags, unit_filename, unit_version);
 
     return 0;
 }

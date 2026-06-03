@@ -20,7 +20,7 @@ size_t input_source::input_count = 0;
 size_t input_source::input_skipped = 0;
 size_t input_source::input_total = 0;
 
-input_source::input_source(const client_options & options) : options(options), interpreter(), view(), directory_length_original(0), directory_length_modified(0) {
+input_source::input_source(const client_options & options) : options(options), deltor(), view(), directory_length_original(0), directory_length_modified(0) {
 
   OPTION_TYPE flags = options.flags;
   if(srcml_archive_get_version(options.archive) && srcml_archive_is_solitary_unit(options.archive)) {
@@ -31,7 +31,7 @@ input_source::input_source(const client_options & options) : options(options), i
 
   const client_options::view_options_t& view_options = options.view_options;
 
-  interpreter = std::make_unique<translator>(
+  deltor = std::make_unique<delta>(
                 options.srcdiff_filename, options.methods, options.archive,
                 options.unit_filename,
                 options.view_options,
@@ -92,7 +92,7 @@ void input_source::file(const std::optional<std::string> & path_original,
   std::string srcdiff = process_file(path_original, path_modified);
 
   if(!view) {
-    interpreter->write_translation();
+    deltor->write_delta();
   } else {
     view->transform(srcdiff, "UTF-8");
   }

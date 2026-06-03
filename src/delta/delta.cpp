@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file translator.cpp
+ * @file delta.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <translator.hpp>
+#include <delta.hpp>
 
 namespace srcdiff {
 
 // constructor
 /// @todo remove srcdiff filename and in general archive open/close from output stream
-translator::translator(const std::string& srcdiff_filename,
+delta::delta(const std::string& srcdiff_filename,
                        const METHOD_TYPE& method,
                        srcml_archive* archive,
                        const std::optional<std::string>& unit_filename,
@@ -27,11 +27,11 @@ translator::translator(const std::string& srcdiff_filename,
     unit_filename(unit_filename) {}
 
 // destructor
-translator::~translator() {
+delta::~delta() {
   output->close();
 }
 
-void translator::write_translation() {
+void delta::write_delta() {
   output->write_unit();
 }
 

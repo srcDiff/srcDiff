@@ -28,5 +28,5 @@ find_package(LibXml2 REQUIRED)
 find_package(srcML REQUIRED)
 
 # srcdiff
-add_library(translator OBJECT ${TRANSLATOR_HEADERS} ${TRANSLATOR_SOURCE})
-target_link_libraries(translator PRIVATE LibXml2::LibXml2 srcML::LibsrcML)
+add_library(delta OBJECT ${TRANSLATOR_HEADERS} ${TRANSLATOR_SOURCE})
+target_link_libraries(delta PRIVATE LibXml2::LibXml2 srcML::LibsrcML)

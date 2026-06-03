@@ -11,7 +11,7 @@
 #define INCLUDED_NPUT_SOURCE_HPP
 
 #include <client_options.hpp>
-#include <translator.hpp>
+#include <delta.hpp>
 #include <view.hpp>
 
 #include <string>
@@ -32,7 +32,7 @@ class input_source {
 protected:
 
   const client_options& options;
-  std::unique_ptr<translator> interpreter;
+  std::unique_ptr<delta> deltor;
   std::unique_ptr<view_t> view;
 
   int directory_length_original;

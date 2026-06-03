@@ -38,14 +38,14 @@ endif()
 if(WIN32)
 
     add_executable(srcdiff ${CLIENT_HEADERS} ${CLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
-                $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:view>
+                $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:delta> $<TARGET_OBJECTS:view>
                 $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:nest> $<TARGET_OBJECTS:convert> $<TARGET_OBJECTS:project>
                 # extra for windows:
                 $<TARGET_OBJECTS:windows>)
 
 else()
     add_executable(srcdiff ${CLIENT_HEADERS} ${CLIENT_SOURCE} $<TARGET_OBJECTS:shortest_edit_script>
-              $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:translator> $<TARGET_OBJECTS:view>
+              $<TARGET_OBJECTS:srcml> $<TARGET_OBJECTS:delta> $<TARGET_OBJECTS:view>
               $<TARGET_OBJECTS:model> $<TARGET_OBJECTS:nest> $<TARGET_OBJECTS:convert> $<TARGET_OBJECTS:project>)
 endif()
 
