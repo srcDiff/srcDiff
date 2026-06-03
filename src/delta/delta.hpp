@@ -34,10 +34,7 @@ class delta {
 
 private:
 
-  srcml_archive* archive;
-
   std::shared_ptr<output_stream> output;
-
   const std::optional<std::string>& unit_filename;
 
 public:

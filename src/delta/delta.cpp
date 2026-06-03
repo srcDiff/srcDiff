@@ -16,8 +16,7 @@ namespace srcdiff {
 delta::delta(srcml_archive* archive,
              const METHOD_TYPE& method,
              const std::optional<std::string>& unit_filename)
-  : archive(archive), output(std::make_shared<srcdiff::output_stream>(archive,
-                             method)),
+  : output(std::make_shared<srcdiff::output_stream>(archive, method)),
     unit_filename(unit_filename) {}
 
 // destructor

@@ -100,6 +100,7 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
 
 struct srcdiff_config* srcdiff_config_create(struct srcml_archive* archive) {
   srcdiff_config* config = new srcdiff_config();
+  config->archive = archive;
   config->deltor = std::make_unique<srcdiff::delta>(archive, config->method, std::optional<std::string>());
   config->method  = 0;
   config->options = srcdiff::OPTION_STRING_SPLITTING;
@@ -129,15 +130,24 @@ private:
   srcml_unit* unit;
 };
 
-struct srcml_unit* srcdiff_create_delta(struct srcdiff_unit  * original_unit, 
-                                        struct srcdiff_unit  * modified_unit,
+struct srcml_unit* srcdiff_create_delta(struct srcml_unit  * original_unit, 
+                                        struct srcml_unit  * modified_unit,
                                         struct srcdiff_config* config) {
   if(!original_unit) return nullptr;
   if(!modified_unit) return nullptr;
   if(!config)        return nullptr;
 
-  //input_stream_manager manager(original_unit);
-  //config->deltor->create();
+  srcdiff::input_stream_manager manager(config->archive, config->options);
+  srcml_unit_input original_input(original_unit);
+  manager.append_stream(original_input);
+
+  srcml_unit_input modified_input(modified_unit);
+  manager.append_stream(modified_input);
+
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+  config->deltor->create(manager, "Java", std::optional<std::string>(), std::optional<std::string>());
+fprintf(stderr, "HERE: %s %s %d\n", __FILE__, __FUNCTION__, __LINE__);
+  config->deltor->write_delta();
 
   return nullptr;
 }

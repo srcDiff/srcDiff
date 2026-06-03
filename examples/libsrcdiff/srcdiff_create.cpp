@@ -10,25 +10,28 @@
  */
 
 #include <iostream>
+#include <srcml.h>
+#include <srcdiff.h>
 
 int main(int argc, char * argv[]) {
 
     srcml_archive* archive = srcml_archive_create();
-    srcdiff_config* config = srcdiff_config_create();
+    srcml_archive_write_open_filename(archive, "srcdiff.xml");
+    srcdiff_config* config = srcdiff_config_create(archive);
 
-    for(int i = 2; i < argc; i += 2) {
+    for(int i = 1; i < argc; i += 2) {
 
         // srcml original file
         const int orginal_file_pos  = i - 1;
+        
         srcml_unit* original_unit = srcml_unit_create(archive);
-        srcml_unit_set_filename(unit, argv[orginal_file_pos]);
-        srcml_unit_parse_filename(unit, argv[orginal_file_pos]);
+        srcml_unit_set_filename(original_unit, argv[orginal_file_pos]);
+        srcml_unit_parse_filename(original_unit, argv[orginal_file_pos]);
 
         const int modified_file_pos  = i;
         srcml_unit* modified_unit = srcml_unit_create(archive);
-        srcml_unit_set_filename(unit, argv[modified_file_pos]);
-        srcml_unit_parse_filename(unit, argv[modified_file_pos]);
-
+        srcml_unit_set_filename(modified_unit, argv[modified_file_pos]);
+        srcml_unit_parse_filename(modified_unit, argv[modified_file_pos]);
 
         // unit is self-contained (namespace on unit)
         srcml_unit* unit = srcdiff_create_delta(original_unit, modified_unit, config);

@@ -14,6 +14,7 @@
 #include <memory>
 
 struct srcdiff_config {
+	srcml_archive* archive;
 	std::unique_ptr<srcdiff::delta> deltor;
 
 	METHOD_TYPE method;

@@ -32,8 +32,7 @@ public:
 
     ~input_stream_manager() {}
 
-    template<typename T>
-    void append_stream(const input_stream<T>& stream) {
+    void append_stream(const input_stream_base& stream) {
         streams.push_back(std::ref(stream));
     }
 
