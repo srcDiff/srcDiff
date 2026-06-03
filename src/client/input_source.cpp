@@ -16,11 +16,13 @@ namespace srcdiff {
 
 bool input_source::show_input = false;
 
-size_t input_source::input_count = 0;
+size_t input_source::input_count   = 0;
 size_t input_source::input_skipped = 0;
-size_t input_source::input_total = 0;
+size_t input_source::input_total   = 0;
 
-input_source::input_source(const client_options & options) : options(options), deltor(), view(), directory_length_original(0), directory_length_modified(0) {
+input_source::input_source(const client_options& options) 
+  : options(options), manager(options.archive, options.flags), 
+    deltor(), view(), directory_length_original(0), directory_length_modified(0) {
 
   OPTION_TYPE flags = options.flags;
   if(srcml_archive_get_version(options.archive) && srcml_archive_is_solitary_unit(options.archive)) {

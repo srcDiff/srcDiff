@@ -88,9 +88,12 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
     srcdiff::input_stream<file_input> input_original(in, original_path, language_string);
     srcdiff::input_stream<file_input> input_modified(in, modified_path, language_string);
 
-    srcdiff::delta delta(options.archive,options.methods,
-                         options.unit_filename);
-    delta.create(input_original, input_modified, language_string, options.flags, unit_filename, unit_version);
+    srcdiff::input_stream_manager manager(options.archive, options.flags);
+    manager.append_stream(input_original);
+    manager.append_stream(input_modified);
+
+    srcdiff::delta delta(options.archive, options.methods, options.unit_filename);
+    delta.create(manager, language_string, unit_filename, unit_version);
 
     return 0;
 }
@@ -104,6 +107,18 @@ struct srcdiff_config* srcdiff_config_create(struct srcml_archive* archive) {
 void srcdiff_config_free(struct srcdiff_config* config) {
   delete config;
 }
+
+class srcml_unit_input {
+public:
+  srcml_unit_input(srcml_unit* unit) : unit(unit) {
+  }
+
+  srcml_unit*    open(const char* uri) const { return unit; }
+  static ssize_t read(void* context, void* buffer, size_t len) {}
+  static int     close(void* context) {}
+private:
+  srcml_unit* unit;
+};
 
 struct srcml_unit* srcdiff_create_delta(struct srcdiff_unit  * original_unit, 
                                         struct srcdiff_unit  * modified_unit,

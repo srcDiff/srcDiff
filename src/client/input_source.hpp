@@ -7,10 +7,11 @@
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_NPUT_SOURCE_HPP
-#define INCLUDED_NPUT_SOURCE_HPP
+#ifndef INCLUDED_INPUT_SOURCE_HPP
+#define INCLUDED_INPUT_SOURCE_HPP
 
 #include <client_options.hpp>
+#include <input_stream_manager.hpp>
 #include <delta.hpp>
 #include <view.hpp>
 
@@ -32,6 +33,7 @@ class input_source {
 protected:
 
   const client_options& options;
+  input_stream_manager manager;
   std::unique_ptr<delta> deltor;
   std::unique_ptr<view_t> view;
 

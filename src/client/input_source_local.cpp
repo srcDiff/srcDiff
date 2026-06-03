@@ -101,8 +101,12 @@ std::string input_source_local::process_file(const std::optional<std::string> & 
   }
 
   input_stream<input_source_local> input_original(*this, path_original, language_string);
+  manager.append_stream(input_original);
+
   input_stream<input_source_local> input_modified(*this, path_modified, language_string);
-  return deltor->create(input_original, input_modified, language_string, options.flags, unit_filename, unit_version);
+  manager.append_stream(input_modified);
+
+  return deltor->create(manager, language_string, unit_filename, unit_version);
 
 }
 
