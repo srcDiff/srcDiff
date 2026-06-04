@@ -23,7 +23,7 @@ std::mutex srcml_converter::mutex;
 std::map<std::string, std::shared_ptr<srcML::node>> srcml_converter::start_tags;
 std::map<std::string, std::shared_ptr<srcML::node>> srcml_converter::end_tags;
 
-std::shared_ptr<srcML::node> srcml_converter::get_current_node(xmlTextReaderPtr reader, bool is_archive [[maybe_unused]]) {
+std::shared_ptr<srcML::node> srcml_converter::get_current_node(xmlTextReaderPtr reader) {
 
   xmlNode * curnode = xmlTextReaderCurrentNode(reader);
   curnode->type = (xmlElementType)xmlTextReaderNodeType(reader);
@@ -103,8 +103,8 @@ void eat_element(xmlTextReaderPtr& reader) {
   xmlTextReaderRead(reader);
 }
 
-srcml_converter::srcml_converter(srcml_archive * archive, bool split_strings) 
-  : archive(archive), split_strings(split_strings), output_buffer(nullptr), free_buffer(false) {}
+srcml_converter::srcml_converter(bool split_strings) 
+  : split_strings(split_strings), output_buffer(nullptr), free_buffer(false) {}
 
 srcml_converter::~srcml_converter() {
 
@@ -116,24 +116,22 @@ srcml_converter::~srcml_converter() {
 }
 
 // converts source code to srcML
-void srcml_converter::convert(const std::string & language, void * context,
-                              const std::function<ssize_t(void *, void *, size_t)> & read, const std::function<int(void *)> & close) {
+void srcml_converter::convert(srcml_archive* archive, const std::string& language, void* context,
+                              const std::function<ssize_t(void*, void*, size_t)> & read, const std::function<int(void*)> & close) {
 
-  srcml_archive * unit_archive = srcml_archive_clone(archive);
+  srcml_archive* unit_archive = srcml_archive_clone(archive);
   srcml_archive_enable_solitary_unit(unit_archive);
   srcml_archive_disable_hash(unit_archive);
 
   srcml_archive_write_open_memory(unit_archive, &output_buffer, &output_size);
   free_buffer = true;
 
-  srcml_unit * unit = srcml_unit_create(unit_archive);
-
+  srcml_unit* unit = srcml_unit_create(unit_archive);
   srcml_unit_set_language(unit, language.c_str());
 
   srcml_unit_parse_io(unit, context, *read.target<ssize_t (*) (void *, void *, size_t)>(), *close.target<int (*) (void *)>());
-
   srcml_archive_write_unit(unit_archive, unit);
-
+ 
   srcml_unit_free(unit);
 
   srcml_archive_close(unit_archive);
@@ -359,7 +357,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
 
       // text node does not need to be copied.
       mutex.lock();
-      std::shared_ptr<srcML::node> node = get_current_node(reader, srcml_archive_get_options(archive));
+      std::shared_ptr<srcML::node> node = get_current_node(reader);
       mutex.unlock();
 
       

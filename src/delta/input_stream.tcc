@@ -36,8 +36,8 @@ srcml_nodes input_stream<T>::input_nodes() const {
 
   typename T::input_context* context = input.open(input_path->c_str());
 
-  srcml_converter converter(archive, is_option(options, OPTION_STRING_SPLITTING));
-  converter.convert(language_string, (void*)context, T::read, T::close);
+  srcml_converter converter(is_option(options, OPTION_STRING_SPLITTING));
+  converter.convert(archive, language_string, (void*)context, T::read, T::close);
   return converter.create_nodes();
 
 }

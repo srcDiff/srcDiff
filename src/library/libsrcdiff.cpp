@@ -119,8 +119,8 @@ void srcdiff_config_free(struct srcdiff_config* config) {
 
 class srcml_unit_input : public srcdiff::input_stream_base {
 public:
-  srcml_unit_input(srcml_unit* unit, srcml_archive* archive, const srcdiff::OPTION_TYPE& options) 
-    : unit(unit), archive(archive), options(options) {
+  srcml_unit_input(srcml_unit* unit, const srcdiff::OPTION_TYPE& options) 
+    : unit(unit), options(options) {
   }
 
   virtual void operator()(srcml_nodes& nodes) const {
@@ -128,30 +128,28 @@ public:
   }
 
   virtual srcml_nodes input_nodes() const {
-    srcml_converter converter(archive, srcdiff::is_option(options, srcdiff::OPTION_STRING_SPLITTING));
+    srcml_converter converter(srcdiff::is_option(options, srcdiff::OPTION_STRING_SPLITTING));
     converter.convert(unit);
     return converter.create_nodes();
   }
 
 private:
   srcml_unit* unit;
-
-  srcml_archive* archive;
   const srcdiff::OPTION_TYPE& options;
 };
 
-struct srcml_unit* srcdiff_create_delta(struct srcml_unit  * original_unit, 
-                                        struct srcml_unit  * modified_unit,
+struct srcml_unit* srcdiff_create_delta(struct srcml_unit    * original_unit, 
+                                        struct srcml_unit    * modified_unit,
                                         struct srcdiff_config* config) {
   if(!original_unit) return nullptr;
   if(!modified_unit) return nullptr;
   if(!config)        return nullptr;
 
   srcdiff::input_stream_manager manager;
-  srcml_unit_input original_input(original_unit, config->archive, config->options);
+  srcml_unit_input original_input(original_unit, config->options);
   manager.append_stream(original_input);
 
-  srcml_unit_input modified_input(modified_unit, config->archive, config->options);
+  srcml_unit_input modified_input(modified_unit, config->options);
   manager.append_stream(modified_input);
 
   return config->deltor->create(config->archive, manager, srcml_unit_get_language(original_unit), std::optional<std::string>(), std::optional<std::string>());
