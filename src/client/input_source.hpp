@@ -32,8 +32,6 @@ class input_source {
 
 protected:
 
-  srcml_archive* archive;
-
   const client_options& options;
   input_stream_manager manager;
   std::unique_ptr<delta> deltor;

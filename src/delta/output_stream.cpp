@@ -22,17 +22,12 @@ namespace srcdiff {
 bool output_stream::delay = false;
 enum operation output_stream::delay_operation = NONE;
 
-// summary_type_str is unused here
 output_stream::output_stream(const METHOD_TYPE& method)
  : rbuf_original(std::make_shared<reader_state>(DELETE)), rbuf_modified(std::make_shared<reader_state>(INSERT)), wstate(std::make_shared<writer_state>(method)),
    diff(std::make_shared<srcML::name_space>()), is_initialized(false) {
 }
 
 void output_stream::initialize() {
-
-  // diff->set_prefix(srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()));
-  diff->set_prefix(SRCDIFF_DEFAULT_NAMESPACE_PREFIX);
-  diff->set_uri(SRCDIFF_DEFAULT_NAMESPACE_HREF);
 
   unit_tag            = std::make_shared<srcML::node>(srcML::node_type::START, std::string("unit"));
   diff_common_start   = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_COMMON, srcML::name_space::DIFF_NAMESPACE);
