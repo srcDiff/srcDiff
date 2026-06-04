@@ -98,15 +98,9 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
     return 0;
 }
 
-struct srcdiff_config* srcdiff_config_create(struct srcml_archive* archive) {
+struct srcdiff_config* srcdiff_config_create() {
   srcdiff_config* config = new srcdiff_config();
-  srcml_archive_enable_solitary_unit(archive);
-  srcml_archive_disable_hash(archive);
-  srcml_archive_register_namespace(archive, srcdiff::SRCDIFF_DEFAULT_NAMESPACE_PREFIX.c_str(),
-                                            srcdiff::SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()
-  );
 
-  config->archive = archive;
   config->deltor = std::make_unique<srcdiff::delta>(config->method, std::optional<std::string>());
   config->method  = 0;
   config->options = srcdiff::OPTION_STRING_SPLITTING;
@@ -152,5 +146,5 @@ struct srcml_unit* srcdiff_create_delta(struct srcml_unit    * original_unit,
   srcml_unit_input modified_input(modified_unit, config->options);
   manager.append_stream(modified_input);
 
-  return config->deltor->create(config->archive, manager, srcml_unit_get_language(original_unit), std::optional<std::string>(), std::optional<std::string>());
+  return config->deltor->create(srcml_unit_get_archive(original_unit), manager, srcml_unit_get_language(original_unit), std::optional<std::string>(), std::optional<std::string>());
 }

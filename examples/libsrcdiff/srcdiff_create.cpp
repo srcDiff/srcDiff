@@ -16,8 +16,13 @@
 int main(int argc, char * argv[]) {
 
     srcml_archive* archive = srcml_archive_create();
+    if(argc < 4) {
+        srcml_archive_enable_solitary_unit(archive);
+    }
+
     srcml_archive_write_open_filename(archive, "srcdiff.xml");
-    srcdiff_config* config = srcdiff_config_create(archive);
+    srcdiff_config* config = srcdiff_config_create();
+
 
     for(int i = 2; i < argc; i += 2) {
 
