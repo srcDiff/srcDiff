@@ -13,10 +13,8 @@ namespace srcdiff {
 
 // constructor
 /// @todo remove srcdiff filename and in general archive open/close from output stream
-delta::delta(srcml_archive* archive,
-             const METHOD_TYPE& method,
-             const std::optional<std::string>& unit_filename)
-  : output(std::make_shared<srcdiff::output_stream>(archive, method)),
+delta::delta(const METHOD_TYPE& method, const std::optional<std::string>& unit_filename)
+  : output(std::make_shared<srcdiff::output_stream>(method)),
     unit_filename(unit_filename) {}
 
 // destructor
@@ -25,7 +23,7 @@ delta::~delta() {
 }
 
 // Translate from input stream to output stream
-srcml_unit* delta::create(input_stream_manager& manager,
+srcml_unit* delta::create(srcml_archive* archive, input_stream_manager& manager,
                           const std::string& language,
                           const std::optional<std::string>& unit_filename,
                           const std::optional<std::string>& unit_version) {
@@ -40,7 +38,7 @@ srcml_unit* delta::create(input_stream_manager& manager,
   // run on file level
   if(!output->nodes_original().empty() || !output->nodes_modified().empty()) {
 
-    output->start_unit(language, this->unit_filename ? this->unit_filename : unit_filename, unit_version);
+    output->start_unit(archive, language, this->unit_filename ? this->unit_filename : unit_filename, unit_version);
 
     unit original_unit(output->nodes_original(), output);
     unit modified_unit(output->nodes_modified(), output);

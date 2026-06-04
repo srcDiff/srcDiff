@@ -23,16 +23,15 @@ bool output_stream::delay = false;
 enum operation output_stream::delay_operation = NONE;
 
 // summary_type_str is unused here
-output_stream::output_stream(srcml_archive* archive, const METHOD_TYPE& method)
- : archive(archive),
-   rbuf_original(std::make_shared<reader_state>(DELETE)), rbuf_modified(std::make_shared<reader_state>(INSERT)), wstate(std::make_shared<writer_state>(method)),
-   diff(std::make_shared<srcML::name_space>()),
-   is_initialized(false), is_open(false) {
+output_stream::output_stream(const METHOD_TYPE& method)
+ : rbuf_original(std::make_shared<reader_state>(DELETE)), rbuf_modified(std::make_shared<reader_state>(INSERT)), wstate(std::make_shared<writer_state>(method)),
+   diff(std::make_shared<srcML::name_space>()), is_initialized(false) {
 }
 
 void output_stream::initialize() {
 
-  diff->set_prefix(srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()));
+  // diff->set_prefix(srcml_archive_get_prefix_from_uri(archive, SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()));
+  diff->set_prefix(SRCDIFF_DEFAULT_NAMESPACE_PREFIX);
   diff->set_uri(SRCDIFF_DEFAULT_NAMESPACE_HREF);
 
   unit_tag            = std::make_shared<srcML::node>(srcML::node_type::START, std::string("unit"));
@@ -103,7 +102,7 @@ void output_stream::reset() {
 
 }
 
-void output_stream::start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version) {
+void output_stream::start_unit(srcml_archive* archive, const std::string& language_string, const std::optional<std::string>& unit_filename, const std::optional<std::string>& unit_version) {
 
   wstate->unit = srcml_unit_create(archive);
   srcml_unit_set_language(wstate->unit, language_string.c_str());

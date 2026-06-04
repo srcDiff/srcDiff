@@ -26,8 +26,7 @@ namespace srcdiff {
 class input_stream_manager {
 public:
 
-    input_stream_manager(srcml_archive* archive, const OPTION_TYPE& options) 
-        : archive(archive), options(options) {
+    input_stream_manager() {
     }
 
     ~input_stream_manager() {}
@@ -41,11 +40,11 @@ public:
       if(streams.size() < 2) return std::pair<srcml_nodes, srcml_nodes>();
 
       std::pair<srcml_nodes, srcml_nodes> nodes;
-      std::thread thread_original(streams.front(), std::ref(nodes.first), std::ref(archive), std::ref(options));
+      std::thread thread_original(streams.front(), std::ref(nodes.first));
       thread_original.join();
       streams.pop_front();
 
-      std::thread thread_modified(streams.front(), std::ref(nodes.second), std::ref(archive), std::ref(options));
+      std::thread thread_modified(streams.front(), std::ref(nodes.second));
       thread_modified.join();
       streams.pop_front();
 
@@ -53,9 +52,6 @@ public:
     }
 
 protected:
-    srcml_archive* archive;
-    const OPTION_TYPE& options;
-
     std::list<std::reference_wrapper<const input_stream_base>> streams;
 };
 

@@ -40,12 +40,12 @@ private:
 public:
 
   // constructor
-  delta(srcml_archive * archive, const METHOD_TYPE& method, const std::optional<std::string>& unit_filename);
+  delta(const METHOD_TYPE& method, const std::optional<std::string>& unit_filename);
 
   // destructor
   ~delta();
 
-  srcml_unit* create(input_stream_manager& manager,
+  srcml_unit* create(srcml_archive* archive, input_stream_manager& manager,
                      const std::string& language,
                      const std::optional<std::string>& unit_filename  = std::optional<std::string>(),
                      const std::optional<std::string>& unit_version   = std::optional<std::string>());

@@ -102,14 +102,11 @@ public:
 
 protected:
 
-  srcml_archive* archive;
-
   std::shared_ptr<reader_state> rbuf_original;
   std::shared_ptr<reader_state> rbuf_modified;
   std::shared_ptr<writer_state> wstate;
 
   bool is_initialized;
-  bool is_open;
 
 public:
 
@@ -141,7 +138,7 @@ private:
 public:
 
   output_stream() {}
-  output_stream(srcml_archive * archive, const METHOD_TYPE & method);
+  output_stream(const METHOD_TYPE & method);
   virtual ~output_stream();
 
 
@@ -149,7 +146,7 @@ public:
 
   void prime();
 
-  void start_unit(const std::string & language_string, const std::optional<std::string> & unit_filename, const std::optional<std::string> & unit_version);
+  void start_unit(srcml_archive* archive, const std::string& language_string, const std::optional<std::string>& unit_filename, const std::optional<std::string>& unit_version);
   void end_unit();
 
   srcml_unit* get_unit();

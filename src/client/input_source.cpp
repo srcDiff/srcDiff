@@ -21,7 +21,7 @@ size_t input_source::input_skipped = 0;
 size_t input_source::input_total   = 0;
 
 input_source::input_source(const client_options& options) 
-  : archive(options.archive), options(options), manager(options.archive, options.flags), 
+  : archive(options.archive), options(options), manager(), 
     deltor(), view(), directory_length_original(0), directory_length_modified(0) {
 
   OPTION_TYPE flags = options.flags;
@@ -33,9 +33,7 @@ input_source::input_source(const client_options& options)
 
   const client_options::view_options_t& view_options = options.view_options;
 
-  deltor = std::make_unique<delta>(options.archive,
-                                   options.methods, 
-                                   options.unit_filename);
+  deltor = std::make_unique<delta>(options.methods, options.unit_filename);
 
   if(is_option(flags, OPTION_UNIFIED_VIEW)) {
 

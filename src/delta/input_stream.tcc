@@ -8,18 +8,21 @@
  */
 
 template<class T>
-input_stream<T>::input_stream(const T& input, const std::optional<std::string>& input_path, const char* language_string)
-	: input(input), input_path(input_path), language_string(language_string) {}
+input_stream<T>::input_stream(const T& input, const std::optional<std::string>& input_path,
+                              srcml_archive* archive, const OPTION_TYPE& options,
+                              const char* language_string)
+	: input(input), input_path(input_path), archive(archive), options(options), language_string(language_string) {
+  }
 
 template<class T>
 input_stream<T>::~input_stream() {}
 
 template<class T>
-void input_stream<T>::operator()(srcml_nodes& nodes, srcml_archive* archive, const OPTION_TYPE& options) const {
+void input_stream<T>::operator()(srcml_nodes& nodes) const {
  if(!input_path || input_path->empty()) return;
 
   try {
-    nodes = input_nodes(archive, options);
+    nodes = input_nodes();
   } catch(...) {
     /// @todo handle this more gracefully...
     fprintf(stderr, "Error with files\n");
@@ -29,7 +32,7 @@ void input_stream<T>::operator()(srcml_nodes& nodes, srcml_archive* archive, con
 }
 
 template<class T>
-srcml_nodes input_stream<T>::input_nodes(srcml_archive* archive, const OPTION_TYPE& options) const {
+srcml_nodes input_stream<T>::input_nodes() const {
 
   typename T::input_context* context = input.open(input_path->c_str());
 
