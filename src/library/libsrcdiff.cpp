@@ -132,12 +132,15 @@ private:
   const srcdiff::OPTION_TYPE& options;
 };
 
-struct srcml_unit* srcdiff_create_delta(struct srcml_unit    * original_unit, 
-                                        struct srcml_unit    * modified_unit,
-                                        struct srcdiff_config* config) {
+struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* config,
+                                        struct srcml_unit    * original_unit, 
+                                        struct srcml_unit    * modified_unit) {
   if(!original_unit) return nullptr;
   if(!modified_unit) return nullptr;
-  if(!config)        return nullptr;
+
+  if(!config) {
+    // create config or delta object to use but free downstream.
+  }
 
   srcdiff::input_stream_manager manager;
   srcml_unit_input original_input(original_unit, config->options);

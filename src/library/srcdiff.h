@@ -32,6 +32,7 @@ typedef SSIZE_T ssize_t;
  *
  * Configuration object for controlling srcDiff delta creation.
  */
+struct srcml_unit;
 struct srcdiff_config;
 
 // srcDiff convenience function - original and modified to/from srcDiff archive
@@ -41,9 +42,9 @@ LIBSRCDIFF_EXPORT int srcDiff(const char* original_filename,
 
 LIBSRCDIFF_EXPORT struct srcdiff_config* srcdiff_config_create();
 LIBSRCDIFF_EXPORT void                   srcdiff_config_free  (struct srcdiff_config* config);
-LIBSRCDIFF_EXPORT struct srcml_unit    * srcdiff_create_delta (struct srcml_unit    * original_unit, 
-                                                               struct srcml_unit    * modified_unit,
-                                                               struct srcdiff_config* config);
+LIBSRCDIFF_EXPORT struct srcml_unit    * srcdiff_create_delta (struct srcdiff_config* config,
+                                                               struct srcml_unit    * original_unit, 
+                                                               struct srcml_unit    * modified_unit);
 
 // use revision instead of version in naming
 /** Constant for original srcDiff revision number */

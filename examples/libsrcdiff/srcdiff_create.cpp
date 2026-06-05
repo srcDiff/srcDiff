@@ -39,12 +39,12 @@ int main(int argc, char * argv[]) {
         srcml_unit_set_language(modified_unit, srcml_check_extension(argv[modified_file_pos]));
         srcml_unit_parse_filename(modified_unit, argv[modified_file_pos]);
 
-        srcml_unit* unit = srcdiff_create_delta(original_unit, modified_unit, config);
+        srcml_unit* unit = srcdiff_create_delta(config, original_unit, modified_unit);
         srcml_archive_write_unit(archive, unit);
 
-        srcml_unit_free(original_unit);
-        srcml_unit_free(modified_unit);
         srcml_unit_free(unit);
+        srcml_unit_free(modified_unit);
+        srcml_unit_free(original_unit);
     }
 
     srcdiff_config_free(config);
