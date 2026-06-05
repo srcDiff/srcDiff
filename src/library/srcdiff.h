@@ -35,9 +35,9 @@ typedef SSIZE_T ssize_t;
 struct srcdiff_config;
 
 // srcDiff convenience function - original and modified to/from srcDiff archive
-int srcDiff(const char* original_filename, 
-            const char* modified_filename, 
-            const char* srcdiff_filename);
+LIBSRCDIFF_EXPORT int srcDiff(const char* original_filename, 
+                              const char* modified_filename, 
+                              const char* srcdiff_filename);
 
 
 
