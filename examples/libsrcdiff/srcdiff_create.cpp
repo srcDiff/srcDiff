@@ -23,7 +23,6 @@ int main(int argc, char * argv[]) {
     srcml_archive_write_open_filename(archive, "srcdiff.xml");
     srcdiff_config* config = srcdiff_config_create();
 
-
     for(int i = 2; i < argc; i += 2) {
 
         // srcml original file
