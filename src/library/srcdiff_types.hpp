@@ -14,8 +14,10 @@
 #include <memory>
 
 struct srcdiff_config {
-	std::unique_ptr<srcdiff::delta> deltor;
+    srcdiff_config() {}
+    ~srcdiff_config() {}
 
-	METHOD_TYPE method;
-	srcdiff::OPTION_TYPE options;
+    std::unique_ptr<srcdiff::delta> deltor;
+    METHOD_TYPE method;
+    srcdiff::OPTION_TYPE options;
 };

@@ -370,7 +370,7 @@ bool construct::is_syntax_similar_impl(const construct & modified [[maybe_unused
     return false;
 }
 
-struct none_deleter { void operator()(construct* construct_ptr) {} };
+struct construct_non_deleter { void operator()(construct* construct_ptr) {} };
 enum srcdiff::operation construct::can_refine_difference(const construct& modified, bool test_nest) const {
 
   const std::string & original_tag = root_term_name();
@@ -386,8 +386,8 @@ enum srcdiff::operation construct::can_refine_difference(const construct& modifi
   } else {
 
     if(test_nest) {
-        std::shared_ptr<const construct> original_ptr((construct*)this, none_deleter());
-        std::shared_ptr<const construct> modified_ptr((construct*)&modified, none_deleter());
+        std::shared_ptr<const construct> original_ptr((construct*)this, construct_non_deleter());
+        std::shared_ptr<const construct> modified_ptr((construct*)&modified, construct_non_deleter());
 
         construct_list_view original_view(&original_ptr, 1);
         construct_list_view modified_view(&modified_ptr, 1);

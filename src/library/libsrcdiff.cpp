@@ -132,14 +132,27 @@ private:
   const srcdiff::OPTION_TYPE& options;
 };
 
-struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* config,
+struct srcdiff_config_deleter { 
+public:
+  srcdiff_config_deleter(bool free = false) : free(free) {}
+  void operator()(srcdiff_config* config) { 
+    if(free && config) {
+      srcdiff_config_free(config); 
+    }
+  }
+private:
+  bool free;
+};
+
+struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* configuration,
                                         struct srcml_unit    * original_unit, 
                                         struct srcml_unit    * modified_unit) {
   if(!original_unit) return nullptr;
   if(!modified_unit) return nullptr;
 
+  std::unique_ptr<srcdiff_config, srcdiff_config_deleter> config = std::unique_ptr<srcdiff_config, srcdiff_config_deleter>(configuration, srcdiff_config_deleter());
   if(!config) {
-    // create config or delta object to use but free downstream.
+    config = std::unique_ptr<srcdiff_config, srcdiff_config_deleter>(srcdiff_config_create(), srcdiff_config_deleter(true));
   }
 
   srcdiff::input_stream_manager manager;
