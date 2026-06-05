@@ -136,7 +136,7 @@ struct srcdiff_config_deleter {
 public:
   srcdiff_config_deleter(bool free = false) : free(free) {}
   void operator()(srcdiff_config* config) { 
-    if(free && config) {
+    if(free) {
       srcdiff_config_free(config); 
     }
   }
