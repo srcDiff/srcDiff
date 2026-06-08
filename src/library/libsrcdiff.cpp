@@ -10,7 +10,7 @@
 #include <srcdiff.h>
 #include <srcdiff_types.hpp>
 
-#include <delta.hpp>
+#include <deltor.hpp>
 #include <output_stream.hpp>
 #include <input_stream.hpp>
 #include <client_options.hpp>
@@ -92,8 +92,8 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
     manager.append_stream(input_original);
     manager.append_stream(input_modified);
 
-    srcdiff::delta delta(options.methods, options.unit_filename);
-    delta.create(options.archive, manager, language_string, unit_filename, unit_version);
+    srcdiff::deltor deltor(options.methods, options.unit_filename);
+    deltor.create(options.archive, manager, language_string, unit_filename, unit_version);
 
     return 0;
 }
@@ -101,7 +101,7 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
 struct srcdiff_config* srcdiff_config_create() {
   srcdiff_config* config = new srcdiff_config();
 
-  config->deltor = std::make_unique<srcdiff::delta>(config->method, std::optional<std::string>());
+  config->deltor = std::make_unique<srcdiff::deltor>(config->method, std::optional<std::string>());
   config->method  = 0;
   config->options = srcdiff::OPTION_STRING_SPLITTING;
   return config;

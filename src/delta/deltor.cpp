@@ -1,29 +1,29 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file delta.cpp
+ * @file deltor.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <delta.hpp>
+#include <deltor.hpp>
 
 namespace srcdiff {
 
 // constructor
 /// @todo remove srcdiff filename and in general archive open/close from output stream
-delta::delta(const METHOD_TYPE& method, const std::optional<std::string>& unit_filename)
+deltor::deltor(const METHOD_TYPE& method, const std::optional<std::string>& unit_filename)
   : output(std::make_shared<srcdiff::output_stream>(method)),
     unit_filename(unit_filename) {}
 
 // destructor
-delta::~delta() {
+deltor::~deltor() {
   output->close();
 }
 
 // Translate from input stream to output stream
-srcml_unit* delta::create(srcml_archive* archive, input_stream_manager& manager,
+srcml_unit* deltor::create(srcml_archive* archive, input_stream_manager& manager,
                           const std::string& language,
                           const std::optional<std::string>& unit_filename,
                           const std::optional<std::string>& unit_version) {

@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file delta.hpp
+ * @file deltor.hpp
  *
  * @copyright Copyright (C) 2014-2026 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#ifndef INCLUDED_TRANSLATOR_HPP
-#define INCLUDED_TRANSLATOR_HPP
+#ifndef INCLUDED_DELTOR_HPP
+#define INCLUDED_DELTOR_HPP
 
 #include <input_stream_manager.hpp>
 #include <output_stream.hpp>
@@ -30,7 +30,7 @@
 
 namespace srcdiff {
 
-class delta {
+class deltor {
 
 private:
 
@@ -40,10 +40,10 @@ private:
 public:
 
   // constructor
-  delta(const METHOD_TYPE& method, const std::optional<std::string>& unit_filename);
+  deltor(const METHOD_TYPE& method, const std::optional<std::string>& unit_filename);
 
   // destructor
-  ~delta();
+  ~deltor();
 
   srcml_unit* create(srcml_archive* archive, input_stream_manager& manager,
                      const std::string& language,

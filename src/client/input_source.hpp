@@ -12,7 +12,7 @@
 
 #include <client_options.hpp>
 #include <input_stream_manager.hpp>
-#include <delta.hpp>
+#include <deltor.hpp>
 #include <view.hpp>
 
 #include <string>
@@ -34,7 +34,7 @@ protected:
 
   const client_options& options;
   input_stream_manager manager;
-  std::unique_ptr<delta> deltor;
+  std::unique_ptr<class deltor> deltor;
   std::unique_ptr<view_t> view;
 
   int directory_length_original;

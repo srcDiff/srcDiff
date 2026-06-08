@@ -26,7 +26,7 @@ input_source::input_source(const client_options& options)
 
   show_input = options.is_option(OPTION_VERBOSE) && !options.is_option(OPTION_QUIET);
 
-  deltor = std::make_unique<delta>(options.methods, options.unit_filename);
+  deltor = std::make_unique<class deltor>(options.methods, options.unit_filename);
 
   const client_options::view_options_t& view_options = options.view_options;
   if(options.is_option(OPTION_UNIFIED_VIEW)) {
