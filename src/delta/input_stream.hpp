@@ -22,8 +22,8 @@ namespace srcdiff {
 
 class input_stream_base {
 public:
-    virtual void operator()(srcml_nodes& nodes) const = 0;
-    virtual srcml_nodes input_nodes() const = 0;
+    virtual void operator()(srcml_converter& converter, srcml_nodes& nodes) const = 0;
+    virtual srcml_nodes input_nodes(srcml_converter& converter) const = 0;
 };
 
 template<class T>
@@ -31,19 +31,18 @@ class input_stream : public input_stream_base {
 public:
 
     input_stream(const T& input, const std::optional<std::string>& input_path,
-                 srcml_archive* archive, const OPTION_TYPE& options,
+                 srcml_archive* archive,
                  const char* language_string);
     ~input_stream();
 
-    virtual void operator()(srcml_nodes& nodes) const;
-    virtual srcml_nodes input_nodes() const;
+    virtual void operator()(srcml_converter& converter, srcml_nodes& nodes) const;
+    virtual srcml_nodes input_nodes(srcml_converter& converter) const;
 
 protected:
     const T& input;
     const std::optional<std::string> input_path;
 
     srcml_archive* archive;
-    const OPTION_TYPE& options;
     const char* language_string;
 };
 

@@ -21,7 +21,7 @@ size_t input_source::input_skipped = 0;
 size_t input_source::input_total   = 0;
 
 input_source::input_source(const client_options& options) 
-  : options(options), manager(), 
+  : options(options), manager(options.flags), 
     deltor(), view(), directory_length_original(0), directory_length_modified(0) {
 
   show_input = options.is_option(OPTION_VERBOSE) && !options.is_option(OPTION_QUIET);

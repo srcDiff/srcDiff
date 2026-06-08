@@ -102,10 +102,10 @@ srcml_unit* input_source_local::process_file(const std::optional<std::string> & 
 
   }
 
-  input_stream<input_source_local> input_original(*this, path_original, options.archive, options.flags, language_string);
+  input_stream<input_source_local> input_original(*this, path_original, options.archive, language_string);
   manager.append_stream(input_original);
 
-  input_stream<input_source_local> input_modified(*this, path_modified, options.archive, options.flags, language_string);
+  input_stream<input_source_local> input_modified(*this, path_modified, options.archive, language_string);
   manager.append_stream(input_modified);
 
   return deltor->create(options.archive, manager, language_string, unit_filename, unit_version);

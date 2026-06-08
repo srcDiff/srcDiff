@@ -85,10 +85,10 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
     options.output_filename = output_filename;
 
     file_input in;
-    srcdiff::input_stream<file_input> input_original(in, original_path, options.archive, options.flags, language_string);
-    srcdiff::input_stream<file_input> input_modified(in, modified_path, options.archive, options.flags, language_string);
+    srcdiff::input_stream<file_input> input_original(in, original_path, options.archive, language_string);
+    srcdiff::input_stream<file_input> input_modified(in, modified_path, options.archive, language_string);
 
-    srcdiff::input_stream_manager manager;
+    srcdiff::input_stream_manager manager(options.flags);
     manager.append_stream(input_original);
     manager.append_stream(input_modified);
 
@@ -101,9 +101,11 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
 struct srcdiff_config* srcdiff_config_create() {
   srcdiff_config* config = new srcdiff_config();
 
-  config->deltor = std::make_unique<srcdiff::deltor>(config->method, std::optional<std::string>());
-  config->method  = 0;
   config->options = srcdiff::OPTION_STRING_SPLITTING;
+  config->method  = 0;
+
+  config->manager = std::make_unique<srcdiff::input_stream_manager>(config->options);
+  config->deltor = std::make_unique<srcdiff::deltor>(config->method, std::optional<std::string>());
   return config;
 }
 
@@ -113,23 +115,21 @@ void srcdiff_config_free(struct srcdiff_config* config) {
 
 class srcml_unit_input : public srcdiff::input_stream_base {
 public:
-  srcml_unit_input(srcml_unit* unit, const srcdiff::OPTION_TYPE& options) 
-    : unit(unit), options(options) {
+  srcml_unit_input(srcml_unit* unit) 
+    : unit(unit){
   }
 
-  virtual void operator()(srcml_nodes& nodes) const {
-    nodes = input_nodes();
+  virtual void operator()(srcml_converter& converter, srcml_nodes& nodes) const {
+    nodes = input_nodes(converter);
   }
 
-  virtual srcml_nodes input_nodes() const {
-    srcml_converter converter(srcdiff::is_option(options, srcdiff::OPTION_STRING_SPLITTING));
+  virtual srcml_nodes input_nodes(srcml_converter& converter) const {
     converter.convert(unit);
     return converter.create_nodes();
   }
 
 private:
   srcml_unit* unit;
-  const srcdiff::OPTION_TYPE& options;
 };
 
 struct srcdiff_config_deleter { 
@@ -155,12 +155,11 @@ struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* configuration,
     config = std::unique_ptr<srcdiff_config, srcdiff_config_deleter>(srcdiff_config_create(), srcdiff_config_deleter(true));
   }
 
-  srcdiff::input_stream_manager manager;
-  srcml_unit_input original_input(original_unit, config->options);
-  manager.append_stream(original_input);
+  srcml_unit_input original_input(original_unit);
+  config->manager->append_stream(original_input);
 
-  srcml_unit_input modified_input(modified_unit, config->options);
-  manager.append_stream(modified_input);
+  srcml_unit_input modified_input(modified_unit);
+  config->manager->append_stream(modified_input);
 
-  return config->deltor->create(srcml_unit_get_archive(original_unit), manager, srcml_unit_get_language(original_unit), std::optional<std::string>(), std::optional<std::string>());
+  return config->deltor->create(srcml_unit_get_archive(original_unit), *config->manager, srcml_unit_get_language(original_unit), std::optional<std::string>(), std::optional<std::string>());
 }

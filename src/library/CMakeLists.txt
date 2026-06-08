@@ -16,3 +16,5 @@ find_package(srcML REQUIRED)
 # srcdiff
 add_library(library OBJECT ${LIBRARY_HEADERS} ${LIBRARY_SOURCE})
 target_link_libraries(library PRIVATE LibXml2::LibXml2 srcML::LibsrcML)
+
+install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/srcdiff.h DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT DEVLIBS)
