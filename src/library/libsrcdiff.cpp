@@ -175,19 +175,19 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
 
     std::string_view DIFF_PREFIX = "diff:"sv;
 
-    std::stack<srcdiff::operation> mode;
-    mode.push(srcdiff::COMMON);
+    std::stack<srcdiff::operation> diff_mode;
+    diff_mode.push(srcdiff::COMMON);
 
-    std::string news;
+    std::string extracted_srcml;
     const char* p = srcml;
     const char* lastp = p;
     while ((p = (const char*) memchr(p, '<', static_cast<size_t>(size - (p - srcml))))) {
 
-        bool inmode = mode.top() == srcdiff::COMMON || (revision == 0 && mode.top() == srcdiff::DELETE) || (revision == 1 && mode.top() == srcdiff::INSERT);
+        bool in_diff = diff_mode.top() == srcdiff::COMMON || (revision == 0 && diff_mode.top() == srcdiff::DELETE) || (revision == 1 && diff_mode.top() == srcdiff::INSERT);
 
         // output previous non-tag text
-        if (inmode) {
-            news.append(lastp, static_cast<size_t>(p - lastp));
+        if (in_diff) {
+            extracted_srcml.append(lastp, static_cast<size_t>(p - lastp));
         }
 
         auto sp = p;
@@ -201,41 +201,41 @@ std::string extract_revision(const char* srcml, int size, int revision, bool tex
             const char* tstart = sp + 1 + DIFF_PREFIX.size();
 
             if (strncmp(tstart, "delete", 6) == 0) {
-                mode.push(srcdiff::DELETE);
+                diff_mode.push(srcdiff::DELETE);
             } else if (strncmp(tstart, "insert", 6) == 0) {
-                mode.push(srcdiff::INSERT);
+                diff_mode.push(srcdiff::INSERT);
             } else if (strncmp(tstart, "ws", 2) != 0) {
-                mode.push(srcdiff::COMMON);
+                diff_mode.push(srcdiff::COMMON);
             }
 
         }
         else if (*(sp + 1) == '/' && strncmp(sp + 2, DIFF_PREFIX.data(), DIFF_PREFIX.size()) == 0) {
             if(strncmp(sp + 2 + DIFF_PREFIX.size(), "ws", 2) != 0) {
-                mode.pop();
+                diff_mode.pop();
             }
         }
         else {
-            if (inmode && !text_only) {
-                news.append(sp, static_cast<size_t>(p - sp));
+            if (in_diff && !text_only) {
+                extracted_srcml.append(sp, static_cast<size_t>(p - sp));
             }
         }
 
         lastp = p;
     }
 
-    bool inmode = mode.top() == srcdiff::COMMON || (revision == 0 && mode.top() == srcdiff::DELETE) || (revision == 1 && mode.top() == srcdiff::INSERT);
+    bool in_diff = diff_mode.top() == srcdiff::COMMON || (revision == 0 && diff_mode.top() == srcdiff::DELETE) || (revision == 1 && diff_mode.top() == srcdiff::INSERT);
     auto remaining_size = (size_t) size - (size_t) (lastp - srcml);
-    if (inmode && remaining_size > 0) {
-        news.append(lastp, remaining_size);
+    if (in_diff && remaining_size > 0) {
+        extracted_srcml.append(lastp, remaining_size);
     }
 
-    return news;
+    return extracted_srcml;
 }
 
 struct extract_context {
     std::string src;
     srcdiff::operation operation;
-    std::stack<srcdiff::operation> mode;  
+    std::stack<srcdiff::operation> diff_mode;  
 };
 
 // Extract source code from srcml
@@ -243,7 +243,7 @@ std::string extract_src(std::string_view srcml, srcdiff::operation operation) {
 
     extract_context context;
     context.operation = operation;
-    context.mode.push(srcdiff::COMMON);
+    context.diff_mode.push(srcdiff::COMMON);
 
     // parse the srcml collecting the (now needed) src
     xmlSAXHandler charactersax;
@@ -284,11 +284,11 @@ std::string extract_src(std::string_view srcml, srcdiff::operation operation) {
         } else if (context->operation && srcML::name_space::DIFF_NAMESPACE->get_uri() == (const char*) URI) {
 
             if ((const char*) localname == "srcdiff::INSERT"sv)
-                context->mode.push(srcdiff::INSERT);
+                context->diff_mode.push(srcdiff::INSERT);
             else if ((const char*) localname == "srcdiff::DELETE"sv)
-                context->mode.push(srcdiff::DELETE);
+                context->diff_mode.push(srcdiff::DELETE);
             else
-                context->mode.push(srcdiff::COMMON);
+                context->diff_mode.push(srcdiff::COMMON);
         }
     };
 
