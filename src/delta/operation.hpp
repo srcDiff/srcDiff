@@ -7,9 +7,10 @@
  * This file is part of the srcDiff Infrastructure.
  */
 
-
 #ifndef INCLUDED_OPERATION_HPP
 #define INCLUDED_OPERATION_HPP
+
+#include <string>
 
 namespace srcdiff {
 
@@ -24,6 +25,8 @@ enum operation : int {
     NEST,
     MOVE
 };
+
+operation string_to_operation(const std::string& str);
 
 }
 

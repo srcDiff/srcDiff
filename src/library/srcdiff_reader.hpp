@@ -18,9 +18,7 @@
 
 #include <operation.hpp>
 
-#include <vector>
-#include <algorithm>
-#include <cstring>
+#include <stack>
 
 
 #include <string_view>
@@ -30,12 +28,14 @@ using namespace ::std::literals::string_view_literals;
 class srcdiff_reader : public srcSAXHandler {
 public:
 
-    srcdiff_reader(srcml_unit* unit, srcdiff::operation operation) : srcSAXHandler(), unit(unit), operation(operation) {
+    srcdiff_reader(srcml_unit* unit, srcdiff::operation operation) : srcSAXHandler(),
+        unit(unit), operation(operation), op_mode() {
     }
 
     virtual void startUnit(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const struct srcsax_namespace* namespaces,
                            int num_attributes, const struct srcsax_attribute* attributes) {
+        op_mode.push(srcdiff::operation::COMMON);
         register_namespaces(num_namespaces, namespaces);
         update_unit_attributes(num_attributes, attributes);
 
@@ -46,6 +46,15 @@ public:
     virtual void startElement(const char* localname, const char* prefix, const char* URI,
                                 int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
                                 const struct srcsax_attribute* attributes) {
+        if(URI == srcdiff::SRCDIFF_DEFAULT_NAMESPACE_HREF) {
+            if(localname != "ws"sv) {
+                op_mode.push(srcdiff::string_to_operation(localname));
+            }
+            return;
+        }
+
+        if(!in_operation()) return;
+
         srcml_write_start_element(unit, prefix, localname, URI);
         write_attributes(num_attributes, attributes);
     }
@@ -55,10 +64,21 @@ public:
     }
 
     virtual void endElement(const char* localname, const char* prefix, const char* URI) {
+        if(URI == srcdiff::SRCDIFF_DEFAULT_NAMESPACE_HREF) {
+            if(localname != "ws"sv) {
+                op_mode.pop();
+            }
+            return;            
+        }
+
+        if(!in_operation()) return;
+
         srcml_write_end_element(unit);
     }
 
     virtual void charactersUnit(const char* ch, int len) {
+        if(!in_operation()) return; 
+
         std::string text;
         text.append(ch, len) ;
         srcml_write_string(unit, text.c_str());
@@ -109,9 +129,15 @@ public:
       } 
     }
 
+    bool in_operation() const {
+        if(op_mode.top() == srcdiff::operation::COMMON) return true;
+        return operation == op_mode.top();
+    }
+
 private:
     srcml_unit* unit;
     srcdiff::operation operation;
+    std::stack<srcdiff::operation> op_mode;
 };
 
 #endif

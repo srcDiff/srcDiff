@@ -174,7 +174,7 @@ struct srcml_unit* srcdiff_read_unit_revision(struct srcml_unit* unit, size_t re
     if(srcdiff.empty()) return nullptr;
 
     srcml_unit* revision_unit = srcml_unit_clone(unit);
-    srcdiff_reader reader(revision_unit, srcdiff::operation::DELETE);
+    srcdiff_reader reader(revision_unit, revision_number == SRCDIFF_REVISION_ORIGINAL? srcdiff::operation::DELETE : srcdiff::operation::INSERT);
 
     /** @todo fix encoding */
     srcSAXController controller(srcdiff, "UTF-8");
