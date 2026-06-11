@@ -167,6 +167,14 @@ struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* configuration,
   return config->deltor->create(srcml_unit_get_archive(original_unit), *config->manager, srcml_unit_get_language(original_unit), std::optional<std::string>(), std::optional<std::string>());
 }
 
+struct srcml_unit* srcdiff_read_unit_original(struct srcml_unit* unit) {
+    return srcdiff_read_unit_revision(unit, SRCDIFF_REVISION_ORIGINAL);
+}
+
+struct srcml_unit* srcdiff_read_unit_modified(struct srcml_unit* unit) {
+    return srcdiff_read_unit_revision(unit, SRCDIFF_REVISION_MODIFIED);
+}
+
 struct srcml_unit* srcdiff_read_unit_revision(struct srcml_unit* unit, size_t revision_number) {
     if(!unit) return nullptr;
 
