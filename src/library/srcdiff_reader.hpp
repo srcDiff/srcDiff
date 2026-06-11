@@ -10,39 +10,108 @@
 #ifndef INCLUDED_SRCDIFF_READER_HPP
 #define INCLUDED_SRCDIFF_READER_HPP
 
+#include <srcSAXHandler.hpp>
 #include <srcSAXController.hpp>
-
 #include <libxml/parser.h>
+
+#include <srcml.h>
+
+#include <operation.hpp>
 
 #include <vector>
 #include <algorithm>
 #include <cstring>
 
+
+#include <string_view>
+using namespace ::std::literals::string_view_literals;
+
+
 class srcdiff_reader : public srcSAXHandler {
 public:
 
-    srcdiff_reader() : srcSAXHandler() {
+    srcdiff_reader(srcml_unit* unit, srcdiff::operation operation) : srcSAXHandler(), unit(unit), operation(operation) {
     }
 
-    virtual void startUnit(const char * localname, const char * prefix, const char * URI,
-                           int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                           const struct srcsax_attribute * attributes) {
+    virtual void startUnit(const char* localname, const char* prefix, const char* URI,
+                           int num_namespaces, const struct srcsax_namespace* namespaces,
+                           int num_attributes, const struct srcsax_attribute* attributes) {
+        register_namespaces(num_namespaces, namespaces);
+        update_unit_attributes(num_attributes, attributes);
+
+        srcml_write_start_element(unit, prefix, localname, URI);
+        write_attributes(num_attributes, attributes);
     }
 
-    virtual void startElement(const char * localname, const char * prefix, const char * URI,
-                                int num_namespaces, const struct srcsax_namespace * namespaces, int num_attributes,
-                                const struct srcsax_attribute * attributes) {
+    virtual void startElement(const char* localname, const char* prefix, const char* URI,
+                                int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
+                                const struct srcsax_attribute* attributes) {
+        srcml_write_start_element(unit, prefix, localname, URI);
+        write_attributes(num_attributes, attributes);
     }
 
-    virtual void endUnit(const char * localname, const char * prefix, const char * URI) {
+    virtual void endUnit(const char* localname, const char* prefix, const char* URI) {
+        srcml_write_end_element(unit);
     }
 
-    virtual void endElement(const char * localname, const char * prefix, const char * URI) {
+    virtual void endElement(const char* localname, const char* prefix, const char* URI) {
+        srcml_write_end_element(unit);
     }
 
-    virtual void charactersUnit(const char * ch, int len) {
+    virtual void charactersUnit(const char* ch, int len) {
+        std::string text;
+        text.append(ch, len) ;
+        srcml_write_string(unit, text.c_str());
     }
 
+    void update_unit_attributes(int num_attributes, const srcsax_attribute* attributes) {
+
+        for(int attr_pos = 0; attr_pos < num_attributes; ++attr_pos) {
+            const srcsax_attribute& attr = attributes[attr_pos];
+
+            std::string_view attribute = attr.localname;
+            if (attribute == "timestamp"sv)
+                srcml_unit_set_timestamp(unit, attr.value);
+            else if (attribute == "hash"sv)
+                ; /** @todo */
+            else if (attribute == "language"sv)
+                srcml_unit_set_language(unit, attr.value);
+            else if (attribute == "revision"sv)
+                ; /** @todo */
+            else if (attribute == "filename"sv)
+                srcml_unit_set_filename(unit, attr.value);
+            else if (attribute == "url"sv)
+               ; /** @todo */
+            else if (attribute == "version"sv)
+                srcml_unit_set_version(unit, attr.value);
+            else if (attribute == "tabs"sv || attribute == "options"sv)
+                ;
+            else {
+                // add custom attribute
+                /** @todo */
+            }
+        }
+    }
+
+    void register_namespaces(int num_namespaces, const srcsax_namespace* namespaces) {
+
+        for (int ns_pos = 0; ns_pos < num_namespaces; ++ns_pos) {
+            const srcsax_namespace& ns = namespaces[ns_pos];
+            srcml_unit_register_namespace(unit, ns.prefix, ns.uri);
+        }
+
+    }
+
+    void write_attributes(int num_attributes, const struct srcsax_attribute* attributes) {
+        for(int attr_pos = 0; attr_pos < num_attributes; ++attr_pos) {
+            const srcsax_attribute& attr = attributes[attr_pos];
+            srcml_write_attribute(unit, attr.prefix, attr.localname, 0/*URI?*/, attr.value);
+      } 
+    }
+
+private:
+    srcml_unit* unit;
+    srcdiff::operation operation;
 };
 
 #endif

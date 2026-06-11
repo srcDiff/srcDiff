@@ -14,6 +14,7 @@
 #include <input_stream.hpp>
 #include <output_stream.hpp>
 #include <operation.hpp>
+#include <srcdiff_reader.hpp>
 
 #include <client_options.hpp>
 
