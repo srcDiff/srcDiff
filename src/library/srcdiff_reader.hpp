@@ -39,7 +39,7 @@ public:
         register_namespaces(num_namespaces, namespaces);
         update_unit_attributes(num_attributes, attributes);
 
-        srcml_write_start_element(unit, prefix, localname, URI);
+        srcml_write_start_unit(unit);
         write_attributes(num_attributes, attributes);
     }
 
@@ -51,7 +51,7 @@ public:
     }
 
     virtual void endUnit(const char* localname, const char* prefix, const char* URI) {
-        srcml_write_end_element(unit);
+        srcml_write_end_unit(unit);
     }
 
     virtual void endElement(const char* localname, const char* prefix, const char* URI) {

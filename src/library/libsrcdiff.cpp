@@ -166,3 +166,19 @@ struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* configuration,
 
   return config->deltor->create(srcml_unit_get_archive(original_unit), *config->manager, srcml_unit_get_language(original_unit), std::optional<std::string>(), std::optional<std::string>());
 }
+
+struct srcml_unit* srcdiff_read_unit_revision(struct srcml_unit* unit, size_t revision_number) {
+    if(!unit) return nullptr;
+
+    std::string srcdiff = srcml_unit_get_srcml(unit);
+    if(srcdiff.empty()) return nullptr;
+
+    srcml_unit* revision_unit = srcml_unit_clone(unit);
+    srcdiff_reader reader(revision_unit, srcdiff::operation::DELETE);
+
+    /** @todo fix encoding */
+    srcSAXController controller(srcdiff, "UTF-8");
+    controller.parse(&reader);
+
+    return revision_unit;
+}
