@@ -20,7 +20,7 @@ int main(int argc, char * argv[]) {
     srcml_archive_read_open_filename(archive, "srcdiff.xml");
 
     srcml_unit* unit = srcml_archive_read_unit(archive);
-    srcml_unit* original_unit = srcdiff_read_unit_revision(unit, SRCDIFF_REVISION_ORIGINAL);
+    srcml_unit* original_unit = srcdiff_read_unit_revision(unit, SRCDIFF_ORIGINAL);
 
     std::cout << srcml_unit_get_srcml(original_unit) << '\n';
 

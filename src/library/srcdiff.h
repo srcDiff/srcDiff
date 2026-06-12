@@ -48,15 +48,14 @@ LIBSRCDIFF_EXPORT struct srcml_unit    * srcdiff_create_delta (struct srcdiff_co
 
 // use revision instead of version in naming
 /** Constant for original srcDiff revision number */
-#define SRCDIFF_REVISION_ORIGINAL 0
+#define SRCDIFF_ORIGINAL 0
 /** Constant for modified srcDiff revision number */
-#define SRCDIFF_REVISION_MODIFIED 1
-/** Constant for an invalid srcDiff revision number */
-#define SRCDIFF_REVISION_INVALID  2
+#define SRCDIFF_MODIFIED 1
 
 LIBSRCDIFF_EXPORT struct srcml_unit* srcdiff_read_unit_original(struct srcml_unit* unit);
 LIBSRCDIFF_EXPORT struct srcml_unit* srcdiff_read_unit_modified(struct srcml_unit* unit);
-LIBSRCDIFF_EXPORT struct srcml_unit* srcdiff_read_unit_revision(struct srcml_unit* unit, size_t revision_number);
+LIBSRCDIFF_EXPORT struct srcml_unit* srcdiff_read_unit_revision(struct srcml_unit* unit,
+                                                                size_t revision_number);
 
 #ifndef __cplusplus
 }
