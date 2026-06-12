@@ -123,6 +123,9 @@ public:
   }
 
   virtual void operator()(srcml_converter& converter, srcml_nodes& nodes) const {
+    nodes.clear();
+    if(!unit) return;
+
     nodes = input_nodes(converter);
   }
 
