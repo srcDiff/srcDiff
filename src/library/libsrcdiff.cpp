@@ -147,6 +147,20 @@ private:
   bool free;
 };
 
+std::optional<std::string> srcdiff_merge_attributes(const char* original_attr, const char* modified_attr) {
+    if(!original_attr && !modified_attr) return std::optional<std::string>();
+
+    std::string merged_attr;
+    if(original_attr) {
+            merged_attr = original_attr;
+    }
+    merged_attr += '|';
+    if(modified_attr) {
+        merged_attr += modified_attr;
+    }
+    return merged_attr;
+}
+
 struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* configuration,
                                         struct srcml_unit    * original_unit, 
                                         struct srcml_unit    * modified_unit) {
@@ -164,7 +178,10 @@ struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* configuration,
   srcml_unit_input modified_input(modified_unit);
   config->manager->append_stream(modified_input);
 
-  return config->deltor->create(srcml_unit_get_archive(original_unit), *config->manager, srcml_unit_get_language(original_unit), std::optional<std::string>(), std::optional<std::string>());
+  std::optional<std::string> unit_filename = srcdiff_merge_attributes(srcml_unit_get_filename(original_unit), srcml_unit_get_filename(modified_unit));
+  std::optional<std::string> unit_version = srcdiff_merge_attributes(srcml_unit_get_version(original_unit), srcml_unit_get_version(modified_unit));
+
+  return config->deltor->create(srcml_unit_get_archive(original_unit), *config->manager, srcml_unit_get_language(original_unit), unit_filename, unit_version);
 }
 
 struct srcml_unit* srcdiff_read_unit_original(struct srcml_unit* unit) {
