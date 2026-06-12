@@ -140,6 +140,8 @@ void srcml_converter::convert(srcml_archive* archive, const std::string& languag
 }
 
 void srcml_converter::convert(srcml_unit* unit) {
+  if(!unit) return;
+
   output_buffer = (char*)srcml_unit_get_srcml(unit);
   output_size   = strlen(output_buffer);
 }

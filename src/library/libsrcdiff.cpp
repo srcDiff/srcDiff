@@ -164,8 +164,7 @@ std::optional<std::string> srcdiff_merge_attributes(const char* original_attr, c
 struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* configuration,
                                         struct srcml_unit    * original_unit, 
                                         struct srcml_unit    * modified_unit) {
-  if(!original_unit) return nullptr;
-  if(!modified_unit) return nullptr;
+  if(!original_unit && !modified_unit) return nullptr;
 
   std::unique_ptr<srcdiff_config, srcdiff_config_deleter> config = std::unique_ptr<srcdiff_config, srcdiff_config_deleter>(configuration, srcdiff_config_deleter());
   if(!config) {
@@ -181,7 +180,9 @@ struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* configuration,
   std::optional<std::string> unit_filename = srcdiff_merge_attributes(srcml_unit_get_filename(original_unit), srcml_unit_get_filename(modified_unit));
   std::optional<std::string> unit_version = srcdiff_merge_attributes(srcml_unit_get_version(original_unit), srcml_unit_get_version(modified_unit));
 
-  return config->deltor->create(srcml_unit_get_archive(original_unit), *config->manager, srcml_unit_get_language(original_unit), unit_filename, unit_version);
+  srcml_archive* archive = original_unit? srcml_unit_get_archive(original_unit) : srcml_unit_get_archive(modified_unit);
+  const char* language = original_unit? srcml_unit_get_language(original_unit) : srcml_unit_get_language(modified_unit);
+  return config->deltor->create(archive, *config->manager, language, unit_filename, unit_version);
 }
 
 struct srcml_unit* srcdiff_read_unit_original(struct srcml_unit* unit) {
