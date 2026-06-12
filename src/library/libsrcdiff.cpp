@@ -184,7 +184,6 @@ struct srcml_unit* srcdiff_read_unit_revision(struct srcml_unit* unit, size_t re
     srcml_unit* revision_unit = srcml_unit_clone(unit);
     srcdiff_reader reader(revision_unit, revision_number == SRCDIFF_REVISION_ORIGINAL? srcdiff::operation::DELETE : srcdiff::operation::INSERT);
 
-    /** @todo fix encoding */
     const char* xml_encoding = srcml_archive_get_xml_encoding(srcml_unit_get_archive(unit));
     srcSAXController controller(srcdiff, xml_encoding? xml_encoding : "UTF-8");
     controller.parse(&reader);
