@@ -189,11 +189,11 @@ struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* configuration,
 }
 
 struct srcml_unit* srcdiff_read_unit_original(struct srcml_unit* unit) {
-    return srcdiff_read_unit_revision(unit, SRCDIFF_REVISION_ORIGINAL);
+    return srcdiff_read_unit_revision(unit, SRCDIFF_ORIGINAL);
 }
 
 struct srcml_unit* srcdiff_read_unit_modified(struct srcml_unit* unit) {
-    return srcdiff_read_unit_revision(unit, SRCDIFF_REVISION_MODIFIED);
+    return srcdiff_read_unit_revision(unit, SRCDIFF_MODIFIED);
 }
 
 struct srcml_unit* srcdiff_read_unit_revision(struct srcml_unit* unit, size_t revision_number) {
@@ -202,8 +202,8 @@ struct srcml_unit* srcdiff_read_unit_revision(struct srcml_unit* unit, size_t re
     std::string srcdiff = srcml_unit_get_srcml(unit);
     if(srcdiff.empty()) return nullptr;
 
-    srcml_unit* revision_unit = srcml_unit_clone(unit);
-    srcdiff::reader reader(revision_unit, revision_number == SRCDIFF_REVISION_ORIGINAL? srcdiff::operation::DELETE : srcdiff::operation::INSERT);
+    srcml_unit* revision_unit = srcml_unit_create(srcml_unit_get_archive(unit));
+    srcdiff::reader reader(revision_unit, revision_number == SRCDIFF_ORIGINAL? srcdiff::operation::DELETE : srcdiff::operation::INSERT);
 
     srcSAXController controller(srcdiff, "UTF-8");
     controller.parse(&reader);

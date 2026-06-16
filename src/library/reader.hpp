@@ -29,18 +29,27 @@ class reader : public srcSAXHandler {
 public:
 
     reader(srcml_unit* unit, srcdiff::operation operation) : srcSAXHandler(),
-        unit(unit), operation(operation), op_mode() {
+        unit(unit), operation(operation), op_mode(), is_first_unit(true) {
+    }
+
+    virtual void startRoot(const char* localname, const char* prefix, const char* URI,
+                           int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
+                           const struct srcsax_attribute* attributes) {
+    }
+
+    virtual void endRoot(const char* localname, const char* prefix, const char* URI) {    
     }
 
     virtual void startUnit(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const struct srcsax_namespace* namespaces,
                            int num_attributes, const struct srcsax_attribute* attributes) {
+
         op_mode.push(srcdiff::operation::COMMON);
-        register_namespaces(num_namespaces, namespaces);
-        update_unit_attributes(num_attributes, attributes);
 
         srcml_write_start_unit(unit);
-        write_attributes(num_attributes, attributes);
+
+        register_namespaces(num_namespaces, namespaces);
+        update_unit_attributes(num_attributes, attributes);
     }
 
     virtual void startElement(const char* localname, const char* prefix, const char* URI,
@@ -85,19 +94,14 @@ public:
     }
 
     void update_unit_attributes(int num_attributes, const srcsax_attribute* attributes) {
-
         for(int attr_pos = 0; attr_pos < num_attributes; ++attr_pos) {
             const srcsax_attribute& attr = attributes[attr_pos];
 
             std::string_view attribute = attr.localname;
             if (attribute == "timestamp"sv)
                 srcml_unit_set_timestamp(unit, attr.value);
-            else if (attribute == "hash"sv)
-                ;// srcml_unit_set_hash(unit, attr.value);
             else if (attribute == "language"sv)
                 srcml_unit_set_language(unit, attr.value);
-            else if (attribute == "revision"sv)
-                ; /** @todo */
             else if (attribute == "filename"sv)
                 srcml_unit_set_filename(unit, attr.value);
             else if (attribute == "url"sv)
@@ -107,14 +111,12 @@ public:
             else if (attribute == "tabs"sv || attribute == "options"sv)
                 ;
             else {
-                // add custom attribute
-                srcml_unit_add_attribute(unit, attr.prefix, attr.localname, attr.value);
+                srcml_write_attribute(unit, attr.prefix, attr.localname, attributes->uri, attr.value);
             }
         }
     }
 
     void register_namespaces(int num_namespaces, const srcsax_namespace* namespaces) {
-
         for (int ns_pos = 0; ns_pos < num_namespaces; ++ns_pos) {
             const srcsax_namespace& ns = namespaces[ns_pos];
             srcml_unit_register_namespace(unit, ns.prefix, ns.uri);
@@ -125,7 +127,7 @@ public:
     void write_attributes(int num_attributes, const struct srcsax_attribute* attributes) {
         for(int attr_pos = 0; attr_pos < num_attributes; ++attr_pos) {
             const srcsax_attribute& attr = attributes[attr_pos];
-            srcml_write_attribute(unit, attr.prefix, attr.localname, 0/*URI?*/, attr.value);
+            srcml_write_attribute(unit, attr.prefix, attr.localname, attributes->uri, attr.value);
       } 
     }
 
@@ -138,6 +140,7 @@ private:
     srcml_unit* unit;
     srcdiff::operation operation;
     std::stack<srcdiff::operation> op_mode;
+    bool is_first_unit;
 };
 
 };
