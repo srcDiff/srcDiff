@@ -14,7 +14,7 @@
 #include <input_stream.hpp>
 #include <output_stream.hpp>
 #include <operation.hpp>
-#include <srcdiff_reader.hpp>
+#include <reader.hpp>
 
 #include <client_options.hpp>
 
@@ -203,7 +203,7 @@ struct srcml_unit* srcdiff_read_unit_revision(struct srcml_unit* unit, size_t re
     if(srcdiff.empty()) return nullptr;
 
     srcml_unit* revision_unit = srcml_unit_clone(unit);
-    srcdiff_reader reader(revision_unit, revision_number == SRCDIFF_REVISION_ORIGINAL? srcdiff::operation::DELETE : srcdiff::operation::INSERT);
+    srcdiff::reader reader(revision_unit, revision_number == SRCDIFF_REVISION_ORIGINAL? srcdiff::operation::DELETE : srcdiff::operation::INSERT);
 
     srcSAXController controller(srcdiff, "UTF-8");
     controller.parse(&reader);

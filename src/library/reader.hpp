@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcdiff_reader.hpp
+ * @file reader.hpp
  *
  * @copyright Copyright (C) 2026-2026 SDML (www.srcDiff.org)
  *
@@ -20,15 +20,15 @@
 
 #include <stack>
 
-
 #include <string_view>
 using namespace ::std::literals::string_view_literals;
 
+namespace srcdiff {
 
-class srcdiff_reader : public srcSAXHandler {
+class reader : public srcSAXHandler {
 public:
 
-    srcdiff_reader(srcml_unit* unit, srcdiff::operation operation) : srcSAXHandler(),
+    reader(srcml_unit* unit, srcdiff::operation operation) : srcSAXHandler(),
         unit(unit), operation(operation), op_mode() {
     }
 
@@ -93,7 +93,7 @@ public:
             if (attribute == "timestamp"sv)
                 srcml_unit_set_timestamp(unit, attr.value);
             else if (attribute == "hash"sv)
-                srcml_unit_set_hash(unit, attr.value);
+                ;// srcml_unit_set_hash(unit, attr.value);
             else if (attribute == "language"sv)
                 srcml_unit_set_language(unit, attr.value);
             else if (attribute == "revision"sv)
@@ -138,6 +138,8 @@ private:
     srcml_unit* unit;
     srcdiff::operation operation;
     std::stack<srcdiff::operation> op_mode;
+};
+
 };
 
 #endif
