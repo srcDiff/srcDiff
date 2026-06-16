@@ -93,7 +93,7 @@ public:
             if (attribute == "timestamp"sv)
                 srcml_unit_set_timestamp(unit, attr.value);
             else if (attribute == "hash"sv)
-                ; /** @todo */
+                srcml_unit_set_hash(unit, attr.value);
             else if (attribute == "language"sv)
                 srcml_unit_set_language(unit, attr.value);
             else if (attribute == "revision"sv)
@@ -101,14 +101,14 @@ public:
             else if (attribute == "filename"sv)
                 srcml_unit_set_filename(unit, attr.value);
             else if (attribute == "url"sv)
-               ; /** @todo */
+               ;
             else if (attribute == "version"sv)
                 srcml_unit_set_version(unit, attr.value);
             else if (attribute == "tabs"sv || attribute == "options"sv)
                 ;
             else {
                 // add custom attribute
-                /** @todo */
+                srcml_unit_add_attribute(unit, attr.prefix, attr.localname, attr.value);
             }
         }
     }
