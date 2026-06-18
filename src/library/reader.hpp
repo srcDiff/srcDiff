@@ -32,14 +32,6 @@ public:
         unit(unit), operation(operation), op_mode(), is_first_unit(true) {
     }
 
-    virtual void startRoot(const char* localname, const char* prefix, const char* URI,
-                           int num_namespaces, const struct srcsax_namespace* namespaces, int num_attributes,
-                           const struct srcsax_attribute* attributes) {
-    }
-
-    virtual void endRoot(const char* localname, const char* prefix, const char* URI) {    
-    }
-
     virtual void startUnit(const char* localname, const char* prefix, const char* URI,
                            int num_namespaces, const struct srcsax_namespace* namespaces,
                            int num_attributes, const struct srcsax_attribute* attributes) {
