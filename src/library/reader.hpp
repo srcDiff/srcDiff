@@ -85,6 +85,14 @@ public:
         srcml_write_string(unit, text.c_str());
     }
 
+    void register_namespaces(int num_namespaces, const srcsax_namespace* namespaces) {
+        for (int ns_pos = 0; ns_pos < num_namespaces; ++ns_pos) {
+            const srcsax_namespace& ns = namespaces[ns_pos];
+            srcml_unit_register_namespace(unit, ns.prefix, ns.uri);
+        }
+
+    }
+
     void update_unit_attributes(int num_attributes, const srcsax_attribute* attributes) {
         for(int attr_pos = 0; attr_pos < num_attributes; ++attr_pos) {
             const srcsax_attribute& attr = attributes[attr_pos];
@@ -106,14 +114,6 @@ public:
                 srcml_write_attribute(unit, attr.prefix, attr.localname, attributes->uri, attr.value);
             }
         }
-    }
-
-    void register_namespaces(int num_namespaces, const srcsax_namespace* namespaces) {
-        for (int ns_pos = 0; ns_pos < num_namespaces; ++ns_pos) {
-            const srcsax_namespace& ns = namespaces[ns_pos];
-            srcml_unit_register_namespace(unit, ns.prefix, ns.uri);
-        }
-
     }
 
     void write_attributes(int num_attributes, const struct srcsax_attribute* attributes) {
