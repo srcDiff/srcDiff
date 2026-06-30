@@ -70,15 +70,27 @@ LIBSRCDIFF_EXPORT int srcDiff(const char* original_filename,
 /** @defgroup create Create
     @{
 */
+/**
+ * Create a new srcdiff_config.
+ * @note The config must be freed using srcdiff_config_free()
+ * @returns Created srcdiff_config on success
+ * @return NULL on failure
+ */
 LIBSRCDIFF_EXPORT struct srcdiff_config* srcdiff_config_create();
-LIBSRCDIFF_EXPORT void                   srcdiff_config_free  (struct srcdiff_config* config);
+
+/**
+ * Free an allocated config
+ * @param config The srcdiff config to free
+ */
+LIBSRCDIFF_EXPORT void srcdiff_config_free  (struct srcdiff_config* config);
 
 /**
  * Create the srcDiff delta of the original and modifid srcml_unit in the srcDiff format.
  * @param config A srcdiff_config to direct delta creation, Null uses default options 
  * @param original_unit A srcml_unit of the original source-code
  * @param modified_unit A srcml_unit of the modified source-code
- * @return srcml_unit containing the srcDiff delta, Null on failure
+ * @returns srcml_unit containing the srcDiff delta
+ * @return NULL on failure
  */
 LIBSRCDIFF_EXPORT struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* config,
                                                           struct srcml_unit    * original_unit, 
@@ -93,9 +105,29 @@ LIBSRCDIFF_EXPORT struct srcml_unit* srcdiff_create_delta(struct srcdiff_config*
 /** Constant for modified srcDiff revision number */
 #define SRCDIFF_MODIFIED 1
 
-
+/**
+ * Read the original srcML from a unit containing srcDiff.
+ * @param unit A srcml_unit containing srcDiff
+ * @returns srcml_unit containing the original srcML
+ * @return NULL on failure
+ */
 LIBSRCDIFF_EXPORT struct srcml_unit* srcdiff_read_unit_original(struct srcml_unit* unit);
+
+/**
+ * Read the modified srcML from a unit containing srcDiff.
+ * @param unit A srcml_unit containing srcDiff
+ * @returns srcml_unit containing the modified srcML
+ * @return NULL on failure
+ */
 LIBSRCDIFF_EXPORT struct srcml_unit* srcdiff_read_unit_modified(struct srcml_unit* unit);
+
+/**
+ * Read a srcML revision from a unit containing srcDiff.
+ * @param unit            A srcml_unit containing srcDiff
+ * @param revision_number The revision_number to read from unit
+ * @returns srcml_unit containing the specified srcML revision
+ * @return NULL on failure
+ */
 LIBSRCDIFF_EXPORT struct srcml_unit* srcdiff_read_unit_revision(struct srcml_unit* unit,
                                                                 size_t revision_number);
 /**@}*/
