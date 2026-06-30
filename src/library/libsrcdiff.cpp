@@ -98,7 +98,7 @@ int srcDiff(const char * original_filename, const char* modified_filename, const
     srcdiff::deltor deltor(options.methods, options.unit_filename);
     deltor.create(options.archive, manager, language_string, unit_filename, unit_version);
 
-    return 0;
+    return SRCDIFF_STATUS_OK;
 }
 
 struct srcdiff_config* srcdiff_config_create() {

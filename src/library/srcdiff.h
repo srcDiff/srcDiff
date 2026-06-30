@@ -27,34 +27,78 @@ typedef SSIZE_T ssize_t;
 #define LIBSRCDIFF_EXPORT
 #endif
 
+/**@{ @name Status */
+/** Return status indicating no errors */
+#define SRCDIFF_STATUS_OK    0
+/** Return status indicating general errors occurred */
+#define SRCDIFF_STATUS_ERROR 1
+/**@}*/
+
+/**
+ * @struct srcml_unit
+ *
+ * The srcML markup of one source-code file.
+ * See srcML.org
+ */
+struct srcml_unit;
+
 /**
  * @struct srcdiff_config
  *
  * Configuration object for controlling srcDiff delta creation.
  */
-struct srcml_unit;
 struct srcdiff_config;
 
-// srcDiff convenience function - original and modified to/from srcDiff archive
+/** @defgroup convenience Convenience functions
+  @{
+ */
+
+/**
+ * Create the srcDiff delta in the srcDiff format
+ * @details @todo
+ * @param [in] original_filename The name of the original source-code file
+ * @param [in] modified_filename The name of the modified source-code file
+ * @param [in] srcdiff_filename  The name of the srcDiff file
+ * @return SRCDIFF_STATUS_OK on success
+ * @return Status error on failure
+ */
 LIBSRCDIFF_EXPORT int srcDiff(const char* original_filename, 
                               const char* modified_filename, 
                               const char* srcdiff_filename);
+/**@}*/
 
+/** @defgroup create Create
+    @{
+*/
 LIBSRCDIFF_EXPORT struct srcdiff_config* srcdiff_config_create();
 LIBSRCDIFF_EXPORT void                   srcdiff_config_free  (struct srcdiff_config* config);
-LIBSRCDIFF_EXPORT struct srcml_unit    * srcdiff_create_delta (struct srcdiff_config* config,
-                                                               struct srcml_unit    * original_unit, 
-                                                               struct srcml_unit    * modified_unit);
 
+/**
+ * Create the srcDiff delta of the original and modifid srcml_unit in the srcDiff format.
+ * @param config A srcdiff_config to direct delta creation, Null uses default options 
+ * @param original_unit A srcml_unit of the original source-code
+ * @param modified_unit A srcml_unit of the modified source-code
+ * @return srcml_unit containing the srcDiff delta, Null on failure
+ */
+LIBSRCDIFF_EXPORT struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* config,
+                                                          struct srcml_unit    * original_unit, 
+                                                          struct srcml_unit    * modified_unit);
+/**@}*/
+
+/** @defgroup read Read
+    @{
+*/
 /** Constant for original srcDiff revision number */
 #define SRCDIFF_ORIGINAL 0
 /** Constant for modified srcDiff revision number */
 #define SRCDIFF_MODIFIED 1
 
+
 LIBSRCDIFF_EXPORT struct srcml_unit* srcdiff_read_unit_original(struct srcml_unit* unit);
 LIBSRCDIFF_EXPORT struct srcml_unit* srcdiff_read_unit_modified(struct srcml_unit* unit);
 LIBSRCDIFF_EXPORT struct srcml_unit* srcdiff_read_unit_revision(struct srcml_unit* unit,
                                                                 size_t revision_number);
+/**@}*/
 
 #ifndef __cplusplus
 }
