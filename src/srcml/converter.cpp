@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcml_converter.cpp
+ * @file converter.cpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcml_converter.hpp>
+#include <converter.hpp>
 
 #include <constants.hpp>
 #include <shortest_edit_script.h>
@@ -18,12 +18,11 @@
 #include <libxml/xmlreader.h>
 #include <iostream>
 
-std::mutex srcml_converter::mutex;
+namespace srcML {
 
-std::map<std::string, std::shared_ptr<srcML::node>> srcml_converter::start_tags;
-std::map<std::string, std::shared_ptr<srcML::node>> srcml_converter::end_tags;
+std::mutex converter::mutex;
 
-std::shared_ptr<srcML::node> srcml_converter::get_current_node(xmlTextReaderPtr reader) {
+std::shared_ptr<srcML::node> converter::get_current_node(xmlTextReaderPtr reader) {
 
   xmlNode * curnode = xmlTextReaderCurrentNode(reader);
   curnode->type = (xmlElementType)xmlTextReaderNodeType(reader);
@@ -83,7 +82,7 @@ std::shared_ptr<srcML::node> split_text(const char * characters_start,
 
   if(characters_start != characters_end) {
 
-    text->set_content(std::string().append((const char *)characters_start, characters_end  - characters_start));
+    text->set_content(std::string().append((const char *)characters_start, characters_end - characters_start));
 
   }
 
@@ -103,10 +102,10 @@ void eat_element(xmlTextReaderPtr& reader) {
   xmlTextReaderRead(reader);
 }
 
-srcml_converter::srcml_converter(bool split_strings) 
+converter::converter(bool split_strings) 
   : split_strings(split_strings), output_buffer(nullptr), free_buffer(false) {}
 
-srcml_converter::~srcml_converter() {
+converter::~converter() {
 
   // libsrcml uses xmlBufferCreate to create this buffer, so we need to use
   // xmlFree to free it. srcml_memory_free just calls the normal free(), which
@@ -116,8 +115,8 @@ srcml_converter::~srcml_converter() {
 }
 
 // converts source code to srcML
-void srcml_converter::convert(srcml_archive* archive, const std::string& language, void* context,
-                              const std::function<ssize_t(void*, void*, size_t)> & read, const std::function<int(void*)> & close) {
+void converter::convert(srcml_archive* archive, const std::string& language, void* context,
+                        const std::function<ssize_t(void*, void*, size_t)> & read, const std::function<int(void*)> & close) {
 
   srcml_archive* unit_archive = srcml_archive_clone(archive);
   srcml_archive_enable_solitary_unit(unit_archive);
@@ -139,12 +138,12 @@ void srcml_converter::convert(srcml_archive* archive, const std::string& languag
 
 }
 
-void srcml_converter::convert(srcml_unit* unit) {
+void converter::convert(srcml_unit* unit) {
   output_buffer = (char*)srcml_unit_get_srcml(unit);
   output_size   = strlen(output_buffer);
 }
 
-srcml_nodes srcml_converter::create_nodes() const {
+nodes converter::create_nodes() const {
   
   xmlTextReaderPtr reader = xmlReaderForMemory(output_buffer, (int)output_size, 0, 0, XML_PARSE_HUGE);
 
@@ -154,10 +153,10 @@ srcml_nodes srcml_converter::create_nodes() const {
   xmlTextReaderRead(reader);
 
   // Read past unit tag open
-  if(xmlTextReaderRead(reader) == 0) return srcml_nodes();
+  if(xmlTextReaderRead(reader) == 0) return nodes();
 
   // collect if non empty files
-  srcml_nodes nodes = collect_nodes(reader);
+  srcML::nodes nodes = collect_nodes(reader);
 
   xmlFreeTextReader(reader);
 
@@ -186,11 +185,11 @@ static bool is_cpp_file_separate(const char character) {
 }
 
 // collect the differences
-srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
+nodes converter::collect_nodes(xmlTextReaderPtr reader) const {
 
-  srcml_nodes nodes;
+  srcML::nodes nodes;
 
-  srcml_nodes element_stack;
+  srcML::nodes element_stack;
   element_stack.push_back(std::make_shared<srcML::node>(srcML::node_type::START, "unit"));
 
 
@@ -411,5 +410,7 @@ srcml_nodes srcml_converter::collect_nodes(xmlTextReaderPtr reader) const {
   }
 
   return nodes;
+
+}
 
 }

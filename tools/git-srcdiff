@@ -1,5 +1,8 @@
 #!/bin/sh
+
+echo "srcdiff -u " $1
 echo "---" $1
+
 if [[ $# -eq 7 ]]; then
     echo "+++" $1
 else
@@ -17,15 +20,15 @@ echo $temp_file
 if [[ $2 = "/dev/null" ]]; then
 
     touch $temp_file
-    srcdiff --unified --unified-context=3 $temp_file "$5"
+    srcdiff --unified --context=3 $temp_file "$5"
     rm -f $temp_file
 
 elif [[ $5 = "/dev/null" ]]; then
 
     touch $temp_file   
-    srcdiff --unified --unified-context=3 "$2" $temp_file
+    srcdiff --unified --context=3 "$2" $temp_file
     rm -f $temp_file
 
 else
-    srcdiff --unified --unified-context=3 "$2" "$5"
+    srcdiff --unified --context=3 "$2" "$5"
 fi

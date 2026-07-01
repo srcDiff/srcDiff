@@ -1,24 +1,26 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcml_nodes.cpp
+ * @file nodes.cpp
  *
  * @copyright Copyright (C) 2016-2024 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
 
-#include <srcml_nodes.hpp>
+#include <nodes.hpp>
 #include <iostream>
+
+namespace srcML {
 
 //static xmlReaderTypes START_TAG_TYPE = XML_READER_TYPE_ELEMENT;
 //static xmlReaderTypes END_TAG_TYPE = XML_READER_TYPE_END_ELEMENT;
 
-void advance_to_child(const srcml_nodes & nodes,
+void advance_to_child(const nodes & nodes,
                       size_t & pos,
                       srcML::node_type type,
                       const std::string & name) {
 
-  srcml_nodes::size_type size = nodes.size();
+  nodes::size_type size = nodes.size();
 
   size_t start_pos = pos;
   int depth = 0;
@@ -51,5 +53,7 @@ void advance_to_child(const srcml_nodes & nodes,
   }
 
   pos = start_pos;
+
+}
 
 }

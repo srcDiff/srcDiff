@@ -12,7 +12,7 @@
 
 #include <input_stream.hpp>
 #include <client_options.hpp>
-#include <srcml_nodes.hpp>
+#include <nodes.hpp>
 
 #include <srcml.h>
 
@@ -35,11 +35,11 @@ public:
         streams.push_back(std::ref(stream));
     }
 
-    std::pair<srcml_nodes, srcml_nodes> consume_streams() {
+    std::pair<srcML::nodes, srcML::nodes> consume_streams() {
       /// @todo handle better
-      if(streams.size() < 2) return std::pair<srcml_nodes, srcml_nodes>();
+      if(streams.size() < 2) return std::pair<srcML::nodes, srcML::nodes>();
 
-      std::pair<srcml_nodes, srcml_nodes> nodes;
+      std::pair<srcML::nodes, srcML::nodes> nodes;
       std::thread thread_original(streams.front(), std::ref(converter), std::ref(nodes.first));
       thread_original.join();
       streams.pop_front();
@@ -52,7 +52,7 @@ public:
     }
 
 protected:
-    srcml_converter converter;
+    srcML::converter converter;
     std::list<std::reference_wrapper<const input_stream_base>> streams;
 };
 

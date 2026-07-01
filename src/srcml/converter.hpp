@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file srcml_converter.hpp
+ * @file converter.hpp
  *
  * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
  *
@@ -10,7 +10,7 @@
 #ifndef INCLUDED_SRCML_CONVERTER_HPP
 #define INCLUDED_SRCML_CONVERTER_HPP
 
-#include <srcml_nodes.hpp>
+#include <nodes.hpp>
 
 #include <srcml.h>
 #include <vector>
@@ -19,7 +19,9 @@
 #include <functional>
 #include <memory>
 
-class srcml_converter {
+namespace srcML {
+
+class converter {
 
 protected:
 
@@ -35,18 +37,20 @@ protected:
   static std::map<std::string, std::shared_ptr<srcML::node>> end_tags;
 
 private:
-
-    srcml_nodes collect_nodes(xmlTextReaderPtr reader) const;
+    nodes collect_nodes(xmlTextReaderPtr reader) const;
     static std::shared_ptr<srcML::node> get_current_node(xmlTextReaderPtr reader);
 
 public:
-    srcml_converter(bool split_strings);
-    ~srcml_converter();
+    converter(bool split_strings);
+    ~converter();
 
     void set_output_buffer(const std::string& str); 
     void convert(srcml_archive* archive, const std::string& language, void* context, const std::function<ssize_t(void*, void*, size_t)>& read, const std::function<int(void*)>& close); 
     void convert(srcml_unit* unit);
-    srcml_nodes create_nodes() const;
+    nodes create_nodes() const;
 };
+
+
+}
 
 #endif

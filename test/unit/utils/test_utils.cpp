@@ -14,7 +14,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <srcml_converter.hpp>
+#include <converter.hpp>
 #include <iostream>
 #include <cstdio>
 #include <cassert>
@@ -40,7 +40,7 @@ std::string read_from_file(std::string filename){
     return str;
 }
 
-std::shared_ptr<srcml_nodes> create_nodes(const std::string & code, const std::string & language) {
+std::shared_ptr<srcML::nodes> create_nodes(const std::string & code, const std::string & language) {
 
     //create srcml archive pointer and get code string      
     srcml_archive * archive = srcml_archive_create();
@@ -48,13 +48,13 @@ std::shared_ptr<srcml_nodes> create_nodes(const std::string & code, const std::s
     srcml_archive_disable_hash(archive);
     srcml_archive_register_namespace(archive, "diff", "http://www.srcML.org/srcDiff");
 
-    //create srcml_nodes
-    srcml_converter contNodes(true);
+    //create srcML::nodes
+    srcML::converter contNodes(true);
     std::string source = code;
     contNodes.convert(archive, language, (void*)&source, &str_read, &str_close);
-    srcml_nodes testNode = contNodes.create_nodes();
+    srcML::nodes testNode = contNodes.create_nodes();
 
-    return std::make_shared<srcml_nodes>(testNode);
+    return std::make_shared<srcML::nodes>(testNode);
 }
 
 std::shared_ptr<const construct> create_test_construct_inner(std::shared_ptr<construct> parent, size_t pos ) {
@@ -76,7 +76,7 @@ std::shared_ptr<const construct> create_test_construct_inner(std::shared_ptr<con
 
 construct_test_data create_test_construct(const std::string & code, const std::string & construct_name, const std::string & language) {
 
-    std::shared_ptr<srcml_nodes> nodes = create_nodes(code, language);
+    std::shared_ptr<srcML::nodes> nodes = create_nodes(code, language);
 
     for (size_t i = 0; i < nodes->size(); ++i) {
         if ((*nodes)[i]->get_name() == construct_name) {

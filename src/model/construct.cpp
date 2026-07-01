@@ -9,7 +9,6 @@
 
 #include <construct.hpp>
 
-#include <srcml_nodes.hpp>
 #include <construct_factory.hpp>
 #include <text_measurer.hpp>
 #include <syntax_measurer.hpp>
@@ -18,7 +17,7 @@
 #include <algorithm>
 #include <iostream>
 
-bool construct::is_non_white_space(std::size_t & node_pos, const srcml_nodes & node_list, const void * context [[maybe_unused]]) {
+bool construct::is_non_white_space(std::size_t & node_pos, const srcML::nodes & node_list, const void * context [[maybe_unused]]) {
 
     const std::shared_ptr<srcML::node> & node = node_list[node_pos];
 
@@ -27,7 +26,7 @@ bool construct::is_non_white_space(std::size_t & node_pos, const srcml_nodes & n
 
 }
 
-bool construct::is_match(std::size_t & node_pos, const srcml_nodes & nodes, const void * context) {
+bool construct::is_match(std::size_t & node_pos, const srcML::nodes & nodes, const void * context) {
 
   const std::shared_ptr<srcML::node> & node = nodes[node_pos];
   const std::shared_ptr<srcML::node> & context_node = *(const std::shared_ptr<srcML::node> *)context;
@@ -61,7 +60,7 @@ construct::construct_list construct::get_descendents(std::size_t start_pos, std:
     return descendents;
 }
 
-construct::construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff::output_stream> out)
+construct::construct(const srcML::nodes & node_list, std::shared_ptr<srcdiff::output_stream> out)
     : out(out), node_list(node_list), terms(), hash_value(),
       nest_checker(), convert_checker() {
 }
@@ -220,7 +219,7 @@ int construct::end_position() const {
 
 
 
-const srcml_nodes & construct::nodes() const {
+const srcML::nodes & construct::nodes() const {
     return node_list;
 }
 

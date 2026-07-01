@@ -12,7 +12,7 @@
 
 #include <output_stream.hpp>
 #include <operation.hpp>
-#include <srcml_nodes.hpp>
+#include <nodes.hpp>
 #include <construct_utils.hpp>
 
 #include <nest/rule_checker.hpp>
@@ -31,16 +31,16 @@ public:
     typedef std::vector<std::shared_ptr<const construct>> construct_list;
     typedef std::span<const std::shared_ptr<const construct>> construct_list_view;
 
-    typedef std::function<bool (std::size_t & node_pos, const srcml_nodes & node_list, const void * context)> construct_filter;
+    typedef std::function<bool (std::size_t & node_pos, const srcML::nodes & node_list, const void * context)> construct_filter;
 
-    static bool is_non_white_space(std::size_t & node_pos, const srcml_nodes & node_list, const void * context);
-    static bool is_match(std::size_t & node_pos, const srcml_nodes & nodes, const void * context);
+    static bool is_non_white_space(std::size_t & node_pos, const srcML::nodes & node_list, const void * context);
+    static bool is_match(std::size_t & node_pos, const srcML::nodes & nodes, const void * context);
 
     construct_list get_descendents(std::size_t start_pos, std::size_t end_pos,
                                    construct_filter filter = is_non_white_space,
                                    const void * context = nullptr) const;
 
-    construct(const srcml_nodes & node_list, std::shared_ptr<srcdiff::output_stream> out = std::shared_ptr<srcdiff::output_stream>());
+    construct(const srcML::nodes & node_list, std::shared_ptr<srcdiff::output_stream> out = std::shared_ptr<srcdiff::output_stream>());
 
     construct(const construct* parent, std::size_t& start);
 
@@ -85,7 +85,7 @@ public:
     int end_position() const;
 
 
-    const srcml_nodes & nodes() const;
+    const srcML::nodes & nodes() const;
     const std::shared_ptr<srcML::node> & root_term() const;
     const std::string & term_name(std::size_t pos) const;
     const std::string & root_term_name() const;
@@ -103,7 +103,7 @@ public:
  protected:
     std::shared_ptr<srcdiff::output_stream> out;
 
-    const srcml_nodes & node_list;
+    const srcML::nodes & node_list;
 
     std::vector<int> terms;
     mutable std::optional<std::size_t> hash_value;

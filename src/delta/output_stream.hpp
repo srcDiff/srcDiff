@@ -11,7 +11,7 @@
 #define INCLUDED_OUTPUT_STREAM_HPP
 
 #include <namespace.hpp>
-#include <srcml_nodes.hpp>
+#include <nodes.hpp>
 #include <client_options.hpp>
 
 #include <methods.hpp>
@@ -34,7 +34,7 @@ public:
 
     enum operation operation;
 
-    srcml_nodes open_tags;
+    srcML::nodes open_tags;
 
   };
 
@@ -63,7 +63,7 @@ public:
     int stream_source;
     unsigned int last_output;
 
-    srcml_nodes nodes;
+    srcML::nodes nodes;
 
     std::vector<diff_set *> open_diff;
 
@@ -154,10 +154,10 @@ public:
   void reset();
   void close();
 
-  virtual const srcml_nodes & nodes_original() const;
-  virtual const srcml_nodes & nodes_modified() const;
-  virtual srcml_nodes & nodes_original();
-  virtual srcml_nodes & nodes_modified();
+  virtual const srcML::nodes & nodes_original() const;
+  virtual const srcML::nodes & nodes_modified() const;
+  virtual srcML::nodes & nodes_original();
+  virtual srcML::nodes & nodes_modified();
   unsigned int last_output_original() const;
   unsigned int last_output_modified() const;
   virtual unsigned int & last_output_original();

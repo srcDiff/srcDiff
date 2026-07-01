@@ -10,8 +10,8 @@
 #ifndef INCLUDED_INPUT_STREAM_HPP
 #define INCLUDED_INPUT_STREAM_HPP
 
-#include <srcml_nodes.hpp>
-#include <srcml_converter.hpp>
+#include <nodes.hpp>
+#include <converter.hpp>
 #include <client_options.hpp>
 
 #include <srcml.h>
@@ -22,8 +22,8 @@ namespace srcdiff {
 
 class input_stream_base {
 public:
-    virtual void operator()(srcml_converter& converter, srcml_nodes& nodes) const = 0;
-    virtual srcml_nodes input_nodes(srcml_converter& converter) const = 0;
+    virtual void operator()(srcML::converter& converter, srcML::nodes& nodes) const = 0;
+    virtual srcML::nodes input_nodes(srcML::converter& converter) const = 0;
 };
 
 template<class T>
@@ -35,8 +35,8 @@ public:
                  const char* language_string);
     ~input_stream();
 
-    virtual void operator()(srcml_converter& converter, srcml_nodes& nodes) const;
-    virtual srcml_nodes input_nodes(srcml_converter& converter) const;
+    virtual void operator()(srcML::converter& converter, srcML::nodes& nodes) const;
+    virtual srcML::nodes input_nodes(srcML::converter& converter) const;
 
 protected:
     const T& input;

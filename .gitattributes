@@ -1,3 +1,26 @@
 # always expect lf line endings for xml and sh files, for test runners
 *.xml text eol=lf
 *.sh text eol=lf
+
+# configure srcDiff
+*.cpp diff=srcdiff
+*.hpp diff=srcdiff
+*.cxx diff=srcdiff
+*.hxx diff=srcdiff
+*.cc diff=srcdiff
+*.c++ diff=srcdiff
+*.h++ diff=srcdiff
+*.hh diff=srcdiff
+*.ii diff=srcdiff
+*.C diff=srcdiff
+*.H diff=srcdiff
+*.c diff=srcdiff
+*.h diff=srcdiff
+*.i diff=srcdiff
+*.CPP diff=srcdiff
+*.cp diff=srcdiff
+*.tcc diff=srcdiff
+*.java diff=srcdiff
+*.aj diff=srcdiff
+*.cs diff=srcdiff
+*.m diff=srcdiff

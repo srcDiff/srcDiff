@@ -18,7 +18,7 @@ template<class T>
 input_stream<T>::~input_stream() {}
 
 template<class T>
-void input_stream<T>::operator()(srcml_converter& converter, srcml_nodes& nodes) const {
+void input_stream<T>::operator()(srcML::converter& converter, srcML::nodes& nodes) const {
  if(!input_path || input_path->empty()) return;
 
   try {
@@ -32,7 +32,7 @@ void input_stream<T>::operator()(srcml_converter& converter, srcml_nodes& nodes)
 }
 
 template<class T>
-srcml_nodes input_stream<T>::input_nodes(srcml_converter& converter) const {
+srcML::nodes input_stream<T>::input_nodes(srcML::converter& converter) const {
 
   typename T::input_context* context = input.open(input_path->c_str());
 

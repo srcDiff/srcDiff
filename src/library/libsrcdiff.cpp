@@ -122,14 +122,14 @@ public:
     : unit(unit){
   }
 
-  virtual void operator()(srcml_converter& converter, srcml_nodes& nodes) const {
+  virtual void operator()(srcML::converter& converter, srcML::nodes& nodes) const {
     nodes.clear();
     if(!unit) return;
 
     nodes = input_nodes(converter);
   }
 
-  virtual srcml_nodes input_nodes(srcml_converter& converter) const {
+  virtual srcML::nodes input_nodes(srcML::converter& converter) const {
     converter.convert(unit);
     return converter.create_nodes();
   }

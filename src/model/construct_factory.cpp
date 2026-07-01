@@ -104,6 +104,8 @@ factory_map_type factory_map = {
 
   {"name", generate_factory<name_t, nest::name_t>() },
 
+  {"namespace", generate_factory<construct, class_nest>() },
+ 
   // // class-type
   {"class",      generate_factory<named_construct, class_nest, convert::class_t>() },
   {"struct",     generate_factory<named_construct, class_nest, convert::class_t>() },
