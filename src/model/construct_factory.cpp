@@ -183,7 +183,7 @@ factory_map_type factory_map = {
   {"member_list",      generate_factory<always_match>() },
   {"super_list",       generate_factory<always_match>() },
 
-  {"block", generate_factory<block, nest::block>() },
+  {"block",         generate_factory<block, nest::block>() },
   {"block_content", generate_factory<always_match, nest::block>() },
 
   {"operator", generate_factory<always_match, nest::similar>() },
