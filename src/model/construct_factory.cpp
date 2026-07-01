@@ -80,7 +80,7 @@ typedef nest::custom<"expr", "call", "operator", "literal", "name", "switch">
 
 typedef nest::custom<"function", "constructor", "destructor",
                      "function_decl", "constructor_decl", "destructor_decl",
-                     "decl_stmt", "typedef"
+                     "decl_stmt", "typedef",
                      "class", "struct", "union", "enum",
                      "class_decl", "struct_decl", "union_decl", "enum_decl">
         class_nest;
