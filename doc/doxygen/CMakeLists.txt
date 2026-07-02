@@ -1,9 +1,11 @@
-# SPDX-License-Identifier: GPL-3.0-only
-##
+## SPDX-License-Identifier: GPL-3.0-only
+#
 # @file CMakeLists.txt
-# 
-# @copyright Copyright (C) 2013-2024 srcML, LLC. (www.srcML.org)
-# 
+#
+# @copyright Copyright (C) 2026-2026 SDML (www.srcDiff.org)
+#
+# This file is part of the srcDiff Infrastructure.
+#
 # CMake files for doxygen documentation
 
 find_package(Doxygen REQUIRED)
@@ -19,7 +21,7 @@ add_custom_command(
     COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT}
     COMMAND ${CMAKE_COMMAND} -E echo "Done."
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    DEPENDS ${DOXYGEN_TEMPLATE} "${CMAKE_SOURCE_DIR}/src/libsrcml/srcml.h"
+    DEPENDS ${DOXYGEN_TEMPLATE} "${CMAKE_SOURCE_DIR}/src/library/srcdiff.h"
 )
 
 add_custom_target(doc_doxygen ALL DEPENDS ${CMAKE_BINARY_DIR}/html)
