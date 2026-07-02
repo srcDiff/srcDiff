@@ -17,7 +17,6 @@ configure_file(${DOXYGEN_TEMPLATE} ${DOXYGEN_INPUT})
 add_custom_command(
     OUTPUT  ${CMAKE_BINARY_DIR}/html
     COMMAND ${CMAKE_COMMAND} -E echo_append "Building API Documentation..."
-#    COMMAND ${CMAKE_COMMAND} -P configure_doxygen.cmake
     COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_INPUT}
     COMMAND ${CMAKE_COMMAND} -E echo "Done."
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
@@ -26,4 +25,4 @@ add_custom_command(
 
 add_custom_target(doc_doxygen ALL DEPENDS ${CMAKE_BINARY_DIR}/html)
 
-install(DIRECTORY ${CMAKE_BINARY_DIR}/html DESTINATION ${CMAKE_INSTALL_DOCDIR} COMPONENT SRCMLDEV)
+install(DIRECTORY ${CMAKE_BINARY_DIR}/html DESTINATION ${CMAKE_INSTALL_DOCDIR} COMPONENT SRCDIFFDEV)

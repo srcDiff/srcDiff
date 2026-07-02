@@ -76,6 +76,9 @@ include_directories(src/shortest_edit_script
 # include sub directories
 add_subdirectory(src)
 
+# documentation
+add_subdirectory(doc)
+
 # packaging
 add_subdirectory(package)
 
