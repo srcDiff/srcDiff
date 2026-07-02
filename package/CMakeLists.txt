@@ -31,7 +31,7 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "srcDiff Infrastructure")
 set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_SOURCE_DIR}/package/welcome.html)
 
 # vendor
-set(CPACK_PACKAGE_VENDOR "srcML, LLC.")
+set(CPACK_PACKAGE_VENDOR "SDML")
 
 # contact
 set(CPACK_PACKAGE_CONTACT "Software Development Laboratories <srcDiff.org>")
