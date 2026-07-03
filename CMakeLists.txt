@@ -44,6 +44,10 @@ if(DISTRO AND DISTRO MATCHES "CentOS|Fedora")
     set(CMAKE_SYSTEM_IGNORE_PATH $ENV{HOME})
 endif()
 
+# Use defaults for installation and packaging
+include(GNUInstallDirs)
+
+# Enable testing, needs to be run at root
 enable_testing()
 
 option(BUILD_ALL "Build all tests and examples (to be implemented)" OFF)
