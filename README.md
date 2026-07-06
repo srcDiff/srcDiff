@@ -4,6 +4,27 @@ srcDiff is a syntactical differencer built off of the srcML infrastructure.
 
 ## Building srcDiff
 
+### Unix-based
+On Unix-based systems, the builtin CMake presets should be used to build. In the srcDiff repository root directory, run the CMake command corresponding to your OS. A build directory will be created in the root directory. Ninja is used to build, test, and install.
+
+#### macOS
+
+```bash
+cmake --preset ci-macos
+```
+
+#### Ubuntu or Debian-based OS
+
+```bash
+cmake --preset ci-debian
+```
+
+#### Fedora or RPM-based OS
+
+```bash
+cmake --preset ci-rhel
+```
+
 ### Windows
 
 On Windows, due to the lack of a standard location or package manager for libraries, vcpkg should be used to install dependencies. [This is the official guide to installing vcpkg](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-cmd#1---set-up-vcpkg). Following these steps is sufficient to install vcpkg for this build:
