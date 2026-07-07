@@ -13,8 +13,8 @@
 
   "configurePresets": [
     {
-      "name": "ci-rhel",
-      "inherits": ["ci-gcc", "subdirectory-build"],
+      "name": "rhel-base",
+      "inherits": ["gcc", "subdirectory-build"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "displayName": "GCC Release",
       "description": "Default build options for GCC release",
@@ -22,7 +22,14 @@
       "cacheVariables": {
           "CPACK_OUTPUT_FILE_PREFIX": "dist"
       }
-
+    },
+    {
+      "name": "rhel",
+      "inherits": ["rhel-base", "base"]
+    },
+    {
+      "name": "ci-rhel",
+      "inherits": ["rhel-base", "ci-base"]
     }
   ],
 

@@ -13,8 +13,8 @@
 
   "configurePresets": [
     {
-      "name": "ci-macos",
-      "inherits": ["ci-clang", "subdirectory-build"],
+      "name": "macos-base",
+      "inherits": ["clang", "subdirectory-build"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "displayName": "macOS Release",
       "description": "Default build options for macOS release",
@@ -25,6 +25,14 @@
         "CPACK_GENERATOR": "productbuild;TGZ;TBZ2",
         "CPACK_OUTPUT_FILE_PREFIX": "dist"
       }
+    },
+    {
+      "name": "macos",
+      "inherits": ["macos-base", "base"]
+    },
+    {
+      "name": "ci-macos",
+      "inherits": [ "macos-base", "ci-base"]
     }
   ],
 

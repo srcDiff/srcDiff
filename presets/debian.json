@@ -13,8 +13,8 @@
 
   "configurePresets": [
     {
-      "name": "ci-debian",
-      "inherits": ["ci-gcc", "subdirectory-build"],
+      "name": "debian-base",
+      "inherits": ["gcc", "subdirectory-build"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "displayName": "Debian Release",
       "description": "Default build options for Debian release",
@@ -22,6 +22,14 @@
       "cacheVariables": {
         "CPACK_OUTPUT_FILE_PREFIX": "dist"
       }
+    },
+    {
+      "name": "debian",
+      "inherits": ["debian-base", "base"]
+    },
+    {
+      "name": "ci-debian",
+      "inherits": ["debian-base", "ci-base"]
     }
   ],
 

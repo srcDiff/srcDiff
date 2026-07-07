@@ -41,30 +41,23 @@
       }
     },
     {
-      "name": "ci-base",
+      "name": "base",
       "hidden": true,
       "cacheVariables": {
-        "BUILD_SUITE_TESTS":  "ON",
-        "BUILD_CLIENT_TESTS": "ON",
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_SUITE_TESTS":  "OFF",
+        "BUILD_CLIENT_TESTS": "OFF",
         "BUILD_UNIT_TESTS":   "OFF"
       }
     },
     {
-      "name": "ci-clang",
-      "inherits": ["clang", "ci-base"],
-      "displayName": "Clang Release",
-      "description": "Default build options for Clang release",
+      "name": "ci-base",
+      "hidden": true,
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release" 
-      }
-    },
-    {
-      "name": "ci-gcc",
-      "inherits": ["gcc", "ci-base"],
-      "displayName": "GCC Release",
-      "description": "Default build options for GCC release",
-      "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_SUITE_TESTS":  "ON",
+        "BUILD_CLIENT_TESTS": "ON",
+        "BUILD_UNIT_TESTS":   "ON"
       }
     },
     {
