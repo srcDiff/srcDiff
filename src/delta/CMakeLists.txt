@@ -7,20 +7,18 @@
 # This file is part of the srcDiff Infrastructure.
 #
 
-
-
-file(GLOB TRANSLATOR_HEADERS *.hpp)
-file(GLOB TRANSLATOR_SOURCE *.cpp)
+file(GLOB DELTA_HEADERS *.hpp)
+file(GLOB DELTA_SOURCE *.cpp)
 
 if(NOT SVN_ENABLED)
 
-list(REMOVE_ITEM TRANSLATOR_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_input_svn.cpp)
+list(REMOVE_ITEM DELTA_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_input_svn.cpp)
 
 endif()
 
 if(NOT GIT_ENABLED)
 
-list(REMOVE_ITEM TRANSLATOR_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_input_git.cpp)
+list(REMOVE_ITEM DELTA_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/srcdiff_input_git.cpp)
 
 endif()
 
@@ -28,5 +26,5 @@ find_package(LibXml2 REQUIRED)
 find_package(srcML REQUIRED)
 
 # srcdiff
-add_library(delta OBJECT ${TRANSLATOR_HEADERS} ${TRANSLATOR_SOURCE})
+add_library(delta OBJECT ${DELTA_HEADERS} ${DELTA_SOURCE})
 target_link_libraries(delta PRIVATE LibXml2::LibXml2 srcML::LibsrcML)
