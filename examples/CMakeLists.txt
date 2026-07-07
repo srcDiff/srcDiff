@@ -10,6 +10,7 @@
 
 # Turn ON/OFF building examples
 option(BUILD_EXAMPLES "Build examples usage files for libsrcdiff" OFF)
+
 if(BUILD_ALL)
     set(BUILD_EXAMPLES ON)
 endif()

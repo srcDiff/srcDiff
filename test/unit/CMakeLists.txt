@@ -12,7 +12,7 @@ include_directories(utils)
 
 find_package(srcML REQUIRED)
 find_package(LibXml2 REQUIRED)
-
+find_package(Boost REQUIRED)
 
 macro(add_unit_test TEST_FILE)
 

@@ -7,14 +7,28 @@
 # This file is part of the srcDiff Infrastructure.
 #
 
+option(BUILD_ALL_TESTS    "Build all suite and unit tests" OFF)
+option(BUILD_SUITE_TESTS  "Build all suite tests" ON)
+option(BUILD_CLIENT_TESTS "Build all client tests"  ON)
+option(BUILD_UNIT_TESTS   "Build all unit tests"  OFF)
+
+if(BUILD_ALL OR BUILD_ALL_TESTS)
+    set(BUILD_SUITE_TESTS ON)
+    set(BUILD_CLIENT_TESTS ON)
+    set(BUILD_UNIT_TESTS ON)
+endif()
+
 # include sub directories
+if(BUILD_SUITE_TESTS)
+    add_subdirectory(src)
+endif()
+
 if(BUILD_UNIT_TESTS)
     add_subdirectory(unit)
 endif()
 
-if(BUILD_TRANSLATOR_TESTS)
-    add_subdirectory(src)
-endif()
+## @todo Push down to appropriate directory
+if(BUILD_SUITE_TESTS)
 
 # copy test suite over to build directory, so tests run from that directory
 set(TEST_SUITE "test_suite.py")
@@ -35,3 +49,5 @@ add_custom_target(suite
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
 add_dependencies(suite srcdiff archive_reader switch_differences)
+
+endif()

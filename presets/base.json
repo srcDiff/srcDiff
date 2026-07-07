@@ -44,8 +44,9 @@
       "name": "ci-base",
       "hidden": true,
       "cacheVariables": {
-        "BUILD_UNIT_TESTS": "ON",
-        "BUILD_TRANSLATOR_TESTS": "ON"
+        "BUILD_SUITE_TESTS":  "ON",
+        "BUILD_CLIENT_TESTS": "ON",
+        "BUILD_UNIT_TESTS":   "OFF"
       }
     },
     {
@@ -83,8 +84,8 @@
       "targets": ["install-package"]
     },
     {
-      "name": "ci-test-unit",
-      "description": "Unit Tests",
+      "name": "ci-test-client",
+      "description": "Client Tests",
       "hidden": true,
       "targets": ["test"]
     },

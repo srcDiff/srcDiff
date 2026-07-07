@@ -52,10 +52,6 @@ enable_testing()
 
 option(BUILD_ALL "Build all tests and examples (to be implemented)" OFF)
 
-option(BUILD_UNIT_TESTS "Build all unit tests" ON)
-option(BUILD_TRANSLATOR_TESTS "Build all translator tests" ON)
-option(BUILD_EXAMPLES "Build srcDiff library examples" ON)
-
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMake)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 20)
@@ -86,10 +82,8 @@ add_subdirectory(doc)
 # packaging
 add_subdirectory(package)
 
-if(BUILD_TRANSLATOR_TESTS OR BUILD_UNIT_TESTS)
-    add_subdirectory(test)
-endif()
+# testing
+add_subdirectory(test)
 
-if(BUILD_EXAMPLES)
-    add_subdirectory(examples)
-endif()
+# exmaples
+add_subdirectory(examples)
