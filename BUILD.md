@@ -23,7 +23,7 @@ Before running CMake, ensure your system has all required build tools and projec
 * **Ninja:** Used as the primary build generator for the CI presets.
 * **Git:** Required for CMake to fetch internal dependencies like CLI11.
 * **libxml2:** Required for XML parsing.
-* **Boost:** Required for various utility functions.
+* **Boost (Optional):** For testing.
 
 ### Unix-based (Linux & macOS)
 
@@ -74,7 +74,7 @@ On Windows, `vcpkg` is heavily integrated into the CMake presets to handle depen
 
 ```powershell
 cd C:/your/chosen/install/location
-git clone [https://github.com/microsoft/vcpkg.git](https://github.com/microsoft/vcpkg.git)
+git clone https://github.com/microsoft/vcpkg.git
 cd vcpkg
 ./bootstrap-vcpkg.bat
 # Set the required VCPKG_ROOT environment variable to the current directory.
@@ -106,7 +106,7 @@ cd build/bin
 ```
 
 #### Alternative: Compile with MSVC
-You can also build srcDiff with Microsoft's compiler and build tools. First, ensure you have installed Visual Studio 17 (2022) with C++ development tools from [Microsoft's website](https://learn.microsoft.com/en-us/visualstudio/releases/2022/release-notes).
+You can also build srcDiff with Microsoft's compiler and build tools. First, ensure you have installed Visual Studio 2026 with C++ development tools from [Microsoft's website](https://learn.microsoft.com/en-us/visualstudio/releases/2026/release-notes).
 
 Then, configure and run the build using the MSVC preset:
 
@@ -116,3 +116,14 @@ cmake --build ./build/
 ```
 
 The compiled executable will be located in `build/bin/Debug/` (or `Release/` depending on your configuration).
+
+## Running Tests (Optional)
+The unit tests require **Boost**. If Boost is installed on your system, CMake will automatically detect it and configure the test suite.
+
+```bash
+# Configure with tests enabled (if Boost is found)
+cmake --preset ci-debian/ci-rhel/ci-macos
+
+# Build and run the test suite
+cmake --build ./build/ --target test
+```
