@@ -8,4 +8,4 @@
 
 ## Build Instructions
 
-For details on compiling and installation, please refer to [build.md](build.md).
+For details on compiling and installation, please refer to [BUILD.md](BUILD.md).
