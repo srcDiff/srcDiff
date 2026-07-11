@@ -13,6 +13,7 @@
 #include <shortest_edit_script.h>
 
 #include <string>
+#include <cstring>
 #include <cctype>
 
 #include <libxml/xmlreader.h>
