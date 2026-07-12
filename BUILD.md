@@ -1,10 +1,6 @@
-# srcDiff
-
-srcDiff is a syntactical differencer built off of the srcML infrastructure.
-
 ## Getting the Source Code
 
-Because srcDiff relies on the `srcSAX` module, you must clone the repository with its submodules.
+srcDiff relies on the [`srcSAX`](https://github.com/srcML/srcSAX) module. Therefore, you must clone the repository with its submodules.
 
 ```bash
 git clone --recurse-submodules https://github.com/srcDiff/srcDiff
@@ -12,6 +8,7 @@ cd srcDiff
 ```
 
 *(If you already cloned without submodules, you can fetch them by running `git submodule update --init --recursive` inside the repository root).*
+
 ## Building srcDiff
 
 ### Prerequisites
@@ -20,57 +17,62 @@ Before running CMake, ensure your system has all required build tools and projec
 #### Build Tools
 * **CMake:** Version 3.28 or higher is required.
 * **C++ Compiler:** Must support C++20.
-* **Ninja:** Used as the primary build generator for the CI presets.
-* **Git:** Required for CMake to fetch internal dependencies like CLI11.
+* **Ninja:** Used as the primary build generator. 
+* **Git:** Required for cloning and for CMake to fetch internal dependencies like CLI11.
 
 #### Libraries
 * **srcML:** please refer to the official build instructions here: [https://github.com/srcML/srcML/blob/develop/BUILD.md](https://github.com/srcML/srcML/blob/develop/BUILD.md).
 * **libxml2:** Required for XML parsing.
-* **Boost (Optional):** For testing.
+* **Boost (Optional):** Required only if you plan on running the unit test suite.
 
 ### Unix-based (Linux & macOS)
 
 **Ubuntu or Debian-based OS:**
+*(Note: The command below is an example using Clang. You can substitute your preferred compiler as long as it is recent enough to support C++20).*
 ```bash
 sudo apt update
-sudo apt install -y cmake git clang ninja-build libxml2-dev libboost-all-dev
+sudo apt install -y cmake git clang ninja-build libxml2-dev
 ```
 
 **Fedora or RPM-based OS (RHEL/CentOS):**
 ```bash
-sudo dnf install -y cmake git clang ninja-build libxml2-devel boost-devel
+dnf install -y cmake git clang ninja-build libxml2-devel
 ```
 
 **macOS:**
-*(Requires Homebrew)*
+*(Requires Xcode Command Line Tools and Homebrew)*
 ```bash
-brew install cmake git llvm ninja libxml2 boost
+xcode-select --install
+brew install cmake ninja libxml2
 ```
 
 #### Unix Build Instructions
-Once the system dependencies and `srcML` are installed, use the built-in CMake presets to configure and build. In the repository root directory, run the commands corresponding to your OS. A `build` directory will be created automatically.
+Once the system dependencies and `srcML` are installed, use the built-in CMake presets to configure and build. Run these commands from the **root of the `srcDiff` repository**. The configuration preset will automatically create the `build` directory for you.
+
+> **Note:** The presets below configure the standard build. If you want to build with testing enabled, you can prepend `ci-` to your preset (e.g., `ci-debian`, `ci-macos`).
 
 **Ubuntu or Debian-based OS:**
 ```bash
-cmake --preset ci-debian
-cmake --build ./build/
+# Ensure you are in the srcDiff root directory
+cmake --preset debian   # This generates the 'build' directory
+cmake --build build
 ```
 
 **Fedora or RPM-based OS (RHEL/CentOS):**
 ```bash
-cmake --preset ci-rhel
-cmake --build ./build/
+cmake --preset rhel
+cmake --build build
 ```
 
 **macOS:**
 ```bash
-cmake --preset ci-macos
-cmake --build ./build/
+cmake --preset macos
+cmake --build build
 ```
 
 ### Windows
 
-On Windows, `vcpkg` is heavily integrated into the CMake presets to handle dependencies (like Boost, libxml2, and CLI11). 
+On Windows, `vcpkg` is heavily integrated into the CMake presets to handle dependencies (like libxml2 and CLI11). 
 
 #### 1. Setup vcpkg
 [This is the official guide to installing vcpkg](https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-cmd#1---set-up-vcpkg). Following these steps is sufficient to install vcpkg for this build:
@@ -98,8 +100,8 @@ The recommended way to build srcDiff on Windows is with Clang and Ninja. Once vc
 
 ```powershell
 # Return to the srcDiff repository root
-cmake -S ./ -B ./build --preset windows
-cmake --build ./build/
+cmake -S ./ -B build --preset windows
+cmake --build build
 ```
 
 The compiled executable will be located in `build/bin`:
@@ -114,19 +116,26 @@ You can also build srcDiff with Microsoft's compiler and build tools. First, ens
 Then, configure and run the build using the MSVC preset:
 
 ```powershell
-cmake -S ./ -B ./build --preset windows-msvc
-cmake --build ./build/
+cmake -S ./ -B build --preset windows-msvc
+cmake --build build
 ```
 
 The compiled executable will be located in `build/bin/Debug/` (or `Release/` depending on your configuration).
 
 ## Running Tests (Optional)
-The unit tests require **Boost**. If Boost is installed on your system, CMake will automatically detect it and configure the test suite.
 
+Testing requires **Boost** (e.g., `libboost-all-dev` on Debian/Ubuntu, `boost-devel` on Fedora/RHEL, `boost` on macOS, or via `vcpkg` on Windows). If Boost is installed on your system and you used a testing preset (like `ci-debian`), CMake will automatically detect it and configure the test suite.
+
+Once configured, you can run the following test suites directly from the build directory:
+
+**Run Differencing Tests:**
 ```bash
-# Configure with tests enabled (if Boost is found)
-cmake --preset ci-debian/ci-rhel/ci-macos
+# Ensure you are in the srcDiff root directory
+ninja -C build suite
+```
 
-# Build and run the test suite
-cmake --build ./build/ --target test
+**Run Unit Tests:**
+```bash
+cd build
+ctest
 ```
