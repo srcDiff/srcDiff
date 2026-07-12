@@ -17,11 +17,14 @@ cd srcDiff
 ### Prerequisites
 Before running CMake, ensure your system has all required build tools and project libraries installed.
 
-* **srcML:** please refer to the official build instructions here: [https://github.com/srcML/srcML/blob/develop/BUILD.md](https://github.com/srcML/srcML/blob/develop/BUILD.md).
+#### Build Tools
 * **CMake:** Version 3.28 or higher is required.
 * **C++ Compiler:** Must support C++20.
 * **Ninja:** Used as the primary build generator for the CI presets.
 * **Git:** Required for CMake to fetch internal dependencies like CLI11.
+
+#### Libraries
+* **srcML:** please refer to the official build instructions here: [https://github.com/srcML/srcML/blob/develop/BUILD.md](https://github.com/srcML/srcML/blob/develop/BUILD.md).
 * **libxml2:** Required for XML parsing.
 * **Boost (Optional):** For testing.
 
