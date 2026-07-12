@@ -18,7 +18,7 @@ Before running CMake, ensure your system has all required build tools and projec
 * **CMake:** Version 3.28 or higher is required.
 * **C++ Compiler:** Must support C++20.
 * **Ninja:** Used as the primary build generator. 
-* **Git:** Required for cloning and for CMake to fetch internal dependencies like CLI11.
+* Note: **Git:** Is used by CMake to fetch internal dependencies like CLI11.
 
 #### Libraries
 * **srcML:** please refer to the official build instructions here: [https://github.com/srcML/srcML/blob/develop/BUILD.md](https://github.com/srcML/srcML/blob/develop/BUILD.md).
@@ -27,18 +27,6 @@ Before running CMake, ensure your system has all required build tools and projec
 
 ### Unix-based (Linux & macOS)
 
-**Ubuntu or Debian-based OS:**
-*(Note: The command below is an example using Clang. You can substitute your preferred compiler as long as it is recent enough to support C++20).*
-```bash
-sudo apt update
-sudo apt install -y cmake git clang ninja-build libxml2-dev
-```
-
-**Fedora or RPM-based OS (RHEL/CentOS):**
-```bash
-dnf install -y cmake git clang ninja-build libxml2-devel
-```
-
 **macOS:**
 *(Requires Xcode Command Line Tools and Homebrew)*
 ```bash
@@ -46,10 +34,28 @@ xcode-select --install
 brew install cmake ninja libxml2
 ```
 
+**Ubuntu or Debian-based OS:**
+*(Note: The command below is an example using Clang. You can substitute your preferred compiler as long as it is recent enough to support C++20).*
+```bash
+sudo apt update
+sudo apt install -y cmake clang ninja-build libxml2-dev
+```
+
+**Fedora or RPM-based OS (RHEL/CentOS):**
+```bash
+dnf install -y cmake clang ninja-build libxml2-devel
+```
+
 #### Unix Build Instructions
 Once the system dependencies and `srcML` are installed, use the built-in CMake presets to configure and build. Run these commands from the **root of the `srcDiff` repository**. The configuration preset will automatically create the `build` directory for you.
 
-> **Note:** The presets below configure the standard build. If you want to build with testing enabled, you can prepend `ci-` to your preset (e.g., `ci-debian`, `ci-macos`).
+> **Note:** The presets below configure the standard build. If you want to build with testing enabled, you can prepend `ci-` to your preset (e.g., change `macos` to `ci-macos`).
+
+**macOS:**
+```bash
+cmake --preset macos
+cmake --build build
+```
 
 **Ubuntu or Debian-based OS:**
 ```bash
@@ -64,14 +70,7 @@ cmake --preset rhel
 cmake --build build
 ```
 
-**macOS:**
-```bash
-cmake --preset macos
-cmake --build build
-```
-
 ### Windows
-
 On Windows, `vcpkg` is heavily integrated into the CMake presets to handle dependencies (like libxml2 and CLI11). 
 
 #### 1. Setup vcpkg
