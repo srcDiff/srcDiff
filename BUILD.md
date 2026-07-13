@@ -122,18 +122,23 @@ cmake --build build
 The compiled executable will be located in `build/bin/Debug/` (or `Release/` depending on your configuration).
 
 ## Running Tests (Optional)
+Testing requires **Boost** (e.g., `boost` on macOS, `libboost-all-dev` on Debian/Ubuntu, `boost-devel` on Fedora/RHEL, or via `vcpkg` on Windows). 
 
-Testing requires **Boost** (e.g., `libboost-all-dev` on Debian/Ubuntu, `boost-devel` on Fedora/RHEL, `boost` on macOS, or via `vcpkg` on Windows). If Boost is installed on your system and you used a testing preset (like `ci-debian`), CMake will automatically detect it and configure the test suite.
+To configure and build srcDiff with testing, run CMake with a `ci-*` preset (e.g., `ci-macos`).
 
-Once configured, you can run the following test suites directly from the build directory:
+srcDiff testing consists of:
+* Delta Testsuite - A suite of tests that check correct delta generation.
+* Unit Testsuite - A unit testing suite for srcDiff classes/methods/functions.
 
-**Run Differencing Tests:**
+The following shows how to execute each type of srcDiff testing.
+
+**Delta Testsuite:**
 ```bash
 # Ensure you are in the srcDiff root directory
 ninja -C build suite
 ```
 
-**Run Unit Tests:**
+**Unit Testsuite:**
 ```bash
 cd build
 ctest
