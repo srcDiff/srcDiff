@@ -23,7 +23,7 @@
       "displayName": "Windows (with Clang, Ninja, and vcpkg)",
       "description": "Default build options for Windows",
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Windows" },
-      "inherits": ["clang", "windows-base"],
+      "inherits": ["windows-base"],
       "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_CXX_FLAGS": "-DWIN32 -D_MSC_BUILD",

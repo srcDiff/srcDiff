@@ -14,7 +14,7 @@
   "configurePresets": [
     {
       "name": "debian-base",
-      "inherits": ["gcc", "subdirectory-build"],
+      "inherits": ["unix", "subdirectory-build"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "displayName": "Debian Release",
       "description": "Default build options for Debian release",

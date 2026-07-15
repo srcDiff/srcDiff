@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: GPL-3.0-only
 ##
-# @file toolchain-macos.cmake
+# @file toolchain-unix.cmake
 #
-# @copyright Copyright (C) 2024 srcML, LLC. (www.srcDiff.org)
+# @copyright Copyright (C) 2024-2026 srcML, LLC. (www.srcDiff.org)
 # This file is part of the srcDiff translator.
 
-# MacOS-specific tool configuration
+# Unix-specific tool configuration
 
 set(CMAKE_OPTIMIZE_DEPENDENCIES ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)

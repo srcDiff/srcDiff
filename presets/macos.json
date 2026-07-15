@@ -14,7 +14,7 @@
   "configurePresets": [
     {
       "name": "macos-base",
-      "inherits": ["clang", "subdirectory-build"],
+      "inherits": ["unix", "subdirectory-build"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Darwin" },
       "displayName": "macOS Release",
       "description": "Default build options for macOS release",

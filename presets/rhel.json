@@ -14,7 +14,7 @@
   "configurePresets": [
     {
       "name": "rhel-base",
-      "inherits": ["gcc", "subdirectory-build"],
+      "inherits": ["unix", "subdirectory-build"],
       "condition": { "type": "equals", "lhs": "${hostSystemName}", "rhs": "Linux" },
       "displayName": "GCC Release",
       "description": "Default build options for GCC release",
