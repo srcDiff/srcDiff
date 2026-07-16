@@ -35,15 +35,14 @@ brew install cmake ninja libxml2
 ```
 
 **Ubuntu or Debian-based OS:**
-*(Note: The command below is an example using Clang. You can substitute your preferred compiler as long as it is recent enough to support C++20).*
 ```bash
 sudo apt update
-sudo apt install -y cmake clang ninja-build libxml2-dev
+sudo apt install -y cmake build-essential ninja-build libxml2-dev
 ```
 
 **Fedora or RPM-based OS (RHEL/CentOS):**
 ```bash
-dnf install -y cmake clang ninja-build libxml2-devel
+dnf install -y cmake gcc gcc-c++ ninja-build libxml2-devel
 ```
 
 #### Unix Build Instructions
