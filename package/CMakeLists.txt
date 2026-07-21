@@ -58,12 +58,12 @@ set(CPACK_ARCHIVE_COMPONENT_INSTALL ON)
 # for installers that let you pick what to install
 # Development group, SRCDIFFDEV, is composed of multiple components
 include(CPackComponent)
-cpack_add_install_type(CLIENT DISPLAY_NAME "srcdiff cli")
+cpack_add_install_type(CLIENT DISPLAY_NAME "srcdiff client")
 cpack_add_install_type(DEVELOPER DISPLAY_NAME "development")
 
 cpack_add_component(SRCDIFF
                     DISPLAY_NAME "srcdiff"
-                    DESCRIPTION "srcdiff cli program with required libraries"
+                    DESCRIPTION "srcdiff client program with required libraries"
                     REQUIRED
                     INSTALL_TYPES CLIENT DEVELOPER)
 
@@ -80,8 +80,8 @@ set(CPACK_RESOURCE_FILE_README ${CMAKE_BINARY_DIR}/README.txt)
 set(SRCDIFF_TEST_TIMEOUT 5 CACHE STRING "ctest timeout in seconds")
 function(add_workflow_test_targets binary_dir output_directory package_file_name)
 
-    # Target for cli tests
-    add_custom_target(cli
+    # Target for client tests
+    add_custom_target(client
         WORKING_DIRECTORY ${binary_dir}
         COMMAND ${CMAKE_CTEST_COMMAND} -R ^srcdiff --timeout ${SRCDIFF_TEST_TIMEOUT} --output-log ${output_directory}/${package_file_name}-client.log || true
     )
