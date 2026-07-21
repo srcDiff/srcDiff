@@ -92,6 +92,12 @@ function(add_workflow_test_targets binary_dir output_directory package_file_name
         COMMAND ${CMAKE_CTEST_COMMAND} -R ^unit --timeout ${SRCDIFF_TEST_TIMEOUT} --output-log ${output_directory}/${package_file_name}-unit.log || true
     )
 
+    # Target for stress tests
+    add_custom_target(stress
+        WORKING_DIRECTORY ${binary_dir}
+        COMMAND bash stress_test.sh git@github.com:git/git.git master git@github.com:git/git.git maint || true
+    )
+
 endfunction()
 
 # Generators are defined in the *.cpack files
