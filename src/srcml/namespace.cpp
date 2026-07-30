@@ -62,7 +62,12 @@ name_spaces::name_spaces() : namespaces() {
 }
 
 void name_spaces::init(const srcml_archive* archive) {
-
+  size_t ns_size = srcml_archive_get_namespace_size(archive);
+  for(int ns = 0; ns < ns_size; ++ns) {
+    std::string uri = srcml_archive_get_namespace_uri(archive, ns);
+    if(uri == SRC_URI) continue;
+    update(uri, srcml_archive_get_namespace_prefix(archive, ns));
+  }
 }
 
 std::shared_ptr<name_space> name_spaces::get_src_ns() {
@@ -73,11 +78,18 @@ std::shared_ptr<name_space> name_spaces::get_diff_ns() {
   return namespaces.at(DIFF_URI);
 }
 
+void name_spaces::update(const std::string& uri, const std::string& prefix) {
+  namespaces_citr citr = namespaces.find(uri);
+  if(citr == namespaces.end()) {
+    citr = namespaces.emplace(std::make_pair(uri, std::make_shared<name_space>(uri, prefix))).first;
+  }
+  citr->second->set_prefix(prefix);
+}
+
 std::shared_ptr<name_space> name_spaces::get_namespace(xmlNsPtr ns) {
 
   if(!ns) return get_src_ns();
 
-  typedef std::unordered_map<std::string, std::shared_ptr<name_space>>::const_iterator namespaces_citr;
   namespaces_citr citr = namespaces.find((const char *)ns->href);
   if(citr != namespaces.end()) return citr->second;
 

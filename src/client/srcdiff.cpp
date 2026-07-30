@@ -33,6 +33,7 @@ int main(int argc, char* argv[]) {
 
   // process command-line arguments
   const srcdiff::client_options& options = srcdiff::process_command_line(argc, argv);
+  srcML::name_spaces::namespace_registry.init(options.archive);
 
   bool is_view = options.is_option(srcdiff::OPTION_UNIFIED_VIEW | srcdiff::OPTION_SIDE_BY_SIDE_VIEW);
   try {

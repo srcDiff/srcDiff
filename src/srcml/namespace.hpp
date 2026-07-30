@@ -55,11 +55,15 @@ public:
         static std::shared_ptr<name_space> SRC_NAMESPACE;
         static name_spaces namespace_registry;
 
+        typedef std::unordered_map<std::string, std::shared_ptr<name_space>>::const_iterator namespaces_citr;
+
         name_spaces();
         void init(const srcml_archive* archive);
 
         std::shared_ptr<name_space> get_src_ns();
         std::shared_ptr<name_space> get_diff_ns();
+
+        void update(const std::string& uri, const std::string& prefix);
 
         std::shared_ptr<name_space> get_namespace(xmlNsPtr ns);
 
