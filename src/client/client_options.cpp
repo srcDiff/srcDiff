@@ -37,8 +37,7 @@ std::string get_version() {
   std::stringstream out;
 
   out << PROGRAM_NAME << " 0.1.0\n"
-    << "Using:\n"
-    << "libsrcml " << srcml_version_string() << "\n";
+      << "Using:\n" << "libsrcml " << srcml_version_string() << "\n";
 
   if(atoi(xmlParserVersion) == LIBXML_VERSION) {
     out << "libxml " << LIBXML_VERSION;
@@ -299,10 +298,8 @@ void option_parsing_method(const std::string & arg) {
 
   for(std::string method : methods) {
 
-    if(method == COLLECT_METHOD)            options.methods &= ~METHOD_RAW;
-    else if(method == RAW_METHOD)           options.methods |= METHOD_RAW;
-    else if(method == NO_GROUP_DIFF_METHOD) options.methods &= ~METHOD_GROUP;
-    else if(method == GROUP_DIFF_METHOD)    options.methods |= METHOD_GROUP;
+    if(method == NO_GROUP_DIFF_METHOD)   options.methods &= ~METHOD_GROUP;
+    else if(method == GROUP_DIFF_METHOD) options.methods |= METHOD_GROUP;
     else {
       throw CLI::ValidationError(method + " is not a valid parsing method");
     }
@@ -383,12 +380,6 @@ const client_options& process_command_line(int argc, char* argv[]) {
       "Specify output filename"
     )->default_val("-");
   
-  general_group->add_flag(
-    "-z,--compress",
-    option_flag_enable<OPTION_COMPRESS>,
-    "Compress the output"
-  );
-
   general_group->add_flag(
     "-v,--verbose",
     option_flag_enable<OPTION_VERBOSE>,
@@ -477,13 +468,6 @@ const client_options& process_command_line(int argc, char* argv[]) {
     "Example: --register-ext cxx=C++"
   );
 
-// TODO: should these attributes be added to the unit(s), or require --archive?
-  srcml_group->add_option_function<std::string>(
-    "--url",
-    option_srcml_string<URL>,
-    "Set the url attribute on the root XML element of the archive"
-  );
-
   srcml_group->add_option_function<std::string>(
     "-s,--src-version",
     option_srcml_string<SRC_VERSION>,
@@ -537,8 +521,8 @@ const client_options& process_command_line(int argc, char* argv[]) {
     "-m,--method",
     option_parsing_method,
     "Specify a list of parsing methods, separated by commas.\n"
-    "The options are collect, raw, group-diff and no-group-diff"
-  )->default_val("collect,group-diff")->force_callback();
+    "The options are group-diff and no-group-diff"
+  )->default_val("group-diff")->force_callback();
 
   // srcdiff_group->add_flag(
   //   "--disable-string-split",

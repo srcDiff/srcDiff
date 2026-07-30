@@ -307,7 +307,7 @@ void view_t::endDocument() {
 
   } else {
 
-    (*output) << "\x1b[0m";
+    (*output) << theme->common_color;
 
   }
 

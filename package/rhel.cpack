@@ -68,7 +68,6 @@ unset(BASE_DEVLIBS_FILE_NAME)
 # SRCDIFF package is main, so no extension is added
 set(CPACK_RPM_MAIN_COMPONENT SRCDIFF)
 
-
 set(CPACK_RPM_DEVLIBS_PACKAGE_REQUIRES "${CPACK_PACKAGE_NAME} >= ${PROJECT_VERSION}")
 
 # Homepage URLs
@@ -103,6 +102,9 @@ set(CPACK_RPM_EXCLUDE_FROM_AUTO_FILELIST_ADDITION ${CMAKE_INSTALL_MANDIR}/man1 $
         /usr/local /usr/local/include /usr/local/lib64 /usr/local/bin /usr/local/man /usr/local/man/man1 
         /usr/local/share /usr/local/share/man /usr/local/share/man/man1 /usr/share/man /usr/share/man/man1
         /usr/share/man1)
+
+# Targets for workflow testing
+add_workflow_test_targets(${CMAKE_BINARY_DIR} ${CPACK_OUTPUT_FILE_PREFIX} ${BASE_SRCDIFF_FILE_NAME})
 
 # Targets for installing generated packages
 add_custom_target(install-package

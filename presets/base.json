@@ -55,9 +55,10 @@
       "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
-        "BUILD_SUITE_TESTS":  "ON",
         "BUILD_CLIENT_TESTS": "ON",
-        "BUILD_UNIT_TESTS":   "ON"
+        "BUILD_UNIT_TESTS":   "ON",
+        "BUILD_DELTA_TESTS":  "ON",
+        "BUILD_STRESS_TESTS": "ON"
       }
     },
     {
@@ -80,13 +81,19 @@
       "name": "ci-test-client",
       "description": "Client Tests",
       "hidden": true,
-      "targets": ["test"]
+      "targets": ["client"]
     },
     {
-      "name": "ci-test-suite",
-      "description": "Suite Tests",
+      "name": "ci-test-unit",
+      "description": "Unit Tests",
       "hidden": true,
-      "targets": ["suite"]
+      "targets": ["unit"]
+    },
+    {
+      "name": "ci-test-delta",
+      "description": "Delta Tests",
+      "hidden": true,
+      "targets": ["delta"]
     }
   ],
 

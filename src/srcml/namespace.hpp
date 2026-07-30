@@ -28,7 +28,7 @@ namespace srcML {
     public:
 
         name_space(const std::string & uri = std::string(),
-                        const std::optional<std::string> & prefix = std::optional<std::string>());
+                   const std::optional<std::string> & prefix = std::optional<std::string>());
         name_space(const name_space & ns);
         name_space(xmlNsPtr ns);
 

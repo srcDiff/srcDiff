@@ -59,8 +59,12 @@
       "inherits": ["ci-test-client", "ci-rhel"]
     },
     {
-      "name": "ci-test-suite-rhel",
-      "inherits": ["ci-test-suite", "ci-rhel"]
+      "name": "ci-test-unit-rhel",
+      "inherits": ["ci-test-unit", "ci-rhel"]
+    },
+    {
+      "name": "ci-test-delta-rhel",
+      "inherits": ["ci-test-delta", "ci-rhel"]
     }
   ],
 
@@ -84,8 +88,9 @@
         { "type": "build",     "name": "ci-rhel" },
         { "type": "package",   "name": "ci-rhel" },
         { "type": "build",     "name": "ci-install-package-rhel" },
-        { "type": "build",     "name": "ci-test-client-rhel" },
-        { "type": "build",     "name": "ci-test-suite-rhel" }
+        { "type": "build",     "name": "ci-test-client-rhel"     },
+        { "type": "build",     "name": "ci-test-unit-rhel"       },
+        { "type": "build",     "name": "ci-test-delta-rhel"      }
       ]
     }
   ]
