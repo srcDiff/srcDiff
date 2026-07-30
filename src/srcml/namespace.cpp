@@ -9,12 +9,12 @@
 
 #include <namespace.hpp>
 
+#include <iostream>
 #include <string>
 #include <optional>
 #include <memory>
 #include <map>
 #include <unordered_map>
-
 
 #include <srcml.h>
 
@@ -22,8 +22,7 @@ namespace srcML {
 
 name_space::name_space(const std::string & uri, const std::optional<std::string> & prefix) : uri(uri), prefix(prefix) {}
 
-name_space::name_space(xmlNsPtr ns) 
-  : uri(), prefix() {
+name_space::name_space(xmlNsPtr ns) : uri(), prefix() {
 
     if(!ns) return;
 
