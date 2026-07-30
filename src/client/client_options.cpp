@@ -246,13 +246,12 @@ void option_srcml_string<XMLNS>(const std::string & arg) {
   std::string::size_type pos = arg.find('=');
   if(pos == std::string::npos) {
     srcml_archive_register_namespace(options.archive, "", arg.c_str());
-  }
-  else {
-    srcml_archive_register_namespace(
-      options.archive,
-      arg.substr(0, pos).c_str(),
-      arg.substr(pos + 1, std::string::npos).c_str()
-    );
+  } else {
+      srcml_archive_register_namespace(
+        options.archive,
+        arg.substr(0, pos).c_str(),
+        arg.substr(pos + 1, std::string::npos).c_str()
+      );
   }
 
 }

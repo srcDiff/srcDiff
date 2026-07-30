@@ -12,17 +12,17 @@
 #include <optional>
 #include <string>
 
-srcML::attribute::attribute(xmlAttrPtr attribute)
+namespace srcML {
+
+attribute::attribute(xmlAttrPtr attribute)
     : name((const char *)attribute->name),
       value(attribute->children && attribute->children->content ? std::string((const char *)attribute->children->content) : std::optional<std::string>()),
-      ns(srcML::name_space::get_namespace(attribute->ns)) {}
+      ns(name_spaces::namespace_registry.get_namespace(attribute->ns)) {}
 
-srcML::attribute::attribute(
-    const std::string & name,
-    std::shared_ptr<srcML::name_space> ns,
-    std::optional<std::string> value) : name(name), value(value), ns(ns) {}
+attribute::attribute(const std::string& name, std::shared_ptr<name_space> ns, const std::optional<std::string>& value)
+    : name(name), value(value), ns(ns) {}
 
-void srcML::attribute::merge(const srcML::attribute & that) {
+void attribute::merge(const attribute& that) {
     assert(this->get_name() == that.get_name());
     assert(this->get_ns() == that.get_ns());
     if(*this->get_value() != *that.get_value()) {
@@ -30,37 +30,39 @@ void srcML::attribute::merge(const srcML::attribute & that) {
     }
 }
 
-void srcML::attribute::set_value(const std::optional<std::string> & input) {
+void attribute::set_value(const std::optional<std::string>& input) {
     value = input;
 }
 
-std::string srcML::attribute::full_name() const {
+std::string attribute::full_name() const {
     if(ns && ns->get_prefix()) return *ns->get_prefix() + ":" + name;
     return name;
 }
 
-std::ostream & srcML::operator<<(std::ostream & out, const srcML::attribute & that) {
+std::ostream& operator<<(std::ostream& out, const attribute& that) {
     out << that.full_name();
     if(that.get_value().has_value()) out << "=" << that.get_value().value();
     return out;
 }
 
-bool srcML::attribute::operator==(const attribute & that) const {
+bool attribute::operator==(const attribute& that) const {
     return ns == that.ns && name == that.name && value == that.value;
 }
 
-bool srcML::attribute::operator!=(const attribute & that) const {
+bool attribute::operator!=(const attribute& that) const {
     return !this->operator==(that);
 }
 
-const std::string & srcML::attribute::get_name() const {
+const std::string& attribute::get_name() const {
     return name;
 }
 
-std::shared_ptr<srcML::name_space> srcML::attribute::get_ns() const {
+std::shared_ptr<name_space> attribute::get_ns() const {
     return ns;
 }
 
-const std::optional<std::string> & srcML::attribute::get_value() const {
+const std::optional<std::string>& attribute::get_value() const {
     return value;
+}
+
 }

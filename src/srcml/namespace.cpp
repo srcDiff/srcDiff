@@ -18,19 +18,11 @@
 
 #include <srcml.h>
 
-std::shared_ptr<srcML::name_space> srcML::name_space::SRC_NAMESPACE = std::make_shared<srcML::name_space>("http://www.srcML.org/srcML/src");
+namespace srcML {
 
-std::shared_ptr<srcML::name_space> srcML::name_space::CPP_NAMESPACE = std::make_shared<srcML::name_space>("http://www.srcML.org/srcML/cpp", "cpp");
+name_space::name_space(const std::string & uri, const std::optional<std::string> & prefix) : uri(uri), prefix(prefix) {}
 
-std::shared_ptr<srcML::name_space> srcML::name_space::POS_NAMESPACE = std::make_shared<srcML::name_space>("http://www.srcML.org/srcML/position", "pos");
-
-std::shared_ptr<srcML::name_space> srcML::name_space::DIFF_NAMESPACE = std::make_shared<srcML::name_space>("http://www.srcML.org/srcDiff", "diff");
-
-std::unordered_map<std::string, std::shared_ptr<srcML::name_space>> srcML::name_space::namespaces = {};
-
-srcML::name_space::name_space(const std::string & uri, const std::optional<std::string> & prefix) : uri(uri), prefix(prefix) {}
-
-srcML::name_space::name_space(xmlNsPtr ns) 
+name_space::name_space(xmlNsPtr ns) 
   : uri(), prefix() {
 
     if(!ns) return;
@@ -39,43 +31,58 @@ srcML::name_space::name_space(xmlNsPtr ns)
     if(ns->prefix) prefix = std::string((const char *)ns->prefix);
 }
 
-srcML::name_space::name_space(const name_space & ns) 
+name_space::name_space(const name_space & ns) 
   : uri(ns.uri), prefix(ns.prefix) {}
 
-std::string srcML::name_space::get_uri() const {
+std::string name_space::get_uri() const {
   return uri;
 }
 
-std::optional<std::string> srcML::name_space::get_prefix() const {
+std::optional<std::string> name_space::get_prefix() const {
   return prefix;
 }
 
-void srcML::name_space::set_uri(std::string input) {
+void name_space::set_uri(std::string input) {
   uri = input;
 }
 
-void srcML::name_space::set_prefix(std::optional<std::string> input) {
+void name_space::set_prefix(std::optional<std::string> input) {
   prefix = input;
 }
 
-std::shared_ptr<srcML::name_space> srcML::name_space::get_namespace(xmlNsPtr ns) {
+std::string name_spaces::SRC_URI = "http://www.srcML.org/srcML/src";
+std::string name_spaces::DIFF_URI = "http://www.srcML.org/srcDiff";
 
-  static bool init_namespace = true;
+std::shared_ptr<name_space> name_spaces::SRC_NAMESPACE = std::make_shared<name_space>(SRC_URI);
+name_spaces name_spaces::namespace_registry;
 
-  if(init_namespace) {
-      namespaces.emplace(std::make_pair("http://www.srcML.org/srcML/src", srcML::name_space::SRC_NAMESPACE));
-      namespaces.emplace(std::make_pair("http://www.srcML.org/srcML/cpp", srcML::name_space::CPP_NAMESPACE));
-      namespaces.emplace(std::make_pair("http://www.srcML.org/srcML/cpp", srcML::name_space::POS_NAMESPACE));
-      namespaces.emplace(std::make_pair("http://www.srcML.org/srcDiff",   srcML::name_space::DIFF_NAMESPACE));
-      init_namespace = false;
-  }
+name_spaces::name_spaces() : namespaces() {
+  namespaces.emplace(std::make_pair(SRC_URI,  SRC_NAMESPACE));
+  namespaces.emplace(std::make_pair(DIFF_URI, std::make_shared<name_space>(DIFF_URI, "diff")));
+}
 
-  if(!ns) return SRC_NAMESPACE;
+void name_spaces::init(const srcml_archive* archive) {
 
-  typedef std::unordered_map<std::string, std::shared_ptr<srcML::name_space>>::const_iterator namespaces_citr;
+}
+
+std::shared_ptr<name_space> name_spaces::get_src_ns() {
+  return namespaces.at(SRC_URI);
+}
+
+std::shared_ptr<name_space> name_spaces::get_diff_ns() {
+  return namespaces.at(DIFF_URI);
+}
+
+std::shared_ptr<name_space> name_spaces::get_namespace(xmlNsPtr ns) {
+
+  if(!ns) return get_src_ns();
+
+  typedef std::unordered_map<std::string, std::shared_ptr<name_space>>::const_iterator namespaces_citr;
   namespaces_citr citr = namespaces.find((const char *)ns->href);
   if(citr != namespaces.end()) return citr->second;
 
-  namespaces_citr added_citr = namespaces.emplace(std::make_pair((const char *)ns->href, std::make_shared<srcML::name_space>(ns))).first;
+  namespaces_citr added_citr = namespaces.emplace(std::make_pair((const char *)ns->href, std::make_shared<name_space>(ns))).first;
   return added_citr->second;
+}
+
 }

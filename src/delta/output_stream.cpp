@@ -30,15 +30,15 @@ output_stream::output_stream(const METHOD_TYPE& method)
 void output_stream::initialize() {
 
   unit_tag            = std::make_shared<srcML::node>(srcML::node_type::START, std::string("unit"));
-  diff_common_start   = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_COMMON,   srcML::name_space::DIFF_NAMESPACE);
-  diff_common_end     = std::make_shared<srcML::node>(srcML::node_type::END,   DIFF_COMMON,   srcML::name_space::DIFF_NAMESPACE);
-  diff_original_start = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_ORIGINAL, srcML::name_space::DIFF_NAMESPACE);
-  diff_original_end   = std::make_shared<srcML::node>(srcML::node_type::END,   DIFF_ORIGINAL, srcML::name_space::DIFF_NAMESPACE);
-  diff_modified_start = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_MODIFIED, srcML::name_space::DIFF_NAMESPACE);
-  diff_modified_end   = std::make_shared<srcML::node>(srcML::node_type::END,   DIFF_MODIFIED, srcML::name_space::DIFF_NAMESPACE);
+  diff_common_start   = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_COMMON,   srcML::name_spaces::namespace_registry.get_diff_ns());
+  diff_common_end     = std::make_shared<srcML::node>(srcML::node_type::END,   DIFF_COMMON,   srcML::name_spaces::namespace_registry.get_diff_ns());
+  diff_original_start = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_ORIGINAL, srcML::name_spaces::namespace_registry.get_diff_ns());
+  diff_original_end   = std::make_shared<srcML::node>(srcML::node_type::END,   DIFF_ORIGINAL, srcML::name_spaces::namespace_registry.get_diff_ns());
+  diff_modified_start = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_MODIFIED, srcML::name_spaces::namespace_registry.get_diff_ns());
+  diff_modified_end   = std::make_shared<srcML::node>(srcML::node_type::END,   DIFF_MODIFIED, srcML::name_spaces::namespace_registry.get_diff_ns());
   
-  diff_ws_start = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_WHITESPACE, srcML::name_space::DIFF_NAMESPACE);
-  diff_ws_end   = std::make_shared<srcML::node>(srcML::node_type::END,   DIFF_WHITESPACE, srcML::name_space::DIFF_NAMESPACE);
+  diff_ws_start = std::make_shared<srcML::node>(srcML::node_type::START, DIFF_WHITESPACE, srcML::name_spaces::namespace_registry.get_diff_ns());
+  diff_ws_end   = std::make_shared<srcML::node>(srcML::node_type::END,   DIFF_WHITESPACE, srcML::name_spaces::namespace_registry.get_diff_ns());
 
   is_initialized = true;
 }

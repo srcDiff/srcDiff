@@ -43,7 +43,7 @@ namespace srcML {
     node(const xmlNode & node, xmlElementType xml_type);
     node(const std::string & text);
     node(const node & node);
-    node(node_type type, const std::string & name, const std::shared_ptr<name_space> & ns = name_space::SRC_NAMESPACE);
+    node(node_type type, const std::string & name, const std::shared_ptr<name_space> & ns = name_spaces::SRC_NAMESPACE);
 
     ~node();
 

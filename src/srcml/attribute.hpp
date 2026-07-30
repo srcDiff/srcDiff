@@ -27,29 +27,27 @@ namespace srcML {
 
         attribute(xmlAttrPtr attribute);
         attribute(const std::string & name = std::string(),
-                        std::shared_ptr<srcML::name_space> ns = srcML::name_space::SRC_NAMESPACE,
-                        std::optional<std::string> value = std::optional<std::string>());
+                  std::shared_ptr<name_space> ns = name_spaces::SRC_NAMESPACE,
+                  const std::optional<std::string>& value = std::optional<std::string>());
 
-        void merge(const attribute & that);
+        void merge(const attribute& that);
         std::string full_name() const;
-        void set_value(const std::optional<std::string> & input);
-        const std::string & get_name() const;
-        std::shared_ptr<srcML::name_space> get_ns() const;
-        const std::optional<std::string> & get_value() const;
+        void set_value(const std::optional<std::string>& input);
+        const std::string& get_name() const;
+        std::shared_ptr<name_space> get_ns() const;
+        const std::optional<std::string>& get_value() const;
 
-        friend std::ostream & operator<<(std::ostream & out, const attribute & that);
-        bool operator==(const attribute & that) const;
-        bool operator!=(const attribute & that) const;
+        friend std::ostream& operator<<(std::ostream& out, const attribute& that);
+        bool operator==(const attribute& that) const;
+        bool operator!=(const attribute& that) const;
 
     private:
-    
         std::string name;
         std::optional<std::string> value;
-        std::shared_ptr<srcML::name_space> ns;
-
+        std::shared_ptr<name_space> ns;
     };
 
-    std::ostream & operator<<(std::ostream & out, const attribute & that);
+    std::ostream& operator<<(std::ostream& out, const attribute& that);
 }
 
 #endif

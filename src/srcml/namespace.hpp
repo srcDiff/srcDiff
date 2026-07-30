@@ -38,13 +38,7 @@ namespace srcML {
         void set_uri(std::string input);
         void set_prefix(std::optional<std::string> input);
 
-        static std::shared_ptr<name_space> get_namespace(xmlNsPtr ns);
 
-        static std::shared_ptr<name_space> SRC_NAMESPACE;
-        static std::shared_ptr<name_space> CPP_NAMESPACE;
-        static std::shared_ptr<name_space> POS_NAMESPACE;
-        static std::shared_ptr<name_space> DIFF_NAMESPACE;
-        static std::unordered_map<std::string, std::shared_ptr<name_space>> namespaces;
 
     private:
     
@@ -52,6 +46,27 @@ namespace srcML {
         std::optional<std::string> prefix;
 
     };
-  
+ 
+class name_spaces {
+public:
+        static std::string SRC_URI;
+        static std::string DIFF_URI;
+
+        static std::shared_ptr<name_space> SRC_NAMESPACE;
+        static name_spaces namespace_registry;
+
+        name_spaces();
+        void init(const srcml_archive* archive);
+
+        std::shared_ptr<name_space> get_src_ns();
+        std::shared_ptr<name_space> get_diff_ns();
+
+        std::shared_ptr<name_space> get_namespace(xmlNsPtr ns);
+
+    private:
+        std::unordered_map<std::string, std::shared_ptr<name_space>> namespaces;
+
+    };
+
 }
 #endif
