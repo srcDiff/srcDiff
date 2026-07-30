@@ -21,7 +21,7 @@ define modified <<- 'SOURCE'
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:pos="http://www.srcML.org/srcML/position" xmlns:diff="http://www.srcML.org/srcDiff" revision="1.0.0" language="C++" filename="sub/a.cpp|sub/b.cpp" pos:tabs="8"><diff:delete type="replace"><expr_stmt start="1:1" end="1:2"><expr start="1:1" end="1:1"><name start="1:1" end="1:1">a</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt start="1:1" end="1:2"><expr start="1:1" end="1:1"><name start="1:1" end="1:1">b</name></expr>;</expr_stmt></diff:insert>
+	<unit xmlns="http://www.srcML.org/srcML/src" xmlns:pos="http://www.srcML.org/srcML/position" xmlns:diff="http://www.srcML.org/srcDiff" revision="1.0.0" language="C++" filename="sub/a.cpp|sub/b.cpp" pos:tabs="8"><diff:delete type="replace"><expr_stmt pos:start="1:1" pos:end="1:2"><expr pos:start="1:1" pos:end="1:1"><name pos:start="1:1" pos:end="1:1">a</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt pos:start="1:1" pos:end="1:2"><expr pos:start="1:1" pos:end="1:1"><name pos:start="1:1" pos:end="1:1">b</name></expr>;</expr_stmt></diff:insert>
 	</unit>
 	STDOUT
 

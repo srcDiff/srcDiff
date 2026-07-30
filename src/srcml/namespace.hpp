@@ -38,13 +38,9 @@ namespace srcML {
         void set_uri(std::string input);
         void set_prefix(std::optional<std::string> input);
 
-
-
     private:
-    
-        std::string uri;
+            std::string uri;
         std::optional<std::string> prefix;
-
     };
  
 class name_spaces {
@@ -69,7 +65,6 @@ public:
 
     private:
         std::unordered_map<std::string, std::shared_ptr<name_space>> namespaces;
-
     };
 
 }
