@@ -108,12 +108,14 @@ srcml_unit* input_source_local::process_file(const std::optional<std::string> & 
   input_stream<input_source_local> input_modified(*this, path_modified, options.archive, language_string);
   manager.append_stream(input_modified);
 
-  return deltor->create(options.archive, manager, language_string, unit_filename, unit_version);
+  const char* unit_version = srcml_archive_get_version(options.archive);
+
+  return deltor->create(options.archive, manager, language_string, unit_filename, unit_version? unit_version : std::optional<std::string>());
 
 }
 
 void input_source_local::process_directory(const std::optional<std::string> & directory_original,
-                                                   const std::optional<std::string> & directory_modified) {
+                                           const std::optional<std::string> & directory_modified) {
 
   std::filesystem::directory_entry original_entry(directory_original ? *directory_original : "");
   std::filesystem::directory_entry modified_entry(directory_modified ? *directory_modified : "");

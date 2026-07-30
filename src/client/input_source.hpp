@@ -40,8 +40,6 @@ protected:
   int directory_length_original;
   int directory_length_modified;
 
-  std::optional<std::string> unit_version;
-
 private:
 
   static bool show_input;
