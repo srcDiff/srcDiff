@@ -13,6 +13,6 @@ else()
 	set(SRCDIFF_PATH ${SRCDIFF_DIR}/srcdiff)
 endif()
 
-configure_file(framework.sh.in ${CMAKE_CURRENT_SOURCE_DIR}/framework.sh USE_SOURCE_PERMISSIONS @ONLY)
+configure_file(framework.sh.in framework.sh USE_SOURCE_PERMISSIONS @ONLY)
 
 add_subdirectory(suite)

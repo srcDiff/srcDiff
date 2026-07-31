@@ -11,5 +11,6 @@ file(GLOB CLIENT_TESTS *.sh)
 
 foreach(CLIENT_TEST IN ITEMS ${CLIENT_TESTS})
     get_filename_component(TEST_NAME ${CLIENT_TEST} NAME)
-    add_test(NAME srcdiff.${TEST_NAME} COMMAND ${CLIENT_TEST})
+    file(COPY ${TEST_NAME} DESTINATION .)
+    add_test(NAME srcdiff.${TEST_NAME} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${TEST_NAME})
 endforeach()
