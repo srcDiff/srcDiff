@@ -10,9 +10,9 @@ else
 fi
 
 if [[ $2 = "/dev/null" ]]; then
-temp_file = srcdiff_temp$(bash -c "echo $5 | grep -o '\.[^.]*$'")
+temp_file=srcdiff_temp$(bash -c "echo $5 | grep -o '\.[^.]*$'")
 elif [[ $5 = "/dev/null" ]]; then
-temp_file = srcdiff_temp$(bash -c "echo $2 | grep -o '\.[^.]*$'")
+temp_file=srcdiff_temp$(bash -c "echo $2 | grep -o '\.[^.]*$'")
 fi
 
 echo $temp_file
