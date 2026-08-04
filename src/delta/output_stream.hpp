@@ -12,7 +12,6 @@
 
 #include <namespace.hpp>
 #include <nodes.hpp>
-#include <client_options.hpp>
 
 #include <methods.hpp>
 #include <constants.hpp>

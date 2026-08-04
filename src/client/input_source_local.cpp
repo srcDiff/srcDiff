@@ -22,7 +22,8 @@
 
 namespace srcdiff {
 
-input_source_local::input_source_local(const client_options & options) : input_source(options) {
+input_source_local::input_source_local(const client_options& options, const std::string& original, const std::string& modified)
+ : input_source(options), original(original), modified(modified) {
   output_file = std::filesystem::directory_entry(options.output_filename);
 }
 
@@ -40,17 +41,15 @@ void input_source_local::consume()
   
   } else {
 
-    for (std::pair<std::string, std::string> input_pair : options.input_pairs) {
-
-      std::filesystem::path original(input_pair.first);
-      std::filesystem::path modified(input_pair.second);
+      std::filesystem::path original(this->original);
+      std::filesystem::path modified(this->modified);
 
       if (!std::filesystem::exists(original) && !std::filesystem::exists(modified))
-        throw std::string("Input sources '" + input_pair.first + "' and '" + input_pair.second + "' could not be opened");
+        throw std::string("Input sources '" + this->original + "' and '" + this->modified + "' could not be opened");
       else if (!std::filesystem::exists(original))
-        throw std::string("Input source '" + input_pair.first + "' could not be opened");
-      else if (input_pair.second != "" && !std::filesystem::exists(modified))
-        throw std::string("Input source '" + input_pair.second + "' could not be opened");
+        throw std::string("Input source '" + this->original + "' could not be opened");
+      else if (this->modified != "" && !std::filesystem::exists(modified))
+        throw std::string("Input source '" + this->modified + "' could not be opened");
 
       if (std::filesystem::is_directory(original)) {
 
@@ -59,18 +58,17 @@ void input_source_local::consume()
         if (!srcml_archive_get_url(options.archive))
         {
 
-          std::string directory_path = input_pair.first == input_pair.second ? input_pair.first : input_pair.first + '|' + input_pair.second;
+          std::string directory_path = this->original == this->modified ? this->original : this->original + '|' + this->modified;
           srcml_archive_set_url(options.archive, directory_path.c_str());
         }
 
-        directory_length_original = input_pair.first.back() == '/' ? input_pair.first.size() : input_pair.first.size() + 1;
-        directory_length_modified = input_pair.second.back() == '/' ? input_pair.second.size() : input_pair.second.size() + 1;
+        directory_length_original = this->original.back() == '/' ? this->original.size() : this->original.size() + 1;
+        directory_length_modified = this->modified.back() == '/' ? this->modified.size() : this->modified.size() + 1;
 
-        directory(input_pair.first, input_pair.second);
+        directory(this->original, this->modified);
       } else {
-        file(input_pair.first, input_pair.second);
+        file(this->original, this->modified);
       }
-    }
   }
 }
 

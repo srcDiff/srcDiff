@@ -10,6 +10,9 @@
 #include <client_options.hpp>
 #include <constants.hpp>
 
+#include <input_source_manager.hpp>
+#include <input_source_local.hpp>
+
 #include <libxml/parser.h>
 #include <CLI/CLI.hpp>
 
@@ -30,8 +33,12 @@ client_options options;
 // width of each of the two columns of help text that CLI11 displays
 const unsigned COLUMN_WIDTH = 50;
 
-// Callback functions that process or respond to flags or options being set:
+client_options::client_options() : flags(OPTION_STRING_SPLITTING) {}
+bool client_options::is_option(OPTION_TYPE flag) const {
+  return (flags & flag) > 0;
+}
 
+// Callback functions that process or respond to flags or options being set:
 std::string get_version() {
 
   std::stringstream out;
@@ -53,8 +60,6 @@ std::string get_version() {
 // e.g. "orig.cpp|mod.cpp"
 void option_input_file(const std::vector<std::string> & arg) {
 
-  options.input_pairs.reserve(arg.size());
-
   for(std::vector<std::string>::size_type pos = 0; pos < arg.size(); pos += 1) {
 
     std::string::size_type sep_pos = arg[pos].find('|');
@@ -62,23 +67,19 @@ void option_input_file(const std::vector<std::string> & arg) {
     if(sep_pos != std::string::npos) {
       std::string path_original = arg[pos].substr(0, sep_pos);
       std::string path_modified = arg[pos].substr(sep_pos + 1);
-      options.input_pairs.push_back(std::make_pair(path_original, path_modified));
+      options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options, path_original, path_modified)));
     } else if(ext_pos != std::string::npos && arg[pos].substr(ext_pos + 1) == "xml") {
       options.flags |= OPTION_VIEW_XML;
-      options.input_pairs.push_back(std::make_pair(arg[pos], ""));
+      options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options, arg[pos], "")));
     } else {
 
       if((pos + 1) >= arg.size()) {
         throw CLI::ValidationError("Odd number of input files.");
       }
-      options.input_pairs.push_back(std::make_pair(arg[pos], arg[pos + 1]));
+      options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options, arg[pos], arg[pos + 1])));
       ++pos;
     }
 
-  }
-
-  if(options.input_pairs.size() > 1) {
-    srcml_archive_disable_solitary_unit(options.archive);
   }
 
 }
@@ -193,37 +194,27 @@ void option_srcml_string(const std::string & arg) {}
 
 template<>
 void option_srcml_string<SRC_ENCODING>(const std::string & arg) {
-
   srcml_archive_set_src_encoding(options.archive, arg.c_str());
-
 }
 
 template<>
 void option_srcml_string<XML_ENCODING>(const std::string & arg) {
-
   srcml_archive_set_xml_encoding(options.archive, arg.c_str());
-
 }
 
 template<>
 void option_srcml_string<LANGUAGE>(const std::string & arg) {
-
   srcml_archive_set_language(options.archive, arg.c_str());
-
 }
 
 template<>
 void option_srcml_string<URL>(const std::string & arg) {
-  
   srcml_archive_set_url(options.archive, arg.c_str());
-
 }
 
 template<>
 void option_srcml_string<SRC_VERSION>(const std::string & arg) {
-
   srcml_archive_set_version(options.archive, arg.c_str());
-
 }
 
 template<>
@@ -260,24 +251,18 @@ void option_srcml_string<XMLNS>(const std::string & arg) {
 
 template<OPTION_TYPE flag>
 void option_flag_enable(int flagged_count) {
-
   if(flagged_count > 0) options.flags |= flag;
-
 }
 
 template<OPTION_TYPE flag>
 void option_flag_disable(int flagged_count) {
-
   if(flagged_count > 0) options.flags &= ~flag;
-
 }
 
 // general template functions for srcML's bit-level flags
 template<int op>
 void option_srcml_flag_enable(int flagged_count) {
-
   if(flagged_count > 0) srcml_archive_enable_option(options.archive, op);
-
 }
 
 // processes the argument to the srcdiff parsing method option
@@ -332,7 +317,6 @@ void view_option_unified_view_context(const std::string & arg) {
 void view_option_side_by_side_tab_size(const int & arg) {
 
   options.view_options.side_by_side_tab_size = arg;
-
   options.flags |= OPTION_SIDE_BY_SIDE_VIEW;
 
 }
@@ -348,6 +332,8 @@ const client_options& process_command_line(int argc, char* argv[]) {
       srcdiff::SRCDIFF_DEFAULT_NAMESPACE_PREFIX.c_str(),
       srcdiff::SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()
   );
+
+  options.input_manager = new input_source_manager();
 
   CLI::App cli(
     "Translates C, C++, and Java source code into the XML source-code representation srcDiff.\n"
@@ -621,10 +607,6 @@ const client_options& process_command_line(int argc, char* argv[]) {
   try {
 
     cli.parse(arguments);
-
-    if (!options.files_from_name.has_value() && options.input_pairs.size() < 1) {
-      throw CLI::ValidationError("Input files are required.");
-    }
 
     // CLI11 unfortunately does not have a great mechanism for requiring that
     // exactly one out of two options is required if and only if any options

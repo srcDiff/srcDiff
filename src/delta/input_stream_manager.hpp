@@ -11,7 +11,6 @@
 #define INCLUDED_INPUT_STREAM_MANAGER_HPP
 
 #include <input_stream.hpp>
-#include <client_options.hpp>
 #include <nodes.hpp>
 
 #include <srcml.h>
@@ -26,7 +25,7 @@ namespace srcdiff {
 class input_stream_manager {
 public:
 
-    input_stream_manager(const OPTION_TYPE& options) : converter(is_option(options, OPTION_STRING_SPLITTING)) {
+    input_stream_manager(bool should_split_strings) : converter(should_split_strings) {
     }
 
     ~input_stream_manager() {}

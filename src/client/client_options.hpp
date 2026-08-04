@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
- * @file options.hpp
+ * @file client_options.hpp
  *
- * @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
+ * @copyright Copyright (C) 2014-2026 SDML (www.srcDiff.org)
  *
  * This file is part of the srcDiff Infrastructure.
  */
@@ -83,16 +83,16 @@ inline bool is_option(OPTION_TYPE options, OPTION_TYPE flag) {
     return (flag & options) > 0;
 }
 
+class input_source_manager;
 struct client_options {
 
-  client_options() : flags(OPTION_STRING_SPLITTING) {}
-  bool is_option(OPTION_TYPE flag) const {
-    return (flags & flag) > 0;
-  }
+  client_options();
+  bool is_option(OPTION_TYPE flag) const;
 
   srcml_archive* archive;
 
-  std::vector<std::pair<std::string, std::string>> input_pairs;
+  input_source_manager* input_manager;
+
   std::string output_filename;
   std::optional<std::string> files_from_name;
   std::optional<std::string> unit_filename;

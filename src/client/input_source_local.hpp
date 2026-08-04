@@ -20,34 +20,31 @@
 namespace srcdiff {
 
 class input_source_local : public input_source {
-
-protected:
-
-  std::filesystem::directory_entry output_file;
-
 public:
-
-  input_source_local(const client_options & options);
+  input_source_local(const client_options& options, const std::string& original, const std::string& modified);
   virtual ~input_source_local();
 
   virtual void consume();
 
-  virtual srcml_unit* process_file(const std::optional<std::string> & path_original,
-                                   const std::optional<std::string> & path_modified);
-  virtual void process_directory(const std::optional<std::string> & directory_original,
-                                 const std::optional<std::string> & directory_modified);
+  virtual srcml_unit* process_file(const std::optional<std::string>& path_original,
+                                   const std::optional<std::string>& path_modified);
+  virtual void process_directory(const std::optional<std::string>& directory_original,
+                                 const std::optional<std::string>& directory_modified);
   virtual void process_files_from();
 
   struct input_context {
-
     std::ifstream in;
-
   };
 
-  input_context * open(const char * uri) const;
-  static ssize_t read(void * context, void * buffer, size_t len);
-  static int close(void * context);
+  input_context* open(const char* uri) const;
+  static ssize_t read(void* context, void* buffer, size_t len);
+  static int     close(void* context);
 
+protected:
+  std::filesystem::directory_entry output_file;
+private:
+  std::string original;
+  std::string modified;
 };
 
 }
