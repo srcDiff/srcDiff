@@ -30,8 +30,8 @@ public:
 
     ~input_stream_manager() {}
 
-    void append_stream(const input_stream_base& stream) {
-        streams.push_back(std::ref(stream));
+    void append_stream(std::unique_ptr<input_stream_base> stream) {
+        streams.push_back(std::move(stream));
     }
 
     std::pair<srcML::nodes, srcML::nodes> consume_streams() {
@@ -39,11 +39,11 @@ public:
       if(streams.size() < 2) return std::pair<srcML::nodes, srcML::nodes>();
 
       std::pair<srcML::nodes, srcML::nodes> nodes;
-      std::thread thread_original(streams.front(), std::ref(converter), std::ref(nodes.first));
+      std::thread thread_original(std::ref(*streams.front().get()), std::ref(converter), std::ref(nodes.first));
       thread_original.join();
       streams.pop_front();
 
-      std::thread thread_modified(streams.front(), std::ref(converter), std::ref(nodes.second));
+      std::thread thread_modified(std::ref(*streams.front().get()), std::ref(converter), std::ref(nodes.second));
       thread_modified.join();
       streams.pop_front();
 
@@ -52,7 +52,7 @@ public:
 
 protected:
     srcML::converter converter;
-    std::list<std::reference_wrapper<const input_stream_base>> streams;
+    std::list<std::unique_ptr<input_stream_base>> streams;
 };
 
 }

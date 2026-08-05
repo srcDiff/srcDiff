@@ -21,16 +21,16 @@ namespace srcdiff {
 
 class input_source_local : public input_source {
 public:
-  input_source_local(const client_options& options, const std::string& original, const std::string& modified);
+  input_source_local(srcml_archive* archive, const std::string& path);
   virtual ~input_source_local();
 
-  virtual void consume();
+  virtual operator bool() override;
+  virtual std::unique_ptr<input_stream_base> next() override;
 
-  virtual srcml_unit* process_file(const std::optional<std::string>& path_original,
-                                   const std::optional<std::string>& path_modified);
-  virtual void process_directory(const std::optional<std::string>& directory_original,
-                                 const std::optional<std::string>& directory_modified);
-  virtual void process_files_from();
+  std::unique_ptr<input_stream_base> file(const std::string& path);
+  // virtual void process_directory(const std::optional<std::string>& directory_original,
+  //                                const std::optional<std::string>& directory_modified);
+  // virtual void process_files_from();
 
   struct input_context {
     std::ifstream in;
@@ -41,10 +41,9 @@ public:
   static int     close(void* context);
 
 protected:
-  std::filesystem::directory_entry output_file;
+  // std::filesystem::directory_entry output_file;
 private:
-  std::string original;
-  std::string modified;
+  std::string path;
 };
 
 }

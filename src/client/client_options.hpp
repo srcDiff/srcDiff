@@ -86,8 +86,10 @@ inline bool is_option(OPTION_TYPE options, OPTION_TYPE flag) {
 class input_source_manager;
 struct client_options {
 
-  client_options();
-  bool is_option(OPTION_TYPE flag) const;
+  client_options() : flags(OPTION_STRING_SPLITTING) {}
+  bool is_option(OPTION_TYPE flag) const {
+    return (flags & flag) > 0;
+  }
 
   srcml_archive* archive;
 

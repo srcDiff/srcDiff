@@ -13,6 +13,7 @@
 #include <input_source.hpp>
 #include <list>
 
+#include <client_options.hpp>
 #include <input_stream_manager.hpp>
 #include <deltor.hpp>
 #include <view.hpp>
@@ -34,7 +35,7 @@ class input_source_manager {
 
 public:
 
-  input_source_manager();
+  input_source_manager(const client_options& options);
   ~input_source_manager();
 
   void append_source(std::unique_ptr<input_source> input);
@@ -43,8 +44,10 @@ public:
   void consume();
 
 private:
+  const client_options& options;
 
   std::list<std::unique_ptr<input_source>> input_sources;
+  input_stream_manager stream_manager;
 
   // bool show_input;
 
@@ -52,11 +55,9 @@ private:
   // size_t input_skipped;
   // size_t input_total;
 
-  // input_stream_manager manager;
-  // std::unique_ptr<class deltor> deltor;
-  // std::unique_ptr<view_t> view;
+  std::unique_ptr<class deltor> deltor;
+  std::unique_ptr<view_t> view;
 
-  // std::optional<std::string> unit_version;
 };
 
 }

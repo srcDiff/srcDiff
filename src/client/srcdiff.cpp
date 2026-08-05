@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
       std::cerr << "Error: " << s << '\n';
   } 
 
-  if(options.input_manager) {
+  while(*options.input_manager) {
 
     try {
 

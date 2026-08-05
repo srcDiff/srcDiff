@@ -88,12 +88,12 @@ int srcDiff(const char* original_filename, const char* modified_filename, const 
     options.output_filename = output_filename;
 
     file_input in;
-    srcdiff::input_stream<file_input> input_original(in, original_path, options.archive, language_string);
-    srcdiff::input_stream<file_input> input_modified(in, modified_path, options.archive, language_string);
+    std::unique_ptr<srcdiff::input_stream<file_input>> input_original = std::make_unique<srcdiff::input_stream<file_input>>(in, original_path, options.archive, language_string);
+    std::unique_ptr<srcdiff::input_stream<file_input>> input_modified = std::make_unique<srcdiff::input_stream<file_input>>(in, modified_path, options.archive, language_string);
 
     srcdiff::input_stream_manager manager(options.flags);
-    manager.append_stream(input_original);
-    manager.append_stream(input_modified);
+    manager.append_stream(std::move(input_original));
+    manager.append_stream(std::move(input_modified));
 
     srcdiff::deltor deltor(options.methods, options.unit_filename);
     deltor.create(options.archive, manager, language_string, unit_filename, unit_version);
@@ -174,11 +174,11 @@ struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* configuration,
     config = std::unique_ptr<srcdiff_config, srcdiff_config_deleter>(srcdiff_config_create(), srcdiff_config_deleter(true));
   }
 
-  srcml_unit_input original_input(original_unit);
-  config->manager->append_stream(original_input);
+  std::unique_ptr<srcdiff::input_stream_base> original_input = std::make_unique<srcml_unit_input>(original_unit);
+  config->manager->append_stream(std::move(original_input));
 
-  srcml_unit_input modified_input(modified_unit);
-  config->manager->append_stream(modified_input);
+  std::unique_ptr<srcdiff::input_stream_base> modified_input = std::make_unique<srcml_unit_input>(modified_unit);
+  config->manager->append_stream(std::move(modified_input));
 
   std::optional<std::string> unit_filename = srcdiff_merge_attributes(srcml_unit_get_filename(original_unit), srcml_unit_get_filename(modified_unit));
   std::optional<std::string> unit_version = srcdiff_merge_attributes(srcml_unit_get_version(original_unit), srcml_unit_get_version(modified_unit));

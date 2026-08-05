@@ -10,10 +10,7 @@
 #ifndef INCLUDED_INPUT_SOURCE_HPP
 #define INCLUDED_INPUT_SOURCE_HPP
 
-#include <client_options.hpp>
-#include <input_stream_manager.hpp>
-#include <deltor.hpp>
-#include <view.hpp>
+#include <input_stream.hpp>
 
 #include <string>
 
@@ -32,16 +29,15 @@ class input_source {
 
 protected:
 
-  const client_options& options;
-  input_stream_manager manager;
-  std::unique_ptr<class deltor> deltor;
-  std::unique_ptr<view_t> view;
+  srcml_archive* archive;
 
   int directory_length_original;
   int directory_length_modified;
 
 private:
 
+  // handle in input source manager. Maybe
+  // bool() return false if not anymore in source. Exception is somethign skipped
   static bool show_input;
 
   static size_t input_count;
@@ -50,23 +46,24 @@ private:
 
 public:
 
-  input_source(const client_options & options);
+  input_source(srcml_archive* archive);
   virtual ~input_source();
 
-  virtual void consume() = 0;
-  virtual const char * get_language(const std::optional<std::string> & path_original, const std::optional<std::string> & path_modified);
+  // virtual bool is_directory() = 0;
+  virtual operator bool() = 0;
+  virtual std::unique_ptr<input_stream_base> next() = 0;
+  virtual const char* get_language(const std::string& path);
 
-  virtual void file(const std::optional<std::string> & path_original,
-                    const std::optional<std::string> & path_modified);
-  virtual void directory(const std::optional<std::string> & directory_original,
-                         const std::optional<std::string> & directory_modified);
-  virtual void files_from();
+  // virtual std::unique_ptr<input_stream_base> file(const std::string& path) = 0;
+  // virtual void directory(const std::optional<std::string>& directory_original,
+  //                        const std::optional<std::string>& directory_modified);
+  // virtual void files_from();
 
-  virtual srcml_unit* process_file(const std::optional<std::string> & path_original,
-                                   const std::optional<std::string> & path_modified) = 0;
-  virtual void process_directory(const std::optional<std::string> & directory_original,
-                                 const std::optional<std::string> & directory_modified) = 0;
-  virtual void process_files_from() = 0;
+  // virtual input_stream_base process_file(const std::optional<std::string>& path_original,
+  //                                        const std::optional<std::string>& path_modified) = 0;
+  // virtual void process_directory(const std::optional<std::string>& directory_original,
+  //                                const std::optional<std::string>& directory_modified) = 0;
+  // virtual void process_files_from() = 0;
 
 };
 

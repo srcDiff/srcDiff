@@ -22,6 +22,7 @@ namespace srcdiff {
 
 class input_stream_base {
 public:
+    virtual ~input_stream_base() {}
     virtual void operator()(srcML::converter& converter, srcML::nodes& nodes) const = 0;
     virtual srcML::nodes input_nodes(srcML::converter& converter) const = 0;
 };

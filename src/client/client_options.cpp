@@ -33,11 +33,6 @@ client_options options;
 // width of each of the two columns of help text that CLI11 displays
 const unsigned COLUMN_WIDTH = 50;
 
-client_options::client_options() : flags(OPTION_STRING_SPLITTING) {}
-bool client_options::is_option(OPTION_TYPE flag) const {
-  return (flags & flag) > 0;
-}
-
 // Callback functions that process or respond to flags or options being set:
 std::string get_version() {
 
@@ -58,7 +53,7 @@ std::string get_version() {
 // processes input file arguments. this accepts a vector of file names or a
 // vector where each element consists of two file names separated by a pipe,
 // e.g. "orig.cpp|mod.cpp"
-void option_input_file(const std::vector<std::string> & arg) {
+void option_input_file(const std::vector<std::string>& arg) {
 
   for(std::vector<std::string>::size_type pos = 0; pos < arg.size(); pos += 1) {
 
@@ -67,17 +62,18 @@ void option_input_file(const std::vector<std::string> & arg) {
     if(sep_pos != std::string::npos) {
       std::string path_original = arg[pos].substr(0, sep_pos);
       std::string path_modified = arg[pos].substr(sep_pos + 1);
-      options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options, path_original, path_modified)));
+      options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options.archive, path_original)));
+      options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options.archive, path_modified)));
     } else if(ext_pos != std::string::npos && arg[pos].substr(ext_pos + 1) == "xml") {
       options.flags |= OPTION_VIEW_XML;
-      options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options, arg[pos], "")));
+      // options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options.archive, arg[pos], "")));
     } else {
 
-      if((pos + 1) >= arg.size()) {
-        throw CLI::ValidationError("Odd number of input files.");
-      }
-      options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options, arg[pos], arg[pos + 1])));
-      ++pos;
+      // if((pos + 1) >= arg.size()) {
+      //   throw CLI::ValidationError("Odd number of input files.");
+      // }
+      options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options.archive, arg[pos])));
+      // ++pos;
     }
 
   }
@@ -333,7 +329,7 @@ const client_options& process_command_line(int argc, char* argv[]) {
       srcdiff::SRCDIFF_DEFAULT_NAMESPACE_HREF.c_str()
   );
 
-  options.input_manager = new input_source_manager();
+  options.input_manager = new input_source_manager(options);
 
   CLI::App cli(
     "Translates C, C++, and Java source code into the XML source-code representation srcDiff.\n"
