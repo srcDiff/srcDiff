@@ -74,10 +74,6 @@ void input_source_manager::consume() {
 	stream_manager.append_stream(std::move(input_sources.front()->next()));
 	input_sources.pop_front();
 
-	// fix these
-  	std::string unit_filename = "";
-  	std::string language_string = "C++";
-
 	srcml_unit* srcdiff_unit = deltor->create(options.archive, stream_manager);
 
 	if(!view) {

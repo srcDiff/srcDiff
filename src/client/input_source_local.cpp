@@ -22,8 +22,8 @@
 
 namespace srcdiff {
 
-input_source_local::input_source_local(srcml_archive* archive, const std::string& path)
- : input_source(archive), path(path) {
+input_source_local::input_source_local(srcml_archive* archive, const std::optional<std::string>& filename, const std::string& path)
+ : input_source(archive, filename), path(path) {
   // output_file = std::filesystem::directory_entry(options.output_filename);
 }
 
@@ -86,7 +86,7 @@ std::unique_ptr<input_stream_base> input_source_local::file(const std::string& p
   // throw instead?
   if(language_string == SRCML_LANGUAGE_NONE) return std::unique_ptr<input_stream_base>();
 
-  return std::move(std::make_unique<input_stream<input_source_local>>(*this, path, archive, language_string));
+  return std::move(std::make_unique<input_stream<input_source_local>>(*this, path, archive, language_string, filename));
 
 }
 

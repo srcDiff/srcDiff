@@ -35,7 +35,7 @@ public:
 
     input_stream(const T& input, const std::optional<std::string>& path,
                  srcml_archive* archive,
-                 const char* language);
+                 const char* language, const std::optional<std::string>& filename);
     ~input_stream();
 
     virtual void operator()(srcML::converter& converter, srcML::nodes& nodes) const;
@@ -47,6 +47,7 @@ protected:
 
     srcml_archive* archive;
     const char* language;
+    const std::optional<std::string>& filename;
 };
 
 #include <input_stream.tcc>

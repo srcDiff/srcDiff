@@ -30,6 +30,7 @@ class input_source {
 protected:
 
   srcml_archive* archive;
+  const std::optional<std::string>& filename;
 
   int directory_length_original;
   int directory_length_modified;
@@ -46,7 +47,7 @@ private:
 
 public:
 
-  input_source(srcml_archive* archive);
+  input_source(srcml_archive* archive, const std::optional<std::string>& filename);
   virtual ~input_source();
 
   // virtual bool is_directory() = 0;

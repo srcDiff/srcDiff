@@ -76,18 +76,12 @@ int srcDiff(const char* original_filename, const char* modified_filename, const 
     std::optional<std::string> original_path = original_filename ? original_filename : std::optional<std::string>();
     std::optional<std::string> modified_path = modified_filename ? modified_filename : std::optional<std::string>();
 
-    std::string unit_filename = original_path ? *original_path : std::string();
-    if(modified_path || unit_filename != *modified_path) {
-        unit_filename += "|";
-        unit_filename += *modified_path;
-    }
-
     srcdiff::client_options options;
     options.output_filename = output_filename;
 
     file_input in;
-    std::unique_ptr<srcdiff::input_stream<file_input>> input_original = std::make_unique<srcdiff::input_stream<file_input>>(in, original_path, options.archive, language_string);
-    std::unique_ptr<srcdiff::input_stream<file_input>> input_modified = std::make_unique<srcdiff::input_stream<file_input>>(in, modified_path, options.archive, language_string);
+    std::unique_ptr<srcdiff::input_stream<file_input>> input_original = std::make_unique<srcdiff::input_stream<file_input>>(in, original_path, options.archive, language_string, std::optional<std::string>());
+    std::unique_ptr<srcdiff::input_stream<file_input>> input_modified = std::make_unique<srcdiff::input_stream<file_input>>(in, modified_path, options.archive, language_string, std::optional<std::string>());
 
     srcdiff::input_stream_manager manager(options.flags);
     manager.append_stream(std::move(input_original));

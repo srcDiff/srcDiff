@@ -21,7 +21,7 @@ namespace srcdiff {
 
 class input_source_local : public input_source {
 public:
-  input_source_local(srcml_archive* archive, const std::string& path);
+  input_source_local(srcml_archive* archive, const std::optional<std::string>& filename, const std::string& path);
   virtual ~input_source_local();
 
   virtual operator bool() override;
