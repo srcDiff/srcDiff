@@ -244,8 +244,8 @@ void output_stream::update_diff_stacks(const std::shared_ptr<srcML::node> & node
 }
 
 void output_stream::output_node(const std::shared_ptr<srcML::node> & original_node, 
-                                 const std::shared_ptr<srcML::node> & modified_node,
-                                 enum operation operation, bool force_output) {
+                                const std::shared_ptr<srcML::node> & modified_node,
+                                enum operation operation, bool force_output) {
 
   if(operation == COMMON && original_node->is_temporary() != modified_node->is_temporary()) {
 

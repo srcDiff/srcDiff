@@ -36,6 +36,7 @@ class input_source_manager {
 public:
 
   input_source_manager(const client_options& options);
+  void init();
   ~input_source_manager();
 
   void append_source(std::unique_ptr<input_source> input);

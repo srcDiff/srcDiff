@@ -45,7 +45,7 @@ public:
     ~converter();
 
     void set_output_buffer(const std::string& str); 
-    void convert(srcml_archive* archive, const std::string& language, void* context, const std::function<ssize_t(void*, void*, size_t)>& read, const std::function<int(void*)>& close); 
+    void convert(srcml_archive* archive, const std::string& language, const std::string& filename, void* context, const std::function<ssize_t(void*, void*, size_t)>& read, const std::function<int(void*)>& close); 
     void convert(srcml_unit* unit);
     nodes create_nodes() const;
 };

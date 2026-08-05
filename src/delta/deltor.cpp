@@ -27,8 +27,6 @@ srcml_unit* deltor::create(srcml_archive* archive, input_stream_manager& manager
 
   const std::optional<std::string> output_path = "";
 
-  std::string unit_language = manager.get_unit_language();
-  std::string unit_filename = manager.get_unit_filename();
   std::tie(output->nodes_original(), output->nodes_modified()) = manager.consume_streams();
 
   output->prime();

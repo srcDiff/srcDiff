@@ -116,8 +116,8 @@ converter::~converter() {
 }
 
 // converts source code to srcML
-void converter::convert(srcml_archive* archive, const std::string& language, void* context,
-                        const std::function<ssize_t(void*, void*, size_t)> & read, const std::function<int(void*)> & close) {
+void converter::convert(srcml_archive* archive, const std::string& language, const std::string& filename,
+                        void* context, const std::function<ssize_t(void*, void*, size_t)> & read, const std::function<int(void*)> & close) {
 
   srcml_archive* unit_archive = srcml_archive_clone(archive);
   srcml_archive_enable_solitary_unit(unit_archive);
@@ -128,6 +128,7 @@ void converter::convert(srcml_archive* archive, const std::string& language, voi
 
   srcml_unit* unit = srcml_unit_create(unit_archive);
   srcml_unit_set_language(unit, language.c_str());
+  srcml_unit_set_filename(unit, filename.c_str());
 
   srcml_unit_parse_io(unit, context, *read.target<ssize_t (*) (void *, void *, size_t)>(), *close.target<int (*) (void *)>());
   srcml_archive_write_unit(unit_archive, unit);

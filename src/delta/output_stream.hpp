@@ -43,7 +43,7 @@ public:
   public:
 
     reader_state(int source) 
-      : stream_source(source), last_output(0) { }
+      : stream_source(source), last_output(1) { }
 
     void clear() {
 

@@ -35,7 +35,7 @@ template<class T>
 srcML::nodes input_stream<T>::input_nodes(srcML::converter& converter) const {
 
   typename T::input_context* context = input.open(path->c_str());
-  converter.convert(archive, language, (void*)context, T::read, T::close);
+  converter.convert(archive, language, std::filesystem::path(*path).filename(), (void*)context, T::read, T::close);
   return converter.create_nodes();
 
 }

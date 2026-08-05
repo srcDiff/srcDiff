@@ -17,7 +17,10 @@ namespace srcdiff {
 input_source_manager::input_source_manager(const client_options& options)
 	: options(options), input_sources(), stream_manager(options.is_option(OPTION_STRING_SPLITTING)),
 	  deltor(), view()  {
+}
 
+void input_source_manager::init() {
+	
   deltor = std::make_unique<class deltor>(options.methods);
 
   const client_options::view_options_t& view_options = options.view_options;
@@ -46,7 +49,6 @@ input_source_manager::input_source_manager(const client_options& options)
               view_options.side_by_side_tab_size);
 
   }
-
 }
 
 input_source_manager::~input_source_manager() {

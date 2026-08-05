@@ -51,7 +51,7 @@ std::shared_ptr<srcML::nodes> create_nodes(const std::string & code, const std::
     //create srcML::nodes
     srcML::converter contNodes(true);
     std::string source = code;
-    contNodes.convert(archive, language, (void*)&source, &str_read, &str_close);
+    contNodes.convert(archive, language, "", (void*)&source, &str_read, &str_close);
     srcML::nodes testNode = contNodes.create_nodes();
 
     return std::make_shared<srcML::nodes>(testNode);

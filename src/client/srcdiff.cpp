@@ -42,7 +42,9 @@ int main(int argc, char* argv[]) {
     }
   } catch(const std::string& s) {
       std::cerr << "Error: " << s << '\n';
-  } 
+  }
+
+  options.input_manager->init();
 
   while(*options.input_manager) {
 
