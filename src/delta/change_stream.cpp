@@ -23,16 +23,14 @@
 
 namespace srcdiff {
 
-const std::string replace("replace");
+const std::string replace = "replace";
 const srcML::attribute diff_type(DIFF_TYPE, srcML::name_spaces::SRC_NAMESPACE, replace);
 
 change_stream::change_stream(const output_stream& out, std::size_t end_original, std::size_t end_modified)
 : output_stream(out), end_original(end_original), end_modified(end_modified) {}
 
 /*
-
   Output all prepending whitespace as part of a change.
-
 */
 void change_stream::output_whitespace_all() {
 
@@ -42,13 +40,11 @@ void change_stream::output_whitespace_all() {
 }
 
 /*
-
   Adds whitespace to a change. Then outputs the change.
 
   All preceeding unused whitespace must be included, and all whitespace
   with a newline afterwards.  Currently, if the first after is not a newline,
   it is included and the following nodes are included if they have a new line.
-
 */
 void change_stream::output_whitespace_prefix() {
 
@@ -58,10 +54,8 @@ void change_stream::output_whitespace_prefix() {
 }
 
 /*
-
   Outputs a syntactical diff. Beginning whitespace is narrowed and all
   whitespace even if it could be matches is treated as different.
-
 */
 void change_stream::output() {
 
