@@ -36,7 +36,7 @@ srcml_unit* deltor::create(srcml_archive* archive, input_stream_manager& manager
   // run on file level
   if(!output->nodes_original().empty() || !output->nodes_modified().empty()) {
 
-    output->start_unit(archive, unit_language, unit_filename, 0);
+    output->start_unit(archive);
 
     unit original_unit(output->nodes_original(), output);
     unit modified_unit(output->nodes_modified(), output);

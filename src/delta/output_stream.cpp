@@ -16,6 +16,7 @@
 #include <list>
 
 #include <cstring>
+#include <cassert>
 
 namespace srcdiff {
 
@@ -97,13 +98,19 @@ void output_stream::reset() {
 
 }
 
-void output_stream::start_unit(srcml_archive* archive, const std::string& language_string, const std::optional<std::string>& unit_filename, const char* unit_version) {
+void output_stream::start_unit(srcml_archive* archive) {
 
   wstate->unit = srcml_unit_create(archive);
- 
-  srcml_unit_set_language(wstate->unit, language_string.c_str());
-  srcml_unit_set_filename(wstate->unit, unit_filename ? unit_filename->c_str() : 0);
-  srcml_unit_set_version(wstate->unit, unit_version);
+
+  assert(!nodes_original().empty() || !nodes_modified().empty());
+  std::shared_ptr<srcML::node> unit = !nodes_original().empty()? nodes_original().at(0) : nodes_modified().at(0);
+  if(!nodes_original().empty() && !nodes_modified().empty()) {
+    unit->merge_attributes(nodes_modified().at(0)->get_attributes());
+  }
+
+  srcml_unit_set_language(wstate->unit, unit->get_attribute("language")->get_value()->c_str());
+  srcml_unit_set_filename(wstate->unit, unit->get_attribute("filename") ? unit->get_attribute("filename")->get_value()->c_str() : 0);
+  srcml_unit_set_version( wstate->unit, unit->get_attribute("version")  ? unit->get_attribute("version")->get_value()->c_str() : 0);
 
   srcml_write_start_unit(wstate->unit);
 
