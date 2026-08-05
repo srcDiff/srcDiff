@@ -35,15 +35,11 @@ class deltor {
 private:
 
   std::shared_ptr<output_stream> output;
-  const std::optional<std::string>& unit_filename;
-  const char* unit_version;
 
 public:
 
   // constructor
-  deltor(const METHOD_TYPE& method,
-         const std::optional<std::string>& unit_filename,
-         const char* unit_version);
+  deltor(const METHOD_TYPE& method);
 
   // destructor
   ~deltor();

@@ -18,8 +18,7 @@ input_source_manager::input_source_manager(const client_options& options)
 	: options(options), input_sources(), stream_manager(options.is_option(OPTION_STRING_SPLITTING)),
 	  deltor(), view()  {
 
-  const char* unit_version = srcml_archive_get_version(options.archive);
-  deltor = std::make_unique<class deltor>(options.methods, options.unit_filename, unit_version);
+  deltor = std::make_unique<class deltor>(options.methods);
 
   const client_options::view_options_t& view_options = options.view_options;
   if(options.is_option(OPTION_UNIFIED_VIEW)) {

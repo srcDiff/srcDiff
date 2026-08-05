@@ -151,9 +151,6 @@ nodes converter::create_nodes() const {
   if (reader == NULL) throw std::string("Unable to open srcML output_buffer as XML");
 
   // read to unit
-  xmlTextReaderRead(reader);
-
-  // Read past unit tag open
   if(xmlTextReaderRead(reader) == 0) return nodes();
 
   // collect if non empty files
@@ -189,10 +186,11 @@ static bool is_cpp_file_separate(const char character) {
 nodes converter::collect_nodes(xmlTextReaderPtr reader) const {
 
   srcML::nodes nodes;
+  nodes.push_back(get_current_node(reader));
 
   srcML::nodes element_stack;
-  element_stack.push_back(std::make_shared<srcML::node>(srcML::node_type::START, "unit"));
-
+  element_stack.push_back(nodes.back());
+  if(xmlTextReaderRead(reader) == 0) return nodes;
 
   bool is_elseif = false;
   int not_done = 1;
@@ -385,15 +383,11 @@ nodes converter::collect_nodes(xmlTextReaderPtr reader) const {
       else if(node->get_type() == srcML::node_type::END) {
         element_stack.pop_back();
       }
-
-      if(node->get_name() == "unit") return nodes;
-
-      
+    
       if(node->get_type() == srcML::node_type::START && node->get_parent()->is_simple()) {
         node->get_parent()->set_simple(false);
       }
-      
-      
+            
       if(node->is_empty()) {
         node->set_empty(false);
         std::shared_ptr<srcML::node> end_node = std::make_shared<srcML::node>(*node);
@@ -403,6 +397,8 @@ nodes converter::collect_nodes(xmlTextReaderPtr reader) const {
       } else {
         nodes.push_back(node);
       }
+
+      if(node->get_name() == "unit") return nodes;
 
     }
 

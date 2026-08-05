@@ -27,7 +27,7 @@ public:
     virtual srcML::nodes input_nodes(srcML::converter& converter) const = 0;
 
     virtual std::string get_language() const { return ""; };
-    virtual std::string get_path() const { return ""; };
+    virtual std::string get_path()     const { return ""; };
 private:
 };
 

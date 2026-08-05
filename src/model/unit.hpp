@@ -18,8 +18,8 @@ class unit : public construct {
 public:
 
     unit(const srcML::nodes & node_list, std::shared_ptr<srcdiff::output_stream> out) : construct(node_list, out) {
-        terms.push_back(-1);
-        terms.push_back(node_list.size());
+        terms.push_back(0);
+        terms.push_back(node_list.size() - 1);
     }
 
 };
