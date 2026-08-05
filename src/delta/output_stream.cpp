@@ -97,13 +97,13 @@ void output_stream::reset() {
 
 }
 
-void output_stream::start_unit(srcml_archive* archive, const std::string& language_string, const std::optional<std::string>& unit_filename, const std::optional<std::string>& unit_version) {
+void output_stream::start_unit(srcml_archive* archive, const std::string& language_string, const std::optional<std::string>& unit_filename, const char* unit_version) {
 
   wstate->unit = srcml_unit_create(archive);
  
   srcml_unit_set_language(wstate->unit, language_string.c_str());
   srcml_unit_set_filename(wstate->unit, unit_filename ? unit_filename->c_str() : 0);
-  srcml_unit_set_version(wstate->unit, unit_version ? unit_version->c_str() : 0);
+  srcml_unit_set_version(wstate->unit, unit_version);
 
   srcml_write_start_unit(wstate->unit);
 

@@ -83,20 +83,8 @@ std::unique_ptr<input_stream_base> input_source_local::file(const std::string& p
   // }
 
   const char* language_string = get_language(path);
-
+  // throw instead?
   if(language_string == SRCML_LANGUAGE_NONE) return std::unique_ptr<input_stream_base>();
-
-  // std::string path_one = path_original ? *path_original : std::string();
-  // std::string path_two = path_modified ? *path_modified : std::string();
-
-  // std::string unit_filename = !path_one.empty() ? path_one.substr(directory_length_original) : path_one;
-  // std::string filename_two  = !path_two.empty() ? path_two.substr(directory_length_modified) : path_two;
-  // if(path_two.empty() || unit_filename != filename_two) {
-
-  //   unit_filename += "|";
-  //   unit_filename += filename_two;
-
-  // }
 
   return std::move(std::make_unique<input_stream<input_source_local>>(*this, path, archive, language_string));
 

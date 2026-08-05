@@ -19,6 +19,7 @@
 #include <functional>
 #include <thread>
 #include <memory>
+#include <filesystem>
 
 namespace srcdiff {
 
@@ -27,8 +28,23 @@ public:
 
     input_stream_manager(bool should_split_strings) : converter(should_split_strings) {
     }
-
     ~input_stream_manager() {}
+
+    std::string get_unit_language() const {
+        return "C++";
+    }
+
+    std::string get_unit_filename() const {
+        std::string original_filename = std::filesystem::path(streams.front()->get_path()).filename();
+        std::string modified_filename = std::filesystem::path((*++streams.begin())->get_path()).filename();
+
+        std::string unit_filename = original_filename;
+        if(modified_filename.empty() || original_filename != modified_filename) {
+            unit_filename += "|";
+            unit_filename += modified_filename;
+        }
+        return unit_filename;
+    }
 
     void append_stream(std::unique_ptr<input_stream_base> stream) {
         streams.push_back(std::move(stream));

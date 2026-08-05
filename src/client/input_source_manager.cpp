@@ -18,7 +18,8 @@ input_source_manager::input_source_manager(const client_options& options)
 	: options(options), input_sources(), stream_manager(options.is_option(OPTION_STRING_SPLITTING)),
 	  deltor(), view()  {
 
-  deltor = std::make_unique<class deltor>(options.methods, options.unit_filename);
+  const char* unit_version = srcml_archive_get_version(options.archive);
+  deltor = std::make_unique<class deltor>(options.methods, options.unit_filename, unit_version);
 
   const client_options::view_options_t& view_options = options.view_options;
   if(options.is_option(OPTION_UNIFIED_VIEW)) {
@@ -72,24 +73,11 @@ void input_source_manager::consume() {
 	stream_manager.append_stream(std::move(input_sources.front()->next()));
 	input_sources.pop_front();
 
-	// std::string path_one = path_original ? *path_original : std::string();
-	// std::string path_two = path_modified ? *path_modified : std::string();
-
-	// std::string unit_filename = !path_one.empty() ? path_one.substr(directory_length_original) : path_one;
-	// std::string filename_two  = !path_two.empty() ? path_two.substr(directory_length_modified) : path_two;
-	// if(path_two.empty() || unit_filename != filename_two) {
-
-	// unit_filename += "|";
-	// unit_filename += filename_two;
-
-	// }
-
 	// fix these
   	std::string unit_filename = "";
   	std::string language_string = "C++";
-	const char* unit_version = srcml_archive_get_version(options.archive);
 
-	srcml_unit* srcdiff_unit = deltor->create(options.archive, stream_manager, language_string, unit_filename, unit_version? unit_version : std::optional<std::string>());
+	srcml_unit* srcdiff_unit = deltor->create(options.archive, stream_manager);
 
 	if(!view) {
 	    srcml_archive_write_unit(options.archive, srcdiff_unit);

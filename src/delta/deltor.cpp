@@ -13,9 +13,12 @@ namespace srcdiff {
 
 // constructor
 /// @todo remove srcdiff filename and in general archive open/close from output stream
-deltor::deltor(const METHOD_TYPE& method, const std::optional<std::string>& unit_filename)
+deltor::deltor(const METHOD_TYPE& method,
+               const std::optional<std::string>& unit_filename,
+               const char* unit_version)
   : output(std::make_shared<srcdiff::output_stream>(method)),
-    unit_filename(unit_filename) {}
+    unit_filename(unit_filename), unit_version(unit_version) {
+    }
 
 // destructor
 deltor::~deltor() {
@@ -23,13 +26,12 @@ deltor::~deltor() {
 }
 
 // Translate from input stream to output stream
-srcml_unit* deltor::create(srcml_archive* archive, input_stream_manager& manager,
-                          const std::string& language,
-                          const std::optional<std::string>& unit_filename,
-                          const std::optional<std::string>& unit_version) {
+srcml_unit* deltor::create(srcml_archive* archive, input_stream_manager& manager) {
 
   const std::optional<std::string> output_path = "";
 
+  std::string unit_language = manager.get_unit_language();
+  std::string unit_filename = manager.get_unit_filename();
   std::tie(output->nodes_original(), output->nodes_modified()) = manager.consume_streams();
 
   output->prime();
@@ -38,7 +40,7 @@ srcml_unit* deltor::create(srcml_archive* archive, input_stream_manager& manager
   // run on file level
   if(!output->nodes_original().empty() || !output->nodes_modified().empty()) {
 
-    output->start_unit(archive, language, this->unit_filename ? this->unit_filename : unit_filename, unit_version);
+    output->start_unit(archive, unit_language, this->unit_filename ? this->unit_filename : unit_filename, unit_version);
 
     unit original_unit(output->nodes_original(), output);
     unit modified_unit(output->nodes_modified(), output);

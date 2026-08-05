@@ -36,19 +36,19 @@ private:
 
   std::shared_ptr<output_stream> output;
   const std::optional<std::string>& unit_filename;
+  const char* unit_version;
 
 public:
 
   // constructor
-  deltor(const METHOD_TYPE& method, const std::optional<std::string>& unit_filename);
+  deltor(const METHOD_TYPE& method,
+         const std::optional<std::string>& unit_filename,
+         const char* unit_version);
 
   // destructor
   ~deltor();
 
-  srcml_unit* create(srcml_archive* archive, input_stream_manager& manager,
-                     const std::string& language,
-                     const std::optional<std::string>& unit_filename  = std::optional<std::string>(),
-                     const std::optional<std::string>& unit_version   = std::optional<std::string>());
+  srcml_unit* create(srcml_archive* archive, input_stream_manager& manager);
 
 };
 

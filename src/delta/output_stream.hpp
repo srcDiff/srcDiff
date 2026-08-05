@@ -143,7 +143,7 @@ public:
 
   void prime();
 
-  void start_unit(srcml_archive* archive, const std::string& language_string, const std::optional<std::string>& unit_filename, const std::optional<std::string>& unit_version);
+  void start_unit(srcml_archive* archive, const std::string& language_string, const std::optional<std::string>& unit_filename, const char* unit_version);
   void end_unit();
 
   srcml_unit* get_unit();

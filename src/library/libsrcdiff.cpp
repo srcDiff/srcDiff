@@ -27,9 +27,7 @@ class file_input {
 public:
 
     struct input_context {
-
-    std::ifstream in;
-
+      std::ifstream in;
     };
 
     input_context* open(const char * uri) const {
@@ -41,17 +39,17 @@ public:
 
     }
 
-    static ssize_t read(void * context, void * buffer, size_t len) {
+    static ssize_t read(void* context, void* buffer, size_t len) {
 
-      input_context* ctx = (input_context *)context;
-      ctx->in.read((char *)buffer, len);
+      input_context* ctx = (input_context*)context;
+      ctx->in.read((char*)buffer, len);
 
       return ctx->in.gcount();
     }
 
-    static int close(void * context) {
+    static int close(void* context) {
 
-      input_context* ctx = (input_context *)context;
+      input_context* ctx = (input_context*)context;
       ctx->in.close();
       delete ctx;
 
@@ -95,8 +93,8 @@ int srcDiff(const char* original_filename, const char* modified_filename, const 
     manager.append_stream(std::move(input_original));
     manager.append_stream(std::move(input_modified));
 
-    srcdiff::deltor deltor(options.methods, options.unit_filename);
-    deltor.create(options.archive, manager, language_string, unit_filename, unit_version);
+    srcdiff::deltor deltor(options.methods, options.unit_filename, unit_version);
+    deltor.create(options.archive, manager);
 
     return SRCDIFF_STATUS_OK;
 }
@@ -108,7 +106,7 @@ struct srcdiff_config* srcdiff_config_create() {
   config->method  = 0;
 
   config->manager = std::make_unique<srcdiff::input_stream_manager>(config->options);
-  config->deltor = std::make_unique<srcdiff::deltor>(config->method, std::optional<std::string>());
+  config->deltor  = std::make_unique<srcdiff::deltor>(config->method, std::optional<std::string>(), nullptr);
   return config;
 }
 
@@ -185,7 +183,7 @@ struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* configuration,
 
   srcml_archive* archive = original_unit? srcml_unit_get_archive(original_unit)  : srcml_unit_get_archive(modified_unit);
   const char* language   = original_unit? srcml_unit_get_language(original_unit) : srcml_unit_get_language(modified_unit);
-  return config->deltor->create(archive, *config->manager, language, unit_filename, unit_version);
+  return config->deltor->create(archive, *config->manager);
 }
 
 struct srcml_unit* srcdiff_read_unit_original(struct srcml_unit* unit) {

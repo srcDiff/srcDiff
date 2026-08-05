@@ -25,26 +25,38 @@ public:
     virtual ~input_stream_base() {}
     virtual void operator()(srcML::converter& converter, srcML::nodes& nodes) const = 0;
     virtual srcML::nodes input_nodes(srcML::converter& converter) const = 0;
+
+    virtual std::string get_language() const { return ""; };
+    virtual std::string get_path() const { return ""; };
+private:
 };
 
 template<class T>
 class input_stream : public input_stream_base {
 public:
 
-    input_stream(const T& input, const std::optional<std::string>& input_path,
+    input_stream(const T& input, const std::optional<std::string>& path,
                  srcml_archive* archive,
-                 const char* language_string);
+                 const char* language);
     ~input_stream();
+
+    virtual std::string get_language() const {
+        return language;
+    }
+
+    virtual std::string get_path() const {
+        return path? *path : "";
+    }
 
     virtual void operator()(srcML::converter& converter, srcML::nodes& nodes) const;
     virtual srcML::nodes input_nodes(srcML::converter& converter) const;
 
 protected:
     const T& input;
-    const std::optional<std::string> input_path;
+    const std::optional<std::string> path;
 
     srcml_archive* archive;
-    const char* language_string;
+    const char* language;
 };
 
 #include <input_stream.tcc>
