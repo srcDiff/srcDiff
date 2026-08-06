@@ -21,12 +21,20 @@
 
 namespace srcdiff {
 
-class input_stream_base {
+class abstract_input_stream {
 public:
-    virtual ~input_stream_base() {}
+    virtual ~abstract_input_stream() {}
     virtual void operator()(srcML::converter& converter, srcML::nodes& nodes) const = 0;
-    virtual srcML::nodes input_nodes(srcML::converter& converter) const = 0;
+    virtual srcML::nodes input_nodes(srcML::converter& converter)             const = 0;
 private:
+};
+
+class input_stream_base : public abstract_input_stream {
+public:
+    input_stream_base(const std::optional<std::string>& path) : path(path) {};
+    const std::optional<std::string> get_path() { return path; }
+protected:
+    const std::optional<std::string> path;
 };
 
 template<class T>
@@ -43,7 +51,6 @@ public:
 
 protected:
     const T& input;
-    const std::optional<std::string> path;
 
     srcml_archive* archive;
     const char* language;

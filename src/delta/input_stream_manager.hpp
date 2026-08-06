@@ -29,7 +29,7 @@ public:
     }
     ~input_stream_manager() {}
 
-    void append_stream(std::unique_ptr<input_stream_base> stream) {
+    void append_stream(std::unique_ptr<abstract_input_stream> stream) {
         streams.push_back(std::move(stream));
     }
 
@@ -51,7 +51,7 @@ public:
 
 protected:
     srcML::converter converter;
-    std::list<std::unique_ptr<input_stream_base>> streams;
+    std::list<std::unique_ptr<abstract_input_stream>> streams;
 };
 
 }

@@ -108,7 +108,7 @@ void srcdiff_config_free(struct srcdiff_config* config) {
   delete config;
 }
 
-class srcml_unit_input : public srcdiff::input_stream_base {
+class srcml_unit_input : public srcdiff::abstract_input_stream {
 public:
   srcml_unit_input(srcml_unit* unit) 
     : unit(unit){
@@ -166,10 +166,10 @@ struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* configuration,
     config = std::unique_ptr<srcdiff_config, srcdiff_config_deleter>(srcdiff_config_create(), srcdiff_config_deleter(true));
   }
 
-  std::unique_ptr<srcdiff::input_stream_base> original_input = std::make_unique<srcml_unit_input>(original_unit);
+  std::unique_ptr<srcdiff::abstract_input_stream> original_input = std::make_unique<srcml_unit_input>(original_unit);
   config->manager->append_stream(std::move(original_input));
 
-  std::unique_ptr<srcdiff::input_stream_base> modified_input = std::make_unique<srcml_unit_input>(modified_unit);
+  std::unique_ptr<srcdiff::abstract_input_stream> modified_input = std::make_unique<srcml_unit_input>(modified_unit);
   config->manager->append_stream(std::move(modified_input));
 
   std::optional<std::string> unit_filename = srcdiff_merge_attributes(srcml_unit_get_filename(original_unit), srcml_unit_get_filename(modified_unit));

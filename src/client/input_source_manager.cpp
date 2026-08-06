@@ -65,7 +65,6 @@ input_source_manager::operator bool(){
 void input_source_manager::consume() {
 	assert(bool(*this));
 
-
   //   // if we're not at the end of the original contents list, but: we are at the
   //   // end of the modified files list, or in_original is less than the current
   //   // entry in the modified files list, then in_original has no match; process
