@@ -26,7 +26,8 @@ public:
   virtual ~input_source_local();
 
   virtual operator bool() override;
-  virtual std::unique_ptr<input_stream_base> next() override;
+  virtual std::unique_ptr<input_stream_base> stream() override;
+  virtual void next() override;
 
   std::unique_ptr<input_stream_base> file();
   void directory();
@@ -45,6 +46,7 @@ private:
   std::optional<std::filesystem::directory_entry> output_file;
   std::filesystem::path path;
 
+  bool is_initialized;
   // stack for dfs
   std::list<std::filesystem::directory_entry> input_cache;
 };

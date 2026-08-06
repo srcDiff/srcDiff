@@ -127,10 +127,10 @@ void input_source_manager::consume() {
 	// first source is original/second is modified
 	// check if more and put in while, and
 	// add error handling, correction, directory, concurrent, possibly separate input streams, parallelism
-	stream_manager.append_stream(std::move(input_sources.front()->next()));
+	stream_manager.append_stream(std::move(input_sources.front()->stream()));
 	input_sources.pop_front();
 
-	stream_manager.append_stream(std::move(input_sources.front()->next()));
+	stream_manager.append_stream(std::move(input_sources.front()->stream()));
 	input_sources.pop_front();
 
 	srcml_unit* srcdiff_unit = deltor->create(options.archive, stream_manager);

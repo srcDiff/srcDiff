@@ -41,21 +41,11 @@ public:
   input_source(srcml_archive* archive, const std::optional<std::string>& filename);
   virtual ~input_source();
 
-  // virtual bool is_directory() = 0;
   virtual operator bool() = 0;
-  virtual std::unique_ptr<input_stream_base> next() = 0;
+  virtual std::unique_ptr<input_stream_base> stream() = 0;
+  virtual void next() = 0;
+
   virtual const char* get_language(const std::string& path);
-
-  // virtual std::unique_ptr<input_stream_base> file(const std::string& path) = 0;
-  // virtual void directory(const std::optional<std::string>& directory_original,
-  //                        const std::optional<std::string>& directory_modified);
-  // virtual void files_from();
-
-  // virtual input_stream_base process_file(const std::optional<std::string>& path_original,
-  //                                        const std::optional<std::string>& path_modified) = 0;
-  // virtual void process_directory(const std::optional<std::string>& directory_original,
-  //                                const std::optional<std::string>& directory_modified) = 0;
-  // virtual void process_files_from() = 0;
 
 protected:
   srcml_archive* archive;

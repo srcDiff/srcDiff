@@ -26,7 +26,8 @@ namespace srcdiff {
 
 input_source_local::input_source_local(srcml_archive* archive, const std::optional<std::string>& filename,
                                        const std::string& output_filename, const std::string& path)
- : input_source(archive, filename), output_filename(output_filename), path(std::filesystem::path(path)) {
+ : input_source(archive, filename), output_filename(output_filename), path(std::filesystem::path(path)),
+   is_initialized(false), input_cache() {
 
       if(!std::filesystem::exists(path)) {
         throw std::string("Input source '" + path + "' could not be opened");
@@ -39,6 +40,15 @@ input_source_local::~input_source_local() {
 
 input_source_local::operator bool() {
 
+  if(!is_initialized) { 
+    is_initialized = true;
+    next();
+  }
+
+  return !input_cache.empty();
+}
+
+void input_source_local::next() {
   // delayed as output filename may not be known when this is created
   // next calls this first to make sure this happens
   if(!output_file) {
@@ -51,11 +61,9 @@ input_source_local::operator bool() {
   while(!input_cache.empty() && std::filesystem::is_directory(input_cache.back())) {
     directory();
   }
-
-  return !input_cache.empty();
 }
 
-std::unique_ptr<input_stream_base> input_source_local::next() {
+std::unique_ptr<input_stream_base> input_source_local::stream() {
   if(!*this) return std::unique_ptr<input_stream_base>();
   return file();
 }
