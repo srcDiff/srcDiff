@@ -41,14 +41,18 @@ input_source_local::~input_source_local() {
 input_source_local::operator bool() {
 
   if(!is_initialized) { 
-    is_initialized = true;
     next();
   }
-
   return !input_cache.empty();
 }
 
 void input_source_local::next() {
+  if(is_initialized) {
+    input_cache.pop_back();
+  } else {
+    is_initialized = true;
+  }
+
   // delayed as output filename may not be known when this is created
   // next calls this first to make sure this happens
   if(!output_file) {
@@ -83,6 +87,7 @@ std::unique_ptr<input_stream_base> input_source_local::file() {
 void input_source_local::directory() {
 
   std::filesystem::directory_entry directory = input_cache.back();
+  input_cache.pop_back();
   assert(directory.is_directory());
 
   std::vector<std::filesystem::directory_entry> entries;
