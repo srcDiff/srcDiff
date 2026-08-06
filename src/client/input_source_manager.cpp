@@ -54,8 +54,8 @@ void input_source_manager::init() {
 input_source_manager::~input_source_manager() {
 }
 
-void input_source_manager::append_source(std::unique_ptr<input_source> input) {
-    input_sources.push_back(std::move(input));
+void input_source_manager::append_source(std::shared_ptr<input_source> input) {
+    input_sources.push_back(input);
 }
 
 input_source_manager::operator bool(){
@@ -127,11 +127,11 @@ void input_source_manager::consume() {
 	// first source is original/second is modified
 	// check if more and put in while, and
 	// add error handling, correction, directory, concurrent, possibly separate input streams, parallelism
-	stream_manager.append_stream(std::move(input_sources.front()->stream()));
+	stream_manager.append_stream(input_sources.front()->stream());
 	input_sources.front()->next();
 	if(!*input_sources.front()) input_sources.pop_front();
 
-	stream_manager.append_stream(std::move(input_sources.front()->stream()));
+	stream_manager.append_stream(input_sources.front()->stream());
 	input_sources.front()->next();
 	if(!*input_sources.front()) input_sources.pop_front();
 

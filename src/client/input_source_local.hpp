@@ -26,10 +26,10 @@ public:
   virtual ~input_source_local();
 
   virtual operator bool() override;
-  virtual std::unique_ptr<input_stream_base> stream() override;
+  virtual std::shared_ptr<input_stream_base> stream() override;
   virtual void next() override;
 
-  std::unique_ptr<input_stream_base> file();
+  std::shared_ptr<input_stream_base> file();
   void directory();
   //void files_from();
 

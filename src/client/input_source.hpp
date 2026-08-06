@@ -42,7 +42,7 @@ public:
   virtual ~input_source();
 
   virtual operator bool() = 0;
-  virtual std::unique_ptr<input_stream_base> stream() = 0;
+  virtual std::shared_ptr<input_stream_base> stream() = 0;
   virtual void next() = 0;
 
   virtual const char* get_language(const std::string& path);

@@ -29,8 +29,8 @@ public:
     }
     ~input_stream_manager() {}
 
-    void append_stream(std::unique_ptr<abstract_input_stream> stream) {
-        streams.push_back(std::move(stream));
+    void append_stream(std::shared_ptr<abstract_input_stream> stream) {
+        streams.push_back(stream);
     }
 
     std::pair<srcML::nodes, srcML::nodes> consume_streams() {
@@ -51,7 +51,7 @@ public:
 
 protected:
     srcML::converter converter;
-    std::list<std::unique_ptr<abstract_input_stream>> streams;
+    std::list<std::shared_ptr<abstract_input_stream>> streams;
 };
 
 }

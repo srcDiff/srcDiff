@@ -39,7 +39,7 @@ public:
   void init();
   ~input_source_manager();
 
-  void append_source(std::unique_ptr<input_source> input);
+  void append_source(std::shared_ptr<input_source> input);
 
   operator bool();
   void consume();
@@ -47,7 +47,7 @@ public:
 private:
   const client_options& options;
 
-  std::list<std::unique_ptr<input_source>> input_sources;
+  std::list<std::shared_ptr<input_source>> input_sources;
   input_stream_manager stream_manager;
 
   // bool show_input;

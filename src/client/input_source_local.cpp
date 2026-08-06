@@ -67,21 +67,21 @@ void input_source_local::next() {
   }
 }
 
-std::unique_ptr<input_stream_base> input_source_local::stream() {
-  if(!*this) return std::unique_ptr<input_stream_base>();
+std::shared_ptr<input_stream_base> input_source_local::stream() {
+  if(!*this) return std::shared_ptr<input_stream_base>();
   return file();
 }
 
-std::unique_ptr<input_stream_base> input_source_local::file() {
+std::shared_ptr<input_stream_base> input_source_local::file() {
   assert(!input_cache.back().is_directory());
 
   const std::string& path = input_cache.back().path().native();
   const char* language_string = get_language(path);
 
   // throw instead?
-  if(language_string == SRCML_LANGUAGE_NONE) return std::unique_ptr<input_stream_base>();
+  if(language_string == SRCML_LANGUAGE_NONE) return std::shared_ptr<input_stream_base>();
 
-  return std::move(std::make_unique<input_stream<input_source_local>>(*this, path, archive, language_string, filename));
+  return std::make_unique<input_stream<input_source_local>>(*this, path, archive, language_string, filename);
 }
 
 void input_source_local::directory() {
