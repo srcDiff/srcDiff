@@ -18,7 +18,7 @@ size_t input_source::input_skipped = 0;
 size_t input_source::input_total   = 0;
 
 input_source::input_source(srcml_archive* archive, const std::optional<std::string>& filename) 
-  : archive(archive), filename(filename), directory_length_original(0), directory_length_modified(0) {
+  : archive(archive), filename(filename) {
 
   // show_input = options.is_option(OPTION_VERBOSE) && !options.is_option(OPTION_QUIET);
 

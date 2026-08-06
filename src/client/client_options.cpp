@@ -62,17 +62,17 @@ void option_input_file(const std::vector<std::string>& arg) {
     if(sep_pos != std::string::npos) {
       std::string path_original = arg[pos].substr(0, sep_pos);
       std::string path_modified = arg[pos].substr(sep_pos + 1);
-      options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options.archive, options.unit_filename, path_original)));
-      options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options.archive, options.unit_filename, path_modified)));
+      options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options.archive, options.unit_filename, options.output_filename, path_original)));
+      options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options.archive, options.unit_filename, options.output_filename, path_modified)));
     } else if(ext_pos != std::string::npos && arg[pos].substr(ext_pos + 1) == "xml") {
       options.flags |= OPTION_VIEW_XML;
-      // options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options.archive, options.unit_filename, arg[pos], "")));
+      // options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options.archive, options.unit_filename, options.output_filename, arg[pos], "")));
     } else {
 
       // if((pos + 1) >= arg.size()) {
       //   throw CLI::ValidationError("Odd number of input files.");
       // }
-      options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options.archive, options.unit_filename, arg[pos])));
+      options.input_manager->append_source(std::move(std::make_unique<input_source_local>(options.archive, options.unit_filename, options.output_filename, arg[pos])));
       // ++pos;
     }
 

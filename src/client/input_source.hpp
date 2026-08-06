@@ -26,15 +26,6 @@
 namespace srcdiff {
 
 class input_source {
-
-protected:
-
-  srcml_archive* archive;
-  const std::optional<std::string>& filename;
-
-  int directory_length_original;
-  int directory_length_modified;
-
 private:
 
   // handle in input source manager. Maybe
@@ -66,6 +57,9 @@ public:
   //                                const std::optional<std::string>& directory_modified) = 0;
   // virtual void process_files_from() = 0;
 
+protected:
+  srcml_archive* archive;
+  const std::optional<std::string>& filename;
 };
 
 }

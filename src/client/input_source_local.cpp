@@ -15,29 +15,50 @@
 
 #include <uri_stream.hpp>
 
-#include <cstring>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
 
+#include <cstring>
+#include <cassert>
+
 namespace srcdiff {
 
-input_source_local::input_source_local(srcml_archive* archive, const std::optional<std::string>& filename, const std::string& path)
- : input_source(archive, filename), path(path) {
-  // output_file = std::filesystem::directory_entry(options.output_filename);
+input_source_local::input_source_local(srcml_archive* archive, const std::optional<std::string>& filename,
+                                       const std::string& output_filename, const std::string& path)
+ : input_source(archive, filename), output_filename(output_filename), path(std::filesystem::path(path)) {
+
+      if(!std::filesystem::exists(path)) {
+        throw std::string("Input source '" + path + "' could not be opened");
+      }
+      input_cache.emplace_back(path);
 }
 
 input_source_local::~input_source_local() {
 }
 
-/// @todo implement
 input_source_local::operator bool() {
-  return true;
+
+  // delayed as output filename may not be known when this is created
+  // next calls this first to make sure this happens
+  if(!output_file) {
+    output_file = std::filesystem::directory_entry(output_filename);
+    if(input_cache.back() == *output_file) {
+        throw std::string("Input source '" + path.native() + "' same as output filename");
+    }
+  }
+
+  while(!input_cache.empty() && std::filesystem::is_directory(input_cache.back())) {
+    directory();
+  }
+
+  return !input_cache.empty();
 }
 
 // determines whether the input path(s) exist and whether they are files or
 // directories, and then processes them
 std::unique_ptr<input_stream_base> input_source_local::next() {
+  if(!*this) return std::unique_ptr<input_stream_base>();
 
   // if (options.files_from_name) {
     
@@ -45,33 +66,11 @@ std::unique_ptr<input_stream_base> input_source_local::next() {
   
   // } else {
 
-      std::filesystem::path path_inspector(path);
+  return file();
 
-      if(!std::filesystem::exists(path_inspector)) {
-        throw std::string("Input source '" + path + "' could not be opened");
-      }
-
-      // if (std::filesystem::is_directory(original)) {
-
-      //   srcml_archive_enable_solitary_unit(archive);
-
-      //   if (!srcml_archive_get_url(archive)) {
-
-      //     std::string directory_path = this->original == this->modified ? this->original : this->original + '|' + this->modified;
-      //     srcml_archive_set_url(archive, directory_path.c_str());
-      //   }
-
-      //   directory_length_original = this->original.back() == '/' ? this->original.size() : this->original.size() + 1;
-      //   directory_length_modified = this->modified.back() == '/' ? this->modified.size() : this->modified.size() + 1;
-
-      //   directory(this->original, this->modified);
-      // } else {
-      return file(path);
-      // }
-  // }
 }
 
-std::unique_ptr<input_stream_base> input_source_local::file(const std::string& path) {
+std::unique_ptr<input_stream_base> input_source_local::file() {
 
   // if(path_modified == "") {
   //   srcml_archive* read_archive = srcml_archive_create();
@@ -82,120 +81,105 @@ std::unique_ptr<input_stream_base> input_source_local::file(const std::string& p
   //   return unit;
   // }
 
+  assert(!input_cache.back().is_directory());
+
+  const std::string& path = input_cache.back().path().native();
   const char* language_string = get_language(path);
   // throw instead?
   if(language_string == SRCML_LANGUAGE_NONE) return std::unique_ptr<input_stream_base>();
 
   return std::move(std::make_unique<input_stream<input_source_local>>(*this, path, archive, language_string, filename));
-
 }
 
-// void input_source_local::process_directory(const std::optional<std::string>& directory_original,
-//                                            const std::optional<std::string>& directory_modified) {
+void input_source_local::directory() {
 
-//   std::filesystem::directory_entry original_entry(directory_original ? *directory_original : "");
-//   std::filesystem::directory_entry modified_entry(directory_modified ? *directory_modified : "");
+  std::filesystem::directory_entry directory = input_cache.back();
+  assert(directory.is_directory());
 
-//   if (!original_entry.is_directory() && !modified_entry.is_directory()) {
-//     throw std::string("Directories '" + (directory_original ? *directory_original : "")
-//       + "' and '" + (directory_modified ? *directory_modified : "") + "' could not be opened");
-//   }
+  std::vector<std::filesystem::directory_entry> entries;
+  for (std::filesystem::directory_entry entry : std::filesystem::directory_iterator(directory)){
+    entries.push_back(entry);
+  }
+  std::sort(entries.begin(), entries.end(), std::greater{});
 
-//   std::vector<std::filesystem::directory_entry> original_contents;
-//   if(original_entry.is_directory()) {
-//     for (std::filesystem::directory_entry e : std::filesystem::directory_iterator(original_entry)){
-//       original_contents.push_back(e);
-//     }
-//     std::sort(original_contents.begin(), original_contents.end());
-//   }
+  // process all non-directory files
+  for(const std::filesystem::directory_entry& entry : entries) {
 
-//   std::vector<std::filesystem::directory_entry> modified_contents;
-//   if(modified_entry.is_directory()) {
-//     for (std::filesystem::directory_entry e : std::filesystem::directory_iterator(modified_entry)){
-//       modified_contents.push_back(e);
-//     }
-//     std::sort(modified_contents.begin(), modified_contents.end());
-//   }
+    // process directories last
+    if((!entry.is_directory() || entry == *output_file)) {
+      continue;
+    }
+    input_cache.push_back(entry);
+  }
 
-//   // process all non-directory files
-//   std::vector<std::filesystem::directory_entry>::iterator in_original = original_contents.begin();
-//   std::vector<std::filesystem::directory_entry>::iterator in_modified = modified_contents.begin();
-//   while (in_original != original_contents.end() || in_modified != modified_contents.end()) {
+  for(const std::filesystem::directory_entry& entry : entries) {
 
-//     // if we're not at the end of each file list, check to make sure the current
-//     // entry in the file list is not a directory and is not our output file;
-//     // skip the current entry otherwise
-//     if(in_original != original_contents.end() &&
-//         (in_original->is_directory() || *in_original == output_file)) {
-//       ++in_original;
-//       continue;
-//     }
+    // process directories last
+    if((entry.is_directory() || entry == *output_file)) {
+      continue;
+    }
+    input_cache.push_back(entry);
+  }
 
-//     if(in_modified != modified_contents.end() &&
-//         (in_modified->is_directory() || *in_modified == output_file)) {
-//       ++in_modified;
-//       continue;
-//     }
+  //   // if we're not at the end of the original contents list, but: we are at the
+  //   // end of the modified files list, or in_original is less than the current
+  //   // entry in the modified files list, then in_original has no match; process
+  //   // it and then go to the next one in its list
+  //   if (in_original != entry.end() &&
+  //       (in_modified == modified_contents.end() ||
+  //       in_original->path().filename() < in_modified->path().filename())) {
+  //     file(in_original->path().string(), std::optional<std::string>());
+  //     ++in_original;
+  //   } else if(in_original == entry.end() || 
+  //       in_modified->path().filename() < in_original->path().filename()) {
+  //     // similarly, process in_modified if it doesn't match in_original
+  //     file(std::optional<std::string>(), in_modified->path().string());
+  //     ++in_modified;
+  //   } else {
+  //     // having dealt with the problematic cases, we can compare two matching files
+  //     file(in_original->path().string(), in_modified->path().string());
+  //     ++in_original;
+  //     ++in_modified;
+  //   }
+  // }
 
-//     // if we're not at the end of the original contents list, but: we are at the
-//     // end of the modified files list, or in_original is less than the current
-//     // entry in the modified files list, then in_original has no match; process
-//     // it and then go to the next one in its list
-//     if (in_original != original_contents.end() &&
-//         (in_modified == modified_contents.end() ||
-//         in_original->path().filename() < in_modified->path().filename())) {
-//       file(in_original->path().string(), std::optional<std::string>());
-//       ++in_original;
-//     } else if(in_original == original_contents.end() || 
-//         in_modified->path().filename() < in_original->path().filename()) {
-//       // similarly, process in_modified if it doesn't match in_original
-//       file(std::optional<std::string>(), in_modified->path().string());
-//       ++in_modified;
-//     } else {
-//       // having dealt with the problematic cases, we can compare two matching files
-//       file(in_original->path().string(), in_modified->path().string());
-//       ++in_original;
-//       ++in_modified;
-//     }
-//   }
+  // in_original = entry.begin();
+  // in_modified = modified_contents.begin();
 
-//   in_original = original_contents.begin();
-//   in_modified = modified_contents.begin();
+  // while (in_original != entry.end() || in_modified != modified_contents.end()) {
 
-//   while (in_original != original_contents.end() || in_modified != modified_contents.end()) {
+  //   if (in_original != entry.end() && !in_original->is_directory()) {
+  //     ++in_original;
+  //     continue;
+  //   }
 
-//     if (in_original != original_contents.end() && !in_original->is_directory()) {
-//       ++in_original;
-//       continue;
-//     }
+  //   if (in_modified != modified_contents.end() && !in_modified->is_directory()) {
+  //     ++in_modified;
+  //     continue;
+  //   }
 
-//     if (in_modified != modified_contents.end() && !in_modified->is_directory()) {
-//       ++in_modified;
-//       continue;
-//     }
-
-//     // same logic as processing files
-//     if (in_original != original_contents.end() &&
-//         (in_modified == modified_contents.end() ||
-//         in_original->path().filename() < in_modified->path().filename())) {
-//       directory(in_original->path().string(), std::optional<std::string>());
-//       ++in_original;
-//     } else if(in_original == original_contents.end() || 
-//         in_modified->path().filename() < in_original->path().filename()) {
-//       directory(std::optional<std::string>(), in_modified->path().string());
-//       ++in_modified;
-//     } else {
-//       // having dealt with the problematic cases, we can compare two matching
-//       // directories
-//       directory(
-//         in_original->path().string(),
-//         in_modified->path().string()
-//       );
-//       ++in_original;
-//       ++in_modified;
-//     }
-//   }
-// }
+  //   // same logic as processing files
+  //   if (in_original != entry.end() &&
+  //       (in_modified == modified_contents.end() ||
+  //       in_original->path().filename() < in_modified->path().filename())) {
+  //     directory(in_original->path().string(), std::optional<std::string>());
+  //     ++in_original;
+  //   } else if(in_original == entry.end() || 
+  //       in_modified->path().filename() < in_original->path().filename()) {
+  //     directory(std::optional<std::string>(), in_modified->path().string());
+  //     ++in_modified;
+  //   } else {
+  //     // having dealt with the problematic cases, we can compare two matching
+  //     // directories
+  //     directory(
+  //       in_original->path().string(),
+  //       in_modified->path().string()
+  //     );
+  //     ++in_original;
+  //     ++in_modified;
+  //   }
+  // }
+}
 
 
 // void input_source_local::process_files_from() {
