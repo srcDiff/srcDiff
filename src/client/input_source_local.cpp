@@ -55,36 +55,17 @@ input_source_local::operator bool() {
   return !input_cache.empty();
 }
 
-// determines whether the input path(s) exist and whether they are files or
-// directories, and then processes them
 std::unique_ptr<input_stream_base> input_source_local::next() {
   if(!*this) return std::unique_ptr<input_stream_base>();
-
-  // if (options.files_from_name) {
-    
-  //   files_from();
-  
-  // } else {
-
   return file();
-
 }
 
 std::unique_ptr<input_stream_base> input_source_local::file() {
-
-  // if(path_modified == "") {
-  //   srcml_archive* read_archive = srcml_archive_create();
-  //   srcml_archive_read_open_filename(read_archive, path_original->c_str());
-  //   srcml_unit* unit = srcml_archive_read_unit(read_archive);
-  //   srcml_archive_close(read_archive);
-  //   srcml_archive_free(read_archive);
-  //   return unit;
-  // }
-
   assert(!input_cache.back().is_directory());
 
   const std::string& path = input_cache.back().path().native();
   const char* language_string = get_language(path);
+
   // throw instead?
   if(language_string == SRCML_LANGUAGE_NONE) return std::unique_ptr<input_stream_base>();
 
@@ -121,66 +102,7 @@ void input_source_local::directory() {
     input_cache.push_back(entry);
   }
 
-  //   // if we're not at the end of the original contents list, but: we are at the
-  //   // end of the modified files list, or in_original is less than the current
-  //   // entry in the modified files list, then in_original has no match; process
-  //   // it and then go to the next one in its list
-  //   if (in_original != entry.end() &&
-  //       (in_modified == modified_contents.end() ||
-  //       in_original->path().filename() < in_modified->path().filename())) {
-  //     file(in_original->path().string(), std::optional<std::string>());
-  //     ++in_original;
-  //   } else if(in_original == entry.end() || 
-  //       in_modified->path().filename() < in_original->path().filename()) {
-  //     // similarly, process in_modified if it doesn't match in_original
-  //     file(std::optional<std::string>(), in_modified->path().string());
-  //     ++in_modified;
-  //   } else {
-  //     // having dealt with the problematic cases, we can compare two matching files
-  //     file(in_original->path().string(), in_modified->path().string());
-  //     ++in_original;
-  //     ++in_modified;
-  //   }
-  // }
-
-  // in_original = entry.begin();
-  // in_modified = modified_contents.begin();
-
-  // while (in_original != entry.end() || in_modified != modified_contents.end()) {
-
-  //   if (in_original != entry.end() && !in_original->is_directory()) {
-  //     ++in_original;
-  //     continue;
-  //   }
-
-  //   if (in_modified != modified_contents.end() && !in_modified->is_directory()) {
-  //     ++in_modified;
-  //     continue;
-  //   }
-
-  //   // same logic as processing files
-  //   if (in_original != entry.end() &&
-  //       (in_modified == modified_contents.end() ||
-  //       in_original->path().filename() < in_modified->path().filename())) {
-  //     directory(in_original->path().string(), std::optional<std::string>());
-  //     ++in_original;
-  //   } else if(in_original == entry.end() || 
-  //       in_modified->path().filename() < in_original->path().filename()) {
-  //     directory(std::optional<std::string>(), in_modified->path().string());
-  //     ++in_modified;
-  //   } else {
-  //     // having dealt with the problematic cases, we can compare two matching
-  //     // directories
-  //     directory(
-  //       in_original->path().string(),
-  //       in_modified->path().string()
-  //     );
-  //     ++in_original;
-  //     ++in_modified;
-  //   }
-  // }
 }
-
 
 // void input_source_local::process_files_from() {
 
@@ -225,7 +147,6 @@ void input_source_local::directory() {
 input_source_local::input_context * input_source_local::open(const char* uri) const {
 
   input_context* context = new input_context;
-
   context->in.open(uri);
 
   return context->in ? context : (delete context, nullptr);
@@ -235,7 +156,6 @@ input_source_local::input_context * input_source_local::open(const char* uri) co
 ssize_t input_source_local::read(void* context, void* buffer, size_t len) {
 
   input_context* ctx = (input_context*)context;
-
   ctx->in.read((char*)buffer, len);
 
   return ctx->in.gcount();
@@ -244,9 +164,7 @@ ssize_t input_source_local::read(void* context, void* buffer, size_t len) {
 int input_source_local::close(void* context) {
 
   input_context* ctx = (input_context*)context;
-
   ctx->in.close();
-
   delete ctx;
 
   return 1;

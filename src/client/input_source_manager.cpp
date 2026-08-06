@@ -65,6 +65,66 @@ input_source_manager::operator bool(){
 void input_source_manager::consume() {
 	assert(bool(*this));
 
+
+  //   // if we're not at the end of the original contents list, but: we are at the
+  //   // end of the modified files list, or in_original is less than the current
+  //   // entry in the modified files list, then in_original has no match; process
+  //   // it and then go to the next one in its list
+  //   if (in_original != entry.end() &&
+  //       (in_modified == modified_contents.end() ||
+  //       in_original->path().filename() < in_modified->path().filename())) {
+  //     file(in_original->path().string(), std::optional<std::string>());
+  //     ++in_original;
+  //   } else if(in_original == entry.end() || 
+  //       in_modified->path().filename() < in_original->path().filename()) {
+  //     // similarly, process in_modified if it doesn't match in_original
+  //     file(std::optional<std::string>(), in_modified->path().string());
+  //     ++in_modified;
+  //   } else {
+  //     // having dealt with the problematic cases, we can compare two matching files
+  //     file(in_original->path().string(), in_modified->path().string());
+  //     ++in_original;
+  //     ++in_modified;
+  //   }
+  // }
+
+  // in_original = entry.begin();
+  // in_modified = modified_contents.begin();
+
+  // while (in_original != entry.end() || in_modified != modified_contents.end()) {
+
+  //   if (in_original != entry.end() && !in_original->is_directory()) {
+  //     ++in_original;
+  //     continue;
+  //   }
+
+  //   if (in_modified != modified_contents.end() && !in_modified->is_directory()) {
+  //     ++in_modified;
+  //     continue;
+  //   }
+
+  //   // same logic as processing files
+  //   if (in_original != entry.end() &&
+  //       (in_modified == modified_contents.end() ||
+  //       in_original->path().filename() < in_modified->path().filename())) {
+  //     directory(in_original->path().string(), std::optional<std::string>());
+  //     ++in_original;
+  //   } else if(in_original == entry.end() || 
+  //       in_modified->path().filename() < in_original->path().filename()) {
+  //     directory(std::optional<std::string>(), in_modified->path().string());
+  //     ++in_modified;
+  //   } else {
+  //     // having dealt with the problematic cases, we can compare two matching
+  //     // directories
+  //     directory(
+  //       in_original->path().string(),
+  //       in_modified->path().string()
+  //     );
+  //     ++in_original;
+  //     ++in_modified;
+  //   }
+  // }
+
 	// first source is original/second is modified
 	// check if more and put in while, and
 	// add error handling, correction, directory, concurrent, possibly separate input streams, parallelism
