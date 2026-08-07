@@ -38,5 +38,4 @@ srcML::nodes input_stream<T>::input_nodes(srcML::converter& converter) const {
   typename T::input_context* context = input.open(path->c_str());
   converter.convert(archive, language, *path, (void*)context, T::read, T::close);
   return converter.create_nodes();
-
 }

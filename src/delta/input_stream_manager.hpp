@@ -25,33 +25,39 @@ namespace srcdiff {
 class input_stream_manager {
 public:
 
-    input_stream_manager(bool should_split_strings) : converter(should_split_strings) {
+    input_stream_manager(bool should_split_strings) 
+        : converter(should_split_strings), original_streams(), modified_streams() {
     }
     ~input_stream_manager() {}
 
-    void append_stream(std::shared_ptr<abstract_input_stream> stream) {
-        streams.push_back(stream);
+    void append_original_stream(std::shared_ptr<abstract_input_stream> stream) {
+        original_streams.push_back(stream);
+    }
+
+    void append_modified_stream(std::shared_ptr<abstract_input_stream> stream) {
+        modified_streams.push_back(stream);
     }
 
     std::pair<srcML::nodes, srcML::nodes> consume_streams() {
       /// @todo handle better
-      if(streams.size() < 2) return std::pair<srcML::nodes, srcML::nodes>();
+      if(original_streams.empty() || modified_streams.empty()) return std::pair<srcML::nodes, srcML::nodes>();
 
       std::pair<srcML::nodes, srcML::nodes> nodes;
-      std::thread thread_original(std::ref(*streams.front().get()), std::ref(converter), std::ref(nodes.first));
+      std::thread thread_original(std::ref(*original_streams.front().get()), std::ref(converter), std::ref(nodes.first));
       thread_original.join();
-      streams.pop_front();
+      original_streams.pop_front();
 
-      std::thread thread_modified(std::ref(*streams.front().get()), std::ref(converter), std::ref(nodes.second));
+      std::thread thread_modified(std::ref(*modified_streams.front().get()), std::ref(converter), std::ref(nodes.second));
       thread_modified.join();
-      streams.pop_front();
+      modified_streams.pop_front();
 
       return nodes;
     }
 
 protected:
     srcML::converter converter;
-    std::list<std::shared_ptr<abstract_input_stream>> streams;
+    std::list<std::shared_ptr<abstract_input_stream>> original_streams;
+    std::list<std::shared_ptr<abstract_input_stream>> modified_streams;
 };
 
 }

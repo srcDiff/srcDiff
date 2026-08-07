@@ -84,8 +84,8 @@ int srcDiff(const char* original_filename, const char* modified_filename, const 
     std::shared_ptr<srcdiff::input_stream<file_input>> input_modified = std::make_shared<srcdiff::input_stream<file_input>>(in, original_path, modified_path, options.archive, language_string);
 
     srcdiff::input_stream_manager manager(options.flags);
-    manager.append_stream(input_original);
-    manager.append_stream(input_modified);
+    manager.append_original_stream(input_original);
+    manager.append_modified_stream(input_modified);
 
     srcdiff::deltor deltor(options.methods);
     deltor.create(options.archive, manager);
@@ -167,10 +167,10 @@ struct srcml_unit* srcdiff_create_delta(struct srcdiff_config* configuration,
   }
 
   std::unique_ptr<srcdiff::abstract_input_stream> original_input = std::make_unique<srcml_unit_input>(original_unit);
-  config->manager->append_stream(std::move(original_input));
+  config->manager->append_original_stream(std::move(original_input));
 
   std::unique_ptr<srcdiff::abstract_input_stream> modified_input = std::make_unique<srcml_unit_input>(modified_unit);
-  config->manager->append_stream(std::move(modified_input));
+  config->manager->append_modified_stream(std::move(modified_input));
 
   std::optional<std::string> unit_filename = srcdiff_merge_attributes(srcml_unit_get_filename(original_unit), srcml_unit_get_filename(modified_unit));
   std::optional<std::string> unit_version = srcdiff_merge_attributes(srcml_unit_get_version(original_unit), srcml_unit_get_version(modified_unit));
