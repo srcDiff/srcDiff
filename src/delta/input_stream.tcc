@@ -8,10 +8,11 @@
  */
 
 template<class T>
-input_stream<T>::input_stream(const T& input, const std::optional<std::string>& path,
+input_stream<T>::input_stream(const T& input,
+                              const std::optional<std::string>& path_base, const std::optional<std::string>& path,
                               srcml_archive* archive,
-                              const char* language, const std::optional<std::string>& filename)
-	: input(input), input_stream_base(path), archive(archive), language(language), filename(filename) {
+                              const char* language)
+	: input(input), input_stream_base(path_base, path), archive(archive), language(language) {
   }
 
 template<class T>
@@ -35,7 +36,7 @@ template<class T>
 srcML::nodes input_stream<T>::input_nodes(srcML::converter& converter) const {
 
   typename T::input_context* context = input.open(path->c_str());
-  converter.convert(archive, language, filename? filename->c_str() : std::filesystem::path(*path).filename(), (void*)context, T::read, T::close);
+  converter.convert(archive, language, *path, (void*)context, T::read, T::close);
   return converter.create_nodes();
 
 }

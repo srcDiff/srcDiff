@@ -33,7 +33,6 @@ namespace srcdiff {
 class deltor {
 
 private:
-
   std::shared_ptr<output_stream> output;
 
 public:

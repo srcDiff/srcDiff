@@ -38,7 +38,7 @@ private:
 
 public:
 
-  input_source(srcml_archive* archive, const std::optional<std::string>& filename);
+  input_source(srcml_archive* archive);
   virtual ~input_source();
 
   virtual operator bool() = 0;
@@ -49,7 +49,6 @@ public:
 
 protected:
   srcml_archive* archive;
-  const std::optional<std::string>& filename;
 };
 
 }

@@ -24,15 +24,14 @@
 
 namespace srcdiff {
 
-input_source_local::input_source_local(srcml_archive* archive, const std::optional<std::string>& filename,
-                                       const std::string& output_filename, const std::string& path)
- : input_source(archive, filename), output_filename(output_filename), path(std::filesystem::path(path)),
+input_source_local::input_source_local(srcml_archive* archive, const std::string& output_filename, const std::string& path)
+ : input_source(archive), output_filename(output_filename), path_base(std::filesystem::path(path)),
    is_initialized(false), input_cache() {
 
-      if(!std::filesystem::exists(path)) {
+      if(!std::filesystem::exists(path_base)) {
         throw std::string("Input source '" + path + "' could not be opened");
       }
-      input_cache.emplace_back(path);
+      input_cache.emplace_back(path_base);
 }
 
 input_source_local::~input_source_local() {
@@ -58,7 +57,7 @@ void input_source_local::next() {
   if(!output_file) {
     output_file = std::filesystem::directory_entry(output_filename);
     if(input_cache.back() == *output_file) {
-        throw std::string("Input source '" + path.native() + "' same as output filename");
+        throw std::string("Input source '" + input_cache.back().path().native() + "' same as output filename");
     }
   }
 
@@ -81,7 +80,7 @@ std::shared_ptr<input_stream_base> input_source_local::file() {
   // throw instead?
   if(language_string == SRCML_LANGUAGE_NONE) return std::shared_ptr<input_stream_base>();
 
-  return std::make_unique<input_stream<input_source_local>>(*this, path, archive, language_string, filename);
+  return std::make_unique<input_stream<input_source_local>>(*this, path_base, path, archive, language_string);
 }
 
 void input_source_local::directory() {

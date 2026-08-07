@@ -91,16 +91,20 @@ struct client_options {
     return (flags & flag) > 0;
   }
 
-  srcml_archive* archive;
-
-  input_source_manager* input_manager;
-
-  std::string output_filename;
-  std::optional<std::string> files_from_name;
-  std::optional<std::string> unit_filename;
-
   OPTION_TYPE flags;
   METHOD_TYPE methods;
+
+  srcml_archive* archive;
+  input_source_manager* input_manager;
+
+  std::optional<std::string> files_from_name;
+  std::string output_filename;
+
+  struct output_options {
+    std::optional<std::string> url;
+    std::optional<std::string> filename;
+    std::optional<std::string> version;
+  } output_options;
 
   struct view_options_t {
     std::string syntax_highlight;
@@ -108,20 +112,6 @@ struct client_options {
     std::any unified_view_context = (int)3;
     int side_by_side_tab_size;
   } view_options;
-
-#if SVN
-  std::optional<std::string> svn_url;
-  svn_revnum_t revision_one;
-  svn_revnum_t revision_two;
-#endif
-  
-#if GIT
-  std::optional<std::string> git_url;
-  std::string git_revision_one;
-  std::string git_revision_two;
-  std::optional<std::string> original_repository;
-  std::optional<std::string> modified_repository;
-#endif
 
 };
 

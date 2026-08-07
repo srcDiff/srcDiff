@@ -21,8 +21,7 @@ namespace srcdiff {
 
 class input_source_local : public input_source {
 public:
-  input_source_local(srcml_archive* archive, const std::optional<std::string>& filename,
-                     const std::string& output_filename, const std::string& path);
+  input_source_local(srcml_archive* archive, const std::string& output_filename, const std::string& path);
   virtual ~input_source_local();
 
   virtual operator bool() override;
@@ -44,7 +43,7 @@ public:
 private:
   const std::string& output_filename;
   std::optional<std::filesystem::directory_entry> output_file;
-  std::filesystem::path path;
+  std::filesystem::path path_base;
 
   bool is_initialized;
   // stack for dfs

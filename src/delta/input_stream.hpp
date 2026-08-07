@@ -31,9 +31,11 @@ private:
 
 class input_stream_base : public abstract_input_stream {
 public:
-    input_stream_base(const std::optional<std::string>& path) : path(path) {};
-    const std::optional<std::string> get_path() { return path; }
+    input_stream_base(const std::optional<std::string>& path_base, const std::optional<std::string>& path) : path_base(path_base), path(path) {};
+    const std::optional<std::string> get_path_base() { return path_base; }
+    const std::optional<std::string> get_path()      { return path; }
 protected:
+    const std::optional<std::string> path_base;
     const std::optional<std::string> path;
 };
 
@@ -41,9 +43,10 @@ template<class T>
 class input_stream : public input_stream_base {
 public:
 
-    input_stream(const T& input, const std::optional<std::string>& path,
+    input_stream(const T& input,
+                 const std::optional<std::string>& path_base, const std::optional<std::string>& path,
                  srcml_archive* archive,
-                 const char* language, const std::optional<std::string>& filename);
+                 const char* language);
     ~input_stream();
 
     virtual void operator()(srcML::converter& converter, srcML::nodes& nodes) const;
@@ -54,7 +57,6 @@ protected:
 
     srcml_archive* archive;
     const char* language;
-    const std::optional<std::string>& filename;
 };
 
 #include <input_stream.tcc>

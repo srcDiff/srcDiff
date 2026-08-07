@@ -80,12 +80,12 @@ int srcDiff(const char* original_filename, const char* modified_filename, const 
     options.output_filename = output_filename;
 
     file_input in;
-    std::unique_ptr<srcdiff::input_stream<file_input>> input_original = std::make_unique<srcdiff::input_stream<file_input>>(in, original_path, options.archive, language_string, std::optional<std::string>());
-    std::unique_ptr<srcdiff::input_stream<file_input>> input_modified = std::make_unique<srcdiff::input_stream<file_input>>(in, modified_path, options.archive, language_string, std::optional<std::string>());
+    std::shared_ptr<srcdiff::input_stream<file_input>> input_original = std::make_shared<srcdiff::input_stream<file_input>>(in, original_path, original_path, options.archive, language_string);
+    std::shared_ptr<srcdiff::input_stream<file_input>> input_modified = std::make_shared<srcdiff::input_stream<file_input>>(in, original_path, modified_path, options.archive, language_string);
 
     srcdiff::input_stream_manager manager(options.flags);
-    manager.append_stream(std::move(input_original));
-    manager.append_stream(std::move(input_modified));
+    manager.append_stream(input_original);
+    manager.append_stream(input_modified);
 
     srcdiff::deltor deltor(options.methods);
     deltor.create(options.archive, manager);

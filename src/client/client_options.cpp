@@ -62,17 +62,17 @@ void option_input_file(const std::vector<std::string>& arg) {
     if(sep_pos != std::string::npos) {
       std::string path_original = arg[pos].substr(0, sep_pos);
       std::string path_modified = arg[pos].substr(sep_pos + 1);
-      options.input_manager->append_source(std::make_shared<input_source_local>(options.archive, options.unit_filename, options.output_filename, path_original));
-      options.input_manager->append_source(std::make_shared<input_source_local>(options.archive, options.unit_filename, options.output_filename, path_modified));
+      options.input_manager->append_source(std::make_shared<input_source_local>(options.archive, options.output_filename, path_original));
+      options.input_manager->append_source(std::make_shared<input_source_local>(options.archive, options.output_filename, path_modified));
     } else if(ext_pos != std::string::npos && arg[pos].substr(ext_pos + 1) == "xml") {
       options.flags |= OPTION_VIEW_XML;
-      // options.input_manager->append_source(std::make_shared<input_source_local>(options.archive, options.unit_filename, options.output_filename, arg[pos], ""));
+      // options.input_manager->append_source(std::make_shared<input_source_local>(options.archive, options.output_filename, arg[pos], ""));
     } else {
 
       // if((pos + 1) >= arg.size()) {
       //   throw CLI::ValidationError("Odd number of input files.");
       // }
-      options.input_manager->append_source(std::make_shared<input_source_local>(options.archive, options.unit_filename, options.output_filename, arg[pos]));
+      options.input_manager->append_source(std::make_shared<input_source_local>(options.archive, options.output_filename, arg[pos]));
       // ++pos;
     }
 
@@ -117,42 +117,6 @@ void option_files_from(const std::string & filename) {
 
 }
 
-// processing git and svn input arguments:
-
-#if SVN
-void option_svn_url(const std::string & arg) {
-
-  std::string::size_type atsign = arg.find('@');
-  if(atsign == std::string::npos) {
-
-    options.svn_url = arg;
-    options.revision_one = SVN_INVALID_REVNUM;
-    options.revision_two = SVN_INVALID_REVNUM;
-
-  } else {
-
-    options.svn_url = arg.substr(0, atsign);
-    options.revision_one = std::stoi(arg.substr(atsign + 1));
-    std::string::size_type dash = arg.find('-', atsign + 1);
-    options.revision_two = std::stoi(arg.substr(dash + 1));
-
-  }
-
-}
-#endif
-
-#if GIT
-void option_git_url(const std::string & arg) {
-
-  std::string::size_type atsign = arg.find('@');
-  options.git_url = arg.substr(0, atsign);
-  std::string::size_type dash = arg.find('-', atsign + 1);
-  options.git_revision_one = arg.substr(atsign + 1, dash - (atsign + 1));
-  options.git_revision_two = arg.substr(dash + 1);
-
-}
-#endif
-
 // options that are passed to the srcML archive object (options.archive):
 
 enum srcml_bool_field { ARCHIVE };
@@ -183,7 +147,7 @@ void option_srcml_int<TABSTOP>(const int & arg) {
 
 }
 
-enum srcml_string_field { SRC_ENCODING, XML_ENCODING, LANGUAGE, URL, SRC_VERSION, REGISTER_EXT, XMLNS };
+enum srcml_string_field { SRC_ENCODING, XML_ENCODING, LANGUAGE, REGISTER_EXT, XMLNS };
 
 template<srcml_string_field field>
 void option_srcml_string(const std::string & arg) {}
@@ -201,16 +165,6 @@ void option_srcml_string<XML_ENCODING>(const std::string & arg) {
 template<>
 void option_srcml_string<LANGUAGE>(const std::string & arg) {
   srcml_archive_set_language(options.archive, arg.c_str());
-}
-
-template<>
-void option_srcml_string<URL>(const std::string & arg) {
-  srcml_archive_set_url(options.archive, arg.c_str());
-}
-
-template<>
-void option_srcml_string<SRC_VERSION>(const std::string & arg) {
-  srcml_archive_set_version(options.archive, arg.c_str());
 }
 
 template<>
@@ -384,28 +338,6 @@ const client_options& process_command_line(int argc, char* argv[]) {
     "There should be one pair per line, in the format: original|modified"
   );
 
-  #if SVN
-    input_group->add_option_function<std::string>(
-      "--svn",
-      option_svn_url,
-      "Input from a Subversion repository. Example: --svn http://example.org@1-2"
-    );
-
-    input_group->add_flag(
-      "--svn-continuous",
-      option_flag_enable<OPTION_SVN_CONTINUOUS>,
-      "Continue from base revision: Treat revisions supplied as as range and srcdiff each version with subsequent"
-    ); // this may have been where needed revision
-  #endif
-
-  #if GIT
-    input_group->add_option_function<std::string>(
-      "--git",
-      option_git_url,
-      "Input from a Git repository. Example: --git http://example.org@HASH-HASH"
-    );
-  #endif
-
   CLI::Option_group * srcml_group = cli.add_option_group(
     "srcML",
     "These options control how srcML parses code into an XML AST."
@@ -435,11 +367,22 @@ const client_options& process_command_line(int argc, char* argv[]) {
     "Set the input source programming language"
   )->default_val("C++");
 
-  // Note: this will override the filename attribute on all output units
   srcml_group->add_option(
     "-f,--filename",
-    options.unit_filename,
-    "Specify a unit filename attribute that is different from the actual filename"
+    options.output_options.filename,
+    "Set the filename attribute"
+  );
+
+  srcml_group->add_option(
+    "--url",
+    options.output_options.url,
+    "Set the url attribute"
+  );
+
+  srcml_group->add_option(
+    "-s,--src-version",
+    options.output_options.url,
+    "Set the version attribute"
   );
 
   srcml_group->add_option_function<std::string>(
@@ -447,12 +390,6 @@ const client_options& process_command_line(int argc, char* argv[]) {
      option_srcml_string<REGISTER_EXT>,
     "Register a file extension/language pair to be used during parsing\n"
     "Example: --register-ext cxx=C++"
-  );
-
-  srcml_group->add_option_function<std::string>(
-    "-s,--src-version",
-    option_srcml_string<SRC_VERSION>,
-    "Set the version attribute on the root XML element of the archive"
   );
 
   // since the XMLNS options have a format that CLI11 doesn't know how to parse,
