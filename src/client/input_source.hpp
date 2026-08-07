@@ -16,6 +16,7 @@
 
 #include <optional>
 #include <memory>
+#include <filesystem>
 
 #ifdef __MINGW32__
 #define PATH_SEPARATOR '\\'
@@ -42,6 +43,7 @@ public:
   virtual ~input_source();
 
   virtual operator bool() = 0;
+  virtual std::filesystem::directory_entry   entry()  = 0;
   virtual std::shared_ptr<input_stream_base> stream() = 0;
   virtual void next() = 0;
 

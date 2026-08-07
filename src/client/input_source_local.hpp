@@ -25,12 +25,15 @@ public:
   virtual ~input_source_local();
 
   virtual operator bool() override;
+  virtual std::filesystem::directory_entry   entry() override;
   virtual std::shared_ptr<input_stream_base> stream() override;
   virtual void next() override;
 
   std::shared_ptr<input_stream_base> file();
-  void directory();
+  std::shared_ptr<input_stream_base> directory();
   //void files_from();
+
+  void expand_directory();
 
   struct input_context {
     std::ifstream in;

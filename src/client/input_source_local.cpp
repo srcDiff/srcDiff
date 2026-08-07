@@ -40,30 +40,34 @@ input_source_local::~input_source_local() {
 input_source_local::operator bool() {
 
   if(!is_initialized) { 
-    next();
+
+    // delayed as output filename may not be known when this is created
+    // next calls this first to make sure this happens
+    if(!output_file) {
+      output_file = std::filesystem::directory_entry(output_filename);
+      if(input_cache.back() == *output_file) {
+          throw std::string("Input source '" + input_cache.back().path().native() + "' same as output filename");
+      }
+      is_initialized = true;
+    }
   }
+
   return !input_cache.empty();
 }
 
 void input_source_local::next() {
-  if(is_initialized) {
-    input_cache.pop_back();
+  if(!*this) return;
+
+  if(std::filesystem::is_directory(input_cache.back())) {
+    expand_directory();
   } else {
-    is_initialized = true;
+    input_cache.pop_back();
   }
+}
 
-  // delayed as output filename may not be known when this is created
-  // next calls this first to make sure this happens
-  if(!output_file) {
-    output_file = std::filesystem::directory_entry(output_filename);
-    if(input_cache.back() == *output_file) {
-        throw std::string("Input source '" + input_cache.back().path().native() + "' same as output filename");
-    }
-  }
-
-  while(!input_cache.empty() && std::filesystem::is_directory(input_cache.back())) {
-    directory();
-  }
+std::filesystem::directory_entry input_source_local::entry() {
+  if(!*this) return std::filesystem::directory_entry();
+  return input_cache.back();
 }
 
 std::shared_ptr<input_stream_base> input_source_local::stream() {
@@ -75,19 +79,24 @@ std::shared_ptr<input_stream_base> input_source_local::file() {
   assert(!input_cache.back().is_directory());
 
   const std::string& path = input_cache.back().path().native();
-  const char* language_string = get_language(path);
 
   // throw instead?
+  const char* language_string = get_language(path);
   if(language_string == SRCML_LANGUAGE_NONE) return std::shared_ptr<input_stream_base>();
 
-  return std::make_unique<input_stream<input_source_local>>(*this, path_base, path, archive, language_string);
+  return std::make_shared<input_stream<input_source_local>>(*this, path_base, path, archive, language_string);
 }
 
-void input_source_local::directory() {
+std::shared_ptr<input_stream_base> input_source_local::directory() {
+  return std::make_shared<input_stream<input_source_local>>(*this, path_base, input_cache.back().path().native(), archive, nullptr);
+}
+
+void input_source_local::expand_directory() {
 
   std::filesystem::directory_entry directory = input_cache.back();
-  input_cache.pop_back();
   assert(directory.is_directory());
+
+  input_cache.pop_back();
 
   std::vector<std::filesystem::directory_entry> entries;
   for (std::filesystem::directory_entry entry : std::filesystem::directory_iterator(directory)){
