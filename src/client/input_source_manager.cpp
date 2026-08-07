@@ -139,23 +139,23 @@ void input_source_manager::consume() {
 	input_sources.pop_front();
 
 	std::filesystem::directory_entry entry = original_source->entry();
+	std::shared_ptr<input_source> modified_source = input_sources.front();
 	while(entry.is_directory()) {
 		original_source->next();
 		entry = original_source->entry();
 	}
 
-	stream_manager.append_original_stream(original_source->stream());
-	original_source->next();
-
-	std::shared_ptr<input_source> modified_source = input_sources.front();
-	input_sources.pop_front();
-
-	entry = modified_source->entry();
 	while(entry.is_directory()) {
 		modified_source->next();
 		entry = modified_source->entry();
 	}
 
+	stream_manager.append_original_stream(original_source->stream());
+	original_source->next();
+
+	input_sources.pop_front();
+
+	entry = modified_source->entry();
 	stream_manager.append_modified_stream(modified_source->stream());
 	modified_source->next();
 
