@@ -56,6 +56,7 @@ input_source_local::operator bool() {
 }
 
 void input_source_local::next() {
+  
   if(!*this) return;
 
   if(std::filesystem::is_directory(input_cache.back())) {

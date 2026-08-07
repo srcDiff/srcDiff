@@ -18,25 +18,9 @@
 #include <memory>
 #include <filesystem>
 
-#ifdef __MINGW32__
-#define PATH_SEPARATOR '\\'
-#else
-#define PATH_SEPARATOR '/'
-#endif
-
 namespace srcdiff {
 
 class input_source {
-private:
-
-  // handle in input source manager. Maybe
-  // bool() return false if not anymore in source. Exception is somethign skipped
-  static bool show_input;
-
-  static size_t input_count;
-  static size_t input_skipped;
-  static size_t input_total;
-
 public:
 
   input_source(srcml_archive* archive);

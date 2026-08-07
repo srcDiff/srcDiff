@@ -11,16 +11,8 @@
 
 namespace srcdiff {
 
-bool input_source::show_input = false;
-
-size_t input_source::input_count   = 0;
-size_t input_source::input_skipped = 0;
-size_t input_source::input_total   = 0;
-
 input_source::input_source(srcml_archive* archive) : archive(archive) {
-
   // show_input = options.is_option(OPTION_VERBOSE) && !options.is_option(OPTION_QUIET);
-
 }
 
 input_source::~input_source() {

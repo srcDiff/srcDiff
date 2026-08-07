@@ -124,16 +124,43 @@ void input_source_manager::consume() {
   //   }
   // }
 
+  // if(show_input) {
+
+  //   ++input_skipped;
+  //   ++input_total;
+  //   std::cout << "- " << (directory_original ? *directory_original : "") << '|' << (directory_modified ? *directory_modified : "") << '\n';
+
+  // }
+
 	// first source is original/second is modified
 	// check if more and put in while, and
 	// add error handling, correction, directory, concurrent, possibly separate input streams, parallelism
-	stream_manager.append_original_stream(input_sources.front()->stream());
-	input_sources.front()->next();
-	if(!*input_sources.front()) input_sources.pop_front();
+	std::shared_ptr<input_source> original_source = input_sources.front();
+	input_sources.pop_front();
 
-	stream_manager.append_modified_stream(input_sources.front()->stream());
-	input_sources.front()->next();
-	if(!*input_sources.front()) input_sources.pop_front();
+	std::filesystem::directory_entry entry = original_source->entry();
+	while(entry.is_directory()) {
+		original_source->next();
+		entry = original_source->entry();
+	}
+
+	stream_manager.append_original_stream(original_source->stream());
+	original_source->next();
+
+	std::shared_ptr<input_source> modified_source = input_sources.front();
+	input_sources.pop_front();
+
+	entry = modified_source->entry();
+	while(entry.is_directory()) {
+		modified_source->next();
+		entry = modified_source->entry();
+	}
+
+	stream_manager.append_modified_stream(modified_source->stream());
+	modified_source->next();
+
+	if(*modified_source) input_sources.push_front(modified_source);
+	if(*original_source) input_sources.push_front(original_source);
 
 	srcml_unit* srcdiff_unit = deltor->create(options.archive, stream_manager);
 
