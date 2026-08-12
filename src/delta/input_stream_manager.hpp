@@ -39,19 +39,23 @@ public:
     }
 
     std::pair<srcML::nodes, srcML::nodes> consume_streams() {
-      /// @todo handle better
-      if(original_streams.empty() || modified_streams.empty()) return std::pair<srcML::nodes, srcML::nodes>();
+        /// @todo handle better
+        if(original_streams.empty() || modified_streams.empty()) return std::pair<srcML::nodes, srcML::nodes>();
 
-      std::pair<srcML::nodes, srcML::nodes> nodes;
-      std::thread thread_original(std::ref(*original_streams.front().get()), std::ref(converter), std::ref(nodes.first));
-      thread_original.join();
-      original_streams.pop_front();
+        std::pair<srcML::nodes, srcML::nodes> nodes;
+        if(original_streams.front()) {
+            std::thread thread_original(std::ref(*original_streams.front().get()), std::ref(converter), std::ref(nodes.first));
+            thread_original.join();
+        }
+        original_streams.pop_front();
 
-      std::thread thread_modified(std::ref(*modified_streams.front().get()), std::ref(converter), std::ref(nodes.second));
-      thread_modified.join();
-      modified_streams.pop_front();
+        if(modified_streams.front()) {
+            std::thread thread_modified(std::ref(*modified_streams.front().get()), std::ref(converter), std::ref(nodes.second));
+            thread_modified.join();
+        }
+        modified_streams.pop_front();
 
-      return nodes;
+        return nodes;
     }
 
 protected:

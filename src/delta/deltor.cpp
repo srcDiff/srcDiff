@@ -47,7 +47,6 @@ srcml_unit* deltor::create(srcml_archive* archive, input_stream_manager& manager
     whitespace.output_all();
 
     output->end_unit();
-
   }
 
   output->reset();

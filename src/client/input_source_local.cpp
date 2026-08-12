@@ -72,7 +72,7 @@ std::filesystem::directory_entry input_source_local::entry() {
 }
 
 std::shared_ptr<input_stream_base> input_source_local::stream() {
-  if(!*this) return std::shared_ptr<input_stream_base>();
+  if(!*this) return std::make_shared<input_stream_base>(std::optional<std::string>());
   if(input_cache.back().is_directory()) return directory();
 
   return file();
@@ -85,7 +85,7 @@ std::shared_ptr<input_stream_base> input_source_local::file() {
 
   // throw instead?
   const char* language_string = get_language(path);
-  if(language_string == SRCML_LANGUAGE_NONE) return std::shared_ptr<input_stream_base>();
+  if(language_string == SRCML_LANGUAGE_NONE) return std::make_shared<input_stream_base>(path);
 
   return std::make_shared<input_stream<input_source_local>>(*this, path, archive, language_string);
 }

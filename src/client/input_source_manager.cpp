@@ -67,65 +67,6 @@ input_source_manager::operator bool(){
 void input_source_manager::consume() {
    assert(bool(*this));
 
-  //   // if we're not at the end of the original contents list, but: we are at the
-  //   // end of the modified files list, or in_original is less than the current
-  //   // entry in the modified files list, then in_original has no match; process
-  //   // it and then go to the next one in its list
-  //   if (in_original != entry.end() &&
-  //       (in_modified == modified_contents.end() ||
-  //       in_original->path().filename() < in_modified->path().filename())) {
-  //     file(in_original->path().string(), std::optional<std::string>());
-  //     ++in_original;
-  //   } else if(in_original == entry.end() || 
-  //       in_modified->path().filename() < in_original->path().filename()) {
-  //     // similarly, process in_modified if it doesn't match in_original
-  //     file(std::optional<std::string>(), in_modified->path().string());
-  //     ++in_modified;
-  //   } else {
-  //     // having dealt with the problematic cases, we can compare two matching files
-  //     file(in_original->path().string(), in_modified->path().string());
-  //     ++in_original;
-  //     ++in_modified;
-  //   }
-  // }
-
-  // in_original = entry.begin();
-  // in_modified = modified_contents.begin();
-
-  // while (in_original != entry.end() || in_modified != modified_contents.end()) {
-
-  //   if (in_original != entry.end() && !in_original->is_directory()) {
-  //     ++in_original;
-  //     continue;
-  //   }
-
-  //   if (in_modified != modified_contents.end() && !in_modified->is_directory()) {
-  //     ++in_modified;
-  //     continue;
-  //   }
-
-  //   // same logic as processing files
-  //   if (in_original != entry.end() &&
-  //       (in_modified == modified_contents.end() ||
-  //       in_original->path().filename() < in_modified->path().filename())) {
-  //     directory(in_original->path().string(), std::optional<std::string>());
-  //     ++in_original;
-  //   } else if(in_original == entry.end() || 
-  //       in_modified->path().filename() < in_original->path().filename()) {
-  //     directory(std::optional<std::string>(), in_modified->path().string());
-  //     ++in_modified;
-  //   } else {
-  //     // having dealt with the problematic cases, we can compare two matching
-  //     // directories
-  //     directory(
-  //       in_original->path().string(),
-  //       in_modified->path().string()
-  //     );
-  //     ++in_original;
-  //     ++in_modified;
-  //   }
-  // }
-
    // first source is original/second is modified
    // check if more and put in while, and
    // add error handling, correction, directory, concurrent, possibly separate input streams, parallelism
@@ -176,44 +117,8 @@ void input_source_manager::consume() {
 
    }
 
-
-  // while (in_original != entry.end() || in_modified != modified_contents.end()) {
-
-  //   if (in_original != entry.end() && !in_original->is_directory()) {
-  //     ++in_original;
-  //     continue;
-  //   }
-
-  //   if (in_modified != modified_contents.end() && !in_modified->is_directory()) {
-  //     ++in_modified;
-  //     continue;
-  //   }
-
-  //   // same logic as processing files
-  //   if (in_original != entry.end() &&
-  //       (in_modified == modified_contents.end() ||
-  //       in_original->path().filename() < in_modified->path().filename())) {
-  //     directory(in_original->path().string(), std::optional<std::string>());
-  //     ++in_original;
-  //   } else if(in_original == entry.end() || 
-  //       in_modified->path().filename() < in_original->path().filename()) {
-  //     directory(std::optional<std::string>(), in_modified->path().string());
-  //     ++in_modified;
-  //   } else {
-  //     // having dealt with the problematic cases, we can compare two matching
-  //     // directories
-  //     directory(
-  //       in_original->path().string(),
-  //       in_modified->path().string()
-  //     );
-  //     ++in_original;
-  //     ++in_modified;
-  //   }
-  // }
-
    std::string original_subpath = original_entry.path().lexically_relative(original_source->get_base_path());
    std::string modified_subpath = modified_entry.path().lexically_relative(modified_source->get_base_path());
-
    std::string original_input_str;
    std::string modified_input_str;
    const char* language = srcml_archive_get_language(options.archive);
@@ -222,7 +127,7 @@ void input_source_manager::consume() {
       modified_input_str = modified_entry.path().native();
 
       language = !language? language : srcml_archive_check_extension(options.archive, original_input_str.c_str());
-   } else if(original_entry.path() < modified_entry.path()) {
+   } else if(!modified_entry.exists() && original_entry.path() < modified_entry.path()) {
       original_input_str = original_entry.path().native();
       language = !language? language : srcml_archive_check_extension(options.archive, original_input_str.c_str());
    } else {
@@ -243,10 +148,8 @@ void input_source_manager::consume() {
    stream_manager.append_original_stream(original_source->stream());
    original_source->next();
 
-
    stream_manager.append_modified_stream(modified_source->stream());
    modified_source->next();
-
 
    // keep both on as long as a one still has streams
    if(*original_source || *modified_source) {
@@ -261,7 +164,7 @@ void input_source_manager::consume() {
    } else {
        std::string srcdiff = srcml_unit_get_srcml(srcdiff_unit);
        view->transform(srcdiff, "UTF-8");
-     }
+   }
 
    srcml_unit_free(srcdiff_unit);
 

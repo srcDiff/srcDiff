@@ -50,7 +50,7 @@ namespace srcML {
     void clear_attributes();
 
     void set_attributes(const attribute_map & input);
-    void emplace_attribute(const std::string & type, const attribute & attr);
+    void emplace_attribute(const std::string & name, const attribute & attr);
     void set_type(node_type input);
     void set_empty(bool input);
     void set_temporary(bool input);
