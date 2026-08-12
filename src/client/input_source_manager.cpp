@@ -23,6 +23,13 @@ input_source_manager::input_source_manager(const client_options& options)
 void input_source_manager::init() {
    
    show_input = options.is_option(OPTION_VERBOSE) && !options.is_option(OPTION_QUIET);
+
+   if(input_sources.size() > 2 || input_sources.front()->entry().is_directory()) {
+      // may need to check second source
+      srcml_archive_disable_solitary_unit(options.archive);
+      show_input = true;
+   }
+
    deltor = std::make_unique<class deltor>(options.methods);
 
    const client_options::view_options_t& view_options = options.view_options;
