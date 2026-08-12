@@ -80,8 +80,8 @@ int srcDiff(const char* original_filename, const char* modified_filename, const 
     options.output_filename = output_filename;
 
     file_input in;
-    std::shared_ptr<srcdiff::input_stream<file_input>> input_original = std::make_shared<srcdiff::input_stream<file_input>>(in, std::string(), original_path, options.archive, language_string);
-    std::shared_ptr<srcdiff::input_stream<file_input>> input_modified = std::make_shared<srcdiff::input_stream<file_input>>(in, std::string(), modified_path, options.archive, language_string);
+    std::shared_ptr<srcdiff::input_stream<file_input>> input_original = std::make_shared<srcdiff::input_stream<file_input>>(in, original_path, options.archive, language_string);
+    std::shared_ptr<srcdiff::input_stream<file_input>> input_modified = std::make_shared<srcdiff::input_stream<file_input>>(in, modified_path, options.archive, language_string);
 
     srcdiff::input_stream_manager manager(options.flags);
     manager.append_original_stream(input_original);
