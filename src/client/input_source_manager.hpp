@@ -50,11 +50,11 @@ private:
   std::list<std::shared_ptr<input_source>> input_sources;
   input_stream_manager stream_manager;
 
-  // bool show_input;
+  bool show_input;
 
-  // size_t input_count;
-  // size_t input_skipped;
-  // size_t input_total;
+  size_t input_count;
+  size_t input_skipped;
+  size_t input_total;
 
   std::unique_ptr<class deltor> deltor;
   std::unique_ptr<view_t> view;

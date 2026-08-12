@@ -25,6 +25,7 @@ public:
   virtual ~input_source_local();
 
   virtual operator bool() override;
+
   virtual std::filesystem::directory_entry   entry() override;
   virtual std::shared_ptr<input_stream_base> stream() override;
   virtual void next() override;
@@ -46,7 +47,6 @@ public:
 private:
   const std::string& output_filename;
   std::optional<std::filesystem::directory_entry> output_file;
-  std::filesystem::path base_path;
 
   bool is_initialized;
   // stack for dfs

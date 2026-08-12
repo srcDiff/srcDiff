@@ -23,8 +23,10 @@ namespace srcdiff {
 class input_source {
 public:
 
-  input_source(srcml_archive* archive);
+  input_source(srcml_archive* archive, const std::string& base_path);
   virtual ~input_source();
+
+  std::filesystem::path get_base_path() { return base_path; }
 
   virtual operator bool() = 0;
   virtual std::filesystem::directory_entry   entry()  = 0;
@@ -35,6 +37,7 @@ public:
 
 protected:
   srcml_archive* archive;
+  std::filesystem::path base_path;
 };
 
 }

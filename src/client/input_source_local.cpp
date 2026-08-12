@@ -25,7 +25,7 @@
 namespace srcdiff {
 
 input_source_local::input_source_local(srcml_archive* archive, const std::string& output_filename, const std::string& path)
- : input_source(archive), output_filename(output_filename), base_path(std::filesystem::path(path)),
+ : input_source(archive, path), output_filename(output_filename),
    is_initialized(false), input_cache() {
 
       if(!std::filesystem::exists(base_path)) {
@@ -87,13 +87,12 @@ std::shared_ptr<input_stream_base> input_source_local::file() {
   const char* language_string = get_language(path);
   if(language_string == SRCML_LANGUAGE_NONE) return std::shared_ptr<input_stream_base>();
 
-  std::string subpath = input_cache.back().path().lexically_relative(base_path).native();
-  return std::make_shared<input_stream<input_source_local>>(*this, base_path, subpath, archive, language_string);
+  return std::make_shared<input_stream<input_source_local>>(*this, path, archive, language_string);
 }
 
 std::shared_ptr<input_stream_base> input_source_local::directory() {
-  std::string subpath = input_cache.back().path().lexically_relative(base_path).native();
-  return std::make_shared<input_stream<input_source_local>>(*this, base_path, subpath, archive, nullptr);
+  std::string path = input_cache.back().path().native();
+  return std::make_shared<input_stream<input_source_local>>(*this, path, archive, nullptr);
 }
 
 void input_source_local::expand_directory() {

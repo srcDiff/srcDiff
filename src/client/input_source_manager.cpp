@@ -15,16 +15,18 @@
 namespace srcdiff {
 
 input_source_manager::input_source_manager(const client_options& options)
-	: options(options), input_sources(), stream_manager(options.is_option(OPTION_STRING_SPLITTING)),
-	  deltor(), view()  {
+   : options(options), input_sources(), stream_manager(options.is_option(OPTION_STRING_SPLITTING)),
+     show_input(false), input_count(0), input_skipped(0), input_total(0),
+     deltor(), view()  {
 }
 
 void input_source_manager::init() {
-	
-  deltor = std::make_unique<class deltor>(options.methods);
+   
+   show_input = options.is_option(OPTION_VERBOSE) && !options.is_option(OPTION_QUIET);
+   deltor = std::make_unique<class deltor>(options.methods);
 
-  const client_options::view_options_t& view_options = options.view_options;
-  if(options.is_option(OPTION_UNIFIED_VIEW)) {
+   const client_options::view_options_t& view_options = options.view_options;
+   if(options.is_option(OPTION_UNIFIED_VIEW)) {
 
      view = std::make_unique<unified_view>(
               options.output_filename,
@@ -36,7 +38,7 @@ void input_source_manager::init() {
               options.is_option(OPTION_HTML_VIEW),
               view_options.unified_view_context);
 
-  } else if(options.is_option(OPTION_SIDE_BY_SIDE_VIEW)) {
+   } else if(options.is_option(OPTION_SIDE_BY_SIDE_VIEW)) {
 
      view = std::make_unique<side_by_side_view>(
               options.output_filename,
@@ -48,7 +50,7 @@ void input_source_manager::init() {
               options.is_option(OPTION_HTML_VIEW),
               view_options.side_by_side_tab_size);
 
-  }
+   }
 }
 
 input_source_manager::~input_source_manager() {
@@ -59,11 +61,11 @@ void input_source_manager::append_source(std::shared_ptr<input_source> input) {
 }
 
 input_source_manager::operator bool(){
-	return input_sources.size() > 1;
+   return input_sources.size() > 1;
 }
 
 void input_source_manager::consume() {
-	assert(bool(*this));
+   assert(bool(*this));
 
   //   // if we're not at the end of the original contents list, but: we are at the
   //   // end of the modified files list, or in_original is less than the current
@@ -124,34 +126,56 @@ void input_source_manager::consume() {
   //   }
   // }
 
-  // if(show_input) {
 
-  //   ++input_skipped;
-  //   ++input_total;
-  //   std::cout << "- " << (directory_original ? *directory_original : "") << '|' << (directory_modified ? *directory_modified : "") << '\n';
+   // first source is original/second is modified
+   // check if more and put in while, and
+   // add error handling, correction, directory, concurrent, possibly separate input streams, parallelism
+   std::shared_ptr<input_source>    original_source = input_sources.front();
+   std::filesystem::directory_entry original_entry  = original_source? original_source->entry() : std::filesystem::directory_entry();
+   input_sources.pop_front();
 
-  // }
+   std::shared_ptr<input_source>    modified_source = input_sources.front();
+   std::filesystem::directory_entry modified_entry  = modified_source? modified_source->entry() : std::filesystem::directory_entry();
+   input_sources.pop_front();
 
-	// first source is original/second is modified
-	// check if more and put in while, and
-	// add error handling, correction, directory, concurrent, possibly separate input streams, parallelism
-	std::shared_ptr<input_source> original_source = input_sources.front();
-	std::filesystem::directory_entry original_entry = original_source? original_source->entry() : std::filesystem::directory_entry();
-	input_sources.pop_front();
+   // if exausted source is_directory is false
+   while(original_entry.is_directory() && modified_entry.is_directory()) {
 
-	std::shared_ptr<input_source> modified_source = input_sources.front();
-	std::filesystem::directory_entry modified_entry = modified_source? modified_source->entry() : std::filesystem::directory_entry();
-	input_sources.pop_front();
+      std::string original_subpath = original_entry.path().lexically_relative(original_source->get_base_path());
+      std::string modified_subpath = modified_entry.path().lexically_relative(modified_source->get_base_path());
 
-	while(original_entry.is_directory()) {
-		original_source->next();
-		original_entry = original_source->entry();
-	}
+      std::string original_input_str;
+      std::string modified_input_str;
+      if(original_subpath == modified_subpath) {
+         original_input_str = original_entry.path().native();
+         modified_input_str = modified_entry.path().native();
 
-	while(modified_entry.is_directory()) {
-		modified_source->next();
-		modified_entry = modified_source->entry();
-	}
+         original_source->next();
+         original_entry = original_source->entry();
+
+         modified_source->next();
+         modified_entry = modified_source->entry();
+
+      } else if(original_entry.path() < modified_entry.path()) {
+         original_input_str = original_entry.path().native();
+      
+         original_source->next();
+         original_entry = original_source->entry();
+
+      } else {
+         modified_input_str = modified_entry.path().native();
+
+         modified_source->next();
+         modified_entry = modified_source->entry();
+      }
+
+      if(show_input) {
+         ++input_skipped;
+         ++input_total;
+         std::cout << "- " << original_input_str << '|' << modified_input_str << '\n';
+      }
+
+   }
 
   // while (in_original != entry.end() || in_modified != modified_contents.end()) {
 
@@ -185,27 +209,30 @@ void input_source_manager::consume() {
   //     ++in_original;
   //     ++in_modified;
   //   }
-  // }	
+  // }   
 
-	stream_manager.append_original_stream(original_source->stream());
-	original_source->next();
+   stream_manager.append_original_stream(original_source->stream());
+   original_source->next();
 
-	stream_manager.append_modified_stream(modified_source->stream());
-	modified_source->next();
+   stream_manager.append_modified_stream(modified_source->stream());
+   modified_source->next();
 
-	if(*modified_source) input_sources.push_front(modified_source);
-	if(*original_source) input_sources.push_front(original_source);
+   // keep both on as long as a one still has streams
+   if(*original_source || *modified_source) {
+      input_sources.push_front(modified_source);
+      input_sources.push_front(original_source);
+   }
 
-	srcml_unit* srcdiff_unit = deltor->create(options.archive, stream_manager);
+   srcml_unit* srcdiff_unit = deltor->create(options.archive, stream_manager);
 
-	if(!view) {
-	    srcml_archive_write_unit(options.archive, srcdiff_unit);
-  	} else {
-	    std::string srcdiff = srcml_unit_get_srcml(srcdiff_unit);
-	    view->transform(srcdiff, "UTF-8");
-	  }
+   if(!view) {
+       srcml_archive_write_unit(options.archive, srcdiff_unit);
+   } else {
+       std::string srcdiff = srcml_unit_get_srcml(srcdiff_unit);
+       view->transform(srcdiff, "UTF-8");
+     }
 
-	srcml_unit_free(srcdiff_unit);
+   srcml_unit_free(srcdiff_unit);
 
 }
 

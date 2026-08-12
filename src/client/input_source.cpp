@@ -11,7 +11,8 @@
 
 namespace srcdiff {
 
-input_source::input_source(srcml_archive* archive) : archive(archive) {
+input_source::input_source(srcml_archive* archive, const std::string& path) 
+  : archive(archive), base_path(path) {
   // show_input = options.is_option(OPTION_VERBOSE) && !options.is_option(OPTION_QUIET);
 }
 
