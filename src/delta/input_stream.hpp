@@ -31,11 +31,12 @@ private:
 
 class input_stream_base : public abstract_input_stream {
 public:
-    input_stream_base(const std::optional<std::string>& path_base, const std::optional<std::string>& path) : path_base(path_base), path(path) {};
-    const std::optional<std::string> get_path_base() { return path_base; }
+    input_stream_base(const std::string& base_path, const std::optional<std::string>& path) : base_path(base_path), path(path) {};
+    const std::optional<std::string> get_base_path() { return base_path; }
     const std::optional<std::string> get_path()      { return path; }
+    bool operator==(const input_stream_base& stream) { return path == stream.path; }
 protected:
-    const std::optional<std::string> path_base;
+    const std::string base_path;
     const std::optional<std::string> path;
 };
 
@@ -44,7 +45,7 @@ class input_stream : public input_stream_base {
 public:
 
     input_stream(const T& input,
-                 const std::optional<std::string>& path_base, const std::optional<std::string>& path,
+                 const std::string& base_path, const std::optional<std::string>& path,
                  srcml_archive* archive,
                  const char* language);
     ~input_stream();

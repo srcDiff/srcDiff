@@ -136,26 +136,60 @@ void input_source_manager::consume() {
 	// check if more and put in while, and
 	// add error handling, correction, directory, concurrent, possibly separate input streams, parallelism
 	std::shared_ptr<input_source> original_source = input_sources.front();
+	std::filesystem::directory_entry original_entry = original_source? original_source->entry() : std::filesystem::directory_entry();
 	input_sources.pop_front();
 
-	std::filesystem::directory_entry entry = original_source->entry();
 	std::shared_ptr<input_source> modified_source = input_sources.front();
-	while(entry.is_directory()) {
+	std::filesystem::directory_entry modified_entry = modified_source? modified_source->entry() : std::filesystem::directory_entry();
+	input_sources.pop_front();
+
+	while(original_entry.is_directory()) {
 		original_source->next();
-		entry = original_source->entry();
+		original_entry = original_source->entry();
 	}
 
-	while(entry.is_directory()) {
+	while(modified_entry.is_directory()) {
 		modified_source->next();
-		entry = modified_source->entry();
+		modified_entry = modified_source->entry();
 	}
+
+  // while (in_original != entry.end() || in_modified != modified_contents.end()) {
+
+  //   if (in_original != entry.end() && !in_original->is_directory()) {
+  //     ++in_original;
+  //     continue;
+  //   }
+
+  //   if (in_modified != modified_contents.end() && !in_modified->is_directory()) {
+  //     ++in_modified;
+  //     continue;
+  //   }
+
+  //   // same logic as processing files
+  //   if (in_original != entry.end() &&
+  //       (in_modified == modified_contents.end() ||
+  //       in_original->path().filename() < in_modified->path().filename())) {
+  //     directory(in_original->path().string(), std::optional<std::string>());
+  //     ++in_original;
+  //   } else if(in_original == entry.end() || 
+  //       in_modified->path().filename() < in_original->path().filename()) {
+  //     directory(std::optional<std::string>(), in_modified->path().string());
+  //     ++in_modified;
+  //   } else {
+  //     // having dealt with the problematic cases, we can compare two matching
+  //     // directories
+  //     directory(
+  //       in_original->path().string(),
+  //       in_modified->path().string()
+  //     );
+  //     ++in_original;
+  //     ++in_modified;
+  //   }
+  // }	
 
 	stream_manager.append_original_stream(original_source->stream());
 	original_source->next();
 
-	input_sources.pop_front();
-
-	entry = modified_source->entry();
 	stream_manager.append_modified_stream(modified_source->stream());
 	modified_source->next();
 

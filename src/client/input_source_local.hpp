@@ -46,7 +46,7 @@ public:
 private:
   const std::string& output_filename;
   std::optional<std::filesystem::directory_entry> output_file;
-  std::filesystem::path path_base;
+  std::filesystem::path base_path;
 
   bool is_initialized;
   // stack for dfs

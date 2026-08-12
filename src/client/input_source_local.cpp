@@ -25,13 +25,13 @@
 namespace srcdiff {
 
 input_source_local::input_source_local(srcml_archive* archive, const std::string& output_filename, const std::string& path)
- : input_source(archive), output_filename(output_filename), path_base(std::filesystem::path(path)),
+ : input_source(archive), output_filename(output_filename), base_path(std::filesystem::path(path)),
    is_initialized(false), input_cache() {
 
-      if(!std::filesystem::exists(path_base)) {
+      if(!std::filesystem::exists(base_path)) {
         throw std::string("Input source '" + path + "' could not be opened");
       }
-      input_cache.emplace_back(path_base);
+      input_cache.emplace_back(base_path);
 }
 
 input_source_local::~input_source_local() {
@@ -56,7 +56,7 @@ input_source_local::operator bool() {
 }
 
 void input_source_local::next() {
-  
+
   if(!*this) return;
 
   if(std::filesystem::is_directory(input_cache.back())) {
@@ -73,6 +73,8 @@ std::filesystem::directory_entry input_source_local::entry() {
 
 std::shared_ptr<input_stream_base> input_source_local::stream() {
   if(!*this) return std::shared_ptr<input_stream_base>();
+  if(input_cache.back().is_directory()) return directory();
+
   return file();
 }
 
@@ -85,11 +87,13 @@ std::shared_ptr<input_stream_base> input_source_local::file() {
   const char* language_string = get_language(path);
   if(language_string == SRCML_LANGUAGE_NONE) return std::shared_ptr<input_stream_base>();
 
-  return std::make_shared<input_stream<input_source_local>>(*this, path_base, path, archive, language_string);
+  std::string subpath = input_cache.back().path().lexically_relative(base_path).native();
+  return std::make_shared<input_stream<input_source_local>>(*this, base_path, subpath, archive, language_string);
 }
 
 std::shared_ptr<input_stream_base> input_source_local::directory() {
-  return std::make_shared<input_stream<input_source_local>>(*this, path_base, input_cache.back().path().native(), archive, nullptr);
+  std::string subpath = input_cache.back().path().lexically_relative(base_path).native();
+  return std::make_shared<input_stream<input_source_local>>(*this, base_path, subpath, archive, nullptr);
 }
 
 void input_source_local::expand_directory() {
