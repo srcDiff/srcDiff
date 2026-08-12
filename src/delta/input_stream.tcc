@@ -21,19 +21,13 @@ void input_stream<T>::operator()(srcML::converter& converter, srcML::nodes& node
  if(!path || path->empty()) return;
 
   try {
-    nodes = input_nodes(converter);
+    typename T::input_context* context = input.open(path->c_str());
+    converter.convert(archive, language, *path, (void*)context, T::read, T::close);
+    nodes = converter.create_nodes();
   } catch(...) {
     /// @todo handle this more gracefully...
     fprintf(stderr, "Error with files\n");
     exit(1);
   }
 
-}
-
-template<class T>
-srcML::nodes input_stream<T>::input_nodes(srcML::converter& converter) const {
-
-  typename T::input_context* context = input.open(path->c_str());
-  converter.convert(archive, language, *path, (void*)context, T::read, T::close);
-  return converter.create_nodes();
 }

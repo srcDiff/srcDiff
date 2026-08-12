@@ -118,12 +118,8 @@ public:
     nodes.clear();
     if(!unit) return;
 
-    nodes = input_nodes(converter);
-  }
-
-  virtual srcML::nodes input_nodes(srcML::converter& converter) const {
     converter.convert(unit);
-    return converter.create_nodes();
+    nodes = converter.create_nodes();
   }
 
 private:

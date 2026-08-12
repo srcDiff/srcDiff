@@ -25,13 +25,17 @@ class abstract_input_stream {
 public:
     virtual ~abstract_input_stream() {}
     virtual void operator()(srcML::converter& converter, srcML::nodes& nodes) const = 0;
-    virtual srcML::nodes input_nodes(srcML::converter& converter)             const = 0;
 private:
 };
 
 class input_stream_base : public abstract_input_stream {
 public:
     input_stream_base(const std::optional<std::string>& path) : path(path) {}
+
+    virtual void operator()(srcML::converter& converter, srcML::nodes& nodes) const override {
+        return;
+    }
+
     const std::optional<std::string> get_path() { return path; }
 protected:
     const std::optional<std::string> path;
@@ -45,8 +49,7 @@ public:
                  srcml_archive* archive, const char* language);
     ~input_stream();
 
-    virtual void operator()(srcML::converter& converter, srcML::nodes& nodes) const;
-    virtual srcML::nodes input_nodes(srcML::converter& converter) const;
+    virtual void operator()(srcML::converter& converter, srcML::nodes& nodes) const override;
 
 protected:
     const T& input;

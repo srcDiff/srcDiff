@@ -126,7 +126,6 @@ void input_source_manager::consume() {
   //   }
   // }
 
-
    // first source is original/second is modified
    // check if more and put in while, and
    // add error handling, correction, directory, concurrent, possibly separate input streams, parallelism
@@ -177,6 +176,7 @@ void input_source_manager::consume() {
 
    }
 
+
   // while (in_original != entry.end() || in_modified != modified_contents.end()) {
 
   //   if (in_original != entry.end() && !in_original->is_directory()) {
@@ -209,13 +209,44 @@ void input_source_manager::consume() {
   //     ++in_original;
   //     ++in_modified;
   //   }
-  // }   
+  // }
+
+   std::string original_subpath = original_entry.path().lexically_relative(original_source->get_base_path());
+   std::string modified_subpath = modified_entry.path().lexically_relative(modified_source->get_base_path());
+
+   std::string original_input_str;
+   std::string modified_input_str;
+   const char* language = srcml_archive_get_language(options.archive);
+   if(original_subpath == modified_subpath) {
+      original_input_str = original_entry.path().native();
+      modified_input_str = modified_entry.path().native();
+
+      language = !language? language : srcml_archive_check_extension(options.archive, original_input_str.c_str());
+   } else if(original_entry.path() < modified_entry.path()) {
+      original_input_str = original_entry.path().native();
+      language = !language? language : srcml_archive_check_extension(options.archive, original_input_str.c_str());
+   } else {
+      modified_input_str = modified_entry.path().native();
+      language = !language? language : srcml_archive_check_extension(options.archive, modified_input_str.c_str());
+   }
+
+   if(show_input) {
+      if(!language) {
+         ++input_skipped;
+         std::cout << "- " << original_input_str << '|' << modified_input_str << '\n';
+      } else {
+         ++input_count;
+         std::cout << input_count << " " << original_input_str << '|' << modified_input_str << '\n';
+      }
+   }
 
    stream_manager.append_original_stream(original_source->stream());
    original_source->next();
 
+
    stream_manager.append_modified_stream(modified_source->stream());
    modified_source->next();
+
 
    // keep both on as long as a one still has streams
    if(*original_source || *modified_source) {
