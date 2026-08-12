@@ -124,45 +124,55 @@ void input_source_manager::consume() {
 
    }
 
-   std::string original_subpath = original_entry.path().lexically_relative(original_source->get_base_path());
-   std::string modified_subpath = modified_entry.path().lexically_relative(modified_source->get_base_path());
-   std::string original_input_str;
-   std::string modified_input_str;
+   std::optional<std::string> original_subpath = *original_source? original_entry.path().lexically_relative(original_source->get_base_path()) : std::optional<std::string>();
+   std::optional<std::string> modified_subpath = *modified_source? modified_entry.path().lexically_relative(modified_source->get_base_path()) : std::optional<std::string>();
+
+   std::shared_ptr<abstract_input_stream> original_stream = original_source->stream();
+   std::shared_ptr<abstract_input_stream> modified_stream = modified_source->stream();
+
    const char* language = srcml_archive_get_language(options.archive);
    if(original_subpath == modified_subpath) {
-      original_input_str = original_entry.path().native();
-      modified_input_str = modified_entry.path().native();
 
-      language = !language? language : srcml_archive_check_extension(options.archive, original_input_str.c_str());
-   } else if(!modified_entry.exists() && original_entry.path() < modified_entry.path()) {
-      original_input_str = original_entry.path().native();
-      language = !language? language : srcml_archive_check_extension(options.archive, original_input_str.c_str());
-   } else {
-      modified_input_str = modified_entry.path().native();
-      language = !language? language : srcml_archive_check_extension(options.archive, modified_input_str.c_str());
+      language = language? language : srcml_archive_check_extension(options.archive, original_entry.path().native().c_str());
+
+      original_source->next();
+      modified_source->next();
+   } else if(original_subpath && original_subpath < modified_subpath) {
+
+      language = language? language : srcml_archive_check_extension(options.archive, original_entry.path().native().c_str());
+
+      original_source->next();
+      modified_subpath = std::optional<std::string>();
+      modified_stream = std::make_shared<input_stream_base>(std::optional<std::string>());
+   } else {   
+
+      language = language? language : srcml_archive_check_extension(options.archive, modified_entry.path().native().c_str());
+
+      original_subpath = std::optional<std::string>();
+      original_stream = std::make_shared<input_stream_base>(std::optional<std::string>());
+      modified_source->next();
    }
 
    if(show_input) {
       if(!language) {
          ++input_skipped;
-         std::cout << "- " << original_input_str << '|' << modified_input_str << '\n';
+         std::cout << "- " << (original_subpath? original_entry.path().native() : "") << '|' << (modified_subpath? modified_entry.path().native() : "") << '\n';
       } else {
          ++input_count;
-         std::cout << input_count << " " << original_input_str << '|' << modified_input_str << '\n';
+         std::cout << input_count << " " << (original_subpath? original_entry.path().native() : "") << '|' << (modified_subpath? modified_entry.path().native() : "") << '\n';
       }
    }
-
-   stream_manager.append_original_stream(original_source->stream());
-   original_source->next();
-
-   stream_manager.append_modified_stream(modified_source->stream());
-   modified_source->next();
 
    // keep both on as long as a one still has streams
    if(*original_source || *modified_source) {
       input_sources.push_front(modified_source);
       input_sources.push_front(original_source);
    }
+
+   if(!language) return;
+
+   stream_manager.append_original_stream(original_stream);
+   stream_manager.append_modified_stream(modified_stream);
 
    srcml_unit* srcdiff_unit = deltor->create(options.archive, stream_manager);
 

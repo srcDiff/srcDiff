@@ -13,74 +13,10 @@ namespace srcdiff {
 
 input_source::input_source(srcml_archive* archive, const std::string& path) 
   : archive(archive), base_path(path) {
-  // show_input = options.is_option(OPTION_VERBOSE) && !options.is_option(OPTION_QUIET);
 }
 
 input_source::~input_source() {
 }
-
-// void input_source::file(const std::optional<std::string>& path_original,
-//                         const std::optional<std::string>& path_modified) {
-
-//   if(show_input) {
-
-//     ++input_total;
-
-//     if(get_language(path_original, path_modified) == SRCML_LANGUAGE_NONE) {
-
-//       ++input_skipped;
-//       std::cout << "- " << (path_original ? *path_original : "") << '|' << (path_modified ? *path_modified : "") << '\n';
-
-//     } else {
-
-//       ++input_count;
-//       std::cout << input_count << " " << (path_original ? *path_original : "") << '|' << (path_modified ? *path_modified : "") << '\n';
-
-//     }
-
-//   }
-
-//   return process_file(path_original, path_modified);
-
-  // srcml_unit* srcdiff_unit = process_file(path_original, path_modified);
-
-  // if(!view) {
-  //   srcml_archive_write_unit(archive, srcdiff_unit);
-  // } else {
-  //   std::string srcdiff = srcml_unit_get_srcml(srcdiff_unit);
-  //   view->transform(srcdiff, "UTF-8");
-  // }
-
-  // srcml_unit_free(srcdiff_unit);
-
-// }
-
-// void input_source::directory(const std::optional<std::string>& directory_original,
-//                              const std::optional<std::string>& directory_modified) {
-
-//   show_input = !is_option(options.flags, OPTION_QUIET);
-//   srcml_archive_disable_solitary_unit(archive);
-
-//   if(show_input) {
-
-//     ++input_skipped;
-//     ++input_total;
-//     std::cout << "- " << (directory_original ? *directory_original : "") << '|' << (directory_modified ? *directory_modified : "") << '\n';
-
-//   }
-
-//   try {
-
-//     process_directory(directory_original, directory_modified);
-
-//   } catch(const std::string & error) {
-
-//     std::cerr << error << '\n';
-//     exit(1);
-
-//   }
-
-// }
 
 // void input_source::files_from() {
 
