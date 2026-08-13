@@ -11,7 +11,7 @@ template<class T>
 input_stream<T>::input_stream(const T& input, const std::optional<std::string>& path,
                               srcml_archive* archive, const char* language)
 	: input(input), input_stream_base(path), archive(archive), language(language) {
-  }
+}
 
 template<class T>
 input_stream<T>::~input_stream() {}

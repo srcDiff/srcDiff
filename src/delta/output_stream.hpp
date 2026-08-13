@@ -47,7 +47,7 @@ public:
 
     void clear() {
 
-      last_output = 0;
+      last_output = 1;
       nodes.clear();
 
       while(!open_diff.empty()) {

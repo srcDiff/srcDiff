@@ -85,15 +85,28 @@ void input_source_manager::consume() {
    std::filesystem::directory_entry modified_entry  = modified_source? modified_source->entry() : std::filesystem::directory_entry();
    input_sources.pop_front();
 
-   // if exausted source is_directory is false
-   while(original_entry.is_directory() && modified_entry.is_directory()) {
+   // if exhausted source is_directory is false
+   while(original_entry.is_directory() || modified_entry.is_directory()) {
 
-      std::string original_subpath = original_entry.path().lexically_relative(original_source->get_base_path());
-      std::string modified_subpath = modified_entry.path().lexically_relative(modified_source->get_base_path());
+      std::optional<std::string> original_subpath = *original_source? original_entry.path().lexically_relative(original_source->get_base_path()) : std::optional<std::string>();
+      std::optional<std::string> modified_subpath = *modified_source? modified_entry.path().lexically_relative(modified_source->get_base_path()) : std::optional<std::string>();
 
       std::string original_input_str;
       std::string modified_input_str;
-      if(original_subpath == modified_subpath) {
+
+      if(!original_entry.is_directory()) {
+         modified_input_str = modified_entry.path().native();
+
+         modified_source->next();
+         modified_entry = modified_source->entry();      
+
+      } else if (!modified_entry.is_directory()) {
+         original_input_str = original_entry.path().native();
+
+         original_source->next();
+         original_entry = original_source->entry();
+
+      } else if(original_subpath == modified_subpath) {
          original_input_str = original_entry.path().native();
          modified_input_str = modified_entry.path().native();
 
@@ -124,6 +137,8 @@ void input_source_manager::consume() {
 
    }
 
+   if(!*original_source && !*modified_source) return;
+
    std::optional<std::string> original_subpath = *original_source? original_entry.path().lexically_relative(original_source->get_base_path()) : std::optional<std::string>();
    std::optional<std::string> modified_subpath = *modified_source? modified_entry.path().lexically_relative(modified_source->get_base_path()) : std::optional<std::string>();
 
@@ -137,7 +152,7 @@ void input_source_manager::consume() {
 
       original_source->next();
       modified_source->next();
-   } else if(original_subpath && original_subpath < modified_subpath) {
+   } else if(!modified_subpath || original_subpath < modified_subpath) {
 
       language = language? language : srcml_archive_check_extension(options.archive, original_entry.path().native().c_str());
 
