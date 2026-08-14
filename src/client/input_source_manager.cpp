@@ -91,22 +91,27 @@ void input_source_manager::consume() {
       std::optional<std::string> original_subpath = *original_source? original_entry.path().lexically_relative(original_source->get_base_path()) : std::optional<std::string>();
       std::optional<std::string> modified_subpath = *modified_source? modified_entry.path().lexically_relative(modified_source->get_base_path()) : std::optional<std::string>();
 
+      // don't report directories until processed all less-than files (equal in odd case where file and dir have same name)
+      if(*original_source && !original_entry.is_directory() && original_subpath <= modified_subpath) break;
+      if(*modified_source && !modified_entry.is_directory() && modified_subpath <= original_subpath) break;
+
       std::string original_input_str;
       std::string modified_input_str;
-
-      if(!original_entry.is_directory()) {
-         modified_input_str = modified_entry.path().native();
-
-         modified_source->next();
-         modified_entry = modified_source->entry();      
-
-      } else if (!modified_entry.is_directory()) {
+      if (!modified_entry.is_directory()) {
          original_input_str = original_entry.path().native();
 
          original_source->next();
          original_entry = original_source->entry();
 
+      } else if(!original_entry.is_directory()) {
+         modified_input_str = modified_entry.path().native();
+
+         modified_source->next();
+         modified_entry = modified_source->entry();      
+
       } else if(original_subpath == modified_subpath) {
+
+         // what if one is a dir and other is a file?
          original_input_str = original_entry.path().native();
          modified_input_str = modified_entry.path().native();
 
@@ -116,7 +121,7 @@ void input_source_manager::consume() {
          modified_source->next();
          modified_entry = modified_source->entry();
 
-      } else if(original_entry.path() < modified_entry.path()) {
+      } else if(original_subpath < modified_subpath) {
          original_input_str = original_entry.path().native();
       
          original_source->next();
