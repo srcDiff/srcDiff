@@ -71,19 +71,10 @@ input_source_manager::operator bool(){
    return input_sources.size() > 1;
 }
 
-void input_source_manager::consume() {
-   assert(bool(*this));
+void input_source_manager::process_directory(std::shared_ptr<input_source> original_source, std::shared_ptr<input_source> modified_source) {
 
-   // first source is original/second is modified
-   // check if more and put in while, and
-   // add error handling, correction, directory, concurrent, possibly separate input streams, parallelism
-   std::shared_ptr<input_source>    original_source = input_sources.front();
-   std::filesystem::directory_entry original_entry  = original_source? original_source->entry() : std::filesystem::directory_entry();
-   input_sources.pop_front();
-
-   std::shared_ptr<input_source>    modified_source = input_sources.front();
    std::filesystem::directory_entry modified_entry  = modified_source? modified_source->entry() : std::filesystem::directory_entry();
-   input_sources.pop_front();
+   std::filesystem::directory_entry original_entry  = original_source? original_source->entry() : std::filesystem::directory_entry();
 
    // if exhausted source is_directory is false
    while(original_entry.is_directory() || modified_entry.is_directory()) {
@@ -142,7 +133,12 @@ void input_source_manager::consume() {
 
    }
 
-   if(!*original_source && !*modified_source) return;
+}
+
+void input_source_manager::process_file(std::shared_ptr<input_source> original_source, std::shared_ptr<input_source> modified_source) {
+
+   std::filesystem::directory_entry modified_entry  = modified_source? modified_source->entry() : std::filesystem::directory_entry();
+   std::filesystem::directory_entry original_entry  = original_source? original_source->entry() : std::filesystem::directory_entry();
 
    std::optional<std::string> original_subpath = *original_source? original_entry.path().lexically_relative(original_source->get_base_path()) : std::optional<std::string>();
    std::optional<std::string> modified_subpath = *modified_source? modified_entry.path().lexically_relative(modified_source->get_base_path()) : std::optional<std::string>();
@@ -205,6 +201,25 @@ void input_source_manager::consume() {
 
    srcml_unit_free(srcdiff_unit);
 
+}
+
+void input_source_manager::consume() {
+   assert(bool(*this));
+
+   // first source is original/second is modified
+   // check if more and put in while, and
+   // add error handling, correction, directory, concurrent, possibly separate input streams, parallelism
+   std::shared_ptr<input_source>    original_source = input_sources.front();
+   input_sources.pop_front();
+
+   std::shared_ptr<input_source>    modified_source = input_sources.front();
+   input_sources.pop_front();
+
+   process_directory(original_source, modified_source);
+
+   if(!*original_source && !*modified_source) return;
+
+   process_file(original_source, modified_source);
 }
 
 }
