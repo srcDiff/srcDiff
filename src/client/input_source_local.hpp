@@ -32,7 +32,6 @@ public:
 
   std::shared_ptr<input_stream_base> file();
   std::shared_ptr<input_stream_base> directory();
-  //void files_from();
 
   void expand_directory();
 
@@ -40,7 +39,7 @@ public:
     std::ifstream in;
   };
 
-  input_context* open(const char* uri) const;
+  static input_context* open(const char* uri);
   static ssize_t read(void* context, void* buffer, size_t len);
   static int     close(void* context);
 

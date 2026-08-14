@@ -43,6 +43,7 @@ public:
 
   operator bool();
 
+  void process_files_from();
   void process_directory(std::shared_ptr<input_source> original_source, std::shared_ptr<input_source> modified_source);
   void process_file(std::shared_ptr<input_source> original_source, std::shared_ptr<input_source> modified_source);
   void consume();

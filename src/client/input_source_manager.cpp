@@ -9,6 +9,10 @@
 
 #include <input_source_manager.hpp>
 
+#include <uri_stream.hpp>
+#include <input_source_local.hpp>
+#include <null_input_source.hpp>
+
 #include <unified_view.hpp>
 #include <side_by_side_view.hpp>
 
@@ -69,6 +73,44 @@ void input_source_manager::append_source(std::shared_ptr<input_source> input) {
 
 input_source_manager::operator bool(){
    return input_sources.size() > 1;
+}
+
+void input_source_manager::process_files_from() {
+
+   const char FILELIST_COMMENT = '#';
+
+   try {
+
+      // translate all the filenames listed in the named file
+      input_source_local::input_context* context = input_source_local::open(options.files_from_name->c_str());
+      uri_stream<input_source_local> uriinput(context);
+
+      const char* c_line = 0;
+      while ((c_line = uriinput.readline())) {
+
+         std::string line = c_line;
+
+         int white_length = strspn(line.c_str(), " \t\f");
+         line.erase(0, white_length);
+
+         // skip blank lines or comment lines
+         if (line.empty() || line[0] == FILELIST_COMMENT) continue;
+
+         std::string original_path = line.substr(0, line.find('|'));
+         std::string modified_path = line.substr(line.find('|') + 1);
+
+         std::shared_ptr<input_source> original_source = !original_path.empty()? std::make_shared<input_source_local>(options.archive, options.output_filename, original_path) : (std::shared_ptr<input_source>)std::make_shared<null_input_source>(options.archive);
+         input_sources.push_back(original_source);
+
+         std::shared_ptr<input_source> modified_source = !modified_path.empty()? std::make_shared<input_source_local>(options.archive, options.output_filename, modified_path) : (std::shared_ptr<input_source>)std::make_shared<null_input_source>(options.archive);
+         input_sources.push_back(modified_source);
+       }
+
+   } catch (uri_stream_error) {
+      fprintf(stderr, "error: file/URI \'%s\' does not exist.\n", options.files_from_name->c_str());
+      exit(EXIT_FAILURE);
+   }
+
 }
 
 void input_source_manager::process_directory(std::shared_ptr<input_source> original_source, std::shared_ptr<input_source> modified_source) {
@@ -137,8 +179,8 @@ void input_source_manager::process_directory(std::shared_ptr<input_source> origi
 
 void input_source_manager::process_file(std::shared_ptr<input_source> original_source, std::shared_ptr<input_source> modified_source) {
 
-   std::filesystem::directory_entry modified_entry  = modified_source? modified_source->entry() : std::filesystem::directory_entry();
    std::filesystem::directory_entry original_entry  = original_source? original_source->entry() : std::filesystem::directory_entry();
+   std::filesystem::directory_entry modified_entry  = modified_source? modified_source->entry() : std::filesystem::directory_entry();
 
    std::optional<std::string> original_subpath = *original_source? original_entry.path().lexically_relative(original_source->get_base_path()) : std::optional<std::string>();
    std::optional<std::string> modified_subpath = *modified_source? modified_entry.path().lexically_relative(modified_source->get_base_path()) : std::optional<std::string>();
@@ -153,7 +195,7 @@ void input_source_manager::process_file(std::shared_ptr<input_source> original_s
 
       original_source->next();
       modified_source->next();
-   } else if(!modified_subpath || original_subpath < modified_subpath) {
+   } else if(!modified_subpath || (original_subpath && original_subpath < modified_subpath)) {
 
       language = language? language : srcml_archive_check_extension(options.archive, original_entry.path().native().c_str());
 
@@ -209,10 +251,10 @@ void input_source_manager::consume() {
    // first source is original/second is modified
    // check if more and put in while, and
    // add error handling, correction, directory, concurrent, possibly separate input streams, parallelism
-   std::shared_ptr<input_source>    original_source = input_sources.front();
+   std::shared_ptr<input_source> original_source = input_sources.front();
    input_sources.pop_front();
 
-   std::shared_ptr<input_source>    modified_source = input_sources.front();
+   std::shared_ptr<input_source> modified_source = input_sources.front();
    input_sources.pop_front();
 
    process_directory(original_source, modified_source);

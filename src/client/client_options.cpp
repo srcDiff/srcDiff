@@ -115,6 +115,8 @@ void option_files_from(const std::string & filename) {
       throw CLI::ValidationError("No input file pairs could be obtained from " + filename);
     }
 
+    options.input_manager->process_files_from();
+
 }
 
 // options that are passed to the srcML archive object (options.archive):

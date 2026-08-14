@@ -13,8 +13,6 @@
 
 #include <input_stream.hpp>
 
-#include <uri_stream.hpp>
-
 #include <filesystem>
 #include <fstream>
 #include <sstream>
@@ -129,47 +127,7 @@ void input_source_local::expand_directory() {
 
 }
 
-// void input_source_local::process_files_from() {
-
-// #define FILELIST_COMMENT '#'
-
-//   try {
-
-//     // translate all the filenames listed in the named file
-
-//     input_context * context = open(options.files_from_name->c_str());
-//     uri_stream<input_source_local> uriinput(context);
-
-//     const char * c_line = 0;
-//     while ((c_line = uriinput.readline())) {
-
-//       std::string line = c_line;
- 
-//       int white_length = strspn(line.c_str(), " \t\f");
-//       line.erase(0, white_length);
-
-//       // skip blank lines or comment lines
-//       if (line.empty() || line[0] == FILELIST_COMMENT) continue;
-
-//       std::string path_original = line.substr(0, line.find('|'));
-//       std::string path_modified = line.substr(line.find('|') + 1);
-
-//       file(path_original, path_modified);
-
-//     }
-
-//   } catch (uri_stream_error) {
-
-//     fprintf(stderr, "error: file/URI \'%s\' does not exist.\n", options.files_from_name->c_str());
-//     exit(EXIT_FAILURE);
-
-//   }
-
-// #undef FILELIST_COMMENT
-
-// }
-
-input_source_local::input_context * input_source_local::open(const char* uri) const {
+input_source_local::input_context* input_source_local::open(const char* uri) {
 
   input_context* context = new input_context;
   context->in.open(uri);
