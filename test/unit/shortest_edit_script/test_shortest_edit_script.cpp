@@ -579,8 +579,8 @@ BOOST_AUTO_TEST_CASE(ses1_null_null) {
 
 // Test 2: empty/empty
 BOOST_AUTO_TEST_CASE(ses2_empty_empty) {
-    const char* a[] = {};
-    const char* b[] = {};
+    const char* a[] = { nullptr };
+    const char* b[] = { nullptr };
     struct edit_t* script = nullptr;
     int dist = shortest_edit_script(a, 0, b, 0, &script, compare, accessor, nullptr);
     BOOST_TEST(dist == 0);
