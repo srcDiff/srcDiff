@@ -86,25 +86,19 @@ bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
 bool nest_differ::is_better_nested(construct::construct_list_view original, construct::construct_list_view modified) {
 
   const measurer & measure = *original[0]->measure(*modified[0]);
+  nest_result nestable = check_nestable(original, modified);
+  if(nestable.operation == COMMON) return false;
 
   for(std::size_t pos = 0; pos < original.size(); ++pos) {
-
-    nest_result nestable = check_nestable(original, modified);
-    if(nestable.operation == COMMON) continue;
     if(is_better_nest(original[pos], modified[0], measure)) {
       return true;
     }
-
   }
 
   for(std::size_t pos = 0; pos < modified.size(); ++pos) {
-
-    nest_result nestable = check_nestable(original, modified);
-    if(nestable.operation == COMMON) continue;
     if(is_better_nest(modified[pos], original[0], measure)) {
       return true;
     }
-
   }
 
   return false;
