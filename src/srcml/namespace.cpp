@@ -50,6 +50,7 @@ void name_space::set_prefix(std::optional<std::string> input) {
 }
 
 std::string name_spaces::SRC_URI = "http://www.srcML.org/srcML/src";
+std::string name_spaces::CPP_URI = "http://www.srcML.org/srcML/cpp";
 std::string name_spaces::DIFF_URI = "http://www.srcML.org/srcDiff";
 
 std::shared_ptr<name_space> name_spaces::SRC_NAMESPACE = std::make_shared<name_space>(SRC_URI);

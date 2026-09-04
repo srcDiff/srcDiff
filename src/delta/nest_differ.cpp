@@ -446,7 +446,7 @@ void nest_differ::output() {
     advance_to_child(outer.back()->nodes(), end_pos, srcML::node_type::END, "block");
 
   } else if(structure_outer == "extern") {
-    start_pos = outer.back()->children().back()->children().at(1)->start_position() + 1;
+    start_pos = outer.back()->children().back()->children().at(0)->start_position();
   } 
 
   construct::construct_list set = outer.back()->get_descendents(start_pos, end_pos);

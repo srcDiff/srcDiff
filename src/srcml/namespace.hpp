@@ -39,13 +39,14 @@ namespace srcML {
         void set_prefix(std::optional<std::string> input);
 
     private:
-            std::string uri;
+        std::string uri;
         std::optional<std::string> prefix;
     };
  
 class name_spaces {
 public:
         static std::string SRC_URI;
+        static std::string CPP_URI;
         static std::string DIFF_URI;
 
         static std::shared_ptr<name_space> SRC_NAMESPACE;
