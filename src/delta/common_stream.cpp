@@ -252,6 +252,25 @@ void common_stream::markup_common() {
         std::cerr << *rbuf_modified->nodes.at(pos) << '\n';
       }
       std::cerr << '\n';
+
+      std::cerr << "Original Parents:\n";
+      std::shared_ptr<srcML::node> original_parent = rbuf_original->nodes.at(begin_original)->get_parent();
+      std::string original_parents_str;
+      while(original_parent) {
+        original_parents_str = original_parent->get_name() + "/" + original_parents_str;
+        original_parent = original_parent->get_parent();
+      }
+      std::cerr << original_parents_str << '\n';
+
+      std::cerr << "Modified Parents:\n";
+      std::shared_ptr<srcML::node> modified_parent = rbuf_modified->nodes.at(begin_modified)->get_parent();
+      std::string modified_parents_str;
+      while(modified_parent) {
+        modified_parents_str = modified_parent->get_name() + "/" + modified_parents_str;
+        modified_parent = modified_parent->get_parent();
+      }
+      std::cerr << modified_parents_str << '\n';
+
 #endif
 
       // should never reach this state  This usually occurs when the two lines are not actually the same i.e. more than just whitespace
