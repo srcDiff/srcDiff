@@ -195,6 +195,8 @@ nodes converter::collect_nodes(xmlTextReaderPtr reader) const {
 
 
   bool is_elseif = false;
+  // per open elseif, whether a temp if start was inserted
+  std::vector<bool> elseif_has_temp_if;
   int not_done = 1;
   while(not_done) {
 
@@ -342,8 +344,9 @@ nodes converter::collect_nodes(xmlTextReaderPtr reader) const {
         }
 
         // temp if for elseif, insert start tag
-        if(is_elseif && *text->get_content() == "if") {
+        if(is_elseif && (*text->get_content() == "if" || *text->get_content() == "elif")) {
           is_elseif = false;
+          elseif_has_temp_if.back() = true;
           std::shared_ptr<srcML::node> if_node = std::make_shared<srcML::node>(*element_stack.back());
           if_node->clear_attributes();
           if_node->set_temporary(true);
@@ -371,12 +374,17 @@ nodes converter::collect_nodes(xmlTextReaderPtr reader) const {
       if(node->get_type() == srcML::node_type::END
         && element_stack.back()->get_name() == "if" && !element_stack.back()->get_attributes().empty()
         && bool(element_stack.back()->get_attribute("type"))) {
-        std::shared_ptr<srcML::node> end_node = std::make_shared<srcML::node>(*node);
-        end_node->set_temporary(true);
-        nodes.push_back(end_node);
-      } else if(node->get_name() == "if" && !node->get_attributes().empty()
-            && bool(node->get_attribute("type"))) {
+        is_elseif = false;
+        if(elseif_has_temp_if.back()) {
+          std::shared_ptr<srcML::node> end_node = std::make_shared<srcML::node>(*node);
+          end_node->set_temporary(true);
+          nodes.push_back(end_node);
+        }
+        elseif_has_temp_if.pop_back();
+      } else if(node->get_type() == srcML::node_type::START && node->get_name() == "if"
+            && !node->get_attributes().empty() && bool(node->get_attribute("type"))) {
           is_elseif = true;
+          elseif_has_temp_if.push_back(false);
       }
 
       if(node->get_type() == srcML::node_type::START && !node->is_empty()) {

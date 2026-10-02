@@ -17,9 +17,13 @@ std::shared_ptr<const if_t> elseif::find_if() const {
 }
 
 std::shared_ptr<const construct> elseif::condition() const {
-    return find_if()->condition();
+    std::shared_ptr<const if_t> nested_if = find_if();
+    if(!nested_if) return clause::condition();
+    return nested_if->condition();
 }
 
 std::shared_ptr<const construct> elseif::block() const {
-    return static_cast<const if_t &>(*find_if()).block();
+    std::shared_ptr<const if_t> nested_if = find_if();
+    if(!nested_if) return clause::block();
+    return static_cast<const if_t &>(*nested_if).block();
 }
