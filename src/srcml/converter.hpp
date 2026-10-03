@@ -37,7 +37,7 @@ protected:
   static std::map<std::string, std::shared_ptr<srcML::node>> end_tags;
 
 private:
-    nodes collect_nodes(xmlTextReaderPtr reader) const;
+    nodes collect_nodes(xmlTextReaderPtr reader, const std::string& language) const;
     static std::shared_ptr<srcML::node> get_current_node(xmlTextReaderPtr reader);
 
 public:

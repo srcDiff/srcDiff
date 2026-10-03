@@ -75,9 +75,9 @@ std::shared_ptr<srcML::node> converter::get_current_node(xmlTextReaderPtr reader
   return node;
 }
 
-std::shared_ptr<srcML::node> split_text(const char * characters_start,
-                                        const char * characters_end,
-                                        const std::shared_ptr<srcML::node> & parent) {
+std::shared_ptr<srcML::node> split_text(const char* characters_start,
+                                        const char* characters_end,
+                                        const std::shared_ptr<srcML::node>& parent) {
 
   std::shared_ptr<srcML::node> text = std::make_shared<srcML::node>(srcML::node_type::TEXT, "text");
 
@@ -151,13 +151,19 @@ nodes converter::create_nodes() const {
   if (reader == NULL) throw std::string("Unable to open srcML output_buffer as XML");
 
   // read to unit
-  xmlTextReaderRead(reader);
+  if(xmlTextReaderRead(reader) == 0) return nodes();
+
+  // get unit for language
+  std::shared_ptr<srcML::node> node = get_current_node(reader);
+
+  // assumes always is a language, which should be safe
+  std::string language = *node->get_attributes().at("language").get_value();
 
   // Read past unit tag open
   if(xmlTextReaderRead(reader) == 0) return nodes();
 
   // collect if non empty files
-  srcML::nodes nodes = collect_nodes(reader);
+  srcML::nodes nodes = collect_nodes(reader, language);
 
   xmlFreeTextReader(reader);
 
@@ -186,17 +192,16 @@ static bool is_cpp_file_separate(const char character) {
 }
 
 // collect the differences
-nodes converter::collect_nodes(xmlTextReaderPtr reader) const {
+nodes converter::collect_nodes(xmlTextReaderPtr reader, const std::string& language) const {
+
+  bool split_elseif = language != "Python";
 
   srcML::nodes nodes;
 
   srcML::nodes element_stack;
   element_stack.push_back(std::make_shared<srcML::node>(srcML::node_type::START, "unit"));
 
-
   bool is_elseif = false;
-  // per open elseif, whether a temp if start was inserted
-  std::vector<bool> elseif_has_temp_if;
   int not_done = 1;
   while(not_done) {
 
@@ -344,9 +349,8 @@ nodes converter::collect_nodes(xmlTextReaderPtr reader) const {
         }
 
         // temp if for elseif, insert start tag
-        if(is_elseif && (*text->get_content() == "if" || *text->get_content() == "elif")) {
+        if(is_elseif && *text->get_content() == "if") {
           is_elseif = false;
-          elseif_has_temp_if.back() = true;
           std::shared_ptr<srcML::node> if_node = std::make_shared<srcML::node>(*element_stack.back());
           if_node->clear_attributes();
           if_node->set_temporary(true);
@@ -363,28 +367,24 @@ nodes converter::collect_nodes(xmlTextReaderPtr reader) const {
       std::shared_ptr<srcML::node> node = get_current_node(reader);
       mutex.unlock();
 
-      
       if(node->get_type() == srcML::node_type::START) {
         node->set_parent(element_stack.back());
       }
       
-
-
       // insert end if temp element for elseif and detect elseif
-      if(node->get_type() == srcML::node_type::END
-        && element_stack.back()->get_name() == "if" && !element_stack.back()->get_attributes().empty()
-        && bool(element_stack.back()->get_attribute("type"))) {
-        is_elseif = false;
-        if(elseif_has_temp_if.back()) {
+      if(split_elseif) {
+
+        if(node->get_type() == srcML::node_type::END
+          && element_stack.back()->get_name() == "if" && !element_stack.back()->get_attributes().empty()
+          && bool(element_stack.back()->get_attribute("type"))) {
           std::shared_ptr<srcML::node> end_node = std::make_shared<srcML::node>(*node);
           end_node->set_temporary(true);
           nodes.push_back(end_node);
+        } else if(node->get_name() == "if" && !node->get_attributes().empty()
+              && bool(node->get_attribute("type"))) {
+            is_elseif = true;
         }
-        elseif_has_temp_if.pop_back();
-      } else if(node->get_type() == srcML::node_type::START && node->get_name() == "if"
-            && !node->get_attributes().empty() && bool(node->get_attribute("type"))) {
-          is_elseif = true;
-          elseif_has_temp_if.push_back(false);
+
       }
 
       if(node->get_type() == srcML::node_type::START && !node->is_empty()) {
@@ -400,7 +400,6 @@ nodes converter::collect_nodes(xmlTextReaderPtr reader) const {
       if(node->get_type() == srcML::node_type::START && node->get_parent()->is_simple()) {
         node->get_parent()->set_simple(false);
       }
-      
       
       if(node->is_empty()) {
         node->set_empty(false);
