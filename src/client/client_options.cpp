@@ -84,7 +84,7 @@ void option_input_file(const std::vector<std::string> & arg) {
 }
 
 // processes the --files-from cli argument
-void option_files_from(const std::string & filename) {
+void option_files_from(const std::string& filename) {
 
     options.files_from_name = filename;
 
@@ -123,7 +123,7 @@ void option_files_from(const std::string & filename) {
 // processing git and svn input arguments:
 
 #if SVN
-void option_svn_url(const std::string & arg) {
+void option_svn_url(const std::string& arg) {
 
   std::string::size_type atsign = arg.find('@');
   if(atsign == std::string::npos) {
@@ -145,7 +145,7 @@ void option_svn_url(const std::string & arg) {
 #endif
 
 #if GIT
-void option_git_url(const std::string & arg) {
+void option_git_url(const std::string& arg) {
 
   std::string::size_type atsign = arg.find('@');
   options.git_url = arg.substr(0, atsign);
@@ -189,45 +189,45 @@ void option_srcml_int<TABSTOP>(const int & arg) {
 enum srcml_string_field { SRC_ENCODING, XML_ENCODING, LANGUAGE, URL, SRC_VERSION, REGISTER_EXT, XMLNS };
 
 template<srcml_string_field field>
-void option_srcml_string(const std::string & arg) {}
+void option_srcml_string(const std::string& arg) {}
 
 template<>
-void option_srcml_string<SRC_ENCODING>(const std::string & arg) {
+void option_srcml_string<SRC_ENCODING>(const std::string& arg) {
 
   srcml_archive_set_src_encoding(options.archive, arg.c_str());
 
 }
 
 template<>
-void option_srcml_string<XML_ENCODING>(const std::string & arg) {
+void option_srcml_string<XML_ENCODING>(const std::string& arg) {
 
   srcml_archive_set_xml_encoding(options.archive, arg.c_str());
 
 }
 
 template<>
-void option_srcml_string<LANGUAGE>(const std::string & arg) {
+void option_srcml_string<LANGUAGE>(const std::string& arg) {
 
   srcml_archive_set_language(options.archive, arg.c_str());
 
 }
 
 template<>
-void option_srcml_string<URL>(const std::string & arg) {
+void option_srcml_string<URL>(const std::string& arg) {
   
   srcml_archive_set_url(options.archive, arg.c_str());
 
 }
 
 template<>
-void option_srcml_string<SRC_VERSION>(const std::string & arg) {
+void option_srcml_string<SRC_VERSION>(const std::string& arg) {
 
   srcml_archive_set_version(options.archive, arg.c_str());
 
 }
 
 template<>
-void option_srcml_string<REGISTER_EXT>(const std::string & arg) {
+void option_srcml_string<REGISTER_EXT>(const std::string& arg) {
 
   std::string::size_type pos = arg.find('=');
   srcml_archive_register_file_extension(
@@ -241,7 +241,7 @@ void option_srcml_string<REGISTER_EXT>(const std::string & arg) {
 // this function is called with a processed version of the xmlns arguments
 // that look like "prefix=uri", or just "uri"
 template<>
-void option_srcml_string<XMLNS>(const std::string & arg) {
+void option_srcml_string<XMLNS>(const std::string& arg) {
 
   std::string::size_type pos = arg.find('=');
   if(pos == std::string::npos) {
@@ -281,7 +281,7 @@ void option_srcml_flag_enable(int flagged_count) {
 }
 
 // processes the argument to the srcdiff parsing method option
-void option_parsing_method(const std::string & arg) {
+void option_parsing_method(const std::string& arg) {
 
   std::vector<std::string> methods;
   std::string::size_type last_pos = 0;
@@ -309,7 +309,7 @@ void option_parsing_method(const std::string & arg) {
 
 // this is a special option in the view_options_t struct that can be a string or
 // a number via std::any
-void view_option_unified_view_context(const std::string & arg) {
+void view_option_unified_view_context(const std::string& arg) {
 
   try {
 
@@ -464,7 +464,7 @@ const client_options& process_command_line(int argc, char* argv[]) {
     "--register-ext",
      option_srcml_string<REGISTER_EXT>,
     "Register a file extension/language pair to be used during parsing\n"
-    "Example: --register-ext cxx=C++"
+    "Examples: --register-ext h=C++,  --register-ext cmake=NONE"
   );
 
   srcml_group->add_option_function<std::string>(
