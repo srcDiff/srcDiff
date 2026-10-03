@@ -465,7 +465,7 @@ const client_options& process_command_line(int argc, char* argv[]) {
      option_srcml_string<REGISTER_EXT>,
     "Register a file extension/language pair to be used during parsing\n"
     "Examples: --register-ext h=C++,  --register-ext cmake=NONE"
-  );
+  )->trigger_on_parse(true);
 
   srcml_group->add_option_function<std::string>(
     "-s,--src-version",
