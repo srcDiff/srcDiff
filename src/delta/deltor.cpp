@@ -34,11 +34,11 @@ srcml_unit* deltor::create(srcml_archive* archive, input_stream_manager& manager
 
   output->prime();
 
+  output->start_unit(archive, language, this->unit_filename ? this->unit_filename : unit_filename, unit_version);
+
   std::string srcdiff_str;
   // run on file level
   if(!output->nodes_original().empty() || !output->nodes_modified().empty()) {
-
-    output->start_unit(archive, language, this->unit_filename ? this->unit_filename : unit_filename, unit_version);
 
     unit original_unit(output->nodes_original(), output);
     unit modified_unit(output->nodes_modified(), output);
@@ -50,13 +50,14 @@ srcml_unit* deltor::create(srcml_archive* archive, input_stream_manager& manager
     whitespace_stream whitespace(*output);
     whitespace.output_all();
 
-    output->end_unit();
-
   }
 
+  output->end_unit();
+
+  srcml_unit* srcdiff_unit = output->get_unit();
   output->reset();
 
-  return output->get_unit();
+  return srcdiff_unit;
 }
 
 }

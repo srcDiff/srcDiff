@@ -87,6 +87,7 @@ public:
 
       }
 
+      unit = nullptr;
       approximate = false;
 
     }
