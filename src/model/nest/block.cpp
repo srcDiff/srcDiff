@@ -22,7 +22,7 @@ string_set block_nestable{
   "try", "catch", "finally", "synchronized", "continue", "break", "goto",
   "typedef",
   "class", "struct", "union", "enum",
-  "class_decl", "struct_decl", "union_decl", "enum_decl"  
+  "class_decl", "struct_decl", "union_decl", "enum_decl",
 };
 
 block::block(const construct& client) : rule_checker(client, block_nestable) {
@@ -35,6 +35,7 @@ bool block::can_nest_internal(const construct& modified) const {
   bool parent_is_block = client.root_term()->get_parent() && client.root_term()->get_parent()->get_name() == "block";
   if(is_block && !parent_is_block) return false;
 
+  if(modified.root_term()->get_namespace()->get_uri() == srcML::name_spaces::CPP_URI) return true;
   return nestable_constructs.find(modified.root_term_name()) != nestable_constructs.end();
 }
 

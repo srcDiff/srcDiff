@@ -85,26 +85,21 @@ bool is_better_nest(std::shared_ptr<const construct> node_set_outer,
 
 bool nest_differ::is_better_nested(construct::construct_list_view original, construct::construct_list_view modified) {
 
+  nest_result nestable = check_nestable(original, modified);
+  if(nestable.operation == COMMON) return false;
+
   const measurer & measure = *original[0]->measure(*modified[0]);
 
   for(std::size_t pos = 0; pos < original.size(); ++pos) {
-
-    nest_result nestable = check_nestable(original, modified);
-    if(nestable.operation == COMMON) continue;
     if(is_better_nest(original[pos], modified[0], measure)) {
       return true;
     }
-
   }
 
   for(std::size_t pos = 0; pos < modified.size(); ++pos) {
-
-    nest_result nestable = check_nestable(original, modified);
-    if(nestable.operation == COMMON) continue;
     if(is_better_nest(modified[pos], original[0], measure)) {
       return true;
     }
-
   }
 
   return false;
@@ -451,7 +446,7 @@ void nest_differ::output() {
     advance_to_child(outer.back()->nodes(), end_pos, srcML::node_type::END, "block");
 
   } else if(structure_outer == "extern") {
-    start_pos = outer.back()->children().back()->children().at(1)->start_position() + 1;
+    start_pos = outer.back()->children().back()->children().at(0)->start_position();
   } 
 
   construct::construct_list set = outer.back()->get_descendents(start_pos, end_pos);
