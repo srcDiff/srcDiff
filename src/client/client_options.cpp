@@ -379,7 +379,7 @@ const client_options& process_command_line(int argc, char* argv[]) {
 
   srcml_group->add_option(
     "-s,--src-version",
-    options.output_options.url,
+    options.output_options.version,
     "Set the version attribute"
   );
 
