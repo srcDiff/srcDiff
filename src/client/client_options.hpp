@@ -83,6 +83,12 @@ inline bool is_option(OPTION_TYPE options, OPTION_TYPE flag) {
     return (flag & options) > 0;
 }
 
+struct output_options {
+    std::optional<std::string> url;
+    std::optional<std::string> filename;
+    std::optional<std::string> version;
+};
+
 class input_source_manager;
 struct client_options {
 
@@ -100,11 +106,7 @@ struct client_options {
   std::optional<std::string> files_from_name;
   std::string output_filename;
 
-  struct output_options {
-    std::optional<std::string> url;
-    std::optional<std::string> filename;
-    std::optional<std::string> version;
-  } output_options;
+  struct output_options output_options;
 
   struct view_options_t {
     std::string syntax_highlight;

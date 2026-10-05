@@ -12,6 +12,7 @@
 
 #include <namespace.hpp>
 #include <nodes.hpp>
+#include <client_options.hpp>
 
 #include <methods.hpp>
 #include <constants.hpp>
@@ -106,6 +107,7 @@ protected:
   std::shared_ptr<writer_state> wstate;
 
   bool is_initialized;
+  const output_options& option_attrs;
 
 public:
 
@@ -134,8 +136,7 @@ private:
 
 public:
 
-  output_stream() {}
-  output_stream(const METHOD_TYPE & method);
+  output_stream(const output_options& output_attrs, const METHOD_TYPE& method);
   virtual ~output_stream();
 
 

@@ -13,8 +13,8 @@ namespace srcdiff {
 
 // constructor
 /// @todo remove srcdiff filename and in general archive open/close from output stream
-deltor::deltor(const METHOD_TYPE& method)
-  : output(std::make_shared<srcdiff::output_stream>(method)) {
+deltor::deltor(const output_options& output_attrs, const METHOD_TYPE& method)
+  : output(std::make_shared<srcdiff::output_stream>(output_attrs, method)) {
   }
 
 // destructor

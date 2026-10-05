@@ -23,9 +23,9 @@ namespace srcdiff {
 bool output_stream::delay = false;
 enum operation output_stream::delay_operation = NONE;
 
-output_stream::output_stream(const METHOD_TYPE& method)
+output_stream::output_stream(const output_options& option_attrs, const METHOD_TYPE& method)
  : rbuf_original(std::make_shared<reader_state>(DELETE)), rbuf_modified(std::make_shared<reader_state>(INSERT)), wstate(std::make_shared<writer_state>(method)),
-   is_initialized(false) {
+   is_initialized(false), option_attrs(option_attrs) {
 }
 
 void output_stream::initialize() {
@@ -98,6 +98,14 @@ void output_stream::reset() {
 
 }
 
+const char* get_final_attribute(const std::optional<std::string>& option_attr, const srcML::attribute* unit_attr) {
+
+  if(option_attr) return option_attr->c_str();
+  if(unit_attr) return unit_attr->get_value()->c_str();
+
+  return 0;
+}
+
 void output_stream::start_unit(srcml_archive* archive) {
 
   wstate->unit = srcml_unit_create(archive);
@@ -109,8 +117,8 @@ void output_stream::start_unit(srcml_archive* archive) {
   }
 
   srcml_unit_set_language(wstate->unit, unit->get_attribute("language")->get_value()->c_str());
-  srcml_unit_set_filename(wstate->unit, unit->get_attribute("filename") ? unit->get_attribute("filename")->get_value()->c_str() : 0);
-  srcml_unit_set_version( wstate->unit, unit->get_attribute("version")  ? unit->get_attribute("version")->get_value()->c_str() : 0);
+  srcml_unit_set_filename(wstate->unit, get_final_attribute(option_attrs.filename, unit->get_attribute("filename")));
+  srcml_unit_set_version( wstate->unit, get_final_attribute(option_attrs.version, unit->get_attribute("version")));
 
   srcml_write_start_unit(wstate->unit);
 

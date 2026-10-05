@@ -87,7 +87,7 @@ int srcDiff(const char* original_filename, const char* modified_filename, const 
     manager.append_original_stream(input_original);
     manager.append_modified_stream(input_modified);
 
-    srcdiff::deltor deltor(options.methods);
+    srcdiff::deltor deltor(srcdiff::output_options(), options.methods);
     deltor.create(options.archive, manager);
 
     return SRCDIFF_STATUS_OK;
@@ -100,7 +100,7 @@ struct srcdiff_config* srcdiff_config_create() {
   config->method  = 0;
 
   config->manager = std::make_unique<srcdiff::input_stream_manager>(config->options);
-  config->deltor  = std::make_unique<srcdiff::deltor>(config->method);
+  config->deltor  = std::make_unique<srcdiff::deltor>(srcdiff::output_options(), config->method);
   return config;
 }
 
