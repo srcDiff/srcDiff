@@ -28,6 +28,6 @@ BOOST_DATA_TEST_CASE(unit_tests, data::make(unit_test_cases), code) {
 
     unit test_unit(*nodes, std::shared_ptr<srcdiff::output_stream>());
 
-    BOOST_CHECK_EQUAL(test_unit.start_position(), -1);
-    BOOST_CHECK_EQUAL(test_unit.end_position(), nodes->size());
+    BOOST_CHECK_EQUAL(test_unit.start_position(), 0);
+    BOOST_CHECK_EQUAL(test_unit.end_position(), nodes->size() - 1);
 }

@@ -141,7 +141,7 @@ BOOST_DATA_TEST_CASE(construct_term, data::make(test_cases_term), code, pos) {
 
     std::shared_ptr<const construct> test_construct = std::dynamic_pointer_cast<const construct>(test_data.test_construct);
 
-    BOOST_TEST(*test_construct->term(pos) == *nodes->at(pos));
+    BOOST_TEST(*test_construct->term(pos) == *nodes->at(pos + 1));
 
 }
 
@@ -160,15 +160,15 @@ BOOST_DATA_TEST_CASE(construct_start_position, data::make(test_cases_start_posit
 
     std::shared_ptr<const construct> test_construct = std::dynamic_pointer_cast<const construct>(test_data.test_construct);
 
-    BOOST_TEST(test_construct->start_position() == 0);
+    BOOST_TEST(test_construct->start_position() == 1);
 }
 
 // end_position() tests
 
 std::vector<std::tuple<std::string, std::size_t>> test_cases_end_position = {
-    {"try {}"          , 9 },
-    {"try {} catch {}" , 20},
-    {"try {int i = 0;}", 33},
+    {"try {}"          , 10 },
+    {"try {} catch {}" , 21},
+    {"try {int i = 0;}", 34},
 };
 
 BOOST_DATA_TEST_CASE(construct_end_position, data::make(test_cases_end_position), code, count) {
