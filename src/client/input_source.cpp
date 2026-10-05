@@ -18,16 +18,9 @@ input_source::input_source(srcml_archive* archive, const std::string& path)
 input_source::~input_source() {
 }
 
-// void input_source::files_from() {
-
-// show_input = !options.is_option(OPTION_QUIET);
-//   if(show_input) {
-//     std::cout << "Processing files from:  " << *options.files_from_name << '\n';
-//   }
-
-//   process_files_from();
-
-// }
+bool input_source::is_single_source() const {
+  return false;
+}
 
 const char* input_source::get_language(const std::string& path) {
 

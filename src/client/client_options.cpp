@@ -12,6 +12,7 @@
 
 #include <input_source_manager.hpp>
 #include <input_source_local.hpp>
+#include <input_source_nop.hpp>
 
 #include <libxml/parser.h>
 #include <CLI/CLI.hpp>
@@ -66,14 +67,9 @@ void option_input_file(const std::vector<std::string>& arg) {
       options.input_manager->append_source(std::make_shared<input_source_local>(options.archive, options.output_filename, path_modified));
     } else if(ext_pos != std::string::npos && arg[pos].substr(ext_pos + 1) == "xml") {
       options.flags |= OPTION_VIEW_XML;
-      // options.input_manager->append_source(std::make_shared<input_source_local>(options.archive, options.output_filename, arg[pos], ""));
+      options.input_manager->append_source(std::make_shared<input_source_nop>(options.archive, arg[pos]));
     } else {
-
-      // if((pos + 1) >= arg.size()) {
-      //   throw CLI::ValidationError("Odd number of input files.");
-      // }
       options.input_manager->append_source(std::make_shared<input_source_local>(options.archive, options.output_filename, arg[pos]));
-      // ++pos;
     }
 
   }

@@ -12,7 +12,7 @@
 
 #include <input_source.hpp>
 
-#include <fstream>
+#include <input_local_utilities.hpp>
 
 #include <sys/stat.h>
 #include <filesystem>
@@ -35,9 +35,7 @@ public:
 
   void expand_directory();
 
-  struct input_context {
-    std::ifstream in;
-  };
+  typedef local_input_context input_context;
 
   static input_context* open(const char* uri);
   static ssize_t read(void* context, void* buffer, size_t len);

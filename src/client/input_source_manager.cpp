@@ -72,7 +72,7 @@ void input_source_manager::append_source(std::shared_ptr<input_source> input) {
 }
 
 input_source_manager::operator bool(){
-   return input_sources.size() > 1;
+   return input_sources.size() > 1 || (!input_sources.empty() && input_sources.back()->is_single_source());
 }
 
 void input_source_manager::process_files_from() {
@@ -177,7 +177,7 @@ void input_source_manager::process_directory(std::shared_ptr<input_source> origi
 
 }
 
-void input_source_manager::process_file(std::shared_ptr<input_source> original_source, std::shared_ptr<input_source> modified_source) {
+srcml_unit* input_source_manager::process_file(std::shared_ptr<input_source> original_source, std::shared_ptr<input_source> modified_source) {
 
    std::filesystem::directory_entry original_entry  = original_source? original_source->entry() : std::filesystem::directory_entry();
    std::filesystem::directory_entry modified_entry  = modified_source? modified_source->entry() : std::filesystem::directory_entry();
@@ -227,12 +227,16 @@ void input_source_manager::process_file(std::shared_ptr<input_source> original_s
       input_sources.push_front(original_source);
    }
 
-   if(!language) return;
+   if(!language) return nullptr;
 
    stream_manager.append_original_stream(original_stream);
    stream_manager.append_modified_stream(modified_stream);
 
-   srcml_unit* srcdiff_unit = deltor->create(options.archive, stream_manager);
+   return deltor->create(options.archive, stream_manager);
+}
+
+void input_source_manager::process_unit(srcml_unit* srcdiff_unit) {
+   if(!srcdiff_unit) return;
 
    if(!view) {
        srcml_archive_write_unit(options.archive, srcdiff_unit);
@@ -242,7 +246,6 @@ void input_source_manager::process_file(std::shared_ptr<input_source> original_s
    }
 
    srcml_unit_free(srcdiff_unit);
-
 }
 
 void input_source_manager::consume() {
@@ -254,14 +257,27 @@ void input_source_manager::consume() {
    std::shared_ptr<input_source> original_source = input_sources.front();
    input_sources.pop_front();
 
-   std::shared_ptr<input_source> modified_source = input_sources.front();
-   input_sources.pop_front();
+   srcml_unit* srcdiff_unit = nullptr;
+   if(!original_source->is_single_source()) {
 
-   process_directory(original_source, modified_source);
+      std::shared_ptr<input_source> modified_source = input_sources.front();
+      input_sources.pop_front();
 
-   if(!*original_source && !*modified_source) return;
+      process_directory(original_source, modified_source);
 
-   process_file(original_source, modified_source);
+      if(!*original_source && !*modified_source) return;
+
+      srcdiff_unit = process_file(original_source, modified_source);
+   } else {
+      srcml_archive* read_archive = srcml_archive_create();
+      srcml_archive_read_open_filename(read_archive, original_source->get_base_path().native().c_str());
+      srcdiff_unit = srcml_archive_read_unit(read_archive);
+      srcml_archive_close(read_archive);
+      srcml_archive_free(read_archive);
+   }
+
+   process_unit(srcdiff_unit);
+
 }
 
 }

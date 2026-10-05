@@ -33,6 +33,8 @@ public:
   virtual std::shared_ptr<input_stream_base> stream() = 0;
   virtual void next() = 0;
 
+  virtual bool is_single_source() const;
+
   virtual const char* get_language(const std::string& path);
 
 protected:

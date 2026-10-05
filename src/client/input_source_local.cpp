@@ -128,29 +128,15 @@ void input_source_local::expand_directory() {
 }
 
 input_source_local::input_context* input_source_local::open(const char* uri) {
-
-  input_context* context = new input_context;
-  context->in.open(uri);
-
-  return context->in ? context : (delete context, nullptr);
-
+  return srcdiff::open_local(uri);
 }
 
 ssize_t input_source_local::read(void* context, void* buffer, size_t len) {
-
-  input_context* ctx = (input_context*)context;
-  ctx->in.read((char*)buffer, len);
-
-  return ctx->in.gcount();
+  return srcdiff::read_local(context, buffer, len);
 }
 
 int input_source_local::close(void* context) {
-
-  input_context* ctx = (input_context*)context;
-  ctx->in.close();
-  delete ctx;
-
-  return 1;
+  return srcdiff::close_local(context);
 }
 
 }

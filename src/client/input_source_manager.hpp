@@ -45,7 +45,8 @@ public:
 
   void process_files_from();
   void process_directory(std::shared_ptr<input_source> original_source, std::shared_ptr<input_source> modified_source);
-  void process_file(std::shared_ptr<input_source> original_source, std::shared_ptr<input_source> modified_source);
+  srcml_unit* process_file(std::shared_ptr<input_source> original_source, std::shared_ptr<input_source> modified_source);
+  void process_unit(srcml_unit* srcdiff_unit);
   void consume();
 
 private:
