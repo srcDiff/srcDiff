@@ -213,33 +213,6 @@ void option_srcml_flag_enable(int flagged_count) {
   if(flagged_count > 0) srcml_archive_enable_option(options.archive, op);
 }
 
-// processes the argument to the srcdiff parsing method option
-void option_parsing_method(const std::string& arg) {
-
-  std::vector<std::string> methods;
-  std::string::size_type last_pos = 0;
-  std::string::size_type pos = 0;
-  while((pos = arg.find(',', last_pos)) != std::string::npos) {
-
-    methods.push_back(arg.substr(last_pos, pos));
-    last_pos = pos + 1;
-
-  }
-
-  methods.push_back(arg.substr(last_pos));
-
-  for(std::string method : methods) {
-
-    if(method == NO_GROUP_DIFF_METHOD)   options.methods &= ~METHOD_GROUP;
-    else if(method == GROUP_DIFF_METHOD) options.methods |= METHOD_GROUP;
-    else {
-      throw CLI::ValidationError(method + " is not a valid parsing method");
-    }
-
-  }
-
-}
-
 // this is a special option in the view_options_t struct that can be a string or
 // a number via std::any
 void view_option_unified_view_context(const std::string& arg) {
@@ -430,21 +403,6 @@ const client_options& process_command_line(int argc, char* argv[]) {
     option_srcml_flag_enable<SRCML_OPTION_CPP_TEXT_ELSE>,
     "Do not markup #else contents"
   )->force_callback();
-
-  // TODO: remove these options, here and elsewhere in the code
-
-  srcml_group->add_option_function<std::string>(
-    "-m,--method",
-    option_parsing_method,
-    "Specify a list of parsing methods, separated by commas.\n"
-    "The options are group-diff and no-group-diff"
-  )->default_val("group-diff")->force_callback();
-
-  // srcdiff_group->add_flag(
-  //   "--disable-string-split",
-  //   option_flag_disable<OPTION_STRING_SPLITTING>,
-  //   "Disable splitting strings into multiple nodes"
-  // );
 
   CLI::Option_group * view_options = cli.add_option_group("View");
   view_options->description(

@@ -13,8 +13,6 @@
 
 #include <input_source.hpp>
 #include <input_source_local.hpp>
-#include <input_source_svn.hpp>
-#include <input_source_git.hpp>
 
 #include <srcml.h>
 

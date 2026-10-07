@@ -98,7 +98,6 @@ struct client_options {
   }
 
   OPTION_TYPE flags;
-  METHOD_TYPE methods;
 
   srcml_archive* archive;
   input_source_manager* input_manager;

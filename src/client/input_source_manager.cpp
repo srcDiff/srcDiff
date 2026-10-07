@@ -36,7 +36,7 @@ void input_source_manager::init() {
       }
    }
 
-   deltor = std::make_unique<class deltor>(options.output_options, options.methods);
+   deltor = std::make_unique<class deltor>(options.output_options);
 
    const client_options::view_options_t& view_options = options.view_options;
    if(options.is_option(OPTION_UNIFIED_VIEW)) {

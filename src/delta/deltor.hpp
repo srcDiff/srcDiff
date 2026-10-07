@@ -38,7 +38,7 @@ private:
 public:
 
   // constructor
-  deltor(const output_options& output_attrs, const METHOD_TYPE& method);
+  deltor(const output_options& output_attrs);
 
   // destructor
   ~deltor();

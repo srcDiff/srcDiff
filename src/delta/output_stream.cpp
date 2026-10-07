@@ -23,8 +23,8 @@ namespace srcdiff {
 bool output_stream::delay = false;
 enum operation output_stream::delay_operation = NONE;
 
-output_stream::output_stream(const output_options& option_attrs, const METHOD_TYPE& method)
- : rbuf_original(std::make_shared<reader_state>(DELETE)), rbuf_modified(std::make_shared<reader_state>(INSERT)), wstate(std::make_shared<writer_state>(method)),
+output_stream::output_stream(const output_options& option_attrs)
+ : rbuf_original(std::make_shared<reader_state>(DELETE)), rbuf_modified(std::make_shared<reader_state>(INSERT)), wstate(std::make_shared<writer_state>()),
    is_initialized(false), option_attrs(option_attrs) {
 }
 
@@ -174,10 +174,6 @@ unsigned int & output_stream::last_output_modified() {
 
 int output_stream::output_state() const {
   return wstate->output_diff.back()->operation;
-}
-
-METHOD_TYPE output_stream::method() const {
-  return wstate->method;
 }
 
 void output_stream::approximate(bool is_approximate) {
@@ -339,7 +335,7 @@ void output_stream::output_node(const std::shared_ptr<srcML::node> & node, enum 
       return;
 
     // check if ending a DELETE/INSERT/COMMON tag. if so delay.
-    if(ismethod(wstate->method, METHOD_GROUP) && !force_output && (*node == *diff_original_end || *node == *diff_modified_end || *node == *diff_common_end)) {
+    if(!force_output && (*node == *diff_original_end || *node == *diff_modified_end || *node == *diff_common_end)) {
 
 
       delay = true;

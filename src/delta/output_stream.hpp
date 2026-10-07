@@ -74,8 +74,8 @@ public:
 
   public:
 
-    writer_state(const METHOD_TYPE & method)
-      : unit(nullptr), method(method), approximate(false),
+    writer_state()
+      : unit(nullptr), approximate(false),
         output_diff() {}
 
     void clear() {
@@ -93,7 +93,6 @@ public:
 
     srcml_unit * unit;
 
-    const METHOD_TYPE & method;
     bool approximate;
     
     std::vector<diff_set *> output_diff;
@@ -136,7 +135,7 @@ private:
 
 public:
 
-  output_stream(const output_options& output_attrs, const METHOD_TYPE& method);
+  output_stream(const output_options& output_attrs);
   virtual ~output_stream();
 
 
@@ -161,7 +160,6 @@ public:
   virtual unsigned int & last_output_original();
   virtual unsigned int & last_output_modified();
   virtual int output_state() const;
-  METHOD_TYPE method() const;
 
   void approximate(bool is_approximate);
 
