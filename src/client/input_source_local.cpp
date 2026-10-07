@@ -13,6 +13,7 @@
 
 #include <input_stream.hpp>
 
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
