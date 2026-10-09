@@ -22,6 +22,10 @@ bool input_source::is_single_source() const {
   return false;
 }
 
+bool input_source::is_missing() const {
+  return !std::filesystem::exists(base_path);
+}
+
 const char* input_source::get_language(const std::string& path) {
 
   const char* archive_language = srcml_archive_get_language(archive);

@@ -26,10 +26,6 @@ namespace srcdiff {
 input_source_local::input_source_local(srcml_archive* archive, const std::string& output_filename, const std::string& path)
  : input_source(archive, path), output_filename(output_filename),
    is_initialized(false), input_cache() {
-
-      if(!std::filesystem::exists(base_path)) {
-        throw std::string("Input source '" + path + "' could not be opened");
-      }
       input_cache.emplace_back(base_path);
 }
 

@@ -265,12 +265,25 @@ void input_source_manager::consume() {
       std::shared_ptr<input_source> modified_source = input_sources.front();
       input_sources.pop_front();
 
+      if(original_source->is_missing() && modified_source->is_missing()) {
+         throw std::string("Input sources '" + original_source->get_base_path().native() + "' and '" + modified_source->get_base_path().native() + "' could not be opened");
+      } else if(original_source->is_missing()) {
+         throw std::string("Input source '" + original_source->get_base_path().native() + "' could not be opened");
+      } else if(modified_source->is_missing()) {
+         throw std::string("Input source '" + modified_source->get_base_path().native() + "' could not be opened");
+      }
+
       process_directory(original_source, modified_source);
 
       if(!*original_source && !*modified_source) return;
 
       srcdiff_unit = process_file(original_source, modified_source);
    } else {
+
+      if(original_source->is_missing()) {
+         throw std::string("Input source '" + original_source->get_base_path().native() + "' could not be opened");
+      }
+
       srcml_archive* read_archive = srcml_archive_create();
       srcml_archive_read_open_filename(read_archive, original_source->get_base_path().native().c_str());
       srcdiff_unit = srcml_archive_read_unit(read_archive);

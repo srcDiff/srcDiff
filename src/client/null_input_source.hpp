@@ -30,6 +30,8 @@ public:
   virtual std::shared_ptr<input_stream_base> stream() { return std::shared_ptr<input_stream_base>(); }
   virtual void next() {}
 
+  virtual bool is_missing() const { return false; }
+
 };
 
 }

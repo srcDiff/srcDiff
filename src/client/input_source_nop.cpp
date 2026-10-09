@@ -24,10 +24,6 @@ namespace srcdiff {
 
 input_source_nop::input_source_nop(srcml_archive* archive, const std::string& path)
  : input_source(archive, path) {
-
-    if(!std::filesystem::exists(base_path)) {
-      throw std::string("Input source '" + path + "' could not be opened");
-    }
 }
 
 input_source_nop::~input_source_nop() {

@@ -34,6 +34,7 @@ public:
   virtual void next() = 0;
 
   virtual bool is_single_source() const;
+  virtual bool is_missing() const;
 
   virtual const char* get_language(const std::string& path);
 
