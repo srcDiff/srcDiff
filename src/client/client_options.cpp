@@ -56,6 +56,17 @@ std::string get_version() {
 // e.g. "orig.cpp|mod.cpp"
 void option_input_file(const std::vector<std::string>& arg) {
 
+  std::size_t unpaired_count = 0;
+  for(const std::string& input : arg) {
+    std::string::size_type ext_pos = input.rfind(".");
+    bool is_xml = ext_pos != std::string::npos && input.substr(ext_pos + 1) == "xml";
+    if(input.find('|') == std::string::npos && !is_xml) ++unpaired_count;
+  }
+
+  if(unpaired_count % 2 != 0) {
+    throw CLI::ValidationError("Odd number of input files.");
+  }
+
   for(std::vector<std::string>::size_type pos = 0; pos < arg.size(); pos += 1) {
 
     std::string::size_type sep_pos = arg[pos].find('|');
