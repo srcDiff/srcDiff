@@ -25,15 +25,41 @@ input_source_manager::input_source_manager(const client_options& options)
 }
 
 void input_source_manager::init() {
-   
+
+   // must happen before the output is opened else the input is already overwritten
+   if(options.output_filename != "-") {
+      for(const std::shared_ptr<input_source>& source : input_sources) {
+         std::error_code error;
+         if(!source->get_base_path().empty() && std::filesystem::equivalent(source->get_base_path(), options.output_filename, error)) {
+            throw std::string("Input source '" + source->get_base_path().native() + "' same as output filename");
+         }
+      }
+   }
+
    show_input = options.is_option(OPTION_VERBOSE) && !options.is_option(OPTION_QUIET);
 
-   if(input_sources.size() > 2 || input_sources.front()->entry().is_directory()) {
+   bool is_directory_pair = input_sources.size() == 2
+                         && std::filesystem::is_directory(input_sources.front()->get_base_path())
+                         && std::filesystem::is_directory(input_sources.back()->get_base_path());
+
+   if(input_sources.size() > 2 || (!input_sources.empty() && input_sources.front()->entry().is_directory())) {
       // may need to check second source
       srcml_archive_disable_solitary_unit(options.archive);
       if(!options.is_option(OPTION_QUIET)) {
          show_input = true;
       }
+   }
+
+   // mirrors srcML
+   if(options.output_options.url) {
+      srcml_archive_set_url(options.archive, options.output_options.url->c_str());
+   } else if(is_directory_pair) {
+      std::string url = input_sources.front()->get_base_path().native() + '|' + input_sources.back()->get_base_path().native();
+      srcml_archive_set_url(options.archive, url.c_str());
+   }
+
+   if(options.output_options.version && !srcml_archive_is_solitary_unit(options.archive)) {
+      srcml_archive_set_version(options.archive, options.output_options.version->c_str());
    }
 
    deltor = std::make_unique<class deltor>(options.output_options);

@@ -34,6 +34,16 @@ int main(int argc, char* argv[]) {
   srcML::name_spaces::namespace_registry.init(options.archive);
 
   bool is_view = options.is_option(srcdiff::OPTION_UNIFIED_VIEW | srcdiff::OPTION_SIDE_BY_SIDE_VIEW);
+
+  try {
+    options.input_manager->init();
+  } catch(const std::string& s) {
+    std::cerr << "Error: " << s << '\n';
+    delete options.input_manager;
+    srcml_archive_free(options.archive);
+    return EXIT_FAILURE;
+  }
+
   try {
     if(!is_view && srcml_archive_write_open_filename(options.archive, options.output_filename.c_str()) != SRCML_STATUS_OK) {
       throw std::string("Output source '" + options.output_filename + "' could not be opened");
@@ -41,8 +51,6 @@ int main(int argc, char* argv[]) {
   } catch(const std::string& s) {
       std::cerr << "Error: " << s << '\n';
   }
-
-  options.input_manager->init();
 
   while(*options.input_manager) {
 

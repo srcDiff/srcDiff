@@ -40,9 +40,6 @@ input_source_local::operator bool() {
     // next calls this first to make sure this happens
     if(!output_file) {
       output_file = std::filesystem::directory_entry(output_filename);
-      if(input_cache.back() == *output_file) {
-          throw std::string("Input source '" + input_cache.back().path().native() + "' same as output filename");
-      }
       is_initialized = true;
     }
   }
