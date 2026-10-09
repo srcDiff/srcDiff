@@ -3,7 +3,7 @@
 #
 # @file multiple-pairs.sh
 #
-# @copyright Copyright (C) 2024-2025 SDML (www.srcDiff.org)
+# @copyright Copyright (C) 2024-2026 SDML (www.srcDiff.org)
 #
 # This file is part of the srcDiff Infrastructure.
 #
@@ -18,6 +18,11 @@ define original <<- 'SOURCE'
 define modified <<- 'SOURCE'
 	b;
 	SOURCE
+
+define progress <<- 'STDOUT'
+	1 sub/a.cpp|sub/b.cpp
+	2 sub/b.cpp|sub/a.cpp
+	STDOUT
 
 define output <<- 'STDOUT'
 	<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -38,6 +43,9 @@ createfile sub/a.cpp "$original"
 createfile sub/b.cpp "$modified"
 
 srcdiff sub/a.cpp sub/b.cpp sub/b.cpp sub/a.cpp
+check "${progress}${output}"
+
+srcdiff sub/a.cpp sub/b.cpp sub/b.cpp sub/a.cpp -q
 check "$output"
 
 srcdiff sub/a.cpp sub/b.cpp sub/b.cpp sub/a.cpp -o sub/ab.xml
