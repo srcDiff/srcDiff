@@ -34,6 +34,9 @@ public:
 
     static bool is_move(std::shared_ptr<const construct> set);
 
+    // restart move numbering so move ids are per unit
+    static void reset_moves();
+
     static void mark_moves(const construct::construct_list_view original,
                            const construct::construct_list_view modified,
                            const ses::edit_list& edits);

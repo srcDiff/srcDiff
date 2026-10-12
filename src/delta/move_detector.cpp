@@ -33,6 +33,12 @@ bool move_detector::is_move(std::shared_ptr<const construct> set) {
 
 }
 
+void move_detector::reset_moves() {
+
+  move_id = 0;
+
+}
+
 /** loop O(CD^2) */
 void move_detector::mark_moves(const construct::construct_list_view original,
                                const construct::construct_list_view modified,
