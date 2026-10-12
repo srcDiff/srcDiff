@@ -23,7 +23,7 @@ Before running CMake, ensure your system has all required build tools and projec
 #### Libraries
 * **srcML:** please refer to the official build instructions here: [https://github.com/srcML/srcML/blob/develop/BUILD.md](https://github.com/srcML/srcML/blob/develop/BUILD.md).
 * **libxml2:** Required for XML parsing.
-* **Boost (Optional):** Required only if you plan on running the unit test suite.
+* **Boost (Optional):** Required only if you plan on running the unit or delta test suites.
 
 ### Unix-based (Linux & macOS)
 
@@ -134,7 +134,10 @@ The following shows how to execute each type of srcDiff testing.
 **Delta Testsuite:**
 ```bash
 # Ensure you are in the srcDiff root directory
-ninja -C build suite
+ninja -C build delta
+
+# or a single suite file (e.g. test/delta/suite/if.cpp.xml)
+ctest --test-dir build -R '^delta\.if\.cpp$' --output-on-failure
 ```
 
 **Unit Testsuite:**

@@ -2,20 +2,16 @@
 #
 # @file CMakeLists.txt
 #
-# @copyright Copyright (C) 2014-2024 SDML (www.srcDiff.org)
+# @copyright Copyright (C) 2014-2026 SDML (www.srcDiff.org)
 #
 # This file is part of the srcDiff Infrastructure.
 #
 
 find_package(LibXml2 REQUIRED)
-find_package(Iconv REQUIRED)
-find_package(CLI11 REQUIRED)
 find_package(srcML REQUIRED)
+find_package(Boost REQUIRED)
 
-add_executable(switch_differences switch_differences.cpp)
-target_link_libraries(switch_differences LibXml2::LibXml2)
-set_target_properties(switch_differences PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-add_executable(archive_reader archive_reader.cpp)
-target_link_libraries(archive_reader CLI11::CLI11 LibXml2::LibXml2 srcML::LibsrcML)
-set_target_properties(archive_reader PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+add_executable(test_delta test_delta.cpp delta_utils.cpp delta_utils.hpp)
+target_include_directories(test_delta PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(test_delta srcdiff_static srcML::LibsrcML LibXml2::LibXml2)
+set_target_properties(test_delta PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
