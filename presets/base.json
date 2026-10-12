@@ -45,7 +45,7 @@
       "hidden": true,
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
-        "BUILD_SUITE_TESTS":  "OFF",
+        "BUILD_DELTA_TESTS":  "OFF",
         "BUILD_CLIENT_TESTS": "OFF",
         "BUILD_UNIT_TESTS":   "OFF"
       }
