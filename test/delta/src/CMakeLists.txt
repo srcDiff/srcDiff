@@ -9,7 +9,6 @@
 
 find_package(LibXml2 REQUIRED)
 find_package(srcML REQUIRED)
-find_package(Boost REQUIRED)
 
 add_executable(test_delta test_delta.cpp delta_utils.cpp delta_utils.hpp)
 target_include_directories(test_delta PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
