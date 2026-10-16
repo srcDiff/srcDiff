@@ -55,9 +55,9 @@ struct srcdiff_config;
 
 /**
  * Create the srcDiff delta in the srcDiff format
- * @details @todo
- * @param [in] original_filename The name of the original source-code file
- * @param [in] modified_filename The name of the modified source-code file
+ * @details The language is chosen by file extension. A NULL file is treated as empty.
+ * @param [in] original_filename The name of the original source-code file, or NULL
+ * @param [in] modified_filename The name of the modified source-code file, or NULL
  * @param [in] srcdiff_filename  The name of the srcDiff file
  * @return SRCDIFF_STATUS_OK on success
  * @return Status error on failure
