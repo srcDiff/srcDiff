@@ -32,6 +32,11 @@ find_package(LibXml2 REQUIRED)
 find_package(Threads REQUIRED)
 find_package(CLI11 REQUIRED)
 
+# Mirrors srcSAX/src/CMakeLists.txt but for static linking
+file(GLOB SRCSAX_SOURCE srcSAX/src/srcsax/*.cpp srcSAX/src/cpp/*.cpp srcSAX/src/windows/*.cpp)
+add_library(srcsax-objects OBJECT ${SRCSAX_SOURCE})
+target_link_libraries(srcsax-objects PRIVATE LibXml2::LibXml2)
+
 #
 # build_library
 #
@@ -59,7 +64,13 @@ macro(build_library LIBRARY_NAME LIBRARY_TYPE LIBRARY_OUTPUT_NAME)
         set_target_properties(${LIBRARY_NAME} PROPERTIES OUTPUT_NAME ${LIBRARY_OUTPUT_NAME})
     endif()
 
-    target_link_libraries(${LIBRARY_NAME} PRIVATE srcsax_static srcML::LibsrcML LibXml2::LibXml2 CLI11::CLI11)
+    # a static library cannot carry srcsax_static so it includes the srcSAX objects instead
+    if("${LIBRARY_TYPE}" STREQUAL "STATIC")
+        target_sources(${LIBRARY_NAME} PRIVATE $<TARGET_OBJECTS:srcsax-objects>)
+        target_link_libraries(${LIBRARY_NAME} PRIVATE srcML::LibsrcML LibXml2::LibXml2 CLI11::CLI11)
+    else()
+        target_link_libraries(${LIBRARY_NAME} PRIVATE srcsax_static srcML::LibsrcML LibXml2::LibXml2 CLI11::CLI11)
+    endif()
 
 endmacro()
 
