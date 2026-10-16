@@ -15,6 +15,7 @@
 #include <memory>
 #include <map>
 #include <unordered_map>
+#include <mutex>
 
 #include <srcml.h>
 
@@ -71,14 +72,17 @@ void name_spaces::init(const srcml_archive* archive) {
 }
 
 std::shared_ptr<name_space> name_spaces::get_src_ns() {
+  std::shared_lock lock(mutex);
   return namespaces.at(SRC_URI);
 }
 
 std::shared_ptr<name_space> name_spaces::get_diff_ns() {
+  std::shared_lock lock(mutex);
   return namespaces.at(DIFF_URI);
 }
 
 void name_spaces::update(const std::string& uri, const std::string& prefix) {
+  std::unique_lock lock(mutex);
   namespaces_citr citr = namespaces.find(uri);
   if(citr == namespaces.end()) {
     citr = namespaces.emplace(std::make_pair(uri, std::make_shared<name_space>(uri, prefix))).first;
@@ -90,9 +94,13 @@ std::shared_ptr<name_space> name_spaces::get_namespace(xmlNsPtr ns) {
 
   if(!ns) return get_src_ns();
 
-  namespaces_citr citr = namespaces.find((const char *)ns->href);
-  if(citr != namespaces.end()) return citr->second;
+  {
+    std::shared_lock lock(mutex);
+    namespaces_citr citr = namespaces.find((const char *)ns->href);
+    if(citr != namespaces.end()) return citr->second;
+  }
 
+  std::unique_lock lock(mutex);
   namespaces_citr added_citr = namespaces.emplace(std::make_pair((const char *)ns->href, std::make_shared<name_space>(ns))).first;
   return added_citr->second;
 }
