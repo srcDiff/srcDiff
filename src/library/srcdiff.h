@@ -14,7 +14,7 @@
 #include <sys/types.h> /* ssize_t */
 #include <stdio.h>     /* FILE*   */
 
-#ifndef __cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -132,7 +132,7 @@ LIBSRCDIFF_EXPORT struct srcml_unit* srcdiff_read_unit_revision(struct srcml_uni
                                                                 size_t revision_number);
 /**@}*/
 
-#ifndef __cplusplus
+#ifdef __cplusplus
 }
 #endif
 
