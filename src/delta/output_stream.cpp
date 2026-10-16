@@ -20,9 +20,6 @@
 
 namespace srcdiff {
 
-bool output_stream::delay = false;
-enum operation output_stream::delay_operation = NONE;
-
 output_stream::output_stream(const output_options& option_attrs)
  : rbuf_original(std::make_shared<reader_state>(DELETE)), rbuf_modified(std::make_shared<reader_state>(INSERT)), wstate(std::make_shared<writer_state>()),
    is_initialized(false), option_attrs(option_attrs) {
@@ -126,7 +123,7 @@ void output_stream::start_unit(srcml_archive* archive) {
 
 void output_stream::end_unit() {
 
-  static const std::shared_ptr<srcML::node> flush = std::make_shared<srcML::node>(srcML::node_type::TEXT, "text");
+  const std::shared_ptr<srcML::node> flush = std::make_shared<srcML::node>(srcML::node_type::TEXT, "text");
   output_node(flush, COMMON);
 
   srcml_write_end_unit(wstate->unit);
@@ -134,6 +131,10 @@ void output_stream::end_unit() {
 
 srcml_unit* output_stream::get_unit() {
   return wstate->unit;
+}
+
+void output_stream::release_unit() {
+  wstate->unit = nullptr;
 }
 
 void output_stream::close() {
@@ -182,8 +183,8 @@ void output_stream::approximate(bool is_approximate) {
 
 
 bool output_stream::is_delay_type(enum operation operation) {
-  if(!delay) return false;
-  return operation == delay_operation;
+  if(!wstate->delay) return false;
+  return operation == wstate->delay_operation;
 }
 
 void output_stream::update_diff_stack(std::vector<diff_set *> & open_diffs, const std::shared_ptr<srcML::node> & node, enum operation operation) {
@@ -291,41 +292,41 @@ void output_stream::output_node(const std::shared_ptr<srcML::node> & original_no
 void output_stream::output_node(const std::shared_ptr<srcML::node> & node, enum operation operation, bool force_output) {
 
   // check if delaying DELETE/INSERT/COMMON tag. should only stop if operation is different or not whitespace
-  if(delay && (delay_operation != operation)
-     && ((delay_operation == DELETE 
+  if(wstate->delay && (wstate->delay_operation != operation)
+     && ((wstate->delay_operation == DELETE 
           && wstate->output_diff.back()->open_tags.back()->get_name() == diff_original_end->get_name())
-         || (delay_operation == INSERT 
+         || (wstate->delay_operation == INSERT 
              && wstate->output_diff.back()->open_tags.back()->get_name() == diff_modified_end->get_name())
-         || (delay_operation == COMMON 
+         || (wstate->delay_operation == COMMON 
              && wstate->output_diff.back()->open_tags.back()->get_name() == diff_common_end->get_name()))) {
 
-    if(delay_operation == DELETE) {
+    if(wstate->delay_operation == DELETE) {
 
       output_node(*diff_original_end);
 
-      update_diff_stacks(diff_original_end, delay_operation);
+      update_diff_stacks(diff_original_end, wstate->delay_operation);
 
-    } else if(delay_operation == INSERT) {
+    } else if(wstate->delay_operation == INSERT) {
 
       output_node(*diff_modified_end);
 
-      update_diff_stacks(diff_modified_end, delay_operation);
+      update_diff_stacks(diff_modified_end, wstate->delay_operation);
 
-    } else if(delay_operation == COMMON)  {
+    } else if(wstate->delay_operation == COMMON)  {
 
       output_node(*diff_common_end);
 
-      update_diff_stacks(diff_common_end, delay_operation);
+      update_diff_stacks(diff_common_end, wstate->delay_operation);
 
     }
 
-    delay = false;
-    delay_operation = NONE;
+    wstate->delay = false;
+    wstate->delay_operation = NONE;
 
-  } else if(delay) {
+  } else if(wstate->delay) {
 
-    delay = false;
-    delay_operation = NONE;
+    wstate->delay = false;
+    wstate->delay_operation = NONE;
 
   }
 
@@ -338,8 +339,8 @@ void output_stream::output_node(const std::shared_ptr<srcML::node> & node, enum 
     if(!force_output && (*node == *diff_original_end || *node == *diff_modified_end || *node == *diff_common_end)) {
 
 
-      delay = true;
-      delay_operation = wstate->output_diff.back()->operation;
+      wstate->delay = true;
+      wstate->delay_operation = wstate->output_diff.back()->operation;
       return;
 
     } else {
@@ -388,7 +389,7 @@ void output_stream::output_text_as_node(const std::string & text, enum operation
 
 void output_stream::output_char(char character, enum operation operation) {
 
-  static char buf[2] = { 0 };
+  char buf[2] = { 0 };
   buf[0] = character;
 
   output_text_as_node(buf, operation);
@@ -396,11 +397,9 @@ void output_stream::output_char(char character, enum operation operation) {
 
 void output_stream::output_node(const srcML::node & node) {
 
-  static bool delay_ws_end = false;
+  if(wstate->delay_ws_end) {
 
-  if(delay_ws_end) {
-
-    delay_ws_end = false;
+    wstate->delay_ws_end = false;
 
     if(node == *diff_ws_start) return;
     else output_node_inner(*diff_ws_end);
@@ -409,7 +408,7 @@ void output_stream::output_node(const srcML::node & node) {
 
   if(node == *diff_ws_end) {
 
-    delay_ws_end = true;
+    wstate->delay_ws_end = true;
     return;
 
   }

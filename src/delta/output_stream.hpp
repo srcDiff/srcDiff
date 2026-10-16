@@ -76,7 +76,7 @@ public:
 
     writer_state()
       : unit(nullptr), approximate(false),
-        output_diff() {}
+        output_diff(), delay(false), delay_operation(NONE), delay_ws_end(false) {}
 
     void clear() {
 
@@ -88,6 +88,9 @@ public:
       }
 
       approximate = false;
+      delay = false;
+      delay_operation = NONE;
+      delay_ws_end = false;
 
     }
 
@@ -96,6 +99,10 @@ public:
     bool approximate;
     
     std::vector<diff_set *> output_diff;
+
+    bool delay;
+    enum operation delay_operation;
+    bool delay_ws_end;
 
   };
 
@@ -106,7 +113,7 @@ protected:
   std::shared_ptr<writer_state> wstate;
 
   bool is_initialized;
-  const output_options& option_attrs;
+  const output_options option_attrs;
 
 public:
 
@@ -122,9 +129,6 @@ public:
   std::shared_ptr<srcML::node> diff_ws_end;
 
   std::shared_ptr<srcML::node> unit_tag;
-
-  static bool delay;
-  static enum operation delay_operation;
 
 private:
 
@@ -147,6 +151,7 @@ public:
   void end_unit();
 
   srcml_unit* get_unit();
+  void release_unit();
 
   void reset();
   void close();
