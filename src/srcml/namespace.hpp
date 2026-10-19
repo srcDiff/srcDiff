@@ -17,6 +17,7 @@
 #include <memory>
 #include <map>
 #include <unordered_map>
+#include <shared_mutex>
 
 #include <libxml/xmlreader.h>
 #include <libxml/xmlwriter.h>
@@ -65,6 +66,7 @@ public:
         std::shared_ptr<name_space> get_namespace(xmlNsPtr ns);
 
     private:
+        mutable std::shared_mutex mutex;
         std::unordered_map<std::string, std::shared_ptr<name_space>> namespaces;
     };
 

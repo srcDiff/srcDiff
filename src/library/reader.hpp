@@ -18,7 +18,9 @@
 
 #include <operation.hpp>
 
+#include <optional>
 #include <stack>
+#include <string>
 
 #include <string_view>
 using namespace ::std::literals::string_view_literals;
@@ -97,21 +99,24 @@ public:
         for(int attr_pos = 0; attr_pos < num_attributes; ++attr_pos) {
             const srcsax_attribute& attr = attributes[attr_pos];
 
+            std::optional<std::string> value = revision_value(attr.value);
+            if(!value) continue;
+
             std::string_view attribute = attr.localname;
             if (attribute == "timestamp"sv)
-                srcml_unit_set_timestamp(unit, attr.value);
+                srcml_unit_set_timestamp(unit, value->c_str());
             else if (attribute == "language"sv)
-                srcml_unit_set_language(unit, attr.value);
+                srcml_unit_set_language(unit, value->c_str());
             else if (attribute == "filename"sv)
-                srcml_unit_set_filename(unit, attr.value);
+                srcml_unit_set_filename(unit, value->c_str());
             else if (attribute == "url"sv)
                ;
             else if (attribute == "version"sv)
-                srcml_unit_set_version(unit, attr.value);
+                srcml_unit_set_version(unit, value->c_str());
             else if (attribute == "tabs"sv || attribute == "options"sv)
                 ;
             else {
-                srcml_write_attribute(unit, attr.prefix, attr.localname, attributes->uri, attr.value);
+                srcml_write_attribute(unit, attr.prefix, attr.localname, nullptr, value->c_str());
             }
         }
     }
@@ -119,8 +124,22 @@ public:
     void write_attributes(int num_attributes, const struct srcsax_attribute* attributes) {
         for(int attr_pos = 0; attr_pos < num_attributes; ++attr_pos) {
             const srcsax_attribute& attr = attributes[attr_pos];
-            srcml_write_attribute(unit, attr.prefix, attr.localname, attributes->uri, attr.value);
+            std::optional<std::string> value = revision_value(attr.value);
+            if(!value) continue;
+            srcml_write_attribute(unit, attr.prefix, attr.localname, nullptr, value->c_str());
       } 
+    }
+
+    std::optional<std::string> revision_value(const char* value) const {
+        std::string_view versioned = value ? value : "";
+        std::string_view::size_type separator = versioned.find('|');
+        if(separator == std::string_view::npos) return std::string(versioned);
+
+        std::string_view revision = operation == srcdiff::operation::DELETE
+                                  ? versioned.substr(0, separator)
+                                  : versioned.substr(separator + 1);
+        if(revision.empty()) return std::nullopt;
+        return std::string(revision);
     }
 
     bool in_operation() const {

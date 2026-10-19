@@ -26,8 +26,6 @@ deltor::~deltor() {
 // Translate from input stream to output stream
 srcml_unit* deltor::create(srcml_archive* archive, input_stream_manager& manager) {
 
-  const std::optional<std::string> output_path = "";
-
   std::tie(output->nodes_original(), output->nodes_modified()) = manager.consume_streams();
 
   output->prime();
@@ -54,7 +52,9 @@ srcml_unit* deltor::create(srcml_archive* archive, input_stream_manager& manager
 
   output->reset();
 
-  return output->get_unit();
+  srcml_unit* unit = output->get_unit();
+  output->release_unit();
+  return unit;
 }
 
 }

@@ -18,7 +18,7 @@
 
 namespace srcdiff {
 
-int move_id = 0;
+thread_local int move_id = 0;
 const std::string move("move");
 
 typedef std::tuple<int, int> move_info;

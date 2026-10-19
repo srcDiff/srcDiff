@@ -22,6 +22,8 @@
 namespace srcML {
 
 std::mutex converter::mutex;
+std::map<std::string, std::shared_ptr<srcML::node>> converter::start_tags;
+std::map<std::string, std::shared_ptr<srcML::node>> converter::end_tags;
 
 std::shared_ptr<srcML::node> converter::get_current_node(xmlTextReaderPtr reader) {
 

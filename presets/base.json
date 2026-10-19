@@ -58,6 +58,7 @@
         "BUILD_CLIENT_TESTS": "ON",
         "BUILD_UNIT_TESTS":   "ON",
         "BUILD_DELTA_TESTS":  "ON",
+        "BUILD_LIBRARY_TESTS": "ON",
         "BUILD_STRESS_TESTS": "ON"
       }
     },

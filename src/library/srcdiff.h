@@ -14,7 +14,7 @@
 #include <sys/types.h> /* ssize_t */
 #include <stdio.h>     /* FILE*   */
 
-#ifndef __cplusplus
+#ifdef __cplusplus
 extern "C" {
 #endif
 
@@ -55,9 +55,9 @@ struct srcdiff_config;
 
 /**
  * Create the srcDiff delta in the srcDiff format
- * @details @todo
- * @param [in] original_filename The name of the original source-code file
- * @param [in] modified_filename The name of the modified source-code file
+ * @details The language is chosen by file extension. A NULL file is treated as empty.
+ * @param [in] original_filename The name of the original source-code file, or NULL
+ * @param [in] modified_filename The name of the modified source-code file, or NULL
  * @param [in] srcdiff_filename  The name of the srcDiff file
  * @return SRCDIFF_STATUS_OK on success
  * @return Status error on failure
@@ -132,7 +132,7 @@ LIBSRCDIFF_EXPORT struct srcml_unit* srcdiff_read_unit_revision(struct srcml_uni
                                                                 size_t revision_number);
 /**@}*/
 
-#ifndef __cplusplus
+#ifdef __cplusplus
 }
 #endif
 
