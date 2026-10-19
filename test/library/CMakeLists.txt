@@ -64,10 +64,3 @@ foreach(LIBRARY_TYPE IN ITEMS static shared)
     list(APPEND LIBRARY_TEST_TARGETS ${TEST_NAME})
     add_test(NAME library.header.c_${LIBRARY_TYPE} COMMAND $<TARGET_FILE:${TEST_NAME}>)
 endforeach()
-
-add_custom_target(library_tests
-    COMMAND ${CMAKE_CTEST_COMMAND} --test-dir ${PROJECT_BINARY_DIR} -R "^library\\." --output-on-failure
-    COMMENT "Run all libsrcdiff test cases"
-    USES_TERMINAL
-)
-add_dependencies(library_tests ${LIBRARY_TEST_TARGETS})

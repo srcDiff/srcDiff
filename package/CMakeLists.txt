@@ -92,6 +92,12 @@ function(add_workflow_test_targets binary_dir output_directory package_file_name
         COMMAND ${CMAKE_CTEST_COMMAND} -R ^unit --timeout ${SRCDIFF_TEST_TIMEOUT} --output-log ${output_directory}/${package_file_name}-unit.log || true
     )
 
+    add_custom_target(libsrcdiff
+        WORKING_DIRECTORY ${binary_dir}
+        COMMAND ${CMAKE_CTEST_COMMAND} -R ^library --timeout ${SRCDIFF_TEST_TIMEOUT} 
+        --output-log ${output_directory}/${package_file_name}-library.log || true
+    )
+
     # Target for stress tests
     add_custom_target(stress
         WORKING_DIRECTORY ${binary_dir}
