@@ -33,16 +33,16 @@ define units <<- 'STDOUT'
 	<unit revision="1.0.0" language="C++" filename="original/a.cpp|modified/a.cpp"><diff:delete type="replace"><expr_stmt><expr><name>a</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>b</name></expr>;</expr_stmt></diff:insert>
 	</unit>
 
-	<unit revision="" language="C++|" filename="original/deleted.cpp|"><diff:delete><expr_stmt><expr><name>x</name></expr>;</expr_stmt><diff:ws>
+	<unit revision="1.0.0|" language="C++|" filename="original/deleted.cpp|"><diff:delete><expr_stmt><expr><name>x</name></expr>;</expr_stmt><diff:ws>
 	</diff:ws></diff:delete></unit>
 
-	<unit revision="" language="|C++" filename="|modified/inserted.cpp"><diff:insert><expr_stmt><expr><name>y</name></expr>;</expr_stmt><diff:ws>
+	<unit revision="|1.0.0" language="|C++" filename="|modified/inserted.cpp"><diff:insert><expr_stmt><expr><name>y</name></expr>;</expr_stmt><diff:ws>
 	</diff:ws></diff:insert></unit>
 
-	<unit revision="" language="|C++" filename="|modified/only_modified/r.cpp"><diff:insert><expr_stmt><expr><name>r</name></expr>;</expr_stmt><diff:ws>
+	<unit revision="|1.0.0" language="|C++" filename="|modified/only_modified/r.cpp"><diff:insert><expr_stmt><expr><name>r</name></expr>;</expr_stmt><diff:ws>
 	</diff:ws></diff:insert></unit>
 
-	<unit revision="" language="C++|" filename="original/only_original/q.cpp|"><diff:delete><expr_stmt><expr><name>q</name></expr>;</expr_stmt><diff:ws>
+	<unit revision="1.0.0|" language="C++|" filename="original/only_original/q.cpp|"><diff:delete><expr_stmt><expr><name>q</name></expr>;</expr_stmt><diff:ws>
 	</diff:ws></diff:delete></unit>
 
 	<unit revision="1.0.0" language="C++" filename="original/sub/c.cpp|modified/sub/c.cpp"><diff:delete type="replace"><expr_stmt><expr><name>c</name></expr>;</expr_stmt></diff:delete><diff:insert type="replace"><expr_stmt><expr><name>d</name></expr>;</expr_stmt></diff:insert>
