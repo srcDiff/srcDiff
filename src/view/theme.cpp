@@ -11,6 +11,7 @@
 
 #include <cpp_keywords.hpp>
 #include <java_keywords.hpp>
+#include <python_keywords.hpp>
 
 theme_t::theme_t(const std::string & highlight_level, bool is_html [[maybe_unused]]) : keywords(nullptr) {
 
@@ -35,8 +36,11 @@ theme_t::~theme_t() {
 
 void theme_t::set_langauge(const std::string & language) {
 
-    if(language == "Java") keywords = new java_keywords(*this);
-    else                   keywords = new cpp_keywords(*this);
+    if(keywords) delete keywords;
+
+    if(language == "Java")        keywords = new java_keywords(*this);
+    else if(language == "Python") keywords = new python_keywords(*this);
+    else                          keywords = new cpp_keywords(*this);
 
 }
 
