@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="elseif">
+
+<unit language="Python" filename="elseif|elseif"><if_stmt><if>if <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</block_content></block></if><if type="elseif">elif <condition><expr><name><diff:delete type="replace">b</diff:delete><diff:insert type="replace">c</diff:insert></name></expr></condition><block>:<block_content>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">2</literal></expr></expr_stmt>
+</block_content></block></if></if_stmt></unit>
+
+<unit language="Python" filename="elseif|elseif"><if_stmt><if>if <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</block_content></block></if><if type="elseif">elif <condition><expr><name>b</name></expr></condition><block>:<block_content>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number"><diff:delete type="replace">2</diff:delete><diff:insert type="replace">3</diff:insert></literal></expr></expr_stmt>
+</block_content></block></if></if_stmt></unit>
+
+<unit language="Python" filename="elseif|elseif"><if_stmt><if>if <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</block_content></block></if><diff:insert><if type="elseif">elif<diff:ws> </diff:ws><condition><expr><name>b</name></expr></condition><block>:<block_content><diff:ws>
+    </diff:ws><expr_stmt><expr><name>x</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><literal type="number">2</literal></expr></expr_stmt><diff:ws>
+</diff:ws></block_content></block></if></diff:insert></if_stmt></unit>
+
+</unit>

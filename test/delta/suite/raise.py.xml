@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="raise">
+
+<unit language="Python" filename="raise|raise"><throw>raise <expr><name>E</name></expr><diff:insert><diff:ws> </diff:ws><from>from<diff:ws> </diff:ws><expr><name>e</name></expr></from></diff:insert></throw>
+</unit>
+
+<unit language="Python" filename="raise|raise"><throw>raise <expr><name>E</name></expr> <from>from <expr><name><diff:delete type="replace">a</diff:delete><diff:insert type="replace">b</diff:insert></name></expr></from></throw>
+</unit>
+
+<unit language="Python" filename="raise|raise"><throw>raise<diff:insert><diff:ws> </diff:ws><expr><name>E</name></expr></diff:insert></throw>
+</unit>
+
+</unit>

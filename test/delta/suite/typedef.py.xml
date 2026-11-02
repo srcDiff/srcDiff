@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="typedef">
+
+<unit language="Python" filename="typedef|typedef"><typedef>type <name><diff:delete type="replace">A</diff:delete><diff:insert type="replace">B</diff:insert></name> = <expr><name>int</name></expr></typedef>
+</unit>
+
+<unit language="Python" filename="typedef|typedef"><typedef>type <name>A</name><parameter_list type="generic">[<parameter><name>T</name></parameter>]</parameter_list> = <expr><name><name><diff:delete type="replace">list</diff:delete><diff:insert type="replace">set</diff:insert></name><index>[<expr><name>T</name></expr>]</index></name></expr></typedef>
+</unit>
+
+</unit>

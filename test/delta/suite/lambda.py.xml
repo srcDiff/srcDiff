@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="lambda">
+
+<unit language="Python" filename="lambda|lambda"><expr_stmt><expr><name>f</name> <operator>=</operator> <lambda>lambda <parameter><name>x</name></parameter>: <expr><name>x</name><diff:insert><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><literal type="number">1</literal></diff:insert></expr></lambda></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="lambda|lambda"><expr_stmt><expr><name>f</name> <operator>=</operator> <lambda>lambda <parameter><name>x</name></parameter><diff:insert>,<diff:ws> </diff:ws><parameter><name>y</name><init>=<expr><literal type="number">1</literal></expr></init></parameter></diff:insert>: <expr><name>x</name></expr></lambda></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="lambda|lambda"><expr_stmt><expr><diff:insert><operator>(</operator><name>x</name></diff:insert><diff:delete><call><name>map</name><argument_list>(<argument><expr><diff:delete type="replace"><lambda>lambda<diff:ws> </diff:ws><parameter><name>x</name></parameter>:<diff:ws> </diff:ws><expr><name>x</name><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><literal type="number">1</literal></expr></lambda></diff:delete><diff:insert type="replace"><diff:ws> </diff:ws><operator>+</operator><diff:ws> </diff:ws><literal type="number">1</literal></diff:insert></expr></argument>,<diff:ws> </diff:ws><argument><expr><name>xs</name></expr></argument>)</argument_list></call></diff:delete><diff:insert><diff:ws> </diff:ws><comprehension><for>for<diff:ws> </diff:ws><control><expr><name>x</name></expr><diff:ws> </diff:ws><range>in<diff:ws> </diff:ws><expr><name>xs</name></expr></range></control></for></comprehension><operator>)</operator></diff:insert></expr></expr_stmt>
+</unit>
+
+</unit>

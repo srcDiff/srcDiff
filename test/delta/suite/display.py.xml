@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="display">
+
+<unit language="Python" filename="display|display"><expr_stmt><expr><name>x</name> <operator>=</operator> <tuple>(<expr><literal type="number">1</literal></expr>, <expr><literal type="number">2</literal></expr><diff:insert>,<diff:ws> </diff:ws><expr><literal type="number">3</literal></expr></diff:insert>)</tuple></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="display|display"><expr_stmt><expr><name>x</name> <operator>=</operator> <dictionary>{<expr><literal type="string">'a'</literal></expr>: <diff:delete type="replace"><expr><literal type="number">1</literal></expr></diff:delete><diff:insert type="replace"><expr><literal type="number">2</literal></expr></diff:insert>}</dictionary></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="display|display"><expr_stmt><expr><name>x</name> <operator>=</operator> <diff:delete type="replace"><call><name>set</name><argument_list>(<argument><expr><array>[<expr><literal type="number">1</literal></expr>,<diff:ws> </diff:ws><expr><literal type="number">2</literal></expr>]</array></expr></argument>)</argument_list></call></diff:delete><diff:insert type="replace"><set>{<expr><literal type="number">1</literal></expr>,<diff:ws> </diff:ws><expr><literal type="number">2</literal></expr>}</set></diff:insert></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="display|display"><expr_stmt><expr><name>x</name> <operator>=</operator> <diff:delete type="replace"><array>[<expr><literal type="number">1</literal></expr>,<diff:ws> </diff:ws><expr><literal type="number">2</literal></expr>]</array></diff:delete><diff:insert type="replace"><tuple>(<expr><literal type="number">1</literal></expr>,<diff:ws> </diff:ws><expr><literal type="number">2</literal></expr>)</tuple></diff:insert></expr></expr_stmt>
+</unit>
+
+</unit>

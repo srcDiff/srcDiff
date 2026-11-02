@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="import">
+
+<unit language="Python" filename="import|import"><import>import <name>os</name><diff:insert>,<diff:ws> </diff:ws><name>sys</name></diff:insert></import>
+</unit>
+
+<unit language="Python" filename="import|import"><import>import <name><name>os</name><operator>.</operator><name>path</name></name> <alias>as <expr><name><diff:delete type="replace">p</diff:delete><diff:insert type="replace">q</diff:insert></name></expr></alias></import>
+</unit>
+
+<unit language="Python" filename="import|import"><import><from>from <name>a</name></from> import <name>b</name><diff:insert>,<diff:ws> </diff:ws><name>c</name></diff:insert></import>
+</unit>
+
+<unit language="Python" filename="import|import"><import><from>from <name><diff:delete type="replace">a</diff:delete><diff:insert type="replace">.</diff:insert></name></from> import <name>b</name></import>
+</unit>
+
+</unit>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="match">
+
+<unit language="Python" filename="match|match"><switch>match <condition><expr><name>x</name></expr></condition><block>:<block_content>
+    <case>case <diff:delete type="replace"><expr><literal type="number">1</literal></expr></diff:delete><diff:insert type="replace"><expr><literal type="number">2</literal></expr></diff:insert><block>:<block_content>
+        <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content></block></case></block_content></block></switch></unit>
+
+<unit language="Python" filename="match|match"><switch>match <condition><expr><name>x</name></expr></condition><block>:<block_content>
+    <case>case <expr><literal type="number">1</literal></expr><block>:<block_content>
+<diff:delete type="replace"><diff:ws>        </diff:ws><expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt></diff:delete><diff:insert type="replace"><diff:ws>        </diff:ws><expr_stmt><expr><call><name>g</name><argument_list>()</argument_list></call></expr></expr_stmt></diff:insert>
+</block_content></block></case></block_content></block></switch></unit>
+
+<unit language="Python" filename="match|match"><switch>match <condition><expr><name>x</name></expr></condition><block>:<block_content>
+    <case>case <expr><literal type="number">1</literal></expr><block>:<block_content>
+        <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content></block></case><diff:insert><diff:ws>    </diff:ws><case>case<diff:ws> </diff:ws><expr><name>_</name></expr><block>:<block_content><diff:ws>
+        </diff:ws><expr_stmt><expr><call><name>g</name><argument_list>()</argument_list></call></expr></expr_stmt><diff:ws>
+</diff:ws></block_content></block></case></diff:insert></block_content></block></switch></unit>
+
+<unit language="Python" filename="match|match"><switch>match <condition><expr><name>x</name></expr></condition><block>:<block_content>
+    <case>case <expr><array>[<expr><name>a</name></expr>]</array></expr><diff:insert><diff:ws> </diff:ws>if<diff:ws> </diff:ws><condition><expr><name>a</name></expr></condition></diff:insert><block>:<block_content>
+        <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content></block></case></block_content></block></switch></unit>
+
+<unit language="Python" filename="match|match"><switch>match <condition><expr><name>x</name></expr></condition><block>:<block_content>
+    <case>case <expr><call><name>Point</name><argument_list>(<argument><name>x</name>=<expr><literal type="number"><diff:delete type="replace">0</diff:delete><diff:insert type="replace">1</diff:insert></literal></expr></argument>)</argument_list></call></expr><block>:<block_content>
+        <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content></block></case></block_content></block></switch></unit>
+
+</unit>

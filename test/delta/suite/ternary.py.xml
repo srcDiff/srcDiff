@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="ternary">
+
+<unit language="Python" filename="ternary|ternary"><expr_stmt><expr><name>z</name> <operator>=</operator> <name>a</name> <ternary>if <condition><expr><name><diff:delete type="replace">b</diff:delete><diff:insert type="replace">d</diff:insert></name></expr></condition> <else>else <expr><name>c</name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="ternary|ternary"><expr_stmt><expr><name>z</name> <operator>=</operator> <name>a</name> <ternary>if <condition><expr><name>b</name></expr></condition> <else>else <expr><name><diff:delete type="replace">c</diff:delete><diff:insert type="replace">e</diff:insert></name></expr></else></ternary></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="ternary|ternary"><diff:delete><if_stmt><if>if<diff:ws> </diff:ws><condition><expr><name>a</name></expr></condition><block>:<block_content><diff:ws>
+    </diff:ws><diff:common><expr_stmt><expr><name>b</name> <operator>=</operator> <name>c</name><diff:insert><diff:ws> </diff:ws><ternary>if<diff:ws> </diff:ws><condition><expr><name>a</name></expr></condition><diff:ws> </diff:ws><else>else<diff:ws> </diff:ws><expr><name>d</name></expr></else></ternary></diff:insert></expr></expr_stmt>
+</diff:common></block_content></block></if><else>else<block>:<block_content><diff:ws>
+    </diff:ws><expr_stmt><expr><name>b</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><name>d</name></expr></expr_stmt><diff:ws>
+</diff:ws></block_content></block></else></if_stmt></diff:delete></unit>
+
+</unit>

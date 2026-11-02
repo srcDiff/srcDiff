@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="function">
+
+<unit language="Python" filename="function|function"><function>def <name><diff:delete type="replace">f</diff:delete><diff:insert type="replace">g</diff:insert></name><parameter_list>()</parameter_list><block>:<block_content>
+    <return>return <expr><literal type="number">1</literal></expr></return>
+</block_content></block></function></unit>
+
+<unit language="Python" filename="function|function"><function><diff:insert><specifier>async</specifier><diff:ws> </diff:ws></diff:insert>def <name>f</name><parameter_list>()</parameter_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></function></unit>
+
+<unit language="Python" filename="function|function"><function>def <name>f</name><parameter_list>()</parameter_list><diff:insert><diff:ws> </diff:ws><annotation>-&gt;<diff:ws> </diff:ws><expr><name>int</name></expr></annotation></diff:insert><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></function></unit>
+
+<unit language="Python" filename="function|function"><function><diff:insert><attribute>@<expr><name>cache</name></expr></attribute><diff:ws>
+</diff:ws></diff:insert>def <name>f</name><parameter_list>()</parameter_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></function></unit>
+
+<unit language="Python" filename="function|function"><function><attribute>@<expr><name><diff:delete type="replace">a</diff:delete><diff:insert type="replace">b</diff:insert></name></expr></attribute>
+def <name>f</name><parameter_list>()</parameter_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></function></unit>
+
+<unit language="Python" filename="function|function"><function>def <name>f</name><parameter_list>()</parameter_list><block>:<block_content>
+    <function>def <name><diff:delete type="replace">g</diff:delete><diff:insert type="replace">h</diff:insert></name><parameter_list>()</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></function></unit>
+
+</unit>

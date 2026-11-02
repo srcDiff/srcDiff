@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="literal">
+
+<unit language="Python" filename="literal|literal"><expr_stmt><expr><name>s</name> <operator>=</operator> <literal type="string"><diff:delete type="replace">'</diff:delete><diff:insert type="replace">"</diff:insert>a<diff:delete type="replace">'</diff:delete><diff:insert type="replace">"</diff:insert></literal></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="literal|literal"><expr_stmt><expr><name>s</name> <operator>=</operator> <literal type="string"><diff:insert>b</diff:insert>'a'</literal></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="literal|literal"><expr_stmt><expr><name>s</name> <operator>=</operator> <literal type="string"><diff:insert>f</diff:insert>"{<diff:insert>x</diff:insert>}"</literal><diff:delete><operator>.</operator><call><name>format</name><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></diff:delete></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="literal|literal"><expr_stmt><expr><name>x</name> <operator>=</operator> <diff:delete type="replace"><literal type="null">None</literal></diff:delete><diff:insert type="replace"><literal type="boolean">True</literal></diff:insert></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="literal|literal"><expr_stmt><expr><name>x</name> <operator>=</operator> <diff:delete type="replace"><literal type="number">1_000</literal></diff:delete><diff:insert type="replace"><literal type="complex">4j</literal></diff:insert></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="literal|literal"><expr_stmt><expr><name>x</name> <operator>=</operator> <diff:delete type="replace"><literal type="ellipsis">...</literal></diff:delete><diff:insert type="replace"><literal type="null">None</literal></diff:insert></expr></expr_stmt>
+</unit>
+
+</unit>

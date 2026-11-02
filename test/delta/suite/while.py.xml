@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="while">
+
+<unit language="Python" filename="while|while"><while>while <condition><expr><name><diff:delete type="replace">a</diff:delete><diff:insert type="replace">b</diff:insert></name></expr></condition><block>:<block_content>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</block_content></block></while></unit>
+
+<unit language="Python" filename="while|while"><while>while <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</block_content></block><diff:insert><else>else<block>:<block_content><diff:ws>
+    </diff:ws><expr_stmt><expr><name>y</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><literal type="number">2</literal></expr></expr_stmt><diff:ws>
+</diff:ws></block_content></block></else></diff:insert></while></unit>
+
+<unit language="Python" filename="while|while"><diff:insert><while>while<diff:ws> </diff:ws><condition><expr><name>a</name></expr></condition><block>:<block_content><diff:ws>
+    </diff:ws><diff:common><expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</diff:common></block_content></block></while></diff:insert></unit>
+
+<unit language="Python" filename="while|while"><diff:delete type="replace"><while>while<diff:ws> </diff:ws><condition><expr><literal type="boolean">True</literal></expr></condition><block>:<block_content><diff:ws>
+    </diff:ws><expr_stmt><expr><name>m</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt><diff:ws>
+    </diff:ws><if_stmt><if>if<diff:ws> </diff:ws><condition><expr><operator>not</operator><diff:ws> </diff:ws><name>m</name></expr></condition><block>:<block_content><diff:ws>
+        </diff:ws><break>break</break><diff:ws>
+</diff:ws></block_content></block></if></if_stmt></block_content></block></while></diff:delete><diff:insert type="replace"><while>while<diff:ws> </diff:ws><condition><expr><operator>(</operator><name>m</name><diff:ws> </diff:ws><operator>:=</operator><diff:ws> </diff:ws><call><name>f</name><argument_list>()</argument_list></call><operator>)</operator></expr></condition><block>:<block_content><diff:ws>
+    </diff:ws><pass>pass</pass><diff:ws>
+</diff:ws></block_content></block></while></diff:insert></unit>
+
+</unit>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="annotation">
+
+<unit language="Python" filename="annotation|annotation"><expr_stmt><expr><name>x</name><diff:insert><annotation>:<diff:ws> </diff:ws><expr><name>int</name></expr></annotation></diff:insert> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="annotation|annotation"><function>def <name>f</name><parameter_list>(<parameter><name>x</name><annotation>: <expr><name><name><diff:delete type="replace">List</diff:delete><diff:insert type="replace">list</diff:insert></name><index>[<expr><name>str</name></expr>]</index></name></expr></annotation></parameter>)</parameter_list> <annotation>-&gt; <expr><name><diff:delete type="replace"><name>Optional</name><index>[<expr><name>str</name></expr>]</index></diff:delete><diff:insert type="replace">str</diff:insert></name><diff:insert><diff:ws> </diff:ws><operator>|</operator><diff:ws> </diff:ws><literal type="null">None</literal></diff:insert></expr></annotation><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></function></unit>
+
+</unit>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="parameter">
+
+<unit language="Python" filename="parameter|parameter"><function>def <name>f</name><parameter_list>(<diff:delete type="replace"><parameter><name>a</name></parameter></diff:delete><diff:insert type="replace"><parameter><name>b</name></parameter></diff:insert>)</parameter_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></function></unit>
+
+<unit language="Python" filename="parameter|parameter"><function>def <name>f</name><parameter_list>(<parameter><name>a</name></parameter><diff:insert>,<diff:ws> </diff:ws><parameter><name>b</name></parameter></diff:insert>)</parameter_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></function></unit>
+
+<unit language="Python" filename="parameter|parameter"><function>def <name>f</name><parameter_list>(<parameter><name>a</name><diff:insert><annotation>:<diff:ws> </diff:ws><expr><name>int</name></expr></annotation></diff:insert></parameter>)</parameter_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></function></unit>
+
+<unit language="Python" filename="parameter|parameter"><function>def <name>f</name><parameter_list>(<parameter><name>a</name><init>=<diff:delete type="replace"><expr><literal type="number">1</literal></expr></diff:delete><diff:insert type="replace"><expr><literal type="number">2</literal></expr></diff:insert></init></parameter>)</parameter_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></function></unit>
+
+<unit language="Python" filename="parameter|parameter"><function>def <name>f</name><parameter_list>(<parameter type="args">*<name>args</name></parameter><diff:insert>,<diff:ws> </diff:ws><parameter type="kwargs">**<name>kw</name></parameter></diff:insert>)</parameter_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></function></unit>
+
+<unit language="Python" filename="parameter|parameter"><function>def <name>f</name><parameter_list>(<parameter><name>a</name></parameter>, <diff:insert><parameter type="modifier">/</parameter>,<diff:ws> </diff:ws></diff:insert><parameter><name>b</name></parameter>)</parameter_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></function></unit>
+
+<unit language="Python" filename="parameter|parameter"><function>def <name>f</name><parameter_list type="generic">[<diff:delete type="replace"><parameter><name>T</name></parameter></diff:delete><diff:insert type="replace"><parameter><name>U</name></parameter></diff:insert>]</parameter_list><parameter_list>(<parameter><name>a</name></parameter>)</parameter_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></function></unit>
+
+</unit>

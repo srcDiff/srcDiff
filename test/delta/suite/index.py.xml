@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="index">
+
+<unit language="Python" filename="index|index"><expr_stmt><expr><name>x</name> <operator>=</operator> <name><name>a</name><index>[<expr><literal type="number">1</literal><operator>:</operator><literal type="number"><diff:delete type="replace">2</diff:delete><diff:insert type="replace">3</diff:insert></literal></expr>]</index></name></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="index|index"><expr_stmt><expr><name>x</name> <operator>=</operator> <name><name>a</name><index>[<expr><name>b</name></expr>, <expr><name><diff:delete type="replace">c</diff:delete><diff:insert type="replace">d</diff:insert></name></expr>]</index></name></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="index|index"><expr_stmt><expr><name>x</name> <operator>=</operator> <name><name><diff:delete type="replace">a</diff:delete><diff:insert type="replace">b</diff:insert></name><index>[<expr><literal type="number">1</literal></expr>]</index></name></expr></expr_stmt>
+</unit>
+
+</unit>

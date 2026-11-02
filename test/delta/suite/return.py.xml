@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="return">
+
+<unit language="Python" filename="return|return"><function>def <name>f</name><parameter_list>()</parameter_list><block>:<block_content>
+    <return>return <expr><name><diff:delete type="replace">a</diff:delete><diff:insert type="replace">b</diff:insert></name></expr></return>
+</block_content></block></function></unit>
+
+<unit language="Python" filename="return|return"><function>def <name>f</name><parameter_list>()</parameter_list><block>:<block_content>
+    <return>return<diff:insert><diff:ws> </diff:ws><expr><name>a</name></expr></diff:insert></return>
+</block_content></block></function></unit>
+
+<unit language="Python" filename="return|return"><function>def <name>f</name><parameter_list>()</parameter_list><block>:<block_content>
+<diff:delete type="replace"><diff:ws>    </diff:ws><pass>pass</pass></diff:delete><diff:insert type="replace"><diff:ws>    </diff:ws><return>return</return></diff:insert>
+</block_content></block></function></unit>
+
+</unit>

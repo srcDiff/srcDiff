@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="class">
+
+<unit language="Python" filename="class|class"><class>class <name><diff:delete type="replace">A</diff:delete><diff:insert type="replace">B</diff:insert></name><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class></unit>
+
+<unit language="Python" filename="class|class"><class>class <name>A</name><diff:insert><super_list>(<super><expr><name>Base</name></expr></super>)</super_list></diff:insert><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class></unit>
+
+<unit language="Python" filename="class|class"><class>class <name>A</name><super_list>(<super><expr><name>B</name></expr></super><diff:insert>,<diff:ws> </diff:ws><super><expr><name>metaclass</name><operator>=</operator><name>M</name></expr></super></diff:insert>)</super_list><block>:<block_content>
+    <pass>pass</pass>
+</block_content></block></class></unit>
+
+<unit language="Python" filename="class|class"><class>class <name>A</name><block>:<block_content>
+    <expr_stmt><expr><name>x</name><diff:insert><annotation>:<diff:ws> </diff:ws><expr><name>int</name></expr></annotation></diff:insert> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</block_content></block></class></unit>
+
+<unit language="Python" filename="class|class"><class>class <name>A</name><block>:<block_content>
+    <function>def <name><diff:delete type="replace">f</diff:delete><diff:insert type="replace">g</diff:insert></name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+        <pass>pass</pass>
+</block_content></block></function></block_content></block></class></unit>
+
+<unit language="Python" filename="class|class"><diff:insert><class>class<diff:ws> </diff:ws><name>A</name><block><diff:delete type="replace"><function>def<diff:ws> </diff:ws><name>f</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content><diff:ws>
+    </diff:ws><pass>pass</pass><diff:ws>
+</diff:ws></block_content></block></function></diff:delete><diff:insert type="replace">:<block_content><diff:ws>
+    </diff:ws><function>def<diff:ws> </diff:ws><name>f</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content><diff:ws>
+        </diff:ws><pass>pass</pass><diff:ws>
+</diff:ws></block_content></block></function></block_content></diff:insert></block></class></diff:insert></unit>
+
+</unit>

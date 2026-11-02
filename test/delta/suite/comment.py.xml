@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="comment">
+
+<unit language="Python" filename="comment|comment"><comment type="line"># <diff:delete type="replace">a</diff:delete><diff:insert type="replace">b</diff:insert></comment>
+<expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="comment|comment"><expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt><diff:insert><diff:ws>  </diff:ws><comment type="line">#<diff:ws> </diff:ws>note</comment></diff:insert>
+</unit>
+
+<unit language="Python" filename="comment|comment"><comment type="hashbang">#!/usr/bin/env <diff:delete type="replace">python</diff:delete><diff:insert type="replace">python3</diff:insert></comment>
+<expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="comment|comment"><pass>pass</pass>
+<diff:insert><comment type="line">#<diff:ws> </diff:ws>x</comment><diff:ws>
+</diff:ws></diff:insert></unit>
+
+</unit>

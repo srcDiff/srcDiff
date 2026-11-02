@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="if">
+
+<unit language="Python" filename="if|if"><if_stmt><if>if <condition><expr><name><diff:delete type="replace">a</diff:delete><diff:insert type="replace">b</diff:insert></name></expr></condition><block>:<block_content>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</block_content></block></if></if_stmt></unit>
+
+<unit language="Python" filename="if|if"><if_stmt><if>if <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number"><diff:delete type="replace">1</diff:delete><diff:insert type="replace">2</diff:insert></literal></expr></expr_stmt>
+</block_content></block></if></if_stmt></unit>
+
+<unit language="Python" filename="if|if"><if_stmt><if>if <condition><expr><name>a</name></expr></condition><block>:<block_content>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</block_content></block></if><diff:insert><else>else<block>:<block_content><diff:ws>
+    </diff:ws><expr_stmt><expr><name>x</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><literal type="number">2</literal></expr></expr_stmt><diff:ws>
+</diff:ws></block_content></block></else></diff:insert></if_stmt></unit>
+
+<unit language="Python" filename="if|if"><diff:insert><if_stmt><if>if<diff:ws> </diff:ws><condition><expr><name>a</name></expr></condition><block>:<block_content><diff:ws>
+    </diff:ws><diff:common><expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</diff:common></block_content></block></if></if_stmt></diff:insert></unit>
+
+</unit>

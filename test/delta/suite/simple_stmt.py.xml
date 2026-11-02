@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="simple_stmt">
+
+<unit language="Python" filename="simple_stmt|simple_stmt"><delete>del <name>x</name><diff:insert>,<diff:ws> </diff:ws><name>y</name></diff:insert></delete>
+</unit>
+
+<unit language="Python" filename="simple_stmt|simple_stmt"><delete>del <name><diff:delete type="replace">x</diff:delete><diff:insert type="replace">z</diff:insert></name></delete>
+<expr_stmt><expr><name>y</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="simple_stmt|simple_stmt"><assert>assert <condition><expr><name>a</name></expr></condition><diff:insert>,<diff:ws> </diff:ws><expr><literal type="string">'msg'</literal></expr></diff:insert></assert>
+</unit>
+
+<unit language="Python" filename="simple_stmt|simple_stmt"><diff:delete type="replace"><global>global<diff:ws> </diff:ws><name>g</name></global></diff:delete><diff:insert type="replace"><nonlocal>nonlocal<diff:ws> </diff:ws><name>g</name></nonlocal></diff:insert>
+</unit>
+
+<unit language="Python" filename="simple_stmt|simple_stmt"><function>def <name>f</name><parameter_list>()</parameter_list><block>:<block_content>
+    <for>for <control><expr><name>x</name></expr> <range>in <expr><name>y</name></expr></range></control><block>:<block_content>
+<diff:delete type="replace"><diff:ws>        </diff:ws><break>break</break></diff:delete><diff:insert type="replace"><diff:ws>        </diff:ws><continue>continue</continue></diff:insert>
+</block_content></block></for></block_content></block></function></unit>
+
+</unit>

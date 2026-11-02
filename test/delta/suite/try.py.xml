@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="try">
+
+<unit language="Python" filename="try|try"><try>try<block>:<block_content>
+    <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content></block><catch>except <expr><name><diff:delete type="replace">E</diff:delete><diff:insert type="replace">F</diff:insert></name></expr><block>:<block_content>
+    <expr_stmt><expr><call><name>g</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content></block></catch></try></unit>
+
+<unit language="Python" filename="try|try"><try>try<block>:<block_content>
+    <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content></block><catch>except <expr><name>E</name></expr><diff:insert><diff:ws> </diff:ws><alias>as<diff:ws> </diff:ws><expr><name>e</name></expr></alias></diff:insert><block>:<block_content>
+    <expr_stmt><expr><call><name>g</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content></block></catch></try></unit>
+
+<unit language="Python" filename="try|try"><try>try<block>:<block_content>
+    <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content></block><catch><diff:delete type="replace">except</diff:delete><diff:insert type="replace">except*</diff:insert> <expr><name>E</name></expr><block>:<block_content>
+    <expr_stmt><expr><call><name>g</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content></block></catch></try></unit>
+
+<unit language="Python" filename="try|try"><try>try<block>:<block_content>
+    <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content></block><catch>except <diff:insert><expr><diff:delete type="replace"><expr><name>E</name></expr></diff:delete><diff:insert type="replace"><tuple>(<expr><name>E</name></expr>,<diff:ws> </diff:ws><expr><name>F</name></expr>)</tuple></diff:insert></expr></diff:insert><block>:<block_content>
+    <expr_stmt><expr><call><name>g</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content></block></catch></try></unit>
+
+<unit language="Python" filename="try|try"><try>try<block>:<block_content>
+    <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content></block><catch>except <expr><name>E</name></expr><block>:<block_content>
+    <expr_stmt><expr><call><name>g</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content></block></catch><diff:insert><else>else<block>:<block_content><diff:ws>
+    </diff:ws><expr_stmt><expr><call><name>h</name><argument_list>()</argument_list></call></expr></expr_stmt><diff:ws>
+</diff:ws></block_content></block></else><finally>finally<block>:<block_content><diff:ws>
+    </diff:ws><expr_stmt><expr><call><name>i</name><argument_list>()</argument_list></call></expr></expr_stmt><diff:ws>
+</diff:ws></block_content></block></finally></diff:insert></try></unit>
+
+<unit language="Python" filename="try|try"><diff:insert><try>try<block>:<block_content><diff:ws>
+    </diff:ws><diff:common><expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</diff:common></block_content></block><catch>except<diff:ws> </diff:ws><expr><name>E</name></expr><block>:<block_content><diff:ws>
+    </diff:ws><pass>pass</pass><diff:ws>
+</diff:ws></block_content></block></catch></try></diff:insert></unit>
+
+</unit>

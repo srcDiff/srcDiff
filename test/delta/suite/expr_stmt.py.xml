@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="expr_stmt">
+
+<unit language="Python" filename="expr_stmt|expr_stmt"><expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number"><diff:delete type="replace">1</diff:delete><diff:insert type="replace">2</diff:insert></literal></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="expr_stmt|expr_stmt"><expr_stmt><expr><name>x</name> <operator>=</operator> <name>a</name> <operator><diff:delete type="replace">+</diff:delete><diff:insert type="replace">-</diff:insert></operator> <name>b</name></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="expr_stmt|expr_stmt"><expr_stmt><expr><tuple><expr><name>a</name></expr>, <expr><name>b</name></expr></tuple> <operator>=</operator> <tuple><expr><name><diff:delete type="replace">b</diff:delete><diff:insert type="replace">c</diff:insert></name></expr>, <expr><name>a</name></expr></tuple></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="expr_stmt|expr_stmt"><expr_stmt><expr><name>x</name> <operator><diff:delete type="replace">+=</diff:delete><diff:insert type="replace">-=</diff:insert></operator> <literal type="number">3</literal></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="expr_stmt|expr_stmt"><expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>x</name></expr></argument><diff:insert>,<diff:ws> </diff:ws><argument><expr><name>y</name></expr></argument></diff:insert>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="expr_stmt|expr_stmt"><expr_stmt><expr><call><name><diff:delete type="replace">f</diff:delete><diff:insert type="replace">g</diff:insert></name><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="expr_stmt|expr_stmt"><expr_stmt><expr><call><name><name>obj</name><operator>.</operator><name>meth</name></name><argument_list>(<argument><name>k</name>=<expr><literal type="number"><diff:delete type="replace">1</diff:delete><diff:insert type="replace">2</diff:insert></literal></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="expr_stmt|expr_stmt"><expr_stmt><expr><name>x</name> <operator>=</operator> <literal type="number">1</literal></expr></expr_stmt>
+<diff:insert><expr_stmt><expr><name>y</name><diff:ws> </diff:ws><operator>=</operator><diff:ws> </diff:ws><literal type="number">2</literal></expr></expr_stmt><diff:ws>
+</diff:ws></diff:insert></unit>
+
+<unit language="Python" filename="expr_stmt|expr_stmt"><expr_stmt><expr><call><call><call><name>f</name><argument_list>(<argument><expr><name>a</name></expr></argument>)</argument_list></call><argument_list>(<argument><expr><name>b</name></expr></argument>)</argument_list></call><argument_list>(<argument><expr><name><diff:delete type="replace">c</diff:delete><diff:insert type="replace">d</diff:insert></name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="expr_stmt|expr_stmt"><function><specifier>async</specifier> def <name>f</name><parameter_list>()</parameter_list><block>:<block_content>
+    <expr_stmt><expr><name>x</name> <operator>=</operator> <diff:insert><operator>await</operator><diff:ws> </diff:ws></diff:insert><call><name>g</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</block_content></block></function></unit>
+
+</unit>

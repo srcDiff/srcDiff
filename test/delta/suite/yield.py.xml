@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="yield">
+
+<unit language="Python" filename="yield|yield"><function>def <name>f</name><parameter_list>()</parameter_list><block>:<block_content>
+    <yield>yield<diff:insert><diff:ws> </diff:ws><expr><name>a</name></expr></diff:insert></yield>
+</block_content></block></function></unit>
+
+<unit language="Python" filename="yield|yield"><function>def <name>f</name><parameter_list>()</parameter_list><block>:<block_content>
+<diff:delete type="replace"><diff:ws>    </diff:ws><for>for<diff:ws> </diff:ws><control><expr><name>x</name></expr><diff:ws> </diff:ws><range>in<diff:ws> </diff:ws><expr><name>y</name></expr></range></control><block>:<block_content><diff:ws>
+        </diff:ws><yield>yield<diff:ws> </diff:ws><expr><name>x</name></expr></yield><diff:ws>
+</diff:ws></block_content></block></for></diff:delete><diff:insert type="replace"><diff:ws>    </diff:ws><yield type="from">yield<diff:ws> </diff:ws>from<diff:ws> </diff:ws><expr><name>y</name></expr></yield></diff:insert><diff:insert><diff:ws>
+</diff:ws></diff:insert></block_content></block></function></unit>
+
+<unit language="Python" filename="yield|yield"><function>def <name>f</name><parameter_list>()</parameter_list><block>:<block_content>
+<diff:delete type="replace"><diff:ws>    </diff:ws><return>return<diff:ws> </diff:ws><expr><name>a</name></expr></return></diff:delete><diff:insert type="replace"><diff:ws>    </diff:ws><yield>yield<diff:ws> </diff:ws><expr><name>a</name></expr></yield></diff:insert>
+</block_content></block></function></unit>
+
+</unit>

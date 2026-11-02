@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="for">
+
+<unit language="Python" filename="for|for"><for>for <control><expr><name>x</name></expr> <range>in <expr><name><diff:delete type="replace">xs</diff:delete><diff:insert type="replace">ys</diff:insert></name></expr></range></control><block>:<block_content>
+    <expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block></for></unit>
+
+<unit language="Python" filename="for|for"><for>for <control><expr><name>x</name></expr> <range>in <expr><name>xs</name></expr></range></control><block>:<block_content>
+    <expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</block_content></block><diff:insert><else>else<block>:<block_content><diff:ws>
+    </diff:ws><expr_stmt><expr><call><name>g</name><argument_list>()</argument_list></call></expr></expr_stmt><diff:ws>
+</diff:ws></block_content></block></else></diff:insert></for></unit>
+
+<unit language="Python" filename="for|for"><diff:insert><for>for<diff:ws> </diff:ws><control><expr><name>x</name></expr><diff:ws> </diff:ws><range>in<diff:ws> </diff:ws><expr><name>xs</name></expr></range></control><block>:<block_content><diff:ws>
+    </diff:ws><diff:common><expr_stmt><expr><call><name>f</name><argument_list>(<argument><expr><name>x</name></expr></argument>)</argument_list></call></expr></expr_stmt>
+</diff:common></block_content></block></for></diff:insert></unit>
+
+</unit>

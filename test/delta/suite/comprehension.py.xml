@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="comprehension">
+
+<unit language="Python" filename="comprehension|comprehension"><expr_stmt><expr><name>y</name> <operator>=</operator> <array>[<expr><name>x</name></expr> <comprehension><for>for <control><expr><name>x</name></expr> <range>in <expr><name><diff:delete type="replace">xs</diff:delete><diff:insert type="replace">ys</diff:insert></name></expr></range></control></for></comprehension>]</array></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="comprehension|comprehension"><expr_stmt><expr><name>y</name> <operator>=</operator> <array>[<expr><name>x</name></expr> <comprehension><for>for <control><expr><name>x</name></expr> <range>in <expr><name>xs</name></expr></range></control></for><diff:insert><diff:ws> </diff:ws><if>if<diff:ws> </diff:ws><condition><expr><name>x</name></expr></condition></if></diff:insert></comprehension>]</array></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="comprehension|comprehension"><expr_stmt><expr><name>y</name> <operator>=</operator> <array>[<expr><name>x</name></expr> <comprehension><for>for <control><expr><name>x</name></expr> <range>in <expr><name>xs</name></expr></range></control></for> <if>if <condition><expr><name><diff:delete type="replace">a</diff:delete><diff:insert type="replace">b</diff:insert></name></expr></condition></if></comprehension>]</array></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="comprehension|comprehension"><expr_stmt><expr><name>y</name> <operator>=</operator> <diff:delete type="replace"><set>{<expr><name>x</name></expr><diff:ws> </diff:ws><comprehension><for>for<diff:ws> </diff:ws><control><expr><name>x</name></expr><diff:ws> </diff:ws><range>in<diff:ws> </diff:ws><expr><name>xs</name></expr></range></control></for></comprehension>}</set></diff:delete><diff:insert type="replace"><dictionary>{<expr><name>x</name></expr>:<diff:ws> </diff:ws><expr><literal type="number">1</literal></expr><diff:ws> </diff:ws><comprehension><for>for<diff:ws> </diff:ws><control><expr><name>x</name></expr><diff:ws> </diff:ws><range>in<diff:ws> </diff:ws><expr><name>xs</name></expr></range></control></for></comprehension>}</dictionary></diff:insert></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="comprehension|comprehension"><expr_stmt><expr><name>y</name> <operator>=</operator> <array>[<expr><name>x</name></expr> <comprehension><for>for <control><expr><name>a</name></expr> <range>in <expr><name><diff:delete type="replace">b</diff:delete><diff:insert type="replace">c</diff:insert></name></expr> <comprehension><for>for <control><expr><name>x</name></expr> <range>in <expr><name>a</name></expr></range></control></for></comprehension></range></control></for></comprehension>]</array></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="comprehension|comprehension"><expr_stmt><expr><name>y</name> <operator>=</operator> <call><name>sum</name><argument_list>(<argument><expr><name>x</name></expr> <comprehension><for>for <control><expr><name>x</name></expr> <range>in <expr><name><diff:delete type="replace">xs</diff:delete><diff:insert type="replace">ys</diff:insert></name></expr></range></control></for></comprehension></argument>)</argument_list></call></expr></expr_stmt>
+</unit>
+
+<unit language="Python" filename="comprehension|comprehension"><expr_stmt><expr><name>y</name> <operator>=</operator> <diff:delete type="replace"><call><name>list</name><argument_list>(<argument><expr><call><name>f</name><argument_list>(<argument><expr><name>q</name></expr></argument>)</argument_list></call></expr><diff:ws> </diff:ws><comprehension><for>for<diff:ws> </diff:ws><control><expr><name>q</name></expr><diff:ws> </diff:ws><range>in<diff:ws> </diff:ws><expr><name>foo</name></expr></range></control></for></comprehension></argument>)</argument_list></call></diff:delete><diff:insert type="replace"><array>[<expr><call><name>f</name><argument_list>(<argument><expr><name>q</name></expr></argument>)</argument_list></call></expr><diff:ws> </diff:ws><comprehension><for>for<diff:ws> </diff:ws><control><expr><name>q</name></expr><diff:ws> </diff:ws><range>in<diff:ws> </diff:ws><expr><name>foo</name></expr></range></control></for></comprehension>]</array></diff:insert></expr></expr_stmt>
+</unit>
+
+</unit>
