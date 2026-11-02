@@ -268,7 +268,7 @@ const client_options& process_command_line(int argc, char* argv[]) {
   options.input_manager = new input_source_manager(options);
 
   CLI::App cli(
-    "Translates C, C++, and Java source code into the XML source-code representation srcDiff.\n"
+    "Translates C, C++, Java, and Python source code into the XML source-code representation srcDiff.\n"
     "Multiple files are stored in a srcDiff archive.",
     PROGRAM_NAME
   );

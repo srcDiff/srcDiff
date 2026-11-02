@@ -12,7 +12,7 @@
 source $(dirname "$0")/../framework.sh
 
 define output <<- 'STDOUT'
-	Translates C, C++, and Java source code into the XML source-code representation srcDiff.
+	Translates C, C++, Java, and Python source code into the XML source-code representation srcDiff.
 	STDOUT
 
 srcdiff --help | head -n 1
