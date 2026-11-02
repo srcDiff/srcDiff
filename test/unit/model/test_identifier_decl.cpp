@@ -41,5 +41,40 @@ BOOST_DATA_TEST_CASE(identifier_decl_name, data::make(test_cases_name), code, ex
     BOOST_TEST(name_child->to_string() == expected);
 }
 
+std::vector<std::tuple<std::string, std::string>> test_cases_python_parameter_name = {
+    {"def f(a): pass"               , "a"   },
+    {"def f(b=1): pass"             , "b"   },
+    {"def f(c: int): pass"          , "c"   },
+    {"def f(d: int = 2): pass"      , "d"   },
+    {"def f(*args): pass"           , "args"},
+    {"def f(**kwargs): pass"        , "kwargs"}
+};
+
+BOOST_DATA_TEST_CASE(identifier_decl_python_parameter_name, data::make(test_cases_python_parameter_name), code, expected) {
+
+    construct_test_data test_data = create_test_construct(code, "parameter", "Python");
+    BOOST_TEST(test_data.test_construct);
+
+    std::shared_ptr<const identifier_decl> identifier_decl_construct = std::dynamic_pointer_cast<const identifier_decl>(test_data.test_construct);
+    std::shared_ptr<const name_t> name_child = identifier_decl_construct->name();
+
+    BOOST_TEST(name_child);
+    if(name_child) BOOST_TEST(name_child->to_string() == expected);
+}
+
+std::vector<std::string> test_cases_python_modifier_parameter = {
+    "def f(*, a): pass",
+    "def f(/): pass"
+};
+
+BOOST_DATA_TEST_CASE(identifier_decl_python_modifier_parameter, data::make(test_cases_python_modifier_parameter), code) {
+
+    construct_test_data test_data = create_test_construct(code, "parameter", "Python");
+    BOOST_TEST(test_data.test_construct);
+
+    std::shared_ptr<const identifier_decl> identifier_decl_construct = std::dynamic_pointer_cast<const identifier_decl>(test_data.test_construct);
+    BOOST_TEST(!identifier_decl_construct->name());
+}
+
 
 

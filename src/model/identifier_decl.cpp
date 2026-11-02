@@ -18,6 +18,9 @@ std::shared_ptr<const name_t> identifier_decl::name() const {
     std::shared_ptr<const construct> decl_child = find_child("decl");
     if(decl_child) {
         name_child = dynamic_cast<const named_construct &>(*decl_child).name();
+    } else {
+        // Python parameters have the name as a direct child
+        name_child = std::static_pointer_cast<const name_t>(find_child("name"));
     }
 
     return *name_child;
