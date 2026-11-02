@@ -184,7 +184,9 @@ bool node::is_equal(const node & node, bool ignore_pos_attr) const {
     attribute_map attribute_diff;
     std::set_symmetric_difference(attributes.begin(), attributes.end(), node.attributes.begin(), node.attributes.end(),
                                   std::inserter(attribute_diff, attribute_diff.end()), attr_compare);
-    return type == node.type && name == node.name && content == node.content && attribute_diff.empty();
+    // compare namespaces by uri so a srcML element never equals a diff:* element of the same name
+    bool same_namespace = ns == node.ns || (ns && node.ns && ns->get_uri() == node.ns->get_uri());
+    return type == node.type && name == node.name && same_namespace && content == node.content && attribute_diff.empty();
 }
 
 
