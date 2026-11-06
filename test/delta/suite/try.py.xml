@@ -21,7 +21,7 @@
 
 <unit language="Python" filename="try|try"><try>try<block>:<block_content>
     <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt>
-</block_content></block><catch>except <diff:insert><expr><diff:delete type="replace"><expr><name>E</name></expr></diff:delete><diff:insert type="replace"><tuple>(<expr><name>E</name></expr>,<diff:ws> </diff:ws><expr><name>F</name></expr>)</tuple></diff:insert></expr></diff:insert><block>:<block_content>
+</block_content></block><catch>except <diff:insert><expr><tuple>(<diff:common><expr><name>E</name></expr></diff:common>,<diff:ws> </diff:ws><expr><name>F</name></expr>)</tuple></expr></diff:insert><block>:<block_content>
     <expr_stmt><expr><call><name>g</name><argument_list>()</argument_list></call></expr></expr_stmt>
 </block_content></block></catch></try></unit>
 

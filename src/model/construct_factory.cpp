@@ -198,6 +198,7 @@ factory_map_type factory_map = {
   {"synchronized", generate_factory<construct, nest::block>() },
 
 
+  {"tuple",   generate_factory<construct, expr_nest>() },
   {"ternary", generate_factory<construct, nest::custom<"ternary", "call", "operator", "literal", "expr", "name">>() },
 
   {"extern", generate_factory<construct, nest::always>() },
