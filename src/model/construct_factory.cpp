@@ -199,6 +199,11 @@ factory_map_type factory_map = {
 
 
   {"tuple",   generate_factory<construct, expr_nest>() },
+
+  // python
+  {"global",   generate_factory<construct, nest::rule_checker, convert::custom<"global", "nonlocal">>() },
+  {"nonlocal", generate_factory<construct, nest::rule_checker, convert::custom<"global", "nonlocal">>() },
+
   {"ternary", generate_factory<construct, nest::custom<"ternary", "call", "operator", "literal", "expr", "name">>() },
 
   {"extern", generate_factory<construct, nest::always>() },

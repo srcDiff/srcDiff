@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.srcML.org/srcML/src" xmlns:diff="http://www.srcML.org/srcDiff" language="Python" url="interchange">
+
+<unit language="Python" filename="interchange|interchange"><diff:delete type="convert"><global>global<diff:insert type="convert"><nonlocal>nonlocal<diff:common> <name>g</name></diff:common></nonlocal></diff:insert></global></diff:delete>
+</unit>
+
+<unit language="Python" filename="interchange|interchange"><diff:delete type="convert"><nonlocal>nonlocal<diff:insert type="convert"><global>global<diff:common> <name>g</name></diff:common></global></diff:insert></nonlocal></diff:delete>
+</unit>
+
+<unit language="Python" filename="interchange|interchange"><diff:delete type="convert"><global>global<diff:insert type="convert"><nonlocal>nonlocal<diff:common> <name>a</name>, <name><diff:delete type="replace">b</diff:delete><diff:insert type="replace">c</diff:insert></name></diff:common></nonlocal></diff:insert></global></diff:delete>
+</unit>
+
+</unit>
