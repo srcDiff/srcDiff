@@ -88,13 +88,13 @@ typedef nest::custom<"function", "constructor", "destructor",
 typedef nest::custom<"goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
                      "if", "while", "for", "foreach", "else", "elseif", "switch", "do",
                      "try", "catch", "finally", "synchronized",
-                     "expr", "call", "operator", "literal", "continue", "break", "goto">
+                     "expr", "call", "operator", "literal", "continue", "break", "throw", "with", "goto">
         then_nest;
 
 typedef nest::custom<"goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
                      "if_stmt", "if", "while", "for", "foreach", "switch", "do",
                      "try", "catch", "finally", "synchronized",
-                     "expr", "call", "operator", "literal", "continue", "break", "goto">
+                     "expr", "call", "operator", "literal", "continue", "break", "throw", "with", "goto">
         else_nest;
 
 typedef std::unordered_map<std::string_view, factory_function> factory_map_type;
@@ -191,6 +191,7 @@ factory_map_type factory_map = {
 
   // nest only
   {"try",      generate_factory<construct, nest::block>() },
+  {"with",     generate_factory<construct, nest::block>() },
   {"catch",    generate_factory<construct, nest::block>() },
   {"finally",  generate_factory<construct, nest::block>() },
 

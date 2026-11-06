@@ -14,15 +14,13 @@
 </block_content></block></with></unit>
 
 <unit language="Python" filename="with|with"><with>with <expr><call><name>A</name><argument_list>()</argument_list></call></expr> <alias>as <expr><name>a</name></expr></alias><diff:insert>,<diff:ws> </diff:ws><expr><call><name>B</name><argument_list>()</argument_list></call></expr><diff:ws> </diff:ws><alias>as<diff:ws> </diff:ws><expr><name>b</name></expr></alias></diff:insert><block>:<block_content>
-<diff:delete type="replace"><diff:ws>    </diff:ws><with>with<diff:ws> </diff:ws><expr><call><name>B</name><argument_list>()</argument_list></call></expr><diff:ws> </diff:ws><alias>as<diff:ws> </diff:ws><expr><name>b</name></expr></alias><block>:<block_content><diff:ws>
-        </diff:ws><expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt><diff:ws>
-</diff:ws></block_content></block></with></diff:delete><diff:insert type="replace"><diff:ws>    </diff:ws><expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt></diff:insert><diff:insert><diff:ws>
-</diff:ws></diff:insert></block_content></block></with></unit>
+<diff:delete><diff:ws>    </diff:ws><with>with<diff:ws> </diff:ws><expr><call><name>B</name><argument_list>()</argument_list></call></expr><diff:ws> </diff:ws><alias>as<diff:ws> </diff:ws><expr><name>b</name></expr></alias><block>:<block_content><diff:ws>
+    </diff:ws><diff:common>    <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</diff:common></block_content></block></with></diff:delete></block_content></block></with></unit>
 
-<unit language="Python" filename="with|with"><diff:delete type="replace"><expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt></diff:delete><diff:insert type="replace"><with>with<diff:ws> </diff:ws><expr><call><name>A</name><argument_list>()</argument_list></call></expr><block>:<block_content><diff:ws>
-    </diff:ws><expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt><diff:ws>
-</diff:ws></block_content></block></with></diff:insert><diff:delete><diff:ws>
-</diff:ws></diff:delete></unit>
+<unit language="Python" filename="with|with"><diff:insert><with>with<diff:ws> </diff:ws><expr><call><name>A</name><argument_list>()</argument_list></call></expr><block>:<block_content><diff:ws>
+    </diff:ws><diff:common><expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt>
+</diff:common></block_content></block></with></diff:insert></unit>
 
 <unit language="Python" filename="with|with"><with><diff:insert><specifier>async</specifier><diff:ws> </diff:ws></diff:insert>with <expr><call><name>A</name><argument_list>()</argument_list></call></expr><block>:<block_content>
     <expr_stmt><expr><call><name>f</name><argument_list>()</argument_list></call></expr></expr_stmt>
