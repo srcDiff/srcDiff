@@ -18,35 +18,38 @@ code {
 </head>
 <body>
 
-<p>For details on the srcml command-line program, please refer to the man page (man srcml). Here's some examples of how to use it:</p>
+<p>For details on the srcdiff command-line program, run <code>srcdiff --help</code>. Here's some examples of how to use it:</p>
 
 <pre><code class="console">
-# Convert from a source file to srcML
-srcml main.cpp -o main.cpp.xml
+# Compute the srcDiff of two versions of a file
+srcdiff original.cpp modified.cpp -o diff.cpp.xml
 
-# Convert from srcML back to source code
-srcml main.cpp.xml -o main.cpp
+# Compare two directories
+srcdiff original_dir modified_dir -o project.xml
 
-# Convert a code fragment to srcML
-srcml --text=&quot;int a = b;&quot; -l C++ -o fragment.cpp.xml
+# Show a colorized unified diff
+srcdiff -u original.cpp modified.cpp
 
-# Convert entire project to srcML
-srcml --verbose project -o project.xml
+# Show the whole file instead of just the context around changes
+srcdiff -u -C all original.cpp modified.cpp
+
+# Show a colorized side-by-side diff (argument is the tab size)
+srcdiff -y 2 original.cpp modified.cpp
+
+# Save the unified view as an HTML page
+srcdiff --html -u original.cpp modified.cpp -o diff.html
 </code></pre>
-
 <br/>
 
-<p>If you installed the libsrcml development package, you have the ability to write applications that directly use libsrcml. This contains the following:
+<p>If you installed the libsrcdiff development package, you can write applications that use libsrcdiff directly. It contains the following:
 </p>
 
 <ul>
-<li>The include file <code>srcml.h</code></li>
-<li>The static library <code>libsrcml.a</code></li>
-<li>CMake configuration files</li>
+<li>The include file <code>srcdiff.h</code></li>
+<li>The shared and static libsrcdiff libraries</li>
+<li>The libsrcdiff API documentation (HTML)</li>
 </ul>
 
 <br/>
 
-<p>
-In addition, the libsrcml examples are installed in /usr/local/share/srcml</p></body>
 </html>
