@@ -22,11 +22,9 @@
         <pass>pass</pass>
 </block_content></block></function></block_content></block></class></unit>
 
-<unit language="Python" filename="class|class"><diff:insert><class>class<diff:ws> </diff:ws><name>A</name><block><diff:delete type="replace"><function>def<diff:ws> </diff:ws><name>f</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content><diff:ws>
-    </diff:ws><pass>pass</pass><diff:ws>
-</diff:ws></block_content></block></function></diff:delete><diff:insert type="replace">:<block_content><diff:ws>
-    </diff:ws><function>def<diff:ws> </diff:ws><name>f</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content><diff:ws>
-        </diff:ws><pass>pass</pass><diff:ws>
-</diff:ws></block_content></block></function></block_content></diff:insert></block></class></diff:insert></unit>
+<unit language="Python" filename="class|class"><diff:insert><class>class<diff:ws> </diff:ws><name>A</name><block>:<block_content><diff:ws>
+    </diff:ws><diff:common><function>def <name>f</name><parameter_list>(<parameter><name>self</name></parameter>)</parameter_list><block>:<block_content>
+    <diff:insert><diff:ws>    </diff:ws></diff:insert><pass>pass</pass>
+</block_content></block></function></diff:common></block_content></block></class></diff:insert></unit>
 
 </unit>

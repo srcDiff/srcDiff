@@ -20,7 +20,7 @@ string_set block_nestable{
   "goto", "expr_stmt", "decl_stmt", "return", "comment", "block",
   "if_stmt", "if", "while", "for", "foreach", "else", "switch", "do",
   "try", "catch", "finally", "synchronized", "continue", "break", "throw",
-  "typedef",
+  "typedef", "function", "with",
   "class", "struct", "union", "enum",
   "class_decl", "struct_decl", "union_decl", "enum_decl",
 };
